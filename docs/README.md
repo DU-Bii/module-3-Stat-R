@@ -65,7 +65,7 @@ Concepts:
 
 ### Séance 6: Classification supervisée
 
-*Intervenants: Jacques van Helden et Leslie Rega*
+*Intervenants: Jacques van Helden et Leslie Regad*
 
 - Cas d'étude: transcriptome de cancer (données TCGA)
 - Méthodes: k-nearest neighbours, Random Forest, SVM
