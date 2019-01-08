@@ -8,18 +8,23 @@
 
 ## Synopsis
 
-### Séance 1 : Hugo et Fred
+### Séance 1 : Introduction à R
 
-### Séance 2 : Fred et Magali
+*Intervenants: Hugo Varet et Frédéric Guyon*
 
-### Enrichissement fonctionnel
+- Récupérer et adapter le TP de Roscoff
+- Identifier des cas d'études intéressants
 
-- Concepts
+### Séance 2 : Programmation avec R
 
-    - Test exact de Fisher et distribution hypergéométrique 
-    - Corrections de tests multiples (avec dépendances)
+*Intervenants: Frédéric Guyon et Magali Berland*
 
-### Séance 4: Détection de gènes différentiellement exprimés
+
+
+
+### Séance 3: Détection de gènes différentiellement exprimés
+
+*Intervenants: Claire Vandiedonck & Magali Berland & Jacques van Helden*
 
 - Concepts
 
@@ -29,7 +34,9 @@
     - visualisation des résultats globaux  (MA plots, volcano plots, histogrammes de p-vlaeurs)
     - évaluation de l'impact des choix de logiciels et paramètres 
 
-### Séance 5: Clustering
+### Séance 4: Clustering
+
+*Intervenants: Leslie Regad & Anne Badel & Jacques van Helden*
 
 Concepts:
 
@@ -38,8 +45,27 @@ Concepts:
     - évaluation du clustering
     - comparaison de résultats de clustering
     - Visualisartion (heat maps, arbres)
+    
+### Séance 5: statistiques d'enrichissement
+
+*Intervenants: Jacques van Helden + Claire Vandiedonck (à confirmer)*
+
+- Concepts
+
+    - Distributions discrètes de probabilité
+    - Test exact de Fisher
+    - Détection d'enrichissement 
+    - Corrections de tests multiples (avec dépendances)
+
+- Applications
+
+    - Analyse de séquences: détection de motifs sur-représentés (binomiale, Poisson, ...)
+    - Analyse de données NGS ChIP-seq: détection de pics (binomiale, Poisson)
+    - Enrichissement fonctionnel (hypergéométrique)
 
 ### Séance 6: Classification supervisée
+
+*Intervenants: Jacques van Helden et Leslie Rega*
 
 - Cas d'étude: transcriptome de cancer (données TCGA)
 - Méthodes: k-nearest neighbours, Random Forest, SVM
@@ -48,6 +74,4 @@ Concepts:
     - Approches de classification supervisées
     - Entraînement / test
     - Evaluation des résultats (évaluation croisée, mesures de performance)
-    
-    
 
