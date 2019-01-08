@@ -1,1 +1,1 @@
-Voir doc/README.md
+Voir [docs/README.md](docs/README.md)
