@@ -8,9 +8,9 @@
 
 ## Synopsis
 
-### Séance 1
+### Séance 1 : Hugo et Fred
 
-### Séance 2
+### Séance 2 : Fred et Magali
 
 ### Enrichissement fonctionnel
 
