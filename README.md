@@ -30,9 +30,13 @@
 
 ### Séance 5: Clustering
 
+Concepts:
+
+    - Approches de clustering: hiérarchique, K-means
+    - Complexité
     - évaluation du clustering
     - comparaison de résultats de clustering
-
+    - Visualisartion (heat maps, arbres)
 
 ### Séance 6: Classification supervisée
 
