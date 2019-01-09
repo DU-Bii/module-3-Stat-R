@@ -65,21 +65,21 @@ A la fin du module, les participants auront acquis les compétences suivantes:
 
 Avant d'entamer ce module, les participants sont censés avoir suivi les deux premiers modules d'introxuction à R sur Data Camp.
 
-### Séance 1 : Introduction à R
+### [Séance 1 : Introduction à R](../seance_1/README.md)
 
 *Intervenants: Hugo Varet et Frédéric Guyon*
 
 - Récupérer et adapter le TP de Roscoff
 - Identifier des cas d'études intéressants
 
-### Séance 2 : Programmation avec R
+### [Séance 2 : Programmation avec R](../seance_2/README.md)]
 
 *Intervenants: Frédéric Guyon et Magali Berland*
 
 
 
 
-### Séance 3: Détection de gènes différentiellement exprimés
+### [Séance 3: Détection de gènes différentiellement exprimés](../seance_3/README.md)
 
 *Intervenants: Claire Vandiedonck & Magali Berland & Jacques van Helden*
 
@@ -91,7 +91,7 @@ Avant d'entamer ce module, les participants sont censés avoir suivi les deux pr
     - visualisation des résultats globaux  (MA plots, volcano plots, histogrammes de p-vlaeurs)
     - évaluation de l'impact des choix de logiciels et paramètres 
 
-### Séance 4: Clustering
+### [Séance 4: Clustering](../seance_4/README.md)
 
 *Intervenants: Leslie Regad & Anne Badel & Jacques van Helden*
 
@@ -103,7 +103,7 @@ Avant d'entamer ce module, les participants sont censés avoir suivi les deux pr
     - comparaison de résultats de clustering
     - Visualisartion (heat maps, arbres)
     
-### Séance 5: statistiques d'enrichissement
+### [Séance 5: Statistiques d'enrichissement](../seance_5/README.md)
 
 *Intervenants: Jacques van Helden + Claire Vandiedonck (à confirmer)*
 
@@ -120,7 +120,7 @@ Avant d'entamer ce module, les participants sont censés avoir suivi les deux pr
     - Analyse de données NGS ChIP-seq: détection de pics (binomiale, Poisson)
     - Enrichissement fonctionnel (hypergéométrique)
 
-### Séance 6: Classification supervisée
+### [Séance 6: Classification supervisée](../seance_6/README.md)
 
 *Intervenants: Jacques van Helden et Leslie Rega*
 
