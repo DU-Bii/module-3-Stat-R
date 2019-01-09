@@ -4,7 +4,7 @@
 ## Accès
 
 - Web: <https://du-bii.github.io/DUBii-3-Statistiques-avec-R/>
-- Github (sources): <https://github.com/DU-Bii/DUBii-3-Statistiques-avec-R/blob/master/docs/README.md>
+- Github (sources): <https://github.com/DU-Bii/DUBii-3-Statistiques-avec-R/>
 
 Cloner le cours sur votre propre ordinateur.
 
