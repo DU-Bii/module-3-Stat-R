@@ -76,7 +76,7 @@ Avant d'entamer ce module, les participants sont censés avoir suivi les deux pr
 - Récupérer et adapter le TP de Roscoff
 - Identifier des cas d'études intéressants
 
-### [Séance 2 : Programmation avec R](seance_2/README.md)]
+### [Séance 2 : Programmation avec R](seance_2/README.md)
 
 *Intervenants: Frédéric Guyon et Magali Berland*
 
