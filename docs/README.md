@@ -1,12 +1,69 @@
 
 # DUBii module 3 : Statistiques-avec-R
 
-## Intervenants
+## Accès
 
-1. Anne Badel (Co-responsable)
-2. Jacques van Helden (Co-responsable)
+- Web: <https://du-bii.github.io/DUBii-3-Statistiques-avec-R/>
+- Github (sources): <https://github.com/DU-Bii/DUBii-3-Statistiques-avec-R/blob/master/docs/README.md>
+
+Cloner le cours sur votre propre ordinateur.
+
+```{bash}
+git clone https://github.com/DU-Bii/DUBii-3-Statistiques-avec-R.git
+```
+
+## Responsables
+
+1. Anne Badel, Université Paris-Diderot
+2. [Jacques van Helden](https://orcid.org/0000-0002-8799-8584), Institut Français de Bioinformatique, Aix-Marseille Université
+
+## Autres intervenants
+
+3. Hugo Varet, Institut Pasteur
+4. Claire Vandiedonck, Université Paris-Diderot
+4. Leslie Regad, Université Paris-Diderot
+6. Frédéric Guyon, Université Paris-Diderot
+
+
+## Compétences attendues à la fin du module
+
+A la fin du module, les participants auront acquis les compétences suivantes:
+
+- écrire un script R qui charge des fichiers de données (généralement en format tabulaire), réalise une série d'analyses statistiques, exporte les résultats sous différents formats et génère figures illustrant les résultats
+- intégrer les scripts et l'interprétation dans un rapport en format R markdown, pour assurer la reproductibilité des résultats et la cohérence entre les résultats et le texte décrivant leur interprétation
+
+## Concepts  à couvrir
+
+- Manipulation de données avec R
+
+    - vecteurs
+    - matrices
+    - data frames
+
+- Représentations graphiques courantes en bioinformatiques
+
+    - histogramme
+    - box plot (boîte à moustaches)
+    - violin plot
+    - MA plot
+    - volcano plot
+    - PC plot
+    - heatmap
+    
+- Tests d'hypothèses
+
+- Corrections de tests multiples
+
+- Clustering
+
+- Classement (supervised classification)
+
 
 ## Synopsis
+
+### Prérequis
+
+Avant d'entamer ce module, les participants sont censés avoir suivi les deux premiers modules d'introxuction à R sur Data Camp.
 
 ### Séance 1 : Introduction à R
 
@@ -38,7 +95,7 @@
 
 *Intervenants: Leslie Regad & Anne Badel & Jacques van Helden*
 
-Concepts:
+- Concepts
 
     - Approches de clustering: hiérarchique, K-means
     - Complexité
@@ -74,4 +131,5 @@ Concepts:
     - Approches de classification supervisées
     - Entraînement / test
     - Evaluation des résultats (évaluation croisée, mesures de performance)
+
 
