@@ -122,7 +122,7 @@ Avant d'entamer ce module, les participants sont censés avoir suivi les deux pr
 
 ### [Séance 6: Classification supervisée](../seance_6/README.md)
 
-*Intervenants: Jacques van Helden et Leslie Rega*
+*Intervenants: Jacques van Helden et Leslie Regad*
 
 - Cas d'étude: transcriptome de cancer (données TCGA)
 - Méthodes: k-nearest neighbours, Random Forest, SVM
