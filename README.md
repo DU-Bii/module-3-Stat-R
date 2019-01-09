@@ -1,5 +1,5 @@
 
-# DUBii module 3 : Statistiques-avec-R
+# DUBii module 3 : Statistiques avec R
 
 ## Accès
 
