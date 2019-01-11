@@ -29,13 +29,13 @@ Calendrier du DUBii : <https://goo.gl/MVEA4q>
 
 Pour les **participants**
 
-```{bash}
+```sh
 git clone https://github.com/DU-Bii/DUBii-3-Statistiques-avec-R.git
 ```
 
 Pour les **contributeurs du cours** (requiert de faire partie de l'équipe *module3-R* de l'organisation github *DU-Bii*)
 
-```{bash}
+```sh
 git clone git@github.com:DU-Bii/DUBii-3-Statistiques-avec-R.git
 ```
 
