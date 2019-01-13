@@ -4,7 +4,7 @@
 
 Supports du cours "Statistiques avec R" du Diplôme Universitaire en Bioinformatique Intégrative ([DUBii](https://du-bii.github.io/accueil/)).
 
-## Compétences attendues à la fin du module
+### Compétences attendues à la fin du module
 
 A la fin du module, les participants auront acquis les compétences suivantes:
 
@@ -19,7 +19,7 @@ A la fin du module, les participants auront acquis les compétences suivantes:
     - assure la cohérence entre les résultats et figures (générés au vol), et le texte qui en fournit l'interprétation
     - assure la reproductibilité des analyses
 
-## Concepts  à couvrir
+### Concepts  à couvrir
 
 - Manipulation de données avec R
 
@@ -46,7 +46,7 @@ A la fin du module, les participants auront acquis les compétences suivantes:
 - Classement (supervised classification)
 
 
-## Synopsis
+## Table des matières
 
 
 ### Prérequis
@@ -161,23 +161,23 @@ Concepts:
 
 Calendrier du DUBii : <https://goo.gl/MVEA4q>
 
-### Accès aux supports de cours
+## Accès aux supports de cours
 
 - Web: <https://du-bii.github.io/module-3-Stat-R/>
 - Github (sources): <https://github.com/DU-Bii/module-3-Stat-R/>
 
-#### Cloner le cours sur votre propre ordinateur
+## Installation
 
-Pour les **participants**
-
-```sh
-git clone https://github.com/DU-Bii/module-3-Stat-R.git
-```
-
-Pour les **contributeurs du cours** (requiert de faire partie de l'équipe *module3-R* de l'organisation github *DU-Bii*)
+### Contributeurs du cours (membres de l'équipe pédagogique)
 
 ```sh
 git clone git@github.com:DU-Bii/module-3-Stat-R.git
+```
+
+### Autres 
+
+```sh
+git clone https://github.com/DU-Bii/module-3-Stat-R.git
 ```
 
 
