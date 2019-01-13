@@ -1,6 +1,6 @@
 
 # DUBii module 3 : Statistiques avec R
-
+[]!(img/R_logo.svg)
 
 ## Informations
 
