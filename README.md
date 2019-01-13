@@ -1,5 +1,5 @@
 
-# [DUBii](https://du-bii.github.io/accueil/) -- module 3 -- Analyse statistique avec R
+# [DUBii](https://du-bii.github.io/accueil/) - module 3 - Analyse statistique avec R
 
 ## Informations
 
