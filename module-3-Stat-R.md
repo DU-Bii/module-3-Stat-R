@@ -1,45 +1,8 @@
-
 # [DUBii](https://du-bii.github.io/accueil/) - module 3 - Analyse statistique avec R
 
-## Informations
+## Description
 
-- [Licence d'utilisation](LICENSE.html)
-
-### Responsables
-
-1. Anne Badel, Université Paris-Diderot
-2. [Jacques van Helden](https://orcid.org/0000-0002-8799-8584), Institut Français de Bioinformatique, Aix-Marseille Université
-
-### Autres intervenants
-
-3. Hugo Varet, Institut Pasteur
-4. Claire Vandiedonck, Université Paris-Diderot
-4. Leslie Regad, Université Paris-Diderot
-6. Frédéric Guyon, Université Paris-Diderot
-
-### Calendrier 2019
-
-Calendrier du DUBii : <https://goo.gl/MVEA4q>
-
-### Accès aux supports de cours
-
-- Web: <https://du-bii.github.io/module-3-Stat-R/>
-- Github (sources): <https://github.com/DU-Bii/module-3-Stat-R/>
-
-#### Cloner le cours sur votre propre ordinateur
-
-Pour les **participants**
-
-```sh
-git clone https://github.com/DU-Bii/module-3-Stat-R.git
-```
-
-Pour les **contributeurs du cours** (requiert de faire partie de l'équipe *module3-R* de l'organisation github *DU-Bii*)
-
-```sh
-git clone git@github.com:DU-Bii/module-3-Stat-R.git
-```
-
+Supports du cours "Statistiques avec R" du Diplôme Universitaire en Bioinformatique Intégrative ([DUBii](https://du-bii.github.io/accueil/)).
 
 ## Compétences attendues à la fin du module
 
@@ -179,6 +142,43 @@ Concepts:
     - Entraînement / test
     - Evaluation des résultats (évaluation croisée, mesures de performance)
 
+
+## Contributeurs
+
+### Responsables
+
+1. Anne Badel, Université Paris-Diderot
+2. [Jacques van Helden](https://orcid.org/0000-0002-8799-8584), Institut Français de Bioinformatique, Aix-Marseille Université
+
+### Autres intervenants
+
+3. Hugo Varet, Institut Pasteur
+4. Claire Vandiedonck, Université Paris-Diderot
+4. Leslie Regad, Université Paris-Diderot
+6. Frédéric Guyon, Université Paris-Diderot
+
+### Calendrier 2019
+
+Calendrier du DUBii : <https://goo.gl/MVEA4q>
+
+### Accès aux supports de cours
+
+- Web: <https://du-bii.github.io/module-3-Stat-R/>
+- Github (sources): <https://github.com/DU-Bii/module-3-Stat-R/>
+
+#### Cloner le cours sur votre propre ordinateur
+
+Pour les **participants**
+
+```sh
+git clone https://github.com/DU-Bii/module-3-Stat-R.git
+```
+
+Pour les **contributeurs du cours** (requiert de faire partie de l'équipe *module3-R* de l'organisation github *DU-Bii*)
+
+```sh
+git clone git@github.com:DU-Bii/module-3-Stat-R.git
+```
 
 
 ## License
