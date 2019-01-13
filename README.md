@@ -4,6 +4,8 @@
 
 ## Informations
 
+- [Licence d'utilisation](LICENSE.html)
+
 ### Responsables
 
 1. Anne Badel, Université Paris-Diderot
@@ -22,21 +24,21 @@ Calendrier du DUBii : <https://goo.gl/MVEA4q>
 
 ### Accès aux supports de cours
 
-- Web: <https://du-bii.github.io/DUBii-3-Statistiques-avec-R/>
-- Github (sources): <https://github.com/DU-Bii/DUBii-3-Statistiques-avec-R/>
+- Web: <https://du-bii.github.io/module-3-Stat-R/>
+- Github (sources): <https://github.com/DU-Bii/module-3-Stat-R/>
 
 #### Cloner le cours sur votre propre ordinateur
 
 Pour les **participants**
 
 ```sh
-git clone https://github.com/DU-Bii/DUBii-3-Statistiques-avec-R.git
+git clone https://github.com/DU-Bii/module-3-Stat-R.git
 ```
 
 Pour les **contributeurs du cours** (requiert de faire partie de l'équipe *module3-R* de l'organisation github *DU-Bii*)
 
 ```sh
-git clone git@github.com:DU-Bii/DUBii-3-Statistiques-avec-R.git
+git clone git@github.com:DU-Bii/module-3-Stat-R.git
 ```
 
 
