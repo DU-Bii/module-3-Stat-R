@@ -28,7 +28,7 @@ Après avoir suivi le module d'intro à R dans DataCamp, nous vous demandons de 
 
 - Dans le sommaire, cliquez sur le lien *Activités préparatoires*. 
 
-![](img/moodle_sommaire_quiz-R.png){:width="300px"}
+![](img/moodle_sommaire_quiz-R.png){:width="500px"}
 
 
 
