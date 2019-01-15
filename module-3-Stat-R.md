@@ -34,6 +34,7 @@ A la fin du module, les participants auront acquis les compétences suivantes:
     - violin plot
     - MA plot
     - volcano plot
+    - courbes de Lorenz
     - PC plot
     - heatmap
     
@@ -46,7 +47,12 @@ A la fin du module, les participants auront acquis les compétences suivantes:
 - Classement (supervised classification)
 
 
+
 ## Table des matières
+
+### Planning DU-Bii 2019
+
+<https://tinyurl.com/dubii19-planning>
 
 
 ### Prérequis
