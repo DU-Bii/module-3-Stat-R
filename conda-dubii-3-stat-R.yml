@@ -1,0 +1,41 @@
+name: dubii19-m3-stat-r
+
+channels:
+  - r
+  - conda-forge
+  - bioconda
+
+dependencies:
+
+  ## RCRAN packages
+  - r::r-base  >=3.5,< 3.6
+  - r::r-e1071 
+  - r::r-randomforest
+  - r::r-yaml        # Required to load the config file
+  - r::r-roxygen2    # To build the package doc
+  - r::kableExtra    # To export nice-looking tables in the R markdown reports
+  
+  # - r::r-dplyr       # Required for caret (depedency of dependency)
+  # - r::r-rcurl       # Undeclared dependency of recount
+  # - r::r-rcpp        # Wrongly declared dependency for xml2, itself required for roxygen2
+  # - r::r-devtools   
+  - r::r-caret 
+  - r::r-class 
+  - r::r-broom 
+  # - r::r-foreach 
+  # - r::r-doparallel 
+  # - r::r-domc
+  # - conda-forge::r-pheatmap  # Heatmaps with extended control on dimensions
+  # - conda-forge::r-scatterplot3d 
+  # - conda-forge::r-biocmanager
+  
+  ## Bioconda
+  - bioconda::bioconductor-iranges         # Seems to be required for derfinder but not automatically installed
+  - bioconda::bioconductor-derfinder
+  - bioconda::bioconductor-recount
+  - bioconda::bioconductor-vsn             # For RNA-seq plots from Huber
+  - bioconda::bioconductor-deseq2
+  - bioconda::bioconductor-limma
+  - bioconda::bioconductor-edger
+  - bioconda::bioconductor-s4vectors
+  - bioconda::bioconductor-summarizedexperiment
