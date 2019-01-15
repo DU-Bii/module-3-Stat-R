@@ -4,6 +4,32 @@
 
 Supports du cours "Statistiques avec R" du Diplôme Universitaire en Bioinformatique Intégrative ([DUBii](https://du-bii.github.io/accueil/)).
 
+### Prérequis
+
+Nous demandons aux participants de suivre le premier module d'initiation à **R** sur *DataCamp*
+
+- Connectez-vous à DataCamp R : <https://www.datacamp.com/onboarding/learn?technology=r>
+- Identifiez-vous (après avoir créé un compte si vous n'en avez pas)
+- démarrez le module **Introduduction to R**
+
+![](img/datacamp_intro-R_icon.png)
+
+- Faites les exercices du premier chapitre intitulé **Intro to basics**. 
+
+En principe ceci devrait vous prendre une demi-heure. Vous pourrez prendre connaissance des éléments suivants
+- syntaxe de R
+- calculs de base 
+- affectation de variables
+- classes de variables (numériques, caractères, logiques)
+
+Ces exercices vous permettront de vous sentir plus à l'aise lors des premières séances du cours.
+
+### Validation des prérequis
+
+Après avoir suivi le module d'intro à R dans DataCamp, nous vous demandons de valider l'aquisition des prérequis sur le site moodle du diplôme. 
+
+
+
 ### Compétences attendues à la fin du module
 
 A la fin du module, les participants auront acquis les compétences suivantes:
