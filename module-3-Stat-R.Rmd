@@ -28,7 +28,7 @@ Après avoir suivi le module d'intro à R dans DataCamp, nous vous demandons de 
 
 - Dans le sommaire, cliquez sur le lien *Activités préparatoires*. 
 
-![](img/moodle_sommaire_quiz-R.png){:width="200px"}
+![](img/moodle_sommaire_quiz-R.png){:width="300px"}
 
 
 
@@ -36,44 +36,31 @@ Après avoir suivi le module d'intro à R dans DataCamp, nous vous demandons de 
 
 A la fin du module, les participants auront acquis les compétences suivantes.
 
-- Ecrire des scripts R pour 
+- Maîtrise du langage R
     - charger des fichiers de données (généralement en format tabulaire), 
-    - réaliser une série d'analyses statistiques, 
+    - comprendre et maîtriser les structures de données courantes (vecteurs, matrices, data frames, ...),
     - exporter les résultats sous différents formats,
-    - générer différents types de figures synthétisant les résultats
+    - générer différents types de représentations graphiques
+        - histogramme
+        - box plot (boîte à moustaches)
+        - violin plot
+        - MA plot
+        - volcano plot
+        - courbes de Lorenz
+        - PC plot
+        - heatmap
+
+
+- Analyse statistique
+    - concevoir un plan d'analyse pour différents types de données biologiques à haut débit,
+    - mettre en oeuvre ces analyses statistiques au moyen de scripts R, 
+    - interpréter les résultats en les mettant en rapport avec les questions biologiques
+
     
-- Générer un rapport scientifique en format R markdown
+- (Optionnel) Générer un rapport scientifique en format R markdown
     - intégration de blocs de code dans un texte formaté
     - assure la cohérence entre les résultats et figures (générés au vol), et le texte qui en fournit l'interprétation
     - assure la reproductibilité des analyses
-
-### Concepts  à couvrir
-
-- Manipulation de données avec R
-
-    - vecteurs
-    - matrices
-    - data frames
-
-- Représentations graphiques courantes en bioinformatiques
-
-    - histogramme
-    - box plot (boîte à moustaches)
-    - violin plot
-    - MA plot
-    - volcano plot
-    - courbes de Lorenz
-    - PC plot
-    - heatmap
-    
-- Tests d'hypothèses
-
-- Corrections de tests multiples
-
-- Clustering
-
-- Classement (supervised classification)
-
 
 
 ## Table des matières
