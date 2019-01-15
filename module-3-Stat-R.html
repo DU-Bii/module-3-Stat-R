@@ -268,15 +268,10 @@ $(document).ready(function () {
 </div>
 <div id="seance-2-analyse-statistique-avec-r" class="section level3">
 <h3><a href="seance_2/README.md">Séance 2 : Analyse statistique avec R</a></h3>
-<p><em>Intervenants: Frédéric Guyon et Magali Berland</em></p>
+<p><em>Intervenants: Leslie Regad et Magali Berland</em></p>
 <p><strong><em>Evaluer si on veut vraiment couvrir la programmation de fonctions avec R. Ne le faire que si on trouve des cas pertinents auxquels les participants risquent d’être confrontés pour leurs propres travaux. </em></strong></p>
-<p>Concepts:</p>
-<ul>
-<li>Echantillonnage et estimation</li>
-<li>Distributions théoriques de probabilité (discrètes et continues, grands principes, sachant que certaines seront approfondies dans d’autres séances)</li>
-<li>Tests d’hypothèse</li>
-<li>Représentations graphiques</li>
-</ul>
+<p>Concepts: - Echantillonnage et estimation - Distributions théoriques de probabilité (discrètes et continues, grands principes, sachant que certaines seront approfondies dans d’autres séances) - Tests d’hypothèse - Représentations graphiques</p>
+<p>Applications: - Normalisation des données RNA-seq - standardisation des tailles de librairies (scaling) - transformation log - visualisation des résultats par box plots + violin plots - Réduction de dimensionalité, visualisation / positionnement (multidimensional scaling) - ACP - matrice de distance -&gt; SVD (?)</p>
 </div>
 <div id="seance-3-detection-de-genes-differentiellement-exprimes" class="section level3">
 <h3><a href="seance_3/README.md">Séance 3: Détection de gènes différentiellement exprimés</a></h3>
@@ -307,22 +302,46 @@ $(document).ready(function () {
 </ul></li>
 </ul>
 </div>
-<div id="seance-4-clustering" class="section level3">
-<h3><a href="seance_4/README.md">Séance 4: Clustering</a></h3>
-<p><em>Intervenants: Leslie Regad &amp; Anne Badel &amp; Jacques van Helden</em></p>
+<div id="seance-4-clustering-validation-des-classifications" class="section level3">
+<h3><a href="seance_4/README.md">Séance 4: Clustering + validation des classifications</a></h3>
+<p><em>Intervenants: Frédéric Guyon &amp; Anne Badel &amp; Jacques van Helden</em></p>
+<div id="clustering" class="section level4">
+<h4>Clustering</h4>
 <ul>
 <li>Concepts
 <ul>
 <li>Approches de clustering: hiérarchique, K-means</li>
-<li>Complexité</li>
-<li>évaluation du clustering</li>
-<li>comparaison de résultats de clustering</li>
-<li>Visualisartion (heat maps, arbres)</li>
+<li>Hiérarchique: critères d’agglomération (single, average, complete)</li>
+<li>Métrique de (dis)similarité: Euclidienne, corrélation, dot product</li>
+<li>Complexité des algorithmes</li>
+<li>Evaluation du clustering
+<ul>
+<li>Comment choisir le nombre de groupes  (concepts, pas de pratique) ?</li>
+</ul></li>
+<li>Comparaison de résultats de clustering: table de contingence entre
+<ul>
+<li>résultats obtenus par différentes méthodes</li>
+<li>clustering avec tous les gènes vs les X gènes différentiellement exprimés</li>
+<li>résultats de clustering et classes de référence (données TCGA)</li>
+</ul></li>
+<li>Mesures de performance (avant-goût de la séance sur la classification supervisée)
+<ul>
+<li>Pour le clustering: Adjusted Rand Index (ARI)</li>
+<li>Pour comparer à des classes de référence
+<ul>
+<li>Mesures à 2 classes: FP, FN, TP, TN, Sens (coverage, recall) + PPV (“précison”), Accuracy</li>
+<li>Mesures multi-groupes: hit rate, MER, f-measure</li>
+<li>Courbes de ROC, AUC</li>
+<li>Courves Precision-recall</li>
+</ul></li>
+</ul></li>
+<li>Visualisation (heat maps, arbres, PCs)</li>
+<li>Impact de la dimensionalité:</li>
 </ul></li>
 <li>Applications
 <ul>
-<li>Clustering et heat-maps de densités de reads autour des pics ChIP-seq (marques épigénétiques, facteurs transcriptionnels) avec KNN</li>
-<li><p>Clustering hiérarchique de données d’expression pour identifier les groupes de gènes co-exprimés</p>
+<li><p>Clustering et heat-maps de densités de reads autour des pics ChIP-seq (marques épigénétiques, facteurs transcriptionnels) avec K-means</p></li>
+<li>Clustering hiérarchique de données d’expression pour identifier les groupes de gènes co-exprimés
 <ul>
 <li>TCGA visualisation des profils temporels (on choisir un type de cancer et on fait des heatmaps en fonction des stades)</li>
 </ul></li>
@@ -331,7 +350,13 @@ $(document).ready(function () {
 <ul>
 <li>Clustering sur les graphes (brève présentation des problématiques et approches, pas forcément de TP) ? A discuter avec Costas et Anaïs</li>
 </ul></li>
+<li>Messages
+<ul>
+<li>Différentes méthodes sont appropriées pour différents types de données</li>
+<li>Au-delà de la méthodes, des paramètres influencence des paramètres</li>
+</ul></li>
 </ul>
+</div>
 </div>
 <div id="seance-5-statistiques-denrichissement" class="section level3">
 <h3><a href="seance_5/README.md">Séance 5: Statistiques d’enrichissement</a></h3>
@@ -363,6 +388,12 @@ $(document).ready(function () {
 <li>Approches de classification supervisées</li>
 <li>Entraînement / test</li>
 <li>Evaluation des résultats (évaluation croisée, mesures de performance)</li>
+</ul></li>
+<li>Messages
+<ul>
+<li>SVM: importance du choix du noyau, et des paramètres</li>
+<li>RF: interprétabilité des résultats, score d’importance des variables</li>
+<li>réseaux neuronaux:</li>
 </ul></li>
 </ul>
 </div>
