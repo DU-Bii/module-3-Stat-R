@@ -28,13 +28,13 @@ Après avoir suivi le module d'intro à R dans DataCamp, nous vous demandons de 
 
 - Dans le sommaire, cliquez sur le lien *Activités préparatoires*. 
 
-![](img/moodle_sommaire_quiz-R.png){:width="36px"}
+![](img/moodle_sommaire_quiz-R.png){:width="200px"}
 
 
 
 ### Compétences attendues à la fin du module
 
-A la fin du module, les participants auront acquis les compétences suivantes:
+A la fin du module, les participants auront acquis les compétences suivantes.
 
 - Ecrire des scripts R pour 
     - charger des fichiers de données (généralement en format tabulaire), 
