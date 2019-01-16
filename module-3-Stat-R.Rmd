@@ -32,7 +32,7 @@ Après avoir suivi le module d'intro à R dans DataCamp, nous vous demandons de 
 
 
 
-### Compétences attendues à la fin du module
+### Compétences attendues à la fin du module 3 - Analyse statistique avec R
 
 A la fin du module, les participants auront acquis les compétences suivantes.
 
@@ -72,7 +72,7 @@ A la fin du module, les participants auront acquis les compétences suivantes.
 
 ### Prérequis
 
-Avant d'entamer ce module, les participants sont censés avoir suivi les deux premiers modules d'introxuction à R sur Data Camp.
+Avant d'entamer ce module, les participants sont censés avoir suivi le premier module d'introduction à R sur Data Camp.
 
 ### [Séance 1 : Introduction à R](seance_1/README.md)
 
