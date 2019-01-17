@@ -227,7 +227,7 @@ Applications:
 
 - Messages
     - SVM: importance du choix du noyau, et des paramètres
-    - RF: interprétabilité des résultats, score d'importance des variables
+    - RF: interprétabilité des résultats, score d'importance des variables.
     - réseaux neuronaux: 
 
 ## Contributeurs
