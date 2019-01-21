@@ -467,8 +467,6 @@ write.table(x = exprs8, file = "exprs8.txt", sep = "\t",
 
 ```
 
-## A ajouter : jouer avec un fichier d'annotations au format GTF
-
 ## Take home messages
 
  - Tout est faisable avec R
@@ -486,3 +484,6 @@ write.table(x = exprs8, file = "exprs8.txt", sep = "\t",
     - ressources en ligne
     - tutoriels pour des analyses spécifiques (e.g. DESeq2 pour le RNA-Seq)
 
+## A ajouter : jouer avec un fichier d'annotations au format GTF
+
+Fichier d'annotations E. Coli disponible [ici](ftp://ftp.ensemblgenomes.org/pub/bacteria/release-37/gtf/bacteria_0_collection/escherichia_coli_str_k_12_substr_mg1655/Escherichia_coli_str_k_12_substr_mg1655.ASM584v2.37.gtf.gz)

@@ -1,0 +1,484 @@
+---
+title: "Exploration d'une table d'annotations génomiques (GTF)"
+author: "Jacques van Helden, Hugo Varet and Frédéric Guyon"
+date: '`r Sys.Date()`'
+output:
+  slidy_presentation:
+    smart: no
+    slide_level: 2
+    self_contained: no
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    highlight: tango
+    incremental: no
+    keep_md: yes
+    smaller: yes
+    theme: cerulean
+    toc: yes
+    widescreen: yes
+  beamer_presentation:
+    colortheme: dolphin
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    fonttheme: structurebold
+    highlight: tango
+    incremental: no
+    keep_tex: no
+    slide_level: 2
+    theme: Montpellier
+    toc: yes
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
+  html_document:
+    self_contained: no
+    fig_caption: yes
+    highlight: zenburn
+    theme: cerulean
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+  ioslides_presentation:
+    slide_level: 2
+    self_contained: no
+    colortheme: dolphin
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    fonttheme: structurebold
+    highlight: tango
+    smaller: yes
+    toc: yes
+    widescreen: yes
+font-import: http://fonts.googleapis.com/css?family=Risque
+subtitle: DUBii 2019
+font-family: Garamond
+transition: linear
+---
+
+```{r setup, include=FALSE, size="huge"}
+library(knitr)
+## Default parameters for displaying the slides
+knitr::opts_chunk$set(
+  echo = TRUE, 
+  eval = TRUE, 
+  fig.width = 7, 
+  fig.height = 5, 
+  fig.align = "center", 
+  fig.path = "figures/",
+  size = "tiny", 
+  warning = FALSE, 
+  results = TRUE, 
+  message = FALSE, 
+  comment = "")
+
+```
+
+
+## But de ce TP
+
+Durant ce TP, vous serez amenés à effectuer les tâches suivantes: 
+
+1. Manipuler une table de données génomique (les annotations du génome d'*E. Coli*).
+2. Sélectionner un sous-ensemble des données en filtrant les lignes sur base d'un critère déterminé (type d'annotation, chromosome).
+3. Générer des graphiques pour représenter différents aspects liés à ces données.
+4. Calculer des statistiques qui résument les différents types d'annotations. 
+
+## Le format GTF
+
+Le format **GTF** (**General Transfer Format**) est très largement utilisé pour fournir des annotations génomiques dans un format facilement lisible, tout en étant facilement manipulable au moyen de l'ordinateur. 
+
+Fichiers textuels, 
+
+- une ligne par "objet" génomique (gène, transcrit, exon, intron, CDS, ...) 
+- une colonne par attribut  (nom, source, type d'objet, coordonnées génomique, description). 
+
+Le format est décrit sur les sites suivants. 
+
+- <http://www.ensembl.org/info/website/upload/gff.html>
+- <https://genome.ucsc.edu/FAQ/FAQformat.html#format4>
+
+
+
+## Localiser l'URL d'un fichier GTF
+
+N'hésitez pas à adapter le protocole ci-dessous pour travailler avec votre propre génome. 
+
+1. Connectez-vous à <http://ensemblgenomes.org/>. 
+2. Cliquez sur le lien [Fungi](http://fungi.ensemblgenomes.org/). 
+3. Cliquez [Download](http://fungi.ensembl.org/info/website/ftp/)
+4. Dans la boîte **Filter**, tapez *Escherichia coli*. Pendant que vous écrivez, la liste des organismes proposés s'affine. 
+5. Copiez le lien du fichier gtf ([Escherichia_coli_str_k_12_substr_mg1655.ASM584v2.37.gtf](ftp://ftp.ensemblgenomes.org/pub/bacteria/release-37/gtf/bacteria_0_collection/escherichia_coli_str_k_12_substr_mg1655/Escherichia_coli_str_k_12_substr_mg1655.ASM584v2.37.gtf.gz)). 
+
+## Page d'accueil d'EnsemblGenomes
+
+<http://ensemblgenomes.org/>
+
+```{r ensemblgenomes_home_page, out.width="80%", echo=FALSE}
+include_graphics(path = "images/ensemblgenomes_home.png")
+```
+
+
+## EnsemblGenomes Bacteria
+
+<http://bacteria.ensembl.org/>
+
+```{r ensemblgenomes_bacteria, out.width="80%", echo=FALSE}
+include_graphics(path = "images/ensemblgenomes_bacteria.png")
+```
+
+## EnsemblGenomes Fungi
+
+<http://fungi.ensembl.org/>
+
+```{r ensemblgenomes_fungi, out.width="80%", echo=FALSE}
+include_graphics(path = "images/ensemblgenomes_fungi.png")
+```
+
+## EnsemblGenomes Fungi Download page
+
+<http://fungi.ensembl.org/info/website/ftp/>
+
+```{r ensemblgenomes_download, out.width="80%", echo=FALSE}
+include_graphics(path = "images/ensemblgenomes_download_yeast.png")
+```
+
+
+## Créer un espace de travail
+
+**Exercice:**  créer un dossier de travail nommé `workDir` à la racine de votre compte, et déplacez-vous dans ce dossier. 
+
+Solution ci-dessous.
+
+```{r workdir}
+## Define the working directory
+workDir <- "~/intro_R/explorer_un_GTF"
+
+## Create the working directory 
+dir.create(workDir, recursive = TRUE, showWarnings = FALSE)
+
+## Go to the working directory
+setwd(workDir)
+getwd()      ## Check your current location
+list.files()  ## List files (should be empty if just created)
+```
+
+## Downloading the GTF file
+
+**Exercise:** download the GTF file in the working directory (optionally, adapt the command to load a GTF of your interest).  Before downloading the file we check if it is already present in the working directory. If yes, we skip the download. 
+
+**Tip:** use the commands `file.exists`, `download.file`.
+
+## Downloading the GTF file: solution
+
+```{r download_gtf_from_ensembl}
+## Define the URL of the file to download
+gtf.url <- "ftp://ftp.ensemblgenomes.org/pub/bacteria/release-37/gtf/bacteria_0_collection/escherichia_coli_str_k_12_substr_mg1655/Escherichia_coli_str_k_12_substr_mg1655.ASM584v2.37.gtf.gz"
+
+## Download the file, but only if not yet there
+if (file.exists(basename(gtf.url))) {
+  message("GTF annotation file already there: ", basename(gtf.url))
+} else {
+  message("Downloading GTF annotation file")
+  download.file(url = gtf.url)
+}
+
+## Check the files in the work directory
+list.files()
+```
+
+
+## Loading a data table in R
+
+Commands: `read.table`, `read.delim`, `read.csv`.
+
+R includes several types of tabular structures (matrix, data.frame, table). The most widely used is `data.frame()`, which consists in a table of values with a type (strings, integer, ..) attached to each column, and names associated to rows and columns. 
+
+The function `read.table()` enables to read a text file containing tabular data, and to store its content in a variable. 
+
+Several finctions derived from `read.table()` facilitate the loading of different formats. 
+
+- `read.delim()` for files where a particular charcater is used as column separator (by default the tab character "\t"). 
+
+- `read.csv()` for "comma-searated values" values.
+
+## Loading the GTF file
+
+Load the GTF file in a variable named `featureTable`.
+
+**Tip:** command `read.delim`.
+
+```{r load_yeast_gtf, echo=TRUE}
+## Load GTF file in a data.frame
+featureTable <- read.delim("data/Escherichia_coli_str_k_12_substr_mg1655.ASM584v2.37.gtf.gz", 
+                           comment.char = "#", sep="\t", header=FALSE, row.names = NULL)
+
+## The GTF format has no header, but we can define it based on the specification
+names(featureTable) <- c("seqname", "source", "feature", "start", "end", "score", "strand", "frame", "attribute")
+
+```
+
+
+
+## Exploring the content of a data table
+
+Immediately after having loaded a data table, check its dimensions. 
+
+```{r echo=TRUE, result=TRUE, warning=FALSE}
+dim(featureTable) ## Dimensions of the tbale
+nrow(featureTable) ## Number of rows
+ncol(featureTable) ## Number of columns
+```
+
+
+## Checking heads and tails
+
+Displaying the full annotation table would not be very convenient, since it contains tens of thousands of rows. 
+
+We can display the first rows of the file with the function `head()`, and the last rows with `tail()`. 
+
+```{r head_and_tail, echo=TRUE, eval=FALSE, result=FALSE}
+## Display the 5 first rows of the feature table
+head(featureTable, n = 5) 
+
+## Display the 5 last rows of the feature table
+tail(featureTable, n = 5) 
+```
+
+## Viewing a table
+
+If you are using the **RStudio** environment, you can display the table in a dynamic viewer pane with the function  `View()`.
+
+```{r echo=TRUE, eval=FALSE}
+## In RStudio, display the table in a separate tab
+View(featureTable) 
+```
+
+The `View()` function is interactive, so it should not be used in a script because it would perturbate its execution. 
+
+## Selecting columns
+
+The last column of GTF files is particularly heavy, it contains a lof of semi-structured information. 
+
+We can select the 8 first columns and display the 5 first rows of this sub-table.
+
+```{r echo=TRUE, eval=TRUE, result=TRUE}
+## Column selection + head
+head(featureTable[,1:8], n=5)
+
+## Equivalent: selecting subsets of rows and columns
+featureTable[1:5, 1:8]
+```
+
+
+## Feature types
+
+**Exercise:** the column *feature* of the GTF indicates the feature table. 
+
+- List the feature types found in the GTF
+- Count the number of features per type, and sort them by decreasing values. 
+
+**Tip: ** commands `unique`, `table` and `sort`.
+
+
+```{r features_per_type}
+## List the types of features
+unique(featureTable$feature)
+
+## Count the number of features per type
+sort(table(featureTable$feature), decreasing = TRUE)
+```
+
+
+## Décompte par valeur
+
+La fonction `table()` permet de compter le nombre d'occurrences de chaque valeur dans un vecteur ou un tableau. Quelques exemples d'utilisation ci-dessous. 
+
+```{r echo=TRUE, eval=TRUE, results=TRUE}
+## Count the number of featues per chromosome
+table(featureTable$seqname)
+
+## Count the number of features per type
+table(featureTable$feature)
+```
+
+
+On peut calculer des tables de contingence en comptant le nombre de combinaisons entre 2 vecteurs (ou 2 colonnes d'un tableau). 
+
+
+```{r echo=TRUE, eval=TRUE, results=TRUE}
+##  Table with two vectors
+table(featureTable$seqname, featureTable$feature)
+
+## Same result with a 2-column data frame
+table(featureTable[, c("seqname", "feature")])
+```
+
+
+## Computing feature lengths
+
+- Add a column with feature lengths. 
+
+**Note about feature length computation (explain why) :** 
+
+$$L = \text{end} - \text{start} + 1$$
+
+
+```{r feature_lengths}
+## Add a column to the table with genes lengths
+featureTable$length <- featureTable$end - featureTable$start + 1
+```
+
+
+
+## Filtering rows based on a column content
+
+The function `subset()` enables to select a subset of rows based on a filter applied to the content of one or several columns. 
+
+We can use it to select the subset of features corresponding to genes. 
+
+## Selecting genes from the GTF table
+
+- Select of genes from the GTF table and store them in a separate variable named `genes`.
+- Compute summary statistics about gene lengthhs
+
+**Tip: **  commands  `subset`, `summary`.
+
+
+```{r genes}
+## Select subset of features having "CDS" as "feature" attribute
+genes <- subset(featureTable, feature == "gene")
+
+## Print a message with the number of genes
+message("Number of genes: ", nrow(genes))
+
+## Compute basic statistics on genes lengths
+summary(genes$length)
+
+```
+
+
+
+## Downloading chromosome sizes
+
+- Download chromosome sizes ([chrom_sizes.tsv](https://github.com/jvanheld/stats_avec_RStudio_EBA/blob/gh-pages/practicals/gtf_exploration/data/chrom_sizes.tsv)) 
+
+
+
+```{r downlaod_chromosome_sizes}
+## Download tab-delimited file with chromosome sizes (unless already there)
+chromsizes.url <- "https://github.com/jvanheld/stats_avec_RStudio_EBA/blob/gh-pages/practicals/gtf_exploration/data/Saccharomyces_cerevisiae.R64-1-1.41_chrom_sizes.tsv"
+chrom.size.file <- file.path(workDir, "Saccharomyces_cerevisiae.R64-1-1.41_chrom_sizes.tsv")
+
+if (file.exists(chrom.size.file)) {
+} else {
+    download.file(chromsizes.url, destfile = chrom.size.file)
+}
+
+```
+
+## Loading chromosome sizes
+
+```{r load_chrom_sizes}
+## Read chromosome sizes
+chrom.size <- read.delim(
+  file = chrom.size.file,
+  header = FALSE, row.names = 1)
+
+## Assign a name to the columns
+names(chrom.size) <- c("chromID", "size")
+# View(chrom.size)
+
+## print the size of hte third chromosome
+message("Length of chromosome III = ", chrom.size["III", "size"], " bp.")
+
+```
+
+
+
+## Exercices
+
+1. Draw an histogram with gene length distribution. Choose a relevan number of breaks to display an informative histogram. 
+
+1. Draw a barplot showing gene density per chromosome (number of genes per Mb).
+
+2. Draw a boxplot of gene lengths per chromosome. 
+
+
+
+
+## Gene length histogram
+
+
+```{r hist_default, fig.width=7, fig.height=5, out.width="70%"}
+hist(genes$length)
+```
+
+
+## Setting a relevant number of breaks
+
+```{r hist_100breaks, fig.width=7, fig.height=5, out.width="70%"}
+## Take more or less 100 bins
+h <- hist(genes$length, breaks = 100)
+
+```
+
+## Gene length distribution -- improving the output
+
+
+```{r gene_length_histogram, out.width="90%", fig.width=10, fig.height=5, fig.cap="Distribution of cds lengths for Saccharomyces cerevisiae. ", echo=FALSE}
+
+## Compute max length
+max.len <- max(genes$length)
+
+## Plot an histogram with genes lengths
+hist(genes$length, 
+     breaks = seq(from = 0, to = max.len + 100, by = 100), 
+     main = "Gene length distribution", las = 1, 
+     xlab = "Length (bp)", ylab = "Number of genes", 
+     border = "darkblue", col = "lightblue")
+par(mfrow = c(1,1))
+
+```
+
+## Getting the hist() data
+
+Récupérez le résultat de `hist()` dans une variable nommée `{histData}`.
+
+```{r hist_data}
+## Define breaks exactly in the way you wish
+histData <- hist(genes$length, breaks=seq(from=0, to=max(genes$length)+100, by=100))
+
+```
+
+
+Imprimez le résultat à l'écran (`print()`) et analysez la structure de la variable `histData` (il s'agit d'une variable de type liste). 
+
+Fonctions utiles: 
+
+- `class(histData)`
+- `attributes(histData)`
+- `print(histData)`
+
+
+```{r hist_data_print, echo=TRUE, eval=FALSE}
+## Display the values used to draw the histogram
+print(histData)
+
+```
+## Gene length box plot
+
+D'autres types de graphiques permettent d'explorer la distribution d'un ensemble des données. En particulier, les boîtes à moustaches (box plots) affichent, pour une série de données, la médiane, l'écart interquartile, un intervalle de confiance et les valeurs aberrantes. 
+
+```{r gnee_length_boxplot, fig.width=7, fig.height=5, out.width="70%", fig.cap="Boxplot of gene lengths per chromosome"}
+boxplot(length ~ seqname, data = genes, col="palegreen", horizontal=TRUE, las=1, xlab="Gene length", ylab="Chromosome")
+
+```
+
+<!--
+## Rendu
+-->
