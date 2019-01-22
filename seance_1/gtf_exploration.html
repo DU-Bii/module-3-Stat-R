@@ -105,7 +105,7 @@
 
 <ol>
 <li>Manipulate a table containing genomics data (<em>E. Coli</em> genome annotations).</li>
-<li>Select a subset of the data/rows according to a give criterion.</li>
+<li>Select a subset of the data/rows according to a given criterion.</li>
 <li>Generate different graphical representations of these data.</li>
 <li>Compute statistics describing the different types of annotations.</li>
 </ol>
@@ -128,17 +128,16 @@
 <li><a href='https://genome.ucsc.edu/FAQ/FAQformat.html#format4' title=''>https://genome.ucsc.edu/FAQ/FAQformat.html#format4</a></li>
 </ul>
 
-</article></slide><slide class=""><hgroup><h2>Find the <em>E. Coli</em> GTF file</h2></hgroup><article  class="smaller " id="find-the-e.-coli-gtf-file">
-
-<p>Feel free to adapt this protocol to work with your favorite genome.</p>
+</article></slide><slide class=""><hgroup><h2>Find the GTF file of your favorite organism (on Ensembl)</h2></hgroup><article  class="smaller " id="find-the-gtf-file-of-your-favorite-organism-on-ensembl">
 
 <ol>
 <li>Visit <a href='http://ensemblgenomes.org/' title=''>http://ensemblgenomes.org/</a>.</li>
 <li>Click on the link <a href='http://bacteria.ensembl.org/' title=''>Bacteria</a>.</li>
 <li>Click on <a href='https://bacteria.ensembl.org/info/website/ftp/index.html' title=''>Download</a></li>
 <li>In the <strong>Filter</strong> box, write <em>Escherichia coli</em>. The list of the proposed organisms is changing while you are writing.</li>
-<li>Copy the link of <strong>our</strong> GTF file (<a href='ftp://ftp.ensemblgenomes.org/pub/bacteria/release-37/gtf/bacteria_0_collection/escherichia_coli_str_k_12_substr_mg1655/Escherichia_coli_str_k_12_substr_mg1655.ASM584v2.37.gtf.gz' title=''>Escherichia_coli_str_k_12_substr_mg1655.ASM584v2.37.gtf</a>).</li>
 </ol>
+
+<p>For this session we will use the <em>E. Coli</em> GTF annotation file available <a href='ftp://ftp.ensemblgenomes.org/pub/bacteria/release-37/gtf/bacteria_0_collection/escherichia_coli_str_k_12_substr_mg1655/Escherichia_coli_str_k_12_substr_mg1655.ASM584v2.37.gtf.gz' title=''>here</a>.</p>
 
 </article></slide><slide class=""><hgroup><h2>Page d’accueil d’EnsemblGenomes</h2></hgroup><article  class="smaller " id="page-daccueil-densemblgenomes">
 
@@ -204,7 +203,6 @@ if (file.exists(destfile)) {
   message(&quot;Downloading GTF annotation file&quot;)
   download.file(url = gtf.url, destfile = destfile)
 }
-
 ## Check the files in the work directory
 list.files()</pre>
 
@@ -484,7 +482,7 @@ hist(genes$length, breaks = 100)</pre>
 
 </article></slide><slide class=""><hgroup><h2>Gene length distribution – improving the output</h2></hgroup><article  class="smaller " id="gene-length-distribution-improving-the-output">
 
-<div class="figure" style="text-align: center">
+<div style="text-align: center" class="figure">
 <img src="figures/gene_length_histogram-1.png" alt="Distribution of gene lengths for E. Coli. " width="90%" />
 
 <p class="caption">
@@ -493,27 +491,35 @@ Distribution of gene lengths for E. Coli.
 
 </p></div>
 
-</article></slide><slide class=""><hgroup><h2>Getting the hist() data</h2></hgroup><article  class="smaller " id="getting-the-hist-data">
+<!-- ## Getting the hist() data -->
 
-<p>Récupérez le résultat de <code>hist()</code> dans une variable nommée <code>{histData}</code>.</p>
+<!-- Récupérez le résultat de `hist()` dans une variable nommée `{histData}`. -->
 
-<pre class = 'prettyprint lang-r'>## Define breaks exactly in the way you wish
-histData &lt;- hist(genes$length, breaks=seq(from=0, to=max(genes$length)+100, by=100))</pre>
+<!-- ```{r hist_data} -->
 
-<p><img src="figures/hist_data-1.png" width="672" style="display: block; margin: auto;" /></p>
+<!-- ## Define breaks exactly in the way you wish -->
 
-<p>Imprimez le résultat à l’écran (<code>print()</code>) et analysez la structure de la variable <code>histData</code> (il s’agit d’une variable de type liste).</p>
+<!-- histData <- hist(genes$length, breaks=seq(from=0, to=max(genes$length)+100, by=100)) -->
 
-<p>Fonctions utiles:</p>
+<!-- ``` -->
 
-<ul>
-<li><code>class(histData)</code></li>
-<li><code>attributes(histData)</code></li>
-<li><code>print(histData)</code></li>
-</ul>
+<!-- Imprimez le résultat à l'écran (`print()`) et analysez la structure de la variable `histData` (il s'agit d'une variable de type liste).  -->
 
-<pre class = 'prettyprint lang-r'>## Display the values used to draw the histogram
-print(histData)</pre>
+<!-- Fonctions utiles:  -->
+
+<!-- - `class(histData)` -->
+
+<!-- - `attributes(histData)` -->
+
+<!-- - `print(histData)` -->
+
+<!-- ```{r hist_data_print, echo=TRUE, eval=FALSE} -->
+
+<!-- ## Display the values used to draw the histogram -->
+
+<!-- print(histData) -->
+
+<!-- ``` -->
 
 </article></slide><slide class=""><hgroup><h2>Gene length box plot</h2></hgroup><article  class="smaller " id="gene-length-box-plot">
 
@@ -522,7 +528,7 @@ print(histData)</pre>
 <pre class = 'prettyprint lang-r'>boxplot(length ~ strand, data = genes, col=&quot;palegreen&quot;, horizontal=TRUE, 
         las=1, xlab=&quot;Gene length&quot;, ylab=&quot;Strand&quot;)</pre>
 
-<div class="figure" style="text-align: center">
+<div style="text-align: center" class="figure">
 <img src="figures/gnee_length_boxplot-1.png" alt="Boxplot of gene lengths per chromosome" width="70%" />
 
 <p class="caption">
