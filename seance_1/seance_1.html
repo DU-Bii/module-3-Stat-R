@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Module 3 - Analyse statistique avec R - Séance 1</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+  <meta name="date" content="2019-01-21" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'Module 3 - Analyse statistique avec R - Séance 1',
+                        subtitle: 'DUBii 2019',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                      },
+
+      // Author information
+      presenters: [
+            {
+        name:  'Hugo Varet, Frédéric Guyon, Olivier Kirsh et Jacques van Helden' ,
+        company: '',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <link href="seance_1_files/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="seance_1_files/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="seance_1_files/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="seance_1_files/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="seance_1_files/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="seance_1_files/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="seance_1_files/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="seance_1_files/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="seance_1_files/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="seance_1_files/ioslides-13.5.1/js/slide-deck.js"></script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+  </style>
+
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2019-01-21</p>
+          </hgroup>
+  </slide>
+
+<slide class=""><hgroup><h2>R en quelques mots</h2></hgroup><article  id="r-en-quelques-mots" class="smaller ">
+
+<p>Langage de programmation qui permet de :</p>
+
+<ul>
+<li>manipuler des données : importer, transformer, exporter</li>
+<li>faire des analyses statistiques plus ou moins complexes : description, exploration, modélisation…</li>
+<li>créer des (jolies) figures</li>
+</ul>
+
+<p>Disponible sur Windows, MacOS, Linux</p>
+
+<p>Historique :</p>
+
+<ul>
+<li>1993 : début du projet R</li>
+<li>2000 : sortie de R 1.0.0</li>
+<li>2018 : R 3.5.1</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Avantages et inconvénients</h2></hgroup><article  id="avantages-et-inconvenients" class="smaller ">
+
+<p>Avantages :</p>
+
+<ul>
+<li>Souplesse d’utilisation pour réaliser des analyses statistiques</li>
+<li>R est libre et gratuit, même s’il existe maintenant des versions payantes de RStudio (shiny et/ou server)</li>
+<li>Reproductibilité des analyses en écrivant/sauvegardant les commandes R dans des scripts</li>
+</ul>
+
+<p>Inconvénients :</p>
+
+</article></slide><slide class=""><hgroup><h2>Analyse de données vs langage de programmation</h2></hgroup><article  id="analyse-de-donnees-vs-langage-de-programmation" class="smaller ">
+
+<ul>
+<li>Lire un tableau : <code>read.table()</code></li>
+<li>Fusionner deux tableau : <code>merge()</code></li>
+<li>Sélectionner des colonnes : <code>mydata[ , c(&quot;col1&quot;,&quot;col2&quot;)]</code></li>
+<li>Rechercher une chaîne de caractères : <code>grep()</code></li>
+<li>Calculer une moyenne : <code>mean(x)</code></li>
+<li>Exporter un tableau de données : <code>write.table()</code></li>
+<li>Régression linéaire : <code>lm(y ~ x)</code></li>
+<li>Tester une hypothèse : <code>t.test()</code></li>
+<li>Dessiner un histogramme : <code>hist()</code></li>
+<li>Convertire des données : <code>as.data.frame()</code></li>
+<li>Tracer une courbe : <code>plot()</code></li>
+<li>Réaliser une ACP : <code>prcomp()</code></li>
+<li>Calculer une variance : <code>var()</code></li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Modes d’utilisation (list non exhaustive)</h2></hgroup><article  id="modes-dutilisation-list-non-exhaustive" class="smaller ">
+
+<ul>
+<li>Localement via le terminal</li>
+<li>Localement via RStudio (utilisation classique)</li>
+<li>Sur un serveur distant via le terminal et une connexion ssh</li>
+<li>Sur un serveur via un nagivateur pour accéder à RStudio server</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Se connecter au serveur ou ouvrir RStudio</h2></hgroup><article  id="se-connecter-au-serveur-ou-ouvrir-rstudio" class="smaller ">
+
+<p>Comment faire pour le DUBii ?</p>
+
+</article></slide><slide class=""><hgroup><h2>Aller dans son dossier de travail</h2></hgroup><article  id="aller-dans-son-dossier-de-travail" class="smaller ">
+
+<p>Définir une variable qui indique le chemin du dossier de travail</p>
+
+<pre class = 'prettyprint lang-r'>work.dir &lt;- &quot;~/intro_R&quot; </pre>
+
+<p>S’il n’existe pas encore, créer le dossier de travail. (Commande Unix équivalente: &ldquo;mkdir -p ~/intro_R&rdquo;)</p>
+
+<pre class = 'prettyprint lang-r'>dir.create(work.dir, recursive = TRUE, showWarnings = FALSE)</pre>
+
+<p>Aller dans ce dossier de travail. (Commande Unix équivalente: &ldquo;cd ~/intro_R&rdquo;)</p>
+
+<pre class = 'prettyprint lang-r'>setwd(work.dir) </pre>
+
+<p>Où suis-je ? (Commande Unix équivalente: &ldquo;pwd&rdquo;)</p>
+
+<pre class = 'prettyprint lang-r'>getwd()</pre>
+
+<p>Qu’y a-t-il par ici ? (Commande Unix équivalente: &ldquo;ls&rdquo;)</p>
+
+<pre class = 'prettyprint lang-r'>list.files()</pre>
+
+</article></slide><slide class=""><hgroup><h2>R vu comme une calculatrice</h2></hgroup><article  id="r-vu-comme-une-calculatrice" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>2 + 3
+4 * 5
+6 / 4</pre>
+
+</article></slide><slide class=""><hgroup><h2>Notion de variable/objet</h2></hgroup><article  id="notion-de-variableobjet" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>a &lt;- 2      ## Assigner une valeur à une variable
+print(a)    ## Afficher la valeur de la variable a</pre>
+
+<pre class = 'prettyprint lang-r'>b &lt;- 3      ## Assigner une valeur à une seconde variable
+c &lt;- a + b  ## Effectuer un calcul avec 2 variables
+print(c)    ## Afficher le contenu de la variable c</pre>
+
+<pre class = 'prettyprint lang-r'>a &lt;- 7      ## Changer la valeur de a
+print(c)    ## Note: le contenu de c n&#39;est pas modifié</pre>
+
+</article></slide><slide class=""><hgroup><h2>Télécharger un fichier</h2></hgroup><article  id="telecharger-un-fichier" class="smaller ">
+
+<p>La commande <code>download()</code> permet de télécharger un fichier à partir d’un serveur, et <code>dir.create()</code> permet de créer un nouveau dossier dans l’espace de travail:</p>
+
+<pre class = 'prettyprint lang-r'>dir.create(&quot;data&quot;)
+download.file(url = &quot;https://goo.gl/9QVAg6&quot;, destfile = &quot;data/expression.txt&quot;)</pre>
+
+<pre class = 'prettyprint lang-r'>download.file(url = &quot;https://goo.gl/NQWnHg&quot;, destfile = &quot;data/annotation.csv&quot;)</pre>
+
+</article></slide><slide class=""><hgroup><h2>Chargement des données</h2></hgroup><article  id="chargement-des-donnees" class="smaller ">
+
+<p>Charger le contenu du fichier &ldquo;expression.txt&rdquo; dans une variable nommée &ldquo;exprs&rdquo;.</p>
+
+<pre class = 'prettyprint lang-r'>exprs &lt;- read.table(file = &quot;data/expression.txt&quot;, header = TRUE, sep = &quot;\t&quot;)</pre>
+
+<p>Accéder à l’aide d’une fonction</p>
+
+<pre class = 'prettyprint lang-r'>help(read.table)</pre>
+
+<p>Notation alternative</p>
+
+<pre class = 'prettyprint lang-r'>?read.table</pre>
+
+</article></slide><slide class=""><hgroup><h2>Affichage de l’objet &ldquo;exprs&rdquo;</h2></hgroup><article  id="affichage-de-lobjet-exprs" class="smaller ">
+
+<p>Imprimer toutes les valeurs.</p>
+
+<pre class = 'prettyprint lang-r'>print(exprs)</pre>
+
+<pre >                id    WT1   WT2    KO1   KO2
+1  ENSG00000034510 235960 94264 202381 91336
+2  ENSG00000064201    116    71     64    56
+3  ENSG00000065717    118   174    124   182
+4  ENSG00000099958    450   655    301   472
+5  ENSG00000104164   4736  5019   4845  4934
+6  ENSG00000104783   9002  8623   7720  7142
+7  ENSG00000105229   1295  2744   1113  2887
+8  ENSG00000105723   3353  7449   3589  7202
+9  ENSG00000116199   2044  4525   2604  4902
+10 ENSG00000118939   7022  2526   6269  3068
+11 ENSG00000119285  15783 17359  18591 20077
+12 ENSG00000121680   3133  2775   2045  2796
+13 ENSG00000125384   1380  3079    869  2419
+14 ENSG00000129562  12089  7958  10708  7683
+15 ENSG00000129932   1744  2247   1513  3104
+16 ENSG00000134198    122    66     44    16
+17 ENSG00000135452    635   427    662   291
+18 ENSG00000140416     83   246    136   267
+19 ENSG00000147274  16013 17642  15055 18804
+20 ENSG00000148090    552  1062    615  1082
+21 ENSG00000148248  62324 33973  56862 37710
+22 ENSG00000157036   1225  1475   1275  1373
+23 ENSG00000157869   1201  1034   1025   858
+24 ENSG00000159433     31   788     30   675
+25 ENSG00000161692    695  1825    746  1851
+26 ENSG00000167005  26866 23111  24888 22661
+27 ENSG00000168517    273   112    190    77
+28 ENSG00000169570    202   181    207   209
+29 ENSG00000172216   3515  1981   3204  3174
+30 ENSG00000175221   1988  4788   2115  5306
+31 ENSG00000183161   2238   974   2089   996
+32 ENSG00000185324   1236  2163   1048  2024
+33 ENSG00000188985   3415  1703   3587  2096
+34 ENSG00000196867    209   189    293   192
+35 ENSG00000197081  14741 36309  14941 29645
+36 ENSG00000198586   1216  4545   1660  3932
+37 ENSG00000214121   4044  2575   3019  2506
+38 ENSG00000225630   1405  8135   1569  7866
+39 ENSG00000226742    158    94    153   178
+40 ENSG00000238241     90    43    122   143
+41 ENSG00000248751    518   718    411   597
+42 ENSG00000250202    261   163    177   191
+43 ENSG00000251106     94   114     63    86
+44 ENSG00000253991     77    78    134    92
+45 ENSG00000254470   3025  3707   2558  4066
+46 ENSG00000262814  15470 11450  11656 13821
+47 ENSG00000267228   3801  2465   2787  2301
+48 ENSG00000267699   1488  1086   1374   939
+49 ENSG00000269293    424   162    310   120
+50 ENSG00000279329     55    76     58    70</pre>
+
+</article></slide><slide class=""><hgroup><h2>Affichage des premières lignes de l’objet</h2></hgroup><article  id="affichage-des-premieres-lignes-de-lobjet" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>head(exprs)</pre>
+
+<pre >               id    WT1   WT2    KO1   KO2
+1 ENSG00000034510 235960 94264 202381 91336
+2 ENSG00000064201    116    71     64    56
+3 ENSG00000065717    118   174    124   182
+4 ENSG00000099958    450   655    301   472
+5 ENSG00000104164   4736  5019   4845  4934
+6 ENSG00000104783   9002  8623   7720  7142</pre>
+
+</article></slide><slide class=""><hgroup><h2>Un peu plus de lignes</h2></hgroup><article  id="un-peu-plus-de-lignes" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>head(exprs, n = 15)</pre>
+
+<pre >                id    WT1   WT2    KO1   KO2
+1  ENSG00000034510 235960 94264 202381 91336
+2  ENSG00000064201    116    71     64    56
+3  ENSG00000065717    118   174    124   182
+4  ENSG00000099958    450   655    301   472
+5  ENSG00000104164   4736  5019   4845  4934
+6  ENSG00000104783   9002  8623   7720  7142
+7  ENSG00000105229   1295  2744   1113  2887
+8  ENSG00000105723   3353  7449   3589  7202
+9  ENSG00000116199   2044  4525   2604  4902
+10 ENSG00000118939   7022  2526   6269  3068
+11 ENSG00000119285  15783 17359  18591 20077
+12 ENSG00000121680   3133  2775   2045  2796
+13 ENSG00000125384   1380  3079    869  2419
+14 ENSG00000129562  12089  7958  10708  7683
+15 ENSG00000129932   1744  2247   1513  3104</pre>
+
+</article></slide><slide class=""><hgroup><h2>Caractéristiques d’un tableau</h2></hgroup><article  id="caracteristiques-dun-tableau" class="smaller ">
+
+<p>Dimensions</p>
+
+<pre class = 'prettyprint lang-r'>dim(exprs)    ## Dimensions
+ncol(exprs)   ## Nombre de colonnes
+nrow(exprs)   ## Nombre de lignes</pre>
+
+<p>Noms des lignes et colonnes</p>
+
+<pre class = 'prettyprint lang-r'>colnames(exprs)
+rownames(exprs)</pre>
+
+</article></slide><slide class=""><hgroup><h2>Résumé rapide des données par colonne</h2></hgroup><article  id="resume-rapide-des-donnees-par-colonne" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>  summary(exprs)</pre>
+
+<pre >               id          WT1              WT2               KO1                KO2         
+ ENSG00000034510: 1   Min.   :    31   Min.   :   43.0   Min.   :    30.0   Min.   :   16.0  
+ ENSG00000064201: 1   1st Qu.:   264   1st Qu.:  203.2   1st Qu.:   228.5   1st Qu.:  223.5  
+ ENSG00000065717: 1   Median :  1338   Median : 1903.0   Median :  1324.5   Median : 2060.0  
+ ENSG00000099958: 1   Mean   :  9358   Mean   : 6498.6   Mean   :  8356.0   Mean   : 6489.5  
+ ENSG00000104164: 1   3rd Qu.:  3730   3rd Qu.: 4727.2   3rd Qu.:  3491.2   3rd Qu.: 4926.0  
+ ENSG00000104783: 1   Max.   :235960   Max.   :94264.0   Max.   :202381.0   Max.   :91336.0  
+ (Other)        :44                                                                          </pre>
+
+</article></slide><slide class=""><hgroup><h2>Sélection de colonnes d’un tableau</h2></hgroup><article  id="selection-de-colonnes-dun-tableau" class="smaller ">
+
+<p>Valeurs stockées dans la colonne nommée &ldquo;WT1&rdquo;</p>
+
+<pre class = 'prettyprint lang-r'>exprs$WT1</pre>
+
+<p>Notation alternative</p>
+
+<pre class = 'prettyprint lang-r'>exprs[, &quot;WT1&quot;]  ## Sélection de la colonne WT1</pre>
+
+<p>Sélection de plusieurs colonnes.</p>
+
+<pre class = 'prettyprint lang-r'>exprs[, c(&quot;WT1&quot;, &quot;WT2&quot;)]</pre>
+
+<p>Sélection de colonnes par leur indice</p>
+
+<pre class = 'prettyprint lang-r'>exprs[, 2]
+exprs[, c(2, 3)]</pre>
+
+</article></slide><slide class=""><hgroup><h2>Histogramme des valeurs d’expression pour WT1</h2></hgroup><article  id="histogramme-des-valeurs-dexpression-pour-wt1" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>hist(exprs$WT1)</pre>
+
+<p><img src="figures/07_tests_multiplesunnamed-chunk-26-1.png" width="60%" style="display: block; margin: auto;" /></p>
+
+</article></slide><slide class=""><hgroup><h2>Histogramme du logarithme de ces valeurs</h2></hgroup><article  id="histogramme-du-logarithme-de-ces-valeurs" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>hist(log(exprs$WT1))</pre>
+
+<p><img src="figures/07_tests_multiplesunnamed-chunk-27-1.png" width="60%" style="display: block; margin: auto;" /></p>
+
+</article></slide><slide class=""><hgroup><h2>Nuages de points – Expressions KO1 vs WT1</h2></hgroup><article  id="nuages-de-points-expressions-ko1-vs-wt1" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>plot(x = log(exprs$WT1), y = log(exprs$KO1))</pre>
+
+<p><img src="figures/07_tests_multiplesunnamed-chunk-28-1.png" width="60%" style="display: block; margin: auto;" /></p>
+
+</article></slide><slide class=""><hgroup><h2>Personnalisation des paramètres graphiques</h2></hgroup><article  id="personnalisation-des-parametres-graphiques" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>plot(x = log(exprs$WT1),   ## données pour l’abscisse
+     y = log(exprs$KO1),   ## données pour l’ordonnée
+     main = &quot;Expression KO1 vs WT1&quot;,  ## Titre principal
+     xlab = &quot;WT1&quot;,  ## légende de l’axe X
+     ylab = &quot;KO1&quot;,  ## légende de l’axe Y
+     pch = 16,      ## caractère pour marquer les points
+     las = 1,       ## écrire les échelles horizontalement
+     col = &quot;red&quot;)   ## couleur des points
+grid()  ## Ajout d’une grille
+abline(a = 0, b = 1)   ## Ajouter la droite X = Y (intercept a = 0, pente b = 1).</pre>
+
+<p><img src="figures/07_tests_multiplesunnamed-chunk-29-1.png" width="60%" style="display: block; margin: auto;" /></p>
+
+</article></slide><slide class=""><hgroup><h2>Sélection de lignes d’un tableau</h2></hgroup><article  id="selection-de-lignes-dun-tableau" class="smaller ">
+
+<p>Sélection des lignes 4 et 11 du tableau des expressions</p>
+
+<pre class = 'prettyprint lang-r'>exprs[c(4, 11), ]</pre>
+
+<p>Indices des lignes correspondant aux IDs ENSG00000253991 et ENSG00000099958</p>
+
+<pre class = 'prettyprint lang-r'>which(exprs$id %in% c(&quot;ENSG00000253991&quot;, &quot;ENSG00000099958&quot;))</pre>
+
+<p>Afficher les lignes correspondantes</p>
+
+<pre class = 'prettyprint lang-r'>exprs[which(exprs$id %in% c(&quot;ENSG00000253991&quot;, &quot;ENSG00000099958&quot;)), ]</pre>
+
+</article></slide><slide class=""><hgroup><h2>Calculs sur des colonnes</h2></hgroup><article  id="calculs-sur-des-colonnes" class="smaller ">
+
+<p>Calcul de moyennes par ligne (<code>rowMeans</code>) pour un sous-ensemble donné des colonnes (WT1 et WT2).</p>
+
+<pre class = 'prettyprint lang-r'>rowMeans(exprs[,c(&quot;WT1&quot;,&quot;WT2&quot;)])</pre>
+
+<p>Ajout de colonnes avec les expressions moyennes des WT et des KO.</p>
+
+<pre class = 'prettyprint lang-r'>exprs$meanWT &lt;- rowMeans(exprs[,c(&quot;WT1&quot;,&quot;WT2&quot;)])
+exprs$meanKO &lt;- rowMeans(exprs[,c(&quot;KO1&quot;,&quot;KO2&quot;)])
+
+head(exprs) ## Check the result</pre>
+
+<p>Fold-change KO vs WT</p>
+
+<pre class = 'prettyprint lang-r'>exprs$FC &lt;- exprs$meanKO / exprs$meanWT
+head(exprs) ## Check the result</pre>
+
+<p>Moyenne de tous les échantillons</p>
+
+<pre class = 'prettyprint lang-r'>exprs$mean &lt;- rowMeans(exprs[,c(&quot;WT1&quot;,&quot;WT2&quot;,&quot;KO1&quot;,&quot;KO2&quot;)])</pre>
+
+</article></slide><slide class=""><hgroup><h2>MA-plot: log2FC vs intensité</h2></hgroup><article  id="ma-plot-log2fc-vs-intensite" class="smaller ">
+
+<p>\(M\) est le logarithme en base 2 du rapport d’expression.</p>
+
+<p>\[M = log_{2} (\text{FC}) = log_{2} \left( \frac{\text{KO}}{\text{WT}} \right) = log_2 (\text{KO}) - log_2(\text{WT})\]</p>
+
+<pre class = 'prettyprint lang-r'>exprs$M &lt;- log2(exprs$FC)</pre>
+
+<p>\(A\) (average intensity) est la moyenne des logarithmes des valeurs d’expression.</p>
+
+<p>\[A = \frac{1}{2} log_2 (\text{KO} \cdot \text{WT}) = \frac{1}{2} \left( log_2 (\text{KO}) + log_2(\text{WT}) \right)\]</p>
+
+<pre class = 'prettyprint lang-r'>exprs$A &lt;- rowMeans(log2(exprs[,c(&quot;meanWT&quot;, &quot;meanKO&quot;)]))</pre>
+
+</article></slide><slide class=""><hgroup><h2>MA-plot: log2FC vs intensité</h2></hgroup><article  id="ma-plot-log2fc-vs-intensite-1" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>plot(x = exprs$A, y = exprs$M, main = &quot;MA plot&quot;, las = 1,
+     col = &quot;blue&quot;, pch = 16, xlab = &quot;A = intensity&quot;, ylab = &quot;M = log2FC&quot;)
+grid(lty = &quot;solid&quot;, col = &quot;lightgray&quot;)
+abline(h = 0)</pre>
+
+<p><img src="figures/07_tests_multiplesunnamed-chunk-39-1.png" width="60%" style="display: block; margin: auto;" /></p>
+
+</article></slide><slide class=""><hgroup><h2>Charger les annotations des gènes</h2></hgroup><article  id="charger-les-annotations-des-genes" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>annot &lt;- read.table(file = &quot;data/annotation.csv&quot;, header = TRUE, sep = &quot;;&quot;)
+dim(annot)   ## Vérifier les dimensions
+head(annot)  ## Afficher quelques lignes</pre>
+
+<p>Combien de gènes par chromosome ?</p>
+
+<pre class = 'prettyprint lang-r'>table(annot$chr)</pre>
+
+<p>Question: combien de gènes sur le chromosome 8 ? Et sur le X ?</p>
+
+</article></slide><slide class=""><hgroup><h2>Diagramme en bâtons – gènes par chromosomes</h2></hgroup><article  id="diagramme-en-batons-genes-par-chromosomes" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>barplot(sort(table(annot$chr)), horiz = TRUE, las = 1,
+        main = &quot;Genes per chromosome&quot;, ylab = &quot;Chromosome&quot;, 
+        col = &quot;lightblue&quot;, xlab = &quot;Number of genes&quot;)</pre>
+
+<p><img src="figures/07_tests_multiplesunnamed-chunk-42-1.png" width="40%" style="display: block; margin: auto;" /></p>
+
+</article></slide><slide class=""><hgroup><h2>Sélectionner les données du chromosome 8</h2></hgroup><article  id="selectionner-les-donnees-du-chromosome-8" class="smaller ">
+
+<p>1ere étape: fusionner les deux tableaux exprs et annot</p>
+
+<pre class = 'prettyprint lang-r'>exprs.annot &lt;- merge(exprs, annot, by = &quot;id&quot;)
+head(exprs.annot)</pre>
+
+<p>2eme étape: sous-ensemble des lignes pour lesquelles chr vaut 8</p>
+
+<pre class = 'prettyprint lang-r'>exprs8 &lt;- exprs.annot[which(exprs.annot$chr == 8),]
+print(exprs8)</pre>
+
+</article></slide><slide class=""><hgroup><h2>Exporter exprs8 dans un fichier</h2></hgroup><article  id="exporter-exprs8-dans-un-fichier" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>write.table(x = exprs8, file = &quot;exprs8.txt&quot;, sep = &quot;\t&quot;,
+            row.names = TRUE, col.names = NA)</pre>
+
+</article></slide><slide class=""><hgroup><h2>A ajouter : jouer avec un fichier d’annotations au format GTF</h2></hgroup><article  id="a-ajouter-jouer-avec-un-fichier-dannotations-au-format-gtf" class="smaller ">
+
+</article></slide><slide class=""><hgroup><h2>Take home messages</h2></hgroup><article  id="take-home-messages" class="smaller ">
+
+<ul>
+<li><p>Tout est faisable avec R</p></li>
+<li><p>Définir et comprendre l’opération mathématique/statistique avant de chercher la fonction R correspondante</p></li>
+<li><p>R est un langage :</p>
+
+<ul>
+<li>plusieurs types et structures de données (out of scope)</li>
+<li>énormément de commandes à connaître (out of scope)</li>
+<li>Google est votre ami</li>
+</ul></li>
+<li><p>Une infinité de :</p>
+
+<ul>
+<li>ressources en ligne</li>
+<li>tutoriels pour des analyses spécifiques (e.g. DESeq2 pour le RNA-Seq)</li>
+</ul></li>
+</ul></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

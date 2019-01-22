@@ -1,0 +1,489 @@
+---
+title: "Module 3 - Analyse statistique avec R - Séance 1"
+author: "Hugo Varet, Frédéric Guyon, Olivier Kirsh et Jacques van Helden"
+date: '`r Sys.Date()`'
+output:
+  ioslides_presentation:
+    slide_level: 2
+    self_contained: no
+    colortheme: dolphin
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    fonttheme: structurebold
+    highlight: tango
+    smaller: yes
+    toc: yes
+    widescreen: yes
+  slidy_presentation:
+    smart: no
+    slide_level: 2
+    self_contained: yes
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    highlight: tango
+    incremental: no
+    keep_md: yes
+    smaller: yes
+    theme: cerulean
+    toc: yes
+    widescreen: yes
+  html_document:
+    self_contained: no
+    fig_caption: yes
+    highlight: zenburn
+    theme: cerulean
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
+  beamer_presentation:
+    colortheme: dolphin
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    fonttheme: structurebold
+    highlight: tango
+    incremental: no
+    keep_tex: no
+    slide_level: 2
+    theme: Montpellier
+    toc: yes
+font-import: http://fonts.googleapis.com/css?family=Risque
+subtitle: DUBii 2019
+font-family: Garamond
+transition: linear
+---
+
+```{r include=FALSE, echo=FALSE, eval=TRUE}
+library(knitr)
+library(kableExtra)
+# library(formattable)
+
+options(width = 300)
+# options(encoding = 'UTF-8')
+knitr::opts_chunk$set(
+  fig.width = 7, fig.height = 5, 
+  fig.path = 'figures/07_tests_multiples',
+  fig.align = "center", 
+  size = "tiny", 
+  echo = TRUE, eval = TRUE, 
+  warning = FALSE, message = FALSE, 
+  results = FALSE, comment = "")
+
+options(scipen = 12) ## Max number of digits for non-scientific notation
+# knitr::asis_output("\\footnotesize")
+
+```
+
+## R en quelques mots
+
+Langage de programmation qui permet de :
+
+ - manipuler des données : importer, transformer, exporter
+ - faire des analyses statistiques plus ou moins complexes : description, exploration, modélisation...
+ - créer des (jolies) figures
+
+Disponible sur Windows, MacOS, Linux
+
+Historique :
+
+ - 1993 : début du projet R
+ - 2000 : sortie de R 1.0.0
+ - 2018 : R 3.5.1
+
+## Avantages et inconvénients
+
+Avantages :
+
+ - Souplesse d’utilisation pour réaliser des analyses statistiques
+ - R est libre et gratuit, même s'il existe maintenant des versions payantes de RStudio (shiny et/ou server)
+ - Reproductibilité des analyses en écrivant/sauvegardant les commandes R dans des scripts
+
+Inconvénients :
+
+## Analyse de données vs langage de programmation
+
+ - Lire un tableau : `read.table()`
+ - Fusionner deux tableau : `merge()`
+ - Sélectionner des colonnes : `mydata[ , c("col1","col2")]`
+ - Rechercher une chaîne de caractères : `grep()`
+ - Calculer une moyenne : `mean(x)`
+ - Exporter un tableau de données : `write.table()`
+ - Régression linéaire : `lm(y ~ x)`
+ - Tester une hypothèse : `t.test()`
+ - Dessiner un histogramme : `hist()`
+ - Convertire des données : `as.data.frame()`
+ - Tracer une courbe : `plot()`
+ - Réaliser une ACP : `prcomp()`
+ - Calculer une variance : `var()`
+
+## Modes d'utilisation (list non exhaustive)
+
+ - Localement via le terminal
+ - Localement via RStudio (utilisation classique)
+ - Sur un serveur distant via le terminal et une connexion ssh
+ - Sur un serveur via un nagivateur pour accéder à RStudio server
+ 
+## Se connecter au serveur ou ouvrir RStudio
+
+Comment faire pour le DUBii ?
+
+## Aller dans son dossier de travail
+
+Définir une variable qui indique le chemin du dossier de travail
+
+```{r}
+work.dir <- "~/intro_R" 
+```
+
+S’il n’existe pas encore, créer le dossier de travail.
+(Commande Unix équivalente: "mkdir -p ~/intro_R")
+
+```{r}
+dir.create(work.dir, recursive = TRUE, showWarnings = FALSE)
+```
+
+Aller dans ce dossier de travail.
+(Commande Unix équivalente: "cd ~/intro_R")
+
+```{r}
+setwd(work.dir)	
+```
+
+Où suis-je ? 
+(Commande Unix équivalente: "pwd")
+
+```{r}
+getwd()
+```
+
+Qu'y a-t-il par ici ? 
+(Commande Unix équivalente: "ls")
+
+```{r}
+list.files()
+```
+
+## R vu comme une calculatrice
+
+```{r}
+2 + 3
+4 * 5
+6 / 4
+```
+
+## Notion de variable/objet
+
+
+```{r}
+a <- 2      ## Assigner une valeur à une variable
+print(a)    ## Afficher la valeur de la variable a
+```
+
+```{r}
+b <- 3      ## Assigner une valeur à une seconde variable
+c <- a + b  ## Effectuer un calcul avec 2 variables
+print(c)    ## Afficher le contenu de la variable c
+```
+
+
+```{r}
+a <- 7      ## Changer la valeur de a
+print(c)    ## Note: le contenu de c n'est pas modifié
+```
+
+
+## Télécharger un fichier
+
+La commande `download()` permet de télécharger un fichier à partir d'un serveur, et `dir.create()` permet de créer un nouveau dossier dans l'espace de travail:
+
+```{r, eval=FALSE}
+dir.create("data")
+download.file(url = "https://goo.gl/9QVAg6", destfile = "data/expression.txt")
+```
+
+```{r, eval=FALSE}
+download.file(url = "https://goo.gl/NQWnHg", destfile = "data/annotation.csv")
+```
+
+## Chargement des données
+
+Charger le contenu du fichier "expression.txt" dans une variable nommée "exprs".
+
+```{r}
+exprs <- read.table(file = "data/expression.txt", header = TRUE, sep = "\t")
+```
+
+Accéder à l'aide d'une fonction
+
+```{r}
+help(read.table)
+```
+
+Notation alternative
+
+```{r}
+?read.table
+```
+
+
+## Affichage de l'objet "exprs"
+
+Imprimer toutes les valeurs.
+
+```{r results = TRUE}
+print(exprs)
+```
+
+## Affichage des premières lignes de l'objet
+
+```{r results = TRUE}
+head(exprs)
+```
+
+## Un peu plus de lignes
+
+```{r results = TRUE}
+head(exprs, n = 15)
+```
+
+## Caractéristiques d'un tableau
+
+Dimensions
+
+```{r}
+dim(exprs)    ## Dimensions
+ncol(exprs)   ## Nombre de colonnes
+nrow(exprs)   ## Nombre de lignes
+```
+
+Noms des lignes et colonnes
+
+```{r}
+colnames(exprs)
+rownames(exprs)
+```
+
+
+## Résumé rapide des données par colonne
+
+```{r results = TRUE}
+  summary(exprs)
+```
+
+## Sélection de colonnes d'un tableau
+
+Valeurs stockées dans la colonne nommée "WT1"
+
+```{r}
+exprs$WT1
+```
+
+Notation alternative
+
+```{r}
+exprs[, "WT1"]  ## Sélection de la colonne WT1
+```
+
+Sélection de plusieurs colonnes. 
+
+```{r}
+exprs[, c("WT1", "WT2")]
+```
+
+Sélection de colonnes par leur indice
+
+```{r}
+exprs[, 2]
+exprs[, c(2, 3)]
+```
+
+## Histogramme des valeurs d'expression pour WT1
+
+```{r fig.width=7, fig.height=5, out.width="60%"}
+hist(exprs$WT1)
+```
+
+## Histogramme du logarithme de ces valeurs
+
+```{r fig.width=7, fig.height=5, out.width="60%"}
+hist(log(exprs$WT1))
+```
+
+## Nuages de points -- Expressions KO1 vs WT1
+
+```{r fig.width=7, fig.height=5, out.width="60%"}
+plot(x = log(exprs$WT1), y = log(exprs$KO1))
+```
+
+## Personnalisation des paramètres graphiques
+
+```{r fig.width=7, fig.height=5, out.width="60%"}
+plot(x = log(exprs$WT1),   ## données pour l’abscisse
+     y = log(exprs$KO1),   ## données pour l’ordonnée
+     main = "Expression KO1 vs WT1",  ## Titre principal
+     xlab = "WT1",  ## légende de l’axe X
+     ylab = "KO1",  ## légende de l’axe Y
+     pch = 16,      ## caractère pour marquer les points
+     las = 1,       ## écrire les échelles horizontalement
+     col = "red")   ## couleur des points
+grid()  ## Ajout d’une grille
+abline(a = 0, b = 1)   ## Ajouter la droite X = Y (intercept a = 0, pente b = 1).
+```
+
+## Sélection de lignes d'un tableau
+
+Sélection des lignes 4 et 11 du tableau des expressions
+
+```{r}
+exprs[c(4, 11), ]
+```
+
+Indices des lignes correspondant aux IDs ENSG00000253991 et ENSG00000099958
+
+```{r}
+which(exprs$id %in% c("ENSG00000253991", "ENSG00000099958"))
+```
+
+Afficher les lignes correspondantes
+
+```{r}
+exprs[which(exprs$id %in% c("ENSG00000253991", "ENSG00000099958")), ]
+```
+
+## Calculs sur des colonnes
+
+Calcul de moyennes par ligne (`rowMeans`) pour un sous-ensemble donné des colonnes (WT1 et WT2).
+
+```{r}
+rowMeans(exprs[,c("WT1","WT2")])
+```
+
+Ajout de colonnes avec les expressions moyennes des WT et des KO.
+ 
+```{r}
+exprs$meanWT <- rowMeans(exprs[,c("WT1","WT2")])
+exprs$meanKO <- rowMeans(exprs[,c("KO1","KO2")])
+
+head(exprs) ## Check the result
+```
+
+Fold-change KO vs WT
+
+```{r}
+exprs$FC <- exprs$meanKO / exprs$meanWT
+head(exprs) ## Check the result
+```
+
+Moyenne de tous les échantillons
+
+```{r}
+exprs$mean <- rowMeans(exprs[,c("WT1","WT2","KO1","KO2")])
+```
+
+## MA-plot: log2FC vs intensité
+
+$M$ est le logarithme en base 2 du rapport d'expression.
+
+$$M = log_{2} (\text{FC}) = log_{2} \left( \frac{\text{KO}}{\text{WT}} \right) = log_2 (\text{KO}) - log_2(\text{WT})$$
+
+```{r}
+exprs$M <- log2(exprs$FC)
+```
+
+$A$ (average intensity) est la moyenne des logarithmes des valeurs d'expression.
+
+$$A = \frac{1}{2} log_2 (\text{KO} \cdot \text{WT}) = \frac{1}{2} \left( log_2 (\text{KO}) + log_2(\text{WT}) \right)$$
+```{r}
+exprs$A <- rowMeans(log2(exprs[,c("meanWT", "meanKO")]))
+```
+
+
+
+## MA-plot: log2FC vs intensité
+
+```{r  fig.width=7, fig.height=5, out.width="60%"}
+plot(x = exprs$A, y = exprs$M, main = "MA plot", las = 1,
+     col = "blue", pch = 16, xlab = "A = intensity", ylab = "M = log2FC")
+grid(lty = "solid", col = "lightgray")
+abline(h = 0)
+```
+
+## Charger les annotations des gènes
+
+```{r}
+annot <- read.table(file = "data/annotation.csv", header = TRUE, sep = ";")
+dim(annot)   ## Vérifier les dimensions
+head(annot)  ## Afficher quelques lignes
+```
+
+Combien de gènes par chromosome ?
+
+```{r}
+table(annot$chr)
+```
+
+Question: combien de gènes sur le chromosome 8 ? Et sur le X ?
+
+
+## Diagramme en bâtons -- gènes par chromosomes
+
+```{r fig.width = 5, fig.height = 7, out.width = "40%"}
+barplot(sort(table(annot$chr)), horiz = TRUE, las = 1,
+        main = "Genes per chromosome", ylab = "Chromosome", 
+        col = "lightblue", xlab = "Number of genes")
+
+```
+
+
+## Sélectionner les données du chromosome 8
+
+1ere étape: fusionner les deux tableaux exprs et annot
+
+```{r}
+exprs.annot <- merge(exprs, annot, by = "id")
+head(exprs.annot)
+```
+
+2eme étape: sous-ensemble des lignes pour lesquelles chr vaut 8
+
+```{r}
+exprs8 <- exprs.annot[which(exprs.annot$chr == 8),]
+print(exprs8)
+
+```
+
+## Exporter exprs8 dans un fichier
+
+```{r}
+write.table(x = exprs8, file = "exprs8.txt", sep = "\t",
+            row.names = TRUE, col.names = NA)
+
+```
+
+## Take home messages
+
+ - Tout est faisable avec R
+
+ - Définir et comprendre l’opération mathématique/statistique avant de chercher la fonction R correspondante
+
+ - R est un langage :
+    
+    - plusieurs types et structures de données (out of scope)
+    - énormément de commandes à connaître (out of scope)
+    - Google est votre ami
+
+ - Une infinité de :
+ 
+    - ressources en ligne
+    - tutoriels pour des analyses spécifiques (e.g. DESeq2 pour le RNA-Seq)
+
+## A ajouter : jouer avec un fichier d'annotations au format GTF
+
+Fichier d'annotations E. Coli disponible [ici](ftp://ftp.ensemblgenomes.org/pub/bacteria/release-37/gtf/bacteria_0_collection/escherichia_coli_str_k_12_substr_mg1655/Escherichia_coli_str_k_12_substr_mg1655.ASM584v2.37.gtf.gz)
