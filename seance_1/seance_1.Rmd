@@ -123,7 +123,7 @@ Inconvénients :
  - Réaliser une ACP : `prcomp()`
  - Calculer une variance : `var()`
 
-## Modes d'utilisation (list non exhaustive)
+## Modes d'utilisation (liste non exhaustive)
 
  - Localement via le terminal
  - Localement via RStudio (utilisation classique)
@@ -205,11 +205,11 @@ La commande `download()` permet de télécharger un fichier à partir d'un serve
 
 ```{r, eval=FALSE}
 dir.create("data")
-download.file(url = "https://goo.gl/9QVAg6", destfile = "data/expression.txt")
+download.file(url = "https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/seance_1/data/expression.txt", destfile = "data/expression.txt")
 ```
 
 ```{r, eval=FALSE}
-download.file(url = "https://goo.gl/NQWnHg", destfile = "data/annotation.csv")
+download.file(url = "https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/seance_1/data/annotation.csv", destfile = "data/annotation.csv")
 ```
 
 ## Chargement des données
@@ -325,16 +325,10 @@ plot(x = log(exprs$WT1), y = log(exprs$KO1))
 ## Personnalisation des paramètres graphiques
 
 ```{r fig.width=7, fig.height=5, out.width="60%"}
-plot(x = log(exprs$WT1),   ## données pour l’abscisse
-     y = log(exprs$KO1),   ## données pour l’ordonnée
-     main = "Expression KO1 vs WT1",  ## Titre principal
-     xlab = "WT1",  ## légende de l’axe X
-     ylab = "KO1",  ## légende de l’axe Y
-     pch = 16,      ## caractère pour marquer les points
-     las = 1,       ## écrire les échelles horizontalement
-     col = "red")   ## couleur des points
-grid()  ## Ajout d’une grille
-abline(a = 0, b = 1)   ## Ajouter la droite X = Y (intercept a = 0, pente b = 1).
+plot(x = log(exprs$WT1), y = log(exprs$KO1), main = "Expression KO1 vs WT1",
+     xlab = "WT1", ylab = "KO1",  pch = 16, las = 1, col = "red")
+grid()
+abline(a = 0, b = 1)
 ```
 
 ## Sélection de lignes d'un tableau
