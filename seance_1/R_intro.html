@@ -10,7 +10,7 @@
 
 
 
-  <meta name="date" content="2019-01-22" />
+  <meta name="date" content="2019-01-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -43,16 +43,16 @@
     };
   </script>
 
-  <link href="seance_1_files/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
-  <link href="seance_1_files/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
-  <link href="seance_1_files/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
-  <script src="seance_1_files/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
-  <script src="seance_1_files/ioslides-13.5.1/js/prettify/prettify.js"></script>
-  <script src="seance_1_files/ioslides-13.5.1/js/prettify/lang-r.js"></script>
-  <script src="seance_1_files/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
-  <script src="seance_1_files/ioslides-13.5.1/js/hammer.js"></script>
-  <script src="seance_1_files/ioslides-13.5.1/js/slide-controller.js"></script>
-  <script src="seance_1_files/ioslides-13.5.1/js/slide-deck.js"></script>
+  <link href="R_intro_files/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="R_intro_files/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="R_intro_files/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="R_intro_files/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="R_intro_files/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="R_intro_files/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="R_intro_files/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="R_intro_files/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="R_intro_files/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="R_intro_files/ioslides-13.5.1/js/slide-deck.js"></script>
 
   <style type="text/css">
 
@@ -62,6 +62,10 @@
 
     em {
       font-style: italic;
+    }
+
+    summary {
+      display: list-item;
     }
 
     slides > slide {
@@ -95,17 +99,17 @@
       <h1 data-config-title><!-- populated from slide_config.json --></h1>
       <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
       <p data-config-presenter><!-- populated from slide_config.json --></p>
-            <p style="margin-top: 6px; margin-left: -2px;">2019-01-22</p>
+            <p style="margin-top: 6px; margin-left: -2px;">2019-01-23</p>
           </hgroup>
   </slide>
 
-<slide class=""><hgroup><h2>R en quelques mots</h2></hgroup><article  class="smaller " id="r-en-quelques-mots">
+<slide class=""><hgroup><h2>R en quelques mots</h2></hgroup><article  id="r-en-quelques-mots" class="smaller ">
 
 <p>Langage de programmation qui permet de :</p>
 
 <ul>
 <li>manipuler des données : importer, transformer, exporter</li>
-<li>faire des analyses statistiques plus ou moins complexes : description, exploration, modélisation…</li>
+<li>faire des analyses statistiques plus ou moins complexes : description, exploration, modélisation&#8230;</li>
 <li>créer des (jolies) figures</li>
 </ul>
 
@@ -119,19 +123,19 @@
 <li>2018 : R 3.5.1</li>
 </ul>
 
-</article></slide><slide class=""><hgroup><h2>Avantages et inconvénients</h2></hgroup><article  class="smaller " id="avantages-et-inconvenients">
+</article></slide><slide class=""><hgroup><h2>Avantages et inconvénients</h2></hgroup><article  id="avantages-et-inconvenients" class="smaller ">
 
 <p>Avantages :</p>
 
 <ul>
 <li>Souplesse d’utilisation pour réaliser des analyses statistiques</li>
-<li>R est libre et gratuit, même s’il existe maintenant des versions payantes de RStudio (shiny et/ou server)</li>
+<li>R est libre et gratuit, même s&#39;il existe maintenant des versions payantes de RStudio (shiny et/ou server)</li>
 <li>Reproductibilité des analyses en écrivant/sauvegardant les commandes R dans des scripts</li>
 </ul>
 
 <p>Inconvénients :</p>
 
-</article></slide><slide class=""><hgroup><h2>Analyse de données vs langage de programmation</h2></hgroup><article  class="smaller " id="analyse-de-donnees-vs-langage-de-programmation">
+</article></slide><slide class=""><hgroup><h2>Analyse de données vs langage de programmation</h2></hgroup><article  id="analyse-de-donnees-vs-langage-de-programmation" class="smaller ">
 
 <ul>
 <li>Lire un tableau : <code>read.table()</code></li>
@@ -149,7 +153,7 @@
 <li>Calculer une variance : <code>var()</code></li>
 </ul>
 
-</article></slide><slide class=""><hgroup><h2>Modes d’utilisation (liste non exhaustive)</h2></hgroup><article  class="smaller " id="modes-dutilisation-liste-non-exhaustive">
+</article></slide><slide class=""><hgroup><h2>Modes d&#39;utilisation (liste non exhaustive)</h2></hgroup><article  id="modes-dutilisation-liste-non-exhaustive" class="smaller ">
 
 <ul>
 <li>Localement via le terminal</li>
@@ -158,39 +162,39 @@
 <li>Sur un serveur via un nagivateur pour accéder à RStudio server</li>
 </ul>
 
-</article></slide><slide class=""><hgroup><h2>Se connecter au serveur ou ouvrir RStudio</h2></hgroup><article  class="smaller " id="se-connecter-au-serveur-ou-ouvrir-rstudio">
+</article></slide><slide class=""><hgroup><h2>Se connecter au serveur ou ouvrir RStudio</h2></hgroup><article  id="se-connecter-au-serveur-ou-ouvrir-rstudio" class="smaller ">
 
 <p>Comment faire pour le DUBii ?</p>
 
-</article></slide><slide class=""><hgroup><h2>Aller dans son dossier de travail</h2></hgroup><article  class="smaller " id="aller-dans-son-dossier-de-travail">
+</article></slide><slide class=""><hgroup><h2>Aller dans son dossier de travail</h2></hgroup><article  id="aller-dans-son-dossier-de-travail" class="smaller ">
 
 <p>Définir une variable qui indique le chemin du dossier de travail</p>
 
 <pre class = 'prettyprint lang-r'>work.dir &lt;- &quot;~/intro_R&quot; </pre>
 
-<p>S’il n’existe pas encore, créer le dossier de travail. (Commande Unix équivalente: &ldquo;mkdir -p ~/intro_R&rdquo;)</p>
+<p>S’il n’existe pas encore, créer le dossier de travail. (Commande Unix équivalente: &quot;mkdir -p ~/intro_R&quot;)</p>
 
 <pre class = 'prettyprint lang-r'>dir.create(work.dir, recursive = TRUE, showWarnings = FALSE)</pre>
 
-<p>Aller dans ce dossier de travail. (Commande Unix équivalente: &ldquo;cd ~/intro_R&rdquo;)</p>
+<p>Aller dans ce dossier de travail. (Commande Unix équivalente: &quot;cd ~/intro_R&quot;)</p>
 
 <pre class = 'prettyprint lang-r'>setwd(work.dir) </pre>
 
-<p>Où suis-je ? (Commande Unix équivalente: &ldquo;pwd&rdquo;)</p>
+<p>Où suis-je ? (Commande Unix équivalente: &quot;pwd&quot;)</p>
 
 <pre class = 'prettyprint lang-r'>getwd()</pre>
 
-<p>Qu’y a-t-il par ici ? (Commande Unix équivalente: &ldquo;ls&rdquo;)</p>
+<p>Qu&#39;y a-t-il par ici ? (Commande Unix équivalente: &quot;ls&quot;)</p>
 
 <pre class = 'prettyprint lang-r'>list.files()</pre>
 
-</article></slide><slide class=""><hgroup><h2>R vu comme une calculatrice</h2></hgroup><article  class="smaller " id="r-vu-comme-une-calculatrice">
+</article></slide><slide class=""><hgroup><h2>R vu comme une calculatrice</h2></hgroup><article  id="r-vu-comme-une-calculatrice" class="smaller ">
 
 <pre class = 'prettyprint lang-r'>2 + 3
 4 * 5
 6 / 4</pre>
 
-</article></slide><slide class=""><hgroup><h2>Notion de variable/objet</h2></hgroup><article  class="smaller " id="notion-de-variableobjet">
+</article></slide><slide class=""><hgroup><h2>Notion de variable/objet</h2></hgroup><article  id="notion-de-variableobjet" class="smaller ">
 
 <pre class = 'prettyprint lang-r'>a &lt;- 2      ## Assigner une valeur à une variable
 print(a)    ## Afficher la valeur de la variable a</pre>
@@ -202,22 +206,22 @@ print(c)    ## Afficher le contenu de la variable c</pre>
 <pre class = 'prettyprint lang-r'>a &lt;- 7      ## Changer la valeur de a
 print(c)    ## Note: le contenu de c n&#39;est pas modifié</pre>
 
-</article></slide><slide class=""><hgroup><h2>Télécharger un fichier</h2></hgroup><article  class="smaller " id="telecharger-un-fichier">
+</article></slide><slide class=""><hgroup><h2>Télécharger un fichier</h2></hgroup><article  id="telecharger-un-fichier" class="smaller ">
 
-<p>La commande <code>download()</code> permet de télécharger un fichier à partir d’un serveur, et <code>dir.create()</code> permet de créer un nouveau dossier dans l’espace de travail:</p>
+<p>La commande <code>download()</code> permet de télécharger un fichier à partir d&#39;un serveur, et <code>dir.create()</code> permet de créer un nouveau dossier dans l&#39;espace de travail:</p>
 
 <pre class = 'prettyprint lang-r'>dir.create(&quot;data&quot;)
 download.file(url = &quot;https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/seance_1/data/expression.txt&quot;, destfile = &quot;data/expression.txt&quot;)</pre>
 
 <pre class = 'prettyprint lang-r'>download.file(url = &quot;https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/seance_1/data/annotation.csv&quot;, destfile = &quot;data/annotation.csv&quot;)</pre>
 
-</article></slide><slide class=""><hgroup><h2>Chargement des données</h2></hgroup><article  class="smaller " id="chargement-des-donnees">
+</article></slide><slide class=""><hgroup><h2>Chargement des données</h2></hgroup><article  id="chargement-des-donnees" class="smaller ">
 
-<p>Charger le contenu du fichier &ldquo;expression.txt&rdquo; dans une variable nommée &ldquo;exprs&rdquo;.</p>
+<p>Charger le contenu du fichier &quot;expression.txt&quot; dans une variable nommée &quot;exprs&quot;.</p>
 
 <pre class = 'prettyprint lang-r'>exprs &lt;- read.table(file = &quot;data/expression.txt&quot;, header = TRUE, sep = &quot;\t&quot;)</pre>
 
-<p>Accéder à l’aide d’une fonction</p>
+<p>Accéder à l&#39;aide d&#39;une fonction</p>
 
 <pre class = 'prettyprint lang-r'>help(read.table)</pre>
 
@@ -225,7 +229,7 @@ download.file(url = &quot;https://raw.githubusercontent.com/DU-Bii/module-3-Stat
 
 <pre class = 'prettyprint lang-r'>?read.table</pre>
 
-</article></slide><slide class=""><hgroup><h2>Affichage de l’objet &ldquo;exprs&rdquo;</h2></hgroup><article  class="smaller " id="affichage-de-lobjet-exprs">
+</article></slide><slide class=""><hgroup><h2>Affichage de l&#39;objet &quot;exprs&quot;</h2></hgroup><article  id="affichage-de-lobjet-exprs" class="smaller ">
 
 <p>Imprimer toutes les valeurs.</p>
 
@@ -283,7 +287,7 @@ download.file(url = &quot;https://raw.githubusercontent.com/DU-Bii/module-3-Stat
 49 ENSG00000269293    424   162    310   120
 50 ENSG00000279329     55    76     58    70</pre>
 
-</article></slide><slide class=""><hgroup><h2>Affichage des premières lignes de l’objet</h2></hgroup><article  class="smaller " id="affichage-des-premieres-lignes-de-lobjet">
+</article></slide><slide class=""><hgroup><h2>Affichage des premières lignes de l&#39;objet</h2></hgroup><article  id="affichage-des-premieres-lignes-de-lobjet" class="smaller ">
 
 <pre class = 'prettyprint lang-r'>head(exprs)</pre>
 
@@ -295,7 +299,7 @@ download.file(url = &quot;https://raw.githubusercontent.com/DU-Bii/module-3-Stat
 5 ENSG00000104164   4736  5019   4845  4934
 6 ENSG00000104783   9002  8623   7720  7142</pre>
 
-</article></slide><slide class=""><hgroup><h2>Un peu plus de lignes</h2></hgroup><article  class="smaller " id="un-peu-plus-de-lignes">
+</article></slide><slide class=""><hgroup><h2>Un peu plus de lignes</h2></hgroup><article  id="un-peu-plus-de-lignes" class="smaller ">
 
 <pre class = 'prettyprint lang-r'>head(exprs, n = 15)</pre>
 
@@ -316,7 +320,7 @@ download.file(url = &quot;https://raw.githubusercontent.com/DU-Bii/module-3-Stat
 14 ENSG00000129562  12089  7958  10708  7683
 15 ENSG00000129932   1744  2247   1513  3104</pre>
 
-</article></slide><slide class=""><hgroup><h2>Caractéristiques d’un tableau</h2></hgroup><article  class="smaller " id="caracteristiques-dun-tableau">
+</article></slide><slide class=""><hgroup><h2>Caractéristiques d&#39;un tableau</h2></hgroup><article  id="caracteristiques-dun-tableau" class="smaller ">
 
 <p>Dimensions</p>
 
@@ -329,7 +333,7 @@ nrow(exprs)   ## Nombre de lignes</pre>
 <pre class = 'prettyprint lang-r'>colnames(exprs)
 rownames(exprs)</pre>
 
-</article></slide><slide class=""><hgroup><h2>Résumé rapide des données par colonne</h2></hgroup><article  class="smaller " id="resume-rapide-des-donnees-par-colonne">
+</article></slide><slide class=""><hgroup><h2>Résumé rapide des données par colonne</h2></hgroup><article  id="resume-rapide-des-donnees-par-colonne" class="smaller ">
 
 <pre class = 'prettyprint lang-r'>  summary(exprs)</pre>
 
@@ -342,9 +346,9 @@ rownames(exprs)</pre>
  ENSG00000104783: 1   Max.   :235960   Max.   :94264.0   Max.   :202381.0   Max.   :91336.0  
  (Other)        :44                                                                          </pre>
 
-</article></slide><slide class=""><hgroup><h2>Sélection de colonnes d’un tableau</h2></hgroup><article  class="smaller " id="selection-de-colonnes-dun-tableau">
+</article></slide><slide class=""><hgroup><h2>Sélection de colonnes d&#39;un tableau</h2></hgroup><article  id="selection-de-colonnes-dun-tableau" class="smaller ">
 
-<p>Valeurs stockées dans la colonne nommée &ldquo;WT1&rdquo;</p>
+<p>Valeurs stockées dans la colonne nommée &quot;WT1&quot;</p>
 
 <pre class = 'prettyprint lang-r'>exprs$WT1</pre>
 
@@ -361,25 +365,25 @@ rownames(exprs)</pre>
 <pre class = 'prettyprint lang-r'>exprs[, 2]
 exprs[, c(2, 3)]</pre>
 
-</article></slide><slide class=""><hgroup><h2>Histogramme des valeurs d’expression pour WT1</h2></hgroup><article  class="smaller " id="histogramme-des-valeurs-dexpression-pour-wt1">
+</article></slide><slide class=""><hgroup><h2>Histogramme des valeurs d&#39;expression pour WT1</h2></hgroup><article  id="histogramme-des-valeurs-dexpression-pour-wt1" class="smaller ">
 
 <pre class = 'prettyprint lang-r'>hist(exprs$WT1)</pre>
 
 <p><img src="figures/07_tests_multiplesunnamed-chunk-26-1.png" width="60%" style="display: block; margin: auto;" /></p>
 
-</article></slide><slide class=""><hgroup><h2>Histogramme du logarithme de ces valeurs</h2></hgroup><article  class="smaller " id="histogramme-du-logarithme-de-ces-valeurs">
+</article></slide><slide class=""><hgroup><h2>Histogramme du logarithme de ces valeurs</h2></hgroup><article  id="histogramme-du-logarithme-de-ces-valeurs" class="smaller ">
 
 <pre class = 'prettyprint lang-r'>hist(log(exprs$WT1))</pre>
 
 <p><img src="figures/07_tests_multiplesunnamed-chunk-27-1.png" width="60%" style="display: block; margin: auto;" /></p>
 
-</article></slide><slide class=""><hgroup><h2>Nuages de points – Expressions KO1 vs WT1</h2></hgroup><article  class="smaller " id="nuages-de-points-expressions-ko1-vs-wt1">
+</article></slide><slide class=""><hgroup><h2>Nuages de points &#8211; Expressions KO1 vs WT1</h2></hgroup><article  id="nuages-de-points----expressions-ko1-vs-wt1" class="smaller ">
 
 <pre class = 'prettyprint lang-r'>plot(x = log(exprs$WT1), y = log(exprs$KO1))</pre>
 
 <p><img src="figures/07_tests_multiplesunnamed-chunk-28-1.png" width="60%" style="display: block; margin: auto;" /></p>
 
-</article></slide><slide class=""><hgroup><h2>Personnalisation des paramètres graphiques</h2></hgroup><article  class="smaller " id="personnalisation-des-parametres-graphiques">
+</article></slide><slide class=""><hgroup><h2>Personnalisation des paramètres graphiques</h2></hgroup><article  id="personnalisation-des-parametres-graphiques" class="smaller ">
 
 <pre class = 'prettyprint lang-r'>plot(x = log(exprs$WT1), y = log(exprs$KO1), main = &quot;Expression KO1 vs WT1&quot;,
      xlab = &quot;WT1&quot;, ylab = &quot;KO1&quot;,  pch = 16, las = 1, col = &quot;red&quot;)
@@ -388,7 +392,7 @@ abline(a = 0, b = 1)</pre>
 
 <p><img src="figures/07_tests_multiplesunnamed-chunk-29-1.png" width="60%" style="display: block; margin: auto;" /></p>
 
-</article></slide><slide class=""><hgroup><h2>Sélection de lignes d’un tableau</h2></hgroup><article  class="smaller " id="selection-de-lignes-dun-tableau">
+</article></slide><slide class=""><hgroup><h2>Sélection de lignes d&#39;un tableau</h2></hgroup><article  id="selection-de-lignes-dun-tableau" class="smaller ">
 
 <p>Sélection des lignes 4 et 11 du tableau des expressions</p>
 
@@ -402,7 +406,7 @@ abline(a = 0, b = 1)</pre>
 
 <pre class = 'prettyprint lang-r'>exprs[which(exprs$id %in% c(&quot;ENSG00000253991&quot;, &quot;ENSG00000099958&quot;)), ]</pre>
 
-</article></slide><slide class=""><hgroup><h2>Calculs sur des colonnes</h2></hgroup><article  class="smaller " id="calculs-sur-des-colonnes">
+</article></slide><slide class=""><hgroup><h2>Calculs sur des colonnes</h2></hgroup><article  id="calculs-sur-des-colonnes" class="smaller ">
 
 <p>Calcul de moyennes par ligne (<code>rowMeans</code>) pour un sous-ensemble donné des colonnes (WT1 et WT2).</p>
 
@@ -424,21 +428,21 @@ head(exprs) ## Check the result</pre>
 
 <pre class = 'prettyprint lang-r'>exprs$mean &lt;- rowMeans(exprs[,c(&quot;WT1&quot;,&quot;WT2&quot;,&quot;KO1&quot;,&quot;KO2&quot;)])</pre>
 
-</article></slide><slide class=""><hgroup><h2>MA-plot: log2FC vs intensité</h2></hgroup><article  class="smaller " id="ma-plot-log2fc-vs-intensite">
+</article></slide><slide class=""><hgroup><h2>MA-plot: log2FC vs intensité</h2></hgroup><article  id="ma-plot-log2fc-vs-intensite" class="smaller ">
 
-<p>\(M\) est le logarithme en base 2 du rapport d’expression.</p>
+<p>\(M\) est le logarithme en base 2 du rapport d&#39;expression.</p>
 
 <p>\[M = log_{2} (\text{FC}) = log_{2} \left( \frac{\text{KO}}{\text{WT}} \right) = log_2 (\text{KO}) - log_2(\text{WT})\]</p>
 
 <pre class = 'prettyprint lang-r'>exprs$M &lt;- log2(exprs$FC)</pre>
 
-<p>\(A\) (average intensity) est la moyenne des logarithmes des valeurs d’expression.</p>
+<p>\(A\) (average intensity) est la moyenne des logarithmes des valeurs d&#39;expression.</p>
 
 <p>\[A = \frac{1}{2} log_2 (\text{KO} \cdot \text{WT}) = \frac{1}{2} \left( log_2 (\text{KO}) + log_2(\text{WT}) \right)\]</p>
 
 <pre class = 'prettyprint lang-r'>exprs$A &lt;- rowMeans(log2(exprs[,c(&quot;meanWT&quot;, &quot;meanKO&quot;)]))</pre>
 
-</article></slide><slide class=""><hgroup><h2>MA-plot: log2FC vs intensité</h2></hgroup><article  class="smaller " id="ma-plot-log2fc-vs-intensite-1">
+</article></slide><slide class=""><hgroup><h2>MA-plot: log2FC vs intensité</h2></hgroup><article  id="ma-plot-log2fc-vs-intensite-1" class="smaller ">
 
 <pre class = 'prettyprint lang-r'>plot(x = exprs$A, y = exprs$M, main = &quot;MA plot&quot;, las = 1,
      col = &quot;blue&quot;, pch = 16, xlab = &quot;A = intensity&quot;, ylab = &quot;M = log2FC&quot;)
@@ -447,7 +451,7 @@ abline(h = 0)</pre>
 
 <p><img src="figures/07_tests_multiplesunnamed-chunk-39-1.png" width="60%" style="display: block; margin: auto;" /></p>
 
-</article></slide><slide class=""><hgroup><h2>Charger les annotations des gènes</h2></hgroup><article  class="smaller " id="charger-les-annotations-des-genes">
+</article></slide><slide class=""><hgroup><h2>Charger les annotations des gènes</h2></hgroup><article  id="charger-les-annotations-des-genes" class="smaller ">
 
 <pre class = 'prettyprint lang-r'>annot &lt;- read.table(file = &quot;data/annotation.csv&quot;, header = TRUE, sep = &quot;;&quot;)
 dim(annot)   ## Vérifier les dimensions
@@ -459,7 +463,7 @@ head(annot)  ## Afficher quelques lignes</pre>
 
 <p>Question: combien de gènes sur le chromosome 8 ? Et sur le X ?</p>
 
-</article></slide><slide class=""><hgroup><h2>Diagramme en bâtons – gènes par chromosomes</h2></hgroup><article  class="smaller " id="diagramme-en-batons-genes-par-chromosomes">
+</article></slide><slide class=""><hgroup><h2>Diagramme en bâtons &#8211; gènes par chromosomes</h2></hgroup><article  id="diagramme-en-batons----genes-par-chromosomes" class="smaller ">
 
 <pre class = 'prettyprint lang-r'>barplot(sort(table(annot$chr)), horiz = TRUE, las = 1,
         main = &quot;Genes per chromosome&quot;, ylab = &quot;Chromosome&quot;, 
@@ -467,7 +471,7 @@ head(annot)  ## Afficher quelques lignes</pre>
 
 <p><img src="figures/07_tests_multiplesunnamed-chunk-42-1.png" width="40%" style="display: block; margin: auto;" /></p>
 
-</article></slide><slide class=""><hgroup><h2>Sélectionner les données du chromosome 8</h2></hgroup><article  class="smaller " id="selectionner-les-donnees-du-chromosome-8">
+</article></slide><slide class=""><hgroup><h2>Sélectionner les données du chromosome 8</h2></hgroup><article  id="selectionner-les-donnees-du-chromosome-8" class="smaller ">
 
 <p>1ere étape: fusionner les deux tableaux exprs et annot</p>
 
@@ -479,12 +483,12 @@ head(exprs.annot)</pre>
 <pre class = 'prettyprint lang-r'>exprs8 &lt;- exprs.annot[which(exprs.annot$chr == 8),]
 print(exprs8)</pre>
 
-</article></slide><slide class=""><hgroup><h2>Exporter exprs8 dans un fichier</h2></hgroup><article  class="smaller " id="exporter-exprs8-dans-un-fichier">
+</article></slide><slide class=""><hgroup><h2>Exporter exprs8 dans un fichier</h2></hgroup><article  id="exporter-exprs8-dans-un-fichier" class="smaller ">
 
 <pre class = 'prettyprint lang-r'>write.table(x = exprs8, file = &quot;exprs8.txt&quot;, sep = &quot;\t&quot;,
             row.names = TRUE, col.names = NA)</pre>
 
-</article></slide><slide class=""><hgroup><h2>Take home messages</h2></hgroup><article  class="smaller " id="take-home-messages">
+</article></slide><slide class=""><hgroup><h2>Take home messages</h2></hgroup><article  id="take-home-messages" class="smaller ">
 
 <ul>
 <li><p>Tout est faisable avec R</p></li>
@@ -500,13 +504,13 @@ print(exprs8)</pre>
 
 <ul>
 <li>ressources en ligne</li>
-<li>tutoriels pour des analyses spécifiques (e.g. DESeq2 pour le RNA-Seq)</li>
+<li>tutoriels pour des analyses spécifiques (e.g. DESeq2 pour le RNA-Seq)</li>
 </ul></li>
 </ul>
 
-</article></slide><slide class=""><hgroup><h2>A ajouter : jouer avec un fichier d’annotations au format GTF</h2></hgroup><article  class="smaller " id="a-ajouter-jouer-avec-un-fichier-dannotations-au-format-gtf">
+</article></slide><slide class=""><hgroup><h2>A ajouter : jouer avec un fichier d&#39;annotations au format GTF</h2></hgroup><article  id="a-ajouter-jouer-avec-un-fichier-dannotations-au-format-gtf" class="smaller ">
 
-<p>Fichier d’annotations E. Coli disponible <a href='ftp://ftp.ensemblgenomes.org/pub/bacteria/release-37/gtf/bacteria_0_collection/escherichia_coli_str_k_12_substr_mg1655/Escherichia_coli_str_k_12_substr_mg1655.ASM584v2.37.gtf.gz' title=''>ici</a></p></article></slide>
+<p>Fichier d&#39;annotations E. Coli disponible <a href='ftp://ftp.ensemblgenomes.org/pub/bacteria/release-37/gtf/bacteria_0_collection/escherichia_coli_str_k_12_substr_mg1655/Escherichia_coli_str_k_12_substr_mg1655.ASM584v2.37.gtf.gz' title=''>ici</a></p></article></slide>
 
 
   <slide class="backdrop"></slide>

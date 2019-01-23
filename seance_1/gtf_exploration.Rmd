@@ -3,18 +3,6 @@ title: "Exploration of a genomic annotations table (GTF)"
 author: "Jacques van Helden, Hugo Varet and Frédéric Guyon"
 date: '`r Sys.Date()`'
 output:
-  ioslides_presentation:
-    slide_level: 2
-    self_contained: no
-    colortheme: dolphin
-    fig_caption: yes
-    fig_height: 6
-    fig_width: 7
-    fonttheme: structurebold
-    highlight: tango
-    smaller: yes
-    toc: yes
-    widescreen: yes
   beamer_presentation:
     colortheme: dolphin
     fig_caption: yes
@@ -27,6 +15,18 @@ output:
     slide_level: 2
     theme: Montpellier
     toc: yes
+  ioslides_presentation:
+    slide_level: 2
+    self_contained: no
+    colortheme: dolphin
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    fonttheme: structurebold
+    highlight: tango
+    smaller: yes
+    toc: yes
+    widescreen: yes
   pdf_document:
     fig_caption: yes
     highlight: zenburn

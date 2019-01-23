@@ -3,18 +3,18 @@ title: "Module 3 - Analyse statistique avec R - Séance 1"
 author: "Hugo Varet, Frédéric Guyon, Olivier Kirsh et Jacques van Helden"
 date: '`r Sys.Date()`'
 output:
-  ioslides_presentation:
-    slide_level: 2
-    self_contained: no
+  beamer_presentation:
     colortheme: dolphin
     fig_caption: yes
     fig_height: 6
     fig_width: 7
     fonttheme: structurebold
     highlight: tango
-    smaller: yes
+    incremental: no
+    keep_tex: no
+    slide_level: 2
+    theme: Montpellier
     toc: yes
-    widescreen: yes
   slidy_presentation:
     smart: no
     slide_level: 2
@@ -42,18 +42,18 @@ output:
     highlight: zenburn
     toc: yes
     toc_depth: 3
-  beamer_presentation:
+  ioslides_presentation:
+    slide_level: 2
+    self_contained: no
     colortheme: dolphin
     fig_caption: yes
     fig_height: 6
     fig_width: 7
     fonttheme: structurebold
     highlight: tango
-    incremental: no
-    keep_tex: no
-    slide_level: 2
-    theme: Montpellier
+    smaller: yes
     toc: yes
+    widescreen: yes
 font-import: http://fonts.googleapis.com/css?family=Risque
 subtitle: DUBii 2019
 font-family: Garamond

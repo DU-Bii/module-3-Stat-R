@@ -10,7 +10,7 @@
 
 
 
-  <meta name="date" content="2019-01-22" />
+  <meta name="date" content="2019-01-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -64,6 +64,10 @@
       font-style: italic;
     }
 
+    summary {
+      display: list-item;
+    }
+
     slides > slide {
       -webkit-transition: all 0.4s ease-in-out;
       -moz-transition: all 0.4s ease-in-out;
@@ -95,11 +99,11 @@
       <h1 data-config-title><!-- populated from slide_config.json --></h1>
       <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
       <p data-config-presenter><!-- populated from slide_config.json --></p>
-            <p style="margin-top: 6px; margin-left: -2px;">2019-01-22</p>
+            <p style="margin-top: 6px; margin-left: -2px;">2019-01-23</p>
           </hgroup>
   </slide>
 
-<slide class=""><hgroup><h2>Goal of the practical session</h2></hgroup><article  class="smaller " id="goal-of-the-practical-session">
+<slide class=""><hgroup><h2>Goal of the practical session</h2></hgroup><article  id="goal-of-the-practical-session" class="smaller ">
 
 <p>During this practical session, we will cover the following items:</p>
 
@@ -110,14 +114,14 @@
 <li>Compute statistics describing the different types of annotations.</li>
 </ol>
 
-</article></slide><slide class=""><hgroup><h2>The GTF file format</h2></hgroup><article  class="smaller " id="the-gtf-file-format">
+</article></slide><slide class=""><hgroup><h2>The GTF file format</h2></hgroup><article  id="the-gtf-file-format" class="smaller ">
 
 <p>The <strong>GTF</strong> (<strong>General Transfer Format</strong>) file format is extensively used to provide easily readable genomics annotations while being very handy with a computer.</p>
 
 <p>Text files,</p>
 
 <ul>
-<li>one row per genomic &ldquo;object&rdquo; (gene, transcript, exon, intron, CDS, …)</li>
+<li>one row per genomic &quot;object&quot; (gene, transcript, exon, intron, CDS, &#8230;)</li>
 <li>one column per attribute (name, source, object type, genomic coordinates, description).</li>
 </ul>
 
@@ -128,7 +132,7 @@
 <li><a href='https://genome.ucsc.edu/FAQ/FAQformat.html#format4' title=''>https://genome.ucsc.edu/FAQ/FAQformat.html#format4</a></li>
 </ul>
 
-</article></slide><slide class=""><hgroup><h2>Find the GTF file of your favorite organism (on Ensembl)</h2></hgroup><article  class="smaller " id="find-the-gtf-file-of-your-favorite-organism-on-ensembl">
+</article></slide><slide class=""><hgroup><h2>Find the GTF file of your favorite organism (on Ensembl)</h2></hgroup><article  id="find-the-gtf-file-of-your-favorite-organism-on-ensembl" class="smaller ">
 
 <ol>
 <li>Visit <a href='http://ensemblgenomes.org/' title=''>http://ensemblgenomes.org/</a>.</li>
@@ -139,31 +143,31 @@
 
 <p>For this session we will use the <em>E. Coli</em> GTF annotation file available <a href='ftp://ftp.ensemblgenomes.org/pub/bacteria/release-37/gtf/bacteria_0_collection/escherichia_coli_str_k_12_substr_mg1655/Escherichia_coli_str_k_12_substr_mg1655.ASM584v2.37.gtf.gz' title=''>here</a>.</p>
 
-</article></slide><slide class=""><hgroup><h2>Page d’accueil d’EnsemblGenomes</h2></hgroup><article  class="smaller " id="page-daccueil-densemblgenomes">
+</article></slide><slide class=""><hgroup><h2>Page d&#39;accueil d&#39;EnsemblGenomes</h2></hgroup><article  id="page-daccueil-densemblgenomes" class="smaller ">
 
 <p><a href='http://ensemblgenomes.org/' title=''>http://ensemblgenomes.org/</a></p>
 
 <p><img src="images/ensemblgenomes_home.png" width="80%" style="display: block; margin: auto;" /></p>
 
-</article></slide><slide class=""><hgroup><h2>EnsemblGenomes Bacteria</h2></hgroup><article  class="smaller " id="ensemblgenomes-bacteria">
+</article></slide><slide class=""><hgroup><h2>EnsemblGenomes Bacteria</h2></hgroup><article  id="ensemblgenomes-bacteria" class="smaller ">
 
 <p><a href='http://bacteria.ensembl.org/' title=''>http://bacteria.ensembl.org/</a></p>
 
 <p><img src="images/ensemblgenomes_bacteria.png" width="80%" style="display: block; margin: auto;" /></p>
 
-</article></slide><slide class=""><hgroup><h2>EnsemblGenomes Fungi</h2></hgroup><article  class="smaller " id="ensemblgenomes-fungi">
+</article></slide><slide class=""><hgroup><h2>EnsemblGenomes Fungi</h2></hgroup><article  id="ensemblgenomes-fungi" class="smaller ">
 
 <p><a href='http://fungi.ensembl.org/' title=''>http://fungi.ensembl.org/</a></p>
 
 <p><img src="images/ensemblgenomes_fungi.png" width="80%" style="display: block; margin: auto;" /></p>
 
-</article></slide><slide class=""><hgroup><h2>EnsemblGenomes Fungi Download page</h2></hgroup><article  class="smaller " id="ensemblgenomes-fungi-download-page">
+</article></slide><slide class=""><hgroup><h2>EnsemblGenomes Fungi Download page</h2></hgroup><article  id="ensemblgenomes-fungi-download-page" class="smaller ">
 
 <p><a href='http://fungi.ensembl.org/info/website/ftp/' title=''>http://fungi.ensembl.org/info/website/ftp/</a></p>
 
 <p><img src="images/ensemblgenomes_download_yeast.png" width="80%" style="display: block; margin: auto;" /></p>
 
-</article></slide><slide class=""><hgroup><h2>Define and create your working directory</h2></hgroup><article  class="smaller " id="define-and-create-your-working-directory">
+</article></slide><slide class=""><hgroup><h2>Define and create your working directory</h2></hgroup><article  id="define-and-create-your-working-directory" class="smaller ">
 
 <p><strong>Exercise:</strong> create a working directory named <code>workDir</code> in your home folder and go inside.</p>
 
@@ -178,13 +182,13 @@ setwd(workDir)
 getwd()       ## Check your current location
 list.files()  ## List files (should be empty if just created)</pre>
 
-</article></slide><slide class=""><hgroup><h2>Downloading the GTF file</h2></hgroup><article  class="smaller " id="downloading-the-gtf-file">
+</article></slide><slide class=""><hgroup><h2>Downloading the GTF file</h2></hgroup><article  id="downloading-the-gtf-file" class="smaller ">
 
 <p><strong>Exercise:</strong> download the GTF file in the working directory (optionally, adapt the command to load a GTF of your interest). Before downloading the file we check if it is already present in the working directory. If yes, we skip the download.</p>
 
-<p><strong>Tip:</strong> use the commands <code>file.exists</code>, <code>download.file</code>.</p>
+<p>**<a href='Tip:**' title=''>Tip:**</a> use the commands <code>file.exists</code>, <code>download.file</code>.</p>
 
-</article></slide><slide class=""><hgroup><h2>Downloading the GTF file: solution</h2></hgroup><article  class="smaller " id="downloading-the-gtf-file-solution">
+</article></slide><slide class=""><hgroup><h2>Downloading the GTF file: solution</h2></hgroup><article  id="downloading-the-gtf-file-solution" class="smaller ">
 
 <pre class = 'prettyprint lang-r'>## Define the URL of the file to download
 gtf.url &lt;- &quot;ftp://ftp.ensemblgenomes.org/pub/bacteria/release-37/gtf/bacteria_0_collection/escherichia_coli_str_k_12_substr_mg1655/Escherichia_coli_str_k_12_substr_mg1655.ASM584v2.37.gtf.gz&quot;
@@ -208,12 +212,14 @@ list.files()</pre>
 
 <pre > [1] &quot;data&quot;                  &quot;exprs8.txt&quot;           
  [3] &quot;figures&quot;               &quot;gtf_exploration_files&quot;
- [5] &quot;gtf_exploration.html&quot;  &quot;gtf_exploration.Rmd&quot;  
- [7] &quot;images&quot;                &quot;README.md&quot;            
- [9] &quot;seance_1_files&quot;        &quot;seance_1.html&quot;        
-[11] &quot;seance_1.Rmd&quot;         </pre>
+ [5] &quot;gtf_exploration.html&quot;  &quot;gtf_exploration.md&quot;   
+ [7] &quot;gtf_exploration.Rmd&quot;   &quot;images&quot;               
+ [9] &quot;R_intro.html&quot;          &quot;R_intro.pdf&quot;          
+[11] &quot;R_intro.Rmd&quot;           &quot;README.html&quot;          
+[13] &quot;README.md&quot;             &quot;seance_1_files&quot;       
+[15] &quot;seance_1.md&quot;          </pre>
 
-</article></slide><slide class=""><hgroup><h2>Loading a data table in R</h2></hgroup><article  class="smaller " id="loading-a-data-table-in-r">
+</article></slide><slide class=""><hgroup><h2>Loading a data table in R</h2></hgroup><article  id="loading-a-data-table-in-r" class="smaller ">
 
 <p>Commands: <code>read.table</code>, <code>read.delim</code>, <code>read.csv</code>.</p>
 
@@ -224,15 +230,15 @@ list.files()</pre>
 <p>Several finctions derived from <code>read.table()</code> facilitate the loading of different formats.</p>
 
 <ul>
-<li><p><code>read.delim()</code> for files where a particular charcater is used as column separator (by default the tab character &quot;).</p></li>
-<li><p><code>read.csv()</code> for &ldquo;comma-searated values&rdquo;.</p></li>
+<li><p><code>read.delim()</code> for files where a particular charcater is used as column separator (by default the tab character &quot;&quot;).</p></li>
+<li><p><code>read.csv()</code> for &quot;comma-searated values&quot;.</p></li>
 </ul>
 
-</article></slide><slide class=""><hgroup><h2>Loading the GTF file</h2></hgroup><article  class="smaller " id="loading-the-gtf-file">
+</article></slide><slide class=""><hgroup><h2>Loading the GTF file</h2></hgroup><article  id="loading-the-gtf-file" class="smaller ">
 
 <p>Load the GTF file in a variable named <code>featureTable</code>.</p>
 
-<p><strong>Tip:</strong> command <code>read.delim</code>.</p>
+<p>**<a href='Tip:**' title=''>Tip:**</a> command <code>read.delim</code>.</p>
 
 <pre class = 'prettyprint lang-r'>## Load GTF file in a data.frame
 featureTable &lt;- read.delim(destfile, comment.char = &quot;#&quot;, sep=&quot;\t&quot;, 
@@ -242,7 +248,7 @@ featureTable &lt;- read.delim(destfile, comment.char = &quot;#&quot;, sep=&quot;
 names(featureTable) &lt;- c(&quot;seqname&quot;, &quot;source&quot;, &quot;feature&quot;, &quot;start&quot;, &quot;end&quot;,
                          &quot;score&quot;, &quot;strand&quot;, &quot;frame&quot;, &quot;attribute&quot;)</pre>
 
-</article></slide><slide class=""><hgroup><h2>Exploring the content of a data table</h2></hgroup><article  class="smaller " id="exploring-the-content-of-a-data-table">
+</article></slide><slide class=""><hgroup><h2>Exploring the content of a data table</h2></hgroup><article  id="exploring-the-content-of-a-data-table" class="smaller ">
 
 <p>Immediately after having loaded a data table, check its dimensions.</p>
 
@@ -258,7 +264,7 @@ names(featureTable) &lt;- c(&quot;seqname&quot;, &quot;source&quot;, &quot;featu
 
 <pre >[1] 9</pre>
 
-</article></slide><slide class=""><hgroup><h2>Checking heads and tails</h2></hgroup><article  class="smaller " id="checking-heads-and-tails">
+</article></slide><slide class=""><hgroup><h2>Checking heads and tails</h2></hgroup><article  id="checking-heads-and-tails" class="smaller ">
 
 <p>Displaying the full annotation table would not be very convenient, since it contains tens of thousands of rows.</p>
 
@@ -270,7 +276,7 @@ head(featureTable, n = 5)
 ## Display the 5 last rows of the feature table
 tail(featureTable, n = 5) </pre>
 
-</article></slide><slide class=""><hgroup><h2>Viewing a table</h2></hgroup><article  class="smaller " id="viewing-a-table">
+</article></slide><slide class=""><hgroup><h2>Viewing a table</h2></hgroup><article  id="viewing-a-table" class="smaller ">
 
 <p>If you are using the <strong>RStudio</strong> environment, you can display the table in a dynamic viewer pane with the function <code>View()</code>.</p>
 
@@ -279,7 +285,7 @@ View(featureTable) </pre>
 
 <p>The <code>View()</code> function is interactive, so it should not be used in a script because it would perturbate its execution.</p>
 
-</article></slide><slide class=""><hgroup><h2>Selecting columns</h2></hgroup><article  class="smaller " id="selecting-columns">
+</article></slide><slide class=""><hgroup><h2>Selecting columns</h2></hgroup><article  id="selecting-columns" class="smaller ">
 
 <p>The last column of GTF files is particularly heavy, it contains a lof of semi-structured information.</p>
 
@@ -305,7 +311,7 @@ featureTable[1:5, 1:8]</pre>
 4 Chromosome    ena         CDS   190 252     .      +     0
 5 Chromosome    ena start_codon   190 192     .      +     0</pre>
 
-</article></slide><slide class=""><hgroup><h2>Feature types</h2></hgroup><article  class="smaller " id="feature-types">
+</article></slide><slide class=""><hgroup><h2>Feature types</h2></hgroup><article  id="feature-types" class="smaller ">
 
 <p><strong>Exercise:</strong> the column <em>feature</em> of the GTF indicates the feature table.</p>
 
@@ -329,7 +335,7 @@ sort(table(featureTable$feature), decreasing = TRUE)</pre>
        exon        gene  transcript         CDS start_codon  stop_codon 
        4564        4497        4497        4141        4140        4140 </pre>
 
-</article></slide><slide class=""><hgroup><h2>Décompte par valeur</h2></hgroup><article  class="smaller " id="decompte-par-valeur">
+</article></slide><slide class=""><hgroup><h2>Décompte par valeur</h2></hgroup><article  id="decompte-par-valeur" class="smaller ">
 
 <p>The <code>table()</code> function allows to count the frequency of each value in a qualitative variable:</p>
 
@@ -354,7 +360,7 @@ table(featureTable$feature)</pre>
         CDS        exon        gene start_codon  stop_codon  transcript 
        4141        4564        4497        4140        4140        4497 </pre>
 
-</article></slide><slide class=""><hgroup><h2>Contingency table</h2></hgroup><article  class="smaller " id="contingency-table">
+</article></slide><slide class=""><hgroup><h2>Contingency table</h2></hgroup><article  id="contingency-table" class="smaller ">
 
 <p>We can compute the number of combinations between two qualitatives variables:</p>
 
@@ -374,7 +380,7 @@ strand  CDS exon gene start_codon stop_codon transcript
      - 2129 2307 2277        2128       2128       2277
      + 2012 2257 2220        2012       2012       2220</pre>
 
-</article></slide><slide class=""><hgroup><h2>Computing feature lengths</h2></hgroup><article  class="smaller " id="computing-feature-lengths">
+</article></slide><slide class=""><hgroup><h2>Computing feature lengths</h2></hgroup><article  id="computing-feature-lengths" class="smaller ">
 
 <ul>
 <li>Add a column with feature lengths.</li>
@@ -387,13 +393,13 @@ strand  CDS exon gene start_codon stop_codon transcript
 <pre class = 'prettyprint lang-r'>## Add a column to the table with genes lengths
 featureTable$length &lt;- featureTable$end - featureTable$start + 1</pre>
 
-</article></slide><slide class=""><hgroup><h2>Filtering rows based on a column content</h2></hgroup><article  class="smaller " id="filtering-rows-based-on-a-column-content">
+</article></slide><slide class=""><hgroup><h2>Filtering rows based on a column content</h2></hgroup><article  id="filtering-rows-based-on-a-column-content" class="smaller ">
 
 <p>The function <code>subset()</code> enables to select a subset of rows based on a filter applied to the content of one or several columns.</p>
 
 <p>We can use it to select the subset of features corresponding to genes.</p>
 
-</article></slide><slide class=""><hgroup><h2>Selecting genes from the GTF table</h2></hgroup><article  class="smaller " id="selecting-genes-from-the-gtf-table">
+</article></slide><slide class=""><hgroup><h2>Selecting genes from the GTF table</h2></hgroup><article  id="selecting-genes-from-the-gtf-table" class="smaller ">
 
 <ul>
 <li>Select of genes from the GTF table and store them in a separate variable named <code>genes</code>.</li>
@@ -460,29 +466,29 @@ summary(genes$length)</pre>
 
 <!-- ``` -->
 
-</article></slide><slide class=""><hgroup><h2>Exercices</h2></hgroup><article  class="smaller " id="exercices">
+</article></slide><slide class=""><hgroup><h2>Exercices</h2></hgroup><article  id="exercices" class="smaller ">
 
 <ol>
 <li>Draw an histogram with gene length distribution. Choose a relevant number of breaks to display an informative histogram.</li>
 <li>Draw a boxplot of gene lengths per strand. Are gene longer on the minus or plus strand?</li>
 </ol>
 
-</article></slide><slide class=""><hgroup><h2>Gene length histogram</h2></hgroup><article  class="smaller " id="gene-length-histogram">
+</article></slide><slide class=""><hgroup><h2>Gene length histogram</h2></hgroup><article  id="gene-length-histogram" class="smaller ">
 
 <pre class = 'prettyprint lang-r'>hist(genes$length)</pre>
 
 <p><img src="figures/hist_default-1.png" width="70%" style="display: block; margin: auto;" /></p>
 
-</article></slide><slide class=""><hgroup><h2>Setting a relevant number of breaks</h2></hgroup><article  class="smaller " id="setting-a-relevant-number-of-breaks">
+</article></slide><slide class=""><hgroup><h2>Setting a relevant number of breaks</h2></hgroup><article  id="setting-a-relevant-number-of-breaks" class="smaller ">
 
 <pre class = 'prettyprint lang-r'>## Take more or less 100 bins
 hist(genes$length, breaks = 100)</pre>
 
 <p><img src="figures/hist_100breaks-1.png" width="70%" style="display: block; margin: auto;" /></p>
 
-</article></slide><slide class=""><hgroup><h2>Gene length distribution – improving the output</h2></hgroup><article  class="smaller " id="gene-length-distribution-improving-the-output">
+</article></slide><slide class=""><hgroup><h2>Gene length distribution &#8211; improving the output</h2></hgroup><article  id="gene-length-distribution----improving-the-output" class="smaller ">
 
-<div style="text-align: center" class="figure">
+<div class="figure" style="text-align: center">
 <img src="figures/gene_length_histogram-1.png" alt="Distribution of gene lengths for E. Coli. " width="90%" />
 
 <p class="caption">
@@ -521,14 +527,14 @@ Distribution of gene lengths for E. Coli.
 
 <!-- ``` -->
 
-</article></slide><slide class=""><hgroup><h2>Gene length box plot</h2></hgroup><article  class="smaller " id="gene-length-box-plot">
+</article></slide><slide class=""><hgroup><h2>Gene length box plot</h2></hgroup><article  id="gene-length-box-plot" class="smaller ">
 
 <p>Other types of plots allow to explore the distribution of some data. In particular, boxplots display the median, the first and third quartiles and outlier values.</p>
 
 <pre class = 'prettyprint lang-r'>boxplot(length ~ strand, data = genes, col=&quot;palegreen&quot;, horizontal=TRUE, 
         las=1, xlab=&quot;Gene length&quot;, ylab=&quot;Strand&quot;)</pre>
 
-<div style="text-align: center" class="figure">
+<div class="figure" style="text-align: center">
 <img src="figures/gnee_length_boxplot-1.png" alt="Boxplot of gene lengths per chromosome" width="70%" />
 
 <p class="caption">
