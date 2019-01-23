@@ -473,7 +473,7 @@ par(mfrow = c(1,1))
 
 Other types of plots allow to explore the distribution of some data. In particular, boxplots display the median, the first and third quartiles and outlier values.
 
-```{r gnee_length_boxplot, fig.width=7, fig.height=5, out.width="70%", fig.cap="Boxplot of gene lengths per chromosome"}
+```{r gene_length_boxplot, fig.width=7, fig.height=5, out.width="70%", fig.cap="Boxplot of gene lengths per chromosome"}
 boxplot(length ~ strand, data = genes, col="palegreen", horizontal=TRUE, 
         las=1, xlab="Gene length", ylab="Strand")
 
