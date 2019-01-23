@@ -3,6 +3,11 @@ title: "Exploration of a genomic annotations table (GTF)"
 author: "Jacques van Helden, Hugo Varet and Frédéric Guyon"
 date: '`r Sys.Date()`'
 output:
+  revealjs::revealjs_presentation:
+    theme: night
+    transition: none
+    self_contained: true
+    css: ../slides.css
   slidy_presentation:
     smart: no
     slide_level: 2
