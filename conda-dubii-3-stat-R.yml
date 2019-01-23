@@ -20,5 +20,10 @@ dependencies:
   - r::r-kableextra    # To export nice-looking tables in the R markdown reports
   - bioconda::r-mixomics # For the course of integrative bioinformatics
   
+  ## Bioconductor packages
+  - bioconda::bioconductor-deseq2
+  - bioconda::bioconductor-edger 
+  - bioconda::bioconductor-limma
+  
   ## Other packages
   - lcantini::r-mofa
