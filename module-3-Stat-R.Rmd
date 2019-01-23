@@ -1,5 +1,30 @@
 # [DUBii](https://du-bii.github.io/accueil/) - module 3 - Analyse statistique avec R
 
+## Accès aux séances
+
+| Séance | Contenu | Lien |
+|------|-----------------------------------|------------------------|
+| 1 | Premiers pas avec R | [seance_1](seance_1) |
+| 2 | Analyse statistique avec R |  |
+| 3 | Détection de gènes différentiellement exprimés | |
+| 4 | Clustering | |
+| 5 | Statistiques d'enrichissement | |
+| 6 | Classification supervisée (classement) | |
+
+
+## Table des matières
+
+- [Accès aux séances](#acces-aux-seances)
+- [Description](#description)
+- [Planning 2019](#planning)
+- [Prérequis](#prerequis)
+- [Synopsis](#synopsis)
+- [Contributeurs](#contributeurs)
+- [Accès aux supports de cours](#acces-aux-supports-de-cours)
+- [Installation locale](#installation-locale)
+- [Licence d'utilisation](#licence)
+
+
 ## Description
 
 Supports du cours "Statistiques avec R" du Diplôme Universitaire en Bioinformatique Intégrative ([DUBii](https://du-bii.github.io/accueil/)).
@@ -63,16 +88,16 @@ A la fin du module, les participants auront acquis les compétences suivantes.
     - assure la reproductibilité des analyses
 
 
-## Table des matières
-
-### Planning DU-Bii 2019
+## Planning DU-Bii 2019
 
 <https://tinyurl.com/dubii19-planning>
 
 
-### Prérequis
+## Prérequis
 
 Avant d'entamer ce module, les participants sont censés avoir suivi le premier module d'introduction à R sur Data Camp.
+
+## Synopsis
 
 ### [Séance 1 : Introduction à R](seance_1/README.md)
 
@@ -254,27 +279,29 @@ Calendrier du DUBii : <https://goo.gl/MVEA4q>
 - Web: <https://du-bii.github.io/module-3-Stat-R/>
 - Github (sources): <https://github.com/DU-Bii/module-3-Stat-R/>
 
-## Installation
+## Installation locale
 
-### Contributeurs du cours (membres de l'équipe pédagogique)
+Ces supports de cours peuvent être installés sur votre propre ordinateur en faisant un clone du dépôt git. 
+
+### Contributeurs (membres de l'équipe)
 
 ```sh
 git clone git@github.com:DU-Bii/module-3-Stat-R.git
 ```
 
-### Autres 
+### Non-membres de l'équipe
 
 ```sh
 git clone https://github.com/DU-Bii/module-3-Stat-R.git
 ```
 
 
-## License
+## Licence
 
 ![](img/CC-BY-SA.png)
 
+Ce contenu est mis à disposition selon les termes de la licence [Creative Commons Attribution - Partage dans les Mêmes Conditions 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/deed.fr) (CC BY-SA 4.0). Consultez le fichier [LICENSE](LICENSE.txt) pour plus de détails.
+
 
 This content is released under the [Creative Commons Attribution-ShareAlike 4.0 ](https://creativecommons.org/licenses/by-sa/4.0/deed.en) (CC BY-SA 4.0) license. See the bundled [LICENSE](LICENSE.txt) file for details.
-
-Ce contenu est mis à disposition selon les termes de la licence [Creative Commons Attribution - Partage dans les Mêmes Conditions 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/deed.fr) (CC BY-SA 4.0). Consultez le fichier [LICENSE](LICENSE.txt) pour plus de détails.
 
