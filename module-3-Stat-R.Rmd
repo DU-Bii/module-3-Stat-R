@@ -78,11 +78,9 @@ Avant d'entamer ce module, les participants sont censés avoir suivi le premier 
 
 *Intervenants: Hugo Varet et Frédéric Guyon*
 
-- Récupérer et adapter le TP de Roscoff
-- Identifier des cas d'études intéressants
+- Diapos et tutoriels: [seance_1](seance_1)
 
-
-Concepts:
+**Concepts:**
 - Premiers pas avec R
 - Statistiques descriptives
     - estimateurs de tendance centrale (moyenne, médiane)
@@ -90,7 +88,7 @@ Concepts:
 - Distributions théoriques de probabilité (discrètes et continues, grands principes, sachant que certaines seront approfondies dans d'autres séances)
 - Quelques représentations graphiques (nuage de points, polynome des fréquences, histogramme)
 
-Travaux pratiqus:
+**Travaux pratiques:**
 
 - Manipulation de fonctions R
 - Manipulation de distributions théoriques avec R (une discrète et une continue)
@@ -103,15 +101,18 @@ Travaux pratiqus:
             - il ne s'agit pas d'un affichage de la distrib mais d'une fonction polynomiale ajustée sur les données -> dans certains cas on extrapole au-delà du domaine de définition des données
             - au mieux, une technique commerciale, au pire un outil de fraude scientifique
 
-- Lecture et écriture de tables (read.table, read.delim, write.table)
-- Fonctions graphiques
+
+**Compétences visées**
+- Familiarisation avec la syntaxe R
+- Lecture, manipulation et écriture de tables
+- Utilisation de quelques fonctions graphiques
     - plot
     - lines
     - hist
     - boîte à moustache
-- Exporter un plot dans un fichier pdf ou png
+    - Exporter un plot dans un fichier pdf ou png
     - attirer l'attention sur la différence: vectoriel versus bitmap (zoomer à fond sur les figures produites)
-    
+
 
 ### [Séance 2 : Analyse statistique avec R](seance_2/README.md)
 
