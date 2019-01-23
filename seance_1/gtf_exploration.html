@@ -1,577 +1,415 @@
-<!DOCTYPE html>
-<html>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Exploration of a genomic annotations table (GTF)</title>
-
-  <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta http-equiv="Content-Style-Type" content="text/css" />
   <meta name="generator" content="pandoc" />
-
-
-
+  <meta name="author" content="Jacques van Helden, Hugo Varet and Frédéric Guyon" />
   <meta name="date" content="2019-01-23" />
-
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-
-  <base target="_blank">
-
-  <script type="text/javascript">
-    var SLIDE_CONFIG = {
-      // Slide settings
-      settings: {
-                title: 'Exploration of a genomic annotations table (GTF)',
-                        subtitle: 'DUBii 2019',
-                useBuilds: true,
-        usePrettify: true,
-        enableSlideAreas: true,
-        enableTouch: true,
-                      },
-
-      // Author information
-      presenters: [
-            {
-        name:  'Jacques van Helden, Hugo Varet and Frédéric Guyon' ,
-        company: '',
-        gplus: '',
-        twitter: '',
-        www: '',
-        github: ''
-      },
-            ]
-    };
-  </script>
-
-  <link href="gtf_exploration_files/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
-  <link href="gtf_exploration_files/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
-  <link href="gtf_exploration_files/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
-  <script src="gtf_exploration_files/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
-  <script src="gtf_exploration_files/ioslides-13.5.1/js/prettify/prettify.js"></script>
-  <script src="gtf_exploration_files/ioslides-13.5.1/js/prettify/lang-r.js"></script>
-  <script src="gtf_exploration_files/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
-  <script src="gtf_exploration_files/ioslides-13.5.1/js/hammer.js"></script>
-  <script src="gtf_exploration_files/ioslides-13.5.1/js/slide-controller.js"></script>
-  <script src="gtf_exploration_files/ioslides-13.5.1/js/slide-deck.js"></script>
-
+  <title>Exploration of a genomic annotations table (GTF)</title>
+  <style type="text/css">code{white-space: pre;}</style>
   <style type="text/css">
-
-    b, strong {
-      font-weight: bold;
-    }
-
-    em {
-      font-style: italic;
-    }
-
-    summary {
-      display: list-item;
-    }
-
-    slides > slide {
-      -webkit-transition: all 0.4s ease-in-out;
-      -moz-transition: all 0.4s ease-in-out;
-      -o-transition: all 0.4s ease-in-out;
-      transition: all 0.4s ease-in-out;
-    }
-
-    .auto-fadein {
-      -webkit-transition: opacity 0.6s ease-in;
-      -webkit-transition-delay: 0.4s;
-      -moz-transition: opacity 0.6s ease-in 0.4s;
-      -o-transition: opacity 0.6s ease-in 0.4s;
-      transition: opacity 0.6s ease-in 0.4s;
-      opacity: 0;
-    }
-
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #f8f8f8; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+pre, code { background-color: #f8f8f8; }
+code > span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code > span.dt { color: #204a87; } /* DataType */
+code > span.dv { color: #0000cf; } /* DecVal */
+code > span.bn { color: #0000cf; } /* BaseN */
+code > span.fl { color: #0000cf; } /* Float */
+code > span.ch { color: #4e9a06; } /* Char */
+code > span.st { color: #4e9a06; } /* String */
+code > span.co { color: #8f5902; font-style: italic; } /* Comment */
+code > span.ot { color: #8f5902; } /* Other */
+code > span.al { color: #ef2929; } /* Alert */
+code > span.fu { color: #000000; } /* Function */
+code > span.er { color: #a40000; font-weight: bold; } /* Error */
+code > span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #000000; } /* Constant */
+code > span.sc { color: #000000; } /* SpecialChar */
+code > span.vs { color: #4e9a06; } /* VerbatimString */
+code > span.ss { color: #4e9a06; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #000000; } /* Variable */
+code > span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code > span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code > span.ex { } /* Extension */
+code > span.at { color: #c4a000; } /* Attribute */
+code > span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code > span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
   </style>
-
-
+  <script src="gtf_exploration_files/jquery-1.11.3/jquery.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="gtf_exploration_files/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+  <script src="gtf_exploration_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+  <script src="gtf_exploration_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+  <script src="gtf_exploration_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+  <link href="gtf_exploration_files/slidy-2/styles/slidy.css" rel="stylesheet" />
+  <script src="gtf_exploration_files/slidy-2/scripts/slidy.js"></script>
 </head>
-
-<body style="opacity: 0">
-
-<slides class="layout-widescreen">
-
-  <slide class="title-slide segue nobackground">
-        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
-    <hgroup class="auto-fadein">
-      <h1 data-config-title><!-- populated from slide_config.json --></h1>
-      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
-      <p data-config-presenter><!-- populated from slide_config.json --></p>
-            <p style="margin-top: 6px; margin-left: -2px;">2019-01-23</p>
-          </hgroup>
-  </slide>
-
-<slide class=""><hgroup><h2>Goal of the practical session</h2></hgroup><article  id="goal-of-the-practical-session" class="smaller ">
-
+<body>
+<div class="slide titlepage">
+  <h1 class="title">Exploration of a genomic annotations table (GTF)</h1>
+  <h1 class="subtitle">DUBii 2019</h1>
+  <p class="author">
+Jacques van Helden, Hugo Varet and Frédéric Guyon
+  </p>
+  <p class="date">2019-01-23</p>
+</div>
+<div id="goal-of-the-practical-session" class="slide section level2">
+<h2>Goal of the practical session</h2>
 <p>During this practical session, we will cover the following items:</p>
-
-<ol>
+<ol style="list-style-type: decimal">
 <li>Manipulate a table containing genomics data (<em>E. Coli</em> genome annotations).</li>
 <li>Select a subset of the data/rows according to a given criterion.</li>
 <li>Generate different graphical representations of these data.</li>
 <li>Compute statistics describing the different types of annotations.</li>
 </ol>
-
-</article></slide><slide class=""><hgroup><h2>The GTF file format</h2></hgroup><article  id="the-gtf-file-format" class="smaller ">
-
+</div>
+<div id="the-gtf-file-format" class="slide section level2">
+<h2>The GTF file format</h2>
 <p>The <strong>GTF</strong> (<strong>General Transfer Format</strong>) file format is extensively used to provide easily readable genomics annotations while being very handy with a computer.</p>
-
 <p>Text files,</p>
-
 <ul>
-<li>one row per genomic &quot;object&quot; (gene, transcript, exon, intron, CDS, &#8230;)</li>
+<li>one row per genomic &quot;object&quot; (gene, transcript, exon, intron, CDS, ...)</li>
 <li>one column per attribute (name, source, object type, genomic coordinates, description).</li>
 </ul>
-
 <p>The GTF format is described on the following websites:</p>
-
 <ul>
-<li><a href='http://www.ensembl.org/info/website/upload/gff.html' title=''>http://www.ensembl.org/info/website/upload/gff.html</a></li>
-<li><a href='https://genome.ucsc.edu/FAQ/FAQformat.html#format4' title=''>https://genome.ucsc.edu/FAQ/FAQformat.html#format4</a></li>
+<li><a href="http://www.ensembl.org/info/website/upload/gff.html" class="uri">http://www.ensembl.org/info/website/upload/gff.html</a></li>
+<li><a href="https://genome.ucsc.edu/FAQ/FAQformat.html#format4" class="uri">https://genome.ucsc.edu/FAQ/FAQformat.html#format4</a></li>
 </ul>
-
-</article></slide><slide class=""><hgroup><h2>Find the GTF file of your favorite organism (on Ensembl)</h2></hgroup><article  id="find-the-gtf-file-of-your-favorite-organism-on-ensembl" class="smaller ">
-
-<ol>
-<li>Visit <a href='http://ensemblgenomes.org/' title=''>http://ensemblgenomes.org/</a>.</li>
-<li>Click on the link <a href='http://bacteria.ensembl.org/' title=''>Bacteria</a>.</li>
-<li>Click on <a href='https://bacteria.ensembl.org/info/website/ftp/index.html' title=''>Download</a></li>
+</div>
+<div id="find-the-gtf-file-of-your-favorite-organism-on-ensembl" class="slide section level2">
+<h2>Find the GTF file of your favorite organism (on Ensembl)</h2>
+<ol style="list-style-type: decimal">
+<li>Visit <a href="http://ensemblgenomes.org/" class="uri">http://ensemblgenomes.org/</a>.</li>
+<li>Click on the link <a href="http://bacteria.ensembl.org/">Bacteria</a>.</li>
+<li>Click on <a href="https://bacteria.ensembl.org/info/website/ftp/index.html">Download</a></li>
 <li>In the <strong>Filter</strong> box, write <em>Escherichia coli</em>. The list of the proposed organisms is changing while you are writing.</li>
 </ol>
-
-<p>For this session we will use the <em>E. Coli</em> GTF annotation file available <a href='ftp://ftp.ensemblgenomes.org/pub/bacteria/release-37/gtf/bacteria_0_collection/escherichia_coli_str_k_12_substr_mg1655/Escherichia_coli_str_k_12_substr_mg1655.ASM584v2.37.gtf.gz' title=''>here</a>.</p>
-
-</article></slide><slide class=""><hgroup><h2>Page d&#39;accueil d&#39;EnsemblGenomes</h2></hgroup><article  id="page-daccueil-densemblgenomes" class="smaller ">
-
-<p><a href='http://ensemblgenomes.org/' title=''>http://ensemblgenomes.org/</a></p>
-
+<p>For this session we will use the <em>E. Coli</em> GTF annotation file available <a href="ftp://ftp.ensemblgenomes.org/pub/bacteria/release-37/gtf/bacteria_0_collection/escherichia_coli_str_k_12_substr_mg1655/Escherichia_coli_str_k_12_substr_mg1655.ASM584v2.37.gtf.gz">here</a>.</p>
+</div>
+<div id="page-daccueil-densemblgenomes" class="slide section level2">
+<h2>Page d'accueil d'EnsemblGenomes</h2>
+<p><a href="http://ensemblgenomes.org/" class="uri">http://ensemblgenomes.org/</a></p>
 <p><img src="images/ensemblgenomes_home.png" width="80%" style="display: block; margin: auto;" /></p>
-
-</article></slide><slide class=""><hgroup><h2>EnsemblGenomes Bacteria</h2></hgroup><article  id="ensemblgenomes-bacteria" class="smaller ">
-
-<p><a href='http://bacteria.ensembl.org/' title=''>http://bacteria.ensembl.org/</a></p>
-
+</div>
+<div id="ensemblgenomes-bacteria" class="slide section level2">
+<h2>EnsemblGenomes Bacteria</h2>
+<p><a href="http://bacteria.ensembl.org/" class="uri">http://bacteria.ensembl.org/</a></p>
 <p><img src="images/ensemblgenomes_bacteria.png" width="80%" style="display: block; margin: auto;" /></p>
-
-</article></slide><slide class=""><hgroup><h2>EnsemblGenomes Fungi</h2></hgroup><article  id="ensemblgenomes-fungi" class="smaller ">
-
-<p><a href='http://fungi.ensembl.org/' title=''>http://fungi.ensembl.org/</a></p>
-
+</div>
+<div id="ensemblgenomes-fungi" class="slide section level2">
+<h2>EnsemblGenomes Fungi</h2>
+<p><a href="http://fungi.ensembl.org/" class="uri">http://fungi.ensembl.org/</a></p>
 <p><img src="images/ensemblgenomes_fungi.png" width="80%" style="display: block; margin: auto;" /></p>
-
-</article></slide><slide class=""><hgroup><h2>EnsemblGenomes Fungi Download page</h2></hgroup><article  id="ensemblgenomes-fungi-download-page" class="smaller ">
-
-<p><a href='http://fungi.ensembl.org/info/website/ftp/' title=''>http://fungi.ensembl.org/info/website/ftp/</a></p>
-
+</div>
+<div id="ensemblgenomes-fungi-download-page" class="slide section level2">
+<h2>EnsemblGenomes Fungi Download page</h2>
+<p><a href="http://fungi.ensembl.org/info/website/ftp/" class="uri">http://fungi.ensembl.org/info/website/ftp/</a></p>
 <p><img src="images/ensemblgenomes_download_yeast.png" width="80%" style="display: block; margin: auto;" /></p>
-
-</article></slide><slide class=""><hgroup><h2>Define and create your working directory</h2></hgroup><article  id="define-and-create-your-working-directory" class="smaller ">
-
+</div>
+<div id="define-and-create-your-working-directory" class="slide section level2">
+<h2>Define and create your working directory</h2>
 <p><strong>Exercise:</strong> create a working directory named <code>workDir</code> in your home folder and go inside.</p>
-
-<pre class = 'prettyprint lang-r'>## Define the working directory
-workDir &lt;- &quot;~/intro_R/explorer_un_GTF&quot;
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Define the working directory
+workDir &lt;-<span class="st"> &quot;~/intro_R/explorer_un_GTF&quot;</span>
 
 ## Create the working directory 
-dir.create(workDir, recursive = TRUE, showWarnings = FALSE)
+<span class="kw">dir.create</span>(workDir, <span class="dt">recursive =</span> <span class="ot">TRUE</span>, <span class="dt">showWarnings =</span> <span class="ot">FALSE</span>)
 
 ## Go to the working directory
-setwd(workDir)
-getwd()       ## Check your current location
-list.files()  ## List files (should be empty if just created)</pre>
-
-</article></slide><slide class=""><hgroup><h2>Downloading the GTF file</h2></hgroup><article  id="downloading-the-gtf-file" class="smaller ">
-
+<span class="kw">setwd</span>(workDir)
+<span class="kw">getwd</span>()       ## Check your current location
+<span class="kw">list.files</span>()  ## List files (should be empty if just created)</code></pre></div>
+</div>
+<div id="downloading-the-gtf-file" class="slide section level2">
+<h2>Downloading the GTF file</h2>
 <p><strong>Exercise:</strong> download the GTF file in the working directory (optionally, adapt the command to load a GTF of your interest). Before downloading the file we check if it is already present in the working directory. If yes, we skip the download.</p>
-
-<p>**<a href='Tip:**' title=''>Tip:**</a> use the commands <code>file.exists</code>, <code>download.file</code>.</p>
-
-</article></slide><slide class=""><hgroup><h2>Downloading the GTF file: solution</h2></hgroup><article  id="downloading-the-gtf-file-solution" class="smaller ">
-
-<pre class = 'prettyprint lang-r'>## Define the URL of the file to download
-gtf.url &lt;- &quot;ftp://ftp.ensemblgenomes.org/pub/bacteria/release-37/gtf/bacteria_0_collection/escherichia_coli_str_k_12_substr_mg1655/Escherichia_coli_str_k_12_substr_mg1655.ASM584v2.37.gtf.gz&quot;
+<p>**<a href="Tip:**" class="uri">Tip:**</a> use the commands <code>file.exists</code>, <code>download.file</code>.</p>
+</div>
+<div id="downloading-the-gtf-file-solution" class="slide section level2">
+<h2>Downloading the GTF file: solution</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Define the URL of the file to download
+gtf.url &lt;-<span class="st"> &quot;ftp://ftp.ensemblgenomes.org/pub/bacteria/release-37/gtf/bacteria_0_collection/escherichia_coli_str_k_12_substr_mg1655/Escherichia_coli_str_k_12_substr_mg1655.ASM584v2.37.gtf.gz&quot;</span>
 ## create a directory to store the file
-dir.create(&quot;data&quot;, showWarnings = FALSE)
+<span class="kw">dir.create</span>(<span class="st">&quot;data&quot;</span>, <span class="dt">showWarnings =</span> <span class="ot">FALSE</span>)
 ## create a local filename
-destfile &lt;- paste0(&quot;data/&quot;, basename(gtf.url))
-print(destfile)</pre>
-
-<pre >[1] &quot;data/Escherichia_coli_str_k_12_substr_mg1655.ASM584v2.37.gtf.gz&quot;</pre>
-
-<pre class = 'prettyprint lang-r'>## Download the file, but only if not yet there
-if (file.exists(destfile)) {
-  message(&quot;GTF annotation file already there: &quot;, destfile)
-} else {
-  message(&quot;Downloading GTF annotation file&quot;)
-  download.file(url = gtf.url, destfile = destfile)
+destfile &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;data/&quot;</span>, <span class="kw">basename</span>(gtf.url))
+<span class="kw">print</span>(destfile)</code></pre></div>
+<pre><code>[1] &quot;data/Escherichia_coli_str_k_12_substr_mg1655.ASM584v2.37.gtf.gz&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Download the file, but only if not yet there
+<span class="cf">if</span> (<span class="kw">file.exists</span>(destfile)) {
+  <span class="kw">message</span>(<span class="st">&quot;GTF annotation file already there: &quot;</span>, destfile)
+} <span class="cf">else</span> {
+  <span class="kw">message</span>(<span class="st">&quot;Downloading GTF annotation file&quot;</span>)
+  <span class="kw">download.file</span>(<span class="dt">url =</span> gtf.url, <span class="dt">destfile =</span> destfile)
 }
 ## Check the files in the work directory
-list.files()</pre>
-
-<pre > [1] &quot;data&quot;                 &quot;exprs8.txt&quot;           &quot;figures&quot;             
+<span class="kw">list.files</span>()</code></pre></div>
+<pre><code> [1] &quot;data&quot;                 &quot;exprs8.txt&quot;           &quot;figures&quot;             
  [4] &quot;gtf_exploration.html&quot; &quot;gtf_exploration.md&quot;   &quot;gtf_exploration.pdf&quot; 
  [7] &quot;gtf_exploration.Rmd&quot;  &quot;images&quot;               &quot;R_intro.html&quot;        
-[10] &quot;R_intro.pdf&quot;          &quot;R_intro.Rmd&quot;          &quot;README.html&quot;         
-[13] &quot;README.md&quot;            &quot;seance_1_files&quot;       &quot;seance_1.md&quot;         </pre>
-
-</article></slide><slide class=""><hgroup><h2>Loading a data table in R</h2></hgroup><article  id="loading-a-data-table-in-r" class="smaller ">
-
+[10] &quot;R_intro.md&quot;           &quot;R_intro.pdf&quot;          &quot;R_intro.Rmd&quot;         
+[13] &quot;README.html&quot;          &quot;README.md&quot;           </code></pre>
+</div>
+<div id="loading-a-data-table-in-r" class="slide section level2">
+<h2>Loading a data table in R</h2>
 <p>Commands: <code>read.table</code>, <code>read.delim</code>, <code>read.csv</code>.</p>
-
 <p>R includes several types of tabular structures (matrix, data.frame, table). The most widely used is <code>data.frame()</code>, which consists in a table of values with a type (strings, integer, ..) attached to each column, and names associated to rows and columns.</p>
-
 <p>The function <code>read.table()</code> enables to read a text file containing tabular data, and to store its content in a variable.</p>
-
 <p>Several finctions derived from <code>read.table()</code> facilitate the loading of different formats.</p>
-
 <ul>
 <li><p><code>read.delim()</code> for files where a particular charcater is used as column separator (by default the tab character &quot;&quot;).</p></li>
 <li><p><code>read.csv()</code> for &quot;comma-searated values&quot;.</p></li>
 </ul>
-
-</article></slide><slide class=""><hgroup><h2>Loading the GTF file</h2></hgroup><article  id="loading-the-gtf-file" class="smaller ">
-
+</div>
+<div id="loading-the-gtf-file" class="slide section level2">
+<h2>Loading the GTF file</h2>
 <p>Load the GTF file in a variable named <code>featureTable</code>.</p>
-
-<p>**<a href='Tip:**' title=''>Tip:**</a> command <code>read.delim</code>.</p>
-
-<pre class = 'prettyprint lang-r'>## Load GTF file in a data.frame
-featureTable &lt;- read.delim(destfile, comment.char = &quot;#&quot;, sep=&quot;\t&quot;, 
-                           header=FALSE, row.names = NULL)
+<p>**<a href="Tip:**" class="uri">Tip:**</a> command <code>read.delim</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Load GTF file in a data.frame
+featureTable &lt;-<span class="st"> </span><span class="kw">read.delim</span>(destfile, <span class="dt">comment.char =</span> <span class="st">&quot;#&quot;</span>, <span class="dt">sep=</span><span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>, 
+                           <span class="dt">header=</span><span class="ot">FALSE</span>, <span class="dt">row.names =</span> <span class="ot">NULL</span>)
 
 ## The GTF format has no header, but we can define it based on the specification
-names(featureTable) &lt;- c(&quot;seqname&quot;, &quot;source&quot;, &quot;feature&quot;, &quot;start&quot;, &quot;end&quot;,
-                         &quot;score&quot;, &quot;strand&quot;, &quot;frame&quot;, &quot;attribute&quot;)</pre>
-
-</article></slide><slide class=""><hgroup><h2>Exploring the content of a data table</h2></hgroup><article  id="exploring-the-content-of-a-data-table" class="smaller ">
-
+<span class="kw">names</span>(featureTable) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;seqname&quot;</span>, <span class="st">&quot;source&quot;</span>, <span class="st">&quot;feature&quot;</span>, <span class="st">&quot;start&quot;</span>, <span class="st">&quot;end&quot;</span>,
+                         <span class="st">&quot;score&quot;</span>, <span class="st">&quot;strand&quot;</span>, <span class="st">&quot;frame&quot;</span>, <span class="st">&quot;attribute&quot;</span>)</code></pre></div>
+</div>
+<div id="exploring-the-content-of-a-data-table" class="slide section level2">
+<h2>Exploring the content of a data table</h2>
 <p>Immediately after having loaded a data table, check its dimensions.</p>
-
-<pre class = 'prettyprint lang-r'>dim(featureTable) ## Dimensions of the tbale</pre>
-
-<pre >[1] 25979     9</pre>
-
-<pre class = 'prettyprint lang-r'>nrow(featureTable) ## Number of rows</pre>
-
-<pre >[1] 25979</pre>
-
-<pre class = 'prettyprint lang-r'>ncol(featureTable) ## Number of columns</pre>
-
-<pre >[1] 9</pre>
-
-</article></slide><slide class=""><hgroup><h2>Checking heads and tails</h2></hgroup><article  id="checking-heads-and-tails" class="smaller ">
-
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dim</span>(featureTable) ## Dimensions of the tbale</code></pre></div>
+<pre><code>[1] 25979     9</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">nrow</span>(featureTable) ## Number of rows</code></pre></div>
+<pre><code>[1] 25979</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ncol</span>(featureTable) ## Number of columns</code></pre></div>
+<pre><code>[1] 9</code></pre>
+</div>
+<div id="checking-heads-and-tails" class="slide section level2">
+<h2>Checking heads and tails</h2>
 <p>Displaying the full annotation table would not be very convenient, since it contains tens of thousands of rows.</p>
-
 <p>We can display the first rows of the file with the function <code>head()</code>, and the last rows with <code>tail()</code>.</p>
-
-<pre class = 'prettyprint lang-r'>## Display the 5 first rows of the feature table
-head(featureTable, n = 5) 
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Display the 5 first rows of the feature table
+<span class="kw">head</span>(featureTable, <span class="dt">n =</span> <span class="dv">5</span>) 
 
 ## Display the 5 last rows of the feature table
-tail(featureTable, n = 5) </pre>
-
-</article></slide><slide class=""><hgroup><h2>Viewing a table</h2></hgroup><article  id="viewing-a-table" class="smaller ">
-
+<span class="kw">tail</span>(featureTable, <span class="dt">n =</span> <span class="dv">5</span>) </code></pre></div>
+</div>
+<div id="viewing-a-table" class="slide section level2">
+<h2>Viewing a table</h2>
 <p>If you are using the <strong>RStudio</strong> environment, you can display the table in a dynamic viewer pane with the function <code>View()</code>.</p>
-
-<pre class = 'prettyprint lang-r'>## In RStudio, display the table in a separate tab
-View(featureTable) </pre>
-
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## In RStudio, display the table in a separate tab
+<span class="kw">View</span>(featureTable) </code></pre></div>
 <p>The <code>View()</code> function is interactive, so it should not be used in a script because it would perturbate its execution.</p>
-
-</article></slide><slide class=""><hgroup><h2>Selecting columns</h2></hgroup><article  id="selecting-columns" class="smaller ">
-
+</div>
+<div id="selecting-columns" class="slide section level2">
+<h2>Selecting columns</h2>
 <p>The last column of GTF files is particularly heavy, it contains a lof of semi-structured information.</p>
-
 <p>We can select the 8 first columns and display the 5 first rows of this sub-table.</p>
-
-<pre class = 'prettyprint lang-r'>## Column selection + head
-head(featureTable[,1:8], n=5)</pre>
-
-<pre >     seqname source     feature start end score strand frame
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Column selection + head
+<span class="kw">head</span>(featureTable[,<span class="dv">1</span><span class="op">:</span><span class="dv">8</span>], <span class="dt">n=</span><span class="dv">5</span>)</code></pre></div>
+<pre><code>     seqname source     feature start end score strand frame
 1 Chromosome    ena        gene   190 255     .      +     .
 2 Chromosome    ena  transcript   190 255     .      +     .
 3 Chromosome    ena        exon   190 255     .      +     .
 4 Chromosome    ena         CDS   190 252     .      +     0
-5 Chromosome    ena start_codon   190 192     .      +     0</pre>
-
-<pre class = 'prettyprint lang-r'>## Equivalent: selecting subsets of rows and columns
-featureTable[1:5, 1:8]</pre>
-
-<pre >     seqname source     feature start end score strand frame
+5 Chromosome    ena start_codon   190 192     .      +     0</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Equivalent: selecting subsets of rows and columns
+featureTable[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">8</span>]</code></pre></div>
+<pre><code>     seqname source     feature start end score strand frame
 1 Chromosome    ena        gene   190 255     .      +     .
 2 Chromosome    ena  transcript   190 255     .      +     .
 3 Chromosome    ena        exon   190 255     .      +     .
 4 Chromosome    ena         CDS   190 252     .      +     0
-5 Chromosome    ena start_codon   190 192     .      +     0</pre>
-
-</article></slide><slide class=""><hgroup><h2>Feature types</h2></hgroup><article  id="feature-types" class="smaller ">
-
+5 Chromosome    ena start_codon   190 192     .      +     0</code></pre>
+</div>
+<div id="feature-types" class="slide section level2">
+<h2>Feature types</h2>
 <p><strong>Exercise:</strong> the column <em>feature</em> of the GTF indicates the feature table.</p>
-
 <ul>
 <li>List the feature types found in the GTF</li>
 <li>Count the number of features per type, and sort them by decreasing values.</li>
 </ul>
-
 <p><strong>Tip: </strong> commands <code>unique</code>, <code>table</code> and <code>sort</code>.</p>
-
-<pre class = 'prettyprint lang-r'>## List the types of features
-unique(featureTable$feature)</pre>
-
-<pre >[1] gene        transcript  exon        CDS         start_codon stop_codon 
-Levels: CDS exon gene start_codon stop_codon transcript</pre>
-
-<pre class = 'prettyprint lang-r'>## Count the number of features per type
-sort(table(featureTable$feature), decreasing = TRUE)</pre>
-
-<pre >
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## List the types of features
+<span class="kw">unique</span>(featureTable<span class="op">$</span>feature)</code></pre></div>
+<pre><code>[1] gene        transcript  exon        CDS         start_codon stop_codon 
+Levels: CDS exon gene start_codon stop_codon transcript</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Count the number of features per type
+<span class="kw">sort</span>(<span class="kw">table</span>(featureTable<span class="op">$</span>feature), <span class="dt">decreasing =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<pre><code>
        exon        gene  transcript         CDS start_codon  stop_codon 
-       4564        4497        4497        4141        4140        4140 </pre>
-
-</article></slide><slide class=""><hgroup><h2>Décompte par valeur</h2></hgroup><article  id="decompte-par-valeur" class="smaller ">
-
+       4564        4497        4497        4141        4140        4140 </code></pre>
+</div>
+<div id="decompte-par-valeur" class="slide section level2">
+<h2>Décompte par valeur</h2>
 <p>The <code>table()</code> function allows to count the frequency of each value in a qualitative variable:</p>
-
-<pre class = 'prettyprint lang-r'>## Count the number of features per chromosome
-table(featureTable$seqname)</pre>
-
-<pre >
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Count the number of features per chromosome
+<span class="kw">table</span>(featureTable<span class="op">$</span>seqname)</code></pre></div>
+<pre><code>
 Chromosome 
-     25979 </pre>
-
-<pre class = 'prettyprint lang-r'>## Count the number of features per strand
-table(featureTable$strand)</pre>
-
-<pre >
+     25979 </code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Count the number of features per strand
+<span class="kw">table</span>(featureTable<span class="op">$</span>strand)</code></pre></div>
+<pre><code>
     -     + 
-13246 12733 </pre>
-
-<pre class = 'prettyprint lang-r'>## Count the number of features per type
-table(featureTable$feature)</pre>
-
-<pre >
+13246 12733 </code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Count the number of features per type
+<span class="kw">table</span>(featureTable<span class="op">$</span>feature)</code></pre></div>
+<pre><code>
         CDS        exon        gene start_codon  stop_codon  transcript 
-       4141        4564        4497        4140        4140        4497 </pre>
-
-</article></slide><slide class=""><hgroup><h2>Contingency table</h2></hgroup><article  id="contingency-table" class="smaller ">
-
+       4141        4564        4497        4140        4140        4497 </code></pre>
+</div>
+<div id="contingency-table" class="slide section level2">
+<h2>Contingency table</h2>
 <p>We can compute the number of combinations between two qualitatives variables:</p>
-
-<pre class = 'prettyprint lang-r'>##  Table with two vectors
-table(featureTable$strand, featureTable$feature)</pre>
-
-<pre >   
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">##  Table with two vectors
+<span class="kw">table</span>(featureTable<span class="op">$</span>strand, featureTable<span class="op">$</span>feature)</code></pre></div>
+<pre><code>   
      CDS exon gene start_codon stop_codon transcript
   - 2129 2307 2277        2128       2128       2277
-  + 2012 2257 2220        2012       2012       2220</pre>
-
-<pre class = 'prettyprint lang-r'>## Same result with a 2-column data frame
-table(featureTable[, c(&quot;strand&quot;, &quot;feature&quot;)])</pre>
-
-<pre >      feature
+  + 2012 2257 2220        2012       2012       2220</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Same result with a 2-column data frame
+<span class="kw">table</span>(featureTable[, <span class="kw">c</span>(<span class="st">&quot;strand&quot;</span>, <span class="st">&quot;feature&quot;</span>)])</code></pre></div>
+<pre><code>      feature
 strand  CDS exon gene start_codon stop_codon transcript
      - 2129 2307 2277        2128       2128       2277
-     + 2012 2257 2220        2012       2012       2220</pre>
-
-</article></slide><slide class=""><hgroup><h2>Computing feature lengths</h2></hgroup><article  id="computing-feature-lengths" class="smaller ">
-
+     + 2012 2257 2220        2012       2012       2220</code></pre>
+</div>
+<div id="computing-feature-lengths" class="slide section level2">
+<h2>Computing feature lengths</h2>
 <ul>
 <li>Add a column with feature lengths.</li>
 </ul>
-
 <p><strong>Note about feature length computation (explain why) :</strong></p>
-
-<p>\[L = \text{end} - \text{start} + 1\]</p>
-
-<pre class = 'prettyprint lang-r'>## Add a column to the table with genes lengths
-featureTable$length &lt;- featureTable$end - featureTable$start + 1</pre>
-
-</article></slide><slide class=""><hgroup><h2>Filtering rows based on a column content</h2></hgroup><article  id="filtering-rows-based-on-a-column-content" class="smaller ">
-
+<p><span class="math display">\[L = \text{end} - \text{start} + 1\]</span></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Add a column to the table with genes lengths
+featureTable<span class="op">$</span>length &lt;-<span class="st"> </span>featureTable<span class="op">$</span>end <span class="op">-</span><span class="st"> </span>featureTable<span class="op">$</span>start <span class="op">+</span><span class="st"> </span><span class="dv">1</span></code></pre></div>
+</div>
+<div id="filtering-rows-based-on-a-column-content" class="slide section level2">
+<h2>Filtering rows based on a column content</h2>
 <p>The function <code>subset()</code> enables to select a subset of rows based on a filter applied to the content of one or several columns.</p>
-
 <p>We can use it to select the subset of features corresponding to genes.</p>
-
-</article></slide><slide class=""><hgroup><h2>Selecting genes from the GTF table</h2></hgroup><article  id="selecting-genes-from-the-gtf-table" class="smaller ">
-
+</div>
+<div id="selecting-genes-from-the-gtf-table" class="slide section level2">
+<h2>Selecting genes from the GTF table</h2>
 <ul>
 <li>Select of genes from the GTF table and store them in a separate variable named <code>genes</code>.</li>
 <li>Compute summary statistics about gene lengthhs</li>
 </ul>
-
 <p><strong>Tip: </strong> commands <code>subset</code>, <code>summary</code>.</p>
-
-<pre class = 'prettyprint lang-r'>## Select subset of features having &quot;CDS&quot; as &quot;feature&quot; attribute
-genes &lt;- subset(featureTable, feature == &quot;gene&quot;)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Select subset of features having &quot;CDS&quot; as &quot;feature&quot; attribute
+genes &lt;-<span class="st"> </span><span class="kw">subset</span>(featureTable, feature <span class="op">==</span><span class="st"> &quot;gene&quot;</span>)
 
 ## Print a message with the number of genes
-message(&quot;Number of genes: &quot;, nrow(genes))
+<span class="kw">message</span>(<span class="st">&quot;Number of genes: &quot;</span>, <span class="kw">nrow</span>(genes))
 
 ## Compute basic statistics on genes lengths
-summary(genes$length)</pre>
-
-<pre >   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-   14.0   462.0   813.0   929.4  1221.0 21837.0 </pre>
-
+<span class="kw">summary</span>(genes<span class="op">$</span>length)</code></pre></div>
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   14.0   462.0   813.0   929.4  1221.0 21837.0 </code></pre>
 <!-- ## Downloading chromosome sizes -->
-
 <!-- - Download chromosome sizes ([chrom_sizes.tsv](https://github.com/jvanheld/stats_avec_RStudio_EBA/blob/gh-pages/practicals/gtf_exploration/data/chrom_sizes.tsv))  -->
-
 <!-- ```{r downlaod_chromosome_sizes} -->
-
 <!-- ## Download tab-delimited file with chromosome sizes (unless already there) -->
-
 <!-- chromsizes.url <- "https://github.com/jvanheld/stats_avec_RStudio_EBA/blob/gh-pages/practicals/gtf_exploration/data/Saccharomyces_cerevisiae.R64-1-1.41_chrom_sizes.tsv" -->
-
 <!-- chrom.size.file <- file.path(workDir, "Saccharomyces_cerevisiae.R64-1-1.41_chrom_sizes.tsv") -->
-
 <!-- if (file.exists(chrom.size.file)) { -->
-
 <!-- } else { -->
-
 <!--     download.file(chromsizes.url, destfile = chrom.size.file) -->
-
 <!-- } -->
-
 <!-- ``` -->
-
 <!-- ## Loading chromosome sizes -->
-
 <!-- ```{r load_chrom_sizes} -->
-
 <!-- ## Read chromosome sizes -->
-
 <!-- chrom.size <- read.delim( -->
-
 <!--   file = chrom.size.file, -->
-
 <!--   header = FALSE, row.names = 1) -->
-
 <!-- ## Assign a name to the columns -->
-
 <!-- names(chrom.size) <- c("chromID", "size") -->
-
 <!-- # View(chrom.size) -->
-
 <!-- ## print the size of hte third chromosome -->
-
 <!-- message("Length of chromosome III = ", chrom.size["III", "size"], " bp.") -->
-
 <!-- ``` -->
-
-</article></slide><slide class=""><hgroup><h2>Exercices</h2></hgroup><article  id="exercices" class="smaller ">
-
-<ol>
+</div>
+<div id="exercices" class="slide section level2">
+<h2>Exercices</h2>
+<ol style="list-style-type: decimal">
 <li>Draw an histogram with gene length distribution. Choose a relevant number of breaks to display an informative histogram.</li>
 <li>Draw a boxplot of gene lengths per strand. Are gene longer on the minus or plus strand?</li>
 </ol>
-
-</article></slide><slide class=""><hgroup><h2>Gene length histogram</h2></hgroup><article  id="gene-length-histogram" class="smaller ">
-
-<pre class = 'prettyprint lang-r'>hist(genes$length)</pre>
-
+</div>
+<div id="gene-length-histogram" class="slide section level2">
+<h2>Gene length histogram</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(genes<span class="op">$</span>length)</code></pre></div>
 <p><img src="figures/hist_default-1.png" width="70%" style="display: block; margin: auto;" /></p>
-
-</article></slide><slide class=""><hgroup><h2>Setting a relevant number of breaks</h2></hgroup><article  id="setting-a-relevant-number-of-breaks" class="smaller ">
-
-<pre class = 'prettyprint lang-r'>## Take more or less 100 bins
-hist(genes$length, breaks = 100)</pre>
-
+</div>
+<div id="setting-a-relevant-number-of-breaks" class="slide section level2">
+<h2>Setting a relevant number of breaks</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Take more or less 100 bins
+<span class="kw">hist</span>(genes<span class="op">$</span>length, <span class="dt">breaks =</span> <span class="dv">100</span>)</code></pre></div>
 <p><img src="figures/hist_100breaks-1.png" width="70%" style="display: block; margin: auto;" /></p>
-
-</article></slide><slide class=""><hgroup><h2>Gene length distribution &#8211; improving the output</h2></hgroup><article  id="gene-length-distribution----improving-the-output" class="smaller ">
-
+</div>
+<div id="gene-length-distribution----improving-the-output" class="slide section level2">
+<h2>Gene length distribution -- improving the output</h2>
 <div class="figure" style="text-align: center">
 <img src="figures/gene_length_histogram-1.png" alt="Distribution of gene lengths for E. Coli. " width="90%" />
-
 <p class="caption">
-
 Distribution of gene lengths for E. Coli.
-
-</p></div>
-
+</p>
+</div>
 <!-- ## Getting the hist() data -->
-
 <!-- Récupérez le résultat de `hist()` dans une variable nommée `{histData}`. -->
-
 <!-- ```{r hist_data} -->
-
 <!-- ## Define breaks exactly in the way you wish -->
-
 <!-- histData <- hist(genes$length, breaks=seq(from=0, to=max(genes$length)+100, by=100)) -->
-
 <!-- ``` -->
-
 <!-- Imprimez le résultat à l'écran (`print()`) et analysez la structure de la variable `histData` (il s'agit d'une variable de type liste).  -->
-
 <!-- Fonctions utiles:  -->
-
 <!-- - `class(histData)` -->
-
 <!-- - `attributes(histData)` -->
-
 <!-- - `print(histData)` -->
-
 <!-- ```{r hist_data_print, echo=TRUE, eval=FALSE} -->
-
 <!-- ## Display the values used to draw the histogram -->
-
 <!-- print(histData) -->
-
 <!-- ``` -->
-
-</article></slide><slide class=""><hgroup><h2>Gene length box plot</h2></hgroup><article  id="gene-length-box-plot" class="smaller ">
-
+</div>
+<div id="gene-length-box-plot" class="slide section level2">
+<h2>Gene length box plot</h2>
 <p>Other types of plots allow to explore the distribution of some data. In particular, boxplots display the median, the first and third quartiles and outlier values.</p>
-
-<pre class = 'prettyprint lang-r'>boxplot(length ~ strand, data = genes, col=&quot;palegreen&quot;, horizontal=TRUE, 
-        las=1, xlab=&quot;Gene length&quot;, ylab=&quot;Strand&quot;)</pre>
-
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(length <span class="op">~</span><span class="st"> </span>strand, <span class="dt">data =</span> genes, <span class="dt">col=</span><span class="st">&quot;palegreen&quot;</span>, <span class="dt">horizontal=</span><span class="ot">TRUE</span>, 
+        <span class="dt">las=</span><span class="dv">1</span>, <span class="dt">xlab=</span><span class="st">&quot;Gene length&quot;</span>, <span class="dt">ylab=</span><span class="st">&quot;Strand&quot;</span>)</code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figures/gene_length_boxplot-1.png" alt="Boxplot of gene lengths per chromosome" width="70%" />
-
 <p class="caption">
-
 Boxplot of gene lengths per chromosome
-
-</p></div>
-
+</p>
+</div>
 <!--
 ## Rendu
---></article></slide>
+-->
+</div>
 
-
-  <slide class="backdrop"></slide>
-
-</slides>
-
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
-
-<!-- map slide visiblity events into shiny -->
-<script>
-  (function() {
-    if (window.jQuery) {
-       window.jQuery(document).on('slideleave', function(e) {
-         window.jQuery(e.target).trigger('hidden');
-      });
-       window.jQuery(document).on('slideenter', function(e) {
-         window.jQuery(e.target).trigger('shown');
-      });
-    }
-  })();
-</script>
+  <!-- dynamically load mathjax for compatibility with self-contained -->
+  <script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script>
 
 </body>
 </html>

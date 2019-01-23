@@ -3,18 +3,20 @@ title: "Exploration of a genomic annotations table (GTF)"
 author: "Jacques van Helden, Hugo Varet and Frédéric Guyon"
 date: '`r Sys.Date()`'
 output:
-  beamer_presentation:
-    colortheme: dolphin
+  slidy_presentation:
+    smart: no
+    slide_level: 2
+    self_contained: no
     fig_caption: yes
     fig_height: 6
     fig_width: 7
-    fonttheme: structurebold
     highlight: tango
     incremental: no
-    keep_tex: no
-    slide_level: 2
-    theme: Montpellier
+    keep_md: yes
+    smaller: yes
+    theme: cerulean
     toc: yes
+    widescreen: yes
   ioslides_presentation:
     slide_level: 2
     self_contained: no
@@ -40,20 +42,18 @@ output:
     toc: yes
     toc_depth: 3
     toc_float: yes
-  slidy_presentation:
-    smart: no
-    slide_level: 2
-    self_contained: no
+  beamer_presentation:
+    colortheme: dolphin
     fig_caption: yes
     fig_height: 6
     fig_width: 7
+    fonttheme: structurebold
     highlight: tango
     incremental: no
-    keep_md: yes
-    smaller: yes
-    theme: cerulean
+    keep_tex: no
+    slide_level: 2
+    theme: Montpellier
     toc: yes
-    widescreen: yes
 font-import: http://fonts.googleapis.com/css?family=Risque
 subtitle: DUBii 2019
 font-family: Garamond
