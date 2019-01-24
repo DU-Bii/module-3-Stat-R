@@ -20,6 +20,11 @@ dependencies:
   - conda-forge::r-yaml         # Required to load Yaml config files
   - conda-forge::r-e1071        # for SVM
   - conda-forge::r-randomforest # Supervised classification
+  - r::r-tidyverse    # Collection of R packages designed for data science (ggplot2, tidyr, dplyr, readr, purr, tibble, strigr, forcats)
+  - r::r-FactoMineR   # For PCA
+  - r::r-factoextra   # To plot PCA output
+  - r::r-cowplot      # Add-on to ggplot2 for enhance design
+  - r::r-corrplot     # Graphical display of a correlation matrix, confidence interval
   
   ## Bioconductor packages
   - bioconda::bioconductor-deseq2
