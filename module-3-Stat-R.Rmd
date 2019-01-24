@@ -222,7 +222,7 @@ Applications:
 
 - Messages
     - Différentes méthodes sont appropriées pour différents types de données
-    - Au-delà de la méthodes, des paramètres influencence des paramètres 
+    - Au-delà de la méthode, influence des paramètres 
 
     
 ### [Séance 5: Statistiques d'enrichissement](seance_5/README.md)
