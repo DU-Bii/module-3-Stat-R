@@ -4,22 +4,22 @@
 name: dubii_r_2019
 
 channels:
-  - r
   - conda-forge
+  - bioconda/label/gcc7       # To get R > 3.5
   - bioconda
+  - default
   - lcantini
 
 dependencies:
 
   ## RCRAN packages
-  - r::r-base  >=3.5,< 3.6
-  - r::r-knitr        # For R markdown
-  - r::r-kableextra   # To export nice-looking tables in the R markdown reports
-  - r::r-formattable  # nice formating of tables in reports
-  - r::r-roxygen2     # To build package documentation
-  - r::r-yaml         # Required to load Yaml config files
-  - r::r-e1071        # for SVM
-  - r::r-randomforest # Supervised classification
+  - conda-forge::r-knitr        # For R markdown
+  - conda-forge::r-kableextra   # To export nice-looking tables in the R markdown reports
+  - conda-forge::r-formattable  # nice formating of tables in reports
+  - conda-forge::r-roxygen2     # To build package documentation
+  - conda-forge::r-yaml         # Required to load Yaml config files
+  - conda-forge::r-e1071        # for SVM
+  - conda-forge::r-randomforest # Supervised classification
   
   ## Bioconductor packages
   - bioconda::bioconductor-deseq2
