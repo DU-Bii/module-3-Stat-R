@@ -1,0 +1,208 @@
+---
+title: "Présentation du module 3, R et statistiques"
+author: ""
+date: '`r Sys.Date()`'
+output:
+  beamer_presentation:
+    colortheme: dolphin
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    fonttheme: structurebold
+    highlight: tango
+    incremental: no
+    keep_tex: yes
+    slide_level: 2
+    theme: Montpellier
+    toc: yes
+  ioslides_presentation:
+    slide_level: 2
+    self_contained: no
+    colortheme: dolphin
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    fonttheme: structurebold
+    highlight: tango
+    smaller: yes
+    toc: yes
+    widescreen: yes
+  slidy_presentation:
+    smart: no
+    slide_level: 2
+    self_contained: yes
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    highlight: tango
+    incremental: no
+    keep_md: yes
+    smaller: yes
+    theme: cerulean
+    toc: yes
+    widescreen: yes
+  html_document:
+    self_contained: no
+    fig_caption: yes
+    highlight: zenburn
+    theme: cerulean
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+  revealjs::revealjs_presentation:
+    theme: league
+    transition: none
+    self_contained: true
+    css: ../slides.css
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
+font-import: http://fonts.googleapis.com/css?family=Risque
+font-family: Garamond
+transition: linear
+---
+
+```{r include=FALSE, echo=FALSE, eval=TRUE}
+library(knitr)
+library(kableExtra)
+# library(formattable)
+options(width = 300)
+# options(encoding = 'UTF-8')
+knitr::opts_chunk$set(
+  fig.width = 7, fig.height = 5, 
+  fig.path = 'figures/intro',
+  fig.align = "center", 
+  size = "tiny", 
+  echo = TRUE, eval = TRUE, 
+  warning = FALSE, message = FALSE, 
+  results = FALSE, comment = "")
+options(scipen = 12) ## Max number of digits for non-scientific notation
+# knitr::asis_output("\\footnotesize")
+```
+
+## Le git du module 3
+
+https://du-bii.github.io/module-3-Stat-R/ 
+
+## Les séances
+
+| Séance | Contenu | 
+|--------|-----------------------------------|
+| 1 | Premiers pas avec R | 
+| 2 | Analyse statistique avec R |
+| 3 | Détection de gènes différentiellement exprimés |
+| 4 | Classification non supervisée (clustering) |
+| 5 | Statistiques d'enrichissement |
+| 6 | Classification supervisée (classement) |
+
+
+## Prérequis
+
+Vous avez suivi le module "Introduction to R" sur DataCamp:  <https://www.datacamp.com/courses/free-introduction-to-r>
+
+Vous vous êtes initiés aux éléments suivants :
+
+  - syntaxe de R
+  - calculs de base 
+  - affectation de variables
+  - classes de variables (numériques, caractères, logiques)
+
+
+
+## Compétences attendues à la fin du module 3 - Analyse statistique avec R
+
+A la fin du module, vous
+
+- Maîtriserez le langage R, en particulier
+    - la lecture des fichiers de données (généralement en format tabulaire), 
+    - les structures de données courantes (vecteurs, matrices, data frames, ...),
+    - l'exportation des résultats sous différents formats,
+    - les différents types de représentations graphiques
+
+---
+### Et vous serez capable de 
+
+- Réaliser des analyses statistiques, en particulier
+    - la conception d'un plan d'analyse pour différents types de données biologiques à haut débit,
+    - la mise en oeuvre ces analyses statistiques au moyen de scripts R, 
+    - l'interprétation des résultats en les mettant en rapport avec les questions biologiques
+
+- Générer un rapport scientifique en format R markdown, avec
+    - l'intégration de blocs de code dans un texte formaté
+    - assurant la cohérence entre les résultats et figures (générés au vol), et le texte qui en fournit l'interprétation
+    - et la reproductibilité des analyses
+
+
+## Séance 1 : Introduction à R
+
+*Intervenants : Hugo Varet et Frédéric Guyon*
+
+**Concepts :**
+
+  - Premiers pas avec R
+  - Statistiques descriptives, estimateurs
+  - Distributions théoriques de probabilité 
+  - Quelques représentations graphiques 
+
+
+## Séance 2 : Analyse statistique avec R
+
+*Intervenants : Leslie Regad et Magali Berland*
+
+**Concepts : **
+
+  - Echantillonnage et estimation
+  - Tests d'hypothèse
+  - Représentations graphiques
+
+## Séance 3 : Détection de gènes différentiellement exprimés
+
+*Intervenants : Claire Vandiedonck, Magali Berland et Jacques van Helden*
+
+**Concepts :**
+
+  - Echantillonnage et estimation
+  - Tests d'hypothèse
+  - Tests multiples
+  - Visualisation des résultats globaux 
+  - Evaluation de l'impact des choix de logiciels et paramètres 
+  - Comparaison des projections ACP avec tous les gènes et avec la sélection de gènes différentiellement exprimés
+
+## Séance 4 : Classification non supervisée ou clustering 
+
+*Intervenants : Frédéric Guyon, Anne Badel et Jacques van Helden*
+
+**Concepts :**
+
+  - Approches de clustering : hiérarchique, K-means
+  - Hiérarchique : critères d'agglomération (single, average, complete)
+  - Métrique de (dis)similarité : euclidienne, corrélation, dot product
+  - Complexité des algorithmes
+  - Evaluation du clustering, comment choisir le nombre de groupes ?
+  - Comparaison de résultats de clustering : 
+  - Mesures de performance 
+  - Visualisation (heat maps, arbres, PCs)
+
+
+## Séance 5 : Statistiques d'enrichissement
+
+*Intervenants : Jacques van Helden + Claire Vandiedonck*
+
+**Concepts :**
+
+  - Distributions discrètes de probabilité
+  - Test exact de Fisher
+  - Détection d'enrichissement 
+  - Corrections de tests multiples (avec dépendances)
+
+## Séance 6: Classification supervisée
+
+*Intervenants : Jacques van Helden, Leslie Regad et Frédéric Guyon*
+
+**Concepts :**
+ 
+  - Approches de classification supervisées, k-nearest neighbours, Random Forest, SVM
+  - Entraînement / test
+  - Evaluation des résultats (évaluation croisée, mesures de performance)
