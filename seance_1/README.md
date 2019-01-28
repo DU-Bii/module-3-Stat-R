@@ -1,7 +1,7 @@
 # Séance 1 : Introduction à R
 
 
-- Présntation du module
+- Présentation du module
 [[html](module-3-Stat-R_presentation.html)]
 [[Rmd](module-3-Stat-R_presentation.Rmd)]
 
