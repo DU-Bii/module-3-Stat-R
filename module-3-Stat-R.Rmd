@@ -282,9 +282,11 @@ Calendrier du DUBii : <https://goo.gl/MVEA4q>
 
 ## Un peu de bibliographie
 
-![](img/Capture d’écran 2019-01-28 à 16.37.20.png) "Analyse de données avec R", Husson, F., S. Lê et Pagès J. (2009) Analyse de données avec R. Presses Universitaires.
+![](img/Capture d’écran 2019-01-28 à 16.37.20.png) 
+"Analyse de données avec R", Husson, F., S. Lê et Pagès J. (2009) Analyse de données avec R. Presses Universitaires.
 
-![](img/Capture d’écran 2019-01-28 à 16.33.32.png) "Statistiques avec R", 3ème édition augmentée en couleurs, Cornillon P.A., Guyader A., Husson F., Jégou N., Josse J., Kloareg M., Matzner-Løber E., Rouvière L. (2012) Presses Universitaires de Rennes.
+![](img/Capture d’écran 2019-01-28 à 16.33.32.png) 
+"Statistiques avec R", 3ème édition augmentée en couleurs, Cornillon P.A., Guyader A., Husson F., Jégou N., Josse J., Kloareg M., Matzner-Løber E., Rouvière L. (2012) Presses Universitaires de Rennes.
 
 ## Installation locale
 
