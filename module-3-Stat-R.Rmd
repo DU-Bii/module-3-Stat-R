@@ -286,9 +286,9 @@ Calendrier du DUBii : <https://goo.gl/MVEA4q>
 
 ![](img/statAvecR.png){:width="100px"} "Statistiques avec R", 3ème édition augmentée en couleurs, Cornillon P.A., Guyader A., Husson F., Jégou N., Josse J., Kloareg M., Matzner-Løber E., Rouvière L. (2012) Presses Universitaires de Rennes.
 
-![](img/RforDataScience.png){:width="100px"} "R for Data Science", Hadley Wickham & Garrett Grolemund, O’Reilly [lien de téléchargement](https://r4ds.had.co.nz/index.html)
+![](img/RforDataScience.png){:width="100px"} "R for Data Science", Hadley Wickham & Garrett Grolemund, O’Reilly [lien](https://r4ds.had.co.nz/index.html)
 
-![](img/advancedR.png){:width="100px"} "Advanced R", Hadley Wickham, Chapman & Hall/CRC The R Series [lien de téléchargement](http://adv-r.had.co.nz/)
+![](img/advancedR.png){:width="100px"} "Advanced R", Hadley Wickham, Chapman & Hall/CRC The R Series [lien](http://adv-r.had.co.nz/)
 
 ![](img/appliedPredictiveModel.png){:width="100px"} "Applied Predictive Modeling", Max Kuhn & Kjell Johnson, Springer
 
