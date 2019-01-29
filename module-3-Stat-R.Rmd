@@ -143,22 +143,17 @@ Avant d'entamer ce module, les participants sont censés avoir suivi le premier 
 
 *Intervenants: Leslie Regad et Magali Berland*
 
-***Evaluer si on veut vraiment couvrir la programmation de fonctions avec R. Ne le faire que si on trouve des cas pertinents auxquels les participants risquent d'être confrontés pour leurs propres travaux. ***
-
 Concepts:
 - Echantillonnage et estimation
 - Tests d'hypothèse
 - Représentations graphiques
 
 Applications: 
+- Présentation d'un panorama des tests statistiques existants, exercices d'applications
 
-- Normalisation des données RNA-seq
-    - standardisation des tailles de librairies (scaling)
-    - transformation log
-    - visualisation des résultats par box plots + violin plots
 - Réduction de dimensionalité, visualisation / positionnement (multidimensional scaling)
-    - PC plots`
-    - SVD sur des matrices de similarité / dissimilarité
+    - ACP avec factoMineR et factoextra pour les représentations graphiques
+    - Choix et calcul d'une distance, représentation avec une PCoA
 
 ### [Séance 3: Détection de gènes différentiellement exprimés](seance_3/README.md)
 
@@ -174,6 +169,11 @@ Applications:
         - coloration des classes pour évaluer la pertinence de la sélection de variables
 
 - Application
+    - Normalisation des données RNA-seq
+        - standardisation des tailles de librairies (scaling)
+        - transformation log
+        - visualisation des résultats par box plots + violin plots
+
     - TCGA: 
         - détection de gènes différentiellement exprimés entre deux groupes (types de cancer, stades)
         - analyse différentielle entre plusieurs groupes (types de cancer, stades)
@@ -265,11 +265,11 @@ Applications:
 
 ### Autres intervenants
 
-3. Hugo Varet, Institut Pasteur
-4. Claire Vandiedonck, Université Paris Diderot
-4. Leslie Regad, Université Paris Diderot
-6. Frédéric Guyon, Université Paris Diderot
-7. Magali Berland, INRA
+3. Magali Berland, MetaGenoPolis, INRA
+4. Frédéric Guyon, Université Paris Diderot
+5. Leslie Regad, Université Paris Diderot
+6. Claire Vandiedonck, Université Paris Diderot
+7. Hugo Varet, Institut Pasteur
 
 ### Calendrier 2019
 
