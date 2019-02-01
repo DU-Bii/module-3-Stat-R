@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Module 3 - Analyse statistique avec R - Séance 2 : PCA et PCoA</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+  <meta name="date" content="2019-02-01" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'Module 3 - Analyse statistique avec R - Séance 2 : PCA et PCoA',
+                        subtitle: 'DUBii 2019',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                      },
+
+      // Author information
+      presenters: [
+            {
+        name:  'Magali Berland' ,
+        company: '',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <link href="PCA_PCoA_Intro_files/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="PCA_PCoA_Intro_files/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="PCA_PCoA_Intro_files/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="PCA_PCoA_Intro_files/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="PCA_PCoA_Intro_files/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="PCA_PCoA_Intro_files/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="PCA_PCoA_Intro_files/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="PCA_PCoA_Intro_files/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="PCA_PCoA_Intro_files/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="PCA_PCoA_Intro_files/ioslides-13.5.1/js/slide-deck.js"></script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+  </style>
+
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2019-02-01</p>
+          </hgroup>
+  </slide>
+
+<slide class=""><hgroup><h2>Analyse en Composantes principales</h2></hgroup><article  id="analyse-en-composantes-principales" class="smaller ">
+
+<p>Objectif : décrire sans a priori un tableau de données constitué exclusivement de variables quantitatives.</p>
+
+<p><img src="figures/07_tests_multiplesunnamed-chunk-2-1.png" width="400px" style="display: block; margin: auto;" /></p>
+
+</article></slide><slide class=""><hgroup><h2>Analyse en Composantes principales</h2></hgroup><article  id="analyse-en-composantes-principales-1" class="smaller ">
+
+<p><img src="figures/07_tests_multiplesunnamed-chunk-3-1.png" width="600px" style="display: block; margin: auto;" /></p>
+
+</article></slide><slide class=""><hgroup><h2>Analyse en Composantes principales</h2></hgroup><article  id="analyse-en-composantes-principales-2" class="smaller ">
+
+<p>L’ACP permet de déterminer :</p>
+
+<ul>
+<li>les espaces de dimension inférieure à l’espace initial</li>
+<li>sur lesquels la projection du nuage de points initial est la moins déformée possible,</li>
+<li>celle qui conserve le plus d’information c’est-à-dire de variabilité.</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Analyse en Composantes principales</h2></hgroup><article  id="analyse-en-composantes-principales-3" class="smaller ">
+
+<p>Le principe de l&#39;ACP :</p>
+
+<ul>
+<li>Trouver un axe ( = la première composante principale),</li>
+<li>Issu d&#39;une combinaison linéaire des variables initiales,</li>
+<li>Tel que la variance du nuage autour de cet axe soit maximale.</li>
+<li>Réitérer ce processus dans des directions orthogonales pour déterminer les composantes principales suivantes.</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Analyse en Composantes principales</h2></hgroup><article  id="analyse-en-composantes-principales-4" class="smaller ">
+
+<ul>
+<li>l&#39;ACP permet de conserver au mieux la structure de corrélation entre les variables initiales.</li>
+<li><p>Plusieurs variables corrélées :</p></li>
+<li>Première composante principale = combinaison de ces variables</li>
+<li>Suffit à représenter les individus avec une perte d’information minimale</li>
+<li><p>Tous les points sont relativement proches de ce nouvel axe.</p></li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Notions de base</h2></hgroup><article  id="notions-de-base" class="smaller ">
+
+<p><img src="figures/07_tests_multiplesunnamed-chunk-4-1.png" width="500px" style="display: block; margin: auto;" /></p>
+
+<ul>
+<li>L’ACP suppose que les directions avec les plus grandes variances sont les plus “importantes”</li>
+<li>La quantité de variance expliquée par chaque composante principale est mesurée par ce que l’on appelle valeur propre.</li>
+<li>L’ACP est particulièrement utile lorsque les variables sont fortement corrélées (réduction de dimension)</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Standardisation des données</h2></hgroup><article  id="standardisation-des-donnees" class="smaller ">
+
+<ul>
+<li>Pour faire une ACP, les variables sont souvent normalisées</li>
+<li>Particulièrement recommandé lorsque les variables sont mesurées dans différentes unités</li>
+<li>L’objectif est de rendre les variables comparables.</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Standardisation des données</h2></hgroup><article  id="standardisation-des-donnees-1" class="smaller ">
+
+<ul>
+<li>Pour faire une ACP, les variables sont souvent normalisées</li>
+<li>Particulièrement recommandé lorsque les variables sont mesurées dans différentes unités</li>
+<li>L’objectif est de rendre les variables comparables.</li>
+<li>Centrer et réduire = soustraire à chaque valeur la moyenne de la variable et diviser par l’écart-type : #insert formula</li>
+<li>L’ACP appliquée à ces données transformées est appelée ACP normée.</li>
+<li>La fonction scale() peut être utilisée pour normaliser les données.</li>
+</ul></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>
