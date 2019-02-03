@@ -4,27 +4,29 @@
 name: dubii_r_2019
 
 channels:
-  - r
-  - conda-forge
   - bioconda
+  - conda-forge
+  - r
   - lcantini
 
 dependencies:
 
   ## RCRAN packages
-  - r::r-base  >=3.5,< 3.6
-  - r::r-knitr        # For R markdown
-  - r::r-kableextra   # To export nice-looking tables in the R markdown reports
-  - r::r-formattable  # nice formating of tables in reports
-  - r::r-roxygen2     # To build package documentation
-  - r::r-yaml         # Required to load Yaml config files
-  - r::r-e1071        # for SVM
-  - r::r-randomforest # Supervised classification
-  - r::r-tidyverse    # Collection of R packages designed for data science (ggplot2, tidyr, dplyr, readr, purr, tibble, strigr, forcats)
-  - r::r-FactoMineR   # For PCA
-  - r::r-factoextra   # To plot PCA output
-  - r::r-cowplot      # Add-on to ggplot2 for enhance design
-  - r::r-corrplot     # Graphical display of a correlation matrix, confidence interval
+  ## Note: whenever possible, Gildas recommends to use the conda-forge 
+  ## rather than the r channel in Anaconda Cloud (https://anaconda.org/)
+  - conda-forge::r-base  >=3.5,< 3.6
+  - conda-forge::r-knitr        # For R markdown
+  - conda-forge::r-kableextra   # To export nice-looking tables in the R markdown reports
+  - conda-forge::r-formattable  # nice formating of tables in reports
+  - conda-forge::r-roxygen2     # To build package documentation
+  - conda-forge::r-yaml         # Required to load Yaml config files
+  - conda-forge::r-e1071        # for SVM
+  - conda-forge::r-randomforest # Supervised classification
+  - conda-forge::r-tidyverse    # Collection of R packages designed for data science (ggplot2, tidyr, dplyr, readr, purr, tibble, strigr, forcats)
+  - conda-forge::r-factominer   # For PCA
+  - conda-forge::r-factoextra   # To plot PCA output
+  - conda-forge::r-cowplot      # Add-on to ggplot2 for enhanced design
+  - conda-forge::r-corrplot     # Graphical display of a correlation matrix, confidence interval
   
   ## Bioconductor packages
   - bioconda::bioconductor-deseq2
