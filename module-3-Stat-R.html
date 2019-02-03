@@ -240,6 +240,7 @@ $(document).ready(function () {
 <li><a href="#description">Description</a></li>
 <li><a href="#planning">Planning 2019</a></li>
 <li><a href="#prerequis">Prérequis</a></li>
+<li><a href="#ressources">Ressources</a></li>
 <li><a href="#synopsis">Synopsis</a></li>
 <li><a href="#contributeurs">Contributeurs</a></li>
 <li><a href="#acces-aux-supports-de-cours">Accès aux supports de cours</a></li>
@@ -310,9 +311,11 @@ $(document).ready(function () {
 <h2>Planning DU-Bii 2019</h2>
 <p><a href="https://tinyurl.com/dubii19-planning" class="uri">https://tinyurl.com/dubii19-planning</a></p>
 </div>
-<div id="prerequis-1" class="section level2">
-<h2>Prérequis</h2>
-<p>Avant d’entamer ce module, les participants sont censés avoir suivi le premier module d’introduction à R sur Data Camp.</p>
+<div id="ressources" class="section level2">
+<h2>Ressources</h2>
+<ul>
+<li>Serveur RStudio sur IFB core cluster: <a href="https://rstudio.cluster.france-bioinformatique.fr/" class="uri">https://rstudio.cluster.france-bioinformatique.fr/</a></li>
+</ul>
 </div>
 <div id="synopsis" class="section level2">
 <h2>Synopsis</h2>
@@ -342,25 +345,33 @@ $(document).ready(function () {
 </ul></li>
 </ul></li>
 </ul>
-<p><strong>Compétences visées</strong> - Familiarisation avec la syntaxe R - Lecture, manipulation et écriture de tables - Utilisation de quelques fonctions graphiques - plot - lines - hist - boîte à moustache - Exporter un plot dans un fichier pdf ou png - attirer l’attention sur la différence: vectoriel versus bitmap (zoomer à fond sur les figures produites)</p>
+<div id="competences-visees" class="section level4">
+<h4>Compétences visées</h4>
+<ul>
+<li>Familiarisation avec la syntaxe R</li>
+<li>Lecture, manipulation et écriture de tables</li>
+<li>Utilisation de quelques fonctions graphiques
+<ul>
+<li>plot</li>
+<li>lines</li>
+<li>hist</li>
+<li>boîte à moustache</li>
+<li>Exporter un plot dans un fichier pdf ou png</li>
+<li>attirer l’attention sur la différence: vectoriel versus bitmap (zoomer à fond sur les figures produites)</li>
+</ul></li>
+</ul>
+</div>
 </div>
 <div id="seance-2-analyse-statistique-avec-r" class="section level3">
 <h3><a href="seance_2/README.md">Séance 2 : Analyse statistique avec R</a></h3>
 <p><em>Intervenants: Leslie Regad et Magali Berland</em></p>
-<p><strong><em>Evaluer si on veut vraiment couvrir la programmation de fonctions avec R. Ne le faire que si on trouve des cas pertinents auxquels les participants risquent d’être confrontés pour leurs propres travaux. </em></strong></p>
 <p>Concepts: - Echantillonnage et estimation - Tests d’hypothèse - Représentations graphiques</p>
-<p>Applications:</p>
+<p>Applications: - Présentation d’un panorama des tests statistiques existants, exercices d’applications</p>
 <ul>
-<li>Normalisation des données RNA-seq
-<ul>
-<li>standardisation des tailles de librairies (scaling)</li>
-<li>transformation log</li>
-<li>visualisation des résultats par box plots + violin plots</li>
-</ul></li>
 <li>Réduction de dimensionalité, visualisation / positionnement (multidimensional scaling)
 <ul>
-<li>PC plots`</li>
-<li>SVD sur des matrices de similarité / dissimilarité</li>
+<li>ACP avec factoMineR et factoextra pour les représentations graphiques</li>
+<li>Choix et calcul d’une distance, représentation avec une PCoA</li>
 </ul></li>
 </ul>
 </div>
@@ -382,6 +393,12 @@ $(document).ready(function () {
 </ul></li>
 <li>Application
 <ul>
+<li>Normalisation des données RNA-seq
+<ul>
+<li>standardisation des tailles de librairies (scaling)</li>
+<li>transformation log</li>
+<li>visualisation des résultats par box plots + violin plots</li>
+</ul></li>
 <li>TCGA:
 <ul>
 <li>détection de gènes différentiellement exprimés entre deux groupes (types de cancer, stades)</li>
@@ -503,11 +520,11 @@ $(document).ready(function () {
 <div id="autres-intervenants" class="section level3">
 <h3>Autres intervenants</h3>
 <ol start="3" style="list-style-type: decimal">
-<li>Hugo Varet, Institut Pasteur</li>
-<li>Claire Vandiedonck, Université Paris Diderot</li>
-<li>Leslie Regad, Université Paris Diderot</li>
+<li>Magali Berland, MetaGenoPolis, INRA</li>
 <li>Frédéric Guyon, Université Paris Diderot</li>
-<li>Magali Berland, INRA</li>
+<li>Leslie Regad, Université Paris Diderot</li>
+<li>Claire Vandiedonck, Université Paris Diderot</li>
+<li>Hugo Varet, Institut Pasteur</li>
 </ol>
 </div>
 <div id="calendrier-2019" class="section level3">
