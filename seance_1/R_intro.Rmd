@@ -3,11 +3,6 @@ title: "Module 3 - Analyse statistique avec R - Séance 1"
 author: "Hugo Varet, Frédéric Guyon, Olivier Kirsh et Jacques van Helden"
 date: '`r Sys.Date()`'
 output:
-  revealjs::revealjs_presentation:
-    theme: night
-    transition: none
-    self_contained: true
-    css: ../slides.css
   slidy_presentation:
     smart: no
     slide_level: 2
@@ -42,6 +37,11 @@ output:
     toc: yes
     toc_depth: 3
     toc_float: yes
+  revealjs::revealjs_presentation:
+    theme: night
+    transition: none
+    self_contained: true
+    css: ../slides.css
   pdf_document:
     fig_caption: yes
     highlight: zenburn
@@ -137,9 +137,14 @@ Inconvénients :
  
 ## Se connecter au serveur ou ouvrir RStudio
 
-Comment faire pour le DUBii ?
+Les travaux pratiques seront réalisés sur le serveur RStudio sur IFB core cluster. 
 
-## Aller dans son dossier de travail
+<https://rstudio.cluster.france-bioinformatique.fr/>
+
+Identifiez-vous avec votre login du cluster IFB core. Ceci vous permettra d'accéder à votre dossier personnel à partir de l'interface de RStudio. 
+
+
+## Définir et créer son dossier de travail pour ce TP
 
 Définir une variable qui indique le chemin du dossier de travail
 
@@ -153,6 +158,8 @@ S’il n’existe pas encore, créer le dossier de travail.
 ```{r}
 dir.create(work.dir, recursive = TRUE, showWarnings = FALSE)
 ```
+
+## Explorer son dossier de travail
 
 Aller dans ce dossier de travail.
 (Commande Unix équivalente: "cd ~/intro_R")
@@ -222,10 +229,16 @@ download.file(url = "https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/ma
 Charger le contenu du fichier "expression.txt" dans une variable nommée "exprs".
 
 ```{r}
-exprs <- read.table(file = "data/expression.txt", header = TRUE, sep = "\t")
+exprs <- read.table(file = "data/expression.txt", 
+                    header = TRUE, 
+                    sep = "\t")
 ```
 
-Accéder à l'aide d'une fonction
+**Question : ** à quoi servent les options `header` et `sep` ?
+
+**Réponse : ** appelez à l'aide (diapo suivante)
+
+## Afficher l'aide d'une fonction
 
 ```{r}
 help(read.table)
@@ -240,7 +253,9 @@ Notation alternative
 
 ## Affichage de l'objet "exprs"
 
-Imprimer toutes les valeurs.
+La fonction `print()` imprime l'ensemble des valeurs d'une variable. 
+
+Quand on travaille avec un tableau de données omiques comportant des milliers de lignes, ce n'est pas forcément très informatif. 
 
 ```{r results = TRUE}
 print(exprs)
@@ -404,7 +419,6 @@ exprs$A <- rowMeans(log2(exprs[,c("meanWT", "meanKO")]))
 ```
 
 
-
 ## MA-plot: log2FC vs intensité
 
 ```{r  fig.width=7, fig.height=5, out.width="60%"}
@@ -428,7 +442,7 @@ Combien de gènes par chromosome ?
 table(annot$chr)
 ```
 
-Question: combien de gènes sur le chromosome 8 ? Et sur le X ?
+**Question :** combien de gènes sur le chromosome 8 ? Et sur le X ?
 
 
 ## Diagramme en bâtons -- gènes par chromosomes
@@ -466,6 +480,32 @@ write.table(x = exprs8, file = "exprs8.txt", sep = "\t",
 
 ```
 
+## Pourquoi documenter son code ?
+
+Quel que soit le langage de programmation utilisé, il est crucial de documenter son code. 
+
+- pour le rendre compréhensible pour d'autres personnes,
+- pour s'y retrouver quand on devra le modifier quelques mois plus tard.
+
+## Comment documenter son code ?
+
+En R, le caractère `#` marque le début d'un commentaire. Le texte qui suit est ignoré, jusqu'à la fin de la ligne. 
+
+- Avant un bloc de code, annoncer à quoi il sert.
+- Vous pouvez également ajouter un commentaire en fin de ligne (par exemple pour décrire les variables)
+
+
+```{r}
+# Calcul de l'espérance d'un coup de dé
+p <- 1/6          # Probabilité de chaque face
+valeurs <- 1:6    # valeurs associées aux  faces
+
+# L'éspérance est la moyenne attendue au terme d'un nombre infini de tirages.
+# On la calcule par la somme des produits des valeurs par leurs probabilités. 
+sum(p * valeurs)  
+```
+
+
 ## Take home messages
 
  - Tout est faisable avec R
@@ -483,6 +523,4 @@ write.table(x = exprs8, file = "exprs8.txt", sep = "\t",
     - ressources en ligne
     - tutoriels pour des analyses spécifiques (e.g. DESeq2 pour le RNA-Seq)
 
-## A ajouter : jouer avec un fichier d'annotations au format GTF
 
-Fichier d'annotations E. Coli disponible [ici](ftp://ftp.ensemblgenomes.org/pub/bacteria/release-37/gtf/bacteria_0_collection/escherichia_coli_str_k_12_substr_mg1655/Escherichia_coli_str_k_12_substr_mg1655.ASM584v2.37.gtf.gz)
