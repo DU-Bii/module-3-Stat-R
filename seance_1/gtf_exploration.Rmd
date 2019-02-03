@@ -147,23 +147,23 @@ include_graphics(path = "images/ensemblgenomes_fungi.png")
 
 <http://fungi.ensembl.org/info/website/ftp/>
 
-```{r ensemblgenomes_download, out.width="80%", echo=FALSE}
+```{r ensemblgenomes_download, out.width="60%", echo=FALSE}
 include_graphics(path = "images/ensemblgenomes_download_yeast.png")
 ```
 
 
 ## Define and create your working directory
 
-**Exercise:** create a working directory named `workDir` in your home folder and go inside.
+**Exercise:** create a working directory named `workDir` in your home folder and go inside it.
 
 ```{r workdir, eval=FALSE}
-## Define the working directory
+# Define the working directory
 workDir <- "~/intro_R/explorer_un_GTF"
 
-## Create the working directory 
+# Create the working directory 
 dir.create(workDir, recursive = TRUE, showWarnings = FALSE)
 
-## Go to the working directory
+# Go to the working directory
 setwd(workDir)
 getwd()       ## Check your current location
 list.files()  ## List files (should be empty if just created)
@@ -173,27 +173,65 @@ list.files()  ## List files (should be empty if just created)
 
 **Exercise:** download the GTF file in the working directory (optionally, adapt the command to load a GTF of your interest). Before downloading the file we check if it is already present in the working directory. If yes, we skip the download. 
 
+
 **Tip:** use the commands `file.exists`, `download.file`.
+
+
+For the sake of readability, we can define an URL by concatenating its different components, separated by a slash character `/`. For this, we use the `paste()` function.
+
+```{r define_gtf_url}
+gtf.url <- "ftp://ftp.ensemblgenomes.org/pub/bacteria/release-37/gtf/bacteria_0_collection/escherichia_coli_str_k_12_substr_mg1655/Escherichia_coli_str_k_12_substr_mg1655.ASM584v2.37.gtf.gz"
+
+print(gtf.url)
+```
+
+## Defining the URL by concatenating strings
+
+For the sake of readability, we can define an URL by concatenating its different components, separated by a slash character `/`. For this, we use the `paste()` function.
+
+```{r concatenate_gtf_url}
+## Define the URL of the file to download
+ensemblbacteria.site <- 
+  "ftp://ftp.ensemblgenomes.org/pub/bacteria"
+
+## Define the URL of the GTF file
+gtf.url <- paste(
+  sep = "/", # separator
+  ensemblbacteria.site,  
+  "release-37",
+  "gtf",
+  "bacteria_0_collection",
+  "escherichia_coli_str_k_12_substr_mg1655",
+  "Escherichia_coli_str_k_12_substr_mg1655.ASM584v2.37.gtf.gz")
+print(gtf.url)
+```
 
 ## Downloading the GTF file: solution
 
 ```{r download_gtf_from_ensembl}
-## Define the URL of the file to download
-gtf.url <- "ftp://ftp.ensemblgenomes.org/pub/bacteria/release-37/gtf/bacteria_0_collection/escherichia_coli_str_k_12_substr_mg1655/Escherichia_coli_str_k_12_substr_mg1655.ASM584v2.37.gtf.gz"
-## create a directory to store the file
+# create a directory to store the file
 dir.create("data", showWarnings = FALSE)
-## create a local filename
+
+# Create a local filename
 destfile <- paste0("data/", basename(gtf.url))
 print(destfile)
-## Download the file, but only if not yet there
+
+# Download the file, but only if not yet there
 if (file.exists(destfile)) {
   message("GTF annotation file already there: ", destfile)
 } else {
   message("Downloading GTF annotation file")
   download.file(url = gtf.url, destfile = destfile)
 }
-## Check the files in the work directory
-list.files()
+```
+
+## Listing the files
+
+After a file transfer, it is safe to check the content of the taregt folder with the `list.files()` command.
+
+```{r list_files}
+# Check the files in the work directory
+list.files() 
 ```
 
 
@@ -201,11 +239,11 @@ list.files()
 
 Commands: `read.table`, `read.delim`, `read.csv`.
 
-R includes several types of tabular structures (matrix, data.frame, table). The most widely used is `data.frame()`, which consists in a table of values with a type (strings, integer, ..) attached to each column, and names associated to rows and columns. 
+R includes several types of tabular structures (matrix, data.frame, table). The most widely used is `data.frame()`, which consists in a table of values with a type (strings, integer, ...) attached to each column, and names associated to rows and columns. 
 
 The function `read.table()` enables to read a text file containing tabular data, and to store its content in a variable. 
 
-Several finctions derived from `read.table()` facilitate the loading of different formats. 
+Several functions derived from `read.table()` facilitate the loading of different formats. 
 
 - `read.delim()` for files where a particular charcater is used as column separator (by default the tab character "\t"). 
 
@@ -288,7 +326,7 @@ featureTable[1:5, 1:8]
 - List the feature types found in the GTF
 - Count the number of features per type, and sort them by decreasing values. 
 
-**Tip: ** commands `unique`, `table` and `sort`.
+**Tip:** commands `unique`, `table` and `sort`.
 
 
 ```{r features_per_type}
@@ -355,7 +393,7 @@ We can use it to select the subset of features corresponding to genes.
 - Select of genes from the GTF table and store them in a separate variable named `genes`.
 - Compute summary statistics about gene lengthhs
 
-**Tip: **  commands  `subset`, `summary`.
+**Tip:**  commands  `subset`, `summary`.
 
 
 ```{r genes}
