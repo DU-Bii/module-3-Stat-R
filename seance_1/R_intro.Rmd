@@ -20,14 +20,11 @@ output:
     slide_level: 2
     theme: Montpellier
     toc: yes
-  html_document:
-    self_contained: no
-    fig_caption: yes
-    highlight: zenburn
-    theme: cerulean
-    toc: yes
-    toc_depth: 3
-    toc_float: yes
+  revealjs::revealjs_presentation:
+    theme: night
+    transition: none
+    self_contained: true
+    css: ../slides.css
   slidy_presentation:
     smart: no
     slide_level: 2
@@ -42,11 +39,14 @@ output:
     theme: cerulean
     toc: yes
     widescreen: yes
-  revealjs::revealjs_presentation:
-    theme: night
-    transition: none
-    self_contained: true
-    css: ../slides.css
+  html_document:
+    self_contained: no
+    fig_caption: yes
+    highlight: zenburn
+    theme: cerulean
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
   ioslides_presentation:
     slide_level: 2
     self_contained: no
@@ -326,29 +326,112 @@ exprs[, c(2, 3)]
 
 ## Histogramme des valeurs d'expression pour WT1
 
-```{r fig.width=7, fig.height=5, out.width="60%"}
+```{r expr_histo, fig.width=7, fig.height=5, out.width="60%"}
 hist(exprs$WT1)
+```
+
+## Histogramme avec quelques options esthétiques
+
+```{r expr_histo_options, fig.width=7, fig.height=5, out.width="50%"}
+hist(exprs$WT1, 
+     breaks = 100, # class intervals
+     main = "Histogram of expression values",
+     xlab = "Counts per gene", # X label
+     ylab = "Number of genes", # Y label
+     las = 1, # Plot axis labels horizontally
+     col = "bisque" # filling color
+     )
+```
+
+## Histogramme avec quelques options esthétiques
+
+
+**Remarques**
+
+- La distribution sur l'abcsisse est déséquilibrée: les valeurs les plus réfquentes sont "collées au mur" (concentrées sur la gauche) du fait d'une valeur aberrante (1 gène avec un très grand nombre de reads).
+- L'histogramme n'est pas représentatif car pour ce tutoriel nous avons séletionné un tout petit nombre de gènes ($n = `r length(exprs$WT1)`$). Nous traiterons un jeu de données complet à titre d'exercice. 
+
+
+```{r expr_histo_options_noecho, echo=FALSE, fig.width=7, fig.height=5, out.width="50%"}
+hist(exprs$WT1, 
+     breaks = 100, # class intervals
+     main = "Histogram of expression values",
+     xlab = "Counts per gene", # X label
+     ylab = "Number of genes", # Y label
+     las = 1, # Plot axis labels horizontally
+     col = "bisque" # filling color
+     )
 ```
 
 ## Histogramme du logarithme de ces valeurs
 
-```{r fig.width=7, fig.height=5, out.width="60%"}
-hist(log(exprs$WT1))
+```{r expr_log2_hist, fig.width=7, fig.height=5, out.width="60%"}
+hist(log(exprs$WT1), breaks = 20,
+     main = "Log2 expression values",
+     xlab = "log2(counts)", # X label
+     ylab = "Number of genes", # Y label
+     las = 1, # Plot axis labels horizontally
+     col = "aquamarine" # filling color
+     )
 ```
+
+## Boîtes à moustaches
+
+```{r expr_log2_boxplot, fig.width=7, fig.height=5, out.width="60%"}
+boxplot(log(exprs[, c("WT1", "WT2", "KO1", "KO2")]),
+     main = "Expression boxplots",
+     xlab = "samples", # X label
+     ylab = "log2(counts)", # Y label
+     las = 1, # Plot axis labels horizontally
+     col = "aquamarine" # filling color
+     )
+```
+
+## Boîtes à moustaches horizontales
+
+```{r expr_log2_boxplot_horiz, fig.width=7, fig.height=5, out.width="60%"}
+boxplot(log(exprs[, c("WT1", "WT2", "KO1", "KO2")]),
+     main = "Expression boxplots",
+     xlab = "log2(counts)", # X label
+     ylab = "samples", # Y label
+     las = 1, # Plot axis labels horizontally
+     horizontal = TRUE, # plot boxplots horizontally
+     col = "aquamarine" # filling color
+     )
+```
+
+## Pourquoi les boîtes à moustaches apparaissent-elles décalées ?
+
+
+**Remarque :** le décalage entre boîtes nous indique que les librairies de comptage ne sont pas normalisées. Les méthodes de normalisation seront vues dans un cours ultérieur.
+
+```{r expr_log2_boxplot_horiz_noecho, echo=FALSE, fig.width=7, fig.height=5, out.width="60%"}
+boxplot(log(exprs[, c("WT1", "WT2", "KO1", "KO2")]),
+     main = "Expression boxplots",
+     xlab = "log2(counts)", # X label
+     ylab = "samples", # Y label
+     las = 1, # Plot axis labels horizontally
+     horizontal = TRUE, # plot boxplots horizontally
+     col = "aquamarine" # filling color
+     )
+```
+
+
+
 
 ## Nuages de points -- Expressions KO1 vs WT1
 
-```{r fig.width=7, fig.height=5, out.width="60%"}
+```{r xy_plot, fig.width=7, fig.height=5, out.width="60%"}
 plot(x = log(exprs$WT1), y = log(exprs$KO1))
 ```
 
 ## Personnalisation des paramètres graphiques
 
-```{r fig.width=7, fig.height=5, out.width="60%"}
+```{r xy_plot_options, fig.width=7, fig.height=5, out.width="60%"}
 plot(x = log(exprs$WT1), y = log(exprs$KO1), main = "Expression KO1 vs WT1",
      xlab = "WT1", ylab = "KO1",  pch = 16, las = 1, col = "red")
-grid()
-abline(a = 0, b = 1)
+grid()               # add a grid
+abline(a = 0, b = 1) # add a diagonal line
 ```
 
 ## Sélection de lignes d'un tableau
@@ -368,8 +451,19 @@ which(exprs$id %in% c("ENSG00000253991", "ENSG00000099958"))
 Afficher les lignes correspondantes
 
 ```{r}
-exprs[which(exprs$id %in% c("ENSG00000253991", "ENSG00000099958")), ]
+gene.indices <- which(exprs$id %in% c("ENSG00000253991", "ENSG00000099958"))
+exprs[gene.indices, ]
 ```
+
+## Sélection de lignes et colonnes
+
+On peut sélectionner à la fois des lignes et des colonnes en combinant les méthodes vues ci-dessus. 
+
+```{r eval=TRUE, results=TRUE}
+exprs[10:15, 1:5, ]
+```
+
+On peut également désigner les lignes ou les colonnes par leur nom. 
 
 ## Calculs sur des colonnes
 
@@ -421,7 +515,7 @@ exprs$A <- rowMeans(log2(exprs[,c("meanWT", "meanKO")]))
 
 ## MA-plot: log2FC vs intensité
 
-```{r  fig.width=7, fig.height=5, out.width="60%"}
+```{r  expr_MA_plot, fig.width=7, fig.height=5, out.width="60%"}
 plot(x = exprs$A, y = exprs$M, main = "MA plot", las = 1,
      col = "blue", pch = 16, xlab = "A = intensity", ylab = "M = log2FC")
 grid(lty = "solid", col = "lightgray")
@@ -447,7 +541,7 @@ table(annot$chr)
 
 ## Diagramme en bâtons -- gènes par chromosomes
 
-```{r fig.width = 5, fig.height = 7, out.width = "40%"}
+```{r genes_per_chrom_barplot, fig.width = 5, fig.height = 7, out.width = "40%"}
 barplot(sort(table(annot$chr)), horiz = TRUE, las = 1,
         main = "Genes per chromosome", ylab = "Chromosome", 
         col = "lightblue", xlab = "Number of genes")
