@@ -18,6 +18,7 @@
 - [Description](#description)
 - [Planning 2019](#planning)
 - [Prérequis](#prerequis)
+- [Ressources](#ressources)
 - [Synopsis](#synopsis)
 - [Contributeurs](#contributeurs)
 - [Accès aux supports de cours](#acces-aux-supports-de-cours)
@@ -93,9 +94,9 @@ A la fin du module, les participants auront acquis les compétences suivantes.
 <https://tinyurl.com/dubii19-planning>
 
 
-## Prérequis
+## Ressources
 
-Avant d'entamer ce module, les participants sont censés avoir suivi le premier module d'introduction à R sur Data Camp.
+- Serveur RStudio sur IFB core cluster: <https://rstudio.cluster.france-bioinformatique.fr/>
 
 ## Synopsis
 
@@ -127,7 +128,8 @@ Avant d'entamer ce module, les participants sont censés avoir suivi le premier 
             - au mieux, une technique commerciale, au pire un outil de fraude scientifique
 
 
-**Compétences visées**
+#### Compétences visées
+
 - Familiarisation avec la syntaxe R
 - Lecture, manipulation et écriture de tables
 - Utilisation de quelques fonctions graphiques
