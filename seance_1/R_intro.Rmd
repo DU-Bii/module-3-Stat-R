@@ -3,20 +3,11 @@ title: "Module 3 - Analyse statistique avec R - Séance 1"
 author: "Hugo Varet, Frédéric Guyon, Olivier Kirsh et Jacques van Helden"
 date: '`r Sys.Date()`'
 output:
-  slidy_presentation:
-    smart: no
-    slide_level: 2
-    self_contained: yes
+  pdf_document:
     fig_caption: yes
-    fig_height: 6
-    fig_width: 7
-    highlight: tango
-    incremental: no
-    keep_md: yes
-    smaller: yes
-    theme: cerulean
+    highlight: zenburn
     toc: yes
-    widescreen: yes
+    toc_depth: 3
   beamer_presentation:
     colortheme: dolphin
     fig_caption: yes
@@ -37,16 +28,25 @@ output:
     toc: yes
     toc_depth: 3
     toc_float: yes
+  slidy_presentation:
+    smart: no
+    slide_level: 2
+    self_contained: yes
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    highlight: tango
+    incremental: no
+    keep_md: yes
+    smaller: yes
+    theme: cerulean
+    toc: yes
+    widescreen: yes
   revealjs::revealjs_presentation:
     theme: night
     transition: none
     self_contained: true
     css: ../slides.css
-  pdf_document:
-    fig_caption: yes
-    highlight: zenburn
-    toc: yes
-    toc_depth: 3
   ioslides_presentation:
     slide_level: 2
     self_contained: no
@@ -74,7 +74,7 @@ options(width = 300)
 # options(encoding = 'UTF-8')
 knitr::opts_chunk$set(
   fig.width = 7, fig.height = 5, 
-  fig.path = 'figures/07_tests_multiples',
+  fig.path = 'figures/R_intro_',
   fig.align = "center", 
   size = "tiny", 
   echo = TRUE, eval = TRUE, 
@@ -522,5 +522,12 @@ sum(p * valeurs)
  
     - ressources en ligne
     - tutoriels pour des analyses spécifiques (e.g. DESeq2 pour le RNA-Seq)
+
+## Travail personnel
+
+Pour vous approprier les commandes présentées ci-dessus, nous vous proposons d'analyser un fichier d'expression complet et de générer différentes représentations graphiques pour acquérir une intitution de la distribution des donnnées.
+
+
+
 
 
