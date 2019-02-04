@@ -3,23 +3,6 @@ title: "Module 3 - Analyse statistique avec R - Séance 2 : PCA et PCoA"
 author: "Magali Berland"
 date: '`r Sys.Date()`'
 output:
-  ioslides_presentation:
-    slide_level: 2
-    self_contained: no
-    colortheme: dolphin
-    fig_caption: yes
-    fig_height: 6
-    fig_width: 7
-    fonttheme: structurebold
-    highlight: tango
-    smaller: yes
-    toc: yes
-    widescreen: yes
-  revealjs::revealjs_presentation:
-    theme: night
-    transition: none
-    self_contained: true
-    css: ../slides.css
   beamer_presentation:
     colortheme: dolphin
     fig_caption: yes
@@ -40,11 +23,11 @@ output:
     toc: yes
     toc_depth: 3
     toc_float: yes
-  pdf_document:
-    fig_caption: yes
-    highlight: zenburn
-    toc: yes
-    toc_depth: 3
+  revealjs::revealjs_presentation:
+    theme: night
+    transition: none
+    self_contained: true
+    css: ../slides.css
   slidy_presentation:
     smart: no
     slide_level: 2
@@ -57,6 +40,23 @@ output:
     keep_md: yes
     smaller: yes
     theme: cerulean
+    toc: yes
+    widescreen: yes
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
+  ioslides_presentation:
+    slide_level: 2
+    self_contained: no
+    colortheme: dolphin
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    fonttheme: structurebold
+    highlight: tango
+    smaller: yes
     toc: yes
     widescreen: yes
 font-import: http://fonts.googleapis.com/css?family=Risque
@@ -76,7 +76,7 @@ options(width = 300)
 # options(encoding = 'UTF-8')
 knitr::opts_chunk$set(
   fig.width = 7, fig.height = 5, 
-  fig.path = 'figures/07_tests_multiples',
+  fig.path = 'figures/PCA_PCoA_intro_',
   fig.align = "center", 
   size = "tiny", 
   echo = TRUE, eval = TRUE, 
