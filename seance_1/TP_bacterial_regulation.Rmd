@@ -1,0 +1,162 @@
+---
+title: "Travail personnel - exploration d'un transcriptome bactérien"
+author: "Jacques van Helden"
+date: "04/02/2019"
+output:
+  html_document:
+    self_contained: no
+    fig_caption: yes
+    highlight: zenburn
+    theme: cerulean
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+  beamer_presentation:
+    colortheme: dolphin
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    fonttheme: structurebold
+    highlight: tango
+    incremental: no
+    keep_tex: no
+    slide_level: 2
+    theme: Montpellier
+    toc: yes
+  slidy_presentation:
+    smart: no
+    slide_level: 2
+    self_contained: yes
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    highlight: tango
+    incremental: no
+    keep_md: yes
+    smaller: yes
+    theme: cerulean
+    toc: yes
+    widescreen: yes
+  revealjs::revealjs_presentation:
+    theme: night
+    transition: none
+    self_contained: true
+    css: ../slides.css
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
+  ioslides_presentation:
+    slide_level: 2
+    self_contained: no
+    colortheme: dolphin
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    fonttheme: structurebold
+    highlight: tango
+    smaller: yes
+    toc: yes
+    widescreen: yes
+font-import: http://fonts.googleapis.com/css?family=Risque
+subtitle: DUBii 2019
+font-family: Garamond
+transition: linear
+---
+
+```{r include=FALSE, echo=FALSE, eval=TRUE}
+library(knitr)
+library(kableExtra)
+# library(formattable)
+
+options(width = 300)
+# options(encoding = 'UTF-8')
+knitr::opts_chunk$set(
+  fig.width = 7, fig.height = 5, 
+  fig.path = 'figures/R_intro_',
+  fig.align = "center", 
+  size = "tiny", 
+  echo = TRUE, eval = TRUE, 
+  warning = FALSE, message = FALSE, 
+  results = FALSE, comment = "")
+
+options(scipen = 12) ## Max number of digits for non-scientific notation
+# knitr::asis_output("\\footnotesize")
+
+```
+
+
+## But du travail personnel
+
+Pour vous approprier les commandes présentées ci-dessus, nous vous proposons d'analyser un fichier d'expression complet et de générer différentes représentations graphiques pour acquérir une intuition de la distribution des données.
+
+Nous vous demandons d'écrire toutes les commandes dans un script R bien organisé (divisé en sections pour les différentes étapes), documenté (en utilisant les commentaires R précédés d'un `#`), et qui pourra être exécuté par quelqu'un d'autre (reproductibilité).
+
+### Recommandationsg générales pour le code R
+
+- Organisez votre code en sections séparées par des titres, qui correspondent aux différentes étapes de l'analyse. 
+- Veillez à commenter dans votre étape chaque étape de l'analyse.
+- Utilisez des noms de variables explicites, qui permettent instantanément de comprendre ce qu'elles représentent.
+- Séparez soigneusement dans des dossiers distincts les fichiers de code et ceux de données et résultats. Votre code est précieux, il représente votre temps de travail. Les résultats peuvent être effacés sans douleur, puisqu'ils peuvent être régénérés par le code. 
+- Adoptez une convention de nommage cohérente (voir section suivante). 
+
+
+### Style de code
+
+Chaque langage de programmation établit des recommandations concernant le style du code, notamment concernant la façon de nommer les variables et fonctions, l'indentation des blocs de code, l'espacement, ...
+
+Pour des raisons historiques, en R il existe plusieurs conventions alternatives pour nommer les variables et fonctions.  Pour plus de détail, voici un très bon article de synthèse: 
+
+- Rasmus Bååth (2012). *The State of Naming Conventions in R*. The [R Journal (2012) 4:2](https://journal.r-project.org/archive/2012-2/), pages 74-75. 
+[[pdf](https://journal.r-project.org/archive/2012-2/RJournal_2012-2_Baaaath.pdf)] 
+[[DOI:10.32614/RJ-2012-018](https://doi.org/10.32614/RJ-2012-018)]
+    
+Pour les travaux personnels, nous recommandons les conventions de Google R Style <https://google.github.io/styleguide/Rguide.xml#identifiers>, avec cependant une flexibilité: pour les variables, nous suggérons d'utiliser la convention *lowerCamelCase* plutôt que *period.separated*. 
+
+- variable.name is preferred, variableName is accepted 
+- GOOD: `avg.clicks`
+- OK: `avgClicks`
+- BAD: avg_Clicks
+
+Lisez également attentivement les [recommandations d'espacement](https://google.github.io/styleguide/Rguide.xml#spacing). 
+
+### Astuces
+
+- Pour délimiter les sections, vous pouvez utiliser une convention : entourez le titre de quadruples croisillons (par exemple : `#### Data download ####`). Cette convention permet à RStudio d'afficher un menu des sections de votre code, pour vous y déplacer plus facilement.
+
+
+## Téléchargement du jeu de données
+
+1. Connectez-vous à la section "Study cases" de ce module d'enseignement. 
+
+    <https://du-bii.github.io/study-cases/>
+
+2. Cliquez sur le lien [Bacterial regulons](https://du-bii.github.io/study-cases/Escherichia_coli/bacterial-regulons_myers_2013/)
+
+3. Avec le bouton droit, cliquez sur le lien du tableau [Counts per gene](https://du-bii.github.io/study-cases/Escherichia_coli/bacterial-regulons_myers_2013/data/RNA-seq/cutadapt_bwa_featureCounts_all.tsv), et copiez ce lien. 
+
+4. Connectez-vous au serveur RStudio du cluster core de l'IFB: <https://rstudio.cluster.france-bioinformatique.fr/>.
+
+    **Note:** pour les séances de travaux pratiques en salle de cours, nous insistons pour que tout le monde utilise le serveur RStudio du cluster IFB. Cependant, pour le travail personnel, rien ne vous empêche d'utiliser votre propre ordinateur. Vous devrez cependant alors installer vous-mêmes les librairies R requises.
+
+5. Créez un nouveau fichier R (File -> New File -> R script), que vous sauvegarderez sous le nom `bacterial_regulon_analysis.R`.
+
+6. rédigez une section de code intitulée `#### Data download ####` (convention RStudio pour les titres de section dans le code R), qui effectuera les opérations suivantes;
+
+    - créer un dossier local "TP_bacterial_regulons" à la racine de votre compte: (`~/TP_bacterial_regulons`)
+    - se déplacer dans ce dossier;
+    - y télécharger le fichier `cutadapt_bwa_featureCounts_all.tsv`;
+    - lister les fichiers contenus dans le dossier.
+
+7. Exécutez le script et vérifiez le résultat. 
+
+## Exploration des résultats
+
+Entamez une nouvelle section intitulée "Exploration of the transcriptome table". 
+
+
+1. Avec la fonction `read.delim()`, chargez le tableau de comptages RNA-seq (nombre de reads / gène) dans une variable nommée `rawCounts`.
+
+1. Calculez des statistiques de base sur les colonnes du 
+

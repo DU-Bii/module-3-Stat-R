@@ -617,11 +617,4 @@ sum(p * valeurs)
     - ressources en ligne
     - tutoriels pour des analyses spécifiques (e.g. DESeq2 pour le RNA-Seq)
 
-## Travail personnel
-
-Pour vous approprier les commandes présentées ci-dessus, nous vous proposons d'analyser un fichier d'expression complet et de générer différentes représentations graphiques pour acquérir une intitution de la distribution des donnnées.
-
-
-
-
 

@@ -503,9 +503,30 @@ valeurs &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">
 </ul></li>
 </ul>
 </div>
-<div id="travail-personnel" class="slide section level2">
-<h2>Travail personnel</h2>
+<div id="travail-personnel---but-du-travail" class="slide section level2">
+<h2>Travail personnel - But du travail</h2>
 <p>Pour vous approprier les commandes présentées ci-dessus, nous vous proposons d'analyser un fichier d'expression complet et de générer différentes représentations graphiques pour acquérir une intitution de la distribution des donnnées.</p>
+<p>Nous vous demandons d'écrire toutes les commandes dans un script R bien organisé (divisé en sections pour les différentes étapes), documenté (en utilisant les commentaires R précédés d'un <code>#</code>), et qui pourra être exécuté par quelqu'un d'autre (reproductibilité).</p>
+</div>
+<div id="travail-personnel---jeu-de-donnees" class="slide section level2">
+<h2>Travail personnel - jeu de données</h2>
+<ol style="list-style-type: decimal">
+<li><p>Connectez-vous à la section &quot;Study cases&quot; de ce module d'enseignement.</p>
+<p><a href="https://du-bii.github.io/study-cases/" class="uri">https://du-bii.github.io/study-cases/</a></p></li>
+<li><p>Cliquez sur le lien <a href="https://du-bii.github.io/study-cases/Escherichia_coli/bacterial-regulons_myers_2013/">Bacterial regulons</a></p></li>
+<li><p>Avec le bouton droit, cliquez sur le lien du tableau <a href="https://du-bii.github.io/study-cases/Escherichia_coli/bacterial-regulons_myers_2013/data/RNA-seq/cutadapt_bwa_featureCounts_all.tsv">Counts per gene</a>, et copiez ce lien.</p></li>
+<li><p>Connectez-vous au serveur RStudio du cluster core de l'IFB.</p>
+<p><a href="https://rstudio.cluster.france-bioinformatique.fr/" class="uri">https://rstudio.cluster.france-bioinformatique.fr/</a></p></li>
+<li><p>Créez un nouveau fichier R (File -&gt; New File -&gt; R script), que vous sauvegarderez sous le nom <code>bacterial_regulon_analysis.R</code>.</p></li>
+<li><p>rédigez une section de code intitulée <code># Data download</code> qui effectuera les opérations suivantes;</p>
+<ul>
+<li>créer un dossier local &quot;TP_bacterial_regulons&quot; à la racine de votre compte; (<code>~/TP_bacterial_regulons</code>)</li>
+<li>se déplacer dans ce dossier;</li>
+<li>y télécharger le fichier <code>cutadapt_bwa_featureCounts_all.tsv</code>;</li>
+<li>lister les fichiers contenus dans le dossier.</li>
+</ul></li>
+<li><p>Exécutez le script et vérifiez le résultat.</p></li>
+</ol>
 </div>
 
   <!-- dynamically load mathjax for compatibility with self-contained -->
