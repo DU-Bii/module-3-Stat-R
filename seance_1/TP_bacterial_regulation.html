@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Jacques van Helden" />
+
+<meta name="date" content="2019-04-02" />
+
+<title>Travail personnel - exploration d’un transcriptome bactérien</title>
+
+<script src="TP_bacterial_regulation_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="TP_bacterial_regulation_files/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="TP_bacterial_regulation_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="TP_bacterial_regulation_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="TP_bacterial_regulation_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="TP_bacterial_regulation_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="TP_bacterial_regulation_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="TP_bacterial_regulation_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="TP_bacterial_regulation_files/navigation-1.1/tabsets.js"></script>
+
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Travail personnel - exploration d’un transcriptome bactérien</h1>
+<h3 class="subtitle"><em>DUBii 2019</em></h3>
+<h4 class="author"><em>Jacques van Helden</em></h4>
+<h4 class="date"><em>04/02/2019</em></h4>
+
+</div>
+
+
+<div id="but-du-travail-personnel" class="section level2">
+<h2>But du travail personnel</h2>
+<p>Pour vous approprier les commandes présentées ci-dessus, nous vous proposons d’analyser un fichier d’expression complet et de générer différentes représentations graphiques pour acquérir une intuition de la distribution des données.</p>
+<p>Nous vous demandons d’écrire toutes les commandes dans un script R bien organisé (divisé en sections pour les différentes étapes), documenté (en utilisant les commentaires R précédés d’un <code>#</code>), et qui pourra être exécuté par quelqu’un d’autre (reproductibilité).</p>
+<div id="recommandationsg-generales-pour-le-code-r" class="section level3">
+<h3>Recommandationsg générales pour le code R</h3>
+<ul>
+<li>Organisez votre code en sections séparées par des titres, qui correspondent aux différentes étapes de l’analyse.</li>
+<li>Veillez à commenter dans votre étape chaque étape de l’analyse.</li>
+<li>Utilisez des noms de variables explicites, qui permettent instantanément de comprendre ce qu’elles représentent.</li>
+<li>Séparez soigneusement dans des dossiers distincts les fichiers de code et ceux de données et résultats. Votre code est précieux, il représente votre temps de travail. Les résultats peuvent être effacés sans douleur, puisqu’ils peuvent être régénérés par le code.</li>
+<li>Adoptez une convention de nommage cohérente (voir section suivante).</li>
+</ul>
+</div>
+<div id="style-de-code" class="section level3">
+<h3>Style de code</h3>
+<p>Chaque langage de programmation établit des recommandations concernant le style du code, notamment concernant la façon de nommer les variables et fonctions, l’indentation des blocs de code, l’espacement, …</p>
+<p>Pour des raisons historiques, en R il existe plusieurs conventions alternatives pour nommer les variables et fonctions. Pour plus de détail, voici un très bon article de synthèse:</p>
+<ul>
+<li>Rasmus Bååth (2012). <em>The State of Naming Conventions in R</em>. The <a href="https://journal.r-project.org/archive/2012-2/">R Journal (2012) 4:2</a>, pages 74-75. [<a href="https://journal.r-project.org/archive/2012-2/RJournal_2012-2_Baaaath.pdf">pdf</a>] [<a href="https://doi.org/10.32614/RJ-2012-018">DOI:10.32614/RJ-2012-018</a>]</li>
+</ul>
+<p>Pour les travaux personnels, nous recommandons les conventions de Google R Style <a href="https://google.github.io/styleguide/Rguide.xml#identifiers" class="uri">https://google.github.io/styleguide/Rguide.xml#identifiers</a>, avec cependant une flexibilité: pour les variables, nous suggérons d’utiliser la convention <em>lowerCamelCase</em> plutôt que <em>period.separated</em>.</p>
+<ul>
+<li>variable.name is preferred, variableName is accepted</li>
+<li>GOOD: <code>avg.clicks</code></li>
+<li>OK: <code>avgClicks</code></li>
+<li>BAD: avg_Clicks</li>
+</ul>
+<p>Lisez également attentivement les <a href="https://google.github.io/styleguide/Rguide.xml#spacing">recommandations d’espacement</a>.</p>
+</div>
+<div id="astuces" class="section level3">
+<h3>Astuces</h3>
+<ul>
+<li>Pour délimiter les sections, vous pouvez utiliser une convention : entourez le titre de quadruples croisillons (par exemple : <code>#### Data download ####</code>). Cette convention permet à RStudio d’afficher un menu des sections de votre code, pour vous y déplacer plus facilement.</li>
+</ul>
+</div>
+</div>
+<div id="telechargement-du-jeu-de-donnees" class="section level2">
+<h2>Téléchargement du jeu de données</h2>
+<ol style="list-style-type: decimal">
+<li><p>Connectez-vous à la section “Study cases” de ce module d’enseignement.</p>
+<p><a href="https://du-bii.github.io/study-cases/" class="uri">https://du-bii.github.io/study-cases/</a></p></li>
+<li><p>Cliquez sur le lien <a href="https://du-bii.github.io/study-cases/Escherichia_coli/bacterial-regulons_myers_2013/">Bacterial regulons</a></p></li>
+<li><p>Avec le bouton droit, cliquez sur le lien du tableau <a href="https://du-bii.github.io/study-cases/Escherichia_coli/bacterial-regulons_myers_2013/data/RNA-seq/cutadapt_bwa_featureCounts_all.tsv">Counts per gene</a>, et copiez ce lien.</p></li>
+<li><p>Connectez-vous au serveur RStudio du cluster core de l’IFB: <a href="https://rstudio.cluster.france-bioinformatique.fr/" class="uri">https://rstudio.cluster.france-bioinformatique.fr/</a>.</p>
+<p><strong>Note:</strong> pour les séances de travaux pratiques en salle de cours, nous insistons pour que tout le monde utilise le serveur RStudio du cluster IFB. Cependant, pour le travail personnel, rien ne vous empêche d’utiliser votre propre ordinateur. Vous devrez cependant alors installer vous-mêmes les librairies R requises.</p></li>
+<li><p>Créez un nouveau fichier R (File -&gt; New File -&gt; R script), que vous sauvegarderez sous le nom <code>bacterial_regulon_analysis.R</code>.</p></li>
+<li><p>rédigez une section de code intitulée <code>#### Data download ####</code> (convention RStudio pour les titres de section dans le code R), qui effectuera les opérations suivantes;</p>
+<ul>
+<li>créer un dossier local “TP_bacterial_regulons” à la racine de votre compte: (<code>~/TP_bacterial_regulons</code>)</li>
+<li>se déplacer dans ce dossier;</li>
+<li>y télécharger le fichier <code>cutadapt_bwa_featureCounts_all.tsv</code>;</li>
+<li>lister les fichiers contenus dans le dossier.</li>
+</ul></li>
+<li><p>Exécutez le script et vérifiez le résultat.</p></li>
+</ol>
+</div>
+<div id="exploration-des-resultats" class="section level2">
+<h2>Exploration des résultats</h2>
+<p>Entamez une nouvelle section intitulée “Exploration of the transcriptome table”.</p>
+<ol style="list-style-type: decimal">
+<li><p>Avec la fonction <code>read.delim()</code>, chargez le tableau de comptages RNA-seq (nombre de reads / gène) dans une variable nommée <code>rawCounts</code>.</p></li>
+<li><p>Calculez des statistiques de base sur les colonnes du</p></li>
+</ol>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

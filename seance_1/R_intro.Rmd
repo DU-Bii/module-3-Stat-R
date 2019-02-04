@@ -3,28 +3,6 @@ title: "Module 3 - Analyse statistique avec R - Séance 1"
 author: "Hugo Varet, Frédéric Guyon, Olivier Kirsh et Jacques van Helden"
 date: '`r Sys.Date()`'
 output:
-  pdf_document:
-    fig_caption: yes
-    highlight: zenburn
-    toc: yes
-    toc_depth: 3
-  beamer_presentation:
-    colortheme: dolphin
-    fig_caption: yes
-    fig_height: 6
-    fig_width: 7
-    fonttheme: structurebold
-    highlight: tango
-    incremental: no
-    keep_tex: no
-    slide_level: 2
-    theme: Montpellier
-    toc: yes
-  revealjs::revealjs_presentation:
-    theme: night
-    transition: none
-    self_contained: true
-    css: ../slides.css
   slidy_presentation:
     smart: no
     slide_level: 2
@@ -39,6 +17,18 @@ output:
     theme: cerulean
     toc: yes
     widescreen: yes
+  beamer_presentation:
+    colortheme: dolphin
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    fonttheme: structurebold
+    highlight: tango
+    incremental: no
+    keep_tex: no
+    slide_level: 2
+    theme: Montpellier
+    toc: yes
   html_document:
     self_contained: no
     fig_caption: yes
@@ -47,6 +37,16 @@ output:
     toc: yes
     toc_depth: 3
     toc_float: yes
+  revealjs::revealjs_presentation:
+    theme: night
+    transition: none
+    self_contained: true
+    css: ../slides.css
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
   ioslides_presentation:
     slide_level: 2
     self_contained: no
@@ -255,7 +255,7 @@ Notation alternative
 
 La fonction `print()` imprime l'ensemble des valeurs d'une variable. 
 
-Quand on travaille avec un tableau de données omiques comportant des milliers de lignes, ce n'est pas forcément très informatif. 
+Quand on travaille avec un tableau de données omiques comportant des milliers de lignes, ce n'est pas forcément très utile d'afficher toutes les valeurs d'une table de données.  
 
 ```{r results = TRUE}
 print(exprs)
@@ -365,7 +365,7 @@ hist(exprs$WT1,
 
 ## Histogramme du logarithme de ces valeurs
 
-```{r expr_log2_hist, fig.width=7, fig.height=5, out.width="60%"}
+```{r expr_log2_hist, fig.width=7, fig.height=5, out.width="50%"}
 hist(log(exprs$WT1), breaks = 20,
      main = "Log2 expression values",
      xlab = "log2(counts)", # X label
@@ -377,7 +377,7 @@ hist(log(exprs$WT1), breaks = 20,
 
 ## Boîtes à moustaches
 
-```{r expr_log2_boxplot, fig.width=7, fig.height=5, out.width="60%"}
+```{r expr_log2_boxplot, fig.width=7, fig.height=5, out.width="50%"}
 boxplot(log(exprs[, c("WT1", "WT2", "KO1", "KO2")]),
      main = "Expression boxplots",
      xlab = "samples", # X label
@@ -389,7 +389,7 @@ boxplot(log(exprs[, c("WT1", "WT2", "KO1", "KO2")]),
 
 ## Boîtes à moustaches horizontales
 
-```{r expr_log2_boxplot_horiz, fig.width=7, fig.height=5, out.width="60%"}
+```{r expr_log2_boxplot_horiz, fig.width=7, fig.height=5, out.width="50%"}
 boxplot(log(exprs[, c("WT1", "WT2", "KO1", "KO2")]),
      main = "Expression boxplots",
      xlab = "log2(counts)", # X label
@@ -541,7 +541,7 @@ table(annot$chr)
 
 ## Diagramme en bâtons -- gènes par chromosomes
 
-```{r genes_per_chrom_barplot, fig.width = 5, fig.height = 7, out.width = "40%"}
+```{r genes_per_chrom_barplot, fig.width = 5, fig.height = 7, out.width = "30%"}
 barplot(sort(table(annot$chr)), horiz = TRUE, las = 1,
         main = "Genes per chromosome", ylab = "Chromosome", 
         col = "lightblue", xlab = "Number of genes")
@@ -616,12 +616,5 @@ sum(p * valeurs)
  
     - ressources en ligne
     - tutoriels pour des analyses spécifiques (e.g. DESeq2 pour le RNA-Seq)
-
-## Travail personnel
-
-Pour vous approprier les commandes présentées ci-dessus, nous vous proposons d'analyser un fichier d'expression complet et de générer différentes représentations graphiques pour acquérir une intitution de la distribution des donnnées.
-
-
-
 
 
