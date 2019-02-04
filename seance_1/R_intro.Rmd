@@ -96,7 +96,7 @@ Langage de programmation qui permet de :
 
 Disponible sur Windows, MacOS, Linux
 
-Historique :
+**Historique** :
 
  - 1993 : début du projet R
  - 2000 : sortie de R 1.0.0
@@ -104,20 +104,21 @@ Historique :
 
 ## Avantages et inconvénients
 
-Avantages :
+**Avantages** :
 
  - Souplesse d’utilisation pour réaliser des analyses statistiques
  - R est libre et gratuit, même s'il existe maintenant des versions payantes de RStudio (shiny et/ou server)
  - Reproductibilité des analyses en écrivant/sauvegardant les commandes R dans des scripts
+ - Très largement utilisé par la communauté
+ - Très largement enrichi par la communauté : système de packages
 
-Inconvénients :
+**Inconvénients** :
 
 ## Analyse de données vs langage de programmation
 
  - Lire un tableau : `read.table()`
  - Fusionner deux tableau : `merge()`
  - Sélectionner des colonnes : `mydata[ , c("col1","col2")]`
- - Rechercher une chaîne de caractères : `grep()`
  - Calculer une moyenne : `mean(x)`
  - Exporter un tableau de données : `write.table()`
  - Régression linéaire : `lm(y ~ x)`
@@ -126,14 +127,15 @@ Inconvénients :
  - Convertire des données : `as.data.frame()`
  - Tracer une courbe : `plot()`
  - Réaliser une ACP : `prcomp()`
- - Calculer une variance : `var()`
+ 
+Un script R ne doit pas être une boîte noire !
 
 ## Modes d'utilisation (liste non exhaustive)
 
  - Localement via le terminal
  - Localement via RStudio (utilisation classique)
  - Sur un serveur distant via le terminal et une connexion ssh
- - Sur un serveur via un nagivateur pour accéder à RStudio server
+ - Sur un serveur via un nagivateur pour accéder à RStudio server (DUBii)
  
 ## Se connecter au serveur ou ouvrir RStudio
 
@@ -159,6 +161,8 @@ S’il n’existe pas encore, créer le dossier de travail.
 dir.create(work.dir, recursive = TRUE, showWarnings = FALSE)
 ```
 
+**Alternative** : créer le répertoire `intro_R` en utilisant les fonctionnalités de RStudio
+
 ## Explorer son dossier de travail
 
 Aller dans ce dossier de travail.
@@ -167,6 +171,8 @@ Aller dans ce dossier de travail.
 ```{r}
 setwd(work.dir)	
 ```
+
+**Alternative** : cliquer sur "Session/Set Working Directory/Choose Directory"
 
 Où suis-je ? 
 (Commande Unix équivalente: "pwd")
@@ -217,11 +223,13 @@ La commande `download()` permet de télécharger un fichier à partir d'un serve
 
 ```{r, eval=FALSE}
 dir.create("data")
-download.file(url = "https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/seance_1/data/expression.txt", destfile = "data/expression.txt")
+download.file(url = "https://tinyurl.com/dubii-expressions", destile = "data/expression.txt")
+# URL complete : https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/seance_1/data/expression.txt
 ```
 
 ```{r, eval=FALSE}
-download.file(url = "https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/seance_1/data/annotation.csv", destfile = "data/annotation.csv")
+download.file(url = "https://tinyurl.com/dubii-annotation", destfile = "data/annotation.csv")
+# URL complete : https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/seance_1/data/annotation.csv
 ```
 
 ## Chargement des données
@@ -326,9 +334,11 @@ exprs[, c(2, 3)]
 
 ## Histogramme des valeurs d'expression pour WT1
 
-```{r expr_histo, fig.width=7, fig.height=5, out.width="60%"}
+```{r expr_histo, fig.width=7, fig.height=5, out.width="40%"}
 hist(exprs$WT1)
 ```
+
+**Exercice** : améliorer ce graphique en modifiant la couleur de l'histogramme, en ajoutant un titre et des noms aux axes des abscisses et ordonnées.
 
 ## Histogramme avec quelques options esthétiques
 
@@ -419,11 +429,13 @@ boxplot(log(exprs[, c("WT1", "WT2", "KO1", "KO2")]),
 
 
 
-## Nuages de points -- Expressions KO1 vs WT1
+## Nuages de points : expressions KO1 vs WT1
 
-```{r xy_plot, fig.width=7, fig.height=5, out.width="60%"}
+```{r xy_plot, fig.width=7, fig.height=5, out.width="40%"}
 plot(x = log(exprs$WT1), y = log(exprs$KO1))
 ```
+
+**Exercice** : améliorer ce graphique selon vos envies !
 
 ## Personnalisation des paramètres graphiques
 
@@ -460,7 +472,7 @@ exprs[gene.indices, ]
 On peut sélectionner à la fois des lignes et des colonnes en combinant les méthodes vues ci-dessus. 
 
 ```{r eval=TRUE, results=TRUE}
-exprs[10:15, 1:5, ]
+exprs[10:15, 1:5]
 ```
 
 On peut également désigner les lignes ou les colonnes par leur nom. 
