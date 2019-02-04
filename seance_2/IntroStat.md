@@ -1,7 +1,7 @@
 ---
 title: "Module 3 - Analyse statistique avec R - Séance 2"
 author: "Leslie REGAD"
-date: '2019-02-03'
+date: '2019-02-04'
 output:
   slidy_presentation:
     fig_caption: yes
@@ -100,6 +100,7 @@ $\rightarrow$ **diminution de l’immunité humorale**, anémie, infections, ris
 
     + **Destruction osseuse** qui résulte de la décalcification en certains endroits du squelette  
 $\rightarrow$ **fractures** peuvent aisément se produire à ces endroits  
+
 
 
 ## Question statistique 
@@ -254,7 +255,7 @@ boxplot(pyr~diagn, data=dataMyelom)
 $$ \widehat{\mu} = m = \frac{\sum_{i=1}^{n}x_i}{n}$$
 
 * estimateur de la variance : 
-$$ \widehat{\sigma^2} = s^2 = \frac{1}{n} \sum_{i=1}^{n}(x_i-m)^2$$
+$$ \widehat{\sigma^2} = s^2 = \frac{1}{n-1} \sum_{i=1}^{n}(x_i-m)^2$$
 </div>
 
 
@@ -279,7 +280,7 @@ diagn: 1
 $$ \widehat{\mu} = m = \frac{\sum_{i=1}^{n}x_i}{n}$$
 
 * estimateur de la variance : 
-$$ \widehat{\sigma^2} = s^2 = \frac{1}{n} \sum_{i=1}^{n}(x_i-m)^2$$
+$$ \widehat{\sigma^2} = s^2 = \frac{1}{n-1} \sum_{i=1}^{n}(x_i-m)^2$$
 </div>
 
 
@@ -334,8 +335,9 @@ $\quad$
 
 <div class="col2">
 $$ p(m_{inf} < \mu < m_{sup}) = 1- \alpha $$  
+![](img/IC.png){width=70%}
 <center>
-<img src="figures/07_tests_multiplesunnamed-chunk-11-1.png" style="display: block; margin: auto;" />
+
 </center>
 
 
@@ -406,29 +408,7 @@ $\quad$
     + elles s'expliquent par le **hasard** et par le **facteur maladie** : H1 (hypothèse alternative)
 
   
-## Déroulement d'un test statistique - 1
-  
-1. Point de départ : une question biologique  : <span style="color: #8f8f8f">Est-ce que le taux moyen de pyr des patients malades est plus grands que celui des patients sains ?</span>  
-$\rightarrow$ définition de variable aléatoire et de ses paramètres  
-  
-    + <span style="color: #8f8f8f"> X = "taux de pyr" :  $E(X)= \mu$ et $V(X) = \sigma^2$ </span>  
-    + <span style="color: #8f8f8f"> X1 = "taux de pyr chez les patients sains" :  $E(X_1) = \mu_1$ et $V(X_1) = \sigma_1^2$</span>  
-    + <span style="color: #8f8f8f"> X2 = "taux de pyr chez les patients malades" :  $E(X_2) = \mu_2$ et $V(X_2) = \sigma_2^2$  </span>   
-    
-2. Définit deux hypothèses sur un des paramètres de la VA
-    + **hypothèse nulle (H0)** : égalité des paramètres : <span style="color: #8f8f8f">$\mu_1 = \mu_2 = \mu$ </span>
-    + **hypothèse alternative (H0)** : égalité des paramètres : <span style="color: #8f8f8f">$\mu_1 < \mu_2$ </span>
-    
-3. Définit une expérimentation pour extraire des données relatives à la question posée :  
-    + <span style="color: #8f8f8f"> Création de deux échantillons : </span>
-    + <span style="color: #8f8f8f"> échantillon 1 composé de $n_1$ patients sains </span>
-    + <span style="color: #8f8f8f"> échantillon é composé de $n_2$ patients malade </span>
-    + <span style="color: #8f8f8f"> Mesure le taux de pyr de chaque patient </span>   
-    
-4. Les données sont considérées comme la réalisation de la variable aléatoire décrite dans la population  
-
-
-## Déroulement d'un test statistique - 1
+## Déroulement d'un test statistique
   
 * Définit deux hypothèses sur un des paramètres de la VA
     + **hypothèse nulle (H0)** : égalité des paramètres : <span style="color: #8f8f8f">$\mu_1 = \mu_2 = \mu$ </span>  
