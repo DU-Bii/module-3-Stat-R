@@ -1,0 +1,294 @@
+---
+title: "Module 3 - Analyse statistique avec R - Séance 2"
+author: "Magali Berland (INRA) & Leslie REGAD (Université Paris Diderot)"
+date: '`r Sys.Date()`'
+output:
+  html_document:
+    code_folding: hide #show #
+    self_contained: no
+    number_sections: yes
+    fig_caption: yes
+    highlight: zenburn
+    theme: cerulean
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
+font-import: http://fonts.googleapis.com/css?family=Risque
+subtitle: DUBii 2019
+font-family: Garamond
+transition: linear
+---
+
+```{r include=FALSE, echo=FALSE, eval=TRUE}
+library(knitr)
+library(kableExtra)
+# library(formattable)
+
+options(width = 300)
+# options(encoding = 'UTF-8')
+knitr::opts_chunk$set(
+  fig.width = 7, fig.height = 5, 
+  fig.path = 'figures/07_tests_multiples',
+  fig.align = "center", 
+  size = "tiny", 
+  echo = FALSE, eval = FALSE, 
+  warning = FALSE, message = FALSE, 
+  results = TRUE, comment = "")
+
+options(scipen = 12) ## Max number of digits for non-scientific notation
+# knitr::asis_output("\\footnotesize")
+
+```
+
+
+# Introduction
+La cirrhose du foie est une maladie très fréquente à travers le monde ; en France, 700 000 cas étaient répertoriés en 2012. 
+Les principales causes connues de cette maladie sont l’obésité, les infections virales (hépatites) et l’alcool. 
+Selon la gravité de la cirrhose, celle-ci peut conduire à un cancer, voire à un arrêt du fonctionnement du foie, ce qui nécessite une transplantation.
+Les signes et symptômes de la cirrhose ou de ses complications sont nombreux et variés. 
+Nombre d’entre eux ne sont pas spécifiques et peuvent se produire en l’absence de cirrhose.
+Réciproquement, leur absence ne permet pas d’exclure définitivement le diagnostic. 
+Pendant une période plus ou moins longue, dite non compliquée, seul un examen clinique ou biologique peut mettre en évidence la maladie. 
+Aujourd’hui, le diagnostic de la maladie se fait essentiellement à l’aide d’une biopsie du foie qui représente certaines contraintes (hospitalisation, méthode invasive parfois contre-indiquée).
+
+Une étude a été menée pour chercher à caractériser les populations bactériennes de l’intestin chez les patients ayant une cirrhose du foie (Qin et al. ”Alterations of the human gut microbiome in liver cirrhosis.” Nature, 2014). Pour cela, le microbiote (ensemble des gènes bactériens de l’intestin) de 237 individus a  été analysé. 
+La moitié (123 individus) étaient atteints d’une cirrhose du foie et l’autre (114 individus)  étaient sains.
+La méthodologie suivie pour obtenir les données a été la suivante :
+
+1. Un  échantillon du microbiote intestinal a été prévelé chez chaque individu.
+2. L’ADN contenu dans l'échantillon (principalement l’ADN des bactéries présentes dans cet écosystème) est extrait puis séquencé. 
+Des milions de petites séquences (appelées lectures) sont produites par les séquenceurs à haut débit.
+3. Ces lectures sont comparées à un catalogue de référence de 5.4 millions de gènes, lui-même clusterisé en 523 espèces bactériennes.
+4. La quantité de chaque gène est dénombrée et ces comptages sont divisés par la taille des gènes.
+5. Le comptage des gènes de cette matrice d’abondance est regroupé par espèce.
+
+# Les données
+La matrice d’abondance est contenue dans le fichier `microbiota.abundance.log.RDS`, les métadonnées associées à ce jeu de données sont dans le fichier `metadata.RDS`.  
+<span style="color: #FF0000"> dire où se trouve le fichier de données </span>
+
+Le fichier `microbiota.abundance.RDS` contient l’abondance (transformée en log) des 523 espèces bactériennes (colonnes) pour les 237 individus (lignes).  
+<span style="color: #FF0000"> dire où se trouve le fichier de données </span>
+
+Le fichier `metadata.RDS` contient les informations suivantes :
+
+* `Age` : l’âge des patients
+* `Gender` : le genre des patients
+* `BMI` (*body mass index*) : l’indice de masse corporelle, exprimé en kg/m$^2$
+* `status` : statut clinique du patient, sain (*healthy*) ou malade (*liver*)
+* `INR` (*international normalized ratio*) : mesure dérivée du taux de prothrombine utilisée pour évaluer la coagulation sanguine
+* `Crea` : taux de créatinine mesurée dans le sang (indication de la capacité de filtration rénale)
+* `Alb` : taux d’albumine mesurée dans le sang
+* `TB` : taux de bilirubine (pigment jaune produit par la dégradation de l’hémoglobine)
+* `PT` : taux de prothrombine
+* `CTP` (*Child-Turcotte-Pugh score*) : score qui permet la classification en groupes de gravité croissante selon le degré d’insuffisance hépato-cellulaire
+* `MELD` (*Model for End-Stage Liver Disease*) : système de notation pour évaluer la gravité d’une cirrhose du foie
+* `GC` (*gene count*) : Nombre de gènes différents dénombrés
+* `Enterotype` : Un entérotype est un groupe de composition bactérienne intestinale spécifique chez l’homme. 
+Il en existe trois types bien distincts liés au régime alimentaire : 
+    + le type 1 est caractérisé par de hauts niveaux de bacteroides, c’est celui du régime occidental riche en viandes;
+    + le type 2 a peu de bacteroides mais beaucoup de prevotella, il est lié aux régimes riches en glucides; 
+    + le type 3 a un haut niveau de ruminococcus (régime riche en graisses polyinsaturées).
+    
+
+# But du TP
+
+
+
+# Lancement de `Rstudio`
+
+1. Ouvrez un terminal et placez vous dans votre répertoire de travail.
+
+2. Lancez le logiciel `Rstudio`. Ouvrez un nouveau fichier `Rmarkdown` que vous sauvegardez dans votre répertoire de travail.
+
+# Description des données
+
+1. Ouvrez les deux fichiers de données en utilisant la fonction `readRDS()`. Vérifiez que les objects créés ont les bonnes dimensions.
+
+```{r}
+metaFile <- readRDS("data/metadata.RDS")
+dim(metaFile)
+
+abonDF <- readRDS("data/microbiota.abundance.log.RDS")
+dim(abonDF)
+```
+
+2. Quels types de variables contient le fichier `metadata.RDS` (fonction `str()`).
+
+```{r}
+str(metaFile)
+```
+
+3. Déterminez le nombre et la proportion de patients sains et malades dans le jeu de données.
+Représentez ces distributions à l'aide de graphiques en bâtons (fonctions `table()` et `barplot()`).
+
+```{r}
+table(metaFile[,"Gender"])
+table(metaFile[,"Gender"]) / nrow(metaFile)
+barplot(table(metaFile[,"Gender"]), ylab="Occurrence", xlab="Genre")
+```
+
+
+4. Déterminez le nombre et la proportion d'hommes et de femmes dans le jeu de données.
+Représentez ces distributions à l'aide de graphiques en bâtons (fonctions `table()` et `barplot()`).
+
+```{r}
+table(metaFile[,"status"])
+table(metaFile[,"status"])/nrow(metaFile)
+
+barplot(table(metaFile[,"status"]), ylab="Occurrence", xlab="Status")
+
+```
+
+5. En utilisant la fonction `summary()`, étudiez la distribution des différentes variables. Que remarquez vous pour les variables `INR`, `Crea`, `Alb`, `TB`, `PT`, `CTP`, `MELD` et `Enterotype`.
+```{r}
+summary(metaFile)
+```
+
+
+6. Identifiez les individus qui ont des `NA` pour la variable `Crea` (fonctions `which()` et `is.na()`). Quel est le statut clinique de ces patients ? Quel est le genre de ces individus ?
+
+```{r}
+ind.na <- which(is.na(metaFile[,"Crea"]))
+ind.na
+
+metaFile[ind.na,"status"]
+metaFile[ind.na, "Gender"]
+```
+
+7. Est-ce que ces individus ont des `NA` pour les autres variables ?
+```{r}
+metaFile[ind.na,]
+```
+
+8. Suppimez ces individus des deux data.frames qui contiennent les deux jeux de données
+```{r}
+metaFile2 = metaFile[-ind.na,]
+abonDF2 <- abonDF[-ind.na,]
+```
+
+9. Déterminez la moyenne et l'écart-type de chaque variable quantitative (fonctions `apply()`, `mean()` et `sd()`).
+```{r}
+var.sel <- c( "Age", "BMI", "INR", "Crea", "Alb", "TB", "PT", "CTP", "MELD", "GC")
+apply(metaFile2[, var.sel],2,mean, na.rm=T)
+apply(metaFile2[, var.sel],2,sd, na.rm=T)
+```
+
+
+
+# Comparaison des patients malades et sains
+  
+## Mise en place de tests de comparaison de deux moyennes  
+On cherche à savoir si les patients et les individus contrôles présentent des caractéristiques différentes. Pour cela, on se pose les questions suivantes ? 
+
+* Est-ce que l'âge des patients est significativement différent de celui des contrôles sains  ?
+* Est-ce que l'indice de masse corporel des patients est significativement plus grand de celui des contrôles sains ?
+* Le taux d’albumine des patients est-il significativement différent de celui des contrôles sains ?
+* Le taux de créatinine des patients est-il significativement différent de celui des contrôles sains ?
+* Le taux de bilirubine des patients est-il significativement différent de celui des contrôles sains ?
+* Le nombre de gènes différentiellement exprimés chez les patients est-il significativement différent de celui chez les contrôles sains ?
+
+
+Créez deux data.frames qui contiennent pour le premier les métadonnées pour les patients sains et pour le second les métadonnées pour les patients malades.
+
+```{r}
+metaHeath <- metaFile2[which(metaFile2[,"status"]=="healthy"),]
+dim(metaHeath)
+
+metaLiver <- metaFile2[which(metaFile2[,"status"]=="liver"),]
+dim(metaLiver)
+```
+
+
+Pour chacunes des questions précédentes, effectuez les étapes suivantes : 
+
+1. Identifiez la variable aléatoire étudiée.
+3. Identifiez le test que vous allez réaliser.
+3. Représentez, sur le même graphique, la distribution de la variable aléatoire chez les individus sains et les patients malades en utilisant des boîtes à moustaches (fonction `boxplot()`). 
+4. Calculez la moyenne et l'écart-type de la variable chez les individus sains et malades (fonctions  `by()`, `means()` et `sd()`).
+5. Calculez l'intervalle de confiance à 95% de l'espérance de la variable aléatoire pour les individus sains et les individus malades (fonctions `qnorm()` et `var()`). 
+6. Effectuez le test statistique pour répondre à la question. Posez les hypothèses et concluez au test. (fonctions `t.test()`)
+
+## Mise en place de tests de chi2 d'homogénéité  
+
+Ensuite, on se demande si la maladie cyrrhose touche autant les hommes que les femmes. Pour répondre à cette question, vous allez réaliser un test du Chi2 d'homogénéité. 
+
+1. Définissez les variables aléatoires sur lesquelles vous allez travailler pour répondre à cette question.
+
+2. Déterminez la table de contigence qui renvoie le nombre de femmes et d'hommes chez les individus sains et les patients malades (fonction `table()`). 
+
+Status | female | male 
+-------|--------|-----
+healthy|   42   | 72
+ liver |   39   | 84
+ 
+```{r}
+tcStG <- table(metaFile[,"status"], metaFile[,"Gender"])
+```
+ 
+
+3. Réalisez le test du chi2 à partir de cett table de contigence. (fonction `chisq.test()`). Avant de conclure pensez à vérifier les conditions de validité du test qui sont que tous les effectifs théoriques doivent être supérieurs à 5 (argument `$expected` de la fonction `chisq.test()`). 
+```{r}
+res.chisq <- chisq.test(tcStG)
+res.chisq $ expected
+```
+
+
+Pour finir nous cherchons à savoir si la distribution des enterotypes est différent chez les individus sains et les patients malades. Pour répondre à cette question, vous allez réaliser un test de chi2.
+
+1. Identifiez les variables aléatoires que vous allez utiliser pour répondre à cette question.
+2. Déterminez la table de contingence (fonction `table()`).
+3. Effectuez le test du chi2 sur cette table de contingence (fonction `chisq.test()`).
+
+```{r}
+tcStE <- table(metaFile[,"status"], metaFile[,"Enterotype"])
+res.chisq <-chisq.test(tcStE)
+```
+ 
+4. Comparez les effectifs théoriques et observés pour finaliser votre conclusion au test (argument `$expected` de la fonction `chisq.test()`). 
+
+```{r}
+res.chisq$expected
+```
+
+# Etude des différents entérotypes
+
+On se demande si la composition de l'entérotype modifie l'indice de masse corporelle des individus. 
+
+1. Représentez la distribution de l'indice de masse corporelle pour les individus en fonction de leur entérotype (fonction `boxplot()`.
+```{r}
+boxplot(BMI~Enterotype, data=metaFile2)
+```
+
+2. Définissez la variable aléatoire et les échantillons  
+
+Pour répondre à la question, il faut effectuer un test de comparaison de 3 moyennes en utilisant un test ANOVA.  
+Ce test a deux conditions de validité : 
+
+* Il faut que la variable aléatoire suive une loi normale dans les trois échantillons.
+* Il faut que la variable aléatoire ait la même variance dans les trois échantillons (Homoscédaticité de $X$).  
+
+3. Testez la normalité de $X$ dans les 3 échantillons. (fonction `by()`, `shapiro.test()`) 
+```{r}
+by(metaFile2[,"BMI"], metaFile2[,"Enterotype"], shapiro.test)
+```
+
+
+4. Testez l'homoscédaticité de $X$. (foncion `bartlett.test()`)
+```{r}
+bartlett.test(BMI~Enterotype, data=metaFile2)
+```
+
+
+Les résultats que vous avez obtenus vous permettent de conclure que les conditions de validité du test ANOVA ne sont pas vérifiées. Pour répondre à la question, vous allez donc utiliser un test non paramétrique : le test de Kruskall-Wallis (fonction `kruskal.test()`).  
+
+
+```{r}
+kruskal.test(BMI~Enterotype, data=metaFile2)
+```
+
+
