@@ -123,6 +123,7 @@ $\rightarrow$ **diminution de l’immunité humorale**, anémie, infections, ris
 $\rightarrow$ **fractures** peuvent aisément se produire à ces endroits  
 
 
+
 ## Question statistique 
 <div style="float:left;width:75%;">
 **Est-ce le dosage molécule déoxypyridinoline (pyr) est un bon marqueur pour détecter la maladie ?**   
@@ -243,7 +244,7 @@ boxplot(pyr~diagn, data=dataMyelom)
 $$ \widehat{\mu} = m = \frac{\sum_{i=1}^{n}x_i}{n}$$
 
 * estimateur de la variance : 
-$$ \widehat{\sigma^2} = s^2 = \frac{1}{n} \sum_{i=1}^{n}(x_i-m)^2$$
+$$ \widehat{\sigma^2} = s^2 = \frac{1}{n-1} \sum_{i=1}^{n}(x_i-m)^2$$
 </div>
 
 
@@ -259,7 +260,7 @@ by(dataMyelom[,"pyr"], dataMyelom["diagn"], mean)
 $$ \widehat{\mu} = m = \frac{\sum_{i=1}^{n}x_i}{n}$$
 
 * estimateur de la variance : 
-$$ \widehat{\sigma^2} = s^2 = \frac{1}{n} \sum_{i=1}^{n}(x_i-m)^2$$
+$$ \widehat{\sigma^2} = s^2 = \frac{1}{n-1} \sum_{i=1}^{n}(x_i-m)^2$$
 </div>
 
 
@@ -302,8 +303,9 @@ $\quad$
 
 <div class="col2">
 $$ p(m_{inf} < \mu < m_{sup}) = 1- \alpha $$  
+![](img/IC.png){width=70%}
 <center>
-```{r echo=FALSE, fig.width = 4, fig.height=2.5 }
+```{r echo=FALSE, fig.width = 4, fig.height=2.5, eval = FALSE }
 par(mar=c(4,4,1,1))
 vx <- seq(-1,5, by=0.01)
 vy <- dnorm(vx, mean = 2, sd = 0.6)
@@ -355,9 +357,9 @@ round(c(borneInf.1, borneSup.1),2)
 par(mar=c(4,2,1,2))
 plot(10.5:17.5, 10.5:17.5, type = "n", yaxt="n", ylim = c(16,18.5), ylab="", xlab="Pyr values", xlim=c(5, 8))
 segments(borneInf.0,17, borneSup.0, 17, lwd=2, col = 2)
-segments(borneInf.1,16.7, borneSup.1, 16.7, lwd=2, col = 3)
+segments(borneInf.1,17, borneSup.1, 17, lwd=2, col = 3)
 text(5.7,17.5,"IC1", col=2)
-text(7.2,17.2,"IC2", col=3)
+text(7.2,17.5,"IC2", col=3)
 ```
 
 
@@ -376,29 +378,7 @@ $\quad$
     + elles s'expliquent par le **hasard** et par le **facteur maladie** : H1 (hypothèse alternative)
 
   
-## Déroulement d'un test statistique - 1
-  
-1. Point de départ : une question biologique  : <span style="color: #8f8f8f">Est-ce que le taux moyen de pyr des patients malades est plus grands que celui des patients sains ?</span>  
-$\rightarrow$ définition de variable aléatoire et de ses paramètres  
-  
-    + <span style="color: #8f8f8f"> X = "taux de pyr" :  $E(X)= \mu$ et $V(X) = \sigma^2$ </span>  
-    + <span style="color: #8f8f8f"> X1 = "taux de pyr chez les patients sains" :  $E(X_1) = \mu_1$ et $V(X_1) = \sigma_1^2$</span>  
-    + <span style="color: #8f8f8f"> X2 = "taux de pyr chez les patients malades" :  $E(X_2) = \mu_2$ et $V(X_2) = \sigma_2^2$  </span>   
-    
-2. Définit deux hypothèses sur un des paramètres de la VA
-    + **hypothèse nulle (H0)** : égalité des paramètres : <span style="color: #8f8f8f">$\mu_1 = \mu_2 = \mu$ </span>
-    + **hypothèse alternative (H0)** : égalité des paramètres : <span style="color: #8f8f8f">$\mu_1 < \mu_2$ </span>
-    
-3. Définit une expérimentation pour extraire des données relatives à la question posée :  
-    + <span style="color: #8f8f8f"> Création de deux échantillons : </span>
-    + <span style="color: #8f8f8f"> échantillon 1 composé de $n_1$ patients sains </span>
-    + <span style="color: #8f8f8f"> échantillon é composé de $n_2$ patients malade </span>
-    + <span style="color: #8f8f8f"> Mesure le taux de pyr de chaque patient </span>   
-    
-4. Les données sont considérées comme la réalisation de la variable aléatoire décrite dans la population  
-
-
-## Déroulement d'un test statistique - 1
+## Déroulement d'un test statistique
   
 * Définit deux hypothèses sur un des paramètres de la VA
     + **hypothèse nulle (H0)** : égalité des paramètres : <span style="color: #8f8f8f">$\mu_1 = \mu_2 = \mu$ </span>  
