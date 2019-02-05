@@ -38,7 +38,6 @@ opts_chunk$set(fig.align = "center",
                fig.retina = 2,
                fig.width = 10,
                fig.path = 'figures/',
-               data.path = './data_R4/',
                cache = TRUE,
                cache.lazy = FALSE,
                size = "tiny",
@@ -157,7 +156,7 @@ Vous pouvez réaliser l'ACP à l'aide de la fonction `PCA(FactoMineR)` comme vu 
 ```{r}
 # prcomp
 sexp.prcomp <- prcomp(sexp)
-biplot(sexp.prcomp, xlabs=)
+biplot(sexp.prcomp)
 # FactoMineR::PCA
 par(mfrow=c(1,2))
 sexp.pca <- FactoMineR::PCA(sexp, graph=F)
@@ -167,7 +166,7 @@ plot(sexp.mds)
 par(mfrow=c(1,1))
 ```
 
-### à propos de l'ACP
+### A propos de l'ACP
 Selon la méthode utilisée, la représentation des individus peut-être légèrement différente. Une "simple" rotation a été appliquée.
 
 ### à propos du multidimensionnal scaling et de l'ACP
