@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="generator" content="pandoc">
-  <meta name="dcterms.date" content="2019-01-28" />
+  <meta name="author" content="Anne Badel &amp; l’équipe pédagogique" />
+  <meta name="dcterms.date" content="2019-02-04" />
   <title>Présentation du module 3, R et statistiques</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -451,7 +452,8 @@ document.getElementsByTagName('head')[0].appendChild(style);
 
 <section>
     <h1 class="title">Présentation du module 3, R et statistiques</h1>
-    <h3 class="date">2019-01-28</h3>
+    <h2 class="author">Anne Badel &amp; l’équipe pédagogique</h2>
+    <h3 class="date">2019-02-04</h3>
 </section>
 
 <section id="le-git-du-module-3" class="slide level2">
@@ -510,12 +512,13 @@ document.getElementsByTagName('head')[0].appendChild(style);
 <h2>Compétences attendues à la fin du module 3 - Analyse statistique avec R</h2>
 <p>A la fin du module, vous</p>
 <ul>
-<li>Maîtriserez le langage R, en particulier
+<li><p>Utiliser le langage R pour effectuer des analyses courantes, en particulier</p>
 <ul>
-<li>la lecture des fichiers de données (généralement en format tabulaire),</li>
-<li>les structures de données courantes (vecteurs, matrices, data frames, …),</li>
-<li>l’exportation des résultats sous différents formats,</li>
-<li>les différents types de représentations graphiques</li>
+<li>lire des fichiers de données (généralement en format tabulaire);</li>
+<li>utiliser des structures de données courantes (vecteurs, matrices, data frames, …);</li>
+<li>effectuer des analyses statistiques de différents types de données omiques;</li>
+<li>exporter des résultats sous différents formats;</li>
+<li>utiliser différents types de représentations graphiques</li>
 </ul></li>
 </ul>
 </section>
@@ -523,17 +526,17 @@ document.getElementsByTagName('head')[0].appendChild(style);
 
 <h3 id="et-vous-serez-capable-de">Et vous serez capable de</h3>
 <ul>
-<li>Réaliser des analyses statistiques, en particulier
+<li><p>Réaliser des analyses statistiques, en particulier</p>
 <ul>
-<li>la conception d’un plan d’analyse pour différents types de données biologiques à haut débit,</li>
-<li>la mise en oeuvre ces analyses statistiques au moyen de scripts R,</li>
-<li>l’interprétation des résultats en les mettant en rapport avec les questions biologiques</li>
+<li>concevoir un plan d’analyse pour différents types de données biologiques à haut débit;</li>
+<li>mettre en oeuvre ces analyses statistiques au moyen de scripts R;</li>
+<li>interpréter les résultats en les mettant en rapport avec les questions biologiques.</li>
 </ul></li>
-<li>Générer un rapport scientifique en format R markdown, avec
+<li><p>Générer un rapport scientifique en format R markdown, avec</p>
 <ul>
-<li>l’intégration de blocs de code dans un texte formaté</li>
-<li>assurant la cohérence entre les résultats et figures (générés au vol), et le texte qui en fournit l’interprétation</li>
-<li>et la reproductibilité des analyses</li>
+<li>l’intégration de blocs de code dans un texte formaté;</li>
+<li>une cohérence garantie entre les résultats et figures (générés au vol), et le texte qui en fournit l’interprétation;</li>
+<li>une reproductibilité des analyses.</li>
 </ul></li>
 </ul>
 </section>
@@ -605,6 +608,30 @@ document.getElementsByTagName('head')[0].appendChild(style);
 <li>Approches de classification supervisées, k-nearest neighbours, Random Forest, SVM</li>
 <li>Entraînement / test</li>
 <li>Evaluation des résultats (évaluation croisée, mesures de performance)</li>
+</ul>
+</section>
+<section id="langage-et-environnement-de-programmation" class="slide level2">
+<h2>Langage et environnement de programmation</h2>
+<ul>
+<li><p>Tous les logiciels utilisés pour ce cours sont en libre accès, et peuvent être installés sur les principaux systèmes opérateurs (Unix, Mac OS X, Windows).</p></li>
+<li><p>Ce module (cours et travaux pratiques) se base sur le langage <strong>R</strong> (<a href="https://www.r-project.org/" class="uri">https://www.r-project.org/</a>).</p></li>
+<li><p>Les scripts et supports de cours sont réalisés en utilisant l’environnement de développement <strong>RStudio</strong> (<a href="https://www.rstudio.com/" class="uri">https://www.rstudio.com/</a>).</p></li>
+</ul>
+</section>
+<section id="travaux-pratiques" class="slide level2">
+<h2>Travaux pratiques</h2>
+<ul>
+<li><p>Pour les travaux pratiques, nous utiliserons le serveur RStudio installé sur le cluster core de l’IFB.</p>
+<p><a href="https://rstudio.cluster.france-bioinformatique.fr/" class="uri">https://rstudio.cluster.france-bioinformatique.fr/</a></p></li>
+<li><p>Il est également possible d’installer R et RStudio sur votre ordinateur personnel ou au labo, mais les temps des séances ne nous permettront pas de vous assister si vous rencontrez des difficultés (par exemple pour l’installation de librairies manquantes, …)</p></li>
+<li><p>Nous vous demandons donc de réaliser les travaux pratiques uniquement sur le serveur RStudio du cluster IFB. Si vous le désiez, vous pourrez expérimenter l’installation locale pour vos travaux personnels (ceci n’sy pas nécessaire: les TP peuvent être intégralement réalisés sur le serveur RStudio du cluster IFB).</p></li>
+</ul>
+</section>
+<section id="supports-de-cours" class="slide level2">
+<h2>Supports de cours</h2>
+<ul>
+<li><p>Les supports de cours (diaporamas, tutoriels) sont intégralement réalisés avec <strong>R markdown</strong> (<a href="https://rmarkdown.rstudio.com/" class="uri">https://rmarkdown.rstudio.com/</a>), un langage permettant d’intégrer des éléments de code dans du texte structuré, et d’assurer la reproductibilité et la portabilité des résultats.</p></li>
+<li><p>Nous n’aurons peut-être pas le temps de vous former au langage R markdown, mais vous pourrez le découvrir en consultant les fichiers <code>.Rmd</code> disponibles sur le site Web du cours.</p></li>
 </ul>
 </section>
     </div>
