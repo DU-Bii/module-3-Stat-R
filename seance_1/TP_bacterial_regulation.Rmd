@@ -146,7 +146,7 @@ Lisez également attentivement les [recommandations d'espacement](https://google
 
     - créer un dossier local "TP_bacterial_regulons" à la racine de votre compte: (`~/TP_bacterial_regulons`)
     - se déplacer dans ce dossier;
-    - y télécharger le fichier `cutadapt_bwa_featureCounts_all.tsv`;
+    - y télécharger le fichier `cutadapt_bwa_featureCounts_all.tsv` (celui dont vous avez précédemment copié le lien);
     - lister les fichiers contenus dans le dossier.
 
 7. Exécutez le script et vérifiez le résultat. 
@@ -155,8 +155,24 @@ Lisez également attentivement les [recommandations d'espacement](https://google
 
 Entamez une nouvelle section intitulée "Exploration of the transcriptome table". 
 
-
 1. Avec la fonction `read.delim()`, chargez le tableau de comptages RNA-seq (nombre de reads / gène) dans une variable nommée `rawCounts`.
 
-1. Calculez des statistiques de base sur les colonnes du 
+2. Utilisez la commande `summary()` pour calculer des statistiques de base sur chaque colonne du tableau. 
+
+3. Convertissez les comptages par la fonction `log2`. 
+
+4. Explorez la distribution des valeurs transformées par log2, en utilisant différentes représentations graphiques vues lors de la séance d'introduction: histogramme, boîte à moustache, ...
+
+5. Calculez pour chaque gène la moyenne des log2(counts) par condition, et dérivez-en les valeurs $M$ et $A$. 
+
+6. Dessinez un nuage des points comparant les valeurs moyennes entre conditions. 
+
+7. Dessinez un MA plot. 
+
+## Rendu
+
+Un script R proprement structuré (sections) et documenté (expliquez ce que vous allez faire à chaque étape, documentez les variables), qui pourra être compris et reproduit par un utilsiateur de R.
+
+
+
 

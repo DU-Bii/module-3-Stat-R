@@ -325,7 +325,7 @@ div.tocify {
 <ul>
 <li>créer un dossier local “TP_bacterial_regulons” à la racine de votre compte: (<code>~/TP_bacterial_regulons</code>)</li>
 <li>se déplacer dans ce dossier;</li>
-<li>y télécharger le fichier <code>cutadapt_bwa_featureCounts_all.tsv</code>;</li>
+<li>y télécharger le fichier <code>cutadapt_bwa_featureCounts_all.tsv</code> (celui dont vous avez précédemment copié le lien);</li>
 <li>lister les fichiers contenus dans le dossier.</li>
 </ul></li>
 <li><p>Exécutez le script et vérifiez le résultat.</p></li>
@@ -336,8 +336,17 @@ div.tocify {
 <p>Entamez une nouvelle section intitulée “Exploration of the transcriptome table”.</p>
 <ol style="list-style-type: decimal">
 <li><p>Avec la fonction <code>read.delim()</code>, chargez le tableau de comptages RNA-seq (nombre de reads / gène) dans une variable nommée <code>rawCounts</code>.</p></li>
-<li><p>Calculez des statistiques de base sur les colonnes du</p></li>
+<li><p>Utilisez la commande <code>summary()</code> pour calculer des statistiques de base sur chaque colonne du tableau.</p></li>
+<li><p>Convertissez les comptages par la fonction <code>log2</code>.</p></li>
+<li><p>Explorez la distribution des valeurs transformées par log2, en utilisant différentes représentations graphiques vues lors de la séance d’introduction: histogramme, boîte à moustache, …</p></li>
+<li><p>Calculez pour chaque gène la moyenne des log2(counts) par condition, et dérivez-en les valeurs <span class="math inline">\(M\)</span> et <span class="math inline">\(A\)</span>.</p></li>
+<li><p>Dessinez un nuage des points comparant les valeurs moyennes entre conditions.</p></li>
+<li><p>Dessinez un MA plot.</p></li>
 </ol>
+</div>
+<div id="rendu" class="section level2">
+<h2>Rendu</h2>
+<p>Un script R proprement structuré (sections) et documenté (expliquez ce que vous allez faire à chaque étape, documentez les variables), qui pourra être compris et reproduit par un utilsiateur de R.</p>
 </div>
 
 
