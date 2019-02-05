@@ -271,6 +271,7 @@ x$values
 
 - type de données typique de l'analyse de données
 - data.frame: tableaux dont les colonnes sont de même types
+
 ```{r}
 A <- data.frame(names=c("toto", "titi", "tutu"),
                 values=c(1, 2, 4))
@@ -280,51 +281,87 @@ print(A)
 ## Manipulation des vecteurs
 ```{r}
 x <- rnorm(26)
+print(x)
 ```
+
 - indiçage des vecteurs: `[]`
+
 ```{r}
 x[3]
 ```
+
 - vecteur d'indices  
+
 ```{r}
 x[c(3,5)]
 x[1:6]
 x[seq(1,100,by=2)]
 ```
+
 - vecteur de booléens=on prend ou pas sous condition
+
 ```{r}
 x[x>=0]
 ```
+
 ## Manipulation des vecteurs
+
 - accés aux éléments de vecteur par le nom
+
 ```{r}
-names(x) <- letters
-x[c("a","t","z")]
+names(x) <- letters # assigner des noms aux entrées du vecteur
+head(x) # les premiers éléments, noter les noms associés aux valeurs
+x[c("a","t","z")] # imprimer des valeurs sélectionnées par leur nom
 ```
-- accés aux éléments éléments de liste par le nom
+
+
+## Listes
+
+Une liste combine plusieurs sous-structures désignées par des noms ou des indices. Les sous-structures peuvent être de différents types (vecteurs, tableaux à deux dimensions, ou objets plus complexes).
+
+Création d'une liste
+
 ```{r}
-x <- list(names=letters,values=1:26)
+x <- list(names = letters, values = 1:26)
+print(x)
+```
+
+
+Accés aux éléments éléments de liste par le nom
+
+```{r}
 x$names
-x$letters
+x$values
 ```
+
+
+## Data frame
+
 - data.frame = tableau à deux dimensions
+
 ```{r}
-A <- data.frame(names=c("toto","titi","tutu"),values=c(1,2,4))
-A[1,2]
-A[2,1]
-A[1:2,]
-A[A[,2]>=3,]
+A <- data.frame(names = c("toto", "titi", "tutu"), values = c(1,2,4))
+A[1, 2]
+A[2, 1]
+A[1:2, ]
+A[A[,2] >= 3, ]
 ```
+
 - data.frame = liste de vecteur colonne
+
 ```{r}
 A$names
 A$values
 ```
+
 - ou bien
+
 ```{r}
 A[,"names"]
 A[,"values"]
 ```
+
+
 
 ## Les fonctions de base
 - `+`,`-`,`*`,`\`,`**`
@@ -713,8 +750,14 @@ write.table(x = exprs8, file = "exprs8.txt", sep = "\t",
 
 - Fonction générique pour le graphisme : *plot*
 
-`plot(x, y, xlim=range(x), ylim=range(y), type="p",
-main, xlab, ylab, ...)`
+```{r plot_syntax, eval=FALSE}
+plot(x, y, 
+     xlim = range(x), 
+     ylim = range(y), 
+     type = "p",
+     main, xlab, ylab, ...)
+```
+
 
 ## Les graphiques en R
 
@@ -735,6 +778,8 @@ Autres fonctions graphiques de haut-niveau :
 - surfaces: `persp()`
 - 3D: `plot3d()`
 
+## Les graphiques en R
+
 ```{r fig.width=5, fig.height=3, out.width="60%"}
 x <- rnorm(100)
 hist(x)
@@ -742,14 +787,15 @@ hist(x)
 
 ## Les graphiques en R
 
-Fonctions graphiques de bas niveau :
-Pour ajouter des éléments à un graphique déjà ouvert
+Fonctions graphiques de bas niveau : permettent d'ajouter des éléments à un graphique déjà ouvert.
 
 - des points: `points()`
 - un titre: `title()`
 - une légende: `legend()`
 - des droites: `abline()`
 - des lignes: `lines`
+
+## Les graphiques en R: ajout d'éléments
 
 ```{r fig.width=5, fig.height=3, out.width="60%"}
 theta <- seq(0,2*pi,len=50)
