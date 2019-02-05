@@ -10,6 +10,11 @@
 [[pdf](R_intro.pdf)] 
 [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/seance_1/R_intro.Rmd)]
 
+- Exercice d'approfondissement (pour les rapides): exploration d'un petit fichier RNA-seq (régulation bactérienne)
+[[html](TP_bacterial_regulation.html)]
+[[pdf](TP_bacterial_regulation.pdf)]
+[[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/seance_1/TP_bacterial_regulation.Rmd)]
+
 - Exploration of a GTF file (EN): 
 [[html](gtf_exploration.html)] 
 [[pdf](gtf_exploration.pdf)] 
