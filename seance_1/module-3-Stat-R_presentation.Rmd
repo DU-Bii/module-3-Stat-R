@@ -1,8 +1,13 @@
 ---
 title: "Présentation du module 3, R et statistiques"
-author: ""
+author: "Anne Badel & l'équipe pédagogique"
 date: '`r Sys.Date()`'
 output:
+  revealjs::revealjs_presentation:
+    css: ../slides.css
+    theme: league
+    transition: none
+    self_contained: true
   beamer_presentation:
     colortheme: dolphin
     fonttheme: structurebold
@@ -24,6 +29,14 @@ output:
     smaller: yes
     toc: yes
     widescreen: yes
+  html_document:
+    self_contained: no
+    fig_caption: yes
+    highlight: zenburn
+    theme: cerulean
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
   slidy_presentation:
     smart: no
     slide_level: 2
@@ -38,19 +51,6 @@ output:
     theme: cerulean
     toc: yes
     widescreen: yes
-  html_document:
-    self_contained: no
-    fig_caption: yes
-    highlight: zenburn
-    theme: cerulean
-    toc: yes
-    toc_depth: 3
-    toc_float: yes
-  revealjs::revealjs_presentation:
-    theme: league
-    transition: none
-    self_contained: true
-    css: ../slides.css
   pdf_document:
     fig_caption: yes
     highlight: zenburn
@@ -112,24 +112,28 @@ Vous vous êtes initiés aux éléments suivants :
 
 A la fin du module, vous
 
-- Maîtriserez le langage R, en particulier
-    - la lecture des fichiers de données (généralement en format tabulaire), 
-    - les structures de données courantes (vecteurs, matrices, data frames, ...),
-    - l'exportation des résultats sous différents formats,
-    - les différents types de représentations graphiques
+- Utiliser le langage R pour effectuer des analyses courantes, en particulier
+
+    - lire des fichiers de données (généralement en format tabulaire);
+    - utiliser des structures de données courantes (vecteurs, matrices, data frames, ...);
+    - effectuer des analyses statistiques de différents types de données omiques;
+    - exporter des résultats sous différents formats;
+    - utiliser différents types de représentations graphiques
 
 ---
 ### Et vous serez capable de 
 
 - Réaliser des analyses statistiques, en particulier
-    - la conception d'un plan d'analyse pour différents types de données biologiques à haut débit,
-    - la mise en oeuvre ces analyses statistiques au moyen de scripts R, 
-    - l'interprétation des résultats en les mettant en rapport avec les questions biologiques
+
+    - concevoir un plan d'analyse pour différents types de données biologiques à haut débit;
+    - mettre en oeuvre ces analyses statistiques au moyen de scripts R;
+    - interpréter les résultats en les mettant en rapport avec les questions biologiques.
 
 - Générer un rapport scientifique en format R markdown, avec
-    - l'intégration de blocs de code dans un texte formaté
-    - assurant la cohérence entre les résultats et figures (générés au vol), et le texte qui en fournit l'interprétation
-    - et la reproductibilité des analyses
+
+    - l'intégration de blocs de code dans un texte formaté;
+    - une cohérence garantie entre les résultats et figures (générés au vol), et le texte qui en fournit l'interprétation;
+    - une reproductibilité des analyses. 
 
 
 ## Séance 1 : Introduction à R
@@ -203,3 +207,33 @@ A la fin du module, vous
   - Approches de classification supervisées, k-nearest neighbours, Random Forest, SVM
   - Entraînement / test
   - Evaluation des résultats (évaluation croisée, mesures de performance)
+
+
+## Langage et environnement de programmation
+
+- Tous les logiciels utilisés pour ce cours sont en libre accès, et peuvent être installés sur les principaux systèmes opérateurs (Unix, Mac OS X, Windows). 
+
+- Ce module (cours et travaux pratiques) se base sur le langage **R** (<https://www.r-project.org/>). 
+
+- Les scripts et supports de cours sont réalisés en utilisant l'environnement de développement **RStudio** (<https://www.rstudio.com/>). 
+
+
+## Travaux pratiques
+
+- Pour les travaux pratiques, nous utiliserons le serveur RStudio installé sur le cluster core de l'IFB. 
+
+    <https://rstudio.cluster.france-bioinformatique.fr/>
+
+- Il est également possible d'installer R et RStudio sur votre ordinateur personnel ou au labo, mais les temps des séances ne nous permettront pas de vous assister si vous rencontrez des difficultés (par exemple pour l'installation de librairies manquantes, ...) 
+
+- Nous vous demandons donc de réaliser les travaux pratiques uniquement sur le serveur RStudio du cluster IFB. Si vous le désiez, vous pourrez expérimenter l'installation locale pour vos travaux personnels (ceci n'sy pas nécessaire: les TP peuvent être intégralement réalisés sur le serveur RStudio du cluster IFB). 
+
+## Supports de cours
+
+- Les supports de cours (diaporamas, tutoriels) sont intégralement réalisés avec **R markdown** (<https://rmarkdown.rstudio.com/>), un langage permettant d'intégrer des éléments de code dans du texte structuré, et d'assurer la reproductibilité et la portabilité des résultats.
+
+- Nous n'aurons peut-être pas le temps de vous former au langage R markdown, mais vous pourrez le découvrir en consultant les fichiers `.Rmd` disponibles sur le site Web du cours. 
+
+
+
+
