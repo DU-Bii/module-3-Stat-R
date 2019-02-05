@@ -3,11 +3,14 @@ title: "Travail personnel - exploration d'un transcriptome bactérien"
 author: "Jacques van Helden"
 date: "04/02/2019"
 output:
-  pdf_document:
+  html_document:
+    self_contained: no
     fig_caption: yes
     highlight: zenburn
+    theme: cerulean
     toc: yes
     toc_depth: 3
+    toc_float: yes
   beamer_presentation:
     colortheme: dolphin
     fig_caption: yes
@@ -39,14 +42,11 @@ output:
     transition: none
     self_contained: true
     css: ../slides.css
-  html_document:
-    self_contained: no
+  pdf_document:
     fig_caption: yes
     highlight: zenburn
-    theme: cerulean
     toc: yes
     toc_depth: 3
-    toc_float: yes
   ioslides_presentation:
     slide_level: 2
     self_contained: no
