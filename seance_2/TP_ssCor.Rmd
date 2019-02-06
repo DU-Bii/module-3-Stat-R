@@ -215,7 +215,7 @@ Pour chacunes des questions précédentes, effectuez les étapes suivantes :
 
 ## Mise en place de tests de chi2 d'homogénéité  
 
-Ensuite, on se demande si la maladie cyrrhose touche autant les hommes que les femmes. Pour répondre à cette question, vous allez réaliser un test du Chi2 d'homogénéité. 
+Ensuite, on se demande si la maladie cirrhose touche autant les hommes que les femmes. Pour répondre à cette question, vous allez réaliser un test du Chi2 d'homogénéité. 
 
 1. Définissez les variables aléatoires sur lesquelles vous allez travailler pour répondre à cette question.
 

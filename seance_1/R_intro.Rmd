@@ -3,20 +3,18 @@ title: "Module 3 - Analyse statistique avec R - Séance 1"
 author: "Hugo Varet, Frédéric Guyon, Olivier Kirsh et Jacques van Helden"
 date: '`r Sys.Date()`'
 output:
-  slidy_presentation:
-    smart: no
-    slide_level: 2
-    self_contained: yes
+  beamer_presentation:
+    colortheme: dolphin
     fig_caption: yes
     fig_height: 6
     fig_width: 7
+    fonttheme: structurebold
     highlight: tango
     incremental: no
-    keep_md: yes
-    smaller: yes
-    theme: cerulean
+    keep_tex: no
+    slide_level: 2
+    theme: Montpellier
     toc: yes
-    widescreen: yes
   ioslides_presentation:
     slide_level: 2
     self_contained: no
@@ -37,18 +35,20 @@ output:
     toc: yes
     toc_depth: 3
     toc_float: yes
-  beamer_presentation:
-    colortheme: dolphin
+  slidy_presentation:
+    smart: no
+    slide_level: 2
+    self_contained: yes
     fig_caption: yes
     fig_height: 6
     fig_width: 7
-    fonttheme: structurebold
     highlight: tango
     incremental: no
-    keep_tex: no
-    slide_level: 2
-    theme: Montpellier
+    keep_md: yes
+    smaller: yes
+    theme: cerulean
     toc: yes
+    widescreen: yes
   pdf_document:
     fig_caption: yes
     highlight: zenburn
@@ -383,7 +383,7 @@ La commande `download()` permet de télécharger un fichier à partir d'un serve
 
 ```{r, eval=FALSE}
 dir.create("data")
-download.file(url = "https://tinyurl.com/dubii-expressions", destile = "data/expression.txt")
+download.file(url = "https://tinyurl.com/dubii-expressions", destfile = "data/expression.txt")
 # URL complete : https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/seance_1/data/expression.txt
 ```
 
@@ -536,7 +536,7 @@ hist(exprs$WT1,
 ## Histogramme du logarithme de ces valeurs
 
 ```{r expr_log2_hist, fig.width=7, fig.height=5, out.width="50%"}
-hist(log(exprs$WT1), breaks = 20,
+hist(log2(exprs$WT1), breaks = 20,
      main = "Log2 expression values",
      xlab = "log2(counts)", # X label
      ylab = "Number of genes", # Y label
@@ -548,7 +548,7 @@ hist(log(exprs$WT1), breaks = 20,
 ## Boîtes à moustaches
 
 ```{r expr_log2_boxplot, fig.width=7, fig.height=5, out.width="50%"}
-boxplot(log(exprs[, c("WT1", "WT2", "KO1", "KO2")]),
+boxplot(log2(exprs[, c("WT1", "WT2", "KO1", "KO2")]),
      main = "Expression boxplots",
      xlab = "samples", # X label
      ylab = "log2(counts)", # Y label
@@ -560,7 +560,7 @@ boxplot(log(exprs[, c("WT1", "WT2", "KO1", "KO2")]),
 ## Boîtes à moustaches horizontales
 
 ```{r expr_log2_boxplot_horiz, fig.width=7, fig.height=5, out.width="50%"}
-boxplot(log(exprs[, c("WT1", "WT2", "KO1", "KO2")]),
+boxplot(log2(exprs[, c("WT1", "WT2", "KO1", "KO2")]),
      main = "Expression boxplots",
      xlab = "log2(counts)", # X label
      ylab = "samples", # Y label
@@ -576,7 +576,7 @@ boxplot(log(exprs[, c("WT1", "WT2", "KO1", "KO2")]),
 **Remarque :** le décalage entre boîtes nous indique que les librairies de comptage ne sont pas normalisées. Les méthodes de normalisation seront vues dans un cours ultérieur.
 
 ```{r expr_log2_boxplot_horiz_noecho, echo=FALSE, fig.width=7, fig.height=5, out.width="60%"}
-boxplot(log(exprs[, c("WT1", "WT2", "KO1", "KO2")]),
+boxplot(log2(exprs[, c("WT1", "WT2", "KO1", "KO2")]),
      main = "Expression boxplots",
      xlab = "log2(counts)", # X label
      ylab = "samples", # Y label

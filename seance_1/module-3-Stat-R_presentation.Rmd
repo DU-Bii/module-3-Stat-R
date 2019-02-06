@@ -10,9 +10,6 @@ output:
     self_contained: true
   beamer_presentation:
     colortheme: dolphin
-    fig_caption: yes
-    fig_height: 6
-    fig_width: 7
     fonttheme: structurebold
     highlight: tango
     incremental: no
@@ -82,7 +79,7 @@ options(scipen = 12) ## Max number of digits for non-scientific notation
 # knitr::asis_output("\\footnotesize")
 ```
 
-## Le git du module 3
+## Le Git du module 3
 
 https://du-bii.github.io/module-3-Stat-R/ 
 

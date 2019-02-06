@@ -1,0 +1,415 @@
+---
+title: "Module 3, R et statistique"
+subtitle: séance 4, Clustering
+author: ""
+date: '`r Sys.Date()`'
+fontsize: 12pt
+geometry: margin=1in
+header-includes:
+- \usepackage{fancyhdr}
+- \pagestyle{fancy}
+font-import: http://fonts.googleapis.com/css?family=Risque
+font-family: Garamond
+transition: linear
+output: 
+  html_document:
+    hide: true
+    toc: true
+    toc_depth: 2
+    toc_float: TRUE
+    number_sections: true
+    theme: paper # ou default, cerulean, journal, flatly, darkly, readable, spacelab, united, cosmo, lumen, paper, sandstone, simplex, and yeti
+    highlight: tango # ou  default, tango, pygments, kate, monochrome, espresso, zenburn, haddock, and textmate
+  pdf_document:
+    toc: true
+    toc_depth: 2
+    number_sections: true
+    df_print: kable
+    highlight: tango # ou  default, tango, pygments, kate, monochrome, espresso, zenburn, haddock, and textmate
+---
+```{r setup, include=FALSE}
+# les librairies
+library(knitr)
+#library(pROC)
+#library(cluster)
+#library(clues)
+# des paramètres
+opts_chunk$set(fig.align = "center",
+               fig.retina = 2,
+               fig.width = 10,
+               fig.path = 'figures/',
+               cache = TRUE,
+               cache.lazy = FALSE,
+               size = "tiny",
+               warning = FALSE,
+               message = FALSE,
+               comment = "",
+               echo = TRUE,      # F : pour faire un poly pour les étudiants, T : pour faire le corrigé
+               results = 'markup',  # hide : do not display results, markup : default
+               fig.keep = 'high', # none : knitr will discard all plots, high : knitr will merge low-level changes into high level plots
+               eval = TRUE)      # les "chunk" ne sont pas évalués 
+options(width = 300)
+options(scipen = 12)              # Max number of digits for non-scientific notation
+```
+
+
+# Les données
+
+## Lecture 
+
+Les données sont extraites de [**The Cancer Genome Atlas (TCGA)**](https://cancergenome.nih.gov/) qui présente plus de
+12 000 échantillons provenant de patients atteints d'une grande variété de types de cancer. Par souci de simplicité, nous avons profité des données prétraitées mises à notre disposition par l'équipe de Ron Shamir.
+
+Ces données sont disponibles  dans le répertoire `data_R4`. L'extrait (`dubii_exp.tsv`) étudié concerne le cancer du sein pour pour 714 patientes et contient les expressions de quelques 20220 gènes. Vous pouvez le lire à l'aide de la commande : `read.table("data.path/dubii_exp.tsv", header = TRUE)`. Pensez à ne pas le lire à l'écran, mais à mettre le résultat dans un objet nommé par exemple `mesdata`.
+
+```{r}
+exp <- read.table("data_R4/dubii_exp.tsv", header=TRUE)
+surv <- read.table("data_R4/dubii_surv.tsv", header=TRUE)
+annot <- read.table("data_R4/dubii_annot.tsv", header=TRUE)
+```
+## Préparation des données
+
+### En analyse de données,
+
+Classiquement, on a :
+
+  - une ligne = un individu
+  - une colonne = un descripteur, une variable
+  
+Est-ce le cas ici ? Si non, vous pouvez utiliser la fonction `t` pour transposer (permuter ligne et colonne) le `data.frame`.
+
+### Les données manquantes, NA
+
+Vérifions dans un premier temps qu'il n'y a pas de données manquantes dans notre jeu de données, en effet, les méthodes que nous allons utiliser ne gèrent pas les données manquantes, il faudrait le faire en amont si nécessaire. Pour cela, vous pouvez utiliser les fonctions `is.na` et `sum`.
+
+```{r}
+sum(is.na(exp))
+```
+
+### Les descripteurs constants
+
+Certains descripteurs (gènes) ont la même expression pour tous les patients. Ils ne nous intéressent donc pas et risque même de polluer notre analyse. La première étape est donc de les éliminer du jeu de données.
+
+Pour cela, nous allons :
+
+  1. Calculer les variances de tous les descripteurs (colonnes), à l'aide des fonctions `apply`et `var`
+  2. Eliminer les descripteurs de variance nulle (= 0), à l'aide de la fonction `which`
+  3. Il est possible de regarder un peu ces variances, à l'aide des fonctions `summary`, `hist` ou `boxplot`
+
+```{r}
+# les constantes
+var.exp <- apply(exp, 2, var)
+hist(var.exp)
+sum(var.exp == 0)
+var.cst <- which(var.exp == 0)
+var.var <- which(var.exp != 0)
+exp <- exp[, var.var]
+sum(apply(exp, 2, var) == 0)
+```
+
+### Normalisation statistique
+
+Comme nous venons de le voir, certains descripteurs (gènes) sont très (très) variables. C'est donc eux qui contiennent l'information et qui risquent de cacher l'information importante. Afin d'éviter cela, nous allons réaliser une normalisation statistique ("ramener l'ensemble des descritpeurs à une moyenne nulle et une variance unité"). Cela se fait à l'aide de la fonction `scale`.
+
+Nous vous proposons de :
+
+  1. Calculer un vecteur `moyenne.avant` et `variance.avant`
+  2. Utiliser la fonction `scale` pour normaliser les données
+  3. Calculer un vecteur `moyenne.apres` et `variance.apres`
+  
+Afin de vérifier ce qui a été fait.
+
+```{r}
+apply(exp, 2, mean)[1:20]
+apply(exp, 2, var)[1:20]
+sexp <- scale(exp)
+apply(sexp, 2, mean)[1:20]
+apply(sexp, 2, var)[1:20]
+```
+
+## Visualisation des données
+
+Il est possible de visualiser globalement les données, à l'aide des fonctions `image` ou `heatmap` (avec l'option `Colv=NA`) qui crééent une visualisation du tableau de données en fausse couleur, c'est à dire des niveaux d'expression pour chaque échantillon.
+
+### Une image
+
+Afficher l'image de nos données avec la fonction `image`. Attention, il faut afficher la transposée (fonction `t`) de notre `data.frame`. 
+
+```{r, eval=F}
+image(t(sexp))
+```
+
+### Une heatmap
+
+Afficher l'image de nos données avec la fonction `heatmap`. Pour une utilisation basique, il faut spécifier l'option `Colv=NA`. Nous verrons plus loin une utilisation plus poussée de cette fonction.
+
+```{r, eval=F}
+heatmap(sexp, Rowv=NA, Colv=NA)
+```
+
+### ACP ou MDS
+
+Nous pouvons visualiser nos données à l'aide de l'Analyse en Composante Principale (ACP), qui permet de visualiser un espace à p dimensions (20220 descripteurs (gènes)) dans un espace à un nombre plus faible de dimensions, un plan à 2 dimensions par exemple. Ou à l'aide d'un *Multi dimensional Scaling*
+
+Vous pouvez réaliser l'ACP à l'aide de la fonction `PCA(FactoMineR)` comme vu en séance 2 ou à l'aide de la fonction `prcomp`
+
+```{r}
+# prcomp
+sexp.prcomp <- prcomp(sexp)
+biplot(sexp.prcomp)
+# FactoMineR::PCA
+par(mfrow=c(1,2))
+sexp.pca <- FactoMineR::PCA(sexp, graph=F)
+plot(sexp.pca, choix="ind", label="none")
+sexp.mds <- cmdscale(dist(sexp))
+plot(sexp.mds)
+par(mfrow=c(1,1))
+```
+
+### A propos de l'ACP
+Selon la méthode utilisée, la représentation des individus peut-être légèrement différente. Une "simple" rotation a été appliquée.
+
+### à propos du multidimensionnal scaling et de l'ACP
+Lorsqu'on utilise une distance euclidienne, ACP et MDS sont un seul et même calcul et donnent donc les mêmes résultats.
+
+### Données normalisées vs données non normalisées
+
+Nous allons utiliser la projection du *Multi dimension scaling*  pour voir l'influence de la normalisation sur nos données. Pour cela, nous vous proposons à l'aide de la fonction `cmdscale` de :
+
+  1. Découper la fenêtre graphique en deux à l'aide de la commande `par(mfrow=c(1,2))`
+  2. Représenter les données brutes, non normalisées à l'aide des fonctions `dist`, `cmdscale` et `plot`
+  3. Faire de mêmes avec les données normalisées.
+  
+Comparez et commentez les deux représentations que vous avez sous les yeux.
+
+```{r}
+par(mfrow=c(1,2))
+exp.mds <- cmdscale(dist(exp))
+plot(exp.mds)
+plot(sexp.mds)
+par(mfrow=c(1,1))
+```
+
+# Les matrices de distance
+
+## Différentes métriques
+
+## Visualisation de la matrice de distance
+
+On peut facilement visualiser la matrice de distance à l'aide des  fonctions graphiques `image` ou `heatmap`. La fonction `image` a un comportement un peu particulier, il faut donc lui privilégier la fonction `heatmap`avec l'option `Rowv = NA` et `Colv = NA`.
+
+```{r}
+exp.euc <- dist(exp)
+image(t(as.matrix(exp.euc)))
+sexp.euc <- dist(scale(exp))
+image(t(as.matrix(sexp.euc)))
+```
+
+** Nous utiliserons par la suite la distance euclidienne**
+
+# La classification hiérarchique
+
+## Une première classification, influence de la normalisation des données
+
+Dans un premier temps, on réalise la classification hiérarchique en laissant le critère d'aggrégation par défaut (`complete`).
+
+Comparez les dendrogrammes réalisées sur les données normalisées ou non.
+
+```{r}
+# classification hiérarchique
+par(mfrow=c(1,2))
+exp.hclust <- hclust(exp.euc)
+plot(exp.hclust, hang=-1, cex=0.5)
+# normalisation
+sexp.hclust <- hclust(sexp.euc)
+plot(sexp.hclust, hang=-1, cex=0.5)
+par(mfrow=c(1,1))
+```
+
+## Une deuxième classification, influence du critère d'aggrégation
+
+Dans un deuxième temps, on utilise le critère de Ward. Comparez les dendrogrammes réalisées avec le critère d'aggrégation par défaut et par le critère de Ward.
+
+```{r}
+par(mfrow=c(1,2))
+# classification hiérarchique
+plot(sexp.hclust, hang=-1, cex=0.5)
+sexp.hclust.ward <- hclust(sexp.euc, method="ward.D2")
+plot(sexp.hclust.ward, hang=-1, cex=0.5)
+par(mfrow=c(1,1))
+```
+
+## Une troisième classification, influence de la métrique
+```{r}
+par(mfrow=c(1,2))
+# classification hiérarchique
+plot(sexp.hclust.ward, hang=-1, cex=0.5)
+hclust.max <- hclust(dist(sexp, method="maximum"), method="ward.D2")
+plot(hclust.max, hang=-1, cex=0.5)
+par(mfrow=c(1,1))
+```
+
+# La classification par la méthode des k-means
+
+## Un premier kmeans
+```{r}
+# kmeans
+sexp.kmeans8 <- kmeans(sexp, centers=8)
+```
+
+
+## Comment visualisaler un résultat de partitionnement par les k-moyennes (k-means) ?
+
+### En utilisant l'ACP
+
+```{r}
+plot(sexp.pca, choix="ind", col.ind=sexp.kmeans8$cluster, label="none")
+```
+
+### En utilisant le MDS
+```{r}
+plot(sexp.mds, col=sexp.kmeans8$cluster)
+```
+
+# Combien faut-il faire de clusters ?
+
+Essayons de déterminer le nombre optimal de clusters, par l'une et l'autre des méthodes vues
+
+## Si on utilise la classification hiérarchique
+
+
+## Si on utilise la méthode des k-means 
+
+### Combien y a t'il d'individus dans chaque cluster ?
+```{r}
+# kmeans
+sexp.kmeans8 <- kmeans(sexp, centers=8)
+table(sexp.kmeans8$cluster)
+```
+
+```{r}
+# kmeans
+sexp.kmeans6 <- kmeans(sexp, centers=6)
+table(sexp.kmeans6$cluster)
+```
+
+### Etude de l'inertie intra en fonction du nombre de groupes
+```{r}
+I.intra = numeric(length=20)
+I.intra[1] = kmeans(sexp, centers=2)$totss
+for (i in 2:20) {
+  kmi <- kmeans(sexp, centers=i)
+  I.intra[i] <- kmi$tot.withinss
+}
+plot(1:20, I.intra, type="l")
+```
+
+## Au final, combien de clusters ?
+
+# Comparaison des résultats de hclust et de kmeans
+
+## En terme de temps de calcul (faut-il en parler ?)
+
+## Comparaison des groupes obtenus par les deux méthodes
+
+En utilisant le nombre optimal de clusters obtenus pour les deux méthodes, essayons de comparer les résultats des deux méthodes
+
+#### Par une table de contingence
+
+```{r}
+cluster.kmeans6 <- kmeans(sexp, centers=6)$cluster
+cluster.hclust6 <- cutree(sexp.hclust.ward, k=6)
+table(cluster.hclust6, cluster.kmeans6)
+```
+
+#### Par la visualisation
+
+```{r}
+plot(sexp.hclust.ward, hang=-1, cex=0.3, labels=cluster.kmeans6)
+rect.hclust(sexp.hclust.ward, k=6)
+par(mfrow=c(1,2))
+plot(sexp.mds, col=cluster.kmeans6)
+plot(sexp.mds, col=cluster.hclust6)
+par(mfrow=c(1,1))
+```
+
+#### Par l'Adjusted Rand Index
+```{r}
+# # par l'Adjusted Rand Index
+ari <- matrix(nrow=12, ncol=5)
+colnames(ari) <- c("Rand", "ARI.HA", "ARI.MA", "FM", "Jaccard")
+rownames(ari) <- 1:12
+for (i in 2:12) {
+  cluster.kmeans <- kmeans(sexp, centers=i)$cluster
+  cluster.hclust <- cutree(sexp.hclust.ward, k=i)
+  ari[i,] <- clues::adjustedRand(cluster.hclust, cluster.kmeans)
+} # 2 clusters donne le meilleur ARI
+cluster.kmeans2 <- kmeans(sexp, centers=2)$cluster
+cluster.hclust2 <- cutree(sexp.hclust.ward, k=2)
+table(cluster.hclust2, cluster.kmeans2)
+```
+
+# Comparaison avec la *réalité*
+
+## Deux classes, la survie
+
+Dans le fichier `dubii_surv.tsv`, pour chaque échantillon, les informations suivantes sont accessibles :
+
+  - Survival, survie en jours
+  - Death, issue de la maladie
+    - "1" : décés
+    - "0" : survie
+
+Nous pouvons ainsi confronter notre classification à la réalité, en posant la question : une classification en deux groupes par les méthodes vues précédemment permet-elle de regrouper les individus en terme de survie ?
+
+```{r}
+head(surv)
+survie <- as.factor(surv[,3])
+summary(survie)
+## classification hiérarchique en deux classes
+plot(sexp.hclust.ward, labels=annot[,2], hang=-1, cex=0.5)
+rect.hclust(sexp.hclust.ward, k=2)
+cluster.hclust2 <- cutree(sexp.hclust.ward, k=2)
+table(cluster.hclust2)
+### performances
+confusion <- table(cluster.hclust2, survie)
+print(confusion)
+TP <- confusion[1,1]
+FP <- confusion[1,2]
+FN <- confusion[2,1]
+TN <- confusion[2,2]
+P <- TP + FN          # nb positif dans la réalité
+N <- TN + FP          # nb négatif dans la réalité
+FPrate <- FP / N      # = false alarm rate
+Spe <- TN / N      # = spécificité 
+Sens <- recall <- TPrate <- TP / P      # = hit rate ou recall ou sensibilité ou coverage
+PPV <- precision <- TP / (TP + FP)
+accuracy <- (TP + TN) / (P + N)
+F.measure <- 2 / (1/precision + 1/recall)
+performance <- c(FPrate, TPrate, precision, recall, accuracy, F.measure, Spe, PPV)
+names(performance) <- c("FPrate", "TPrate", "precision", "recall", "accuracy", "F.measure", "Spe", "PPV")
+print(performance, digits=3)
+clues::adjustedRand(cluster.hclust2, as.numeric(survie))
+### courbes ROC
+roc1 <- pROC::roc(as.numeric(survie), cluster.hclust2)
+auc1 = pROC::auc(roc1)
+plot(roc1, print.thres = F, col = 2, xlim = c(1,0), xlab = "1 - Specificity", lwd = 4)
+```
+
+## Quatre classes, à l'aide de marqueurs de sous-type des cancers
+
+2 marqueurs sont utilisés par les cliniciens pour attribuer des tissus aux sous-types de cancer : ER_Status_nature2012 et HER2_Final_Status_Nature2012.
+
+```{r}
+## classification hiérarchique en 4 classes
+type.cancer <- annot[,2]
+table(type.cancer)
+plot(sexp.hclust.ward, labels=type.cancer, hang=-1, cex=0.5)
+rect.hclust(sexp.hclust.ward, k=4)
+cluster.hclust <- cutree(sexp.hclust.ward, k=4)
+table(cluster.hclust, type.cancer)
+cluster.kmeans <- kmeans(sexp, centers=4)$cluster
+table(cluster.kmeans, type.cancer)
+```
+
+
