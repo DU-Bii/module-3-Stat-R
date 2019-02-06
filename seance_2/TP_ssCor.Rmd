@@ -109,74 +109,30 @@ Il en existe trois types bien distincts liés au régime alimentaire :
 
 1. Ouvrez les deux fichiers de données en utilisant la fonction `readRDS()`. Vérifiez que les objects créés ont les bonnes dimensions.
 
-```{r}
-metaFile <- readRDS("data/metadata.RDS")
-dim(metaFile)
-
-abonDF <- readRDS("data/microbiota.abundance.log.RDS")
-dim(abonDF)
-```
 
 2. Quels types de variables contient le fichier `metadata.RDS` (fonction `str()`).
 
-```{r}
-str(metaFile)
-```
 
 3. Déterminez le nombre et la proportion de patients sains et malades dans le jeu de données.
 Représentez ces distributions à l'aide de graphiques en bâtons (fonctions `table()` et `barplot()`).
 
-```{r}
-table(metaFile[,"Gender"])
-table(metaFile[,"Gender"]) / nrow(metaFile)
-barplot(table(metaFile[,"Gender"]), ylab="Occurrence", xlab="Genre")
-```
 
 
 4. Déterminez le nombre et la proportion d'hommes et de femmes dans le jeu de données.
 Représentez ces distributions à l'aide de graphiques en bâtons (fonctions `table()` et `barplot()`).
 
-```{r}
-table(metaFile[,"status"])
-table(metaFile[,"status"])/nrow(metaFile)
-
-barplot(table(metaFile[,"status"]), ylab="Occurrence", xlab="Status")
-
-```
 
 5. En utilisant la fonction `summary()`, étudiez la distribution des différentes variables. Que remarquez vous pour les variables `INR`, `Crea`, `Alb`, `TB`, `PT`, `CTP`, `MELD` et `Enterotype`.
-```{r}
-summary(metaFile)
-```
 
 
 6. Identifiez les individus qui ont des `NA` pour la variable `Crea` (fonctions `which()` et `is.na()`). Quel est le statut clinique de ces patients ? Quel est le genre de ces individus ?
 
-```{r}
-ind.na <- which(is.na(metaFile[,"Crea"]))
-ind.na
-
-metaFile[ind.na,"status"]
-metaFile[ind.na, "Gender"]
-```
 
 7. Est-ce que ces individus ont des `NA` pour les autres variables ?
-```{r}
-metaFile[ind.na,]
-```
 
 8. Suppimez ces individus des deux data.frames qui contiennent les deux jeux de données
-```{r}
-metaFile2 = metaFile[-ind.na,]
-abonDF2 <- abonDF[-ind.na,]
-```
 
 9. Déterminez la moyenne et l'écart-type de chaque variable quantitative (fonctions `apply()`, `mean()` et `sd()`).
-```{r}
-var.sel <- c( "Age", "BMI", "INR", "Crea", "Alb", "TB", "PT", "CTP", "MELD", "GC")
-apply(metaFile2[, var.sel],2,mean, na.rm=T)
-apply(metaFile2[, var.sel],2,sd, na.rm=T)
-```
 
 
 
@@ -195,13 +151,6 @@ On cherche à savoir si les patients et les individus contrôles présentent des
 
 Créez deux data.frames qui contiennent pour le premier les métadonnées pour les patients sains et pour le second les métadonnées pour les patients malades.
 
-```{r}
-metaHeath <- metaFile2[which(metaFile2[,"status"]=="healthy"),]
-dim(metaHeath)
-
-metaLiver <- metaFile2[which(metaFile2[,"status"]=="liver"),]
-dim(metaLiver)
-```
 
 
 Pour chacunes des questions précédentes, effectuez les étapes suivantes : 
@@ -226,16 +175,9 @@ Status | female | male
 healthy|   42   | 72
  liver |   39   | 84
  
-```{r}
-tcStG <- table(metaFile[,"status"], metaFile[,"Gender"])
-```
- 
+
 
 3. Réalisez le test du chi2 à partir de cett table de contigence. (fonction `chisq.test()`). Avant de conclure pensez à vérifier les conditions de validité du test qui sont que tous les effectifs théoriques doivent être supérieurs à 5 (argument `$expected` de la fonction `chisq.test()`). 
-```{r}
-res.chisq <- chisq.test(tcStG)
-res.chisq $ expected
-```
 
 
 Pour finir nous cherchons à savoir si la distribution des enterotypes est différent chez les individus sains et les patients malades. Pour répondre à cette question, vous allez réaliser un test de chi2.
@@ -244,25 +186,15 @@ Pour finir nous cherchons à savoir si la distribution des enterotypes est diff�
 2. Déterminez la table de contingence (fonction `table()`).
 3. Effectuez le test du chi2 sur cette table de contingence (fonction `chisq.test()`).
 
-```{r}
-tcStE <- table(metaFile[,"status"], metaFile[,"Enterotype"])
-res.chisq <-chisq.test(tcStE)
-```
- 
+
 4. Comparez les effectifs théoriques et observés pour finaliser votre conclusion au test (argument `$expected` de la fonction `chisq.test()`). 
 
-```{r}
-res.chisq$expected
-```
 
 # Etude des différents entérotypes
 
 On se demande si la composition de l'entérotype modifie l'indice de masse corporelle des individus. 
 
 1. Représentez la distribution de l'indice de masse corporelle pour les individus en fonction de leur entérotype (fonction `boxplot()`.
-```{r}
-boxplot(BMI~Enterotype, data=metaFile2)
-```
 
 2. Définissez la variable aléatoire et les échantillons  
 
@@ -273,22 +205,13 @@ Ce test a deux conditions de validité :
 * Il faut que la variable aléatoire ait la même variance dans les trois échantillons (Homoscédaticité de $X$).  
 
 3. Testez la normalité de $X$ dans les 3 échantillons. (fonction `by()`, `shapiro.test()`) 
-```{r}
-by(metaFile2[,"BMI"], metaFile2[,"Enterotype"], shapiro.test)
-```
 
 
 4. Testez l'homoscédaticité de $X$. (foncion `bartlett.test()`)
-```{r}
-bartlett.test(BMI~Enterotype, data=metaFile2)
-```
 
 
 Les résultats que vous avez obtenus vous permettent de conclure que les conditions de validité du test ANOVA ne sont pas vérifiées. Pour répondre à la question, vous allez donc utiliser un test non paramétrique : le test de Kruskall-Wallis (fonction `kruskal.test()`).  
 
 
-```{r}
-kruskal.test(BMI~Enterotype, data=metaFile2)
-```
 
 
