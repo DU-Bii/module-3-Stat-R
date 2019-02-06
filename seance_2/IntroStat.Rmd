@@ -97,9 +97,8 @@ options(scipen = 12) ## Max number of digits for non-scientific notation
     + Estimateur ponctuel
     + Intervalle de confiance
 * La thérorie des tests d'hypothèses
-    + le test de comparaison de deux moyennes
-    + les erreurs dans les tests
-* Les autres tests d'hypothèses
+    + Le test de comparaison de deux moyennes
+    + Les autres tests d'hypothèses
 * A vous de jouer : Etude de cas
 
 

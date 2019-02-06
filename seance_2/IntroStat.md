@@ -76,9 +76,8 @@ transition: linear
     + Estimateur ponctuel
     + Intervalle de confiance
 * La thérorie des tests d'hypothèses
-    + le test de comparaison de deux moyennes
-    + les erreurs dans les tests
-* Les autres tests d'hypothèses
+    + Le test de comparaison de deux moyennes
+    + Les autres tests d'hypothèses
 * A vous de jouer : Etude de cas
 
 
@@ -345,7 +344,7 @@ mean(ech1)
 ```
 
 ```
-[1] 3.485367
+[1] 4.160389
 ```
 
 2. tire un deuxième échantillon de 20 indidivus et calcule la moyenne de $X$ dans cet échantillon
@@ -356,7 +355,7 @@ mean(ech2)
 ```
 
 ```
-[1] 5.082791
+[1] 4.09503
 ```
 
 $\rightarrow$ Les différences entre les deux estimateurs sont dues aux **fluctuations d'échantillonnage**
