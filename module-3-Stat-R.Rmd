@@ -5,7 +5,7 @@
 | Séance | Contenu | Lien |
 |------|-----------------------------------|------------------------|
 | 1 | Premiers pas avec R | [seance_1](seance_1) |
-| 2 | Analyse statistique avec R |  |
+| 2 | Analyse statistique avec R |  [seance_2](seance_2)|
 | 3 | Détection de gènes différentiellement exprimés | |
 | 4 | Clustering | |
 | 5 | Statistiques d'enrichissement | |
