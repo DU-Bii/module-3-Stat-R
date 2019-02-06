@@ -192,9 +192,9 @@ Pour finir nous cherchons à savoir si la distribution des enterotypes est diff�
 
 # Etude des différents entérotypes
 
-On se demande si la composition de l'entérotype modifie l'indice de masse corporelle des individus. 
+On se demande si la composition de l'entérotype à une influence sur l'indice de masse corporelle des individus. 
 
-1. Représentez la distribution de l'indice de masse corporelle pour les individus en fonction de leur entérotype (fonction `boxplot()`.
+1. Représentez la distribution de l'indice de masse corporelle pour les individus en fonction de leur entérotype (fonction `boxplot()`).
 
 2. Définissez la variable aléatoire et les échantillons  
 
@@ -212,6 +212,19 @@ Ce test a deux conditions de validité :
 
 Les résultats que vous avez obtenus vous permettent de conclure que les conditions de validité du test ANOVA ne sont pas vérifiées. Pour répondre à la question, vous allez donc utiliser un test non paramétrique : le test de Kruskall-Wallis (fonction `kruskal.test()`).  
 
+
+# Analyse en composante principale
+## Jeu de données `metadata`
+1. Réalisez une ACP sur ce jeu de données
+  a. Quel pourcentage de la variance expliquée est représentée dans le premier plan factoriel ?
+  b. Proposez une représentation graphique des individus avec les individus malades d'une couleur et les individus sains d'une autre.
+  c. Pouvez-vous donner une interprétation de ce graphique ? Vous pouvez pour cela vous aider du cercle des corrélations.
+
+## Jeu de données `microbiota.abundance`
+2. Réalisez une ACP centrée réduite sur ce jeu de données.
+  a. Quel pourcentage de la variance expliquée est représentée dans le premier plan factoriel ?
+  b. Proposez une représentation graphique des individus avec les individus malades d'une couleur et les individus sains d'une autre. 
+  c. Proposez une représentation graphique des individus avec les enterotypes de trois couleurs différentes. Que constatez-vous ?
 
 
 

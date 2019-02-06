@@ -358,9 +358,9 @@ div.tocify {
 </div>
 <div id="etude-des-differents-enterotypes" class="section level1">
 <h1><span class="header-section-number">7</span> Etude des différents entérotypes</h1>
-<p>On se demande si la composition de l’entérotype modifie l’indice de masse corporelle des individus.</p>
+<p>On se demande si la composition de l’entérotype à une influence sur l’indice de masse corporelle des individus.</p>
 <ol style="list-style-type: decimal">
-<li><p>Représentez la distribution de l’indice de masse corporelle pour les individus en fonction de leur entérotype (fonction <code>boxplot()</code>.</p></li>
+<li><p>Représentez la distribution de l’indice de masse corporelle pour les individus en fonction de leur entérotype (fonction <code>boxplot()</code>).</p></li>
 <li><p>Définissez la variable aléatoire et les échantillons</p></li>
 </ol>
 <p>Pour répondre à la question, il faut effectuer un test de comparaison de 3 moyennes en utilisant un test ANOVA.<br />
@@ -374,6 +374,31 @@ Ce test a deux conditions de validité :</p>
 <li><p>Testez l’homoscédaticité de <span class="math inline">\(X\)</span>. (foncion <code>bartlett.test()</code>)</p></li>
 </ol>
 <p>Les résultats que vous avez obtenus vous permettent de conclure que les conditions de validité du test ANOVA ne sont pas vérifiées. Pour répondre à la question, vous allez donc utiliser un test non paramétrique : le test de Kruskall-Wallis (fonction <code>kruskal.test()</code>).</p>
+</div>
+<div id="analyse-en-composante-principale" class="section level1">
+<h1><span class="header-section-number">8</span> Analyse en composante principale</h1>
+<div id="jeu-de-donnees-metadata" class="section level2">
+<h2><span class="header-section-number">8.1</span> Jeu de données <code>metadata</code></h2>
+<ol style="list-style-type: decimal">
+<li>Réalisez une ACP sur ce jeu de données</li>
+</ol>
+<ol style="list-style-type: lower-alpha">
+<li>Quel pourcentage de la variance expliquée est représentée dans le premier plan factoriel ?</li>
+<li>Proposez une représentation graphique des individus avec les individus malades d’une couleur et les individus sains d’une autre.</li>
+<li>Pouvez-vous donner une interprétation de ce graphique ? Vous pouvez pour cela vous aider du cercle des corrélations.</li>
+</ol>
+</div>
+<div id="jeu-de-donnees-microbiota.abundance" class="section level2">
+<h2><span class="header-section-number">8.2</span> Jeu de données <code>microbiota.abundance</code></h2>
+<ol start="2" style="list-style-type: decimal">
+<li>Réalisez une ACP centrée réduite sur ce jeu de données.</li>
+</ol>
+<ol style="list-style-type: lower-alpha">
+<li>Quel pourcentage de la variance expliquée est représentée dans le premier plan factoriel ?</li>
+<li>Proposez une représentation graphique des individus avec les individus malades d’une couleur et les individus sains d’une autre.</li>
+<li>Proposez une représentation graphique des individus avec les enterotypes de trois couleurs différentes. Que constatez-vous ?</li>
+</ol>
+</div>
 </div>
 
 
