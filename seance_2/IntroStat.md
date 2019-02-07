@@ -1,7 +1,7 @@
 ---
 title: "Module 3 - Analyse statistique avec R - Séance 2"
 author: "Leslie REGAD"
-date: '2019-02-06'
+date: '2019-02-07'
 output:
   slidy_presentation:
     fig_caption: yes
@@ -89,8 +89,8 @@ transition: linear
 * **Expérience aléatoire** : expérience qui, répétée dans des conditions apparemment identiques, peut donner des résultats différents. Elle se définit par trois propositions :
     + l’expérience peut être répétée
     + plusieurs résultats sont possibles
-    + le résultat ne peut être prédit avec certitude
-*exemple* : je lâche la craie $\rightarrow$ elle se casse combien de morceaux ?
+    + le résultat ne peut être prédit avec certitude  
+*exemple* : je lâche la craie $\rightarrow$ combien de morceaux de craie trouve-t-on par terre ?
 
 
 ## Variable aléatoire (VA) / Unité statistique
@@ -102,7 +102,7 @@ $\rightarrow$ elle répond à la question : Que mesure-t-on pendant l'expérienc
 
 
 * Exemple
-    + Expérience aléatoire : je lâche la craie $\rightarrow$ elle se casse combien de morceaux ?
+    + Expérience aléatoire : je lâche la craie $\rightarrow$ combien de morceaux trouve-t-on par terre?
     + variable aléatoire : nombre de morceaux obtenus
     + unité statistique (US) : 1 craie
 
@@ -111,7 +111,7 @@ $\rightarrow$ elle répond à la question : Que mesure-t-on pendant l'expérienc
     + $X$ : la variable aléatoire
     + $x_i$ : les réalisations de $X$    
 
-* VA Caractérisée par 2 paramètres : 
+* VA réelles sont caractérisée par 2 paramètres : 
     + **Espérance** ($E(X)$) : caractérise la tendance centrale, la valeur moyenne, prise par la VA
     + **Variance** ($V(X)$) : caractérise la dispersion des valeurs de la variable autour de son espérance
 
@@ -121,9 +121,12 @@ $\rightarrow$ elle répond à la question : Que mesure-t-on pendant l'expérienc
 
 * L'ensemble des valeurs possibles est définit sur $\mathbb{R}$
 
-* discrète : l'ensemble des valeurs que $X$ peut prendre est fini ou infini dénombrable
+$\quad$
+
+* **discrète** : l'ensemble des valeurs que $X$ peut prendre est fini ou infini dénombrable
     + nombres d'oeufs pondus par une poule : 2, 3, 4, ...  
-* continue : les autres variables  
+    
+* **continue** : les autres variables  
     + poids d'un patient : 75.3kg, 56.4kg, 87kg, ...  
     + taux de cholestérol : 2g/l, 1.8g/l, ...  
 
@@ -198,7 +201,7 @@ $\rightarrow$ **fractures** peuvent aisément se produire à ces endroits
 
 ## Cas d'étude 
 <div style="float:left;width:75%;">
-**Est-ce le dosage de la molécule déoxypyridinoline (pyr) est un bon marqueur pour détecter la maladie ?**   
+**Est-ce le dosage urinaire de la molécule déoxypyridinoline (pyr) est un bon marqueur pour détecter le MM ?**   
 </div>  
 <div style="float:right;width:25%;">   
 ![](img/pyr.png){width=40%}   
@@ -209,8 +212,8 @@ $\quad$
 
 $\rightarrow$ est-ce que le taux de pyr des patients malades est plus grand que celui des individus sains ?
 
-* X ="Taux de pyr" $\quad \quad \rightarrow$ type = quantitative continue
-* US = un individu
+* X ="Taux de pyr" (micmol/mmolcreat) 
+* US = un individu $\quad \quad \rightarrow$ type = quantitative continue
 
 <center>
 ![](img/estimation1.png){width=70%}
@@ -227,7 +230,7 @@ $\rightarrow$ Récolte des données
 ![](img/estimation4.png){width=75%}
 </center>
 
-## Cas d'étude : présentation des données
+## Analyse des données avec R
 
 
 ```r
@@ -267,7 +270,7 @@ table(dataMyelom[,"diagn"])
 
 
 ```r
-boxplot(pyr~diagn, data=dataMyelom, ylab="Valeur de pyr", col = "steelblue3")
+boxplot(pyr~diagn, data=dataMyelom, ylab="Valeur de pyr (micmol/mmolcreat)", col = "steelblue3")
 ```
 
 <img src="figures/07_tests_multiplesunnamed-chunk-8-1.png" style="display: block; margin: auto;" />
@@ -306,6 +309,37 @@ diagn: 1
 [1] 7.241742
 ```
 
+
+* $m_1 \ne m_2$ : Ne signifie pas que $\mu_1 \ne \mu_2$
+
+## Les fluctuations d'échantillonnage
+
+* 1 population où $X \sim \mathcal{N}(\mu=4; \sigma^2=12)$  
+
+1. tire un échantillon de 20 indidivus et calcule la moyenne de $X$ dans cet échantillon
+
+```r
+ech1 <- rnorm(n=20, mean=4, sd=sqrt(12))
+mean(ech1)
+```
+
+```
+[1] 4.821253
+```
+
+2. tire un deuxième échantillon de 20 indidivus et calcule la moyenne de $X$ dans cet échantillon
+
+```r
+ech2 <- rnorm(n=20, mean=4, sd=sqrt(12))
+mean(ech2)
+```
+
+```
+[1] 3.252031
+```
+
+$\rightarrow$ Les différences entre les deux estimateurs sont dues aux **fluctuations d'échantillonnage**
+
 ## Estimation de paramètres
 <div class="col2">
 
@@ -332,33 +366,6 @@ diagn: 1
 ```
 
 
-## Quelle confiance en ces valeurs ?
-
-* 1 population où $X ~ \mathcal{N}(\mu=4; \sigma^2=12)$  
-
-1. tire un échantillon de 20 indidivus et calcule la moyenne de $X$ dans cet échantillon
-
-```r
-ech1 <- rnorm(n=20, mean=4, sd=sqrt(12))
-mean(ech1)
-```
-
-```
-[1] 4.160389
-```
-
-2. tire un deuxième échantillon de 20 indidivus et calcule la moyenne de $X$ dans cet échantillon
-
-```r
-ech2 <- rnorm(n=20, mean=4, sd=sqrt(12))
-mean(ech2)
-```
-
-```
-[1] 4.09503
-```
-
-$\rightarrow$ Les différences entre les deux estimateurs sont dues aux **fluctuations d'échantillonnage**
 
 ## Estimation d'un paramètre : Intervalle de confiance (IC) 
 
@@ -441,7 +448,7 @@ round(c(borneInf.1, borneSup.1),2)
 <img src="figures/07_tests_multiplesunnamed-chunk-16-1.png" style="display: block; margin: auto;" />
 
 
-## Cas d'étude : Introductions aux tests statistiques
+## Cas d'étude : Introduction aux tests statistiques
  
 <center> 
   ![](img/estimation2.png){width=65%}
@@ -487,7 +494,7 @@ le hasard et le facteur expliquent les différences entre les deux moyennes obse
     
 1. Définir un **critère statistique** $S$ dont la loi sous H0 est connue  
  $S = M_2 - M2$  avec $M$=moyenne de $X$ dans 1 échantillon    
-$ \quad$  
+$\quad$  
 Sous H0 ( $n_1$ et $n_2 > 30$) : $S \sim \mathcal{N} \left(0 ; \sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2} }\right)$
 
 
@@ -655,40 +662,46 @@ Le dosage de pyr est un bon marqueur de la maladie.
 
 
 
-## Les différents types de tests : Les tests paramétriques
+## Les différents types de tests 
 
 * variable réelle continue : **Tests sur les moyennes**
     + 1 échantillon et 1 population de référence  
         + grand échantillon : test espilon   
         + petit échantillon : test de student  
-        $X$ suit doit suivre une loi normale dans la population d'où est tiré l'échantillon  
+        $\rightarrow$ : test paramétrique : test de student  (1 conditions de validité)  
+        $X$ suit doit suivre une loi normale dans la population d'où est tiré l'échantillon   
+        $\rightarrow$ tests non paramétriques : test de Wilcoxon ou test de Mann-Whitney  
     + 2 échantillons    
         + grands échantillons : test espilon   
-        + petits échantillons : test de student  
-          $X$ doit suivre un loi normale dans les deux populations  
-          Egalité des deux variances  
+        + petits échantillons 
+        $\rightarrow$ : test paramétrique : test de student  (2 conditions de validité)  
+        $X$ doit suivre un loi normale dans les deux populations  
+        Egalité des deux variances  
+        $\rightarrow$ tests non paramétriques : test de Kruskal-Wallis
+        
     + $\geq$ 3 échantillons  
-        + ANOVA  
+        + test paramétrique ANOVA  (2 conditions de validité)
         $X$ doit suivre un loi normale dans les différentes populations   
-        Egalité des $k$ variances   
+        Egalité des $k$ variances 
+        + test non paramétrique : test de Kruskal-Wallis
         
-        
-## Les différents types de tests : Les tests nonparamétriques
+ 
+ 
+## Les différents types de tests 
 
-* **Aucune condition de validité**
-
-* variable réelle continue : **Tests sur les moyennes**
-    + 2 échantillons : test de Wilcoxon ou test de Mann-Whitney  
-    + $\geq$ 3 échantillons  : test de Kruskal-Wallis
-  
 * test sur les distribution : 
     + à une loi normale : test de Shapiro
-    + à une distribution théorique : test du Chi2 d'homogénéité  
-    + deux distributions  : test du Chi2 d'adéquation
-    
+    + à une distribution théorique : test du chi$^2$ d'homogénéité  
+    + deux distributions  : test du Cchi$^2$hi2 d'adéquation
     
 
-  
+* deux variables aléatoires (lien) :  
+    + réelles continues :  
+        + test paramétrique : test du coefficient de corrélation de Pearson  
+        binormalité de la variable $X$  
+        + test non paramétrique : test du coefficient de corrélation de Pearson  
+    + réelles discrètes :  
+        + test du chi$^2$ d'indépendance  
   
   
 ## Merci de votre attention !!!
