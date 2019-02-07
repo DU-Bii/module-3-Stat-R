@@ -216,7 +216,7 @@ $\rightarrow$ est-ce que le taux de pyr des patients malades est plus grand que 
 * US = un individu $\quad \quad \rightarrow$ type = quantitative continue
 
 <center>
-![](img/estimation1.png){width=70%}
+![](img/estimation1.png){width=55%}
 </center>  
 
 **Population** = ensemble d’individus ayant des caractéristiques qui leur sont propres  
@@ -227,7 +227,7 @@ $\rightarrow$ est-ce que le taux de pyr des patients malades est plus grand que 
 $\rightarrow$ Récolte des données
 
 <center>
-![](img/estimation4.png){width=75%}
+![](img/estimation4.png){width=70%}
 </center>
 
 ## Analyse des données avec R
@@ -281,7 +281,7 @@ boxplot(pyr~diagn, data=dataMyelom, ylab="Valeur de pyr (micmol/mmolcreat)", col
 $\rightarrow$ Récolte des données
 
 <center>
-![](img/estimation3.png){width=75%}
+![](img/estimation3.png){width=65%}
 </center>
 
 ## Estimation de paramètres
@@ -324,7 +324,7 @@ mean(ech1)
 ```
 
 ```
-[1] 4.821253
+[1] 3.83782
 ```
 
 2. tire un deuxième échantillon de 20 indidivus et calcule la moyenne de $X$ dans cet échantillon
@@ -335,7 +335,7 @@ mean(ech2)
 ```
 
 ```
-[1] 3.252031
+[1] 2.712418
 ```
 
 $\rightarrow$ Les différences entre les deux estimateurs sont dues aux **fluctuations d'échantillonnage**
@@ -451,7 +451,7 @@ round(c(borneInf.1, borneSup.1),2)
 ## Cas d'étude : Introduction aux tests statistiques
  
 <center> 
-  ![](img/estimation2.png){width=65%}
+  ![](img/estimation2.png){width=60%}
 </center>
 
 
