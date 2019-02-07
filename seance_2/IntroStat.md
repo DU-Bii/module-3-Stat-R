@@ -1,7 +1,7 @@
 ---
 title: "Module 3 - Analyse statistique avec R - Séance 2"
 author: "Leslie REGAD"
-date: '2019-02-04'
+date: '2019-02-05'
 output:
   slidy_presentation:
     fig_caption: yes
