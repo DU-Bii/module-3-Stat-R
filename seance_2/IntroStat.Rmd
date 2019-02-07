@@ -433,7 +433,7 @@ $$IC_{1-\alpha} = \left[m \pm t_{\alpha ; \textrm{(n-1)ddl}} \times \sqrt{\frac{
 * **échantillon 1** : 40 patients sains 
 
 ```{r}
-alpha <- 0.5
+alpha <- 0.05
 pyr0 <- dataMyelom[which(dataMyelom[,"diagn"]==0),"pyr"]
 borneInf.0 <- mean(pyr0) - qnorm(1-alpha/2) * sqrt(var(pyr0)/length(pyr0)) 
 borneSup.0 <- mean(pyr0) + qnorm(1-alpha/2) * sqrt(var(pyr0)/length(pyr0)) 
@@ -505,7 +505,7 @@ le hasard et le facteur expliquent les différences entre les deux moyennes obse
 ## Est-ce que les données sont compatibles avec H0 ?
     
 1. Définir un **critère statistique** $S$ dont la loi sous H0 est connue  
- $S = M_2 - M2$  avec $M$=moyenne de $X$ dans 1 échantillon    
+ $S = M_2 - M_1$  avec $M$=moyenne de $X$ dans 1 échantillon    
 $\quad$  
 Sous H0 ( $n_1$ et $n_2 > 30$) : $S \sim \mathcal{N} \left(0 ; \sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2} }\right)$
 
@@ -770,15 +770,15 @@ Le dosage de pyr est un bon marqueur de la maladie.
 
 * test sur les distribution : 
     + à une loi normale : test de Shapiro
-    + à une distribution théorique : test du chi$^2$ d'homogénéité  
-    + deux distributions  : test du Cchi$^2$hi2 d'adéquation
+    + à une distribution théorique : test du Chi$^2$ d'homogénéité  
+    + deux distributions  : test du Chi$^2$ d'adéquation
     
 
 * deux variables aléatoires (lien) :  
     + réelles continues :  
         + test paramétrique : test du coefficient de corrélation de Pearson  
         binormalité de la variable $X$  
-        + test non paramétrique : test du coefficient de corrélation de Pearson  
+        + test non paramétrique : test du coefficient de corrélation de Spearman  
     + réelles discrètes :  
         + test du chi$^2$ d'indépendance  
   
@@ -793,16 +793,5 @@ Place au TP : Etude des caractéristiques des patients atteints d'une cirrhose d
 </center>
 
 
-
-
-## Diminuer l'erreur de type II / Augmenter la puissance du test 
-  
-1. Augmenter la taille d'effet
-2. Diminuer la variabilité des données (variance des données)
-3. Augmenter la taille de l'échantillon
-  
-<center>
-![](img/effetPuissance.png){width=75%}
-</center>
 
 
