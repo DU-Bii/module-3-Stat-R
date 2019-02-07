@@ -1,7 +1,7 @@
 ## Conda environment for the course "Statistical Analysis with R" 
 ## of the "Diplome Universitaire en Bioinformatique integrative" (DU-Bii).
 ## https://du-bii.github.io/accueil/
-name: dubii_r_2019
+name: dubii_r-2019
 
 channels:
   - bioconda
