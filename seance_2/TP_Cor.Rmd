@@ -4,7 +4,7 @@ author: "Magali Berland (INRA) & Leslie REGAD (Université Paris Diderot)"
 date: '`r Sys.Date()`'
 output:
   html_document:
-    code_folding: hide #show #
+    code_folding:  show #hide
     self_contained: no
     number_sections: yes
     fig_caption: yes
@@ -36,7 +36,7 @@ knitr::opts_chunk$set(
   fig.path = 'figures/07_tests_multiples',
   fig.align = "center", 
   size = "tiny", 
-  echo = FALSE, eval = FALSE, 
+  echo = TRUE, eval = TRUE, 
   warning = FALSE, message = FALSE, 
   results = TRUE, comment = "")
 
@@ -102,30 +102,91 @@ Il en existe trois types bien distincts liés au régime alimentaire :
 
 # Description des données
 
-1. Ouvrez les deux fichiers de données en utilisant la fonction `readRDS()`. 
-Vérifiez que les objects créés ont les bonnes dimensions.
+1. Ouvrez les deux fichiers de données en utilisant la fonction `readRDS()`. Vérifiez que les objects créés ont les bonnes dimensions.
+
+```{r}
+metaFile <- readRDS("data/metadata.RDS")
+dim(metaFile)
+
+abonDF <- readRDS("data/microbiota.abundance.log.RDS")
+dim(abonDF)
+```
+Pensez à adapter la localisation des fichiers à votre environnemment et l'architecture de vos dossiers.
+
 
 2. Quels types de variables contient le fichier `metadata.RDS` (fonction `str()`).
 
+```{r}
+str(metaFile)
+```
+
+Les variables sont toutes numériques sauf les variables 
+
+* "Gender" : variable à 2 classes "female" et "male"
+* status : variable à 2 classes "healthy","liver" 
 
 3. Déterminez le nombre et la proportion de patients sains et malades dans le jeu de données.
 Représentez ces distributions à l'aide de graphiques en bâtons (fonctions `table()` et `barplot()`).
 
+```{r}
+table(metaFile[,"Gender"])
+table(metaFile[,"Gender"]) / nrow(metaFile)
+barplot(table(metaFile[,"Gender"]), ylab="Occurrence", xlab="Genre")
+```
 
 
 4. Déterminez le nombre et la proportion d'hommes et de femmes dans le jeu de données.
 Représentez ces distributions à l'aide de graphiques en bâtons (fonctions `table()` et `barplot()`).
 
+```{r}
+table(metaFile[,"status"])
+table(metaFile[,"status"])/nrow(metaFile)
+
+barplot(table(metaFile[,"status"]), ylab="Occurrence", xlab="Status")
+
+```
 
 5. En utilisant la fonction `summary()`, étudiez la distribution des différentes variables. Que remarquez vous pour les variables `INR`, `Crea`, `Alb`, `TB`, `PT`, `CTP`, `MELD` et `Enterotype`.
+```{r}
+summary(metaFile)
+```
 
 
-6. Identifiez les individus qui ont des `NA` pour la variable `Crea` (fonctions `which()` et `is.na()`). Quel est le statut clinique de ces patients ? Quel est le genre de ces individus ? Est-ce que ces individus ont des `NA` pour les autres variables ?
+6. Identifiez les individus qui ont des `NA` pour la variable `Crea` (fonctions `which()` et `is.na()`). Quel est le statut clinique de ces patients ? Quel est le genre de ces individus ?
 
-7. Suppimez ces individus des deux objets qui contiennent les deux jeux de données.
+```{r}
+ind.na <- which(is.na(metaFile[,"Crea"]))
+ind.na
+metaFile[ind.na,"status"]
+metaFile[ind.na, "Gender"]
+```
+Trois individus (56, 73, 74) ont des valeurs `NA` pour la variable `Crea`.
+Ces trois individus sont des patients contrôles de sexe féminin.
+
+
+7. Est-ce que ces individus ont des `NA` pour les autres variables ?
+```{r}
+metaFile[ind.na,]
+```
+
+On observe que ces trois individus contrôles ont aussi des `NA` pour `INR`, `Crea`, `Alb`, `TB`, `PT`, `CTP`, `MELD`.
+
+
+8. Suppimez ces individus des deux data.frames qui contiennent les deux jeux de données
+```{r}
+metaFile2 = metaFile[-ind.na,]
+abonDF2 <- abonDF[-ind.na,]
+dim(metaFile2) ; dim(abonDF2)
+```
 
 9. Déterminez la moyenne et l'écart-type de chaque variable quantitative (fonctions `apply()`, `mean()` et `sd()`).
+```{r}
+var.sel <- c( "Age", "BMI", "INR", "Crea", "Alb", "TB", "PT", "CTP", "MELD", "GC")
+round(apply(metaFile2[, var.sel],2,mean, na.rm=T),3)
+round(apply(metaFile2[, var.sel],2,sd, na.rm=T),3)
+```
 
+La fonction `round()` permet d'arrondir les valeurs à 3 chiffres après la virugle.
 
 
 # Comparaison des patients malades et sains
