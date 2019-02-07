@@ -46,54 +46,6 @@ options(scipen = 12) ## Max number of digits for non-scientific notation
 ```
 
 
-# Introduction
-La cirrhose du foie est une maladie très fréquente à travers le monde ; en France, 700 000 cas étaient répertoriés en 2012. 
-Les principales causes connues de cette maladie sont l’obésité, les infections virales (hépatites) et l’alcool. 
-Selon la gravité de la cirrhose, celle-ci peut conduire à un cancer, voire à un arrêt du fonctionnement du foie, ce qui nécessite une transplantation.
-Les signes et symptômes de la cirrhose ou de ses complications sont nombreux et variés. 
-Nombre d’entre eux ne sont pas spécifiques et peuvent se produire en l’absence de cirrhose.
-Réciproquement, leur absence ne permet pas d’exclure définitivement le diagnostic. 
-Pendant une période plus ou moins longue, dite non compliquée, seul un examen clinique ou biologique peut mettre en évidence la maladie. 
-Aujourd’hui, le diagnostic de la maladie se fait essentiellement à l’aide d’une biopsie du foie qui représente certaines contraintes (hospitalisation, méthode invasive parfois contre-indiquée).
-
-Une étude a été menée pour chercher à caractériser les populations bactériennes de l’intestin chez les patients ayant une cirrhose du foie (Qin et al. ”Alterations of the human gut microbiome in liver cirrhosis.” Nature, 2014). Pour cela, le microbiote (ensemble des gènes bactériens de l’intestin) de 237 individus a  été analysé. 
-La moitié (123 individus) étaient atteints d’une cirrhose du foie et l’autre (114 individus)  étaient sains.
-La méthodologie suivie pour obtenir les données a été la suivante :
-
-1. Un  échantillon du microbiote intestinal a été prévelé chez chaque individu.
-2. L’ADN contenu dans l'échantillon (principalement l’ADN des bactéries présentes dans cet écosystème) est extrait puis séquencé. 
-Des milions de petites séquences (appelées lectures) sont produites par les séquenceurs à haut débit.
-3. Ces lectures sont comparées à un catalogue de référence de 5.4 millions de gènes, lui-même clusterisé en 523 espèces bactériennes.
-4. La quantité de chaque gène est dénombrée et ces comptages sont divisés par la taille des gènes.
-5. Le comptage des gènes de cette matrice d’abondance est regroupé par espèce.
-
-# Les données
-La matrice d’abondance est contenue dans le fichier `microbiota.abundance.log.RDS`, les métadonnées associées à ce jeu de données sont dans le fichier `metadata.RDS`.  Les deux fichiers sont disponibles sous le cluster de l'IFB dans le répertoire : `../../projects/du_bii_2019/data/module3/seance2/`.
-
-Le fichier `microbiota.abundance.RDS` contient l’abondance (transformée en log) des 523 espèces bactériennes (colonnes) pour les 237 individus (lignes).  
-
-
-Le fichier `metadata.RDS` contient les informations suivantes :
-
-* `Age` : l’âge des patients
-* `Gender` : le genre des patients
-* `BMI` (*body mass index*) : l’indice de masse corporelle, exprimé en kg/m$^2$
-* `status` : statut clinique du patient, sain (*healthy*) ou malade (*liver*)
-* `INR` (*international normalized ratio*) : mesure dérivée du taux de prothrombine utilisée pour évaluer la coagulation sanguine
-* `Crea` : taux de créatinine mesurée dans le sang (indication de la capacité de filtration rénale)
-* `Alb` : taux d’albumine mesurée dans le sang
-* `TB` : taux de bilirubine (pigment jaune produit par la dégradation de l’hémoglobine)
-* `PT` : taux de prothrombine
-* `CTP` (*Child-Turcotte-Pugh score*) : score qui permet la classification en groupes de gravité croissante selon le degré d’insuffisance hépato-cellulaire
-* `MELD` (*Model for End-Stage Liver Disease*) : système de notation pour évaluer la gravité d’une cirrhose du foie
-* `GC` (*gene count*) : Nombre de gènes différents dénombrés
-* `Enterotype` : Un entérotype est un groupe de composition bactérienne intestinale spécifique chez l’homme. 
-Il en existe trois types bien distincts liés au régime alimentaire : 
-    + le type 1 est caractérisé par de hauts niveaux de bacteroides, c’est celui du régime occidental riche en viandes;
-    + le type 2 a peu de bacteroides mais beaucoup de prevotella, il est lié aux régimes riches en glucides; 
-    + le type 3 a un haut niveau de ruminococcus (régime riche en graisses polyinsaturées).
-
-
 # Lancement de `Rstudio`
 
 1. Connectez vous à l'interface `Rstudio` de la plateforme IFB en utilisant l'adresse suivante : [lien](https://rstudio.cluster.france-bioinformatique.fr/)
