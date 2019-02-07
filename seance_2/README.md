@@ -9,3 +9,6 @@
 - Travaux pratiques :
 [[html](TP_ssCor.html)] 
 
+
+- Corrections de la première partie du TP (Description des données) : 
+[[html](TP_Cor.html)] 
