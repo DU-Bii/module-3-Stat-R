@@ -1,5 +1,6 @@
 ---
-title: "Module 3 - Analyse statistique avec R - Séance 2"
+title: "DUBii 2019 - Module 3 : Analyse statistique avec R"
+subtitle: "Séance 2 : échantillonnage, estimation et tests statistiques"
 author: "Leslie REGAD"
 date: '2019-02-10'
 output:
@@ -37,11 +38,11 @@ output:
     smaller: yes
     toc: yes
     widescreen: yes
-  pdf_document:
-    fig_caption: yes
-    highlight: zenburn
-    toc: yes
-    toc_depth: 3
+  revealjs::revealjs_presentation:
+    css: ../slides.css
+    self_contained: yes
+    theme: night
+    transition: none
   beamer_presentation:
     colortheme: dolphin
     fig_caption: yes
@@ -54,13 +55,12 @@ output:
     slide_level: 2
     theme: Montpellier
     toc: yes
-  revealjs::revealjs_presentation:
-    css: ../slides.css
-    self_contained: yes
-    theme: night
-    transition: none
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
 font-import: http://fonts.googleapis.com/css?family=Risque
-subtitle: DUBii 2019
 font-family: Garamond
 transition: linear
 ---
@@ -324,7 +324,7 @@ mean(ech1)
 ```
 
 ```
-[1] 4.464912
+[1] 4.010799
 ```
 
 2. tire un deuxième échantillon de 20 indidivus et calcule la moyenne de $X$ dans cet échantillon
@@ -335,7 +335,7 @@ mean(ech2)
 ```
 
 ```
-[1] 5.638747
+[1] 3.447696
 ```
 
 $\rightarrow$ Les différences entre les deux estimateurs sont dues aux **fluctuations d'échantillonnage**
@@ -512,8 +512,6 @@ Sous H0 ( $n_1$ et $n_2 > 30$) : $S \sim \mathcal{N} \left(0 ; \sqrt{\frac{s_1^2
 * $s_{obs} = m2-m1$
 
 * Calcule la probabilité d'obtenir sous H0 le même résultat que celui observé (ou plus grand) sur les échantillons = **p-value**  $= p(S > s_{obs})$
-  
-
 
 <div class="col2">
 <img src="figures/intro-stat-tests_unnamed-chunk-18-1.png" style="display: block; margin: auto;" />

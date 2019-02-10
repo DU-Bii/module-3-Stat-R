@@ -1,13 +1,23 @@
 ---
-title: "Module 3 - Analyse statistique avec R - Séance 2"
+title: "DUBii 2019 - Module 3 : Analyse statistique avec R"
+subtitle: "Séance 2 : échantillonnage, estimation et tests statistiques"
 author: "Leslie REGAD"
 date: '`r Sys.Date()`'
 output:
-  pdf_document:
+  slidy_presentation:
     fig_caption: yes
-    highlight: zenburn
+    fig_height: 6
+    fig_width: 7
+    highlight: tango
+    incremental: no
+    keep_md: yes
+    self_contained: yes
+    slide_level: 2
+    smaller: yes
+    smart: no
+    theme: cerulean
     toc: yes
-    toc_depth: 3
+    widescreen: yes
   html_document:
     fig_caption: yes
     highlight: zenburn
@@ -28,20 +38,11 @@ output:
     smaller: yes
     toc: yes
     widescreen: yes
-  slidy_presentation:
-    fig_caption: yes
-    fig_height: 6
-    fig_width: 7
-    highlight: tango
-    incremental: no
-    keep_md: yes
+  revealjs::revealjs_presentation:
+    css: ../slides.css
     self_contained: yes
-    slide_level: 2
-    smaller: yes
-    smart: no
-    theme: cerulean
-    toc: yes
-    widescreen: yes
+    theme: night
+    transition: none
   beamer_presentation:
     colortheme: dolphin
     fig_caption: yes
@@ -54,13 +55,12 @@ output:
     slide_level: 2
     theme: Montpellier
     toc: yes
-  revealjs::revealjs_presentation:
-    css: ../slides.css
-    self_contained: yes
-    theme: night
-    transition: none
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
 font-import: http://fonts.googleapis.com/css?family=Risque
-subtitle: DUBii 2019
 font-family: Garamond
 transition: linear
 ---
