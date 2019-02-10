@@ -162,9 +162,13 @@ Applications:
 *Intervenants: Claire Vandiedonck & Magali Berland & Jacques van Helden*
 
 - Concepts
-    - échantillonnage et estimation
-    - tests d'hypothèse
-    - tests multiples
+    - appliquer des milliers de tests d'hypothèse en parallèle
+    - problèmatique des tests multiples et corrections
+          - le problème de la p-valeur "nominale" (proba de FP pour un test donné)
+          - FPR = proportion de FP sur l'ensemble des tests $\hat{FPR} = pval$
+          - E-valeur (mesure du problème: $E = p \cdot T$) : nb de FP attendus sur l'ensemble de la batterie de tests
+          - FDR = proportionde FP attendus sur l'ensemble des cas déclarés positifs
+          
     - visualisation des résultats globaux  (MA plots, volcano plots, histogrammes de p-vlaeurs)
     - évaluation de l'impact des choix de logiciels et paramètres 
     - comparer les projections ACP avec tous les gènes et avec la sélection de gènes différentiellement exprimés
