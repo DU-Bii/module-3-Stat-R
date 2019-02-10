@@ -11,7 +11,7 @@
 
 <meta name="author" content="Magali Berland (INRA) &amp; Leslie REGAD (Université Paris Diderot)" />
 
-<meta name="date" content="2019-02-03" />
+<meta name="date" content="2019-02-06" />
 
 <title>Module 3 - Analyse statistique avec R - Séance 2</title>
 
@@ -223,7 +223,7 @@ div.tocify {
 <h1 class="title toc-ignore">Module 3 - Analyse statistique avec R - Séance 2</h1>
 <h3 class="subtitle"><em>DUBii 2019</em></h3>
 <h4 class="author"><em>Magali Berland (INRA) &amp; Leslie REGAD (Université Paris Diderot)</em></h4>
-<h4 class="date"><em>2019-02-03</em></h4>
+<h4 class="date"><em>2019-02-06</em></h4>
 
 </div>
 
@@ -242,10 +242,8 @@ div.tocify {
 </div>
 <div id="les-donnees" class="section level1">
 <h1><span class="header-section-number">2</span> Les données</h1>
-<p>La matrice d’abondance est contenue dans le fichier <code>microbiota.abundance.log.RDS</code>, les métadonnées associées à ce jeu de données sont dans le fichier <code>metadata.RDS</code>.<br />
-<span style="color: #FF0000"> dire où se trouve le fichier de données </span></p>
-<p>Le fichier <code>microbiota.abundance.RDS</code> contient l’abondance (transformée en log) des 523 espèces bactériennes (colonnes) pour les 237 individus (lignes).<br />
-<span style="color: #FF0000"> dire où se trouve le fichier de données </span></p>
+<p>La matrice d’abondance est contenue dans le fichier <code>microbiota.abundance.log.RDS</code>, les métadonnées associées à ce jeu de données sont dans le fichier <code>metadata.RDS</code>. Les deux fichiers sont disponibles sous le cluster de l’IFB dans le répertoire : <code>../../projects/du_bii_2019/data/module3/seance2/</code>.</p>
+<p>Le fichier <code>microbiota.abundance.RDS</code> contient l’abondance (transformée en log) des 523 espèces bactériennes (colonnes) pour les 237 individus (lignes).</p>
 <p>Le fichier <code>metadata.RDS</code> contient les informations suivantes :</p>
 <ul>
 <li><code>Age</code> : l’âge des patients</li>
@@ -268,41 +266,35 @@ div.tocify {
 </ul></li>
 </ul>
 </div>
-<div id="but-du-tp" class="section level1">
-<h1><span class="header-section-number">3</span> But du TP</h1>
-</div>
 <div id="lancement-de-rstudio" class="section level1">
-<h1><span class="header-section-number">4</span> Lancement de <code>Rstudio</code></h1>
+<h1><span class="header-section-number">3</span> Lancement de <code>Rstudio</code></h1>
 <ol style="list-style-type: decimal">
-<li><p>Ouvrez un terminal et placez vous dans votre répertoire de travail.</p></li>
-<li><p>Lancez le logiciel <code>Rstudio</code>. Ouvrez un nouveau fichier <code>Rmarkdown</code> que vous sauvegardez dans votre répertoire de travail.</p></li>
+<li><p>Connectez vous à l’interface <code>Rstudio</code> de la plateforme IFB en utilisant l’adresse suivante : <a href="https://rstudio.cluster.france-bioinformatique.fr/">lien</a></p></li>
+<li><p>Ouvrez un nouveau fichier <code>R script</code> en utilisant le menu <code>File</code>.</p></li>
 </ol>
 </div>
 <div id="description-des-donnees" class="section level1">
-<h1><span class="header-section-number">5</span> Description des données</h1>
+<h1><span class="header-section-number">4</span> Description des données</h1>
 <ol style="list-style-type: decimal">
 <li><p>Ouvrez les deux fichiers de données en utilisant la fonction <code>readRDS()</code>. Vérifiez que les objects créés ont les bonnes dimensions.</p></li>
 <li><p>Quels types de variables contient le fichier <code>metadata.RDS</code> (fonction <code>str()</code>).</p></li>
 <li><p>Déterminez le nombre et la proportion de patients sains et malades dans le jeu de données. Représentez ces distributions à l’aide de graphiques en bâtons (fonctions <code>table()</code> et <code>barplot()</code>).</p></li>
 <li><p>Déterminez le nombre et la proportion d’hommes et de femmes dans le jeu de données. Représentez ces distributions à l’aide de graphiques en bâtons (fonctions <code>table()</code> et <code>barplot()</code>).</p></li>
 <li><p>En utilisant la fonction <code>summary()</code>, étudiez la distribution des différentes variables. Que remarquez vous pour les variables <code>INR</code>, <code>Crea</code>, <code>Alb</code>, <code>TB</code>, <code>PT</code>, <code>CTP</code>, <code>MELD</code> et <code>Enterotype</code>.</p></li>
-<li><p>Identifiez les individus qui ont des <code>NA</code> pour la variable <code>Crea</code> (fonctions <code>which()</code> et <code>is.na()</code>). Quel est le statut clinique de ces patients ? Quel est le genre de ces individus ?</p></li>
-<li><p>Est-ce que ces individus ont des <code>NA</code> pour les autres variables ?</p></li>
-<li><p>Suppimez ces individus des deux data.frames qui contiennent les deux jeux de données</p></li>
+<li><p>Identifiez les individus qui ont des <code>NA</code> pour la variable <code>Crea</code> (fonctions <code>which()</code> et <code>is.na()</code>). Quel est le statut clinique de ces patients ? Quel est le genre de ces individus ? Est-ce que ces individus ont des <code>NA</code> pour les autres variables ?</p></li>
+<li><p>Suppimez ces individus des deux objets qui contiennent les deux jeux de données.</p></li>
 <li><p>Déterminez la moyenne et l’écart-type de chaque variable quantitative (fonctions <code>apply()</code>, <code>mean()</code> et <code>sd()</code>).</p></li>
 </ol>
 </div>
 <div id="comparaison-des-patients-malades-et-sains" class="section level1">
-<h1><span class="header-section-number">6</span> Comparaison des patients malades et sains</h1>
+<h1><span class="header-section-number">5</span> Comparaison des patients malades et sains</h1>
 <div id="mise-en-place-de-tests-de-comparaison-de-deux-moyennes" class="section level2">
-<h2><span class="header-section-number">6.1</span> Mise en place de tests de comparaison de deux moyennes</h2>
+<h2><span class="header-section-number">5.1</span> Mise en place de tests de comparaison de deux moyennes</h2>
 <p>On cherche à savoir si les patients et les individus contrôles présentent des caractéristiques différentes. Pour cela, on se pose les questions suivantes ?</p>
 <ul>
 <li>Est-ce que l’âge des patients est significativement différent de celui des contrôles sains ?</li>
-<li>Est-ce que l’indice de masse corporel des patients est significativement plus grand de celui des contrôles sains ?</li>
-<li>Le taux d’albumine des patients est-il significativement différent de celui des contrôles sains ?</li>
+<li>Est-ce que l’indice de masse corporel des patients est significativement différent de celui des contrôles sains ?</li>
 <li>Le taux de créatinine des patients est-il significativement différent de celui des contrôles sains ?</li>
-<li>Le taux de bilirubine des patients est-il significativement différent de celui des contrôles sains ?</li>
 <li>Le nombre de gènes différentiellement exprimés chez les patients est-il significativement différent de celui chez les contrôles sains ?</li>
 </ul>
 <p>Créez deux data.frames qui contiennent pour le premier les métadonnées pour les patients sains et pour le second les métadonnées pour les patients malades.</p>
@@ -317,8 +309,8 @@ div.tocify {
 </ol>
 </div>
 <div id="mise-en-place-de-tests-de-chi2-dhomogeneite" class="section level2">
-<h2><span class="header-section-number">6.2</span> Mise en place de tests de chi2 d’homogénéité</h2>
-<p>Ensuite, on se demande si la maladie cyrrhose touche autant les hommes que les femmes. Pour répondre à cette question, vous allez réaliser un test du Chi2 d’homogénéité.</p>
+<h2><span class="header-section-number">5.2</span> Mise en place de tests de chi2 d’homogénéité</h2>
+<p>Ensuite, on se demande si la maladie cirrhose touche autant les hommes que les femmes. Pour répondre à cette question, vous allez réaliser un test du Chi2 d’homogénéité.</p>
 <ol style="list-style-type: decimal">
 <li><p>Définissez les variables aléatoires sur lesquelles vous allez travailler pour répondre à cette question.</p></li>
 <li><p>Déterminez la table de contigence qui renvoie le nombre de femmes et d’hommes chez les individus sains et les patients malades (fonction <code>table()</code>).</p></li>
@@ -357,23 +349,48 @@ div.tocify {
 </div>
 </div>
 <div id="etude-des-differents-enterotypes" class="section level1">
-<h1><span class="header-section-number">7</span> Etude des différents entérotypes</h1>
-<p>On se demande si la composition de l’entérotype modifie l’indice de masse corporelle des individus.</p>
+<h1><span class="header-section-number">6</span> Etude des différents entérotypes</h1>
+<p>On se demande si la composition de l’entérotype à une influence sur l’indice de masse corporelle des individus.</p>
 <ol style="list-style-type: decimal">
-<li><p>Représentez la distribution de l’indice de masse corporelle pour les individus en fonction de leur entérotype (fonction <code>boxplot()</code>.</p></li>
+<li><p>Représentez la distribution de l’indice de masse corporelle pour les individus en fonction de leur entérotype (fonction <code>boxplot()</code>).</p></li>
 <li><p>Définissez la variable aléatoire et les échantillons</p></li>
 </ol>
 <p>Pour répondre à la question, il faut effectuer un test de comparaison de 3 moyennes en utilisant un test ANOVA.<br />
 Ce test a deux conditions de validité :</p>
 <ul>
-<li>Il faut que la variable aléatoire suive une loi normale dans les trois échantillons.</li>
-<li>Il faut que la variable aléatoire ait la même variance dans les trois échantillons (Homoscédaticité de <span class="math inline">\(X\)</span>).</li>
+<li>Il faut que la variable aléatoire <span class="math inline">\(X\)</span> suive une loi normale dans les trois échantillons.</li>
+<li>Il faut que la variable aléatoire <span class="math inline">\(X\)</span> ait la même variance dans les trois échantillons (Homoscédaticité de <span class="math inline">\(X\)</span>).</li>
 </ul>
 <ol start="3" style="list-style-type: decimal">
 <li><p>Testez la normalité de <span class="math inline">\(X\)</span> dans les 3 échantillons. (fonction <code>by()</code>, <code>shapiro.test()</code>)</p></li>
-<li><p>Testez l’homoscédaticité de <span class="math inline">\(X\)</span>. (foncion <code>bartlett.test()</code>)</p></li>
+<li><p>Testez l’homoscédaticité de <span class="math inline">\(X\)</span> (foncion <code>bartlett.test()</code>).</p></li>
 </ol>
 <p>Les résultats que vous avez obtenus vous permettent de conclure que les conditions de validité du test ANOVA ne sont pas vérifiées. Pour répondre à la question, vous allez donc utiliser un test non paramétrique : le test de Kruskall-Wallis (fonction <code>kruskal.test()</code>).</p>
+</div>
+<div id="analyse-en-composante-principale" class="section level1">
+<h1><span class="header-section-number">7</span> Analyse en composante principale</h1>
+<div id="jeu-de-donnees-metadata" class="section level2">
+<h2><span class="header-section-number">7.1</span> Jeu de données <code>metadata</code></h2>
+<ol style="list-style-type: decimal">
+<li>Réalisez une ACP sur ce jeu de données</li>
+</ol>
+<ol style="list-style-type: lower-alpha">
+<li>Quel pourcentage de la variance expliquée est représentée dans le premier plan factoriel ?</li>
+<li>Proposez une représentation graphique des individus avec les individus malades d’une couleur et les individus sains d’une autre.</li>
+<li>Pouvez-vous donner une interprétation de ce graphique ? Vous pouvez pour cela vous aider du cercle des corrélations.</li>
+</ol>
+</div>
+<div id="jeu-de-donnees-microbiota.abundance" class="section level2">
+<h2><span class="header-section-number">7.2</span> Jeu de données <code>microbiota.abundance</code></h2>
+<ol start="2" style="list-style-type: decimal">
+<li>Réalisez une ACP centrée réduite sur ce jeu de données.</li>
+</ol>
+<ol style="list-style-type: lower-alpha">
+<li>Quel pourcentage de la variance expliquée est représentée dans le premier plan factoriel ?</li>
+<li>Proposez une représentation graphique des individus avec les individus malades d’une couleur et les individus sains d’une autre.</li>
+<li>Proposez une représentation graphique des individus avec les enterotypes de trois couleurs différentes. Que constatez-vous ?</li>
+</ol>
+</div>
 </div>
 
 
