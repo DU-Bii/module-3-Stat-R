@@ -32,7 +32,10 @@ dependencies:
   - bioconda::bioconductor-deseq2
   - bioconda::bioconductor-edger 
   - bioconda::bioconductor-limma
+  - bioconda::bioconductor-qvalue
+  - bioconda::bioconductor-multtest
   - bioconda::r-mixomics # For the course of integrative bioinformatics
+  - bioconda::bioconductor-recount # used to generate the TCGA study case
   
   ## Other packages
   - lcantini::r-mofa
