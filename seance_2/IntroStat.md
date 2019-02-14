@@ -2,7 +2,7 @@
 title: "DUBii 2019 - Module 3 : Analyse statistique avec R"
 subtitle: "Séance 2 : échantillonnage, estimation et tests statistiques"
 author: "Leslie REGAD"
-date: '2019-02-10'
+date: '2019-02-14'
 output:
   slidy_presentation:
     fig_caption: yes
@@ -324,7 +324,7 @@ mean(ech1)
 ```
 
 ```
-[1] 4.010799
+[1] 4.677439
 ```
 
 2. tire un deuxième échantillon de 20 indidivus et calcule la moyenne de $X$ dans cet échantillon
@@ -335,7 +335,7 @@ mean(ech2)
 ```
 
 ```
-[1] 3.447696
+[1] 4.922556
 ```
 
 $\rightarrow$ Les différences entre les deux estimateurs sont dues aux **fluctuations d'échantillonnage**
