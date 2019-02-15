@@ -27,7 +27,10 @@ dependencies:
   - conda-forge::r-factoextra   # To plot PCA output
   - conda-forge::r-cowplot      # Add-on to ggplot2 for enhanced design
   - conda-forge::r-corrplot     # Graphical display of a correlation matrix, confidence interval
-  
+  - conda-forge::r-momr         # Analysis of metagenomic data
+  - conda-forge::r-gridExtra    # Graphical display of several plots
+
+
   ## Bioconductor packages
   - bioconda::bioconductor-deseq2
   - bioconda::bioconductor-edger 
