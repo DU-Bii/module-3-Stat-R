@@ -636,6 +636,7 @@ $$R=\frac{m+s}{t}$$
 # Comparaison de clustering: Adjusted Rand Index
 
 $$ ARI=\frac{RI-Expected RI}{Max RI -Expected RI}$$
+
 - ARI=RI normalisé
 - Prend en compte la taille des classes
 - ARI=1 pour classification identique
