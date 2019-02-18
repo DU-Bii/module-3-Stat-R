@@ -6,7 +6,7 @@
 |------|-----------------------------------|------------------------|
 | 1 | Premiers pas avec R | [seance_1](seance_1) |
 | 2 | Analyse statistique avec R |  [seance_2](seance_2)|
-| 3 | Détection de gènes différentiellement exprimés | |
+| 3 | Détection d'espèces différentiellement abondantes | [seance_3](seance_3)|
 | 4 | Clustering | |
 | 5 | Statistiques d'enrichissement | |
 | 6 | Classification supervisée (classement) | |
