@@ -33,7 +33,7 @@ options(width = 300)
 # options(encoding = 'UTF-8')
 knitr::opts_chunk$set(
   fig.width = 7, fig.height = 5, 
-  fig.path = 'figures/07_tests_multiples',
+  fig.path = 'figures/TP_ssCor_',
   fig.align = "center", 
   size = "tiny", 
   echo = FALSE, eval = FALSE, 
@@ -68,11 +68,10 @@ Des milions de petites séquences (appelées lectures) sont produites par les s�
 5. Le comptage des gènes de cette matrice d’abondance est regroupé par espèce.
 
 # Les données
-La matrice d’abondance est contenue dans le fichier `microbiota.abundance.log.RDS`, les métadonnées associées à ce jeu de données sont dans le fichier `metadata.RDS`.  
-<span style="color: #FF0000"> dire où se trouve le fichier de données </span>
+La matrice d’abondance est contenue dans le fichier `microbiota.abundance.log.RDS`, les métadonnées associées à ce jeu de données sont dans le fichier `metadata.RDS`.  Les deux fichiers sont disponibles sous le cluster de l'IFB dans le répertoire : `../../projects/du_bii_2019/data/module3/seance2/`.
 
 Le fichier `microbiota.abundance.RDS` contient l’abondance (transformée en log) des 523 espèces bactériennes (colonnes) pour les 237 individus (lignes).  
-<span style="color: #FF0000"> dire où se trouve le fichier de données </span>
+
 
 Le fichier `metadata.RDS` contient les informations suivantes :
 
@@ -93,22 +92,18 @@ Il en existe trois types bien distincts liés au régime alimentaire :
     + le type 1 est caractérisé par de hauts niveaux de bacteroides, c’est celui du régime occidental riche en viandes;
     + le type 2 a peu de bacteroides mais beaucoup de prevotella, il est lié aux régimes riches en glucides; 
     + le type 3 a un haut niveau de ruminococcus (régime riche en graisses polyinsaturées).
-    
-
-# But du TP
-
 
 
 # Lancement de `Rstudio`
 
-1. Ouvrez un terminal et placez vous dans votre répertoire de travail.
+1. Connectez vous à l'interface `Rstudio` de la plateforme IFB en utilisant l'adresse suivante : [lien](https://rstudio.cluster.france-bioinformatique.fr/)
 
-2. Lancez le logiciel `Rstudio`. Ouvrez un nouveau fichier `Rmarkdown` que vous sauvegardez dans votre répertoire de travail.
+2. Ouvrez un nouveau fichier `R script` en utilisant le menu `File`.
 
 # Description des données
 
-1. Ouvrez les deux fichiers de données en utilisant la fonction `readRDS()`. Vérifiez que les objects créés ont les bonnes dimensions.
-
+1. Ouvrez les deux fichiers de données en utilisant la fonction `readRDS()`. 
+Vérifiez que les objects créés ont les bonnes dimensions.
 
 2. Quels types de variables contient le fichier `metadata.RDS` (fonction `str()`).
 
@@ -125,12 +120,9 @@ Représentez ces distributions à l'aide de graphiques en bâtons (fonctions `ta
 5. En utilisant la fonction `summary()`, étudiez la distribution des différentes variables. Que remarquez vous pour les variables `INR`, `Crea`, `Alb`, `TB`, `PT`, `CTP`, `MELD` et `Enterotype`.
 
 
-6. Identifiez les individus qui ont des `NA` pour la variable `Crea` (fonctions `which()` et `is.na()`). Quel est le statut clinique de ces patients ? Quel est le genre de ces individus ?
+6. Identifiez les individus qui ont des `NA` pour la variable `Crea` (fonctions `which()` et `is.na()`). Quel est le statut clinique de ces patients ? Quel est le genre de ces individus ? Est-ce que ces individus ont des `NA` pour les autres variables ?
 
-
-7. Est-ce que ces individus ont des `NA` pour les autres variables ?
-
-8. Suppimez ces individus des deux data.frames qui contiennent les deux jeux de données
+7. Suppimez ces individus des deux objets qui contiennent les deux jeux de données.
 
 9. Déterminez la moyenne et l'écart-type de chaque variable quantitative (fonctions `apply()`, `mean()` et `sd()`).
 
@@ -142,10 +134,8 @@ Représentez ces distributions à l'aide de graphiques en bâtons (fonctions `ta
 On cherche à savoir si les patients et les individus contrôles présentent des caractéristiques différentes. Pour cela, on se pose les questions suivantes ? 
 
 * Est-ce que l'âge des patients est significativement différent de celui des contrôles sains  ?
-* Est-ce que l'indice de masse corporel des patients est significativement plus grand de celui des contrôles sains ?
-* Le taux d’albumine des patients est-il significativement différent de celui des contrôles sains ?
+* Est-ce que l'indice de masse corporel des patients est significativement différent de celui des contrôles sains ?
 * Le taux de créatinine des patients est-il significativement différent de celui des contrôles sains ?
-* Le taux de bilirubine des patients est-il significativement différent de celui des contrôles sains ?
 * Le nombre de gènes différentiellement exprimés chez les patients est-il significativement différent de celui chez les contrôles sains ?
 
 
@@ -201,13 +191,12 @@ On se demande si la composition de l'entérotype à une influence sur l'indice d
 Pour répondre à la question, il faut effectuer un test de comparaison de 3 moyennes en utilisant un test ANOVA.  
 Ce test a deux conditions de validité : 
 
-* Il faut que la variable aléatoire suive une loi normale dans les trois échantillons.
-* Il faut que la variable aléatoire ait la même variance dans les trois échantillons (Homoscédaticité de $X$).  
+* Il faut que la variable aléatoire $X$ suive une loi normale dans les trois échantillons.
+* Il faut que la variable aléatoire $X$ ait la même variance dans les trois échantillons (Homoscédaticité de $X$).  
 
 3. Testez la normalité de $X$ dans les 3 échantillons. (fonction `by()`, `shapiro.test()`) 
 
-
-4. Testez l'homoscédaticité de $X$. (foncion `bartlett.test()`)
+4. Testez l'homoscédaticité de $X$ (foncion `bartlett.test()`).
 
 
 Les résultats que vous avez obtenus vous permettent de conclure que les conditions de validité du test ANOVA ne sont pas vérifiées. Pour répondre à la question, vous allez donc utiliser un test non paramétrique : le test de Kruskall-Wallis (fonction `kruskal.test()`).  

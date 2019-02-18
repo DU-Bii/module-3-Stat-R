@@ -1,7 +1,8 @@
 ---
-title: "Module 3 - Analyse statistique avec R - Séance 2"
+title: "DUBii 2019 - Module 3 : Analyse statistique avec R"
+subtitle: "Séance 2 : échantillonnage, estimation et tests statistiques"
 author: "Leslie REGAD"
-date: '2019-02-04'
+date: '2019-02-14'
 output:
   slidy_presentation:
     fig_caption: yes
@@ -37,11 +38,11 @@ output:
     smaller: yes
     toc: yes
     widescreen: yes
-  pdf_document:
-    fig_caption: yes
-    highlight: zenburn
-    toc: yes
-    toc_depth: 3
+  revealjs::revealjs_presentation:
+    css: ../slides.css
+    self_contained: yes
+    theme: night
+    transition: none
   beamer_presentation:
     colortheme: dolphin
     fig_caption: yes
@@ -54,18 +55,113 @@ output:
     slide_level: 2
     theme: Montpellier
     toc: yes
-  revealjs::revealjs_presentation:
-    css: ../slides.css
-    self_contained: yes
-    theme: night
-    transition: none
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
 font-import: http://fonts.googleapis.com/css?family=Risque
-subtitle: DUBii 2019
 font-family: Garamond
 transition: linear
 ---
 
 
+
+
+## Plan
+
+* Rappels de probabilité 
+* Introduction du cas d'études
+* Estimation d'un paramètre statistique
+    + Estimateur ponctuel
+    + Intervalle de confiance
+* La thérorie des tests d'hypothèses
+    + Le test de comparaison de deux moyennes
+    + Les autres tests d'hypothèses
+* A vous de jouer : Etude de cas
+
+
+## Expérience aléatoire 
+
+* **Phénomène déterministe** : phénomène dont on peut prévoir le résultat avec certitude lorsqu’on contrôle les causes  
+*exemple* : je lâche la craie $\rightarrow$ elle tombe  
+
+* **Expérience aléatoire** : expérience qui, répétée dans des conditions apparemment identiques, peut donner des résultats différents. Elle se définit par trois propositions :
+    + l’expérience peut être répétée
+    + plusieurs résultats sont possibles
+    + le résultat ne peut être prédit avec certitude  
+*exemple* : je lâche la craie $\rightarrow$ combien de morceaux de craie trouve-t-on par terre ?
+
+
+## Variable aléatoire (VA) / Unité statistique
+
+
+* **Variable aléatoire** (VA) = variable $X$ qui prend des valeurs en fonction du résultat d’une expérience aléatoire  
+$\rightarrow$ elle répond à la question : Que mesure-t-on pendant l'expérience aléatoire ?  
+* **Unité statistique** = unité sur laquelle est mesurée la VA
+
+
+* Exemple
+    + Expérience aléatoire : je lâche la craie $\rightarrow$ combien de morceaux trouve-t-on par terre?
+    + variable aléatoire : nombre de morceaux obtenus
+    + unité statistique (US) : 1 craie
+
+
+* Notations : 
+    + $X$ : la variable aléatoire
+    + $x_i$ : les réalisations de $X$    
+
+* VA réelles sont caractérisée par 2 paramètres : 
+    + **Espérance** ($E(X)$) : caractérise la tendance centrale, la valeur moyenne, prise par la VA
+    + **Variance** ($V(X)$) : caractérise la dispersion des valeurs de la variable autour de son espérance
+
+
+    
+## Deux types de VA réelles
+
+* L'ensemble des valeurs possibles est définit sur $\mathbb{R}$
+
+$\quad$
+
+* **discrète** : l'ensemble des valeurs que $X$ peut prendre est fini ou infini dénombrable
+    + nombres d'oeufs pondus par une poule : 2, 3, 4, ...  
+    
+* **continue** : les autres variables  
+    + poids d'un patient : 75.3kg, 56.4kg, 87kg, ...  
+    + taux de cholestérol : 2g/l, 1.8g/l, ...  
+
+    
+    
+## Variable réelle discrète
+
+* se définit par sa **loi de probabilité** : fonction  qui associe à chaque valeur de $X$ sa probabilité
+$$p_i = p(X = x_i)$$   
+    + avec $0<p_i<1$
+    + $\sum_{i=1}^{k} p_i = 1$, avec $k$ le nombre de modalités de $X$   
+    
+* $X$ = "le numéro de la face d'un dé"   
+
+<img src="figures/intro-stat-tests_unnamed-chunk-2-1.png" style="display: block; margin: auto;" />
+
+
+## Variable quantitative continue
+
+*  l'ensemble des valeurs que $X$ peut prendre est infini  
+$\rightarrow p(X=x_i) = 0$
+
+* se caractérise par sa **densité de probabilité** = la fonction $f(x)$ définie par : 
+$$P[x < X \leq x + dx] = f (x) dx \textrm{   pour } x \in  \mathbb{R}$$
+
+
+* la **fonction de répartition** est la fonction $F(X)$ telle que : 
+$$ F(x)=P[X \leq x] = \int_{-\infty}^x f(u)du \textrm{   pour } x \in  \mathbb{R}$$
+
+
+<img src="figures/intro-stat-tests_unnamed-chunk-3-1.png" style="display: block; margin: auto;" />
+ 
+  
+
+   
 
 
 ## Etude de cas : le myélome multiple (MM)
@@ -103,9 +199,9 @@ $\rightarrow$ **fractures** peuvent aisément se produire à ces endroits
 
 
 
-## Question statistique 
+## Cas d'étude 
 <div style="float:left;width:75%;">
-**Est-ce le dosage molécule déoxypyridinoline (pyr) est un bon marqueur pour détecter la maladie ?**   
+**Est-ce le dosage urinaire de la molécule déoxypyridinoline (pyr) est un bon marqueur pour détecter le MM ?**   
 </div>  
 <div style="float:right;width:25%;">   
 ![](img/pyr.png){width=40%}   
@@ -116,58 +212,25 @@ $\quad$
 
 $\rightarrow$ est-ce que le taux de pyr des patients malades est plus grand que celui des individus sains ?
 
+* X ="Taux de pyr" (micmol/mmolcreat) 
+* US = un individu $\quad \quad \rightarrow$ type = quantitative continue
+
 <center>
-![](img/pop1.png){width=70%}    
+![](img/estimation1.png){width=55%}
+</center>  
+
+**Population** = ensemble d’individus ayant des caractéristiques qui leur sont propres  
+
+
+## Mise en place du protocole 
+
+$\rightarrow$ Récolte des données
+
+<center>
+![](img/estimation4.png){width=70%}
 </center>
 
-$\quad$   
-
-**Population** = ensemble d’individus ayant des caractéristiques qui leur sont propres 
-
-## Experience aléatoire / variable aléatoire
-<center>
-![](img/ExpAlea.png){width=60%}
-</center>
-
-* Que mesure-t-on lors de l'expérience : $X$ = 'le taux de pyr' $\rightarrow$ **Variable aléatoire**
-* Sur qui/quoi la variable aléatoire est mesurée : '1 patient' $\rightarrow$ **Unité statistique**
-
-
-##Variables aléatoires (VA)
-
-* Notations : 
-    + Variable aléatoire : $X$
-    + Ses valeurs : $x_i$ 
-
-
-* Caractérisée par son **espérance** et sa **variance**
-    + **Espérance** ($E(X)$) : caractérise la tendance centrale, la valeur moyenne, prise par la VA
-    + **Variance** ($V(X)$) : caractérise la dispersion de la variable autour de son espérance
-
-<center>
-![](img/typeVA.png){width=50%}
-</center>  
-
-
-## Cas d'étude
-<center>
-**Question biologique**    
-
-Est-ce que le taux de pyr des patients malades est plus grand que celui des individus sains ?
-</center>  
-
-$\quad$
-
-* X ="Taux de pyr"
-* US = un individu
-* type = quantitative continue
-
-<center>
-![](img/estimation1.png){width=70%}
-</center>  
-
-
-## Cas d'étude : présentation des données
+## Analyse des données avec R
 
 
 ```r
@@ -179,35 +242,9 @@ dim(dataMyelom)
 [1] 218  38
 ```
 
-```r
-colnames(dataMyelom)
-```
-
-```
- [1] "numero"   "diagn"    "stade"    "sstade"   "statut"   "sexe"     "adiag"    "typeig"   "kaplam"   "pyr"      "bp1"      "caryo"    "nbchrom"  "hb"       "gb"       "plq"      "plasmo"   "creat"    "ctx"      "ntx"      "fract"    "calcemie" "pic"      "albumine" "beta2"    "ldh"     
-[27] "crp"      "ploid"    "tt1"      "etatdn"   "agedg"    "deldgpr"  "agepr"    "ageprc"   "deldgdn"  "delprdn"  "deldn"    "normchr" 
-```
 
 
 
-```r
-str(dataMyelom[,c("diagn", "pyr")])
-```
-
-```
-'data.frame':	218 obs. of  2 variables:
- $ diagn: int  1 1 1 1 1 1 1 1 1 1 ...
- $ pyr  : num  5.48 8.93 6.1 13.29 5.35 ...
-```
-
-
-* `diagn` = 0 $\rightarrow$ individus non malades   
-* `diagn` = 1 $\rightarrow$ patients malades  
-
-
-## Description des deux échantiilons
-
-* taille des échantillons
 
 ```r
 table(dataMyelom[,"diagn"])
@@ -219,20 +256,12 @@ table(dataMyelom[,"diagn"])
  40 178 
 ```
 
-* échantillon 1 : 40 individus sains
 
-```r
-ind.sain <- which(dataMyelom[,"diagn"]==0)
-pyr0 <- dataMyelom[ind.sain,"pyr"]
-```
-  
-* échantillon 2 : 178 patients malades
+* `diagn` = 0 $\rightarrow$ individus non malades   
+* `diagn` = 1 $\rightarrow$ patients malades  
 
 
-```r
-ind.malade <- which(dataMyelom[,"diagn"]==1)
-pyr1 <- dataMyelom[ind.malade,"pyr"]
-```
+
 
 
 ## Description des deux échantillons
@@ -241,25 +270,32 @@ pyr1 <- dataMyelom[ind.malade,"pyr"]
 
 
 ```r
-par(mar=c(3,3,1,1))
-boxplot(pyr~diagn, data=dataMyelom)
+boxplot(pyr~diagn, data=dataMyelom, ylab="Valeur de pyr (micmol/mmolcreat)", col = "steelblue3")
 ```
 
-<img src="figures/07_tests_multiplesunnamed-chunk-7-1.png" style="display: block; margin: auto;" />
+<img src="figures/intro-stat-tests_unnamed-chunk-8-1.png" style="display: block; margin: auto;" />
 
+
+## Mise en place du protocole 
+
+$\rightarrow$ Récolte des données
+
+<center>
+![](img/estimation3.png){width=65%}
+</center>
 
 ## Estimation de paramètres
 <div class="col2">
 
-* estimateur de l'espérance : 
+* estimateur de l'espérance de $X$ = moyenne de $X$ dans l'échantillon
 $$ \widehat{\mu} = m = \frac{\sum_{i=1}^{n}x_i}{n}$$
 
-* estimateur de la variance : 
+* estimateur de la variance de $X$  
 $$ \widehat{\sigma^2} = s^2 = \frac{1}{n-1} \sum_{i=1}^{n}(x_i-m)^2$$
 </div>
 
 
-* calcul de la moyenne de pyr dans les deux échantillons
+* calcul de l'**estimateur de l'espérance** de $X$ dans les deux échantillons
 
 ```r
 by(dataMyelom[,"pyr"], dataMyelom["diagn"], mean)
@@ -273,10 +309,41 @@ diagn: 1
 [1] 7.241742
 ```
 
+
+* $m_1 \ne m_2$ : Ne signifie pas que $\mu_1 \ne \mu_2$
+
+## Les fluctuations d'échantillonnage
+
+* 1 population où $X \sim \mathcal{N}(\mu=4; \sigma^2=12)$  
+
+1. tire un échantillon de 20 indidivus et calcule la moyenne de $X$ dans cet échantillon
+
+```r
+ech1 <- rnorm(n=20, mean=4, sd=sqrt(12))
+mean(ech1)
+```
+
+```
+[1] 4.677439
+```
+
+2. tire un deuxième échantillon de 20 indidivus et calcule la moyenne de $X$ dans cet échantillon
+
+```r
+ech2 <- rnorm(n=20, mean=4, sd=sqrt(12))
+mean(ech2)
+```
+
+```
+[1] 4.922556
+```
+
+$\rightarrow$ Les différences entre les deux estimateurs sont dues aux **fluctuations d'échantillonnage**
+
 ## Estimation de paramètres
 <div class="col2">
 
-* estimateur de l'espérance : 
+* estimateur de l'espérance de $X$ = moyenne de $X$ dans l'échantillon
 $$ \widehat{\mu} = m = \frac{\sum_{i=1}^{n}x_i}{n}$$
 
 * estimateur de la variance : 
@@ -284,50 +351,31 @@ $$ \widehat{\sigma^2} = s^2 = \frac{1}{n-1} \sum_{i=1}^{n}(x_i-m)^2$$
 </div>
 
 
-* calcul de la variance de pyr dans les deux échantillons
+* calcul de l'**estimateur de la variance** de $X$ dans les deux échantillons
 
 ```r
-by(dataMyelom[,"pyr"], dataMyelom["diagn"], sd)
+by(dataMyelom[,"pyr"], dataMyelom["diagn"], var)
 ```
 
 ```
 diagn: 0
-[1] 2.527974
+[1] 6.390654
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
 diagn: 1
-[1] 4.089944
+[1] 16.72764
 ```
 
 
-##Quelle confiance donner aux résultats ?  
-
-* 1 population : $X \sim \mathcal{N}(\mu=14.3 ; \; \sigma^2=24.6)$
-* Tire 1000 échantillons dans la population et calcule la moyenne de $X$ dans les échantillons
-
-
-```r
-nb.simul <- 1000 ; val.mean <- rep(NA, length = nb.simul)
-for(i in 1: nb.simul){
-  ech <- rnorm(n = 100, mean=14.3, sd = sqrt(24.6)) ;   val.mean[i] <- mean(ech)
-}
-hist(val.mean,xlab="estimateur de mu", main=paste(nb.simul,"simulations", sep=" "),breaks=20)
-```
-
-<img src="figures/07_tests_multiplesunnamed-chunk-10-1.png" style="display: block; margin: auto;" />
 
 ## Estimation d'un paramètre : Intervalle de confiance (IC) 
 
-<div style="float:left;width:60%;"> 
+
 * Apporte deux informations :
     + les valeurs possibles du paramètre $\theta$ à estimer
     + le degré de confiance attribué à ces valeurs  
-</div>
 
-<div style="float:right;width:40%;"> 
-* Prend en compte 
-    +  la **variabilité** des données     
-    +  la **taille de l’échantillon**   
-</div>   
+  
+ 
 $\quad$
 
 * **IC de la moyenne** = intervalle $[m_{inf}; m_{sup}]$ dans lequel on considère que $\mu$  a une probabilité $(1-\alpha)$ de se trouver 
@@ -344,15 +392,20 @@ $$ p(m_{inf} < \mu < m_{sup}) = 1- \alpha $$
 </div>
 ##IC de la moyenne : 2 cas
 
+
+* Prend en compte 
+    +  la **variabilité** des données     
+    +  la **taille de l’échantillon**  
+
 * si  $n > 30$: 
-$$IC_{1-\alpha} = M \pm z_{1-\frac{\alpha}{2}} \times \sqrt{ \frac{s^2}{n} }$$    
+$$IC_{1-\alpha} = \left[ m \pm z_{1-\frac{\alpha}{2}} \times \sqrt{ \frac{s^2}{n} } \right]$$    
     + $z_{1-\frac{\alpha}{2}}$ : quantile de la loi normale centrée réduite d'ordre $\alpha$
 
 
 $\quad$
 
 * si $n < 30$ et $X \sim \mathcal{N}(\mu; \sigma^2)$
-$$IC_{1-\alpha} = M \pm t_{\alpha ; \textrm{(n-1)ddl}} \times \sqrt{\frac{s^2}{n}}$$
+$$IC_{1-\alpha} = \left[m \pm t_{\alpha ; \textrm{(n-1)ddl}} \times \sqrt{\frac{s^2}{n}} \right]$$
     + $t_{\alpha ; \textrm{(n-1)ddl}}$ : quantile de la loi de student d'ordre $\alpha$ à $(n-1)$ degrés de liberté 
 
 
@@ -360,43 +413,45 @@ $$IC_{1-\alpha} = M \pm t_{\alpha ; \textrm{(n-1)ddl}} \times \sqrt{\frac{s^2}{n
 
   
   
-## IC du taux de pyr
+## IC du taux de pyr à 95%
 
-* **échantillon 1** : 15 patients sains 
+* **échantillon 1** : 40 patients sains 
 
 
 ```r
-alpha <- 0.5
-borneInf.0 <- mean(pyr0) - qt(1-alpha/2, df=(length(pyr0)-1)) * sqrt(var(pyr0)/length(pyr0)) 
-borneSup.0 <- mean(pyr0) + qt(1-alpha/2, df=(length(pyr0)-1)) * sqrt(var(pyr0)/length(pyr0)) 
+alpha <- 0.05
+pyr0 <- dataMyelom[which(dataMyelom[,"diagn"]==0),"pyr"]
+borneInf.0 <- mean(pyr0) - qnorm(1-alpha/2) * sqrt(var(pyr0)/length(pyr0)) 
+borneSup.0 <- mean(pyr0) + qnorm(1-alpha/2) * sqrt(var(pyr0)/length(pyr0)) 
 round(c(borneInf.0, borneSup.0),2)
 ```
 
 ```
-[1] 5.43 5.97
+[1] 4.92 6.48
 ```
   
-* **échantillon 2** : 14 patients atteints de MM 
+* **échantillon 2** : 178 patients atteints de MM 
 
 
 ```r
-borneInf.1 <- mean(pyr1) - qt(1-alpha/2, df=(length(pyr1)-1)) * sqrt(var(pyr1)/length(pyr1)) 
-borneSup.1 <- mean(pyr1) + qt(1-alpha/2, df=(length(pyr1)-1)) * sqrt(var(pyr1)/length(pyr1)) 
+pyr1 <- dataMyelom[which(dataMyelom[,"diagn"]==1),"pyr"]
+borneInf.1 <- mean(pyr1) - qnorm(1-alpha/2) * sqrt(var(pyr1)/length(pyr1)) 
+borneSup.1 <- mean(pyr1) + qnorm(1-alpha/2) * sqrt(var(pyr1)/length(pyr1)) 
 round(c(borneInf.1, borneSup.1),2)
 ```
 
 ```
-[1] 7.03 7.45
+[1] 6.64 7.84
 ```
 
 
-<img src="figures/07_tests_multiplesunnamed-chunk-14-1.png" style="display: block; margin: auto;" />
+<img src="figures/intro-stat-tests_unnamed-chunk-16-1.png" style="display: block; margin: auto;" />
 
 
-## Cas d'étude : Introductions aux tests statistiques
+## Cas d'étude : Introduction aux tests statistiques
  
 <center> 
-  ![](img/estimation2.png){width=65%}
+  ![](img/estimation2.png){width=60%}
 </center>
 
 
@@ -408,13 +463,16 @@ $\quad$
     + elles s'expliquent par le **hasard** et par le **facteur maladie** : H1 (hypothèse alternative)
 
   
+  
+
+  
 ## Déroulement d'un test statistique
   
 * Définit deux hypothèses sur un des paramètres de la VA
-    + **hypothèse nulle (H0)** : égalité des paramètres : <span style="color: #8f8f8f">$\mu_1 = \mu_2 = \mu$ </span>  
+    + **hypothèse nulle (H0)** : égalité des paramètres : $\mu_1 = \mu_2 = \mu$  
     Les différences observées sont expliquées uniquement par le hasard   
-    + **hypothèse alternative (H0)** : égalité des paramètres : <span style="color: #8f8f8f">$\mu_1 < \mu_2$ </span>  
-    Les différences observées sont expliquées uniquement par le hasard et par le facteur   
+    + **hypothèse alternative (H1)** : inégalité des paramètres : $\mu_1 < \mu_2$  
+    Les différences observées sont expliquées à la fois par le hasard et par le facteur   
     
   
 $\quad$
@@ -427,36 +485,37 @@ $\quad$
 $\rightarrow$ Est-ce que les données des échantillons ($m_1$ et $m_2$) sont compatibles avec H0 ?  
 
 * si oui $\rightarrow$ non rejet de H0  
-* si non $\rightarrow$ rejet de H0
-    
+le hasard explique à lui seul les différences entre les deux moyennes observées
+
+* si non $\rightarrow$ rejet de H0  
+le hasard et le facteur expliquent les différences entre les deux moyennes observées    
     
 ## Est-ce que les données sont compatibles avec H0 ?
     
-* **H0 : Hypothèse de référence** : $\mu1 = \mu_2$  
-$\rightarrow$ calculer la probabilité d'obtenir sous H0 le même résultat que celui observé sur les échantillons = **p-value**  
 1. Définir un **critère statistique** $S$ dont la loi sous H0 est connue  
-<span style="color: #8f8f8f"> $S = M_1 - M_2$  avec $M$=moyenne de $X$ dans 1 échantillon   </span>    
+ $S = M_2 - M_1$  avec $M$=moyenne de $X$ dans 1 échantillon    
+$\quad$  
+Sous H0 ( $n_1$ et $n_2 > 30$) : $S \sim \mathcal{N} \left(0 ; \sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2} }\right)$
 
-2. Calculer $s_{obs}$ = valeur de $S$ calculée sur les échantillons : <span style="color: #8f8f8f"> $s_{obs} = m_1 - m_2$   </span>   
 
-<img src="figures/07_tests_multiplesunnamed-chunk-15-1.png" style="display: block; margin: auto;" />
+<img src="figures/intro-stat-tests_unnamed-chunk-17-1.png" style="display: block; margin: auto;" />
   
+2. Calculer $s_{obs}$ = valeur de $S$ calculée sur les échantillons : $s_{obs} = m_1 - m_2$    
+
+3. Regarde si la réalisation  $s_{obs}$ est fortement probable sous H0 (quand $\mu_1 = \mu_2$)
+
+
+
 ## Est-ce que les données sont compatibles avec H0 ?
 
-* **H0 : Hypothèse de référence** : $\mu1 = \mu_2$  
-$\rightarrow$ calculer la probabilité d'obtenir sous H0 le même résultat que celui observé sur les échantillons = **p-value**  
-  
+* $S = M_2 - M_1$  avec $S \sim \mathcal{N} \left(0 ; \sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2} }\right)$
+* $s_{obs} = m2-m1$
 
-1. Définir un **critère statistique** $S$ dont la loi sous H0 est connue  
-<span style="color: #8f8f8f"> $S = M_1 - M_2$  avec $M$=moyenne de $X$ dans 1 échantillon   </span>    
-
-2. Calculer $s_{obs}$ = valeur de $S$ calculée sur les échantillons : <span style="color: #8f8f8f"> $s_{obs} = m_1 - m_2$   </span>   
-
+* Calcule la probabilité d'obtenir sous H0 le même résultat que celui observé (ou plus grand) sur les échantillons = **p-value**  $= p(S > s_{obs})$
 
 <div class="col2">
-<img src="figures/07_tests_multiplesunnamed-chunk-16-1.png" style="display: block; margin: auto;" />
+<img src="figures/intro-stat-tests_unnamed-chunk-18-1.png" style="display: block; margin: auto;" />
  
-3. Calculer la **p-value** = $p(S>s_{obs})$  
 
 * forte valeur de p-value $\rightarrow$ : $s_{obs}$ est fortement probable sous $H0$
  </div>
@@ -467,22 +526,19 @@ $\rightarrow$ calculer la probabilité d'obtenir sous H0 le même résultat que 
 
 ## Est-ce que les données sont compatibles avec H0 ?
 
-* **H0 : Hypothèse de référence** : $\mu1 = \mu_2$  
-$\rightarrow$ calculer la probabilité d'obtenir sous H0 le même résultat que celui observé sur les échantillons = **p-value**  
+* $S = M_2 - M_1$  avec $S \sim \mathcal{N} \left(0 ; \sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2} }\right)$
+* $s_{obs} = m2-m1$
+
+* Calcule la probabilité d'obtenir sous H0 le même résultat que celui observé (ou plus grand) sur les échantillons = **p-value**  $= p(S > s_{obs})$
   
-
-1. Définir un **critère statistique** $S$ dont la loi sous H0 est connue  
-<span style="color: #8f8f8f"> $S = M_1 - M_2$  avec $M$=moyenne de $X$ dans 1 échantillon   </span>    
-
-2. Calculer $s_{obs}$ = valeur de $S$ calculée sur les échantillons : <span style="color: #8f8f8f"> $s_{obs} = m_1 - m_2$   </span>   
 
 
 <div class="col2">
-<img src="figures/07_tests_multiplesunnamed-chunk-17-1.png" style="display: block; margin: auto;" />
+<img src="figures/intro-stat-tests_unnamed-chunk-19-1.png" style="display: block; margin: auto;" />
  
-3. Calculer la **p-value** = $p(S>s_{obs})$  
 
-* très faible valeur de p-value $\rightarrow$ : $s_{obs}$ est très peu probable sous $H0$
+* forte valeur de p-value $\rightarrow$ : $s_{obs}$ est fortement probable sous $H0$  
+* faible valeur de p-value $\rightarrow$ : $s_{obs}$ est très peu probable sous $H0$
  </div>
   
   
@@ -492,31 +548,23 @@ $\rightarrow$ calculer la probabilité d'obtenir sous H0 le même résultat que 
 <div style="float:left;width:70%;">
 * p-value = 0.03   
 $\rightarrow$ 3% de chance que la valeur $s_{obs}$ se produise sous H0  
-$\rightarrow$ on a 3% de chance que 2 échantillons pris au hasard aient la même différence (ou une différence plus grande) que celle observée   
-$\quad$
-$\quad$
+$\rightarrow$ on a 3% de chance que 2 échantillons pris au hasard aient la même différence (ou plus grande) que celle observée   
+
 
 </div>  
-<div style="float:right;width:30%;">  
-<img src="figures/07_tests_multiplesunnamed-chunk-18-1.png" style="display: block; margin: auto;" />
+<div style="float:right;width:30%;"> 
+<img src="figures/intro-stat-tests_unnamed-chunk-20-1.png" style="display: block; margin: auto;" />
  </div> 
 
+$\quad$   
+
+* p-value = 0.67  
+$\rightarrow$ 67% de chance que la valeur $s_{obs}$ se produise sous H0  
+$\rightarrow$ on a 67% de chance que 2 échantillons pris au hasard aient la même différence (ou plus grande) que celle observée 
 
 
-$\quad$  
-    
-* on choisit un risque $\alpha$ comme valeur seuil : souvent 5%
-    + si p-value > 0.05 $\rightarrow$ non rejet de H0  
-    $\rightarrow$ les différences observées sur les échantillons sont expliquées uniquement par le hasard  
-    $\rightarrow$ aucun effet facteur  
-    
-    
-    + si p-value < 0.05 $\rightarrow$  rejet de H0  
-    $\rightarrow$ Les différences observées ne sont pas seulement dues aux fluctuations d'échantillonnage. Il y a donc un effet du facteur  
-    $\rightarrow$ les différences observées sur les échantillons sont expliquées par le hasard et par le facteur  
   
-  
-## les erreurs
+## Les erreurs
   
 Deux erreurs possibles quand on conclut au test : 
 
@@ -542,16 +590,37 @@ Deux erreurs possibles quand on conclut au test :
 La probabilité de détecter une différence alors qu'il en existe une   
 
 
-## Diminuer l'erreur de type II / Augmenter la puissance du test 
-  
-1. Augmenter la taille d'effet
-2. Diminuer la variabilité des données (variance des données)
-3. Augmenter la taille de l'échantillon
-  
-<center>
-![](img/effetPuissance.png){width=75%}
-</center>
 
+  
+## Interprétation de la p-value :  $p(S>s_{obs})$  
+  
+<div style="float:left;width:70%;">
+* p-value = 0.03   
+$\rightarrow$ 3% de chance que la valeur $s_{obs}$ se produise sous H0  
+$\rightarrow$ on a 3% de chance que 2 échantillons pris au hasard aient la même différence (ou plus grande) que celle observée   
+
+
+</div>  
+<div style="float:right;width:30%;"> 
+<img src="figures/intro-stat-tests_unnamed-chunk-21-1.png" style="display: block; margin: auto;" />
+ </div> 
+
+$\quad$   
+
+* p-value = 0.67  
+$\rightarrow$ 67% de chance que la valeur $s_{obs}$ se produise sous H0  
+$\rightarrow$ on a 67% de chance que 2 échantillons pris au hasard aient la même différence (ou plus grande) que celle observée 
+
+$\quad$  
+    
+* on choisit un risque $\alpha$ comme valeur seuil : souvent 5%
+    + si p-value > 0.05 $\rightarrow$ non rejet de H0  
+    $\rightarrow$ les différences observées sur les échantillons sont expliquées uniquement par le hasard  
+    
+    
+    + si p-value < 0.05 $\rightarrow$  rejet de H0  
+    $\rightarrow$ Les différences observées sont dues aux fluctuations d'échantillonnage et au facteur   
+  
 
 
 ## Comparaison du taux de pyr chez les patients malades et contrôles
@@ -589,28 +658,59 @@ Le taux de pyr des individus contrôles est significativement plus petit de celu
 Le dosage de pyr est un bon marqueur de la maladie. 
 
 
-## Les différents types de tests : suivant H1
+
+
+## Les différents types de tests 
+
+* variable réelle continue : **Tests sur les moyennes**
+    + 1 échantillon et 1 population de référence  
+        + grand échantillon : test espilon   
+        + petit échantillon : test de student  
+        $\rightarrow$ : test paramétrique : test de student  (1 conditions de validité)  
+        $X$ suit doit suivre une loi normale dans la population d'où est tiré l'échantillon   
+        $\rightarrow$ tests non paramétriques : test de Wilcoxon ou test de Mann-Whitney  
+    + 2 échantillons    
+        + grands échantillons : test espilon   
+        + petits échantillons 
+        $\rightarrow$ : test paramétrique : test de student  (2 conditions de validité)  
+        $X$ doit suivre un loi normale dans les deux populations  
+        Egalité des deux variances  
+        $\rightarrow$ tests non paramétriques : test de Kruskal-Wallis
+        
+    + $\geq$ 3 échantillons  
+        + test paramétrique ANOVA  (2 conditions de validité)
+        $X$ doit suivre un loi normale dans les différentes populations   
+        Egalité des $k$ variances 
+        + test non paramétrique : test de Kruskal-Wallis
+        
+ 
+ 
+## Les différents types de tests 
+
+* test sur les distribution : 
+    + à une loi normale : test de Shapiro
+    + à une distribution théorique : test du Chi$^2$ d'homogénéité  
+    + deux distributions  : test du Chi$^2$ d'adéquation
+    
+
+* deux variables aléatoires (lien) :  
+    + réelles continues :  
+        + test paramétrique : test du coefficient de corrélation de Pearson  
+        binormalité de la variable $X$  
+        + test non paramétrique : test du coefficient de corrélation de Spearman  
+    + réelles discrètes :  
+        + test du chi$^2$ d'indépendance  
+  
+  
+## Merci de votre attention !!!
+
+$\quad$
+$\quad$
 
 <center>
-H0 : $\mu_1 = \mu_2$  
-
-
-<div style="float:left;width:50%;">
-Test unilatéral : un sens dans l'effet   
-H1 : $\mu_1 \geq \mu_2$  
-</div>
-
-<div style="float:right;width:50%;">
-Test bilatéral : aucun sens dans l'effet   
-H1 : $\mu_1 \ne \mu_2$  
-</div>
-
-
-![](img/Bi-UniLateral.png){width=65%}
+Place au TP : Etude des caractéristiques des patients atteints d'une cirrhose du foie et des individus sains.
 </center>
 
-
-## Les différents types de tests : suivant la VA
 
 <center>
 ![](img/whichTest.png){width=80%}
