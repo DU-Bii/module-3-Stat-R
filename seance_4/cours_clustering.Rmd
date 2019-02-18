@@ -91,10 +91,10 @@ mes.iris.scaled <- data.frame(scale(mes.iris, T, F))
 	+ on connait le partitionnement sur un jeu de données
 	+ on cherche le groupe (la classe) de nouvelles données
 
-# Partionnement linéaire
+# Partionnement=Clustering
 ![Y a t-il des groupes ?](img/figure1.png)
 
-# Partionnement linéaire
+# Partionnement=Clustering
 ![Oui, 4 groupes](img/figure2.png)
 
 # Apprentissage
@@ -635,7 +635,8 @@ $$R=\frac{m+s}{t}$$
 
 # Comparaison de clustering: Adjusted Rand Index
 
-- ARI=valeur attendue d'être d'accord
+$$ ARI=\frac{RI-Expected RI}{Max RI -Expected RI}$$
+- ARI=RI normalisé
 - Prend en compte la taille des classes
 - ARI=1 pour classification identique
 - ARI $\simeq$ 0 pour classification aléatoire (peut être <0)
