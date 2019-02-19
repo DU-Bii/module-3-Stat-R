@@ -4,26 +4,6 @@ subtitle: Classification Hiérarchique et Kmeans
 author: "Anne Badel et Frédéric Guyon"
 date: "`r Sys.Date()`"
 output:
-  beamer_presentation:
-    colortheme: dolphin
-    fig_caption: no
-    fig_height: 5
-    fig_width: 5
-    fonttheme: structurebold
-    highlight: default
-    incremental: no
-    keep_tex: no
-    slide_level: 1
-    theme: Montpellier
-    toc: yes
-  html_document:
-    fig_caption: yes
-    highlight: zenburn
-    self_contained: no
-    theme: cerulean
-    toc: yes
-    toc_depth: 3
-    toc_float: yes
   slidy_presentation:
     highlight: default
     incremental: no
@@ -38,6 +18,26 @@ output:
     theme: cerulean
     toc: yes
     widescreen: yes
+  html_document:
+    fig_caption: yes
+    highlight: zenburn
+    self_contained: no
+    theme: cerulean
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+  beamer_presentation:
+    colortheme: dolphin
+    fig_caption: no
+    fig_height: 5
+    fig_width: 5
+    fonttheme: structurebold
+    highlight: default
+    incremental: no
+    keep_tex: no
+    slide_level: 1
+    theme: Montpellier
+    toc: yes
   pdf_document:
     fig_caption: yes
     highlight: zenburn
@@ -94,10 +94,18 @@ nb.var=ncol(mes.iris)
 	+ on cherche le groupe (la classe) de nouvelles données
 
 # Partionnement=Clustering
-![Y a t-il des groupes ?](img/figure1.png)
+
+
+```{r are_there_clusters, echo=FALSE, out.width="60%", fig.cap="Y a-t-il des groupes ?"}
+include_graphics(path = "img/figure1.png")
+```
+
 
 # Partionnement=Clustering
-![Oui, 4 groupes](img/figure2.png)
+
+```{r yes_there_are_4_groups, echo=FALSE, out.width="60%", fig.cap="Oui, 4 groupes. "}
+include_graphics(path = "img/figure2.png")
+```
 
 # Apprentissage
 ![2 groupes](img/figure3.png)
