@@ -1,7 +1,7 @@
 ## Conda environment for the course "Statistical Analysis with R" 
 ## of the "Diplome Universitaire en Bioinformatique integrative" (DU-Bii).
 ## https://du-bii.github.io/accueil/
-name: dubii_r-2019
+name: du_bii_m3_stat_r-2019
 
 channels:
   - bioconda
@@ -27,11 +27,12 @@ dependencies:
   - conda-forge::r-factoextra   # To plot PCA output
   - conda-forge::r-cowplot      # Add-on to ggplot2 for enhanced design
   - conda-forge::r-corrplot     # Graphical display of a correlation matrix, confidence interval
-  - conda-forge::r-momr         # Analysis of metagenomic data
+#  - conda-forge::r-momr         # Analysis of metagenomic data
   - conda-forge::r-gridExtra    # Graphical display of several plots
   - conda-forge::r-ade4         # PCoA
   - conda-forge::r-vegan        # Distances calculations
   - conda-forge::r-ggpubr       # Stats on the graphs
+  - conda-forge::r-clues         # For clustering
 
   ## Bioconductor packages
   - bioconda::bioconductor-deseq2
