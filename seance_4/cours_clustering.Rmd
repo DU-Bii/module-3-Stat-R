@@ -175,6 +175,17 @@ $$d("BONJOUR", "BONSOIR")=2$$
 - Distances d'arbre (Neighbor Joining)
 - Distances ultra-métriques (phylogénie UPGMA)
 
+# Distances plus classiques en génomiques
+
+Comme vu lors de la séance 3, il y a d'autres mesures de distances :
+
+  - Bray-Curtis
+  - Jaccard
+  - Jensen-Shannon
+  - coefficient de corrélation de Pearson ou de Spearman
+  
+rq : lors du TP, sur les données d'expression RNA-seq, nous utiliserons le coefficient de corrélation de Spearman et la distance associée, $d = 1-r^2$
+
 # Distances entre groupes
 
 - Single linkage
