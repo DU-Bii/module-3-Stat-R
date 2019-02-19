@@ -34,12 +34,13 @@ dependencies:
   - conda-forge::r-ggpubr       # Stats on the graphs
   - conda-forge::r-clues         # For clustering
 
-  ## Bioconductor packages
+  ## Bioconda packages
   - bioconda::bioconductor-deseq2
   - bioconda::bioconductor-edger 
   - bioconda::bioconductor-limma
   - bioconda::bioconductor-qvalue
   - bioconda::bioconductor-multtest
+  - bioconda::r-classdiscovery
   - bioconda::r-mixomics # For the course of integrative bioinformatics
   - bioconda::bioconductor-recount # used to generate the TCGA study case
   
