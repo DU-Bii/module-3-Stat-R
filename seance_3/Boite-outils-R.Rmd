@@ -1,0 +1,321 @@
+---
+title: "Boîte à outils R"
+author: "Magali Berland"
+date: "18/02/2019"
+output:
+  html_document:
+    df_print: paged
+    toc: yes
+  html_notebook:
+    highlight: zenburn
+    theme: sandstone
+    toc: yes
+    toc_float: no
+  pdf_document:
+    toc: no
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(ggpubr)
+knitr::opts_chunk$set(echo = TRUE, results = "show", warning = FALSE, message = FALSE,
+                      eval = FALSE)
+```
+
+```{r}
+library(tidyverse)
+library(ggpubr)
+```
+
+
+## 1. Fonctionalités de RStudio (Environnement, Historique, Console, Terminal, Scripts)
+* Environnement : supprimer tous les objets, par exemple en commençant une nouvelle analyse
+* Historique : toutes les commandes + outil de recherche
+* Panneau du bas : Files, Plots, Packages, Help
+* Script R : raccourcis Ctrl+Entrer pour envoyer le code dans la console
+
+## 2. Travailler en mode Projet
+* File > New Project
+* Avantages : 
+  + Pas besoin d'utiliser les fonctions setwd() pour des raisons de portabilité du code !!
+  + Nouvelle session R
+  + Sauvegarde des fichiers temporaires projets-spécifiques (fichiers, onglets, variables dans environnement)
+  + Menu déroulant sur la droite pour facilement changer de projet
+
+
+## 3. Créer un notebook et générer des rapports html, pdf, word
+* File > New File > R Notebook
+* Enregistrer le fichier
+* Cliquer sur preview
+* Ouvrir la fenêtre dans un navigateur
+* Cliquer sur run et enregistrer
+* Insérer un nouveau chunk et enregistrer
+* knit to pdf
+* knit to word
+
+Avantage : permettra la programmation lettrée et la génération de rapports facilement !
+
+## 4. Les types de données en R (les conversions entre différents types)
+```{r}
+# Les booléens
+(bool = c(TRUE, TRUE, FALSE))
+
+# Les numériques
+(num = as.numeric(bool))
+
+# Les characters
+(char = as.character(num))
+
+# Les facteurs
+(fact = as.factor(char))
+
+# Les conversions en sautant des étapes ne se passent pas bien
+as.numeric(fact)
+as.numeric(as.character(fact))
+
+```
+
+## 5. Manipuler les facteurs (réordonner les niveaux, gérer les variables ordinales)
+```{r}
+# Création d'un vecteur
+(y = c(rep("grand", 8), rep("petit", 6)))
+
+#Conversion en facteur
+(y = as.factor(y))
+
+#Réordonner les niveaux
+(y = factor(y, levels = c("petit", "grand")))
+
+#Ajouter une notion d'ordre
+(y = factor(y,  levels = c("petit", "grand"), ordered = TRUE))
+
+```
+
+## 6. Convertir une variable quantitative en facteur (fonction `cut()`)
+
+```{r}
+(Age = round(rnorm(n = 20, mean = 40, sd = 10), digits = 0))
+
+(Age_quali = cut(x = Age, breaks = quantile(Age), labels = c("1Q", "2Q", "3Q", "4Q"), include.lowest = TRUE, ordered_result = TRUE))
+
+table(Age_quali)
+
+```
+
+## 7. Les chaines de caractères (fonctions `paste()` et `gsub()`)
+
+```{r}
+a = 'apple'
+b = 'orange'
+
+(paste(a, b))
+(paste(a, b, sep = "-"))
+
+gsub(pattern = "p", replacement = "P", x = a)
+
+```
+
+## 8. Les vecteurs (fonctions `seq()`, `rep()` et `names()`)
+
+```{r}
+# Créer un vecteur
+(x = c(1, 4, 6))
+
+(x = seq(from = 0, to = 10, by = 0.5))
+
+(x = seq(from = 0, to = 3, length.out = 10))
+
+(x = rep(0, 5))
+
+(x = rep(c(0, 1), c(5, 4)))
+
+(x = 1:12)
+
+# Sélectionner les élements d'un vecteur par position
+x[4]
+
+# Sélectionner les élements d'un vecteur par valeur
+x[x == 3]
+
+x[x > 0]
+
+x[x %in% c(1:3)]
+
+# Sélectionner les élements d'un vecteur par nom
+names(x) = month.name
+x
+x['February']
+
+```
+
+## 9. Les matrices (fonctions `colnames()`, `rownames()`, `t()`, `apply()`)
+
+```{r}
+(m = matrix(1:9, nrow = 3, ncol = 3))
+
+class(m)
+
+colnames(m) = paste("ind", 1:3, sep = "")
+m
+rownames(m) = paste("var", 1:3, sep = "")
+m
+t(m) #transposée de la matrice
+
+# Une matrice contient uniquement des élements du même type
+m[2,2] = 'a'
+m
+m[2,2] = 5
+m
+
+# conversion de type
+as.numeric(m)
+apply(m, 1, as.numeric)
+```
+
+## 10. Les listes (fonctions `summary()`, `lapply()`, `sapply()`, scope des variables)
+```{r}
+(l = list(x = 1:10, y = 'apple'))
+
+class(l)
+
+l$x
+l[[2]]
+l['y']
+
+summary(l)
+
+# Appliquer une fonction à tous les éléments d'une liste
+# Sortie : une autre liste
+lapply(X = l, FUN = length)
+
+# Comme lapply mais la sortie est un vecteur ou une matrice
+sapply(X = l, FUN = length)
+
+# Notion de scoping : la portée des variables
+x
+y
+
+```
+
+## 11. Les data.frame (fonctions `dim()`, `ncol()`, `nrow()`, `head()`, `View()`, `cbind()`, `rbind()`)
+```{r}
+(df = data.frame(x = 1:12, y = month.name))
+
+class(df)
+
+dim(df)
+ncol(df)
+nrow(df)
+
+head(df, n = 4) 
+
+View(df)
+
+cbind(df, nb = runif(12))
+
+rbind(df, c(13, "New"))
+df$y
+df$y = as.character(df$y)
+rbind(df, c(13, "New"))
+
+(df = data.frame(x = 1:12, y = month.name, stringsAsFactors = FALSE))
+df$y
+rbind(df, c(13, "New"))
+```
+
+## 12. Les tibbles
+```{r}
+library(tidyverse)
+# Dans la console
+swiss
+as_tibble(swiss) #Affichage plus concis
+# Plus de rownames !
+as_tibble(swiss, rownames = "Provinces")
+```
+
+## 13. Gérer les valeurs manquantes (fonctions `anyNA()`, `is.na()`, `colSums()`)
+```{r}
+metadata = readRDS(file = "TP-metagenomique/metadata.RDS")
+
+View(metadata)
+
+# Savoit quelles sont les colonnes concernées par les données manquantes
+apply(X = metadata, MARGIN = 2, anyNA)
+
+table(metadata$status)
+
+apply(X = metadata, MARGIN = 2, is.na)
+colSums(apply(X = metadata, MARGIN = 2, is.na))
+
+metadata %>%
+  filter(is.na(Crea) | is.na(Alb) | is.na(TB))
+
+metadata2 = metadata %>%
+  filter(!is.na(Crea) & !is.na(Alb) & !is.na(TB))
+
+colSums(apply(X = metadata2, MARGIN = 2, is.na))
+
+metadata %>%
+  filter(is.na(Enterotype))
+```
+
+## 14. Outils de manipulation des données (fonctions `select()`, `filter()`, opérateur `%>%`)
+```{r}
+# selectionner des colonnes
+select(metadata, status, BMI, INR)
+
+metadata %>%
+  select(status, BMI, INR)
+
+# sélectionner des colonnes conditionnellement
+select_if(metadata, is.factor)
+
+# filtrer les lignes
+filter(metadata, status == "liver")
+
+metadata %>% 
+  filter(status == "liver")
+
+
+# Combiner les opérations
+metadata %>%
+  filter(status == "liver") %>%
+  select(Age, BMI) %>%
+  plot()
+  
+# Trier une ou plusieurs colonnes avec arrange
+arrange(metadata, Age)
+
+arrange(metadata, -Age)
+
+# Récupérer les noms de lignes
+metadata %>%
+  rownames_to_column("Ind") %>%
+  arrange(Age) %>%
+  filter(Crea > 100)
+  
+```
+
+## 15. Visualisation des données (fonction `ggplot()`)
+```{r}
+
+ggplot(data = metadata, mapping = aes(x = Age, y = BMI))
+
+ggplot(data = metadata, mapping = aes(x = Age, y = BMI)) + 
+  geom_point()
+
+ggplot(data = metadata, mapping = aes(x = Gender, y = BMI)) + 
+  geom_point()
+
+ggplot(data = metadata, mapping = aes(x = Gender, y = BMI, fill = Gender)) + 
+  geom_boxplot() +
+  stat_compare_means()
+
+ggplot(data = metadata, mapping = aes(x = Gender, y = BMI, fill = Gender)) + 
+  geom_boxplot() +
+  stat_compare_means() +
+  facet_wrap(~status) 
+
+
+```
+

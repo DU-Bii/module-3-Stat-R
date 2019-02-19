@@ -1,0 +1,107 @@
+---
+title: "Correction de l'exercice sur l'ACP (jeu de données `microbiota.abundance`)"
+author: "Magali Berland"
+date: "18/02/2019"
+output:
+  html_document:
+    df_print: paged
+    toc: yes
+  html_notebook:
+    highlight: zenburn
+    theme: sandstone
+    toc: yes
+    toc_float: no
+  pdf_document:
+    toc: no
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(ggpubr)
+knitr::opts_chunk$set(echo = TRUE, results = "show", warning = FALSE, message = FALSE,
+                      eval = TRUE)
+```
+
+
+```{r}
+# Charger les library
+library(FactoMineR)
+library(factoextra)
+
+# Charger les jeux de données
+abonDF = readRDS(file = "../seance_2/data/microbiota.abundance.log.RDS")
+metadata = readRDS(file = "../seance_2/data/metadata.RDS")
+```
+
+
+Réaliser une ACP centrée réduite sur ce jeu de données.
+
+```{r}
+res.pca = PCA(abonDF, graph = FALSE)
+```
+
+  a. Quel pourcentage de la variance expliquée est représentée dans le premier plan factoriel ?
+
+```{r}
+fviz_eig(res.pca, addlabels = TRUE, ylim = c(0, 50))
+```
+
+8% de la variance est expliquée dans le premier plan factoriel
+
+  b. Proposez une représentation graphique des individus avec les individus malades d'une couleur et les individus sains d'une autre. 
+
+```{r}
+fviz_pca_ind(res.pca, 
+             geom.ind = "point", 
+             habillage = metadata$status, 
+             addEllipses = TRUE)
+
+```
+
+ c. Proposez une représentation graphique des individus avec les enterotypes de trois couleurs différentes. Que constatez-vous ?
+
+```{r, eval=FALSE}
+fviz_pca_ind(res.pca, 
+             geom.ind = "point", 
+             habillage = metadata$Enterotype, 
+             addEllipses = TRUE)
+
+# --> Message d'erreur: Error in `[.data.frame`(X$call$X, rownames(ind), grp, drop = FALSE) : undefined columns selected
+```
+
+
+
+```{r}
+metadata$Enterotype
+```
+
+
+```{r}
+all.equal(rownames(abonDF), rownames(metadata))
+
+na.enterotypes = which(is.na(metadata$Enterotype))
+
+res.pca2 = PCA(abonDF[-na.enterotypes, ], graph = FALSE)
+
+fviz_pca_ind(res.pca2, 
+             geom.ind = "point", 
+             habillage = as.factor(metadata$Enterotype[-na.enterotypes]), 
+             addEllipses = TRUE,
+             ellipse.level = 0.5,
+             axes = c(1,2))
+```
+
+
+
+```{r}
+# Contribution des variables aux axes
+fviz_contrib(res.pca, choice = "var", axes = 1, top = 10)
+fviz_contrib(res.pca, choice = "var", axes = 3, top = 10)
+
+```
+
+
+
+
+
+
