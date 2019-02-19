@@ -10,7 +10,7 @@
 | Contenu | HTML | pdf | Rmd |
 |-----------------------------|------|-----|-----|
 | Cours |  [[html](cours_clustering.html)] |  [[pdf](cours_clustering.pdf)] | [[Rmd](cours_clustering.Rmd)] |
-| Travaux pratiques | [[html](TP_clustering.html)]  | [[pdf](TP_clustering.pdf)] | [[Rmd]()] |
+| Travaux pratiques | [[html](TP_clustering.html)]  | [[pdf](TP_clustering.pdf)] | [[TP_correction.Rmd]()] |
 
 
 
