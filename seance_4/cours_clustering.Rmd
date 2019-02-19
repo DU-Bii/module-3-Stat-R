@@ -304,11 +304,9 @@ par(mfrow=c(1,1))
   - par une projection sur une ACP
 
 ```{r}
-iris.acp <- FactoMineR::PCA(mes.iris, graph=F, scale.unit=F)
-iris.scaled.acp <- FactoMineR::PCA(mes.iris.scaled, graph=F)
 par(mfrow=c(1,2))
-plot(iris.acp, title="données brutes", choix="ind")
-plot(iris.scaled.acp, title="données normalisées", choix="ind")
+biplot(prcomp(mes.iris), main="données non normalisées")
+biplot(prcomp(mes.iris, scale.=T), main="données normalisées")
 par(mfrow=c(1,1))
 ```
 
@@ -318,6 +316,8 @@ Nous utilisons la distance euclidienne
 
 ```{r echo=F}
 mes.iris.scaled <- scale(mes.iris, center=T, scale=F)
+iris.acp <- FactoMineR::PCA(mes.iris, graph=F, scale.unit=F)
+iris.scaled.acp <- FactoMineR::PCA(mes.iris.scaled, graph=F)
 ```
 
 ```{r}
