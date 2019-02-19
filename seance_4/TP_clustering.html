@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Anne Badel &amp; Frederic Guyon" />
+
+
+<title>Le TP de la séance 4, Clustering</title>
+
+<script src="TP_clustering_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="TP_clustering_files/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="TP_clustering_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="TP_clustering_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="TP_clustering_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="TP_clustering_files/navigation-1.1/tabsets.js"></script>
+
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Le TP de la séance 4, Clustering</h1>
+<h4 class="author"><em>Anne Badel &amp; Frederic Guyon</em></h4>
+
+</div>
+
+
+<div id="choisir-son-environnement-de-travail" class="section level3">
+<h3>Choisir son environnement de travail</h3>
+<ol style="list-style-type: decimal">
+<li>vous pouvez choisir de travail sur le cluster de l’IFB, <a href="https://rstudio.cluster.france-bioinformatique.fr/auth-sign-in">ici</a>
+<ul>
+<li>les données sont dans le répertoire :</li>
+</ul></li>
+<li>ou en local, sur nos machines
+<ul>
+<li>les données sont dans le répertoire :</li>
+<li>vous devez avoir la commande suivante dans votre <code>.bashrc</code> : <code>. /opt/sdv/anaconda/etc/profile.d/conda.sh</code></li>
+<li>puis vous devez lancer l’environnement <code>conda</code> adéquat : <code>conda activate</code></li>
+<li>et enfin lancer <code>rstudio</code> : <code>rstudio</code></li>
+</ul></li>
+</ol>
+</div>
+<div id="lire-les-donnees" class="section level3">
+<h3>Lire les données</h3>
+<p>Les données sont issues de la base Recount2 (<a href="https://jhubiostatistics.shinyapps.io/recount/" class="uri">https://jhubiostatistics.shinyapps.io/recount/</a>). Nous nous intéressons à la base TCGA, regroupant des données RNA-seq pour différents types de cancer. Nous nous intéressons ici uniquement aux données BIC concernant le cancer du sein.</p>
+<p>Les données ont été préparées pour vous, filtrage des données, normalisation, extraction des gènes différentiellement exprimés (à l’aide d’une analyse de la variance (anova) et du calcul des <em>p.value</em> ajustées par une méthode de FDR (fonction <code>aov</code> et <code>p.adjust(, method=&quot;fdr&quot;)</code>).</p>
+<p>Vous pouvez lire les données à l’aide de la fonction <code>read.table</code>, prenez patience c’est un gros fichiers. La ligne de commande est : <code>mes.expr &lt;- read.table(&quot;data_R4/BIC_diff_exp.tsv&quot;, h=T)</code>.</p>
+</div>
+<div id="calcul-de-la-matrice-de-distance" class="section level3">
+<h3>Calcul de la matrice de distance</h3>
+<p>Nous allons utiliser comme métrique le coefficient de corrélation de Spearman, plus adapté à ce type de données que la distance euclidienne utilisée en cours.</p>
+<ol style="list-style-type: decimal">
+<li>calcul de la matrice de corrélation de Spearman à l’aide de la fonction <code>cor</code> avec l’option <code>method=&quot;spearman&quot;</code></li>
+<li>transformation du corrélation de Spearman en une distance à l’aide de la trnsformation : <span class="math inline">\(d = 1 - r^2\)</span></li>
+</ol>
+</div>
+<div id="hclust" class="section level3">
+<h3>hclust</h3>
+<ol style="list-style-type: decimal">
+<li><p>faire un premier clustering hiérarchique, avec le critère d’aggrégation par défaut</p></li>
+<li><p>faire un deuxième clustering hiérarchique, avec le critère d’aggrégation de Ward</p></li>
+<li><p>Comparer les classifications obtenues</p>
+<ul>
+<li>en particulier sur les nombres de cluster</li>
+<li>utiliser les commandes <code>rect.hclust</code> et <code>cutree</code> pour visualiser les clusters sur le dendrogramme, puis récupérer les clusters.</li>
+</ul></li>
+</ol>
+</div>
+<div id="kmeans" class="section level3">
+<h3>kmeans</h3>
+<ol style="list-style-type: decimal">
+<li>faire un premier kmeans, par exemple, en prenant le nombre de groupe trouvé sur le <code>hclust</code></li>
+<li>faire une boucle pour trouver le nombre optimal de cluster, en calculant l’inertie intra totale en fonction du nombre de groupe <code>kmeans()$totss</code> [faire une boucle pour i allant de 1 à 10 <code>for (i in 1:10) {}</code>]</li>
+<li>refaire le kmeans avec ce nombre optimal</li>
+<li>visualiser ces groupes par exemple sur une projection des données dans le plan par PCA, à l’aide de la fonction `plot(PCA(mon.data.frame, choix=“ind”, col.ind=mon.kmeans$cluster)).</li>
+</ol>
+</div>
+<div id="comparaisons" class="section level3">
+<h3>Comparaisons</h3>
+<div id="kmeans-versus-hclust" class="section level4">
+<h4>kmeans versus hclust</h4>
+<p>Nous allons maintenant comparer les résultats de ces deux méthodes de clustering.</p>
+<ol style="list-style-type: decimal">
+<li>à l’aide de la fonction <code>table</code>, calculer la matrice de confusion de vos deux clustering. Commentez.</li>
+<li>à l’aide de la fonction <code>adjustedRand(clues)</code> calculez le RI et le ARI de vos clustering. Commentez.</li>
+</ol>
+</div>
+<div id="clustering-versus-her2-status" class="section level4">
+<h4>clustering versus Her2 status</h4>
+<p>Nous connaissons les types de cancer des différentes tumeurs, définie en combinant trois marqueurs immunologiques :</p>
+<ul>
+<li>HER2,</li>
+<li>ER (récepteur d’œstrogène)</li>
+<li>Pr (récepteur de progestérone)</li>
+</ul>
+<p>et nous obtenons les classes suivantes :</p>
+<ul>
+<li>Basal.like</li>
+<li>HER2pos</li>
+<li>Luminal.A</li>
+<li>Luminal.B</li>
+</ul>
+<p>qqs tumeurs sont non classées</p>
+<p>Vous pouvez lire les données concernant le type de cancer grâce à la fonction <code>read.table</code>, la ligne de commande est : <code>mes.classes &lt;- read.table(&quot;data_R4/BIC_sample-classes.tsv&quot;, h=T)</code>. A l’aide de la fonction <code>summary</code>, déterminez le nombre de tumeurs pour chaque type de cancer</p>
+<ol style="list-style-type: decimal">
+<li>comparez vos résultats de clustering avec la réalité
+<ul>
+<li>par des visualisations</li>
+<li>le calcul de la matrice de confusion</li>
+<li>le calcul des rand index et adjusted rand index</li>
+</ul></li>
+<li>commentez</li>
+</ol>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
