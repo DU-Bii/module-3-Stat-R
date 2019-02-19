@@ -79,7 +79,9 @@ options(scipen = 12) ## Max number of digits for non-scientific notation
 
 ```{r  echo=F}
 mes.iris <- iris[, 1:4]
-mes.iris.scaled <- data.frame(scale(mes.iris, T, F))
+mes.iris.scaled <- data.frame(scale(mes.iris, T, T))
+nb.iris=nrow(mes.iris)
+nb.var=ncol(mes.iris)
 ```
 
 # Partionnement et apprentissage
@@ -119,6 +121,25 @@ On considère les données comme des points de $R^n$:
 - distances = dissimilaritées imposées par le problème
 - dissimilarités $\longrightarrow$ permettent visualisation de l'ensemble des points
 - Détermination visuelle des groupes
+
+# Les données
+
+[Ces données sont un classique des méthodes d'apprentissage](https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1469-1809.1936.tb02137.x)
+
+Dans un premier temps, regardons les données
+
+```{r}
+dim(mes.iris)
+head(mes.iris)
+```
+
+# Visualisation des données
+
+On peut ensuite essayer de visualiser les données
+  
+```{r plot_iris, fig.width=7, fig.height=5, out.width="70%"}
+plot(mes.iris)
+```
 
 # Géométrie et distances
 Sur la base d'une distance (souvent euclidienne)
@@ -179,12 +200,15 @@ $$d("BONJOUR", "BONSOIR")=2$$
 
 Comme vu lors de la séance 3, il y a d'autres mesures de distances :
 
-  - Bray-Curtis
-  - Jaccard
-  - Jensen-Shannon
-  - coefficient de corrélation de Pearson ou de Spearman
+  - Jaccard (comparaison d'ensemble)
+  - Distance du $\chi^2$ (comparaison de tableau d'effectif)
+
+ne sont pas des distances, mais indices de dissimilarité:
+
+  - Bray-Curtis (en écologie, comparaison d'abondance d'espèce)
+  - Jensen-Shannon (comparaison de distribution)
   
-rq : lors du TP, sur les données d'expression RNA-seq, nous utiliserons le coefficient de corrélation de Spearman et la distance associée, $d = 1-r^2$
+**rq** : lors du TP, sur les données d'expression RNA-seq, nous utiliserons le coefficient de corrélation de Spearman et la distance associée, $d = 1-r^2$
 
 # Distances entre groupes
 
@@ -233,16 +257,16 @@ On peut ensuite essayer de visualiser les données
 
   - par un `plot`
   
-```{r}
+```{r, out.width="60%"}
 plot(mes.iris)
 ```
 
----
+# Visualisation des données
 
   - par une `image`
   
-```{r}
-image(t(as.matrix(mes.iris)))
+```{r, out.width="60%"}
+image(1:nb.var, 1:nb.iris ,t(as.matrix(mes.iris)))
 ```
 
 # Nettoyage des données (1)
@@ -285,12 +309,11 @@ mes.iris.centre <- scale(mes.iris, center=TRUE, scale=FALSE)
 mes.iris.scaled <- scale(mes.iris, center=TRUE, scale=TRUE)
 ```
 
----
 
-## On peut visuellement regarder l'effet de la normalisation :
+# On peut visuellement regarder l'effet de la normalisation :
 
   - par un plot des données 
-```{r}
+```{r ,  out.width="60%"}
 par(mfrow=c(1,2))
 plot(mes.iris)
 plot(mes.iris.scaled)
@@ -298,26 +321,27 @@ par(mfrow=c(1,1))
 ```
 **!** ne pas faire si "grosses" données
 
----
 
-  - par une image
+#
 
-```{r}
+- par une image
+
+```{r,  out.width="60%"}
 par(mfrow=c(1,2))
-image(t(as.matrix(mes.iris)), main="données brutes")
-image(t(as.matrix(mes.iris.scaled)), main="données normalisées")
+image(1:nb.var, 1:nb.iris, t(as.matrix(mes.iris)), main="données brutes")
+image(1:nb.var, 1:nb.iris, t(as.matrix(mes.iris.scaled)), main="données normalisées")
 par(mfrow=c(1,1))
 ```
 
 
----
+#
 
   - par une projection sur une ACP
 
-```{r}
+```{r,  out.width="80%"}
 par(mfrow=c(1,2))
 biplot(prcomp(mes.iris), main="données non normalisées")
-biplot(prcomp(mes.iris, scale.=T), main="données normalisées")
+biplot(prcomp(mes.iris, scale=T), main="données normalisées")
 par(mfrow=c(1,1))
 ```
 
@@ -336,15 +360,12 @@ iris.euc <- dist(mes.iris)
 iris.scale.euc <- dist(mes.iris.scaled)
 ```
 
----
-
-```{r}
+```{r, out.width="50%"}
 par(mfrow=c(1,2))
 image(t(as.matrix(iris.euc)), main="données brutes")
 image(t(as.matrix(iris.scale.euc)), main="données normalisées")
 par(mfrow=c(1,1))
 ```
-
 
 # La classification hiérarchique
 
@@ -354,8 +375,6 @@ par(mfrow=c(1,1))
   - classification hiérarchique **ascendante** : partir des individus pour arriver à des classes / cluster
   - classification hiérarchique **descendante** : partir d'un groupe qu'on subdivise en sous-groupes /cluster jusqu'à arriver à des individus.
 
----
-
 ## Notion importante, cf distances
 
   - ressemblance entre individus = distance
@@ -364,9 +383,7 @@ par(mfrow=c(1,1))
     - lien moyen
     - critère de Ward
 
----
-
-## L'algorithme
+# L'algorithme
 
 ### étape 1 :
   - départ : n individus = n clusters distincts
@@ -374,9 +391,9 @@ par(mfrow=c(1,1))
     - choix de la métrique à utiliser en fonction du type de données
   - regroupement des 2 individus les plus proches => (n-1) clusters
 
----
 
-#### au départ 
+#
+### au départ 
 
 ![](img/hclust1.png) 
 
@@ -461,7 +478,7 @@ par(mfrow=c(1,1))
 
 ## En utilisant une autre métrique
 
-```{r}
+```{r, out.width="60%"}
 iris.scale.max <- dist(mes.iris.scaled, method="max")
 iris.scale.hclust.max <- hclust(iris.scale.max)
 par(mfrow=c(1,2))
@@ -488,9 +505,8 @@ Les individus dans le plan
 
 ![](img/kmeans0.png) 
 
----
 
-## L'algorithme
+# L'algorithme
 
 ### étape 1 :
 
@@ -534,7 +550,7 @@ obtention de la partition Pj
 
   - l’algorithme converge vers une partition stable
 
-### arret : 
+### arrêt : 
 
   - lorsque la partition reste la même, ou lorsque la variance intra-cluster ne décroit plus, ou lorsque le nombre maximal d’itérations est atteint.
 
@@ -616,7 +632,7 @@ plot(iris.scaled.acp, col.ind=iris.scale.kmeans3$cluster, choix="ind")
 
 # Heatmap
 
-```{r}
+```{r, }
 heatmap(mes.iris.scaled)
 ```
 
