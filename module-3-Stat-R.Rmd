@@ -6,9 +6,9 @@
 |------|-----------------------------------|------------------------|
 | 1 | Premiers pas avec R | [seance_1](seance_1) |
 | 2 | Analyse statistique avec R |  [seance_2](seance_2)|
-| 3 | Détection d'espèces différentiellement abondantes | [seance_3](seance_3)|
-| 4 | Clustering |[seance_4](seance_4) |
-| 5 | Statistiques d'enrichissement | |
+| 3 | Analyse de données métagénomiques | |
+| 4 | Analyse de données RNA-seq | |
+| 5 | Comparaison de groupes et enrichissement | |
 | 6 | Classification supervisée (classement) | |
 
 
@@ -20,6 +20,12 @@
 - [Prérequis](#prerequis)
 - [Ressources](#ressources)
 - [Synopsis](#synopsis)
+    - [Séance 1. Introduction à R](#seance-1.-introduction-a-r)
+    - [Séance 2; Analyse statistique avec R](#seance-2.-analyse-statistique-avec-r)
+    - [Séance 3. Analyse de données métagénomiques](#seance-3.-analyse-de-donnees-metagenomiques)
+    - [Séance 4. Analyse de données RNA-seq](#seance-4.-analyse-de-donnees-rna-seq)
+    - [Séance 5. Comparaison de groupes et enrichissement](#seance-5.-comparaison-de-groupes-et-enrichissement)
+    - [Séance 6. Classification supervisée](#seance-6.-classification-supervisee)
 - [Contributeurs](#contributeurs)
 - [Accès aux supports de cours](#acces-aux-supports-de-cours)
 - [Installation locale](#installation-locale)
@@ -54,7 +60,7 @@ Après avoir suivi le module d'intro à R dans DataCamp, nous vous demandons de 
 
 - Dans le sommaire, cliquez sur le lien *Activités préparatoires*. 
 
-![](img/moodle_sommaire_quiz-R.png){:width="500px"}
+![](img/moodle_sommaire_quiz-R.png){:width="300px"}
 
 
 
@@ -100,7 +106,7 @@ A la fin du module, les participants auront acquis les compétences suivantes.
 
 ## Synopsis
 
-### [Séance 1 : Introduction à R](seance_1/README.md)
+### [Séance 1. Introduction à R](seance_1/README.md)
 
 *Intervenants: Hugo Varet et Frédéric Guyon*
 
@@ -141,7 +147,7 @@ A la fin du module, les participants auront acquis les compétences suivantes.
     - attirer l'attention sur la différence: vectoriel versus bitmap (zoomer à fond sur les figures produites)
 
 
-### [Séance 2 : Analyse statistique avec R](seance_2/README.md)
+### [Séance 2. Analyse statistique avec R](seance_2/README.md)
 
 *Intervenants: Leslie Regad et Magali Berland*
 
@@ -157,9 +163,9 @@ Applications:
     - ACP avec factoMineR et factoextra pour les représentations graphiques
     - Choix et calcul d'une distance, représentation avec une PCoA
 
-### [Séance 3: Détection de gènes différentiellement exprimés](seance_3/README.md)
+### [Séance 3. Analyse de données métagénomiques](seance_3/README.md)
 
-*Intervenants: Claire Vandiedonck & Magali Berland & Jacques van Helden*
+*Intervenants: Magali Berland (& ...)*
 
 - Concepts
     - appliquer des milliers de tests d'hypothèse en parallèle
@@ -169,10 +175,20 @@ Applications:
           - E-valeur (mesure du problème: $E = p \cdot T$) : nb de FP attendus sur l'ensemble de la batterie de tests
           - FDR = proportionde FP attendus sur l'ensemble des cas déclarés positifs
           
+ 
+
+### [Séance 4. Analyse de données RNA-seq](seance_4/README.md)
+
+*Intervenants: Frédéric Guyon & Anne Badel & Jacques van Helden*
+
+#### Détection de gènes différentiellement exprimés
+
+- Concepts
     - visualisation des résultats globaux  (MA plots, volcano plots, histogrammes de p-vlaeurs)
     - évaluation de l'impact des choix de logiciels et paramètres 
     - comparer les projections ACP avec tous les gènes et avec la sélection de gènes différentiellement exprimés
         - coloration des classes pour évaluer la pertinence de la sélection de variables
+
 
 - Application
     - Normalisation des données RNA-seq
@@ -184,12 +200,7 @@ Applications:
         - détection de gènes différentiellement exprimés entre deux groupes (types de cancer, stades)
         - analyse différentielle entre plusieurs groupes (types de cancer, stades)
     - Escherichia coli FNR: détection de gènes différentiellement exprimés entre deux conditions (aérobie / anaérobie; sauvage versus mutant FNR)
-    
-
-### [Séance 4: Clustering  + validation des classifications](seance_4/README.md)
-
-*Intervenants: Frédéric Guyon & Anne Badel & Jacques van Helden*
-
+   
 #### Clustering
 
 - Concepts
@@ -231,7 +242,7 @@ Applications:
     - Au-delà de la méthode, influence des paramètres 
 
     
-### [Séance 5: Statistiques d'enrichissement](seance_5/README.md)
+### [Séance 5. Comparaison de groupes et enrichissement](seance_5/README.md)
 
 *Intervenants: Jacques van Helden + Claire Vandiedonck (à confirmer)*
 
@@ -246,7 +257,7 @@ Applications:
     - Analyse de données NGS ChIP-seq: détection de pics (binomiale, Poisson)
     - Enrichissement fonctionnel (hypergéométrique)
 
-### [Séance 6: Classification supervisée](seance_6/README.md)
+### [Séance 6. Classification supervisée](seance_6/README.md)
 
 *Intervenants: Jacques van Helden et Leslie Regad*
 
