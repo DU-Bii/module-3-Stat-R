@@ -12,3 +12,6 @@
 |-----------------------------|------|-----|-----|
 | Cours sur l'analyse des données métagénomique |  |  [[pdf](2019-02-18-Cours-Seance3.pdf)] |  |
 | Travaux pratiques | [[html](TP-metagenomique.html)]  |  |  |
+| Boîte à outils | [[html](Boite-outils-R.html)]  |  |[[Rmd](Boite-outils-R.Rmd)]  |
+| Correction exercice ACP | [[html](Correction-exercice-ACP.html)]  |  |[[Rmd](Correction-exercice-ACP.Rmd)]  |
+
