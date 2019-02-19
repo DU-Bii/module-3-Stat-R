@@ -64,7 +64,11 @@ Les données ont été préparées pour vous, filtrage des données, normalisati
 
 Vous pouvez lire les données à l'aide de la fonction `read.table`, prenez patience c'est un gros fichiers. La ligne de commande est : `mes.expr <- read.table("data_R4/BIC_diff_exp.tsv", h=T)`.
 
-
+- prenez le temps d'identifier
+  
+  - la taille du jeu de données
+  - les individus
+  - les variables
 
 ```{r echo=F, eval=F}
 ## Les données d'expression
