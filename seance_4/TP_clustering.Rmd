@@ -62,7 +62,9 @@ Les données sont issues de la base Recount2 (https://jhubiostatistics.shinyapps
 
 Les données ont été préparées pour vous, filtrage des données, normalisation, extraction des gènes différentiellement exprimés (à l'aide d'une analyse de la variance (anova) et du calcul des *p.value* ajustées par une méthode de FDR (fonction `aov` et `p.adjust(, method="fdr")`).
 
-Vous pouvez lire les données à l'aide de la fonction `read.table`, prenez patience c'est un gros fichiers. La ligne de commande est : `mes.expr <- read.table("data_R4/BIC_diff_exp.tsv", h=T)`.
+  1. A l'IFB : sur le serveur de l'IFB, les données sont dans le répertoire `../../projects/du_bii_2019/data/module3/seance4/`. Vous pouvez donc les lire à l'aide de la commande : `mes.expr <- read.table("../../projects/du_bii_2019/data/module3/seance4/BIC_diff_exp.tsv", h=T)`
+
+  2. En local : en local, les données sont dans le répertoire `../../dubii/data-m3/s4`. Vous pouvez donc les lire à l'aide de la commande : `mes.expr <- read.table("../../dubii/data-m3/s4/BIC_diff_exp.tsv", h=T)`
 
 - prenez le temps d'identifier
   

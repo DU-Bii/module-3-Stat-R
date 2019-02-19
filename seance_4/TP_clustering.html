@@ -193,7 +193,10 @@ $(document).ready(function () {
 <h3>Lire les données</h3>
 <p>Les données sont issues de la base Recount2 (<a href="https://jhubiostatistics.shinyapps.io/recount/" class="uri">https://jhubiostatistics.shinyapps.io/recount/</a>). Nous nous intéressons à la base TCGA, regroupant des données RNA-seq pour différents types de cancer. Nous nous intéressons ici uniquement aux données BIC concernant le cancer du sein.</p>
 <p>Les données ont été préparées pour vous, filtrage des données, normalisation, extraction des gènes différentiellement exprimés (à l’aide d’une analyse de la variance (anova) et du calcul des <em>p.value</em> ajustées par une méthode de FDR (fonction <code>aov</code> et <code>p.adjust(, method=&quot;fdr&quot;)</code>).</p>
-<p>Vous pouvez lire les données à l’aide de la fonction <code>read.table</code>, prenez patience c’est un gros fichiers. La ligne de commande est : <code>mes.expr &lt;- read.table(&quot;data_R4/BIC_diff_exp.tsv&quot;, h=T)</code>.</p>
+<ol style="list-style-type: decimal">
+<li><p>A l’IFB : sur le serveur de l’IFB, les données sont dans le répertoire <code>../../projects/du_bii_2019/data/module3/seance4/</code>. Vous pouvez donc les lire à l’aide de la commande : <code>mes.expr &lt;- read.table(&quot;../../projects/du_bii_2019/data/module3/seance4/BIC_diff_exp.tsv&quot;, h=T)</code></p></li>
+<li><p>En local : en local, les données sont dans le répertoire <code>../../dubii/data-m3/s4</code>. Vous pouvez donc les lire à l’aide de la commande : <code>mes.expr &lt;- read.table(&quot;../../dubii/data-m3/s4/BIC_diff_exp.tsv&quot;, h=T)</code></p></li>
+</ol>
 <ul>
 <li><p>prenez le temps d’identifier</p></li>
 <li>la taille du jeu de données</li>
