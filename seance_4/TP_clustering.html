@@ -9,8 +9,9 @@
 <meta name="generator" content="pandoc" />
 
 
-<meta name="author" content="Anne Badel &amp; Frederic Guyon" />
+<meta name="author" content="Anne Badel, Frederic Guyon &amp; Jacques van Helden" />
 
+<meta name="date" content="2019-02-19" />
 
 <title>Le TP de la séance 4, Clustering</title>
 
@@ -20,9 +21,88 @@
 <script src="TP_clustering_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="TP_clustering_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="TP_clustering_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="TP_clustering_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="TP_clustering_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="TP_clustering_files/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="TP_clustering_files/navigation-1.1/tabsets.js"></script>
+<script src="TP_clustering_files/navigation-1.1/codefolding.js"></script>
 
 
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #303030; color: #cccccc; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; }
+td.sourceCode { padding-left: 5px; }
+pre, code { color: #cccccc; background-color: #303030; }
+code > span.kw { color: #f0dfaf; } /* Keyword */
+code > span.dt { color: #dfdfbf; } /* DataType */
+code > span.dv { color: #dcdccc; } /* DecVal */
+code > span.bn { color: #dca3a3; } /* BaseN */
+code > span.fl { color: #c0bed1; } /* Float */
+code > span.ch { color: #dca3a3; } /* Char */
+code > span.st { color: #cc9393; } /* String */
+code > span.co { color: #7f9f7f; } /* Comment */
+code > span.ot { color: #efef8f; } /* Other */
+code > span.al { color: #ffcfaf; } /* Alert */
+code > span.fu { color: #efef8f; } /* Function */
+code > span.er { color: #c3bf9f; } /* Error */
+code > span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
+code > span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+code > span.sc { color: #dca3a3; } /* SpecialChar */
+code > span.vs { color: #cc9393; } /* VerbatimString */
+code > span.ss { color: #cc9393; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { } /* Variable */
+code > span.cf { color: #f0dfaf; } /* ControlFlow */
+code > span.op { color: #f0efd0; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+code > span.at { } /* Attribute */
+code > span.do { color: #7f9f7f; } /* Documentation */
+code > span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+code > span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+code > span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+
+.sourceCode .row {
+  width: 100%;
+}
+.sourceCode {
+  overflow-x: auto;
+}
+.code-folding-btn {
+  margin-right: -30px;
+}
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
 
 
 <style type="text/css">
@@ -158,17 +238,130 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
 
 <div class="fluid-row" id="header">
 
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
 
 
 <h1 class="title toc-ignore">Le TP de la séance 4, Clustering</h1>
-<h4 class="author"><em>Anne Badel &amp; Frederic Guyon</em></h4>
+<h3 class="subtitle"><em>DUBii 2019</em></h3>
+<h4 class="author"><em>Anne Badel, Frederic Guyon &amp; Jacques van Helden</em></h4>
+<h4 class="date"><em>2019-02-19</em></h4>
 
 </div>
 
@@ -176,11 +369,11 @@ $(document).ready(function () {
 <div id="choisir-son-environnement-de-travail" class="section level3">
 <h3>Choisir son environnement de travail</h3>
 <ol style="list-style-type: decimal">
-<li>vous pouvez choisir de travail sur le cluster de l’IFB, <a href="https://rstudio.cluster.france-bioinformatique.fr/auth-sign-in">ici</a>
+<li><p>vous pouvez choisir de travail sur le cluster de l’IFB, <a href="https://rstudio.cluster.france-bioinformatique.fr/auth-sign-in">ici</a></p>
 <ul>
 <li>les données sont dans le répertoire :</li>
 </ul></li>
-<li>ou en local, sur nos machines
+<li><p>ou en local, sur nos machines</p>
 <ul>
 <li>les données sont dans le répertoire :</li>
 <li>vous devez avoir la commande suivante dans votre <code>.bashrc</code> : <code>. /opt/sdv/anaconda/etc/profile.d/conda.sh</code></li>
@@ -194,8 +387,20 @@ $(document).ready(function () {
 <p>Les données sont issues de la base Recount2 (<a href="https://jhubiostatistics.shinyapps.io/recount/" class="uri">https://jhubiostatistics.shinyapps.io/recount/</a>). Nous nous intéressons à la base TCGA, regroupant des données RNA-seq pour différents types de cancer. Nous nous intéressons ici uniquement aux données BIC concernant le cancer du sein.</p>
 <p>Les données ont été préparées pour vous, filtrage des données, normalisation, extraction des gènes différentiellement exprimés (à l’aide d’une analyse de la variance (anova) et du calcul des <em>p.value</em> ajustées par une méthode de FDR (fonction <code>aov</code> et <code>p.adjust(, method=&quot;fdr&quot;)</code>).</p>
 <ol style="list-style-type: decimal">
-<li><p>A l’IFB : sur le serveur de l’IFB, les données sont dans le répertoire <code>../../projects/du_bii_2019/data/module3/seance4/</code>. Vous pouvez donc les lire à l’aide de la commande : <code>mes.expr &lt;- read.table(&quot;../../projects/du_bii_2019/data/module3/seance4/BIC_diff_exp.tsv&quot;, h=T)</code></p></li>
-<li><p>En local : en local, les données sont dans le répertoire <code>../../dubii/data-m3/s4</code>. Vous pouvez donc les lire à l’aide de la commande : <code>mes.expr &lt;- read.table(&quot;../../dubii/data-m3/s4/BIC_diff_exp.tsv&quot;, h=T)</code></p></li>
+<li>A l’IFB : sur le serveur IFB-core-cluster, les données sont dans le répertoire</li>
+</ol>
+<pre><code>/shared/projects/du_bii_2019/data/module3/seance4/</code></pre>
+<p>Vous pouvez donc les lire à l’aide de la commande :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Define data folder</span>
+data.folder &lt;-<span class="st"> &quot;/shared/projects/du_bii_2019/data/module3/seance4/&quot;</span>
+
+<span class="co"># Define the path of the expression file</span>
+BIC.expr.file &lt;-<span class="st"> </span><span class="kw">file.path</span>(data.folder, <span class="st">&quot;BIC_diff_exp.tsv&quot;</span>)
+
+<span class="co"># Load expression</span>
+BIC.expr &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="dt">file =</span> BIC.expr.file, <span class="dt">h=</span><span class="ot">TRUE</span>)</code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li>En local : en local, les données sont dans le répertoire <code>../../dubii/data-m3/s4</code>. Vous pouvez donc les lire à l’aide de la commande : <code>BIC.expr &lt;- read.table(&quot;../../dubii/data-m3/s4/BIC_diff_exp.tsv&quot;, h=T)</code></li>
 </ol>
 <ul>
 <li><p>prenez le temps d’identifier</p></li>
@@ -217,12 +422,23 @@ $(document).ready(function () {
 <li>calcul de la matrice de corrélation de Spearman à l’aide de la fonction <code>cor</code> avec l’option <code>method=&quot;spearman&quot;</code></li>
 <li>transformation du corrélation de Spearman en une distance à l’aide de la trnsformation : <span class="math inline">\(d = 1 - r^2\)</span></li>
 </ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dt1.cor &lt;-<span class="st"> </span><span class="kw">cor</span>(<span class="kw">t</span>(dt1), <span class="dt">method=</span><span class="st">&quot;spearman&quot;</span>)
+<span class="kw">dim</span>(dt1.cor)
+dt1.dist &lt;-<span class="st"> </span><span class="kw">as.dist</span>(<span class="dv">1</span><span class="op">-</span>dt1.cor<span class="op">^</span><span class="dv">2</span>)</code></pre></div>
 </div>
 <div id="hclust" class="section level3">
 <h3>hclust</h3>
 <ol style="list-style-type: decimal">
-<li><p>faire un premier clustering hiérarchique, avec le critère d’aggrégation par défaut</p></li>
-<li><p>faire un deuxième clustering hiérarchique, avec le critère d’aggrégation de Ward</p></li>
+<li>faire un premier clustering hiérarchique, avec le critère d’aggrégation par défaut</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dt1.hclust &lt;-<span class="st"> </span><span class="kw">hclust</span>(dt1.dist)
+<span class="kw">plot</span>(dt1.hclust, <span class="dt">labels=</span>F, <span class="dt">hang=</span><span class="dv">0</span>)</code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li>faire un deuxième clustering hiérarchique, avec le critère d’aggrégation de Ward</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dt1.hclust.ward &lt;-<span class="st"> </span><span class="kw">hclust</span>(dt1.dist, <span class="dt">method=</span><span class="st">&quot;ward.D2&quot;</span>)
+<span class="kw">plot</span>(dt1.hclust.ward, <span class="dt">labels=</span>F, <span class="dt">hang=</span><span class="dv">0</span>)</code></pre></div>
+<ol start="3" style="list-style-type: decimal">
 <li><p>Comparer les classifications obtenues</p>
 <ul>
 <li>en particulier sur les nombres de cluster</li>
@@ -238,6 +454,29 @@ $(document).ready(function () {
 <li>refaire le kmeans avec ce nombre optimal</li>
 <li>visualiser ces groupes par exemple sur une projection des données dans le plan par PCA, à l’aide de la fonction `plot(PCA(mon.data.frame, choix=“ind”, col.ind=mon.kmeans$cluster)).</li>
 </ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dt1.kmeans &lt;-<span class="st"> </span><span class="kw">kmeans</span>(dt1, <span class="dt">centers=</span><span class="dv">20</span>)
+<span class="kw">table</span>(dt1.kmeans<span class="op">$</span>cluster)
+T1 =<span class="st"> </span><span class="kw">Sys.time</span>()
+I.intra =<span class="st"> </span><span class="kw">numeric</span>(<span class="dt">length=</span><span class="dv">20</span>)
+I.intra[<span class="dv">1</span>] =<span class="st"> </span><span class="kw">kmeans</span>(dt1, <span class="dt">centers=</span><span class="dv">2</span>)<span class="op">$</span>totss
+<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span><span class="dv">20</span>) {
+  kmi &lt;-<span class="st"> </span><span class="kw">kmeans</span>(dt1, <span class="dt">centers=</span>i)
+  I.intra[i] &lt;-<span class="st"> </span>kmi<span class="op">$</span>tot.withinss
+}
+<span class="kw">plot</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">20</span>, I.intra, <span class="dt">type=</span><span class="st">&quot;l&quot;</span>)
+T2 =<span class="st"> </span><span class="kw">Sys.time</span>()
+Tdiff =<span class="st"> </span><span class="kw">difftime</span>(T2,T1)
+<span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))
+dt1.kmeans10 &lt;-<span class="st"> </span><span class="kw">kmeans</span>(dt1, <span class="dt">centers=</span><span class="dv">10</span>)
+<span class="kw">table</span>(dt1.kmeans10<span class="op">$</span>cluster)
+<span class="kw">plot</span>(dt1.pca, <span class="dt">choix=</span><span class="st">&quot;ind&quot;</span>, <span class="dt">label=</span><span class="st">&quot;none&quot;</span>, <span class="dt">col.ind=</span>dt1.kmeans10<span class="op">$</span>cluster)
+dt1.kmeans3 &lt;-<span class="st"> </span><span class="kw">kmeans</span>(dt1, <span class="dt">centers=</span><span class="dv">3</span>)
+<span class="kw">table</span>(dt1.kmeans3<span class="op">$</span>cluster)
+<span class="kw">plot</span>(dt1.pca, <span class="dt">choix=</span><span class="st">&quot;ind&quot;</span>, <span class="dt">label=</span><span class="st">&quot;none&quot;</span>, <span class="dt">col.ind=</span>dt1.kmeans3<span class="op">$</span>cluster)
+<span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))
+dt1.kmeans2 &lt;-<span class="st"> </span><span class="kw">kmeans</span>(dt1, <span class="dt">centers=</span><span class="dv">2</span>)
+<span class="kw">table</span>(dt1.kmeans2<span class="op">$</span>cluster)
+<span class="kw">plot</span>(dt1.pca, <span class="dt">choix=</span><span class="st">&quot;ind&quot;</span>, <span class="dt">label=</span><span class="st">&quot;none&quot;</span>, <span class="dt">col.ind=</span>dt1.kmeans2<span class="op">$</span>cluster)</code></pre></div>
 </div>
 <div id="comparaisons" class="section level3">
 <h3>Comparaisons</h3>
@@ -248,6 +487,20 @@ $(document).ready(function () {
 <li>à l’aide de la fonction <code>table</code>, calculer la matrice de confusion de vos deux clustering. Commentez.</li>
 <li>à l’aide de la fonction <code>adjustedRand(clues)</code> calculez le RI et le ARI de vos clustering. Commentez.</li>
 </ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))
+<span class="kw">plot</span>(dt1.hclust.ward, <span class="dt">labels=</span>F, <span class="dt">hang=</span><span class="dv">0</span>)
+<span class="kw">rect.hclust</span>(dt1.hclust.ward, <span class="dt">k=</span><span class="dv">3</span>)
+dt1.cutree3 &lt;-<span class="st"> </span><span class="kw">cutree</span>(dt1.hclust.ward, <span class="dt">k=</span><span class="dv">3</span>)
+<span class="kw">plot</span>(dt1.hclust.ward, <span class="dt">labels=</span>F, <span class="dt">hang=</span><span class="dv">0</span>)
+<span class="kw">rect.hclust</span>(dt1.hclust.ward, <span class="dt">k=</span><span class="dv">10</span>)
+dt1.cutree10 &lt;-<span class="st"> </span><span class="kw">cutree</span>(dt1.hclust.ward, <span class="dt">k=</span><span class="dv">10</span>)
+<span class="kw">table</span>(dt1.cutree3, dt1.kmeans<span class="op">$</span>cluster)
+<span class="kw">table</span>(dt1.cutree10, dt1.kmeans<span class="op">$</span>cluster)
+<span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))
+clues<span class="op">::</span><span class="kw">adjustedRand</span>(dt1.cutree3, dt1.kmeans3<span class="op">$</span>cluster)
+clues<span class="op">::</span><span class="kw">adjustedRand</span>(dt1.cutree10, dt1.kmeans10<span class="op">$</span>cluster)
+clues<span class="op">::</span><span class="kw">adjustedRand</span>(dt1.cutree3, dt1.kmeans10<span class="op">$</span>cluster)
+clues<span class="op">::</span><span class="kw">adjustedRand</span>(dt1.cutree10, dt1.kmeans3<span class="op">$</span>cluster)</code></pre></div>
 </div>
 <div id="clustering-versus-her2-status" class="section level4">
 <h4>clustering versus Her2 status</h4>
@@ -275,11 +528,37 @@ $(document).ready(function () {
 </ul></li>
 <li>commentez</li>
 </ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(dt1.hclust.ward, <span class="dt">labels=</span>F, <span class="dt">hang=</span><span class="dv">0</span>)
+<span class="kw">rect.hclust</span>(dt1.hclust.ward, <span class="dt">k=</span><span class="dv">2</span>)
+dt1.cutree2 &lt;-<span class="st"> </span><span class="kw">cutree</span>(dt1.hclust.ward, <span class="dt">k=</span><span class="dv">2</span>)
+<span class="kw">table</span>(dt1.cutree2, dt1.classes[,<span class="dv">4</span>])
+<span class="kw">table</span>(dt1.kmeans2<span class="op">$</span>cluster, dt1.classes[,<span class="dv">4</span>])</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># clustering versus cancer.type</span>
+<span class="kw">table</span>(dt1.cutree3, dt1.classes[,<span class="dv">1</span>])
+clues<span class="op">::</span><span class="kw">adjustedRand</span>(dt1.cutree3, <span class="kw">as.numeric</span>(dt1.classes[,<span class="dv">1</span>]))
+<span class="kw">table</span>(dt1.kmeans3<span class="op">$</span>cluster, dt1.classes[,<span class="dv">1</span>])
+clues<span class="op">::</span><span class="kw">adjustedRand</span>(dt1.kmeans3<span class="op">$</span>cluster, <span class="kw">as.numeric</span>(dt1.classes[,<span class="dv">1</span>]))
+<span class="kw">table</span>(dt1.cutree10, dt1.classes[,<span class="dv">1</span>])
+clues<span class="op">::</span><span class="kw">adjustedRand</span>(dt1.cutree10, <span class="kw">as.numeric</span>(dt1.classes[,<span class="dv">1</span>]))
+<span class="kw">table</span>(dt1.kmeans10<span class="op">$</span>cluster, dt1.classes[,<span class="dv">1</span>])
+clues<span class="op">::</span><span class="kw">adjustedRand</span>(dt1.kmeans10<span class="op">$</span>cluster, <span class="kw">as.numeric</span>(dt1.classes[,<span class="dv">1</span>]))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># visualisation</span>
+
+## hclust (2 groupes) et HER2+/-
+mycol=dt1.cutree2
+mypch=<span class="kw">as.numeric</span>(dt1.classes[,<span class="dv">4</span>])
+pointsToPlot &lt;-<span class="st"> </span>dt1.pca<span class="op">$</span>ind<span class="op">$</span>coord[,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>]
+<span class="kw">plot</span>(dt1.pca, <span class="dt">choix=</span><span class="st">&quot;ind&quot;</span>, <span class="dt">label=</span><span class="st">&quot;none&quot;</span>, <span class="dt">col.ind=</span><span class="st">&quot;white&quot;</span>)
+<span class="kw">points</span>(pointsToPlot, <span class="dt">col=</span>mycol, <span class="dt">pch=</span>mypch)
+texte.legend=<span class="kw">c</span>(<span class="st">&quot;HER2-&quot;</span>, <span class="st">&quot;HER2+&quot;</span>, <span class="st">&quot;gr1&quot;</span>, <span class="st">&quot;gr2&quot;</span>)
+<span class="kw">legend</span>(<span class="dt">x=</span><span class="op">-</span><span class="dv">400</span>, <span class="dt">y=</span><span class="dv">100</span>, texte.legend, <span class="dt">col=</span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>), <span class="dt">pch=</span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="ot">NA</span>, <span class="ot">NA</span>), <span class="dt">text.col=</span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>))</code></pre></div>
 </div>
 </div>
 
 
 
+</div>
+</div>
 
 </div>
 
