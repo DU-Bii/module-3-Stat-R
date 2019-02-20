@@ -318,10 +318,10 @@ $(document).ready(function () {
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Liste des fichiers de données
 data.folder &lt;-<span class="st"> &quot;/shared/projects/du_bii_2019/data/module3/seance4/BIC/&quot;</span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
-<li>Sur les machines de Paris-Diderot, elles sont dans le répertoire <code>../../dubii/data-m3/s4</code> (défini relativement à votre compte).</li>
+<li>Sur les machines de Paris-Diderot, elles sont dans le répertoire <code>/home/sdv/dubii/data-m3/s4</code></li>
 </ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Liste des fichiers de données
-data.folder &lt;-<span class="st"> &quot;../../dubii/data-m3/s4/BIC/&quot;</span></code></pre></div>
+data.folder &lt;-<span class="st"> &quot;/home/sdv/dubii/data-m3/s4/BIC/&quot;</span></code></pre></div>
 </div>
 <div id="contenu-du-dossier-de-donnees" class="section level2">
 <h2>Contenu du dossier de données</h2>
@@ -344,12 +344,11 @@ data.folder &lt;-<span class="st"> &quot;../../dubii/data-m3/s4/BIC/&quot;</span
 <div id="lire-le-tableau-de-valeurs-dexpression" class="section level2">
 <h2>Lire le tableau de valeurs d’expression</h2>
 <p>Nous allons maintenant lire le fichier d’expression. Pour cela, nous concaténons le chemin du dossier de données et le nom du fichier d’expressiion (<code>BIC_diff_exp.tsv</code>). Ce fichier contient le comptages de lectures RNA-seq par gène, avec une sélection des gènes déclarés positifs pour letest de comparaison de moyennes multiples (voir-ci-dessus).</p>
-<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">
-<span class="co"># Define the path of the expression file</span>
-<span class="ex">BIC.expr.file</span> <span class="op">&lt;</span>- file.path(data.folder, <span class="st">&quot;BIC_log2-norm-counts_edgeR_DEG_fdr_0.01.tsv.gz&quot;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Define the path of the expression file</span>
+BIC.expr.file &lt;-<span class="st"> </span><span class="kw">file.path</span>(data.folder, <span class="st">&quot;BIC_log2-norm-counts_edgeR_DEG_fdr_0.01.tsv.gz&quot;</span>)
 
 <span class="co"># Load expression</span>
-<span class="ex">BIC.expr</span> <span class="op">&lt;</span>- read.table(file = BIC.expr.file, h=TRUE)</code></pre></div>
+BIC.expr &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="dt">file =</span> BIC.expr.file, <span class="dt">h=</span><span class="ot">TRUE</span>)</code></pre></div>
 </div>
 <div id="mesure-de-la-taille-des-donnees" class="section level2">
 <h2>Mesure de la taille des données</h2>
@@ -368,10 +367,26 @@ data.folder &lt;-<span class="st"> &quot;../../dubii/data-m3/s4/BIC/&quot;</span
 <p>Cette convention a été établie en 1997, lors des toutes premières publications sur le transcriptome de la levure. Dans ces études, l’objet d’intérêt (l’“éindividu”) était le gène, et les variables étaient ses mesures d’expression dans les différentes conditions testées.</p>
 <p>Pour l’anlayse de tissus cancéreux, on considère au contraire que l’“objet” d’intérêt est l’échantillon prélevé sur le patient, et les variables sont les mesures d’expression des différents gènes chez un patient.</p>
 <p>Ce qui implique de faire attention, et éventuellement de travailler sur la matrice transposée (fonction <code>t</code> en R) pour utiliser correctement les fonctions classiques.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Les données d&#39;expression
+<span class="kw">dim</span>(BIC.expr)
+
+## Les noms des lignes correspondent à des gènes
+<span class="kw">head</span>(<span class="kw">rownames</span>(BIC.expr))
+
+## Les noms des colonnes correspondent à des échantillons
+<span class="kw">head</span>(<span class="kw">colnames</span>(BIC.expr))
+
+## transposons la table d&#39;expression
+BIC.expr.transposed &lt;-<span class="st"> </span><span class="kw">t</span>(BIC.expr)</code></pre></div>
 </div>
 <div id="charger-les-etiquettes-de-classes-des-echantillons" class="section level2">
 <h2>Charger les étiquettes de classes des échantillons</h2>
 <p>Le fichier <code>BIC_sample-classes.tsv.gz</code>contient les étiquettes de classes des échantillons.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">BIC.sample.classes &lt;-<span class="st"> </span><span class="kw">read.table</span>(
+  <span class="kw">file.path</span>(data.folder, <span class="st">&quot;BIC_sample-classes.tsv.gz&quot;</span>),
+  <span class="dt">header =</span> <span class="ot">TRUE</span>)
+
+<span class="kw">kable</span>(BIC.sample.classes[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>,])</code></pre></div>
 <p>Chaque échantillon a été assigné à une classe selon la combinaison de 3 marqueurs immunologiques:</p>
 <ul>
 <li>Estrogen Receptor 1 (ER1)</li>
@@ -397,8 +412,56 @@ data.folder &lt;-<span class="st"> &quot;../../dubii/data-m3/s4/BIC/&quot;</span
 <div id="projection-acp-des-echantillons" class="section level2">
 <h2>Projection ACP des échantillons</h2>
 <p>Nous allons réaliser une ACP sans mise à l’échelle.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Transformation ACP
+BIC.prcomp &lt;-<span class="st"> </span><span class="kw">prcomp</span>(BIC.expr.transposed, <span class="dt">center =</span> <span class="ot">FALSE</span>, <span class="dt">scale. =</span> <span class="ot">FALSE</span>)
+<span class="kw">names</span>(BIC.prcomp) <span class="co"># check the name of the fields of the PCA object</span>
+
+<span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))
+## Plot de l&#39;écart-type sur les premières composantes
+<span class="kw">barplot</span>(BIC.prcomp<span class="op">$</span>sdev[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>], <span class="dt">col =</span> <span class="st">&quot;#FFEEDD&quot;</span>,
+        <span class="dt">main =</span> <span class="st">&quot;Standard deviation per PC&quot;</span>)
+
+## Visualisation des données
+<span class="kw">plot</span>(BIC.prcomp, <span class="dt">main =</span> <span class="st">&quot;Variance per PC&quot;</span>, <span class="dt">col=</span><span class="st">&quot;#BBDDFF&quot;</span>)
+
+<span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</code></pre></div>
+<p>Définissez une couleur pour chaque classe, et assignez à chaque échantillon la couleur correspondant à sa classe. Dessinez ensuite un nuage de points avec les coordonnées de chaque échantillon dans les 1ère et 2ème composantes (PC2 vs PC1)</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Assign a color to each cancer type</span>
+classes &lt;-<span class="st"> </span><span class="kw">unique</span>(BIC.sample.classes<span class="op">$</span>cancer.type)
+class.colors &lt;-<span class="st"> </span><span class="kw">rainbow</span>(<span class="dt">n =</span> <span class="kw">length</span>(classes))
+<span class="kw">names</span>(class.colors) &lt;-<span class="st"> </span>classes
+<span class="kw">data.frame</span>(class.colors)
+
+<span class="co"># Associate a color to each sample accordinig to its cancer type</span>
+sample.colors &lt;-<span class="st"> </span>class.colors[BIC.sample.classes<span class="op">$</span>cancer.type]
+<span class="kw">table</span>(BIC.sample.classes<span class="op">$</span>cancer.type, sample.colors)</code></pre></div>
 <!--
 
+```r
+save(BIC.prcomp, file="data_R4/BIC.prcomp.RData")
+# Réduction des données, anova
+dt2 <- data.frame(BIC.expr.transposed, BIC.sample.classes[,1])
+p.value <- numeric(length=ncol(BIC.expr.transposed))
+for (i in 1:ncol(BIC.expr.transposed)) {
+  p.value[i] <- summary(aov(dt2[,i] ~ dt2[,20250]))[[1]][1,5]
+}
+p.fdr <- p.adjust(p.value, method="fdr")
+p.bh <- p.adjust(p.value, method="BH")
+p.bonf <- p.adjust(p.value, method="bonferroni")
+par(mfrow=c(2,2))
+hist(p.value)
+hist(p.fdr)
+hist(p.bh)
+hist(p.bonf)
+par(mfrow=c(1,1))
+sum(p.value < 0.05) ; sum(p.value < 0.01)
+sum(p.fdr < 0.05) ; sum(p.fdr < 0.01)
+sum(p.bh < 0.05) ; sum(p.bh < 0.01)
+sum(p.bonf < 0.05) ; sum(p.bonf < 0.01)
+BIC.all <- BIC.expr.transposed
+BIC.expr.transposed <- BIC.expr.transposed[, which(p.fdr < 0.05)]
+write.table(BIC.expr.transposed, "data_R4/BIC_diff_exp.tsv", sep="\t")
+```
 -->
 <p><strong>Question: </strong> comment interprétez-vous les barplots des écarts-types et variances pour les premières comosantes ? A discuter pendant le cours.</p>
 </div>
@@ -431,19 +494,18 @@ BIC.dist &lt;-<span class="st"> </span><span class="kw">as.dist</span>(<span cla
 <ol start="3" style="list-style-type: decimal">
 <li>Redessiner les arbres de ces deux résultats de clustering en colorant les échantillons selon la classe de cancer.</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Assign a color to each cancer type</span>
-classes &lt;-<span class="st"> </span><span class="kw">unique</span>(BIC.sample.classes<span class="op">$</span>cancer.type)
-class.colors &lt;-<span class="st"> </span><span class="kw">rainbow</span>(<span class="dt">n =</span> <span class="kw">length</span>(classes))
-<span class="kw">names</span>(class.colors) &lt;-<span class="st"> </span>classes
-<span class="kw">data.frame</span>(class.colors)
-
-<span class="co"># Associate a color to each sample accordinig to its cancer type</span>
-sample.colors &lt;-<span class="st"> </span>class.colors[BIC.sample.classes<span class="op">$</span>cancer.type]
-<span class="kw">table</span>(BIC.sample.classes<span class="op">$</span>cancer.type, sample.colors)
-
-<span class="kw">plot</span>(BIC.hclust.complete, <span class="dt">labels =</span> F, <span class="dt">hang =</span> <span class="op">-</span><span class="dv">1</span>, <span class="dt">las =</span> <span class="dv">1</span>,
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(BIC.hclust.complete, <span class="dt">labels =</span> F, <span class="dt">hang =</span> <span class="op">-</span><span class="dv">1</span>, <span class="dt">las =</span> <span class="dv">1</span>,
      <span class="dt">main =</span> <span class="st">&quot;Pearson dissimilarity, complete linkage&quot;</span>,
      <span class="dt">col =</span> sample.colors)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ClassDiscovery<span class="op">::</span><span class="kw">plotColoredClusters</span>(
+  BIC.hclust.ward, 
+  <span class="dt">labs=</span>BIC.sample.classes<span class="op">$</span>cancer.type, 
+  <span class="dt">cols=</span>sample.colors, <span class="dt">cex=</span><span class="fl">0.2</span>)
+
+<span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>,
+       <span class="dt">legend=</span><span class="kw">sort</span>(classes), 
+       <span class="dt">col =</span> class.colors,
+       <span class="dt">text.col =</span> class.colors, <span class="dt">cex=</span><span class="fl">0.6</span>)</code></pre></div>
 <ol start="3" style="list-style-type: decimal">
 <li>Comparer les classifications obtenues avec les règles d’agglomératioin complète et Ward, respectivement, en étudiant l’impact du nombre de clusters.</li>
 </ol>
@@ -455,34 +517,43 @@ sample.colors &lt;-<span class="st"> </span>class.colors[BIC.sample.classes<span
 <div id="kmeans" class="section level3">
 <h3>kmeans</h3>
 <ol style="list-style-type: decimal">
-<li>faire un premier kmeans, par exemple, en prenant le nombre de groupe trouvé sur le <code>hclust</code></li>
-<li>faire une boucle pour trouver le nombre optimal de cluster, en calculant l’inertie intra totale en fonction du nombre de groupe <code>kmeans()$totss</code> [faire une boucle pour i allant de 1 à 10 <code>for (i in 1:10) {}</code>]</li>
-<li>refaire le kmeans avec ce nombre optimal</li>
-<li>visualiser ces groupes par exemple sur une projection des données dans le plan par PCA, à l’aide de la fonction `plot(PCA(mon.data.frame, choix=“ind”, col.ind=mon.kmeans$cluster)).</li>
+<li><p>faire un premier kmeans, par exemple, en prenant le nombre de groupe trouvé sur le <code>hclust</code></p></li>
+<li><p>faire une boucle pour trouver le nombre optimal de cluster, en calculant l’inertie intra totale en fonction du nombre de groupe <code>kmeans()$totss</code> [faire une boucle pour i allant de 1 à 10 <code>for (i in 1:10) {}</code>]</p></li>
+<li><p>refaire le kmeans avec ce nombre optimal</p></li>
+<li><p>visualiser ces groupes par exemple sur une projection des données dans le plan par PCA, à l’aide de la fonction `plot(PCA(mon.data.frame, choix=“ind”, col.ind=mon.kmeans$cluster)).</p></li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">BIC.kmeans &lt;-<span class="st"> </span><span class="kw">kmeans</span>(dt1, <span class="dt">centers=</span><span class="dv">20</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Run k-means clustering with 20 centers
+BIC.kmeans &lt;-<span class="st"> </span><span class="kw">kmeans</span>(BIC.expr.transposed, <span class="dt">centers=</span><span class="dv">20</span>)
+
+## Report the table of the clusters
 <span class="kw">table</span>(BIC.kmeans<span class="op">$</span>cluster)
+
 T1 =<span class="st"> </span><span class="kw">Sys.time</span>()
 I.intra =<span class="st"> </span><span class="kw">numeric</span>(<span class="dt">length=</span><span class="dv">20</span>)
-I.intra[<span class="dv">1</span>] =<span class="st"> </span><span class="kw">kmeans</span>(dt1, <span class="dt">centers=</span><span class="dv">2</span>)<span class="op">$</span>totss
+I.intra[<span class="dv">1</span>] =<span class="st"> </span><span class="kw">kmeans</span>(BIC.expr.transposed, <span class="dt">centers=</span><span class="dv">2</span>)<span class="op">$</span>totss
 <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span><span class="dv">20</span>) {
-  kmi &lt;-<span class="st"> </span><span class="kw">kmeans</span>(dt1, <span class="dt">centers=</span>i)
+  <span class="kw">message</span>(<span class="st">&quot;Running k-means with &quot;</span>, i, <span class="st">&quot; centers&quot;</span>)
+  kmi &lt;-<span class="st"> </span><span class="kw">kmeans</span>(BIC.expr.transposed, <span class="dt">centers=</span>i)
   I.intra[i] &lt;-<span class="st"> </span>kmi<span class="op">$</span>tot.withinss
 }
-<span class="kw">plot</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">20</span>, I.intra, <span class="dt">type=</span><span class="st">&quot;l&quot;</span>)
+
+<span class="co"># Plot a curve showint the intra-cluster information as a function of the number of clusters </span>
+<span class="kw">plot</span>((<span class="dv">1</span><span class="op">:</span><span class="dv">20</span>)<span class="op">-</span><span class="fl">0.5</span>, I.intra, <span class="dt">type=</span><span class="st">&quot;s&quot;</span>)
 T2 =<span class="st"> </span><span class="kw">Sys.time</span>()
-Tdiff =<span class="st"> </span><span class="kw">difftime</span>(T2,T1)
+Tdiff =<span class="st"> </span><span class="kw">difftime</span>(T2,T1) ## Measure elapsed time
+
 <span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))
-BIC.kmeans10 &lt;-<span class="st"> </span><span class="kw">kmeans</span>(dt1, <span class="dt">centers=</span><span class="dv">10</span>)
+BIC.kmeans10 &lt;-<span class="st"> </span><span class="kw">kmeans</span>(BIC.expr.transposed, <span class="dt">centers=</span><span class="dv">10</span>)
 <span class="kw">table</span>(BIC.kmeans10<span class="op">$</span>cluster)
-<span class="kw">plot</span>(BIC.pca, <span class="dt">choix=</span><span class="st">&quot;ind&quot;</span>, <span class="dt">label=</span><span class="st">&quot;none&quot;</span>, <span class="dt">col.ind=</span>BIC.kmeans10<span class="op">$</span>cluster)
-BIC.kmeans3 &lt;-<span class="st"> </span><span class="kw">kmeans</span>(dt1, <span class="dt">centers=</span><span class="dv">3</span>)
+<span class="kw">plot</span>(BIC.prcomp, <span class="dt">choix=</span><span class="st">&quot;ind&quot;</span>, <span class="dt">label=</span><span class="st">&quot;none&quot;</span>, <span class="dt">col.ind=</span>BIC.kmeans10<span class="op">$</span>cluster)
+BIC.kmeans3 &lt;-<span class="st"> </span><span class="kw">kmeans</span>(BIC.expr.transposed, <span class="dt">centers=</span><span class="dv">3</span>)
 <span class="kw">table</span>(BIC.kmeans3<span class="op">$</span>cluster)
-<span class="kw">plot</span>(BIC.pca, <span class="dt">choix=</span><span class="st">&quot;ind&quot;</span>, <span class="dt">label=</span><span class="st">&quot;none&quot;</span>, <span class="dt">col.ind=</span>BIC.kmeans3<span class="op">$</span>cluster)
+<span class="kw">plot</span>(BIC.prcomp, <span class="dt">choix=</span><span class="st">&quot;ind&quot;</span>, <span class="dt">label=</span><span class="st">&quot;none&quot;</span>, <span class="dt">col.ind=</span>BIC.kmeans3<span class="op">$</span>cluster)
 <span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))
-BIC.kmeans2 &lt;-<span class="st"> </span><span class="kw">kmeans</span>(dt1, <span class="dt">centers=</span><span class="dv">2</span>)
+
+BIC.kmeans2 &lt;-<span class="st"> </span><span class="kw">kmeans</span>(BIC.expr.transposed, <span class="dt">centers=</span><span class="dv">2</span>)
 <span class="kw">table</span>(BIC.kmeans2<span class="op">$</span>cluster)
-<span class="kw">plot</span>(BIC.pca, <span class="dt">choix=</span><span class="st">&quot;ind&quot;</span>, <span class="dt">label=</span><span class="st">&quot;none&quot;</span>, <span class="dt">col.ind=</span>BIC.kmeans2<span class="op">$</span>cluster)</code></pre></div>
+<span class="kw">plot</span>(BIC.prcomp, <span class="dt">choix=</span><span class="st">&quot;ind&quot;</span>, <span class="dt">label=</span><span class="st">&quot;none&quot;</span>, <span class="dt">col.ind=</span>BIC.kmeans2<span class="op">$</span>cluster)</code></pre></div>
 </div>
 <div id="comparaisons" class="section level3">
 <h3>Comparaisons</h3>
@@ -490,19 +561,26 @@ BIC.kmeans2 &lt;-<span class="st"> </span><span class="kw">kmeans</span>(dt1, <s
 <h4>kmeans versus hclust</h4>
 <p>Nous allons maintenant comparer les résultats de ces deux méthodes de clustering.</p>
 <ol style="list-style-type: decimal">
-<li>à l’aide de la fonction <code>table</code>, calculer la matrice de confusion de vos deux clustering. Commentez.</li>
-<li>à l’aide de la fonction <code>adjustedRand(clues)</code> calculez le RI et le ARI de vos clustering. Commentez.</li>
+<li><p>à l’aide de la fonction <code>table</code>, calculez la matrice de confusion de vos deux clustering. Commentez.</p></li>
+<li><p>à l’aide de la fonction <code>adjustedRand(clues)</code> calculez le RI et le ARI de vos clustering. Commentez.</p></li>
 </ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))
-<span class="kw">plot</span>(BIC.hclust.ward, <span class="dt">labels=</span>F, <span class="dt">hang=</span><span class="dv">0</span>)
+<span class="kw">plot</span>(BIC.hclust.ward, <span class="dt">labels=</span><span class="ot">FALSE</span>, <span class="dt">hang=</span><span class="op">-</span><span class="dv">1</span>, <span class="dt">main =</span> <span class="st">&quot;Ward&quot;</span>)
+
 <span class="kw">rect.hclust</span>(BIC.hclust.ward, <span class="dt">k=</span><span class="dv">3</span>)
+
 BIC.cutree3 &lt;-<span class="st"> </span><span class="kw">cutree</span>(BIC.hclust.ward, <span class="dt">k=</span><span class="dv">3</span>)
-<span class="kw">plot</span>(BIC.hclust.ward, <span class="dt">labels=</span>F, <span class="dt">hang=</span><span class="dv">0</span>)
-<span class="kw">rect.hclust</span>(BIC.hclust.ward, <span class="dt">k=</span><span class="dv">10</span>)
-BIC.cutree10 &lt;-<span class="st"> </span><span class="kw">cutree</span>(BIC.hclust.ward, <span class="dt">k=</span><span class="dv">10</span>)
+
+<span class="kw">plot</span>(BIC.hclust.ward, <span class="dt">labels =</span> F, <span class="dt">hang =</span> <span class="op">-</span><span class="dv">1</span>, <span class="dt">main =</span> <span class="st">&quot;complete&quot;</span>)
+
+<span class="kw">rect.hclust</span>(BIC.hclust.ward, <span class="dt">k =</span> <span class="dv">10</span>)
+
+BIC.cutree10 &lt;-<span class="st"> </span><span class="kw">cutree</span>(BIC.hclust.ward, <span class="dt">k =</span> <span class="dv">10</span>)
+
 <span class="kw">table</span>(BIC.cutree3, BIC.kmeans<span class="op">$</span>cluster)
 <span class="kw">table</span>(BIC.cutree10, BIC.kmeans<span class="op">$</span>cluster)
-<span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))
+<span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))
+
 clues<span class="op">::</span><span class="kw">adjustedRand</span>(BIC.cutree3, BIC.kmeans3<span class="op">$</span>cluster)
 clues<span class="op">::</span><span class="kw">adjustedRand</span>(BIC.cutree10, BIC.kmeans10<span class="op">$</span>cluster)
 clues<span class="op">::</span><span class="kw">adjustedRand</span>(BIC.cutree3, BIC.kmeans10<span class="op">$</span>cluster)
@@ -513,8 +591,8 @@ clues<span class="op">::</span><span class="kw">adjustedRand</span>(BIC.cutree10
 <p>Nous connaissons les types de cancer des différentes tumeurs, définie en combinant trois marqueurs immunologiques :</p>
 <ul>
 <li>HER2,</li>
-<li>ER (récepteur d’œstrogène)</li>
-<li>Pr (récepteur de progestérone)</li>
+<li>ER1 (récepteur d’œstrogène)</li>
+<li>PR1 (récepteur de progestérone)</li>
 </ul>
 <p>et nous obtenons les classes suivantes :</p>
 <ul>
@@ -553,8 +631,8 @@ clues<span class="op">::</span><span class="kw">adjustedRand</span>(BIC.kmeans10
 ## hclust (2 groupes) et HER2+/-
 mycol=BIC.cutree2
 mypch=<span class="kw">as.numeric</span>(BIC.sample.classes[,<span class="dv">4</span>])
-pointsToPlot &lt;-<span class="st"> </span>BIC.pca<span class="op">$</span>ind<span class="op">$</span>coord[,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>]
-<span class="kw">plot</span>(BIC.pca, <span class="dt">choix=</span><span class="st">&quot;ind&quot;</span>, <span class="dt">label=</span><span class="st">&quot;none&quot;</span>, <span class="dt">col.ind=</span><span class="st">&quot;white&quot;</span>)
+pointsToPlot &lt;-<span class="st"> </span>BIC.prcomp<span class="op">$</span>ind<span class="op">$</span>coord[,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>]
+<span class="kw">plot</span>(BIC.prcomp, <span class="dt">choix=</span><span class="st">&quot;ind&quot;</span>, <span class="dt">label=</span><span class="st">&quot;none&quot;</span>, <span class="dt">col.ind=</span><span class="st">&quot;white&quot;</span>)
 <span class="kw">points</span>(pointsToPlot, <span class="dt">col=</span>mycol, <span class="dt">pch=</span>mypch)
 texte.legend=<span class="kw">c</span>(<span class="st">&quot;HER2-&quot;</span>, <span class="st">&quot;HER2+&quot;</span>, <span class="st">&quot;gr1&quot;</span>, <span class="st">&quot;gr2&quot;</span>)
 <span class="kw">legend</span>(<span class="dt">x=</span><span class="op">-</span><span class="dv">400</span>, <span class="dt">y=</span><span class="dv">100</span>, texte.legend, <span class="dt">col=</span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>), <span class="dt">pch=</span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="ot">NA</span>, <span class="ot">NA</span>), <span class="dt">text.col=</span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>))</code></pre></div>
