@@ -442,9 +442,23 @@ plot((1:20)-0.5, I.intra, type="s")
 T2 = Sys.time()
 Tdiff = difftime(T2,T1) ## Measure elapsed time
 
-par(mfrow=c(1,2))
-BIC.kmeans10 <- kmeans(BIC.expr.transposed, centers=10)
+## Run k-means clustering with 2 clusters
+BIC.kmeans2 <- kmeans(BIC.expr.transposed, centers = 2)
 table(BIC.kmeans10$cluster)
+
+## Run k-means clustering with 10 clusters
+BIC.kmeans10 <- kmeans(BIC.expr.transposed, centers = 10)
+table(BIC.kmeans10$cluster)
+
+
+## Cut the tree at some arbitrary levels to get clusters
+
+## 2 clusters to see if the first subdivision corresponds to one of the 3 markers (ER1, PR1, Her2)
+BIC.cutree2 <- cutree(BIC.hclust.ward, k = 2) 
+
+## 5 clusters to see if the match the cancer types defined by biologists
+BIC.cutree5 <- cutree(BIC.hclust.ward, k = 5)
+
 
 ## Define sample colors reflecting the cluster membership
 hclust.k2.colors <- BIC.cutree2
@@ -459,6 +473,7 @@ pch.her2 <- as.numeric(BIC.sample.classes$Her2)
 
 ## Compare clusters and markers on the PC plot, to evaluate whether 
 ## the components capture relevant information
+par(mfrow=c(1,2))
 plot(BIC.prcomp$x[,1:2], 
      col = hclust.k2.colors, 
      pch = pch.er1,
@@ -552,8 +567,6 @@ rect.hclust(BIC.hclust.ward, k = 2, border = "red")
 legend("topright", 
        legend = c("2 clusters", "5 clusters"), 
        col = c("red", "blue"), lwd = 2, cex = 0.7)
-BIC.cutree2 <- cutree(BIC.hclust.ward, k = 2)
-BIC.cutree5 <- cutree(BIC.hclust.ward, k = 5)
 
 ## hclust 2 clusters versus each marker
 table(BIC.cutree2, BIC.sample.classes$Her2)
