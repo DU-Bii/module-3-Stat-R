@@ -312,16 +312,19 @@ $(document).ready(function () {
 <div id="dossier-partage-contenant-les-donnees" class="section level2">
 <h2>Dossier partagé contenant les données</h2>
 <p>Les données sont dans un répertoire partagé, dont le chemin dépend du serveur auquel vous êtes connectézs. Nous allons définir une variable <code>data.folder</code> qui indiquera le chemin de ce dossier partagé, en fonction du serveur.</p>
-<ol style="list-style-type: decimal">
-<li>Sur le serveur Rstudio de l’<strong>IFB-core-cluster</strong>, les données sont dans le répertoire <code>/shared/projects/du_bii_2019/data/module3/seance4/BIC/</code>.</li>
-</ol>
+<p>Sur le <strong>serveur Rstudio de l’IFB-core-cluster</strong>, les données sont dans le répertoire <code>/shared/projects/du_bii_2019/data/module3/seance4/BIC/</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Liste des fichiers de données
 data.folder &lt;-<span class="st"> &quot;/shared/projects/du_bii_2019/data/module3/seance4/BIC/&quot;</span></code></pre></div>
-<ol start="2" style="list-style-type: decimal">
-<li>Sur les machines de Paris-Diderot, elles sont dans le répertoire <code>/home/sdv/dubii/data-m3/s4</code></li>
-</ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Liste des fichiers de données
-data.folder &lt;-<span class="st"> &quot;/home/sdv/dubii/data-m3/s4/&quot;</span></code></pre></div>
+<!--
+2. Sur les machines de Paris-Diderot, elles sont dans le répertoire `/home/sdv/dubii/data-m3/s4` 
+
+
+```r
+## Liste des fichiers de données
+data.folder <- "/home/sdv/dubii/data-m3/s4/"
+```
+
+-->
 </div>
 <div id="contenu-du-dossier-de-donnees" class="section level2">
 <h2>Contenu du dossier de données</h2>
@@ -336,7 +339,8 @@ data.folder &lt;-<span class="st"> &quot;/home/sdv/dubii/data-m3/s4/&quot;</span
 <li>Calculez la taille des fichiers en bytes et en Megabytes (<span class="math inline">\(1Mb = 1024 \cot 1024 \cdot b\)</span>), sachant que pour chaque conversion il faut diviser par 1024.</li>
 <li>Vous pouvez consulter notre solution à l’aide du code suivant (cliquer sur <strong><em>Code</em></strong> pour l’afficher).</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">list.files</span>(<span class="dt">path =</span> data.folder) <span class="co"># List the data files</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">message</span>(<span class="st">&quot;Listing files in data folder: &quot;</span>, data.folder)
+<span class="kw">list.files</span>(<span class="dt">path =</span> data.folder) <span class="co"># List the data files</span>
 <span class="kw">file.size</span>(<span class="kw">list.files</span>(<span class="dt">path =</span> data.folder, <span class="dt">full.names =</span> <span class="ot">TRUE</span>)) <span class="co"># Get the size of the data files, in bytes</span>
 
 <span class="kw">file.size</span>(<span class="kw">list.files</span>(<span class="dt">path =</span> data.folder, <span class="dt">full.names =</span> <span class="ot">TRUE</span>))<span class="op">/</span><span class="st"> </span><span class="dv">1024</span><span class="op">^</span><span class="dv">2</span> <span class="co"># Get the size of the data files In Mv</span></code></pre></div>
@@ -348,6 +352,7 @@ data.folder &lt;-<span class="st"> &quot;/home/sdv/dubii/data-m3/s4/&quot;</span
 BIC.expr.file &lt;-<span class="st"> </span><span class="kw">file.path</span>(data.folder, <span class="st">&quot;BIC_log2-norm-counts_edgeR_DEG_fdr_0.01.tsv.gz&quot;</span>)
 
 <span class="co"># Load expression</span>
+<span class="kw">message</span>(<span class="st">&quot;Loading expression file</span><span class="ch">\t</span><span class="st">&quot;</span>, BIC.expr.file)
 BIC.expr &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="dt">file =</span> BIC.expr.file, <span class="dt">h=</span><span class="ot">TRUE</span>)</code></pre></div>
 </div>
 <div id="mesure-de-la-taille-des-donnees" class="section level2">
@@ -377,6 +382,7 @@ BIC.expr &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span 
 <span class="kw">head</span>(<span class="kw">colnames</span>(BIC.expr))
 
 ## transposons la table d&#39;expression
+<span class="kw">message</span>(<span class="st">&quot;Transcribing expression matrix&quot;</span>)
 BIC.expr.transposed &lt;-<span class="st"> </span><span class="kw">t</span>(BIC.expr)</code></pre></div>
 </div>
 <div id="charger-les-etiquettes-de-classes-des-echantillons" class="section level2">
@@ -422,9 +428,9 @@ BIC.prcomp &lt;-<span class="st"> </span><span class="kw">prcomp</span>(BIC.expr
         <span class="dt">main =</span> <span class="st">&quot;Standard deviation per PC&quot;</span>)
 
 ## Visualisation des données
-<span class="kw">plot</span>(BIC.prcomp, <span class="dt">main =</span> <span class="st">&quot;Variance per PC&quot;</span>, <span class="dt">col=</span><span class="st">&quot;#BBDDFF&quot;</span>)
-
-<span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</code></pre></div>
+<span class="kw">plot</span>(BIC.prcomp, <span class="dt">main =</span> <span class="st">&quot;Variance per PC&quot;</span>, <span class="dt">col=</span><span class="st">&quot;#BBDDFF&quot;</span>)</code></pre></div>
+<p><img src="figures/TP_unnamed-chunk-6-1.png" width="480" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</code></pre></div>
 <p>Définissez une couleur pour chaque classe, et assignez à chaque échantillon la couleur correspondant à sa classe. Dessinez ensuite un nuage de points avec les coordonnées de chaque échantillon dans les 1ère et 2ème composantes (PC2 vs PC1)</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Assign a color to each cancer type</span>
 classes &lt;-<span class="st"> </span><span class="kw">unique</span>(BIC.sample.classes<span class="op">$</span>cancer.type)
@@ -435,34 +441,6 @@ class.colors &lt;-<span class="st"> </span><span class="kw">rainbow</span>(<span
 <span class="co"># Associate a color to each sample accordinig to its cancer type</span>
 sample.colors &lt;-<span class="st"> </span>class.colors[BIC.sample.classes<span class="op">$</span>cancer.type]
 <span class="kw">table</span>(BIC.sample.classes<span class="op">$</span>cancer.type, sample.colors)</code></pre></div>
-<!--
-
-```r
-save(BIC.prcomp, file="data_R4/BIC.prcomp.RData")
-# Réduction des données, anova
-dt2 <- data.frame(BIC.expr.transposed, BIC.sample.classes[,1])
-p.value <- numeric(length=ncol(BIC.expr.transposed))
-for (i in 1:ncol(BIC.expr.transposed)) {
-  p.value[i] <- summary(aov(dt2[,i] ~ dt2[,20250]))[[1]][1,5]
-}
-p.fdr <- p.adjust(p.value, method="fdr")
-p.bh <- p.adjust(p.value, method="BH")
-p.bonf <- p.adjust(p.value, method="bonferroni")
-par(mfrow=c(2,2))
-hist(p.value)
-hist(p.fdr)
-hist(p.bh)
-hist(p.bonf)
-par(mfrow=c(1,1))
-sum(p.value < 0.05) ; sum(p.value < 0.01)
-sum(p.fdr < 0.05) ; sum(p.fdr < 0.01)
-sum(p.bh < 0.05) ; sum(p.bh < 0.01)
-sum(p.bonf < 0.05) ; sum(p.bonf < 0.01)
-BIC.all <- BIC.expr.transposed
-BIC.expr.transposed <- BIC.expr.transposed[, which(p.fdr < 0.05)]
-write.table(BIC.expr.transposed, "data_R4/BIC_diff_exp.tsv", sep="\t")
-```
--->
 <p><strong>Question: </strong> comment interprétez-vous les barplots des écarts-types et variances pour les premières comosantes ? A discuter pendant le cours.</p>
 </div>
 <div id="clustering-hierarchique" class="section level2">
@@ -474,38 +452,51 @@ write.table(BIC.expr.transposed, "data_R4/BIC_diff_exp.tsv", sep="\t")
 <li><p>Lisez l’aide de la fonction <code>cor</code>, et utilisez cette fonction pour calculer la matrice de corrélation entre échantillons.</p></li>
 <li><p>transformation du corrélation de Spearman en une distance à l’aide de la trnsformation : <span class="math inline">\(d = 1 - r^2\)</span></p></li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">BIC.cor &lt;-<span class="st"> </span><span class="kw">cor</span>(<span class="kw">t</span>(BIC.expr.transposed), 
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Compute Spearman correlation coefficient
+BIC.cor &lt;-<span class="st"> </span><span class="kw">cor</span>(<span class="kw">t</span>(BIC.expr.transposed), 
                <span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>)
+
+<span class="co"># Check the dimensions of the correlation matrix</span>
+<span class="co"># (should be N x N, where N is the number of samples)</span>
 <span class="kw">dim</span>(BIC.cor)
+
+## Derive a dissimilarity value from the corrrelation
 BIC.dist &lt;-<span class="st"> </span><span class="kw">as.dist</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>BIC.cor)</code></pre></div>
 </div>
 <div id="hclust" class="section level3">
 <h3>hclust</h3>
 <p>Faites un premier clustering hiérarchique, avec le critère d’aggrégation par défaut (lisez l’aide de la fonction <code>hclust()</code> pour savoir quelle est ce critère par défaut).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">BIC.hclust.complete &lt;-<span class="st"> </span><span class="kw">hclust</span>(BIC.dist)
-<span class="kw">plot</span>(BIC.hclust.complete, <span class="dt">labels =</span> F, <span class="dt">hang =</span> <span class="op">-</span><span class="dv">1</span>, <span class="dt">las =</span> <span class="dv">1</span>,
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Run hierarchical clustering on the expression data
+## (use default parameters)
+BIC.hclust.complete &lt;-<span class="st"> </span><span class="kw">hclust</span>(BIC.dist)
+
+## Plot the resulting tree
+<span class="kw">plot</span>(BIC.hclust.complete, <span class="dt">labels =</span> F, <span class="dt">hang =</span> <span class="op">-</span><span class="dv">1</span>, <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="st">&quot;grey&quot;</span>,
      <span class="dt">main =</span> <span class="st">&quot;Pearson dissimilarity, complete linkage&quot;</span>)</code></pre></div>
+<p><img src="figures/TP_unnamed-chunk-8-1.png" width="480" style="display: block; margin: auto;" /></p>
 <ol start="2" style="list-style-type: decimal">
 <li>faire un deuxième clustering hiérarchique, avec le critère d’aggrégation de Ward</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">BIC.hclust.ward &lt;-<span class="st"> </span><span class="kw">hclust</span>(BIC.dist, <span class="dt">method =</span> <span class="st">&quot;ward.D2&quot;</span>)
-<span class="kw">plot</span>(BIC.hclust.ward, <span class="dt">labels =</span> F, <span class="dt">hang =</span> <span class="op">-</span><span class="dv">1</span>, <span class="dt">las =</span> <span class="dv">1</span>,
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">##  Run hierarchical clustering with Ward agglomeration
+BIC.hclust.ward &lt;-<span class="st"> </span><span class="kw">hclust</span>(BIC.dist, <span class="dt">method =</span> <span class="st">&quot;ward.D2&quot;</span>)
+
+## Plot the resulting tree
+<span class="kw">plot</span>(BIC.hclust.ward, <span class="dt">labels =</span> F, <span class="dt">hang =</span> <span class="op">-</span><span class="dv">1</span>, <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="st">&quot;#88BB66&quot;</span>, 
      <span class="dt">main =</span> <span class="st">&quot;Pearson dissimilarity, Ward linkage&quot;</span>)</code></pre></div>
+<p><img src="figures/TP_unnamed-chunk-9-1.png" width="480" style="display: block; margin: auto;" /></p>
 <ol start="3" style="list-style-type: decimal">
 <li>Redessiner les arbres de ces deux résultats de clustering en colorant les échantillons selon la classe de cancer.</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(BIC.hclust.complete, <span class="dt">labels =</span> F, <span class="dt">hang =</span> <span class="op">-</span><span class="dv">1</span>, <span class="dt">las =</span> <span class="dv">1</span>,
-     <span class="dt">main =</span> <span class="st">&quot;Pearson dissimilarity, complete linkage&quot;</span>,
-     <span class="dt">col =</span> sample.colors)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ClassDiscovery<span class="op">::</span><span class="kw">plotColoredClusters</span>(
   BIC.hclust.ward, 
-  <span class="dt">labs=</span>BIC.sample.classes<span class="op">$</span>cancer.type, 
+  <span class="dt">labs=</span>BIC.sample.classes<span class="op">$</span>cancer.type, <span class="dt">col =</span> <span class="st">&quot;grey&quot;</span>,
   <span class="dt">cols=</span>sample.colors, <span class="dt">cex=</span><span class="fl">0.2</span>)
 
 <span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>,
        <span class="dt">legend=</span><span class="kw">sort</span>(classes), 
        <span class="dt">col =</span> class.colors,
-       <span class="dt">text.col =</span> class.colors, <span class="dt">cex=</span><span class="fl">0.6</span>)</code></pre></div>
+       <span class="dt">text.col =</span> class.colors, <span class="dt">cex=</span><span class="fl">0.9</span>)</code></pre></div>
+<p><img src="figures/TP_tree_colored_labels-1.png" width="480" style="display: block; margin: auto;" /></p>
 <ol start="3" style="list-style-type: decimal">
 <li>Comparer les classifications obtenues avec les règles d’agglomératioin complète et Ward, respectivement, en étudiant l’impact du nombre de clusters.</li>
 </ol>
@@ -520,8 +511,9 @@ BIC.dist &lt;-<span class="st"> </span><span class="kw">as.dist</span>(<span cla
 <li><p>faire un premier kmeans, par exemple, en prenant le nombre de groupe trouvé sur le <code>hclust</code></p></li>
 <li><p>faire une boucle pour trouver le nombre optimal de cluster, en calculant l’inertie intra totale en fonction du nombre de groupe <code>kmeans()$totss</code> [faire une boucle pour i allant de 1 à 10 <code>for (i in 1:10) {}</code>]</p></li>
 <li><p>refaire le kmeans avec ce nombre optimal</p></li>
-<li><p>visualiser ces groupes par exemple sur une projection des données dans le plan par PCA, à l’aide de la fonction `plot(PCA(mon.data.frame, choix=“ind”, col.ind=mon.kmeans$cluster)).</p></li>
+<li><p>visualiser ces groupes par exemple sur une projection des données dans le plan par PCA, à l’aide de la fonction <code>prcomp()</code>.</p></li>
 </ol>
+<p><strong>Astuce:</strong> dans le résultat de <code>prcomp()</code>, les coordonnées des points se trouvent dans le champs <code>x</code> .</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Run k-means clustering with 20 centers
 BIC.kmeans &lt;-<span class="st"> </span><span class="kw">kmeans</span>(BIC.expr.transposed, <span class="dt">centers=</span><span class="dv">20</span>)
 
@@ -538,22 +530,60 @@ I.intra[<span class="dv">1</span>] =<span class="st"> </span><span class="kw">km
 }
 
 <span class="co"># Plot a curve showint the intra-cluster information as a function of the number of clusters </span>
-<span class="kw">plot</span>((<span class="dv">1</span><span class="op">:</span><span class="dv">20</span>)<span class="op">-</span><span class="fl">0.5</span>, I.intra, <span class="dt">type=</span><span class="st">&quot;s&quot;</span>)
-T2 =<span class="st"> </span><span class="kw">Sys.time</span>()
+<span class="kw">plot</span>((<span class="dv">1</span><span class="op">:</span><span class="dv">20</span>)<span class="op">-</span><span class="fl">0.5</span>, I.intra, <span class="dt">type=</span><span class="st">&quot;s&quot;</span>)</code></pre></div>
+<p><img src="figures/TP_unnamed-chunk-10-1.png" width="480" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">T2 =<span class="st"> </span><span class="kw">Sys.time</span>()
 Tdiff =<span class="st"> </span><span class="kw">difftime</span>(T2,T1) ## Measure elapsed time
 
-<span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))
-BIC.kmeans10 &lt;-<span class="st"> </span><span class="kw">kmeans</span>(BIC.expr.transposed, <span class="dt">centers=</span><span class="dv">10</span>)
-<span class="kw">table</span>(BIC.kmeans10<span class="op">$</span>cluster)
-<span class="kw">plot</span>(BIC.prcomp, <span class="dt">choix=</span><span class="st">&quot;ind&quot;</span>, <span class="dt">label=</span><span class="st">&quot;none&quot;</span>, <span class="dt">col.ind=</span>BIC.kmeans10<span class="op">$</span>cluster)
-BIC.kmeans3 &lt;-<span class="st"> </span><span class="kw">kmeans</span>(BIC.expr.transposed, <span class="dt">centers=</span><span class="dv">3</span>)
-<span class="kw">table</span>(BIC.kmeans3<span class="op">$</span>cluster)
-<span class="kw">plot</span>(BIC.prcomp, <span class="dt">choix=</span><span class="st">&quot;ind&quot;</span>, <span class="dt">label=</span><span class="st">&quot;none&quot;</span>, <span class="dt">col.ind=</span>BIC.kmeans3<span class="op">$</span>cluster)
-<span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))
+## Run k-means clustering with 2 clusters
+BIC.kmeans2 &lt;-<span class="st"> </span><span class="kw">kmeans</span>(BIC.expr.transposed, <span class="dt">centers =</span> <span class="dv">2</span>)
+<span class="kw">table</span>(BIC.kmeans2<span class="op">$</span>cluster) ## Cluster sizes
 
-BIC.kmeans2 &lt;-<span class="st"> </span><span class="kw">kmeans</span>(BIC.expr.transposed, <span class="dt">centers=</span><span class="dv">2</span>)
-<span class="kw">table</span>(BIC.kmeans2<span class="op">$</span>cluster)
-<span class="kw">plot</span>(BIC.prcomp, <span class="dt">choix=</span><span class="st">&quot;ind&quot;</span>, <span class="dt">label=</span><span class="st">&quot;none&quot;</span>, <span class="dt">col.ind=</span>BIC.kmeans2<span class="op">$</span>cluster)</code></pre></div>
+## Run k-means clustering with 3 clusters
+BIC.kmeans3 &lt;-<span class="st"> </span><span class="kw">kmeans</span>(BIC.expr.transposed, <span class="dt">centers =</span> <span class="dv">3</span>)
+<span class="kw">table</span>(BIC.kmeans3<span class="op">$</span>cluster) ## Cluster sizes
+
+## Run k-means clustering with 10 clusters
+BIC.kmeans10 &lt;-<span class="st"> </span><span class="kw">kmeans</span>(BIC.expr.transposed, <span class="dt">centers =</span> <span class="dv">10</span>)
+<span class="kw">table</span>(BIC.kmeans10<span class="op">$</span>cluster) ## Cluster sizes
+
+
+## Cut the tree at some arbitrary levels to get clusters
+
+## 2 clusters to see if the first subdivision corresponds to one of the 3 markers (ER1, PR1, Her2)
+BIC.cutree2 &lt;-<span class="st"> </span><span class="kw">cutree</span>(BIC.hclust.ward, <span class="dt">k =</span> <span class="dv">2</span>) 
+
+## 5 clusters to see if the match the cancer types defined by biologists
+BIC.cutree5 &lt;-<span class="st"> </span><span class="kw">cutree</span>(BIC.hclust.ward, <span class="dt">k =</span> <span class="dv">5</span>)
+
+
+## Define sample colors reflecting the cluster membership
+hclust.k2.colors &lt;-<span class="st"> </span>BIC.cutree2
+kmeans.k2.colors &lt;-<span class="st"> </span>BIC.kmeans2<span class="op">$</span>cluster
+kmeans.k10.colors &lt;-<span class="st"> </span>BIC.kmeans10<span class="op">$</span>cluster
+
+## Define characters reflecting markers
+pch.cancer.type &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(BIC.sample.classes<span class="op">$</span>cancer.type)
+pch.er1 &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(BIC.sample.classes<span class="op">$</span>ER1)
+pch.pr1 &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(BIC.sample.classes<span class="op">$</span>PR1)
+pch.her2 &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(BIC.sample.classes<span class="op">$</span>Her2)
+
+## Compare clusters and markers on the PC plot, to evaluate whether 
+## the components capture relevant information
+<span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))
+<span class="kw">plot</span>(BIC.prcomp<span class="op">$</span>x[,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>], 
+     <span class="dt">col =</span> hclust.k2.colors, 
+     <span class="dt">pch =</span> pch.er1,
+     <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">cex =</span> <span class="fl">0.7</span>, 
+     <span class="dt">main =</span> <span class="st">&quot;Hclust 2 clusters versus markers&quot;</span>)
+<span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="dt">cex =</span> <span class="fl">0.8</span>, <span class="dt">legend =</span> <span class="kw">c</span>(<span class="st">&quot;ER1+&quot;</span>, <span class="st">&quot;ER1-&quot;</span>), <span class="dt">pch =</span> )
+
+<span class="kw">plot</span>(BIC.prcomp<span class="op">$</span>x[,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>], 
+     <span class="dt">col =</span> kmeans.k10.colors, 
+     <span class="dt">pch =</span> pch.er1,
+     <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">cex =</span> <span class="fl">0.7</span>, 
+     <span class="dt">main =</span> <span class="st">&quot;K-means 10 clusters versus markers&quot;</span>)</code></pre></div>
+<p><img src="figures/TP_unnamed-chunk-10-2.png" width="480" style="display: block; margin: auto;" /></p>
 </div>
 <div id="comparaisons" class="section level3">
 <h3>Comparaisons</h3>
@@ -573,9 +603,9 @@ BIC.cutree3 &lt;-<span class="st"> </span><span class="kw">cutree</span>(BIC.hcl
 
 <span class="kw">plot</span>(BIC.hclust.ward, <span class="dt">labels =</span> F, <span class="dt">hang =</span> <span class="op">-</span><span class="dv">1</span>, <span class="dt">main =</span> <span class="st">&quot;complete&quot;</span>)
 
-<span class="kw">rect.hclust</span>(BIC.hclust.ward, <span class="dt">k =</span> <span class="dv">10</span>)
-
-BIC.cutree10 &lt;-<span class="st"> </span><span class="kw">cutree</span>(BIC.hclust.ward, <span class="dt">k =</span> <span class="dv">10</span>)
+<span class="kw">rect.hclust</span>(BIC.hclust.ward, <span class="dt">k =</span> <span class="dv">10</span>)</code></pre></div>
+<p><img src="figures/TP_unnamed-chunk-11-1.png" width="480" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">BIC.cutree10 &lt;-<span class="st"> </span><span class="kw">cutree</span>(BIC.hclust.ward, <span class="dt">k =</span> <span class="dv">10</span>)
 
 <span class="kw">table</span>(BIC.cutree3, BIC.kmeans<span class="op">$</span>cluster)
 <span class="kw">table</span>(BIC.cutree10, BIC.kmeans<span class="op">$</span>cluster)
@@ -610,34 +640,105 @@ clues<span class="op">::</span><span class="kw">adjustedRand</span>(BIC.cutree10
 <li>le calcul de la matrice de confusion</li>
 <li>le calcul des rand index et adjusted rand index</li>
 </ul></li>
-<li>commentez</li>
+<li>Interprétez les résultats suivants (cliquez sur “code” pour afficher le code, et exécutez-le)</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(BIC.hclust.ward, <span class="dt">labels=</span>F, <span class="dt">hang=</span><span class="dv">0</span>)
-<span class="kw">rect.hclust</span>(BIC.hclust.ward, <span class="dt">k=</span><span class="dv">2</span>)
-BIC.cutree2 &lt;-<span class="st"> </span><span class="kw">cutree</span>(BIC.hclust.ward, <span class="dt">k=</span><span class="dv">2</span>)
-<span class="kw">table</span>(BIC.cutree2, BIC.sample.classes[,<span class="dv">4</span>])
-<span class="kw">table</span>(BIC.kmeans2<span class="op">$</span>cluster, BIC.sample.classes[,<span class="dv">4</span>])</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># clustering versus cancer.type</span>
-<span class="kw">table</span>(BIC.cutree3, BIC.sample.classes[,<span class="dv">1</span>])
-clues<span class="op">::</span><span class="kw">adjustedRand</span>(BIC.cutree3, <span class="kw">as.numeric</span>(BIC.sample.classes[,<span class="dv">1</span>]))
-<span class="kw">table</span>(BIC.kmeans3<span class="op">$</span>cluster, BIC.sample.classes[,<span class="dv">1</span>])
-clues<span class="op">::</span><span class="kw">adjustedRand</span>(BIC.kmeans3<span class="op">$</span>cluster, <span class="kw">as.numeric</span>(BIC.sample.classes[,<span class="dv">1</span>]))
-<span class="kw">table</span>(BIC.cutree10, BIC.sample.classes[,<span class="dv">1</span>])
-clues<span class="op">::</span><span class="kw">adjustedRand</span>(BIC.cutree10, <span class="kw">as.numeric</span>(BIC.sample.classes[,<span class="dv">1</span>]))
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Correspondence between markers
+<span class="kw">kable</span>(<span class="kw">table</span>(BIC.sample.classes<span class="op">$</span>ER1, BIC.sample.classes<span class="op">$</span>PR1))
+<span class="kw">fisher.test</span>(<span class="kw">table</span>(BIC.sample.classes<span class="op">$</span>ER1, BIC.sample.classes<span class="op">$</span>PR1))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># cut the tree at different levels (2, 5)</span>
+<span class="kw">plot</span>(BIC.hclust.ward, <span class="dt">labels =</span> <span class="ot">FALSE</span>, <span class="dt">hang =</span> <span class="op">-</span><span class="dv">1</span>)
+<span class="kw">rect.hclust</span>(BIC.hclust.ward, <span class="dt">k =</span> <span class="dv">5</span>, <span class="dt">border =</span> <span class="st">&quot;blue&quot;</span>)
+<span class="kw">rect.hclust</span>(BIC.hclust.ward, <span class="dt">k =</span> <span class="dv">2</span>, <span class="dt">border =</span> <span class="st">&quot;red&quot;</span>)
+<span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, 
+       <span class="dt">legend =</span> <span class="kw">c</span>(<span class="st">&quot;2 clusters&quot;</span>, <span class="st">&quot;5 clusters&quot;</span>), 
+       <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;blue&quot;</span>), <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">cex =</span> <span class="fl">0.7</span>)</code></pre></div>
+<p><img src="figures/TP_markers_vs_clusters-1.png" width="480" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## hclust 2 clusters versus each marker
+<span class="kw">table</span>(BIC.cutree2, BIC.sample.classes<span class="op">$</span>Her2)
+<span class="kw">table</span>(BIC.cutree2, BIC.sample.classes<span class="op">$</span>ER1)
+<span class="kw">table</span>(BIC.cutree2, BIC.sample.classes<span class="op">$</span>PR1)
+
+## K-means 2 clusters versus each marker
+<span class="kw">table</span>(BIC.kmeans2<span class="op">$</span>cluster, BIC.sample.classes<span class="op">$</span>ER1)
+<span class="kw">table</span>(BIC.kmeans2<span class="op">$</span>cluster, BIC.sample.classes<span class="op">$</span>PR1)
+<span class="kw">table</span>(BIC.kmeans2<span class="op">$</span>cluster, BIC.sample.classes<span class="op">$</span>Her2)
+
+## 5 clusters
+<span class="kw">table</span>(BIC.cutree5, BIC.sample.classes<span class="op">$</span>Her2)
+<span class="kw">table</span>(BIC.cutree5, BIC.sample.classes<span class="op">$</span>ER1)
+<span class="kw">table</span>(BIC.cutree5, BIC.sample.classes<span class="op">$</span>cancer.type)
+
+cluster.vs.cancertype &lt;-<span class="st"> </span><span class="kw">table</span>(
+  BIC.cutree5, 
+  BIC.sample.classes<span class="op">$</span>cancer.type)
+
+<span class="kw">kable</span>(cluster.vs.cancertype, <span class="dt">caption =</span> <span class="st">&quot;Hierarchical clusters (c = 5) versus cancer type. &quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## clustering versus cancer.type
+## Compute the confusion table and adjusted RAND index (ARI)
+
+## 2 clusters versus each marker
+<span class="kw">table</span>(BIC.cutree2, BIC.sample.classes<span class="op">$</span>ER1)
+clues<span class="op">::</span><span class="kw">adjustedRand</span>(
+  BIC.cutree2, 
+  <span class="kw">as.numeric</span>(BIC.sample.classes<span class="op">$</span>ER1))
+
+<span class="kw">table</span>(BIC.cutree2, BIC.sample.classes<span class="op">$</span>PR1)
+clues<span class="op">::</span><span class="kw">adjustedRand</span>(
+  BIC.cutree2, 
+  <span class="kw">as.numeric</span>(BIC.sample.classes<span class="op">$</span>PR1))
+
+<span class="kw">table</span>(BIC.cutree2, BIC.sample.classes<span class="op">$</span>Her2)
+clues<span class="op">::</span><span class="kw">adjustedRand</span>(
+  BIC.cutree2, 
+  <span class="kw">as.numeric</span>(BIC.sample.classes<span class="op">$</span>Her2))
+
+
+## 5 clusters versus cancer type
+<span class="kw">table</span>(BIC.cutree5, BIC.sample.classes<span class="op">$</span>cancer.type)
+clues<span class="op">::</span><span class="kw">adjustedRand</span>(
+  BIC.cutree5, 
+  <span class="kw">as.numeric</span>(BIC.sample.classes<span class="op">$</span>cancer.type))
+
+## Negative control: compute the same stat with randomly permuted values
+<span class="kw">table</span>(BIC.cutree5, BIC.sample.classes<span class="op">$</span>cancer.type)
+clues<span class="op">::</span><span class="kw">adjustedRand</span>(
+  <span class="kw">sample</span>(BIC.cutree5), 
+  <span class="kw">as.numeric</span>(BIC.sample.classes<span class="op">$</span>cancer.type))
+
+<span class="kw">table</span>(BIC.kmeans3<span class="op">$</span>cluster, BIC.sample.classes<span class="op">$</span>cancer.type)
+clues<span class="op">::</span><span class="kw">adjustedRand</span>(
+  BIC.kmeans3<span class="op">$</span>cluster,
+  <span class="kw">as.numeric</span>(BIC.sample.classes<span class="op">$</span>cancer.type))
+
 <span class="kw">table</span>(BIC.kmeans10<span class="op">$</span>cluster, BIC.sample.classes[,<span class="dv">1</span>])
-clues<span class="op">::</span><span class="kw">adjustedRand</span>(BIC.kmeans10<span class="op">$</span>cluster, <span class="kw">as.numeric</span>(BIC.sample.classes[,<span class="dv">1</span>]))</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># visualisation</span>
+clues<span class="op">::</span><span class="kw">adjustedRand</span>(BIC.kmeans10<span class="op">$</span>cluster,
+                    <span class="kw">as.numeric</span>(BIC.sample.classes[,<span class="dv">1</span>]))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Visualisation</span>
+
 
 ## hclust (2 groupes) et HER2+/-
-mycol=BIC.cutree2
-mypch=<span class="kw">as.numeric</span>(BIC.sample.classes[,<span class="dv">4</span>])
-pointsToPlot &lt;-<span class="st"> </span>BIC.prcomp<span class="op">$</span>ind<span class="op">$</span>coord[,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>]
-<span class="kw">plot</span>(BIC.prcomp, <span class="dt">choix=</span><span class="st">&quot;ind&quot;</span>, <span class="dt">label=</span><span class="st">&quot;none&quot;</span>, <span class="dt">col.ind=</span><span class="st">&quot;white&quot;</span>)
-<span class="kw">points</span>(pointsToPlot, <span class="dt">col=</span>mycol, <span class="dt">pch=</span>mypch)
-texte.legend=<span class="kw">c</span>(<span class="st">&quot;HER2-&quot;</span>, <span class="st">&quot;HER2+&quot;</span>, <span class="st">&quot;gr1&quot;</span>, <span class="st">&quot;gr2&quot;</span>)
-<span class="kw">legend</span>(<span class="dt">x=</span><span class="op">-</span><span class="dv">400</span>, <span class="dt">y=</span><span class="dv">100</span>, texte.legend, <span class="dt">col=</span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>), <span class="dt">pch=</span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="ot">NA</span>, <span class="ot">NA</span>), <span class="dt">text.col=</span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>))</code></pre></div>
+<span class="kw">plot</span>(BIC.prcomp<span class="op">$</span>x[,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>], 
+     <span class="dt">col =</span> hclust.k2.colors,
+     <span class="dt">pch =</span> <span class="kw">as.numeric</span>(BIC.sample.classes<span class="op">$</span>ER1), <span class="co"># character indicates ER1 status</span>
+     <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">cex =</span> <span class="fl">0.7</span>, 
+     <span class="dt">main =</span> <span class="st">&quot;Clusters versus markers&quot;</span>)
+<span class="kw">grid</span>()
+texte.legend &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;ER1-&quot;</span>, <span class="st">&quot;ER1+&quot;</span>, <span class="st">&quot;gr1&quot;</span>, <span class="st">&quot;gr2&quot;</span>)
+<span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, texte.legend, 
+       <span class="dt">col =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>), 
+       <span class="dt">pch =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="ot">NA</span>, <span class="ot">NA</span>), 
+       <span class="dt">text.col =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>))</code></pre></div>
+<p><img src="figures/TP_unnamed-chunk-13-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Draw a confusion table of cluster versus ER1
+<span class="kw">kable</span>(<span class="kw">table</span>(BIC.cutree2, BIC.sample.classes<span class="op">$</span>ER1), <span class="dt">caption =</span> <span class="st">&quot;hclust clusters versus ER1 marker&quot;</span>)</code></pre></div>
 </div>
 </div>
+</div>
+<div id="lister-son-environnement" class="section level2">
+<h2>Lister son environnement</h2>
+<p>A la fin de tout travail d’analyse, il est important de conserver une trace précise et complète de l’environnement précis utilisé pour produire les résultats.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Print the complete list of libraries + versions used in this session
+<span class="kw">sessionInfo</span>()</code></pre></div>
 </div>
 
 
