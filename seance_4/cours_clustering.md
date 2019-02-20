@@ -80,8 +80,8 @@ transition: linear
 # Partionnement = Clustering
 
 <div class="figure" style="text-align: center">
-<img src="img/figure1.png" alt="Y a-t-il des groupes ?" width="50%" />
-<p class="caption">Y a-t-il des groupes ?</p>
+<img src="img/figure1.png" alt="Y a-t-il des groupes ?" width="50%" />
+<p class="caption">Y a-t-il des groupes ?</p>
 </div>
 
 
@@ -645,13 +645,13 @@ par(mfrow = c(1,1))
   
 ---
 
-## calcul des nouveaux représentants `BE` et `CD`
+## calcul des nouveaux représentants 'BE' et 'CD'
 
 <img src="img/hclust4.png" width="90%" style="display: block; margin: auto;" />
 
 ---
 
-## calcul des distances de l'individu restant `A` aux points moyens
+## calcul des distances de l'individu restant 'A' aux points moyens
 
 <img src="img/hclust5.png" width="90%" style="display: block; margin: auto;" />
 
@@ -824,23 +824,23 @@ iris.scale.kmeans5
 ```
 
 ```
-K-means clustering with 5 clusters of sizes 28, 22, 32, 40, 28
+K-means clustering with 5 clusters of sizes 23, 11, 38, 62, 16
 
 Cluster means:
   Sepal.Length Sepal.Width Petal.Length Petal.Width
-1   -0.6004762  0.61052381   -2.2580000  -0.9171905
-2   -1.1387879  0.06539394   -2.3443636  -0.9993333
-3    1.0691667  0.04266667    2.0888750   0.9319167
-4    0.4091667 -0.20233333    1.0570000   0.4256667
-5   -0.3111905 -0.42161905    0.2027143   0.0292381
+1  -0.89550725  0.30788406   -2.2797391  -0.9558551
+2  -1.26151515 -0.06642424   -2.4125455  -0.9993333
+3   1.00666667  0.01635088    1.9841053   0.8717193
+4   0.05827957 -0.30894624    0.6355484   0.2345376
+5  -0.46208333  0.76141667   -2.2392500  -0.9180833
 
 Clustering vector:
-  [1] 1 2 2 2 1 1 2 1 2 2 1 2 2 2 1 1 1 1 1 1 1 1 2 1 2 2 1 1 1 2 2 1 1 1 2 2 1 1 2 1 1 2 2 1 1 2 1 2 1 2 4 4 4 5 4 5 4 5 4 5 5 5 5 4 5 4 5 5 4 5 4 5 4 4 4 4 4 4 4 5 5 5 5 4 5 4 4 4 5 5 5 4 5 5 5 5 5 4 5 5 3 4 3 3 3 3 5 3 3 3 4 4 3 4 4 3 3 3 3 4 3 4 3 4 3 3 4 4 3 3 3 3 3 4 4 3 3 3 4 3 3 3 4 3 3 3 4
-[148] 4 3 4
+  [1] 1 2 2 2 1 5 1 1 2 1 5 1 2 2 5 5 5 1 5 5 5 5 1 1 1 1 1 1 1 1 1 5 5 5 1 1 5 1 2 1 1 2 2 1 5 2 5 2 5 1 4 4 3 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 3 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 3 4 3 3 3 3 4 3 3 3 3 3 3 4 4 3 3 3 3 4 3 4 3 4 3 3 4 4 3 3 3 3 3 4 3 3 3 3 4 3 3 3 4 3 3 3 4
+[148] 3 3 4
 
 Within cluster sum of squares by cluster:
-[1]  4.630714  3.114091 18.703437 13.624750  9.749286
- (between_SS / total_SS =  92.7 %)
+[1]  2.285217  1.172727 23.879474 39.820968  2.497500
+ (between_SS / total_SS =  89.8 %)
 
 Available components:
 
@@ -855,8 +855,8 @@ iris.scale.kmeans5$cluster
 ```
 
 ```
-  [1] 1 2 2 2 1 1 2 1 2 2 1 2 2 2 1 1 1 1 1 1 1 1 2 1 2 2 1 1 1 2 2 1 1 1 2 2 1 1 2 1 1 2 2 1 1 2 1 2 1 2 4 4 4 5 4 5 4 5 4 5 5 5 5 4 5 4 5 5 4 5 4 5 4 4 4 4 4 4 4 5 5 5 5 4 5 4 4 4 5 5 5 4 5 5 5 5 5 4 5 5 3 4 3 3 3 3 5 3 3 3 4 4 3 4 4 3 3 3 3 4 3 4 3 4 3 3 4 4 3 3 3 3 3 4 4 3 3 3 4 3 3 3 4 3 3 3 4
-[148] 4 3 4
+  [1] 1 2 2 2 1 5 1 1 2 1 5 1 2 2 5 5 5 1 5 5 5 5 1 1 1 1 1 1 1 1 1 5 5 5 1 1 5 1 2 1 1 2 2 1 5 2 5 2 5 1 4 4 3 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 3 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 3 4 3 3 3 3 4 3 3 3 3 3 3 4 4 3 3 3 3 4 3 4 3 4 3 3 4 4 3 3 3 3 3 4 3 3 3 3 4 3 3 3 4 3 3 3 4
+[148] 3 3 4
 ```
 
 ```r
@@ -866,7 +866,7 @@ table(iris.scale.kmeans5$cluster)
 ```
 
  1  2  3  4  5 
-28 22 32 40 28 
+23 11 38 62 16 
 ```
 
 ---
@@ -1005,9 +1005,9 @@ table(cluster.hclust5, cluster.kmeans3)
 ```
                cluster.kmeans3
 cluster.hclust5  1  2  3
-              1  0 50  0
-              2  2  0 36
-              3  0  0 26
+              1  0 17 33
+              2 38  0  0
+              3 22  4  0
               4 24  0  0
               5 12  0  0
 ```
@@ -1079,20 +1079,20 @@ kable(conf.kmeans, caption = "Confusion table: 3-clusters k-means versus actual 
   <tr>
    <td style="text-align:left;"> setosa </td>
    <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 50 </td>
-   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 17 </td>
+   <td style="text-align:right;"> 33 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> versicolor </td>
-   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 46 </td>
+   <td style="text-align:right;"> 4 </td>
    <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 48 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> virginica </td>
-   <td style="text-align:right;"> 36 </td>
+   <td style="text-align:right;"> 50 </td>
    <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 14 </td>
+   <td style="text-align:right;"> 0 </td>
   </tr>
 </tbody>
 </table>
@@ -1155,13 +1155,13 @@ kable(conf.kmeans)
 <tbody>
   <tr>
    <td style="text-align:left;"> notSetosa </td>
-   <td style="text-align:right;"> 97 </td>
    <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 97 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> setosa </td>
-   <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 50 </td>
+   <td style="text-align:right;"> 0 </td>
   </tr>
 </tbody>
 </table>
@@ -1204,35 +1204,35 @@ kable(performance, digits=3)
 <tbody>
   <tr>
    <td style="text-align:left;"> FPrate </td>
-   <td style="text-align:right;"> 0.057 </td>
+   <td style="text-align:right;"> 1.000 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> TPrate </td>
-   <td style="text-align:right;"> 1.000 </td>
+   <td style="text-align:right;"> 0.057 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> precision </td>
-   <td style="text-align:right;"> 0.970 </td>
+   <td style="text-align:right;"> 0.030 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> recall </td>
-   <td style="text-align:right;"> 1.000 </td>
+   <td style="text-align:right;"> 0.057 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> accuracy </td>
-   <td style="text-align:right;"> 0.980 </td>
+   <td style="text-align:right;"> 0.020 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> F.measure </td>
-   <td style="text-align:right;"> 0.985 </td>
+   <td style="text-align:right;"> 0.039 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> Spe </td>
-   <td style="text-align:right;"> 0.943 </td>
+   <td style="text-align:right;"> 0.000 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> PPV </td>
-   <td style="text-align:right;"> 0.970 </td>
+   <td style="text-align:right;"> 0.030 </td>
   </tr>
 </tbody>
 </table>
@@ -1313,8 +1313,8 @@ kable(conf.kmeans)
   </tr>
   <tr>
    <td style="text-align:left;"> versicolor </td>
-   <td style="text-align:right;"> 3 </td>
    <td style="text-align:right;"> 47 </td>
+   <td style="text-align:right;"> 3 </td>
   </tr>
 </tbody>
 </table>
@@ -1353,11 +1353,11 @@ kable(performance, digits=3)
 <tbody>
   <tr>
    <td style="text-align:left;"> FPrate </td>
-   <td style="text-align:right;"> 0.515 </td>
+   <td style="text-align:right;"> 0.943 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> TPrate </td>
-   <td style="text-align:right;"> 0.943 </td>
+   <td style="text-align:right;"> 0.515 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> precision </td>
@@ -1365,19 +1365,19 @@ kable(performance, digits=3)
   </tr>
   <tr>
    <td style="text-align:left;"> recall </td>
-   <td style="text-align:right;"> 0.943 </td>
+   <td style="text-align:right;"> 0.515 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> accuracy </td>
-   <td style="text-align:right;"> 0.647 </td>
+   <td style="text-align:right;"> 0.353 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> F.measure </td>
-   <td style="text-align:right;"> 0.654 </td>
+   <td style="text-align:right;"> 0.508 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> Spe </td>
-   <td style="text-align:right;"> 0.485 </td>
+   <td style="text-align:right;"> 0.057 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> PPV </td>
