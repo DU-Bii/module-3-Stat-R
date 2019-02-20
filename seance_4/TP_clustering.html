@@ -11,7 +11,7 @@
 
 <meta name="author" content="Anne Badel, Frederic Guyon &amp; Jacques van Helden" />
 
-<meta name="date" content="2019-02-19" />
+<meta name="date" content="2019-02-20" />
 
 <title>Le TP de la séance 4, Clustering</title>
 
@@ -361,60 +361,97 @@ div.tocify {
 <h1 class="title toc-ignore">Le TP de la séance 4, Clustering</h1>
 <h3 class="subtitle"><em>DUBii 2019</em></h3>
 <h4 class="author"><em>Anne Badel, Frederic Guyon &amp; Jacques van Helden</em></h4>
-<h4 class="date"><em>2019-02-19</em></h4>
+<h4 class="date"><em>2019-02-20</em></h4>
 
 </div>
 
 
-<div id="choisir-son-environnement-de-travail" class="section level3">
-<h3>Choisir son environnement de travail</h3>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<div id="but-de-ce-tp" class="section level3">
+<h3>But de ce TP</h3>
+<p>Le tutoriel ci-dessous vous guidera pas-à-pas dans l’utilisation de fonctions <strong>R</strong> pour effectuer un clustering sur des profils transcriptomiques RNA-seq.</p>
+</div>
+<div id="source-des-donnees" class="section level3">
+<h3>Source des données</h3>
+<p>Les données sont issues de la base Recount2 (<a href="https://jhubiostatistics.shinyapps.io/recount/" class="uri">https://jhubiostatistics.shinyapps.io/recount/</a>). Nous avons sélectionné l’étude <strong>TCGA</strong> (The Cancer Genome Atlas; <a href="https://cancergenome.nih.gov/" class="uri">https://cancergenome.nih.gov/</a>), regroupant des données RNA-seq pour plus de 12.000 patients souffrant de différents types de cancer. Nous nous intéressons ici uniquement aux données <strong>Breast Invasive Cancer</strong> (<strong>BIC</strong>) concernant le cancer du sein.</p>
+<p>Les données ont été préparées pour vous, selon la procédure détaillée au cours sur l’analyse différentielle de données RNA-seq.</p>
 <ol style="list-style-type: decimal">
-<li><p>vous pouvez choisir de travail sur le cluster de l’IFB, <a href="https://rstudio.cluster.france-bioinformatique.fr/auth-sign-in">ici</a></p>
-<ul>
-<li>les données sont dans le répertoire :</li>
-</ul></li>
-<li><p>ou en local, sur nos machines</p>
-<ul>
-<li>les données sont dans le répertoire :</li>
-<li>vous devez avoir la commande suivante dans votre <code>.bashrc</code> : <code>. /opt/sdv/anaconda/etc/profile.d/conda.sh</code></li>
-<li>puis vous devez lancer l’environnement <code>conda</code> adéquat : <code>conda activate</code></li>
-<li>et enfin lancer <code>rstudio</code> : <code>rstudio</code></li>
-</ul></li>
+<li>Filtrage des gènes à variance nulle et de ceux ccontenant trop de zéros.</li>
+<li>Normalisation (méthode robuste aux outliers)</li>
+<li>Analyse différentielle multi-groupes (méthode ANOVA, fonciton R <code>aov()</code>).</li>
+<li>Correction des P-valeurs nomiables pour tenir compte des tests multiples (nous avons testé ici ~20.000 gènes). Nous estimons le le False Discovery Rate (FDR) selon la méthode de Benjamini-Hochberg (fonction R <code>p.adjust(all.pvalues, method=&quot;fdr&quot;)</code>).</li>
+<li>Sélection de gènes différentiellement exprimés sur base d’un seuil <span class="math inline">\(\alpha = 0.05\)</span> appliqué au FDR.</li>
 </ol>
 </div>
-<div id="lire-les-donnees" class="section level3">
-<h3>Lire les données</h3>
-<p>Les données sont issues de la base Recount2 (<a href="https://jhubiostatistics.shinyapps.io/recount/" class="uri">https://jhubiostatistics.shinyapps.io/recount/</a>). Nous nous intéressons à la base TCGA, regroupant des données RNA-seq pour différents types de cancer. Nous nous intéressons ici uniquement aux données BIC concernant le cancer du sein.</p>
-<p>Les données ont été préparées pour vous, filtrage des données, normalisation, extraction des gènes différentiellement exprimés (à l’aide d’une analyse de la variance (anova) et du calcul des <em>p.value</em> ajustées par une méthode de FDR (fonction <code>aov</code> et <code>p.adjust(, method=&quot;fdr&quot;)</code>).</p>
+</div>
+<div id="choisir-son-environnement-de-travail" class="section level2">
+<h2>Choisir son environnement de travail</h2>
+<p>Vous pouvez choisir de travailler soir sur le cluster core de l’IFB soit sur les ordinateurs de Paris-Diderot.</p>
 <ol style="list-style-type: decimal">
-<li>A l’IFB : sur le serveur IFB-core-cluster, les données sont dans le répertoire</li>
+<li><p>Sur le <a href="https://rstudio.cluster.france-bioinformatique.fr/"><strong>cluster de l’IFB</strong></a></p>
+<ul>
+<li>ouvrez une connexion au serveur RStudio <a href="https://rstudio.cluster.france-bioinformatique.fr/" class="uri">https://rstudio.cluster.france-bioinformatique.fr/</a> et identifiez-vous</li>
+</ul></li>
+<li><p>Sur les machines de la <strong>salle d’ordinateurs de Paris-Diderot</strong></p>
+<ul>
+<li>vous devez avoir la commande suivante dans votre <code>.bashrc</code> :</li>
+</ul></li>
 </ol>
-<pre><code>/shared/projects/du_bii_2019/data/module3/seance4/</code></pre>
-<p>Vous pouvez donc les lire à l’aide de la commande :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Define data folder</span>
-data.folder &lt;-<span class="st"> &quot;/shared/projects/du_bii_2019/data/module3/seance4/&quot;</span>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="bu">source</span> /opt/sdv/anaconda/etc/profile.d/conda.sh<span class="kw">`</span></code></pre></div>
+<ul>
+<li>puis vous devez <strong>lancer l’environnement conda</strong> adéquat :</li>
+</ul>
+<p><code>conda activate</code></p>
+<ul>
+<li>et enfin lancer le serveur Rstudio au moyen de la commande bash: <code>rstudio</code></li>
+</ul>
+</div>
+<div id="dossier-partage-contenant-les-donnees" class="section level2">
+<h2>Dossier partagé contenant les données</h2>
+<p>Les données sont dans un répertoire partagé, dont le chemin dépend du serveur auquel vous êtes connectézs. Nous allons définir une variable <code>data.folder</code> qui indiquera le chemin de ce dossier partagé, en fonction du serveur.</p>
+<ol style="list-style-type: decimal">
+<li>Sur le serveur Rstudio de l’<strong>IFB-core-cluster</strong>, les données sont dans le répertoire <code>/shared/projects/du_bii_2019/data/module3/seance4/</code>.</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Liste des fichiers de données
+data.folder &lt;-<span class="st"> &quot;/shared/projects/du_bii_2019/data/module3/seance4/&quot;</span></code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li>Sur les machines de Paris-Diderot, elles sont dans le répertoire <code>../../dubii/data-m3/s4</code> (défini relativement à votre compte).</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Liste des fichiers de données
+data.folder &lt;-<span class="st"> &quot;../../dubii/data-m3/s4&quot;</span></code></pre></div>
+<p>Utilisez les commandes R <code>list.files()</code> pour vérifier le contenu du dosser <code>data.folder</code>, et <code>file.size()</code> pour calculer la taille de ces fichiers.</p>
+<p>Astuces:</p>
+<ul>
+<li><code>list.files()</code> retourne par défaut le nom de fichier, mais avec l’option <code>full.names=TRUE</code> vous obtiendrez le chemin complet.</li>
+<li>Calculez la taille des fichiers en bytes et en Megabytes (<span class="math inline">\(1Mb = 1024 \cot 1024 \cdot b\)</span>), sachant que pour chaque conversion il faut diviser par 1024.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">list.files</span>(<span class="dt">path =</span> data.dir) <span class="co"># List the data files</span>
+<span class="kw">file.size</span>(<span class="kw">list.files</span>(<span class="dt">path =</span> data.dir, <span class="dt">full.names =</span> <span class="ot">TRUE</span>)) <span class="co"># Get the size of the data files, in bytes</span>
 
+<span class="kw">file.size</span>(<span class="kw">list.files</span>(<span class="dt">path =</span> data.dir, <span class="dt">full.names =</span> <span class="ot">TRUE</span>))<span class="op">/</span><span class="st"> </span><span class="dv">1024</span><span class="op">^</span><span class="dv">2</span> <span class="co"># Get the size of the data files In Mv</span></code></pre></div>
+</div>
+<div id="lire-le-tableau-de-valeurs-dexpression" class="section level2">
+<h2>Lire le tableau de valeurs d’expression</h2>
+<p>Nous allons maintenant lire le fichier d’expression. Pour cela, nous concaténons le chemin du dossier de données et le nom du fichier d’expressiion (<code>BIC_diff_exp.tsv</code>). Ce fichier contient le comptages de lectures RNA-seq par gène, avec une sélection des gènes déclarés positifs pour letest de comparaison de moyennes multiples (voir-ci-dessus).</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">
 <span class="co"># Define the path of the expression file</span>
-BIC.expr.file &lt;-<span class="st"> </span><span class="kw">file.path</span>(data.folder, <span class="st">&quot;BIC_diff_exp.tsv&quot;</span>)
+<span class="ex">BIC.expr.file</span> <span class="op">&lt;</span>- file.path(data.folder, <span class="st">&quot;BIC_diff_exp.tsv&quot;</span>)
 
 <span class="co"># Load expression</span>
-BIC.expr &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="dt">file =</span> BIC.expr.file, <span class="dt">h=</span><span class="ot">TRUE</span>)</code></pre></div>
-<ol start="2" style="list-style-type: decimal">
-<li>En local : en local, les données sont dans le répertoire <code>../../dubii/data-m3/s4</code>. Vous pouvez donc les lire à l’aide de la commande : <code>BIC.expr &lt;- read.table(&quot;../../dubii/data-m3/s4/BIC_diff_exp.tsv&quot;, h=T)</code></li>
-</ol>
+<span class="ex">BIC.expr</span> <span class="op">&lt;</span>- read.table(file = BIC.expr.file, h=TRUE)</code></pre></div>
 <ul>
 <li><p>prenez le temps d’identifier</p></li>
 <li>la taille du jeu de données</li>
-<li>les individus</li>
-<li><p>les variables</p></li>
+<li>le nombre d’individus</li>
+<li><p>le nombre de variables</p></li>
 </ul>
-<p><strong>rq : </strong> Classiquement, en analyse de données, les individus sont les lignes du tableau de données, les colonnes sont les variables. Pour des raisons histroiques, ce n’est pas le cas en analyse transcriptomique, où :</p>
+<p><strong>Remarque :</strong> Classiquement, en analyse de données, les individus sont les lignes du tableau de données, les colonnes sont les variables. Pour des raisons histroiques, ce n’est pas le cas en analyse transcriptomique, où :</p>
 <ul>
 <li>1 ligne = 1 gène</li>
 <li>1 échantillon biologique = 1 colonne</li>
 </ul>
 <p>Ce qui implique de faire attention, et éventuellement de travailler sur la matrice transposée (fonction <code>t</code> en R) pour utiliser correctement les fonctions classiques.</p>
-</div>
 <div id="calcul-de-la-matrice-de-distance" class="section level3">
 <h3>Calcul de la matrice de distance</h3>
 <p>Nous allons utiliser comme métrique le coefficient de corrélation de Spearman, plus adapté à ce type de données que la distance euclidienne utilisée en cours.</p>
@@ -502,8 +539,8 @@ clues<span class="op">::</span><span class="kw">adjustedRand</span>(dt1.cutree10
 clues<span class="op">::</span><span class="kw">adjustedRand</span>(dt1.cutree3, dt1.kmeans10<span class="op">$</span>cluster)
 clues<span class="op">::</span><span class="kw">adjustedRand</span>(dt1.cutree10, dt1.kmeans3<span class="op">$</span>cluster)</code></pre></div>
 </div>
-<div id="clustering-versus-her2-status" class="section level4">
-<h4>clustering versus Her2 status</h4>
+<div id="clustering-versus-statut" class="section level4">
+<h4>clustering versus statut</h4>
 <p>Nous connaissons les types de cancer des différentes tumeurs, définie en combinant trois marqueurs immunologiques :</p>
 <ul>
 <li>HER2,</li>
@@ -552,6 +589,7 @@ pointsToPlot &lt;-<span class="st"> </span>dt1.pca<span class="op">$</span>ind<s
 <span class="kw">points</span>(pointsToPlot, <span class="dt">col=</span>mycol, <span class="dt">pch=</span>mypch)
 texte.legend=<span class="kw">c</span>(<span class="st">&quot;HER2-&quot;</span>, <span class="st">&quot;HER2+&quot;</span>, <span class="st">&quot;gr1&quot;</span>, <span class="st">&quot;gr2&quot;</span>)
 <span class="kw">legend</span>(<span class="dt">x=</span><span class="op">-</span><span class="dv">400</span>, <span class="dt">y=</span><span class="dv">100</span>, texte.legend, <span class="dt">col=</span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>), <span class="dt">pch=</span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="ot">NA</span>, <span class="ot">NA</span>), <span class="dt">text.col=</span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>))</code></pre></div>
+</div>
 </div>
 </div>
 
