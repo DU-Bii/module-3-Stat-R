@@ -3,14 +3,11 @@ title: "TP de la séance 4, Clustering"
 author: "Anne Badel,  Frederic Guyon & Jacques van Helden"
 date: '`r Sys.Date()`'
 output:
-  html_document:
-    self_contained: no
+  pdf_document:
     fig_caption: yes
     highlight: zenburn
-    theme: cerulean
+    toc: yes
     toc_depth: 3
-    toc_float: yes
-    code_folding: "hide"
   beamer_presentation:
     colortheme: dolphin
     fig_caption: yes
@@ -28,11 +25,14 @@ output:
     transition: none
     self_contained: true
     css: ../slides.css
-  pdf_document:
+  html_document:
+    self_contained: no
     fig_caption: yes
     highlight: zenburn
-    toc: yes
+    theme: cerulean
     toc_depth: 3
+    toc_float: yes
+    code_folding: "hide"
   slidy_presentation:
     smart: no
     slide_level: 2
@@ -71,7 +71,7 @@ editor_options:
 ```{r include=FALSE, echo=FALSE, eval=TRUE}
 
 ## Location of the shared folder on the current install
-data.folder <- "~/TCGA_import/data/BIC/"
+# data.folder <- "~/TCGA_import/data/BIC/" # For preparation
 
 library(knitr)
 library(kableExtra)
@@ -160,19 +160,22 @@ source /opt/sdv/anaconda/etc/profile.d/conda.sh`
 
 Les données sont dans un répertoire partagé, dont le chemin dépend du serveur auquel vous êtes connectézs. Nous allons définir une variable `data.folder` qui indiquera le chemin de ce dossier partagé, en fonction du serveur. 
 
-1. Sur le serveur Rstudio de l'**IFB-core-cluster**, les données sont dans le répertoire `/shared/projects/du_bii_2019/data/module3/seance4/BIC/`. 
+Sur le **serveur Rstudio de l'IFB-core-cluster**, les données sont dans le répertoire `/shared/projects/du_bii_2019/data/module3/seance4/BIC/`. 
 
-```{r data_folder_ifb, eval=FALSE}
+```{r data_folder_ifb, eval=TRUE}
 ## Liste des fichiers de données
 data.folder <- "/shared/projects/du_bii_2019/data/module3/seance4/BIC/"
 ```
 
+<!--
 2. Sur les machines de Paris-Diderot, elles sont dans le répertoire `/home/sdv/dubii/data-m3/s4` 
 
 ```{r data_folder_pdiderot, eval=FALSE}
 ## Liste des fichiers de données
 data.folder <- "/home/sdv/dubii/data-m3/s4/"
 ```
+
+-->
 
 ## Contenu du dossier de données
 
@@ -345,9 +348,15 @@ Nous allons maintenant calculer la distance entre chaque paire d'échantillon, e
 2. transformation du corrélation de Spearman en une distance à l'aide de la trnsformation : $d = 1 - r^2$
 
 ```{r}
+## Compute Spearman correlation coefficient
 BIC.cor <- cor(t(BIC.expr.transposed), 
                method = "spearman")
+
+# Check the dimensions of the correlation matrix
+# (should be N x N, where N is the number of samples)
 dim(BIC.cor)
+
+## Derive a dissimilarity value from the corrrelation
 BIC.dist <- as.dist(1 - BIC.cor)
 ```
 
@@ -356,16 +365,23 @@ BIC.dist <- as.dist(1 - BIC.cor)
 Faites un premier clustering hiérarchique, avec le critère d'aggrégation par défaut (lisez l'aide de la fonction `hclust()` pour savoir quelle est ce critère par défaut). 
   
 ```{r}
+## Run hierarchical clustering on the expression data
+## (use default parameters)
 BIC.hclust.complete <- hclust(BIC.dist)
-plot(BIC.hclust.complete, labels = F, hang = -1, las = 1,
+
+## Plot the resulting tree
+plot(BIC.hclust.complete, labels = F, hang = -1, las = 1, col = "grey",
      main = "Pearson dissimilarity, complete linkage")
 ```
 
 2. faire un deuxième clustering hiérarchique, avec le critère d'aggrégation de Ward
 
 ```{r}
+##  Run hierarchical clustering with Ward agglomeration
 BIC.hclust.ward <- hclust(BIC.dist, method = "ward.D2")
-plot(BIC.hclust.ward, labels = F, hang = -1, las = 1,
+
+## Plot the resulting tree
+plot(BIC.hclust.ward, labels = F, hang = -1, las = 1, col = "#88BB66", 
      main = "Pearson dissimilarity, Ward linkage")
 ```
 
@@ -373,25 +389,17 @@ plot(BIC.hclust.ward, labels = F, hang = -1, las = 1,
 3. Redessiner les arbres de ces deux résultats de clustering en colorant les échantillons selon la classe de cancer. 
 
 
-```{r out.width="95%", fig.width=12, fig.height=9}
-
-plot(BIC.hclust.complete, labels = F, hang = -1, las = 1,
-     main = "Pearson dissimilarity, complete linkage",
-     col = sample.colors)
-
-```
-
  
 ```{r tree_colored_labels}
 ClassDiscovery::plotColoredClusters(
   BIC.hclust.ward, 
-  labs=BIC.sample.classes$cancer.type, 
+  labs=BIC.sample.classes$cancer.type, col = "grey",
   cols=sample.colors, cex=0.2)
 
 legend("topright",
        legend=sort(classes), 
        col = class.colors,
-       text.col = class.colors, cex=0.6)
+       text.col = class.colors, cex=0.9)
 ```
  
 3. Comparer les classifications obtenues avec les règles d'agglomératioin complète et Ward, respectivement, en étudiant l'impact du nombre de clusters.
@@ -408,8 +416,11 @@ legend("topright",
 
 3. refaire le kmeans avec ce nombre optimal
 
-4. visualiser ces groupes par exemple sur une projection des données dans le plan par PCA, à l'aide de la fonction `plot(PCA(mon.data.frame, choix="ind", col.ind=mon.kmeans$cluster)).
-  
+4. visualiser ces groupes par exemple sur une projection des données dans le plan par PCA, à l'aide de la fonction `prcomp()`.
+
+**Astuce:** dans le résultat de `prcomp()`, les coordonnées des points se trouvent dans le champs `x`
+.
+
 ```{r}
 ## Run k-means clustering with 20 centers
 BIC.kmeans <- kmeans(BIC.expr.transposed, centers=20)
@@ -434,6 +445,13 @@ Tdiff = difftime(T2,T1) ## Measure elapsed time
 par(mfrow=c(1,2))
 BIC.kmeans10 <- kmeans(BIC.expr.transposed, centers=10)
 table(BIC.kmeans10$cluster)
+
+## Compare clusters and markers on the PC plot, to evaluate whether 
+## the components capture relevant information
+plot(BIC.prcomp$x[,1:2], col = mycol, pch = mypch, 
+     las = 1, cex = 0.7, 
+     main = "Clusters versus markers")
+
 plot(BIC.prcomp, choix="ind", label="none", col.ind=BIC.kmeans10$cluster)
 BIC.kmeans3 <- kmeans(BIC.expr.transposed, centers=3)
 table(BIC.kmeans3$cluster)
@@ -597,10 +615,13 @@ clues::adjustedRand(BIC.kmeans10$cluster,
 ```{r out.width="80%", fig.width=8, fig.height=8}
 # Visualisation
 
+## Define a color indicating the cluster membership of each sample
+sample.color <- BIC.cutree2
+
 ## hclust (2 groupes) et HER2+/-
-mycol <- BIC.cutree2
-mypch <- as.numeric(BIC.sample.classes$ER1)
-plot(BIC.prcomp$x[,1:2], col = mycol, pch = mypch, 
+plot(BIC.prcomp$x[,1:2], 
+     col = 
+     pch = as.numeric(BIC.sample.classes$ER1), # character indicates ER1 status
      las = 1, cex = 0.7, 
      main = "Clusters versus markers")
 grid()
