@@ -444,11 +444,11 @@ Tdiff = difftime(T2,T1) ## Measure elapsed time
 
 ## Run k-means clustering with 2 clusters
 BIC.kmeans2 <- kmeans(BIC.expr.transposed, centers = 2)
-table(BIC.kmeans10$cluster)
+table(BIC.kmeans2$cluster) ## Cluster sizes
 
 ## Run k-means clustering with 10 clusters
 BIC.kmeans10 <- kmeans(BIC.expr.transposed, centers = 10)
-table(BIC.kmeans10$cluster)
+table(BIC.kmeans10$cluster) ## Cluster sizes
 
 
 ## Cut the tree at some arbitrary levels to get clusters
