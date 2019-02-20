@@ -72,7 +72,7 @@ editor_options:
 
 ## Location of the shared folder on the current install
 # data.folder <- "~/TCGA_import/data/BIC/" # For preparation
-
+message("Loading libraries")
 library(knitr)
 library(kableExtra)
 library(FactoMineR)
@@ -83,10 +83,10 @@ library(FactoMineR)
 library(ClassDiscovery)
 # library(formattable)
 
+
+## Define options for the R markdown output
 options(width = 300)
-
 # options(encoding = 'UTF-8')
-
 knitr::opts_chunk$set(
   fig.width = 5, fig.height = 5, 
   fig.path = 'figures/TP_',
@@ -99,7 +99,8 @@ knitr::opts_chunk$set(
   results = FALSE, 
   comment = "")
 
-options(scipen = 12) ## Max number of digits for non-scientific notation
+## Max number of digits for non-scientific notation
+options(scipen = 12) 
 ```
 
 
@@ -192,6 +193,7 @@ Astuces:
 
 
 ```{r list_data_files}
+message("Listing files in data folder: ", data.folder)
 list.files(path = data.folder) # List the data files
 file.size(list.files(path = data.folder, full.names = TRUE)) # Get the size of the data files, in bytes
 
@@ -211,6 +213,7 @@ Nous allons maintenant lire le fichier d'expression. Pour cela, nous concaténon
 BIC.expr.file <- file.path(data.folder, "BIC_log2-norm-counts_edgeR_DEG_fdr_0.01.tsv.gz")
 
 # Load expression
+message("Loading expression file\t", BIC.expr.file)
 BIC.expr <- read.table(file = BIC.expr.file, h=TRUE)
 
 ```
@@ -248,6 +251,7 @@ head(rownames(BIC.expr))
 head(colnames(BIC.expr))
 
 ## transposons la table d'expression
+message("Transcribing expression matrix")
 BIC.expr.transposed <- t(BIC.expr)
 
 ```
@@ -445,6 +449,10 @@ Tdiff = difftime(T2,T1) ## Measure elapsed time
 ## Run k-means clustering with 2 clusters
 BIC.kmeans2 <- kmeans(BIC.expr.transposed, centers = 2)
 table(BIC.kmeans2$cluster) ## Cluster sizes
+
+## Run k-means clustering with 3 clusters
+BIC.kmeans3 <- kmeans(BIC.expr.transposed, centers = 3)
+table(BIC.kmeans3$cluster) ## Cluster sizes
 
 ## Run k-means clustering with 10 clusters
 BIC.kmeans10 <- kmeans(BIC.expr.transposed, centers = 10)
