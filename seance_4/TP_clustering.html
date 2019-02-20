@@ -268,6 +268,10 @@ $(document).ready(function () {
 </div>
 
 
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Location of the shared folder on the current install
+data.folder &lt;-<span class="st"> &quot;~/TCGA_import/data/BIC/&quot;</span> <span class="co"># For preparation</span>
+
+<span class="co">#data.folder &lt;- &quot;/shared/projects/du_bii_2019/data/module3/seance4/BIC/&quot; # on the IFB-cluster-core</span></code></pre></div>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
 <div id="but-de-ce-tp" class="section level3">
@@ -347,13 +351,13 @@ data.folder <- "/home/sdv/dubii/data-m3/s4/"
 </div>
 <div id="lire-le-tableau-de-valeurs-dexpression" class="section level2">
 <h2>Lire le tableau de valeurs d’expression</h2>
-<p>Nous allons maintenant lire le fichier d’expression. Pour cela, nous concaténons le chemin du dossier de données et le nom du fichier d’expressiion (<code>BIC_diff_exp.tsv</code>). Ce fichier contient le comptages de lectures RNA-seq par gène, avec une sélection des gènes déclarés positifs pour letest de comparaison de moyennes multiples (voir-ci-dessus).</p>
+<p>Nous allons maintenant lire le fichier d’expression. Pour cela, nous concaténons le chemin du dossier de données et le nom du fichier d’expressiion (<code>BIC_log2-norm-counts_edgeR_DEG_fdr_0.01.tsv.gz</code>). Ce fichier contient le comptages de lectures RNA-seq par gène, avec une sélection des gènes déclarés positifs pour letest de comparaison de moyennes multiples (voir-ci-dessus).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Define the path of the expression file</span>
 BIC.expr.file &lt;-<span class="st"> </span><span class="kw">file.path</span>(data.folder, <span class="st">&quot;BIC_log2-norm-counts_edgeR_DEG_fdr_0.01.tsv.gz&quot;</span>)
 
 <span class="co"># Load expression</span>
 <span class="kw">message</span>(<span class="st">&quot;Loading expression file</span><span class="ch">\t</span><span class="st">&quot;</span>, BIC.expr.file)
-BIC.expr &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="dt">file =</span> BIC.expr.file, <span class="dt">h=</span><span class="ot">TRUE</span>)</code></pre></div>
+BIC.expr &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="dt">file =</span> BIC.expr.file, <span class="dt">header =</span> <span class="ot">TRUE</span>)</code></pre></div>
 </div>
 <div id="mesure-de-la-taille-des-donnees" class="section level2">
 <h2>Mesure de la taille des données</h2>
@@ -450,7 +454,7 @@ sample.colors &lt;-<span class="st"> </span>class.colors[BIC.sample.classes<span
 <p>Nous allons maintenant calculer la distance entre chaque paire d’échantillon, en utilsiant comme métrique le <strong>coefficient de corrélation de Spearman</strong>, plus adapté à ce type de données que la distance euclidienne utilisée sur les données iris durant le cours</p>
 <ol style="list-style-type: decimal">
 <li><p>Lisez l’aide de la fonction <code>cor</code>, et utilisez cette fonction pour calculer la matrice de corrélation entre échantillons.</p></li>
-<li><p>transformation du corrélation de Spearman en une distance à l’aide de la trnsformation : <span class="math inline">\(d = 1 - r^2\)</span></p></li>
+<li><p>transformation du corrélation de Spearman en une distance à l’aide de la transformation : <span class="math inline">\(d = 1 - r\)</span></p></li>
 </ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Compute Spearman correlation coefficient
 BIC.cor &lt;-<span class="st"> </span><span class="kw">cor</span>(<span class="kw">t</span>(BIC.expr.transposed), 
@@ -472,7 +476,7 @@ BIC.hclust.complete &lt;-<span class="st"> </span><span class="kw">hclust</span>
 
 ## Plot the resulting tree
 <span class="kw">plot</span>(BIC.hclust.complete, <span class="dt">labels =</span> F, <span class="dt">hang =</span> <span class="op">-</span><span class="dv">1</span>, <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="st">&quot;grey&quot;</span>,
-     <span class="dt">main =</span> <span class="st">&quot;Pearson dissimilarity, complete linkage&quot;</span>)</code></pre></div>
+     <span class="dt">main =</span> <span class="st">&quot;Spearman dissimilarity, complete linkage&quot;</span>)</code></pre></div>
 <p><img src="figures/TP_unnamed-chunk-8-1.png" width="480" style="display: block; margin: auto;" /></p>
 <ol start="2" style="list-style-type: decimal">
 <li>faire un deuxième clustering hiérarchique, avec le critère d’aggrégation de Ward</li>
@@ -482,7 +486,7 @@ BIC.hclust.ward &lt;-<span class="st"> </span><span class="kw">hclust</span>(BIC
 
 ## Plot the resulting tree
 <span class="kw">plot</span>(BIC.hclust.ward, <span class="dt">labels =</span> F, <span class="dt">hang =</span> <span class="op">-</span><span class="dv">1</span>, <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="st">&quot;#88BB66&quot;</span>, 
-     <span class="dt">main =</span> <span class="st">&quot;Pearson dissimilarity, Ward linkage&quot;</span>)</code></pre></div>
+     <span class="dt">main =</span> <span class="st">&quot;Spearman dissimilarity, Ward linkage&quot;</span>)</code></pre></div>
 <p><img src="figures/TP_unnamed-chunk-9-1.png" width="480" style="display: block; margin: auto;" /></p>
 <ol start="3" style="list-style-type: decimal">
 <li>Redessiner les arbres de ces deux résultats de clustering en colorant les échantillons selon la classe de cancer.</li>
@@ -504,6 +508,23 @@ BIC.hclust.ward &lt;-<span class="st"> </span><span class="kw">hclust</span>(BIC
 <ul>
 <li>Cous pouvez utiliser les commandes <code>rect.hclust</code> et <code>cutree</code> pour visualiser les clusters sur le dendrogramme, puis récupérer les clusters.</li>
 </ul>
+</div>
+<div id="combinaison-dun-arbre-et-dune-carte-de-temperature" class="section level3">
+<h3>Combinaison d’un arbre et d’une carte de température</h3>
+<p>La fonction R <code>heatmap()</code> permet de représenter à la fois les arbres produit par le clustering hiérarchique, et les profils d’expression.</p>
+<p>Par défaut, elle effectue simultanément un clustering hiérarchique sur les lignes et sur les colonnes, ce qui permet de distinguer non seulement les groupes d’échantillons biologiques, mais également ceux de gènes.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># trop long pour nos machines</span>
+<span class="co"># heatmap(as.matrix(BIC.expr))</span>
+
+<span class="co"># si on en fait pas attention</span>
+<span class="kw">heatmap</span>(<span class="kw">as.matrix</span>(BIC.expr[<span class="kw">sample.int</span>(<span class="kw">nrow</span>(BIC.expr), <span class="dv">50</span>), ]))</code></pre></div>
+<p><img src="figures/TP_heatmap-1.png" width="480" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># extrayons qqs gènes aux hasard (qqs = 1000)</span>
+sampled.genes &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="kw">rownames</span>(BIC.expr), <span class="dt">size =</span> <span class="dv">1000</span>)
+<span class="kw">heatmap</span>(<span class="kw">as.matrix</span>(BIC.expr[sampled.genes, ]),
+        <span class="dt">distfun =</span> <span class="cf">function</span>(x) <span class="kw">as.dist</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">cor</span>(<span class="kw">t</span>(x), <span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>)), 
+        <span class="dt">hclustfun =</span> <span class="cf">function</span>(x) <span class="kw">hclust</span>(x, <span class="dt">method =</span> <span class="st">&quot;ward.D2&quot;</span>) )</code></pre></div>
+<p><img src="figures/TP_heatmap-2.png" width="480" style="display: block; margin: auto;" /></p>
 </div>
 <div id="kmeans" class="section level3">
 <h3>kmeans</h3>
