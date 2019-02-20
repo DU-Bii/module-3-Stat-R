@@ -1,5 +1,5 @@
 ---
-title: "Le TP de la séance 4, Clustering"
+title: "TP de la séance 4, Clustering"
 author: "Anne Badel,  Frederic Guyon & Jacques van Helden"
 date: '`r Sys.Date()`'
 output:
@@ -61,7 +61,7 @@ output:
     toc: yes
     widescreen: yes
 font-import: http://fonts.googleapis.com/css?family=Risque
-subtitle: DUBii 2019
+subtitle: "Diplôme Interuniversitaire en Bioinformatique intégrative (DU-Bii 2019)"
 font-family: Garamond
 transition: linear
 editor_options: 
@@ -125,7 +125,7 @@ Les données ont été préparées pour vous, filtrage des données, normalisati
 /shared/projects/du_bii_2019/data/module3/seance4/
 ```
   
-Vous pouvez donc les lire à l'aide de la commande :
+Vous pouvez donc les lire à l'aide du code suivant (cliquer sur ***Code*** pour l'afficher).
 
 ```{r}
 # Define data folder
