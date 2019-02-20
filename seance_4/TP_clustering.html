@@ -268,6 +268,10 @@ $(document).ready(function () {
 </div>
 
 
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Location of the shared folder on the current install
+data.folder &lt;-<span class="st"> &quot;~/TCGA_import/data/BIC/&quot;</span> <span class="co"># For preparation</span>
+
+<span class="co">#data.folder &lt;- &quot;/shared/projects/du_bii_2019/data/module3/seance4/BIC/&quot; # on the IFB-cluster-core</span></code></pre></div>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
 <div id="but-de-ce-tp" class="section level3">
@@ -347,13 +351,13 @@ data.folder <- "/home/sdv/dubii/data-m3/s4/"
 </div>
 <div id="lire-le-tableau-de-valeurs-dexpression" class="section level2">
 <h2>Lire le tableau de valeurs d’expression</h2>
-<p>Nous allons maintenant lire le fichier d’expression. Pour cela, nous concaténons le chemin du dossier de données et le nom du fichier d’expressiion (<code>BIC_diff_exp.tsv</code>). Ce fichier contient le comptages de lectures RNA-seq par gène, avec une sélection des gènes déclarés positifs pour letest de comparaison de moyennes multiples (voir-ci-dessus).</p>
+<p>Nous allons maintenant lire le fichier d’expression. Pour cela, nous concaténons le chemin du dossier de données et le nom du fichier d’expressiion (<code>BIC_log2-norm-counts_edgeR_DEG_fdr_0.01.tsv.gz</code>). Ce fichier contient le comptages de lectures RNA-seq par gène, avec une sélection des gènes déclarés positifs pour letest de comparaison de moyennes multiples (voir-ci-dessus).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Define the path of the expression file</span>
 BIC.expr.file &lt;-<span class="st"> </span><span class="kw">file.path</span>(data.folder, <span class="st">&quot;BIC_log2-norm-counts_edgeR_DEG_fdr_0.01.tsv.gz&quot;</span>)
 
 <span class="co"># Load expression</span>
 <span class="kw">message</span>(<span class="st">&quot;Loading expression file</span><span class="ch">\t</span><span class="st">&quot;</span>, BIC.expr.file)
-BIC.expr &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="dt">file =</span> BIC.expr.file, <span class="dt">h=</span><span class="ot">TRUE</span>)</code></pre></div>
+BIC.expr &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="dt">file =</span> BIC.expr.file, <span class="dt">header =</span> <span class="ot">TRUE</span>)</code></pre></div>
 </div>
 <div id="mesure-de-la-taille-des-donnees" class="section level2">
 <h2>Mesure de la taille des données</h2>

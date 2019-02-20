@@ -68,10 +68,18 @@ editor_options:
 ---
 
 
+```{r custom_parameters}
+## Location of the shared folder on the current install
+data.folder <- "~/TCGA_import/data/BIC/" # For preparation
+
+#data.folder <- "/shared/projects/du_bii_2019/data/module3/seance4/BIC/" # on the IFB-cluster-core
+
+```
+
+
 ```{r include=FALSE, echo=FALSE, eval=TRUE}
 
-## Location of the shared folder on the current install
-# data.folder <- "~/TCGA_import/data/BIC/" # For preparation
+
 message("Loading libraries")
 library(knitr)
 library(kableExtra)
@@ -144,7 +152,7 @@ Vous pouvez choisir de travailler soir sur le cluster core de l'IFB soit sur les
 
     - vous devez avoir la commande suivante dans votre `.bashrc` : 
     
-```{bash eval=FALSE}
+```{bash eval=FALSE, echo=TRUE}
 source /opt/sdv/anaconda/etc/profile.d/conda.sh`
 ```
 
@@ -163,7 +171,7 @@ Les données sont dans un répertoire partagé, dont le chemin dépend du serveu
 
 Sur le **serveur Rstudio de l'IFB-core-cluster**, les données sont dans le répertoire `/shared/projects/du_bii_2019/data/module3/seance4/BIC/`. 
 
-```{r data_folder_ifb, eval=TRUE}
+```{r data_folder_ifb, eval=FALSE}
 ## Liste des fichiers de données
 data.folder <- "/shared/projects/du_bii_2019/data/module3/seance4/BIC/"
 ```
@@ -349,7 +357,7 @@ Nous allons maintenant calculer la distance entre chaque paire d'échantillon, e
 
 1. Lisez l'aide de la fonction `cor`, et utilisez cette fonction pour calculer la matrice de corrélation entre échantillons.
 
-2. transformation du corrélation de Spearman en une distance à l'aide de la trnsformation : $d = 1 - r^2$
+2. transformation du corrélation de Spearman en une distance à l'aide de la transformation : $d = 1 - r$
 
 ```{r}
 ## Compute Spearman correlation coefficient
@@ -411,6 +419,27 @@ legend("topright",
 **Astuces:**
 
 - Cous pouvez utiliser les commandes `rect.hclust` et `cutree` pour visualiser les clusters sur le dendrogramme, puis récupérer les clusters.
+
+### Combinaison d'un arbre et d'une carte de température
+
+La fonction R `heatmap()` permet de représenter à la fois les arbres produit par le clustering hiérarchique, et les profils d'expression. 
+
+Par défaut, elle effectue simultanément un clustering hiérarchique sur les lignes et sur les colonnes, ce qui permet de distinguer non seulement les groupes d'échantillons biologiques, mais également ceux de gènes. 
+
+```{r heatmap}
+# trop long pour nos machines
+# heatmap(as.matrix(BIC.expr))
+
+# si on en fait pas attention
+heatmap(as.matrix(BIC.expr[sample.int(nrow(BIC.expr), 50), ]))
+        
+# extrayons qqs gènes aux hasard (qqs = 1000)
+sampled.genes <- sample(rownames(BIC.expr), size = 1000)
+heatmap(as.matrix(BIC.expr[sampled.genes, ]),
+        distfun = function(x) as.dist(1 - cor(t(x), method = "spearman")), 
+        hclustfun = function(x) hclust(x, method = "ward.D2") )
+```
+
 
 ### kmeans
 
