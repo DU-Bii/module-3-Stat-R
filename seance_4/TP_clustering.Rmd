@@ -199,22 +199,31 @@ BIC.expr <- read.table(file = BIC.expr.file, h=TRUE)
 ```
 
 
-- prenez le temps d'identifier
-  
-  + la taille du jeu de données
-  + le nombre d'individus
-  + le nombre de variables
+## Mesure de la taille des données
 
-**Remarque :** Classiquement, en analyse de données, les individus sont les lignes du tableau de données, les colonnes sont les variables. Pour des raisons histroiques, ce n'est pas le cas en analyse transcriptomique, où :
+Prenez le temps d'identifier
+  
++ la taille du jeu de données
++ le nombre d'individus
++ le nombre de variables
+
+**Remarque :** Classiquement, en analyse de données, les individus sont les lignes du tableau de données, les colonnes sont les variables. 
+
+Pour des raisons historiques, en analyse transcriptomique les données sont toujours fournies avec
 
   - 1 ligne = 1 gène
   - 1 échantillon biologique = 1 colonne
+
+Cette convention a été établie en 1997, lors des toutes premières publications sur le transcriptome de la levure. Dans ces études, l'objet d'intérêt (l'"éindividu") était le gène, et les variables étaient ses mesures d'expression dans les différentes conditions testées.
+
+Pour l'anlayse de tissus cancéreux, on considère au contraire que l'"objet" d'intérêt  est l'échantillon prélevé sur le patient, et les variables sont les mesures d'expression des différents gènes chez un patient.
 
 Ce qui implique de faire attention, et éventuellement de travailler sur la matrice transposée (fonction `t` en R) pour utiliser correctement les fonctions classiques.
 
 ```{r echo=F, eval=F}
 ## Les données d'expression
-dt1 <- read.table("data_R4/BIC_log2-norm-counts_filtered-genes.tsv", h=T)
+dt1.file <- 
+dt1 <- read.table("BIC_log2-norm-counts_filtered-genes.tsv", h=T)
 dt1.read <- dt1
 dt1 <- t(dt1)
 ```
