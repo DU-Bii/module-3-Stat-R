@@ -234,7 +234,7 @@ Pour l'anlayse de tissus cancéreux, on considère au contraire que l'"objet" d'
 
 Ce qui implique de faire attention, et éventuellement de travailler sur la matrice transposée (fonction `t` en R) pour utiliser correctement les fonctions classiques.
 
-```{r echo=F, eval=F}
+```{r}
 ## Les données d'expression
 dim(BIC.expr)
 
@@ -254,7 +254,7 @@ BIC.expr.transposed <- t(BIC.expr)
 
 Le fichier `BIC_sample-classes.tsv.gz`contient les étiquettes de classes des échantillons. 
 
-```{r echo=FALSE, eval = FALSE}
+```{r}
 BIC.sample.classes <- read.table(
   file.path(data.folder, "BIC_sample-classes.tsv.gz"),
   header = TRUE)
@@ -296,26 +296,48 @@ table(BIC.sample.classes$ER1,
 
 Nous allons réaliser une ACP sans mise à l'échelle. 
 
-```{r echo=F, results=F, eval=F}
+```{r}
 ## Transformation ACP
-BIC.pca <- prcomp(BIC.expr.transposed, center = FALSE, scale. = FALSE)
-names(BIC.pca) # check the name of the fields of the PCA object
+BIC.prcomp <- prcomp(BIC.expr.transposed, center = FALSE, scale. = FALSE)
+names(BIC.prcomp) # check the name of the fields of the PCA object
 
+par(mfrow = c(1,2))
 ## Plot de l'écart-type sur les premières composantes
-barplot(BIC.pca$sdev[1:10], main = "Standard deviation per PC")
+barplot(BIC.prcomp$sdev[1:10], col = "#FFEEDD",
+        main = "Standard deviation per PC")
 
 ## Visualisation des données
-plot(BIC.pca, main = "Variance per PC")
+plot(BIC.prcomp, main = "Variance per PC", col="#BBDDFF")
+
+par(mfrow=c(1,1))
+
+```
+
+Définissez une couleur pour chaque classe, et assignez à chaque échantillon la couleur correspondant à sa classe. Dessinez ensuite un nuage de points avec les coordonnées de chaque échantillon dans les 1ère et 2ème composantes (PC2 vs PC1)
+
+```{r PCplots, out.width="80%", fig.width=10, fig.height=7}
+
+# Assign a color to each cancer type
+classes <- unique(BIC.sample.classes$cancer.type)
+class.colors <- rainbow(n = length(classes))
+names(class.colors) <- classes
+data.frame(class.colors)
+
+# Associate a color to each sample accordinig to its cancer type
+sample.colors <- class.colors[BIC.sample.classes$cancer.type]
+table(BIC.sample.classes$cancer.type, sample.colors)
+
+
 
 ```
 
 <!--
-```{r echo=F, results=F, eval=F}
-save(BIC.pca, file="data_R4/BIC.pca.RData")
+```{r}
+save(BIC.prcomp, file="data_R4/BIC.prcomp.RData")
 # Réduction des données, anova
-dt2 <- data.frame(dt1, BIC.sample.classes[,1])
-p.value <- numeric(length=ncol(dt1))
-for (i in 1:ncol(dt1)) {
+dt2 <- data.frame(BIC.expr.transposed, BIC.sample.classes[,1])
+p.value <- numeric(length=ncol(BIC.expr.transposed))
+for (i in 1:ncol(BIC.expr.transposed)) {
   p.value[i] <- summary(aov(dt2[,i] ~ dt2[,20250]))[[1]][1,5]
 }
 p.fdr <- p.adjust(p.value, method="fdr")
@@ -331,9 +353,9 @@ sum(p.value < 0.05) ; sum(p.value < 0.01)
 sum(p.fdr < 0.05) ; sum(p.fdr < 0.01)
 sum(p.bh < 0.05) ; sum(p.bh < 0.01)
 sum(p.bonf < 0.05) ; sum(p.bonf < 0.01)
-BIC.all <- dt1
-dt1 <- dt1[, which(p.fdr < 0.05)]
-write.table(dt1, "data_R4/BIC_diff_exp.tsv", sep="\t")
+BIC.all <- BIC.expr.transposed
+BIC.expr.transposed <- BIC.expr.transposed[, which(p.fdr < 0.05)]
+write.table(BIC.expr.transposed, "data_R4/BIC_diff_exp.tsv", sep="\t")
 ```
 -->
 
@@ -380,16 +402,6 @@ plot(BIC.hclust.ward, labels = F, hang = -1, las = 1,
 
 ```{r out.width="95%", fig.width=12, fig.height=9}
 
-# Assign a color to each cancer type
-classes <- unique(BIC.sample.classes$cancer.type)
-class.colors <- rainbow(n = length(classes))
-names(class.colors) <- classes
-data.frame(class.colors)
-
-# Associate a color to each sample accordinig to its cancer type
-sample.colors <- class.colors[BIC.sample.classes$cancer.type]
-table(BIC.sample.classes$cancer.type, sample.colors)
-
 plot(BIC.hclust.complete, labels = F, hang = -1, las = 1,
      main = "Pearson dissimilarity, complete linkage",
      col = sample.colors)
@@ -397,21 +409,16 @@ plot(BIC.hclust.complete, labels = F, hang = -1, las = 1,
 ```
 
  
-```{r, echo=F, eval=F}
-# plot(BIC.hclust.ward,
-#     labels=BIC.sample.classes$cancer.type, hang=0)
-# plot(BIC.hclust.ward,
-     # labels=BIC.sample.classes$xml_lab_proc_her2_neu_immunohistochemistry_receptor_status, hang=0, cex=0.5, las = 0)
-
+```{r tree_colored_labels}
 ClassDiscovery::plotColoredClusters(
   BIC.hclust.ward, 
   labs=BIC.sample.classes$cancer.type, 
-  cols=sample.colors, cex=0.5)
+  cols=sample.colors, cex=0.2)
 
 legend("topright",
        legend=sort(classes), 
        col = class.colors,
-       text.col = class.colors, cex=0.5)
+       text.col = class.colors, cex=0.6)
 ```
  
 3. Comparer les classifications obtenues avec les règles d'agglomératioin complète et Ward, respectivement, en étudiant l'impact du nombre de clusters.
@@ -422,35 +429,47 @@ legend("topright",
 
 ### kmeans
 
-  1. faire un premier kmeans, par exemple, en prenant le nombre de groupe trouvé sur le `hclust`
-  2. faire une boucle pour trouver le nombre optimal de cluster, en calculant l'inertie intra totale en fonction du nombre de groupe `kmeans()$totss` [faire une boucle pour i allant de 1 à 10 `for (i in 1:10) {}`]
-  3. refaire le kmeans avec ce nombre optimal
-  3. visualiser ces groupes par exemple sur une projection des données dans le plan par PCA, à l'aide de la fonction `plot(PCA(mon.data.frame, choix="ind", col.ind=mon.kmeans$cluster)).
+1. faire un premier kmeans, par exemple, en prenant le nombre de groupe trouvé sur le `hclust`
+
+2. faire une boucle pour trouver le nombre optimal de cluster, en calculant l'inertie intra totale en fonction du nombre de groupe `kmeans()$totss` [faire une boucle pour i allant de 1 à 10 `for (i in 1:10) {}`]
+
+3. refaire le kmeans avec ce nombre optimal
+
+4. visualiser ces groupes par exemple sur une projection des données dans le plan par PCA, à l'aide de la fonction `plot(PCA(mon.data.frame, choix="ind", col.ind=mon.kmeans$cluster)).
   
 ```{r}
-BIC.kmeans <- kmeans(dt1, centers=20)
+## Run k-means clustering with 20 centers
+BIC.kmeans <- kmeans(BIC.expr.transposed, centers=20)
+
+## Report the table of the clusters
 table(BIC.kmeans$cluster)
+
 T1 = Sys.time()
 I.intra = numeric(length=20)
-I.intra[1] = kmeans(dt1, centers=2)$totss
+I.intra[1] = kmeans(BIC.expr.transposed, centers=2)$totss
 for (i in 2:20) {
-  kmi <- kmeans(dt1, centers=i)
+  message("Running k-means with ", i, " centers")
+  kmi <- kmeans(BIC.expr.transposed, centers=i)
   I.intra[i] <- kmi$tot.withinss
 }
-plot(1:20, I.intra, type="l")
+
+# Plot a curve showint the intra-cluster information as a function of the number of clusters 
+plot((1:20)-0.5, I.intra, type="s")
 T2 = Sys.time()
-Tdiff = difftime(T2,T1)
+Tdiff = difftime(T2,T1) ## Measure elapsed time
+
 par(mfrow=c(1,2))
-BIC.kmeans10 <- kmeans(dt1, centers=10)
+BIC.kmeans10 <- kmeans(BIC.expr.transposed, centers=10)
 table(BIC.kmeans10$cluster)
-plot(BIC.pca, choix="ind", label="none", col.ind=BIC.kmeans10$cluster)
-BIC.kmeans3 <- kmeans(dt1, centers=3)
+plot(BIC.prcomp, choix="ind", label="none", col.ind=BIC.kmeans10$cluster)
+BIC.kmeans3 <- kmeans(BIC.expr.transposed, centers=3)
 table(BIC.kmeans3$cluster)
-plot(BIC.pca, choix="ind", label="none", col.ind=BIC.kmeans3$cluster)
+plot(BIC.prcomp, choix="ind", label="none", col.ind=BIC.kmeans3$cluster)
 par(mfrow=c(1,1))
-BIC.kmeans2 <- kmeans(dt1, centers=2)
+
+BIC.kmeans2 <- kmeans(BIC.expr.transposed, centers=2)
 table(BIC.kmeans2$cluster)
-plot(BIC.pca, choix="ind", label="none", col.ind=BIC.kmeans2$cluster)
+plot(BIC.prcomp, choix="ind", label="none", col.ind=BIC.kmeans2$cluster)
 ```
 
 ### Comparaisons 
@@ -459,20 +478,28 @@ plot(BIC.pca, choix="ind", label="none", col.ind=BIC.kmeans2$cluster)
 
 Nous allons maintenant comparer les résultats de ces deux méthodes de clustering.
 
-  1. à l'aide de la fonction `table`, calculer la matrice de confusion de vos deux clustering. Commentez.
-  2. à l'aide de la fonction `adjustedRand(clues)` calculez le RI et le ARI de vos clustering. Commentez.
+1. à l'aide de la fonction `table`, calculez la matrice de confusion de vos deux clustering. Commentez.
+
+2. à l'aide de la fonction `adjustedRand(clues)` calculez le RI et le ARI de vos clustering. Commentez.
   
 ```{r}
 par(mfrow=c(1,2))
-plot(BIC.hclust.ward, labels=F, hang=0)
+plot(BIC.hclust.ward, labels=FALSE, hang=-1, main = "Ward")
+
 rect.hclust(BIC.hclust.ward, k=3)
+
 BIC.cutree3 <- cutree(BIC.hclust.ward, k=3)
-plot(BIC.hclust.ward, labels=F, hang=0)
-rect.hclust(BIC.hclust.ward, k=10)
-BIC.cutree10 <- cutree(BIC.hclust.ward, k=10)
+
+plot(BIC.hclust.ward, labels = F, hang = -1, main = "complete")
+
+rect.hclust(BIC.hclust.ward, k = 10)
+
+BIC.cutree10 <- cutree(BIC.hclust.ward, k = 10)
+
 table(BIC.cutree3, BIC.kmeans$cluster)
 table(BIC.cutree10, BIC.kmeans$cluster)
-par(mfrow=c(1,1))
+par(mfrow = c(1,1))
+
 clues::adjustedRand(BIC.cutree3, BIC.kmeans3$cluster)
 clues::adjustedRand(BIC.cutree10, BIC.kmeans10$cluster)
 clues::adjustedRand(BIC.cutree3, BIC.kmeans10$cluster)
@@ -483,16 +510,16 @@ clues::adjustedRand(BIC.cutree10, BIC.kmeans3$cluster)
 
 Nous connaissons les types de cancer des différentes tumeurs, définie en combinant trois marqueurs immunologiques :
 
-  - HER2,
-  - ER (récepteur d'œstrogène)
-  - Pr (récepteur de progestérone)
+- HER2,
+- ER1 (récepteur d'œstrogène)
+- PR1 (récepteur de progestérone)
 
 et nous obtenons les classes suivantes :
   
-  - Basal.like
-  - HER2pos
-  - Luminal.A
-  - Luminal.B
+- Basal.like
+- HER2pos
+- Luminal.A
+- Luminal.B
 
 qqs tumeurs sont non classées
 
@@ -534,8 +561,8 @@ clues::adjustedRand(BIC.kmeans10$cluster, as.numeric(BIC.sample.classes[,1]))
 ## hclust (2 groupes) et HER2+/-
 mycol=BIC.cutree2
 mypch=as.numeric(BIC.sample.classes[,4])
-pointsToPlot <- BIC.pca$ind$coord[,1:2]
-plot(BIC.pca, choix="ind", label="none", col.ind="white")
+pointsToPlot <- BIC.prcomp$ind$coord[,1:2]
+plot(BIC.prcomp, choix="ind", label="none", col.ind="white")
 points(pointsToPlot, col=mycol, pch=mypch)
 texte.legend=c("HER2-", "HER2+", "gr1", "gr2")
 legend(x=-400, y=100, texte.legend, col=c(1, 1, 1, 2), pch=c(1, 2, NA, NA), text.col=c(1, 1, 1, 2))
