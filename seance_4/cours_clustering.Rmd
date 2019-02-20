@@ -106,7 +106,7 @@ nb.var=ncol(mes.iris)
 
 # Partionnement = Clustering
 
-```{r are_there_clusters, echo=FALSE, out.width="50%", fig.cap="Y a-t-il des groupes ?"}
+```{r are_there_clusters, echo=FALSE, out.width="50%", fig.cap="Y a-t-il des groupes ?"}
 include_graphics(path = "img/figure1.png")
 ```
 
@@ -538,7 +538,7 @@ include_graphics(path = "img/hclust3.png")
   
 ---
 
-## calcul des nouveaux représentants `BE` et `CD`
+## calcul des nouveaux représentants 'BE' et 'CD'
 
 ```{r hclust_nvx_representants, echo=FALSE, out.width="90%"}
 include_graphics(path = "img/hclust4.png")
@@ -546,7 +546,7 @@ include_graphics(path = "img/hclust4.png")
 
 ---
 
-## calcul des distances de l'individu restant `A` aux points moyens
+## calcul des distances de l'individu restant 'A' aux points moyens
 
 ```{r hclust_update_dist, echo=FALSE, out.width="90%"}
 include_graphics(path = "img/hclust5.png")
