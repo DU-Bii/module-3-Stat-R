@@ -23,8 +23,8 @@
     - [Séance 1. Introduction à R](#seance-1.-introduction-a-r)
     - [Séance 2; Analyse statistique avec R](#seance-2.-analyse-statistique-avec-r)
     - [Séance 3. Analyse de données métagénomiques](#seance-3.-analyse-de-donnees-metagenomiques)
-    - [Séance 4. Analyse de données RNA-seq](#seance-4.-analyse-de-donnees-rna-seq)
-    - [Séance 5. Comparaison de groupes et enrichissement](#seance-5.-comparaison-de-groupes-et-enrichissement)
+    - [Séance 4. Clustering](#seance-4.-analyse-de-donnees-rna-seq)
+    - [Séance 5. Analyse de données RNA-seq](#seance-5.-analyse-de-donnees-rna-seq)
     - [Séance 6. Classification supervisée](#seance-6.-classification-supervisee)
 - [Contributeurs](#contributeurs)
 - [Accès aux supports de cours](#acces-aux-supports-de-cours)
@@ -184,6 +184,7 @@ Applications:
 #### Détection de gènes différentiellement exprimés
 
 - Concepts
+
     - visualisation des résultats globaux  (MA plots, volcano plots, histogrammes de p-vlaeurs)
     - évaluation de l'impact des choix de logiciels et paramètres 
     - comparer les projections ACP avec tous les gènes et avec la sélection de gènes différentiellement exprimés
@@ -191,6 +192,7 @@ Applications:
 
 
 - Application
+
     - Normalisation des données RNA-seq
         - standardisation des tailles de librairies (scaling)
         - transformation log
@@ -242,7 +244,7 @@ Applications:
     - Au-delà de la méthode, influence des paramètres 
 
     
-### [Séance 5. Comparaison de groupes et enrichissement](seance_5/README.md)
+### [Séance 5. Analyse de données RNA-seq](seance_5/README.md)
 
 *Intervenants: Jacques van Helden + Claire Vandiedonck (à confirmer)*
 
