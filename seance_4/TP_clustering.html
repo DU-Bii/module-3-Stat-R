@@ -21,9 +21,6 @@
 <script src="TP_clustering_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="TP_clustering_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="TP_clustering_files/bootstrap-3.3.5/shim/respond.min.js"></script>
-<script src="TP_clustering_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
-<link href="TP_clustering_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="TP_clustering_files/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="TP_clustering_files/navigation-1.1/tabsets.js"></script>
 <script src="TP_clustering_files/navigation-1.1/codefolding.js"></script>
 
@@ -249,101 +246,6 @@ $(document).ready(function () {
 
 
 
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
-
-<style type="text/css">
-
-#TOC {
-  margin: 25px 0px 20px 0px;
-}
-@media (max-width: 768px) {
-#TOC {
-  position: relative;
-  width: 100%;
-}
-}
-
-
-.toc-content {
-  padding-left: 30px;
-  padding-right: 40px;
-}
-
-div.main-container {
-  max-width: 1200px;
-}
-
-div.tocify {
-  width: 20%;
-  max-width: 260px;
-  max-height: 85%;
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-  div.tocify {
-    width: 25%;
-  }
-}
-
-@media (max-width: 767px) {
-  div.tocify {
-    width: 100%;
-    max-width: none;
-  }
-}
-
-.tocify ul, .tocify li {
-  line-height: 20px;
-}
-
-.tocify-subheader .tocify-item {
-  font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
-}
-
-.tocify .list-group-item {
-  border-radius: 0px;
-}
-
-
-</style>
-
-<!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row-fluid">
-<div class="col-xs-12 col-sm-4 col-md-3">
-<div id="TOC" class="tocify">
-</div>
-</div>
-
-<div class="toc-content col-xs-12 col-sm-8 col-md-9">
-
-
 
 
 <div class="fluid-row" id="header">
@@ -366,85 +268,189 @@ div.tocify {
 </div>
 
 
-<div id="choisir-son-environnement-de-travail" class="section level3">
-<h3>Choisir son environnement de travail</h3>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<div id="but-de-ce-tp" class="section level3">
+<h3>But de ce TP</h3>
+<p>Le tutoriel ci-dessous vous guidera pas-à-pas dans l’utilisation de fonctions <strong>R</strong> pour effectuer un clustering sur des profils transcriptomiques RNA-seq.</p>
+</div>
+<div id="source-des-donnees" class="section level3">
+<h3>Source des données</h3>
+<p>Les données sont issues de la base Recount2 (<a href="https://jhubiostatistics.shinyapps.io/recount/" class="uri">https://jhubiostatistics.shinyapps.io/recount/</a>). Nous avons sélectionné l’étude <strong>TCGA</strong> (The Cancer Genome Atlas; <a href="https://cancergenome.nih.gov/" class="uri">https://cancergenome.nih.gov/</a>), regroupant des données RNA-seq pour plus de 12.000 patients souffrant de différents types de cancer. Nous nous intéressons ici uniquement aux données <strong>Breast Invasive Cancer</strong> (<strong>BIC</strong>) concernant le cancer du sein.</p>
+<p>Les données ont été préparées pour vous, selon la procédure détaillée au cours sur l’analyse différentielle de données RNA-seq.</p>
 <ol style="list-style-type: decimal">
-<li><p>vous pouvez choisir de travail sur le cluster de l’IFB, <a href="https://rstudio.cluster.france-bioinformatique.fr/auth-sign-in">ici</a></p>
-<ul>
-<li>les données sont dans le répertoire :</li>
-</ul></li>
-<li><p>ou en local, sur nos machines</p>
-<ul>
-<li>les données sont dans le répertoire :</li>
-<li>vous devez avoir la commande suivante dans votre <code>.bashrc</code> : <code>. /opt/sdv/anaconda/etc/profile.d/conda.sh</code></li>
-<li>puis vous devez lancer l’environnement <code>conda</code> adéquat : <code>conda activate</code></li>
-<li>et enfin lancer <code>rstudio</code> : <code>rstudio</code></li>
-</ul></li>
+<li><p>Filtrage des gènes à variance nulle et de ceux ccontenant trop de zéros.</p></li>
+<li><p>Normalisation (méthode robuste aux outliers)</p></li>
+<li><p>Analyse différentielle multi-groupes (en utilisant le package Bioconductor <code>edgeR</code>).</p></li>
+<li><p>Correction des P-valeurs nomiables pour tenir compte des tests multiples (nous avons testé ici ~20.000 gènes). Nous estimons le le False Discovery Rate (FDR) selon la méthode de Benjamini-Hochberg (fonction R <code>p.adjust(all.pvalues, method=&quot;fdr&quot;)</code>).</p></li>
+<li><p>Sélection de gènes différentiellement exprimés sur base d’un seuil <span class="math inline">\(\alpha = 0.05\)</span> appliqué au FDR.</p></li>
 </ol>
 </div>
-<div id="lire-les-donnees" class="section level3">
-<h3>Lire les données</h3>
-<p>Les données sont issues de la base Recount2 (<a href="https://jhubiostatistics.shinyapps.io/recount/" class="uri">https://jhubiostatistics.shinyapps.io/recount/</a>). Nous nous intéressons à la base TCGA, regroupant des données RNA-seq pour différents types de cancer. Nous nous intéressons ici uniquement aux données BIC concernant le cancer du sein.</p>
-<p>Les données ont été préparées pour vous, filtrage des données, normalisation, extraction des gènes différentiellement exprimés (à l’aide d’une analyse de la variance (anova) et du calcul des <em>p.value</em> ajustées par une méthode de FDR (fonction <code>aov</code> et <code>p.adjust(, method=&quot;fdr&quot;)</code>).</p>
+</div>
+<div id="choisir-son-environnement-de-travail" class="section level2">
+<h2>Choisir son environnement de travail</h2>
+<p>Vous pouvez choisir de travailler soir sur le cluster core de l’IFB soit sur les ordinateurs de Paris-Diderot.</p>
 <ol style="list-style-type: decimal">
-<li>A l’IFB : sur le serveur IFB-core-cluster, les données sont dans le répertoire</li>
+<li><p>Sur le <a href="https://rstudio.cluster.france-bioinformatique.fr/"><strong>cluster de l’IFB</strong></a></p>
+<ul>
+<li>ouvrez une connexion au serveur RStudio <a href="https://rstudio.cluster.france-bioinformatique.fr/" class="uri">https://rstudio.cluster.france-bioinformatique.fr/</a> et identifiez-vous</li>
+</ul></li>
+<li><p>Sur les machines de la <strong>salle d’ordinateurs de Paris-Diderot</strong></p>
+<ul>
+<li>vous devez avoir la commande suivante dans votre <code>.bashrc</code> :</li>
+</ul></li>
 </ol>
-<pre><code>/shared/projects/du_bii_2019/data/module3/seance4/</code></pre>
-<p>Vous pouvez donc les lire à l’aide du code suivant (cliquer sur <strong><em>Code</em></strong> pour l’afficher).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Define data folder</span>
-data.folder &lt;-<span class="st"> &quot;/shared/projects/du_bii_2019/data/module3/seance4/&quot;</span>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="bu">source</span> /opt/sdv/anaconda/etc/profile.d/conda.sh<span class="kw">`</span></code></pre></div>
+<ul>
+<li>puis vous devez <strong>lancer l’environnement conda</strong> adéquat :</li>
+</ul>
+<p><code>conda activate</code></p>
+<ul>
+<li>et enfin lancer le serveur Rstudio au moyen de la commande bash: <code>rstudio</code></li>
+</ul>
+</div>
+<div id="dossier-partage-contenant-les-donnees" class="section level2">
+<h2>Dossier partagé contenant les données</h2>
+<p>Les données sont dans un répertoire partagé, dont le chemin dépend du serveur auquel vous êtes connectézs. Nous allons définir une variable <code>data.folder</code> qui indiquera le chemin de ce dossier partagé, en fonction du serveur.</p>
+<ol style="list-style-type: decimal">
+<li>Sur le serveur Rstudio de l’<strong>IFB-core-cluster</strong>, les données sont dans le répertoire <code>/shared/projects/du_bii_2019/data/module3/seance4/BIC/</code>.</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Liste des fichiers de données
+data.folder &lt;-<span class="st"> &quot;/shared/projects/du_bii_2019/data/module3/seance4/BIC/&quot;</span></code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li>Sur les machines de Paris-Diderot, elles sont dans le répertoire <code>../../dubii/data-m3/s4</code> (défini relativement à votre compte).</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Liste des fichiers de données
+data.folder &lt;-<span class="st"> &quot;../../dubii/data-m3/s4/BIC/&quot;</span></code></pre></div>
+</div>
+<div id="contenu-du-dossier-de-donnees" class="section level2">
+<h2>Contenu du dossier de données</h2>
+<p>Utilisez les commandes R suivantes:</p>
+<ul>
+<li><code>list.files()</code> pour vérifier le contenu du dosser <code>data.folder</code>,</li>
+<li><code>file.size()</code> pour calculer la taille de ces fichiers.</li>
+</ul>
+<p>Astuces:</p>
+<ul>
+<li><code>list.files()</code> retourne par défaut le nom de fichier, mais avec l’option <code>full.names=TRUE</code> vous obtiendrez le chemin complet.</li>
+<li>Calculez la taille des fichiers en bytes et en Megabytes (<span class="math inline">\(1Mb = 1024 \cot 1024 \cdot b\)</span>), sachant que pour chaque conversion il faut diviser par 1024.</li>
+<li>Vous pouvez consulter notre solution à l’aide du code suivant (cliquer sur <strong><em>Code</em></strong> pour l’afficher).</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">list.files</span>(<span class="dt">path =</span> data.folder) <span class="co"># List the data files</span>
+<span class="kw">file.size</span>(<span class="kw">list.files</span>(<span class="dt">path =</span> data.folder, <span class="dt">full.names =</span> <span class="ot">TRUE</span>)) <span class="co"># Get the size of the data files, in bytes</span>
 
+<span class="kw">file.size</span>(<span class="kw">list.files</span>(<span class="dt">path =</span> data.folder, <span class="dt">full.names =</span> <span class="ot">TRUE</span>))<span class="op">/</span><span class="st"> </span><span class="dv">1024</span><span class="op">^</span><span class="dv">2</span> <span class="co"># Get the size of the data files In Mv</span></code></pre></div>
+</div>
+<div id="lire-le-tableau-de-valeurs-dexpression" class="section level2">
+<h2>Lire le tableau de valeurs d’expression</h2>
+<p>Nous allons maintenant lire le fichier d’expression. Pour cela, nous concaténons le chemin du dossier de données et le nom du fichier d’expressiion (<code>BIC_diff_exp.tsv</code>). Ce fichier contient le comptages de lectures RNA-seq par gène, avec une sélection des gènes déclarés positifs pour letest de comparaison de moyennes multiples (voir-ci-dessus).</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">
 <span class="co"># Define the path of the expression file</span>
-BIC.expr.file &lt;-<span class="st"> </span><span class="kw">file.path</span>(data.folder, <span class="st">&quot;BIC_diff_exp.tsv&quot;</span>)
+<span class="ex">BIC.expr.file</span> <span class="op">&lt;</span>- file.path(data.folder, <span class="st">&quot;BIC_log2-norm-counts_edgeR_DEG_fdr_0.01.tsv.gz&quot;</span>)
 
 <span class="co"># Load expression</span>
-BIC.expr &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="dt">file =</span> BIC.expr.file, <span class="dt">h=</span><span class="ot">TRUE</span>)</code></pre></div>
-<ol start="2" style="list-style-type: decimal">
-<li>En local : en local, les données sont dans le répertoire <code>../../dubii/data-m3/s4</code>. Vous pouvez donc les lire à l’aide de la commande : <code>BIC.expr &lt;- read.table(&quot;../../dubii/data-m3/s4/BIC_diff_exp.tsv&quot;, h=T)</code></li>
-</ol>
+<span class="ex">BIC.expr</span> <span class="op">&lt;</span>- read.table(file = BIC.expr.file, h=TRUE)</code></pre></div>
+</div>
+<div id="mesure-de-la-taille-des-donnees" class="section level2">
+<h2>Mesure de la taille des données</h2>
+<p>Prenez le temps d’identifier</p>
 <ul>
-<li><p>prenez le temps d’identifier</p></li>
 <li>la taille du jeu de données</li>
-<li>les individus</li>
-<li><p>les variables</p></li>
+<li>le nombre d’individus</li>
+<li>le nombre de variables</li>
 </ul>
-<p><strong>rq : </strong> Classiquement, en analyse de données, les individus sont les lignes du tableau de données, les colonnes sont les variables. Pour des raisons histroiques, ce n’est pas le cas en analyse transcriptomique, où :</p>
+<p><strong>Remarque :</strong> Classiquement, en analyse de données, les individus sont les lignes du tableau de données, les colonnes sont les variables.</p>
+<p>Pour des raisons historiques, en analyse transcriptomique les données sont toujours fournies avec</p>
 <ul>
 <li>1 ligne = 1 gène</li>
 <li>1 échantillon biologique = 1 colonne</li>
 </ul>
+<p>Cette convention a été établie en 1997, lors des toutes premières publications sur le transcriptome de la levure. Dans ces études, l’objet d’intérêt (l’“éindividu”) était le gène, et les variables étaient ses mesures d’expression dans les différentes conditions testées.</p>
+<p>Pour l’anlayse de tissus cancéreux, on considère au contraire que l’“objet” d’intérêt est l’échantillon prélevé sur le patient, et les variables sont les mesures d’expression des différents gènes chez un patient.</p>
 <p>Ce qui implique de faire attention, et éventuellement de travailler sur la matrice transposée (fonction <code>t</code> en R) pour utiliser correctement les fonctions classiques.</p>
 </div>
+<div id="charger-les-etiquettes-de-classes-des-echantillons" class="section level2">
+<h2>Charger les étiquettes de classes des échantillons</h2>
+<p>Le fichier <code>BIC_sample-classes.tsv.gz</code>contient les étiquettes de classes des échantillons.</p>
+<p>Chaque échantillon a été assigné à une classe selon la combinaison de 3 marqueurs immunologiques:</p>
+<ul>
+<li>Estrogen Receptor 1 (ER1)</li>
+<li>Progesterone Receptor 1 (PR1)</li>
+<li>Human epidermal growth factor receptor 2 (Her2)</li>
+</ul>
+<p>Utilisez</p>
+<ul>
+<li><p>La fonction R <code>summary()</code> pour compter le nombre de patientes positives / négatives pour chacun de ces trois marqueurs.</p></li>
+<li><p>La fonction R <code>table()</code> pour calculer le nombre d’échantillons de chaque type de cancer.</p></li>
+<li><p>La fonction R <code>table()</code> pour calculer une table de contiingence des marqueurs ER1 et PR1</p></li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(BIC.sample.classes)
+
+<span class="kw">table</span>(BIC.sample.classes<span class="op">$</span>cancer.type)
+
+<span class="kw">table</span>(BIC.sample.classes<span class="op">$</span>ER1, BIC.sample.classes<span class="op">$</span>PR1)
+
+<span class="kw">table</span>(BIC.sample.classes<span class="op">$</span>ER1, 
+      BIC.sample.classes<span class="op">$</span>PR1, 
+      BIC.sample.classes<span class="op">$</span>Her2)</code></pre></div>
+</div>
+<div id="projection-acp-des-echantillons" class="section level2">
+<h2>Projection ACP des échantillons</h2>
+<p>Nous allons réaliser une ACP sans mise à l’échelle.</p>
+<!--
+
+-->
+<p><strong>Question: </strong> comment interprétez-vous les barplots des écarts-types et variances pour les premières comosantes ? A discuter pendant le cours.</p>
+</div>
+<div id="clustering-hierarchique" class="section level2">
+<h2>Clustering hiérarchique</h2>
 <div id="calcul-de-la-matrice-de-distance" class="section level3">
 <h3>Calcul de la matrice de distance</h3>
-<p>Nous allons utiliser comme métrique le coefficient de corrélation de Spearman, plus adapté à ce type de données que la distance euclidienne utilisée en cours.</p>
+<p>Nous allons maintenant calculer la distance entre chaque paire d’échantillon, en utilsiant comme métrique le <strong>coefficient de corrélation de Spearman</strong>, plus adapté à ce type de données que la distance euclidienne utilisée sur les données iris durant le cours</p>
 <ol style="list-style-type: decimal">
-<li>calcul de la matrice de corrélation de Spearman à l’aide de la fonction <code>cor</code> avec l’option <code>method=&quot;spearman&quot;</code></li>
-<li>transformation du corrélation de Spearman en une distance à l’aide de la trnsformation : <span class="math inline">\(d = 1 - r^2\)</span></li>
+<li><p>Lisez l’aide de la fonction <code>cor</code>, et utilisez cette fonction pour calculer la matrice de corrélation entre échantillons.</p></li>
+<li><p>transformation du corrélation de Spearman en une distance à l’aide de la trnsformation : <span class="math inline">\(d = 1 - r^2\)</span></p></li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dt1.cor &lt;-<span class="st"> </span><span class="kw">cor</span>(<span class="kw">t</span>(dt1), <span class="dt">method=</span><span class="st">&quot;spearman&quot;</span>)
-<span class="kw">dim</span>(dt1.cor)
-dt1.dist &lt;-<span class="st"> </span><span class="kw">as.dist</span>(<span class="dv">1</span><span class="op">-</span>dt1.cor<span class="op">^</span><span class="dv">2</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">BIC.cor &lt;-<span class="st"> </span><span class="kw">cor</span>(<span class="kw">t</span>(BIC.expr.transposed), 
+               <span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>)
+<span class="kw">dim</span>(BIC.cor)
+BIC.dist &lt;-<span class="st"> </span><span class="kw">as.dist</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>BIC.cor)</code></pre></div>
 </div>
 <div id="hclust" class="section level3">
 <h3>hclust</h3>
-<ol style="list-style-type: decimal">
-<li>faire un premier clustering hiérarchique, avec le critère d’aggrégation par défaut</li>
-</ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dt1.hclust &lt;-<span class="st"> </span><span class="kw">hclust</span>(dt1.dist)
-<span class="kw">plot</span>(dt1.hclust, <span class="dt">labels=</span>F, <span class="dt">hang=</span><span class="dv">0</span>)</code></pre></div>
+<p>Faites un premier clustering hiérarchique, avec le critère d’aggrégation par défaut (lisez l’aide de la fonction <code>hclust()</code> pour savoir quelle est ce critère par défaut).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">BIC.hclust.complete &lt;-<span class="st"> </span><span class="kw">hclust</span>(BIC.dist)
+<span class="kw">plot</span>(BIC.hclust.complete, <span class="dt">labels =</span> F, <span class="dt">hang =</span> <span class="op">-</span><span class="dv">1</span>, <span class="dt">las =</span> <span class="dv">1</span>,
+     <span class="dt">main =</span> <span class="st">&quot;Pearson dissimilarity, complete linkage&quot;</span>)</code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>faire un deuxième clustering hiérarchique, avec le critère d’aggrégation de Ward</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dt1.hclust.ward &lt;-<span class="st"> </span><span class="kw">hclust</span>(dt1.dist, <span class="dt">method=</span><span class="st">&quot;ward.D2&quot;</span>)
-<span class="kw">plot</span>(dt1.hclust.ward, <span class="dt">labels=</span>F, <span class="dt">hang=</span><span class="dv">0</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">BIC.hclust.ward &lt;-<span class="st"> </span><span class="kw">hclust</span>(BIC.dist, <span class="dt">method =</span> <span class="st">&quot;ward.D2&quot;</span>)
+<span class="kw">plot</span>(BIC.hclust.ward, <span class="dt">labels =</span> F, <span class="dt">hang =</span> <span class="op">-</span><span class="dv">1</span>, <span class="dt">las =</span> <span class="dv">1</span>,
+     <span class="dt">main =</span> <span class="st">&quot;Pearson dissimilarity, Ward linkage&quot;</span>)</code></pre></div>
 <ol start="3" style="list-style-type: decimal">
-<li><p>Comparer les classifications obtenues</p>
-<ul>
-<li>en particulier sur les nombres de cluster</li>
-<li>utiliser les commandes <code>rect.hclust</code> et <code>cutree</code> pour visualiser les clusters sur le dendrogramme, puis récupérer les clusters.</li>
-</ul></li>
+<li>Redessiner les arbres de ces deux résultats de clustering en colorant les échantillons selon la classe de cancer.</li>
 </ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Assign a color to each cancer type</span>
+classes &lt;-<span class="st"> </span><span class="kw">unique</span>(BIC.sample.classes<span class="op">$</span>cancer.type)
+class.colors &lt;-<span class="st"> </span><span class="kw">rainbow</span>(<span class="dt">n =</span> <span class="kw">length</span>(classes))
+<span class="kw">names</span>(class.colors) &lt;-<span class="st"> </span>classes
+<span class="kw">data.frame</span>(class.colors)
+
+<span class="co"># Associate a color to each sample accordinig to its cancer type</span>
+sample.colors &lt;-<span class="st"> </span>class.colors[BIC.sample.classes<span class="op">$</span>cancer.type]
+<span class="kw">table</span>(BIC.sample.classes<span class="op">$</span>cancer.type, sample.colors)
+
+<span class="kw">plot</span>(BIC.hclust.complete, <span class="dt">labels =</span> F, <span class="dt">hang =</span> <span class="op">-</span><span class="dv">1</span>, <span class="dt">las =</span> <span class="dv">1</span>,
+     <span class="dt">main =</span> <span class="st">&quot;Pearson dissimilarity, complete linkage&quot;</span>,
+     <span class="dt">col =</span> sample.colors)</code></pre></div>
+<ol start="3" style="list-style-type: decimal">
+<li>Comparer les classifications obtenues avec les règles d’agglomératioin complète et Ward, respectivement, en étudiant l’impact du nombre de clusters.</li>
+</ol>
+<p><strong>Astuces:</strong></p>
+<ul>
+<li>Cous pouvez utiliser les commandes <code>rect.hclust</code> et <code>cutree</code> pour visualiser les clusters sur le dendrogramme, puis récupérer les clusters.</li>
+</ul>
 </div>
 <div id="kmeans" class="section level3">
 <h3>kmeans</h3>
@@ -454,8 +460,8 @@ dt1.dist &lt;-<span class="st"> </span><span class="kw">as.dist</span>(<span cla
 <li>refaire le kmeans avec ce nombre optimal</li>
 <li>visualiser ces groupes par exemple sur une projection des données dans le plan par PCA, à l’aide de la fonction `plot(PCA(mon.data.frame, choix=“ind”, col.ind=mon.kmeans$cluster)).</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dt1.kmeans &lt;-<span class="st"> </span><span class="kw">kmeans</span>(dt1, <span class="dt">centers=</span><span class="dv">20</span>)
-<span class="kw">table</span>(dt1.kmeans<span class="op">$</span>cluster)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">BIC.kmeans &lt;-<span class="st"> </span><span class="kw">kmeans</span>(dt1, <span class="dt">centers=</span><span class="dv">20</span>)
+<span class="kw">table</span>(BIC.kmeans<span class="op">$</span>cluster)
 T1 =<span class="st"> </span><span class="kw">Sys.time</span>()
 I.intra =<span class="st"> </span><span class="kw">numeric</span>(<span class="dt">length=</span><span class="dv">20</span>)
 I.intra[<span class="dv">1</span>] =<span class="st"> </span><span class="kw">kmeans</span>(dt1, <span class="dt">centers=</span><span class="dv">2</span>)<span class="op">$</span>totss
@@ -467,16 +473,16 @@ I.intra[<span class="dv">1</span>] =<span class="st"> </span><span class="kw">km
 T2 =<span class="st"> </span><span class="kw">Sys.time</span>()
 Tdiff =<span class="st"> </span><span class="kw">difftime</span>(T2,T1)
 <span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))
-dt1.kmeans10 &lt;-<span class="st"> </span><span class="kw">kmeans</span>(dt1, <span class="dt">centers=</span><span class="dv">10</span>)
-<span class="kw">table</span>(dt1.kmeans10<span class="op">$</span>cluster)
-<span class="kw">plot</span>(dt1.pca, <span class="dt">choix=</span><span class="st">&quot;ind&quot;</span>, <span class="dt">label=</span><span class="st">&quot;none&quot;</span>, <span class="dt">col.ind=</span>dt1.kmeans10<span class="op">$</span>cluster)
-dt1.kmeans3 &lt;-<span class="st"> </span><span class="kw">kmeans</span>(dt1, <span class="dt">centers=</span><span class="dv">3</span>)
-<span class="kw">table</span>(dt1.kmeans3<span class="op">$</span>cluster)
-<span class="kw">plot</span>(dt1.pca, <span class="dt">choix=</span><span class="st">&quot;ind&quot;</span>, <span class="dt">label=</span><span class="st">&quot;none&quot;</span>, <span class="dt">col.ind=</span>dt1.kmeans3<span class="op">$</span>cluster)
+BIC.kmeans10 &lt;-<span class="st"> </span><span class="kw">kmeans</span>(dt1, <span class="dt">centers=</span><span class="dv">10</span>)
+<span class="kw">table</span>(BIC.kmeans10<span class="op">$</span>cluster)
+<span class="kw">plot</span>(BIC.pca, <span class="dt">choix=</span><span class="st">&quot;ind&quot;</span>, <span class="dt">label=</span><span class="st">&quot;none&quot;</span>, <span class="dt">col.ind=</span>BIC.kmeans10<span class="op">$</span>cluster)
+BIC.kmeans3 &lt;-<span class="st"> </span><span class="kw">kmeans</span>(dt1, <span class="dt">centers=</span><span class="dv">3</span>)
+<span class="kw">table</span>(BIC.kmeans3<span class="op">$</span>cluster)
+<span class="kw">plot</span>(BIC.pca, <span class="dt">choix=</span><span class="st">&quot;ind&quot;</span>, <span class="dt">label=</span><span class="st">&quot;none&quot;</span>, <span class="dt">col.ind=</span>BIC.kmeans3<span class="op">$</span>cluster)
 <span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))
-dt1.kmeans2 &lt;-<span class="st"> </span><span class="kw">kmeans</span>(dt1, <span class="dt">centers=</span><span class="dv">2</span>)
-<span class="kw">table</span>(dt1.kmeans2<span class="op">$</span>cluster)
-<span class="kw">plot</span>(dt1.pca, <span class="dt">choix=</span><span class="st">&quot;ind&quot;</span>, <span class="dt">label=</span><span class="st">&quot;none&quot;</span>, <span class="dt">col.ind=</span>dt1.kmeans2<span class="op">$</span>cluster)</code></pre></div>
+BIC.kmeans2 &lt;-<span class="st"> </span><span class="kw">kmeans</span>(dt1, <span class="dt">centers=</span><span class="dv">2</span>)
+<span class="kw">table</span>(BIC.kmeans2<span class="op">$</span>cluster)
+<span class="kw">plot</span>(BIC.pca, <span class="dt">choix=</span><span class="st">&quot;ind&quot;</span>, <span class="dt">label=</span><span class="st">&quot;none&quot;</span>, <span class="dt">col.ind=</span>BIC.kmeans2<span class="op">$</span>cluster)</code></pre></div>
 </div>
 <div id="comparaisons" class="section level3">
 <h3>Comparaisons</h3>
@@ -488,22 +494,22 @@ dt1.kmeans2 &lt;-<span class="st"> </span><span class="kw">kmeans</span>(dt1, <s
 <li>à l’aide de la fonction <code>adjustedRand(clues)</code> calculez le RI et le ARI de vos clustering. Commentez.</li>
 </ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))
-<span class="kw">plot</span>(dt1.hclust.ward, <span class="dt">labels=</span>F, <span class="dt">hang=</span><span class="dv">0</span>)
-<span class="kw">rect.hclust</span>(dt1.hclust.ward, <span class="dt">k=</span><span class="dv">3</span>)
-dt1.cutree3 &lt;-<span class="st"> </span><span class="kw">cutree</span>(dt1.hclust.ward, <span class="dt">k=</span><span class="dv">3</span>)
-<span class="kw">plot</span>(dt1.hclust.ward, <span class="dt">labels=</span>F, <span class="dt">hang=</span><span class="dv">0</span>)
-<span class="kw">rect.hclust</span>(dt1.hclust.ward, <span class="dt">k=</span><span class="dv">10</span>)
-dt1.cutree10 &lt;-<span class="st"> </span><span class="kw">cutree</span>(dt1.hclust.ward, <span class="dt">k=</span><span class="dv">10</span>)
-<span class="kw">table</span>(dt1.cutree3, dt1.kmeans<span class="op">$</span>cluster)
-<span class="kw">table</span>(dt1.cutree10, dt1.kmeans<span class="op">$</span>cluster)
+<span class="kw">plot</span>(BIC.hclust.ward, <span class="dt">labels=</span>F, <span class="dt">hang=</span><span class="dv">0</span>)
+<span class="kw">rect.hclust</span>(BIC.hclust.ward, <span class="dt">k=</span><span class="dv">3</span>)
+BIC.cutree3 &lt;-<span class="st"> </span><span class="kw">cutree</span>(BIC.hclust.ward, <span class="dt">k=</span><span class="dv">3</span>)
+<span class="kw">plot</span>(BIC.hclust.ward, <span class="dt">labels=</span>F, <span class="dt">hang=</span><span class="dv">0</span>)
+<span class="kw">rect.hclust</span>(BIC.hclust.ward, <span class="dt">k=</span><span class="dv">10</span>)
+BIC.cutree10 &lt;-<span class="st"> </span><span class="kw">cutree</span>(BIC.hclust.ward, <span class="dt">k=</span><span class="dv">10</span>)
+<span class="kw">table</span>(BIC.cutree3, BIC.kmeans<span class="op">$</span>cluster)
+<span class="kw">table</span>(BIC.cutree10, BIC.kmeans<span class="op">$</span>cluster)
 <span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))
-clues<span class="op">::</span><span class="kw">adjustedRand</span>(dt1.cutree3, dt1.kmeans3<span class="op">$</span>cluster)
-clues<span class="op">::</span><span class="kw">adjustedRand</span>(dt1.cutree10, dt1.kmeans10<span class="op">$</span>cluster)
-clues<span class="op">::</span><span class="kw">adjustedRand</span>(dt1.cutree3, dt1.kmeans10<span class="op">$</span>cluster)
-clues<span class="op">::</span><span class="kw">adjustedRand</span>(dt1.cutree10, dt1.kmeans3<span class="op">$</span>cluster)</code></pre></div>
+clues<span class="op">::</span><span class="kw">adjustedRand</span>(BIC.cutree3, BIC.kmeans3<span class="op">$</span>cluster)
+clues<span class="op">::</span><span class="kw">adjustedRand</span>(BIC.cutree10, BIC.kmeans10<span class="op">$</span>cluster)
+clues<span class="op">::</span><span class="kw">adjustedRand</span>(BIC.cutree3, BIC.kmeans10<span class="op">$</span>cluster)
+clues<span class="op">::</span><span class="kw">adjustedRand</span>(BIC.cutree10, BIC.kmeans3<span class="op">$</span>cluster)</code></pre></div>
 </div>
-<div id="clustering-versus-her2-status" class="section level4">
-<h4>clustering versus Her2 status</h4>
+<div id="clustering-versus-statut" class="section level4">
+<h4>clustering versus statut</h4>
 <p>Nous connaissons les types de cancer des différentes tumeurs, définie en combinant trois marqueurs immunologiques :</p>
 <ul>
 <li>HER2,</li>
@@ -528,37 +534,36 @@ clues<span class="op">::</span><span class="kw">adjustedRand</span>(dt1.cutree10
 </ul></li>
 <li>commentez</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(dt1.hclust.ward, <span class="dt">labels=</span>F, <span class="dt">hang=</span><span class="dv">0</span>)
-<span class="kw">rect.hclust</span>(dt1.hclust.ward, <span class="dt">k=</span><span class="dv">2</span>)
-dt1.cutree2 &lt;-<span class="st"> </span><span class="kw">cutree</span>(dt1.hclust.ward, <span class="dt">k=</span><span class="dv">2</span>)
-<span class="kw">table</span>(dt1.cutree2, dt1.classes[,<span class="dv">4</span>])
-<span class="kw">table</span>(dt1.kmeans2<span class="op">$</span>cluster, dt1.classes[,<span class="dv">4</span>])</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(BIC.hclust.ward, <span class="dt">labels=</span>F, <span class="dt">hang=</span><span class="dv">0</span>)
+<span class="kw">rect.hclust</span>(BIC.hclust.ward, <span class="dt">k=</span><span class="dv">2</span>)
+BIC.cutree2 &lt;-<span class="st"> </span><span class="kw">cutree</span>(BIC.hclust.ward, <span class="dt">k=</span><span class="dv">2</span>)
+<span class="kw">table</span>(BIC.cutree2, BIC.sample.classes[,<span class="dv">4</span>])
+<span class="kw">table</span>(BIC.kmeans2<span class="op">$</span>cluster, BIC.sample.classes[,<span class="dv">4</span>])</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># clustering versus cancer.type</span>
-<span class="kw">table</span>(dt1.cutree3, dt1.classes[,<span class="dv">1</span>])
-clues<span class="op">::</span><span class="kw">adjustedRand</span>(dt1.cutree3, <span class="kw">as.numeric</span>(dt1.classes[,<span class="dv">1</span>]))
-<span class="kw">table</span>(dt1.kmeans3<span class="op">$</span>cluster, dt1.classes[,<span class="dv">1</span>])
-clues<span class="op">::</span><span class="kw">adjustedRand</span>(dt1.kmeans3<span class="op">$</span>cluster, <span class="kw">as.numeric</span>(dt1.classes[,<span class="dv">1</span>]))
-<span class="kw">table</span>(dt1.cutree10, dt1.classes[,<span class="dv">1</span>])
-clues<span class="op">::</span><span class="kw">adjustedRand</span>(dt1.cutree10, <span class="kw">as.numeric</span>(dt1.classes[,<span class="dv">1</span>]))
-<span class="kw">table</span>(dt1.kmeans10<span class="op">$</span>cluster, dt1.classes[,<span class="dv">1</span>])
-clues<span class="op">::</span><span class="kw">adjustedRand</span>(dt1.kmeans10<span class="op">$</span>cluster, <span class="kw">as.numeric</span>(dt1.classes[,<span class="dv">1</span>]))</code></pre></div>
+<span class="kw">table</span>(BIC.cutree3, BIC.sample.classes[,<span class="dv">1</span>])
+clues<span class="op">::</span><span class="kw">adjustedRand</span>(BIC.cutree3, <span class="kw">as.numeric</span>(BIC.sample.classes[,<span class="dv">1</span>]))
+<span class="kw">table</span>(BIC.kmeans3<span class="op">$</span>cluster, BIC.sample.classes[,<span class="dv">1</span>])
+clues<span class="op">::</span><span class="kw">adjustedRand</span>(BIC.kmeans3<span class="op">$</span>cluster, <span class="kw">as.numeric</span>(BIC.sample.classes[,<span class="dv">1</span>]))
+<span class="kw">table</span>(BIC.cutree10, BIC.sample.classes[,<span class="dv">1</span>])
+clues<span class="op">::</span><span class="kw">adjustedRand</span>(BIC.cutree10, <span class="kw">as.numeric</span>(BIC.sample.classes[,<span class="dv">1</span>]))
+<span class="kw">table</span>(BIC.kmeans10<span class="op">$</span>cluster, BIC.sample.classes[,<span class="dv">1</span>])
+clues<span class="op">::</span><span class="kw">adjustedRand</span>(BIC.kmeans10<span class="op">$</span>cluster, <span class="kw">as.numeric</span>(BIC.sample.classes[,<span class="dv">1</span>]))</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># visualisation</span>
 
 ## hclust (2 groupes) et HER2+/-
-mycol=dt1.cutree2
-mypch=<span class="kw">as.numeric</span>(dt1.classes[,<span class="dv">4</span>])
-pointsToPlot &lt;-<span class="st"> </span>dt1.pca<span class="op">$</span>ind<span class="op">$</span>coord[,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>]
-<span class="kw">plot</span>(dt1.pca, <span class="dt">choix=</span><span class="st">&quot;ind&quot;</span>, <span class="dt">label=</span><span class="st">&quot;none&quot;</span>, <span class="dt">col.ind=</span><span class="st">&quot;white&quot;</span>)
+mycol=BIC.cutree2
+mypch=<span class="kw">as.numeric</span>(BIC.sample.classes[,<span class="dv">4</span>])
+pointsToPlot &lt;-<span class="st"> </span>BIC.pca<span class="op">$</span>ind<span class="op">$</span>coord[,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>]
+<span class="kw">plot</span>(BIC.pca, <span class="dt">choix=</span><span class="st">&quot;ind&quot;</span>, <span class="dt">label=</span><span class="st">&quot;none&quot;</span>, <span class="dt">col.ind=</span><span class="st">&quot;white&quot;</span>)
 <span class="kw">points</span>(pointsToPlot, <span class="dt">col=</span>mycol, <span class="dt">pch=</span>mypch)
 texte.legend=<span class="kw">c</span>(<span class="st">&quot;HER2-&quot;</span>, <span class="st">&quot;HER2+&quot;</span>, <span class="st">&quot;gr1&quot;</span>, <span class="st">&quot;gr2&quot;</span>)
 <span class="kw">legend</span>(<span class="dt">x=</span><span class="op">-</span><span class="dv">400</span>, <span class="dt">y=</span><span class="dv">100</span>, texte.legend, <span class="dt">col=</span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>), <span class="dt">pch=</span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="ot">NA</span>, <span class="ot">NA</span>), <span class="dt">text.col=</span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>))</code></pre></div>
 </div>
 </div>
-
-
-
 </div>
-</div>
+
+
+
 
 </div>
 
