@@ -1,9 +1,23 @@
 ---
 title: "Méthodes de Partionnement et d'apprentissage non supervisé"
 subtitle: Classification Hiérarchique et Kmeans
-author: "Anne Badel et Frédéric Guyon"
+author: "Anne Badel, Frédéric Guyon & Jacques van Helden"
 date: "`r Sys.Date()`"
 output:
+  slidy_presentation:
+    highlight: default
+    incremental: no
+    smart: no
+    slide_level: 1
+    self_contained: yes
+    fig_caption: no
+    fig_height: 5
+    fig_width: 5
+    keep_md: yes
+    smaller: yes
+    theme: cerulean
+    toc: yes
+    widescreen: yes
   beamer_presentation:
     colortheme: dolphin
     fig_caption: no
@@ -13,7 +27,7 @@ output:
     highlight: default
     incremental: no
     keep_tex: no
-    slide_level: 3
+    slide_level: 1
     theme: Montpellier
     toc: yes
   html_document:
@@ -32,20 +46,12 @@ output:
     highlight: zenburn
     toc: yes
     toc_depth: 3
-  slidy_presentation:
-    highlight: default
-    incremental: no
-    smart: no
-    slide_level: 3
-    self_contained: yes
-    fig_caption: no
-    fig_height: 5
-    fig_width: 5
-    keep_md: yes
-    smaller: yes
-    theme: cerulean
-    toc: yes
-    widescreen: yes
+  revealjs::revealjs_presentation:
+    theme: night
+    transition: none
+    self_contained: true
+    slide_level: 1
+    css: ../slides.css
 font-import: http://fonts.googleapis.com/css?family=Risque
 font-family: Garamond
 transition: linear
@@ -145,7 +151,10 @@ On considère les données comme des points de $R^n$ (*)
 - dissimilarités $\longrightarrow$ permettent visualisation de l'ensemble des points
 - Détermination visuelle des groupes
 
-(*) Espace Euclidien à $n$ dimensions, où chaque dimension représente une des variables observées. Chaque individu est décrit comme un vecteur à $n$ valeurs, qui correspont à un point dans cet espace. 
+(*) Espace Euclidien à $n$ dimensions, où 
+
+- chaque dimension représente une des variables observées;
+- un individu est décrit comme un vecteur à $n$ valeurs, qui correspond à un point dans cet espace. 
 
 </div>
 
@@ -172,7 +181,7 @@ summary(mes.iris)
 
 On peut ensuite essayer de visualiser les données
   
-```{r plot_iris, fig.width=7, fig.height=6, out.width="70%"}
+```{r plot_iris, fig.width=7, fig.height=6, out.width="60%"}
 plot(mes.iris)
 ```
 
@@ -393,7 +402,7 @@ mes.iris.scaled <- scale(mes.iris, center=TRUE, scale=TRUE)
 
 ## par un plot des données 
 
-```{r plot_raw_vs_scaled, out.width="80%", fig.width=12, fig.height=6}
+```{r plot_raw_vs_scaled, out.width="60%", fig.width=12, fig.height=6}
 plot(mes.iris, main = "Raw variables")
 ```
 
@@ -886,11 +895,11 @@ table(variete2)
 
 ---
 
-```{r }
+```{r out.width="95%", fig.width=12, fig.height=6}
 par(mfrow=c(1,2))
-plot(iris.scaled.acp, col.ind=variete2, title="variétés observés")
+plot(iris.scaled.acp, col.ind=variete2, title="Actual species", cex=0.6)
 cluster.kmeans2 <- kmeans(mes.iris.scaled, center=2)$cluster
-plot(iris.scaled.acp, col.ind=cluster.kmeans2, title="kmeans en 2 groupes")
+plot(iris.scaled.acp, col.ind=cluster.kmeans2, title="2-group k-means", cex=0.6)
 par(mfrow=c(1,1))
 ```
 
@@ -949,13 +958,18 @@ variete2[variete=="versicolor"] <- "versicolor"
 variete2 = factor(variete2)
 table(variete2)
 ```
-```{r }
+
+---
+
+
+```{r out.width="90%", fig.width=12, fig.height=6}
 par(mfrow=c(1,2))
-plot(iris.scaled.acp, col.ind=variete2)
+plot(iris.scaled.acp, col.ind = variete2, cex  =0.7)
 cluster.kmeans2 <- kmeans(mes.iris.scaled, center=2)$cluster
-plot(iris.scaled.acp, col.ind=cluster.kmeans2)
+plot(iris.scaled.acp, col.ind = cluster.kmeans2, cex = 0.7)
 par(mfrow=c(1,1))
 ```
+
 ---
 
 ## Table de confusion et calcul de performances
@@ -986,6 +1000,19 @@ kable(performance, digits=3)
 clues::adjustedRand(as.numeric(variete2), cluster.kmeans2)
 ```
 
----
+# Pros et cons des différents algorithmes
+
+| Algorithme | Pros | Cons |
+|-------------|------------------------------|------------------------|
+| **Hiérarchique** | L'arbre reflète la nature imbriquée de tous les sous-clusters | Complexité quadratique (mémoire et temps de calcul) $\rightarrow$ quadruple chaque fois qu'on double le nombre d'individus  |
+| | Permet une visualisation couplée dendrogramme (groupes) + heatmap (profils individuels) | |
+| | Choix a posteriori du nombre de clusters (élagage) | |
+|  |  |  |
+|  |  |  |
+| **K-means** | Rapide (linéaire en temps), peut traiter des jeux de données énormes (centaines de milliers de pics ChIP-seq) | Positions initiales des centres est aléatoire $\rightarrow$ résultats changent d'une exécution à l'autre |
+| | | Distance euclidienne (pas appropriée pour transcriptome par exemple) |
+
+
+#
 
 Contact: <anne.badel@univ-paris-diderot.fr>

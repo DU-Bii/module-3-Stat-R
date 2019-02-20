@@ -4,6 +4,7 @@
 
 - Anne Badel
 - Frédéric Guyon
+- Jacques van Helden
 
 ## Supports de cours
 
