@@ -3,11 +3,14 @@ title: "TP de la séance 4, Clustering"
 author: "Anne Badel,  Frederic Guyon & Jacques van Helden"
 date: '`r Sys.Date()`'
 output:
-  pdf_document:
+  html_document:
+    self_contained: no
     fig_caption: yes
     highlight: zenburn
-    toc: yes
+    theme: cerulean
     toc_depth: 3
+    toc_float: yes
+    code_folding: "hide"
   beamer_presentation:
     colortheme: dolphin
     fig_caption: yes
@@ -25,14 +28,11 @@ output:
     transition: none
     self_contained: true
     css: ../slides.css
-  html_document:
-    self_contained: no
+  pdf_document:
     fig_caption: yes
     highlight: zenburn
-    theme: cerulean
+    toc: yes
     toc_depth: 3
-    toc_float: yes
-    code_folding: "hide"
   slidy_presentation:
     smart: no
     slide_level: 2
@@ -505,26 +505,92 @@ A l'aide de la fonction `summary`, déterminez le nombre de tumeurs pour chaque 
     - le calcul des rand index et adjusted rand index
     
 
-  2. commentez
-  
-```{r}
-plot(BIC.hclust.ward, labels=F, hang=0)
-rect.hclust(BIC.hclust.ward, k=2)
-BIC.cutree2 <- cutree(BIC.hclust.ward, k=2)
-table(BIC.cutree2, BIC.sample.classes[,4])
-table(BIC.kmeans2$cluster, BIC.sample.classes[,4])
+  2. Interprétez les résultats suivants (cliquez sur "code" pour afficher le code, et exécutez-le)
+
+```{r er1_vs_pr1}
+## Correspondence between markers
+table(BIC.sample.classes$ER1, BIC.sample.classes$PR1)
+fisher.test(table(BIC.sample.classes$ER1, BIC.sample.classes$PR1))
+
 ```
 
+  
+```{r markers_vs_clusters}
+# cut the tree at different levels (2, 5)
+plot(BIC.hclust.ward, labels = FALSE, hang = -1)
+rect.hclust(BIC.hclust.ward, k = 5, border = "blue")
+rect.hclust(BIC.hclust.ward, k = 2, border = "red")
+legend("topright", 
+       legend = c("2 clusters", "5 clusters"), 
+       col = c("red", "blue"), lwd = 2, cex = 0.7)
+BIC.cutree2 <- cutree(BIC.hclust.ward, k = 2)
+BIC.cutree5 <- cutree(BIC.hclust.ward, k = 5)
+
+## hclust 2 clusters versus each marker
+table(BIC.cutree2, BIC.sample.classes$Her2)
+table(BIC.cutree2, BIC.sample.classes$ER1)
+table(BIC.cutree2, BIC.sample.classes$PR1)
+
+## K-means 2 clusters versus each marker
+table(BIC.kmeans2$cluster, BIC.sample.classes$ER1)
+table(BIC.kmeans2$cluster, BIC.sample.classes$PR1)
+table(BIC.kmeans2$cluster, BIC.sample.classes$Her2)
+
+## 5 clusters
+table(BIC.cutree5, BIC.sample.classes$Her2)
+table(BIC.cutree5, BIC.sample.classes$ER1)
+table(BIC.cutree5, BIC.sample.classes$cancer.type)
+
+cluster.vs.cancertype <- table(
+  BIC.cutree5, 
+  BIC.sample.classes$cancer.type)
+
+kable(cluster.vs.cancertype, caption = "Hierarchical clusters (c = 5) versus cancer type. ")
+
+```
+
+
 ```{r}
-# clustering versus cancer.type
-table(BIC.cutree3, BIC.sample.classes[,1])
-clues::adjustedRand(BIC.cutree3, as.numeric(BIC.sample.classes[,1]))
-table(BIC.kmeans3$cluster, BIC.sample.classes[,1])
-clues::adjustedRand(BIC.kmeans3$cluster, as.numeric(BIC.sample.classes[,1]))
-table(BIC.cutree10, BIC.sample.classes[,1])
-clues::adjustedRand(BIC.cutree10, as.numeric(BIC.sample.classes[,1]))
+## clustering versus cancer.type
+## Compute the confusion table and adjusted RAND index (ARI)
+
+## 2 clusters versus each marker
+table(BIC.cutree2, BIC.sample.classes$ER1)
+clues::adjustedRand(
+  BIC.cutree2, 
+  as.numeric(BIC.sample.classes$ER1))
+
+table(BIC.cutree2, BIC.sample.classes$PR1)
+clues::adjustedRand(
+  BIC.cutree2, 
+  as.numeric(BIC.sample.classes$PR1))
+
+table(BIC.cutree2, BIC.sample.classes$Her2)
+clues::adjustedRand(
+  BIC.cutree2, 
+  as.numeric(BIC.sample.classes$Her2))
+
+
+## 5 clusters versus cancer type
+table(BIC.cutree5, BIC.sample.classes$cancer.type)
+clues::adjustedRand(
+  BIC.cutree5, 
+  as.numeric(BIC.sample.classes$cancer.type))
+
+## Negative control: compute the same stat with randomly permuted values
+table(BIC.cutree5, BIC.sample.classes$cancer.type)
+clues::adjustedRand(
+  sample(BIC.cutree5), 
+  as.numeric(BIC.sample.classes$cancer.type))
+
+table(BIC.kmeans3$cluster, BIC.sample.classes$cancer.type)
+clues::adjustedRand(
+  BIC.kmeans3$cluster,
+  as.numeric(BIC.sample.classes$cancer.type))
+
 table(BIC.kmeans10$cluster, BIC.sample.classes[,1])
-clues::adjustedRand(BIC.kmeans10$cluster, as.numeric(BIC.sample.classes[,1]))
+clues::adjustedRand(BIC.kmeans10$cluster,
+                    as.numeric(BIC.sample.classes[,1]))
 ```
 
 
@@ -533,16 +599,24 @@ clues::adjustedRand(BIC.kmeans10$cluster, as.numeric(BIC.sample.classes[,1]))
 
 ## hclust (2 groupes) et HER2+/-
 mycol <- BIC.cutree2
-mypch <- as.numeric(BIC.sample.classes[,4])
+mypch <- as.numeric(BIC.sample.classes$ER1)
 plot(BIC.prcomp$x[,1:2], col = mycol, pch = mypch, 
      las = 1, cex = 0.7, 
      main = "Clusters versus markers")
 grid()
-texte.legend <- c("HER2-", "HER2+", "gr1", "gr2")
+texte.legend <- c("ER1-", "ER1+", "gr1", "gr2")
 legend("topright", texte.legend, 
        col = c(1, 1, 1, 2), 
        pch = c(1, 2, NA, NA), 
        text.col = c(1, 1, 1, 2))
+
+```
+
+```{r clusters_vs_markers}
+## Draw a confusion table of cluster versus ER1
+kable(table(BIC.cutree2, BIC.sample.classes$ER1), caption = "hclust clusters versus ER1 marker")
+
+
 ```
 
 
