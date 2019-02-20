@@ -331,33 +331,6 @@ table(BIC.sample.classes$cancer.type, sample.colors)
 
 ```
 
-<!--
-```{r}
-save(BIC.prcomp, file="data_R4/BIC.prcomp.RData")
-# Réduction des données, anova
-dt2 <- data.frame(BIC.expr.transposed, BIC.sample.classes[,1])
-p.value <- numeric(length=ncol(BIC.expr.transposed))
-for (i in 1:ncol(BIC.expr.transposed)) {
-  p.value[i] <- summary(aov(dt2[,i] ~ dt2[,20250]))[[1]][1,5]
-}
-p.fdr <- p.adjust(p.value, method="fdr")
-p.bh <- p.adjust(p.value, method="BH")
-p.bonf <- p.adjust(p.value, method="bonferroni")
-par(mfrow=c(2,2))
-hist(p.value)
-hist(p.fdr)
-hist(p.bh)
-hist(p.bonf)
-par(mfrow=c(1,1))
-sum(p.value < 0.05) ; sum(p.value < 0.01)
-sum(p.fdr < 0.05) ; sum(p.fdr < 0.01)
-sum(p.bh < 0.05) ; sum(p.bh < 0.01)
-sum(p.bonf < 0.05) ; sum(p.bonf < 0.01)
-BIC.all <- BIC.expr.transposed
-BIC.expr.transposed <- BIC.expr.transposed[, which(p.fdr < 0.05)]
-write.table(BIC.expr.transposed, "data_R4/BIC_diff_exp.tsv", sep="\t")
-```
--->
 
 **Question: ** comment interprétez-vous les barplots des écarts-types et variances pour les premières comosantes ? A discuter pendant le cours. 
 
@@ -567,3 +540,17 @@ points(pointsToPlot, col=mycol, pch=mypch)
 texte.legend=c("HER2-", "HER2+", "gr1", "gr2")
 legend(x=-400, y=100, texte.legend, col=c(1, 1, 1, 2), pch=c(1, 2, NA, NA), text.col=c(1, 1, 1, 2))
 ```
+
+
+## Lister son environnement
+
+A la fin de tout travail d'analyse, il est important de conserver une trace précise et complète de l'environnement précis utilisé pour produire les résultats. 
+
+
+```{r session_info, result=TRUE}
+## Print the complete list of libraries + versions used in this session
+sessionInfo()
+
+```
+
+
