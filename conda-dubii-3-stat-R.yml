@@ -40,9 +40,10 @@ dependencies:
   - bioconda::bioconductor-limma
   - bioconda::bioconductor-qvalue
   - bioconda::bioconductor-multtest
+  - bioconda::bioconductor-recount # used to generate the TCGA study case
   - bioconda::r-classdiscovery
   - bioconda::r-mixomics # For the course of integrative bioinformatics
-  - bioconda::bioconductor-recount # used to generate the TCGA study case
-  
+  - bioconda::r-momr
+
   ## Other packages
   - lcantini::r-mofa
