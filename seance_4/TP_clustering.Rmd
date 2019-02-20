@@ -205,7 +205,7 @@ file.size(list.files(path = data.folder, full.names = TRUE))/ 1024^2 # Get the s
 ## Lire le tableau de valeurs d'expression
 
 
-Nous allons maintenant lire le fichier d'expression. Pour cela, nous concaténons le chemin du dossier de données et le nom du fichier d'expressiion (`BIC_diff_exp.tsv`). Ce fichier contient le comptages de lectures RNA-seq par gène, avec une sélection des gènes déclarés positifs pour letest de comparaison de moyennes multiples (voir-ci-dessus). 
+Nous allons maintenant lire le fichier d'expression. Pour cela, nous concaténons le chemin du dossier de données et le nom du fichier d'expressiion (`BIC_log2-norm-counts_edgeR_DEG_fdr_0.01.tsv.gz`). Ce fichier contient le comptages de lectures RNA-seq par gène, avec une sélection des gènes déclarés positifs pour letest de comparaison de moyennes multiples (voir-ci-dessus). 
 
 ```{r file_path}
 
@@ -214,7 +214,7 @@ BIC.expr.file <- file.path(data.folder, "BIC_log2-norm-counts_edgeR_DEG_fdr_0.01
 
 # Load expression
 message("Loading expression file\t", BIC.expr.file)
-BIC.expr <- read.table(file = BIC.expr.file, h=TRUE)
+BIC.expr <- read.table(file = BIC.expr.file, header = TRUE)
 
 ```
 
