@@ -93,7 +93,7 @@ knitr::opts_chunk$set(
   fig.align = "center", 
   size = "tiny", 
   echo = TRUE, 
-  eval = F, 
+  eval = TRUE, 
   warning = FALSE, 
   message = FALSE, 
   results = FALSE, 
@@ -171,7 +171,7 @@ data.folder <- "/shared/projects/du_bii_2019/data/module3/seance4/BIC/"
 
 ```{r data_folder_pdiderot, eval=FALSE}
 ## Liste des fichiers de données
-data.folder <- "/home/sdv/dubii/data-m3/s4/BIC/"
+data.folder <- "/home/sdv/dubii/data-m3/s4/"
 ```
 
 ## Contenu du dossier de données
