@@ -3,11 +3,14 @@ title: "TP de la séance 4, Clustering"
 author: "Anne Badel,  Frederic Guyon & Jacques van Helden"
 date: '`r Sys.Date()`'
 output:
-  pdf_document:
+  html_document:
+    self_contained: no
     fig_caption: yes
     highlight: zenburn
-    toc: yes
+    theme: cerulean
     toc_depth: 3
+    toc_float: yes
+    code_folding: "hide"
   beamer_presentation:
     colortheme: dolphin
     fig_caption: yes
@@ -25,14 +28,11 @@ output:
     transition: none
     self_contained: true
     css: ../slides.css
-  html_document:
-    self_contained: no
+  pdf_document:
     fig_caption: yes
     highlight: zenburn
-    theme: cerulean
+    toc: yes
     toc_depth: 3
-    toc_float: yes
-    code_folding: "hide"
   slidy_presentation:
     smart: no
     slide_level: 2
@@ -446,21 +446,32 @@ par(mfrow=c(1,2))
 BIC.kmeans10 <- kmeans(BIC.expr.transposed, centers=10)
 table(BIC.kmeans10$cluster)
 
+## Define sample colors reflecting the cluster membership
+hclust.k2.colors <- BIC.cutree2
+kmeans.k2.colors <- BIC.kmeans2$cluster
+kmeans.k10.colors <- BIC.kmeans10$cluster
+
+## Define characters reflecting markers
+pch.cancer.type <- as.numeric(BIC.sample.classes$cancer.type)
+pch.er1 <- as.numeric(BIC.sample.classes$ER1)
+pch.pr1 <- as.numeric(BIC.sample.classes$PR1)
+pch.her2 <- as.numeric(BIC.sample.classes$Her2)
+
 ## Compare clusters and markers on the PC plot, to evaluate whether 
 ## the components capture relevant information
-plot(BIC.prcomp$x[,1:2], col = mycol, pch = mypch, 
+plot(BIC.prcomp$x[,1:2], 
+     col = hclust.k2.colors, 
+     pch = pch.er1,
      las = 1, cex = 0.7, 
-     main = "Clusters versus markers")
+     main = "Hclust 2 clusters versus markers")
+legend("topright", cex = 0.8, legend = c("ER1+", "ER1-"), pch = )
 
-plot(BIC.prcomp, choix="ind", label="none", col.ind=BIC.kmeans10$cluster)
-BIC.kmeans3 <- kmeans(BIC.expr.transposed, centers=3)
-table(BIC.kmeans3$cluster)
-plot(BIC.prcomp, choix="ind", label="none", col.ind=BIC.kmeans3$cluster)
-par(mfrow=c(1,1))
+plot(BIC.prcomp$x[,1:2], 
+     col = kmeans.k10.colors, 
+     pch = pch.er1,
+     las = 1, cex = 0.7, 
+     main = "K-means 10 clusters versus markers")
 
-BIC.kmeans2 <- kmeans(BIC.expr.transposed, centers=2)
-table(BIC.kmeans2$cluster)
-plot(BIC.prcomp, choix="ind", label="none", col.ind=BIC.kmeans2$cluster)
 ```
 
 ### Comparaisons 
@@ -525,9 +536,9 @@ A l'aide de la fonction `summary`, déterminez le nombre de tumeurs pour chaque 
 
   2. Interprétez les résultats suivants (cliquez sur "code" pour afficher le code, et exécutez-le)
 
-```{r er1_vs_pr1}
+```{r er1_vs_pr1, result  = TRUE}
 ## Correspondence between markers
-table(BIC.sample.classes$ER1, BIC.sample.classes$PR1)
+kable(table(BIC.sample.classes$ER1, BIC.sample.classes$PR1))
 fisher.test(table(BIC.sample.classes$ER1, BIC.sample.classes$PR1))
 
 ```
@@ -615,12 +626,10 @@ clues::adjustedRand(BIC.kmeans10$cluster,
 ```{r out.width="80%", fig.width=8, fig.height=8}
 # Visualisation
 
-## Define a color indicating the cluster membership of each sample
-sample.color <- BIC.cutree2
 
 ## hclust (2 groupes) et HER2+/-
 plot(BIC.prcomp$x[,1:2], 
-     col = 
+     col = hclust.k2.colors,
      pch = as.numeric(BIC.sample.classes$ER1), # character indicates ER1 status
      las = 1, cex = 0.7, 
      main = "Clusters versus markers")
