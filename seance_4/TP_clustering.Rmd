@@ -167,11 +167,11 @@ Les données sont dans un répertoire partagé, dont le chemin dépend du serveu
 data.folder <- "/shared/projects/du_bii_2019/data/module3/seance4/BIC/"
 ```
 
-2. Sur les machines de Paris-Diderot, elles sont dans le répertoire `../../dubii/data-m3/s4` (défini relativement à votre compte). 
+2. Sur les machines de Paris-Diderot, elles sont dans le répertoire `/home/sdv/dubii/data-m3/s4` 
 
 ```{r data_folder_pdiderot, eval=FALSE}
 ## Liste des fichiers de données
-data.folder <- "../../dubii/data-m3/s4/BIC/"
+data.folder <- "/home/sdv/dubii/data-m3/s4/BIC/"
 ```
 
 ## Contenu du dossier de données
