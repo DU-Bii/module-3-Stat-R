@@ -528,17 +528,21 @@ clues::adjustedRand(BIC.kmeans10$cluster, as.numeric(BIC.sample.classes[,1]))
 ```
 
 
-```{r}
-# visualisation
+```{r out.width="80%", fig.width=8, fig.height=8}
+# Visualisation
 
 ## hclust (2 groupes) et HER2+/-
-mycol=BIC.cutree2
-mypch=as.numeric(BIC.sample.classes[,4])
-pointsToPlot <- BIC.prcomp$ind$coord[,1:2]
-plot(BIC.prcomp, choix="ind", label="none", col.ind="white")
-points(pointsToPlot, col=mycol, pch=mypch)
-texte.legend=c("HER2-", "HER2+", "gr1", "gr2")
-legend(x=-400, y=100, texte.legend, col=c(1, 1, 1, 2), pch=c(1, 2, NA, NA), text.col=c(1, 1, 1, 2))
+mycol <- BIC.cutree2
+mypch <- as.numeric(BIC.sample.classes[,4])
+plot(BIC.prcomp$x[,1:2], col = mycol, pch = mypch, 
+     las = 1, cex = 0.7, 
+     main = "Clusters versus markers")
+grid()
+texte.legend <- c("HER2-", "HER2+", "gr1", "gr2")
+legend("topright", texte.legend, 
+       col = c(1, 1, 1, 2), 
+       pch = c(1, 2, NA, NA), 
+       text.col = c(1, 1, 1, 2))
 ```
 
 
