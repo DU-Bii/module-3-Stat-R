@@ -68,10 +68,9 @@ editor_options:
 ---
 
 
-```{r include=FALSE, echo=FALSE, eval=TRUE}
+```{r include=FALSE, echo=TRUE, eval=TRUE}
 
 ## Location of the shared folder on the current install
-# data.folder <- "~/TCGA_import/data/BIC/" # For preparation
 message("Loading libraries")
 library(knitr)
 library(kableExtra)
@@ -375,7 +374,7 @@ BIC.hclust.complete <- hclust(BIC.dist)
 
 ## Plot the resulting tree
 plot(BIC.hclust.complete, labels = F, hang = -1, las = 1, col = "grey",
-     main = "Pearson dissimilarity, complete linkage")
+     main = "Spearman dissimilarity, complete linkage")
 ```
 
 2. faire un deuxième clustering hiérarchique, avec le critère d'aggrégation de Ward
@@ -386,7 +385,7 @@ BIC.hclust.ward <- hclust(BIC.dist, method = "ward.D2")
 
 ## Plot the resulting tree
 plot(BIC.hclust.ward, labels = F, hang = -1, las = 1, col = "#88BB66", 
-     main = "Pearson dissimilarity, Ward linkage")
+     main = "Spearman dissimilarity, Ward linkage")
 ```
 
 
