@@ -105,7 +105,7 @@ knitr::opts_chunk$set(
   eval = TRUE, 
   warning = FALSE, 
   message = FALSE, 
-  results = FALSE, 
+  results = TRUE, 
   comment = "")
 
 ## Max number of digits for non-scientific notation
@@ -214,12 +214,15 @@ file.size(list.files(path = data.folder, full.names = TRUE))/ 1024^2 # Get the s
 ## Lire le tableau de valeurs d'expression
 
 
-Nous allons maintenant lire le fichier d'expression. Pour cela, nous concaténons le chemin du dossier de données et le nom du fichier d'expressiion (`BIC_log2-norm-counts_edgeR_DEG_fdr_0.01.tsv.gz`). Ce fichier contient le comptages de lectures RNA-seq par gène, avec une sélection des gènes déclarés positifs pour letest de comparaison de moyennes multiples (voir-ci-dessus). 
+Nous allons maintenant lire le fichier d'expression. Pour cela, nous concaténons le chemin du dossier de données et le nom du fichier d'expressiion (`BIC_log2-norm-counts_edgeR_DEG_top_1000.tsv.gz`). 
+
+Ce fichier contient le comptages de lectures RNA-seq par gène, avec une sélection des gènes déclarés positifs pour letest de comparaison de moyennes multiples (voir-ci-dessus). Par ailleurs, nous avons arbitrairement appliqué un seuil supplémentaire en n'exportant que les 1000 gènes les plus significatifs, pour éviter de passer trop de temps sur le clustering hiérachique (complexité quadratique). 
 
 ```{r file_path}
 
-# Define the path of the expression file
-BIC.expr.file <- file.path(data.folder, "BIC_log2-norm-counts_edgeR_DEG_fdr_0.01.tsv.gz")
+# Define the path of the expression file, by concatenating the data folder and the file name
+# Note that file.path is convenient because it automatically used the appropriate parameter to separate the elements of a path (/ on Unix, \\ on Windows)
+BIC.expr.file <- file.path(data.folder, "BIC_log2-norm-counts_edgeR_DEG_top_1000.tsv.gz")
 
 # Load expression
 message("Loading expression file\t", BIC.expr.file)
@@ -312,7 +315,7 @@ table(BIC.sample.classes$ER1,
 
 Nous allons réaliser une ACP sans mise à l'échelle. 
 
-```{r}
+```{r pca_var, out.width="80%", fig.width=10, fig.height=4}
 ## Transformation ACP
 BIC.prcomp <- prcomp(BIC.expr.transposed, center = FALSE, scale. = FALSE)
 names(BIC.prcomp) # check the name of the fields of the PCA object
@@ -427,16 +430,17 @@ La fonction R `heatmap()` permet de représenter à la fois les arbres produit p
 
 Par défaut, elle effectue simultanément un clustering hiérarchique sur les lignes et sur les colonnes, ce qui permet de distinguer non seulement les groupes d'échantillons biologiques, mais également ceux de gènes. 
 
-```{r heatmap}
+**Attention:**
+
+```{r heatmap, out.width="95%", fig.width=10, fig.height=10, fig.cap="Heat map of th eexpression table clustered by genes (rows) and samples (columns)."} 
 # trop long pour nos machines
 # heatmap(as.matrix(BIC.expr))
 
-# si on en fait pas attention
-heatmap(as.matrix(BIC.expr[sample.int(nrow(BIC.expr), 50), ]))
+# si on ne fait pas attention
+# heatmap(as.matrix(BIC.expr[sample.int(nrow(BIC.expr), 50), ]))
         
 # extrayons qqs gènes aux hasard (qqs = 1000)
-sampled.genes <- sample(rownames(BIC.expr), size = 1000)
-heatmap(as.matrix(BIC.expr[sampled.genes, ]),
+heatmap(as.matrix(BIC.expr),
         distfun = function(x) as.dist(1 - cor(t(x), method = "spearman")), 
         hclustfun = function(x) hclust(x, method = "ward.D2") )
 ```
