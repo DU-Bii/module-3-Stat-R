@@ -78,8 +78,7 @@ data.folder <- "~/TCGA_import/data/BIC/" # For preparation
 
 
 ```{r include=FALSE, echo=FALSE, eval=TRUE}
-
-
+## Loading R libraries
 message("Loading libraries")
 library(knitr)
 library(kableExtra)
