@@ -67,18 +67,16 @@ editor_options:
   chunk_output_type: console
 ---
 
-
 ```{r custom_parameters}
 ## Location of the shared folder on the current install
-data.folder <- "~/TCGA_import/data/BIC/" # For preparation
-
-#data.folder <- "/shared/projects/du_bii_2019/data/module3/seance4/BIC/" # on the IFB-cluster-core
+#data.folder <- "~/TCGA_import/data/BIC/" # Just for preparation
+data.folder <- "/shared/projects/du_bii_2019/data/module3/seance4/BIC/" # on the IFB-cluster-core
 
 ```
 
 
-```{r include=FALSE, echo=FALSE, eval=TRUE}
-## Loading R libraries
+```{r load_libraries}
+## Load libraries
 message("Loading libraries")
 library(knitr)
 library(kableExtra)
@@ -90,6 +88,10 @@ library(FactoMineR)
 library(ClassDiscovery)
 # library(formattable)
 
+```
+
+
+```{r knitr_options, echo=FALSE, include=FALSE, eval=TRUE}
 
 ## Define options for the R markdown output
 options(width = 300)
@@ -103,7 +105,7 @@ knitr::opts_chunk$set(
   eval = TRUE, 
   warning = FALSE, 
   message = FALSE, 
-  results = FALSE, 
+  results = TRUE, 
   comment = "")
 
 ## Max number of digits for non-scientific notation
@@ -382,7 +384,7 @@ BIC.hclust.complete <- hclust(BIC.dist)
 
 ## Plot the resulting tree
 plot(BIC.hclust.complete, labels = F, hang = -1, las = 1, col = "grey",
-     main = "Pearson dissimilarity, complete linkage")
+     main = "Spearman dissimilarity, complete linkage")
 ```
 
 2. faire un deuxième clustering hiérarchique, avec le critère d'aggrégation de Ward
@@ -393,7 +395,7 @@ BIC.hclust.ward <- hclust(BIC.dist, method = "ward.D2")
 
 ## Plot the resulting tree
 plot(BIC.hclust.ward, labels = F, hang = -1, las = 1, col = "#88BB66", 
-     main = "Pearson dissimilarity, Ward linkage")
+     main = "Spearman dissimilarity, Ward linkage")
 ```
 
 
