@@ -69,8 +69,8 @@ editor_options:
 
 ```{r custom_parameters}
 ## Location of the shared folder on the current install
-#data.folder <- "~/TCGA_import/data/BIC/" # Just for preparation
-data.folder <- "/shared/projects/du_bii_2019/data/module3/seance4/BIC/" # on the IFB-cluster-core
+data.folder <- "~/TCGA_import/data/BIC/" # Just for preparation
+#data.folder <- "/shared/projects/du_bii_2019/data/module3/seance4/BIC/" # on the IFB-cluster-core
 
 ```
 
@@ -430,21 +430,28 @@ La fonction R `heatmap()` permet de représenter à la fois les arbres produit p
 
 Par défaut, elle effectue simultanément un clustering hiérarchique sur les lignes et sur les colonnes, ce qui permet de distinguer non seulement les groupes d'échantillons biologiques, mais également ceux de gènes. 
 
-**Attention:**
+**Attention:** la fonction `heatmap()` effectue par défaut un clustering hiérarchique sur les lignes et colonnes de votre matrice d'expression. 
 
-```{r heatmap, out.width="95%", fig.width=10, fig.height=10, fig.cap="Heat map of th eexpression table clustered by genes (rows) and samples (columns)."} 
-# trop long pour nos machines
-# heatmap(as.matrix(BIC.expr))
+```{r heatmap, out.width="80%", fig.width=10, fig.height=10, fig.cap="Heat map of the expression matrix clustered by genes (rows) and samples (columns)."} 
 
-# si on ne fait pas attention
-# heatmap(as.matrix(BIC.expr[sample.int(nrow(BIC.expr), 50), ]))
-        
-# extrayons qqs gènes aux hasard (qqs = 1000)
 heatmap(as.matrix(BIC.expr),
         distfun = function(x) as.dist(1 - cor(t(x), method = "spearman")), 
         hclustfun = function(x) hclust(x, method = "ward.D2") )
 ```
 
+### Changer l'échelle de couleurs d'une carte de températures
+
+
+```{r heatmap_markers, out.width="80%", fig.width=10, fig.height=10, fig.cap="Heat map of the expression matrix clustered by genes (rows) and samples (columns). The color code below the heatmap denote the immunological markers (ER1, PR1 Her2)"}
+
+# extrayons qqs gènes aux hasard (qqs = 1000)
+heatmap(as.matrix(BIC.expr),
+        distfun = function(x) as.dist(1 - cor(t(x), method = "spearman")), 
+        hclustfun = function(x) hclust(x, method = "ward.D2"),
+        col = colorRampPalette(
+          c("white","green","green4","violet","purple"))
+        (100))
+```
 
 ### kmeans
 
