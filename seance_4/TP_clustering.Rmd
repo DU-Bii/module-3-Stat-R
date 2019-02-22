@@ -83,6 +83,8 @@ library(kableExtra)
 library(FactoMineR)
 library(clues)
 library(RColorBrewer)
+library(ComplexHeatmap)
+
 # library(corrplot)
 library(FactoMineR)
 library(ClassDiscovery)
@@ -153,7 +155,7 @@ Vous pouvez choisir de travailler soir sur le cluster core de l'IFB soit sur les
 
     - vous devez avoir la commande suivante dans votre `.bashrc` : 
     
-```{bash eval=FALSE, echo=TRUE}
+```{bash paris_diderot_conda, eval=FALSE, echo=TRUE}
 source /opt/sdv/anaconda/etc/profile.d/conda.sh`
 ```
 
@@ -202,11 +204,26 @@ Astuces:
 
 
 ```{r list_data_files}
+# Return file sizes (in bytes)
 message("Listing files in data folder: ", data.folder)
-list.files(path = data.folder) # List the data files
-file.size(list.files(path = data.folder, full.names = TRUE)) # Get the size of the data files, in bytes
 
-file.size(list.files(path = data.folder, full.names = TRUE))/ 1024^2 # Get the size of the data files In Mv
+data.files <- list.files(path = data.folder) # List the data files
+print(data.files)
+
+## Full path
+data.path <- list.files(path = data.folder, full.names = TRUE) # List the data files
+print(data.files)
+
+data.file.sizes <- file.size(data.path) # Get the size of the data files, in bytes
+
+## Add file names 
+## (for some strange reason, file.size returns a vector
+## with no names, which is not very convenient)
+names(data.file.sizes) <- data.files
+
+## Compute file sizes in megabytes
+data.file.Mb <- signif(digits = 2, data.file.sizes / (1024^2))
+kable(data.frame(data.file.Mb))
 ```
 
 
@@ -365,8 +382,7 @@ Nous allons maintenant calculer la distance entre chaque paire d'échantillon, e
 
 ```{r}
 ## Compute Spearman correlation coefficient
-BIC.cor <- cor(t(BIC.expr.transposed), 
-               method = "spearman")
+BIC.cor <- cor(BIC.expr, method = "spearman")
 
 # Check the dimensions of the correlation matrix
 # (should be N x N, where N is the number of samples)
@@ -436,22 +452,99 @@ Par défaut, elle effectue simultanément un clustering hiérarchique sur les li
 
 heatmap(as.matrix(BIC.expr),
         distfun = function(x) as.dist(1 - cor(t(x), method = "spearman")), 
-        hclustfun = function(x) hclust(x, method = "ward.D2") )
+        hclustfun = function(x) hclust(x, method = "ward.D2"),
+        labRow = NA, labCol = NA)
 ```
 
-### Changer l'échelle de couleurs d'une carte de températures
 
+```{r heatmap_genes_standardized, out.width="80%", fig.width=10, fig.height=10, fig.cap="Heat map of the expression matrix clustered by genes (rows) and samples (columns). Genes were centered on the mean in order to highlight over- and under-expression"} 
 
-```{r heatmap_markers, out.width="80%", fig.width=10, fig.height=10, fig.cap="Heat map of the expression matrix clustered by genes (rows) and samples (columns). The color code below the heatmap denote the immunological markers (ER1, PR1 Her2)"}
+# Compute mean value per gene
+gene.means <- apply(BIC.expr, 1, mean)
+gene.sd <-  apply(BIC.expr, 1, sd)
 
-# extrayons qqs gènes aux hasard (qqs = 1000)
-heatmap(as.matrix(BIC.expr),
+# Compute gene-wise centered expression values
+BIC.expr.genes.centered <- BIC.expr / gene.means
+
+# Compute gene-wise centred + scaled expression values
+BIC.expr.genes.standardized <- BIC.expr.genes.centered / gene.sd
+
+heatmap(as.matrix(BIC.expr.genes.standardized),
         distfun = function(x) as.dist(1 - cor(t(x), method = "spearman")), 
         hclustfun = function(x) hclust(x, method = "ward.D2"),
-        col = colorRampPalette(
-          c("white","green","green4","violet","purple"))
-        (100))
+        labRow = NA, labCol = NA, col = rainbow(n = 100),
+        scale = "none")
 ```
+
+
+### Draw a tree with heatmap.2()
+
+The function `heatmap.2()` is derived from `heatmap()` but offers nice additional formatting options.
+
+```{r}
+# Define a color for the heatmap
+expr.colors <- heat.colors(n = 100)
+
+# Compute dendrogram with the hclust() function
+# Choose a custom dissimilirity measure
+# and agglomeration rule
+
+# compute dissimilarity between samples
+sample.dist <- as.dist(1 - cor(BIC.expr, method = "spearman")) 
+
+# Run hierarchical clustering on samples
+sample.clust = hclust(sample.dist, method = "complete")
+
+# Convert the clustering result in a tree object that can be used with plot() and / or heatmap()
+sample.tree <- as.dendrogram(sample.clust)
+
+# Define colors for the cancer type
+cancer.type <- unique(BIC.sample.classes$cancer.type)
+type.cancer.colors <- rainbow(n = length(cancer.type))
+names(type.cancer.colors) <- cancer.type
+
+# Define colors for ER1 marker
+ER1.classes <- unique(BIC.sample.classes$ER1)
+ER1.colors <- rainbow(n = length(ER1.classes))
+names(ER1.colors) <- ER1.classes
+print(ER1.colors)
+
+# Define colors for PR1 marker
+PR1.classes <- unique(BIC.sample.classes$PR1)
+PR1.colors <- heat.colors(n = length(PR1.classes))
+names(PR1.colors) <- PR1.classes
+print(PR1.colors)
+
+# Define colors for Her2 marker
+Her2.classes <- unique(BIC.sample.classes$Her2)
+Her2.colors <- topo.colors(n = length(Her2.classes))
+names(Her2.colors) <- Her2.classes
+
+## Detiine annotations for the heatmap
+## combining the 3 markers + cancer type
+annot.tumeur.column = HeatmapAnnotation(
+  df = BIC.sample.classes,
+  col = list(cancer.type = type.cancer.colors,
+             ER1 = ER1.colors, 
+             PR1 = PR1.colors,
+             Her2 = Her2.colors)
+)
+
+# A first heatmap
+my.heatmap <- ComplexHeatmap::Heatmap(
+  as.matrix(BIC.expr), 
+  name = "TCGA Breast Invasive Cancer", 
+  col = expr.colors,
+  column_title = "Samples",
+  row_title = "Genes",
+  cluster_columns = sample.tree,
+  show_column_names = FALSE, 
+  show_row_names = FALSE,
+  bottom_annotation = annot.tumeur.column
+)
+draw(my.heatmap)
+```
+
 
 ### kmeans
 

@@ -47,6 +47,7 @@ dependencies:
   - bioconda::r-classdiscovery
   - bioconda::r-mixomics # For the course of integrative bioinformatics
   - bioconda::r-momr
+  - bioconda::bioconductor-complexheatmap
 
   ## Other packages
   - lcantini::r-mofa
