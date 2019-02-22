@@ -533,7 +533,7 @@ annot.tumeur.column = HeatmapAnnotation(
 # A first heatmap
 my.heatmap <- ComplexHeatmap::Heatmap(
   as.matrix(BIC.expr), 
-  name = "heatmap.expr", 
+  name = "TCGA Breast Invasive Cancer", 
   col = expr.colors,
   column_title = "Samples",
   row_title = "Genes",
