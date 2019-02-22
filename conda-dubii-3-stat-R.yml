@@ -25,7 +25,9 @@ dependencies:
   - conda-forge::r-tidyverse    # Collection of R packages designed for data science (ggplot2, tidyr, dplyr, readr, purr, tibble, strigr, forcats)
   - conda-forge::r-factominer   # For PCA
   - conda-forge::r-factoextra   # To plot PCA output
-  - conda-forge::r-rpart        # To plot PCA output
+  - conda-forge::r-rpart        # To compute rpart modele
+  - conda-forge::r-rpart.plot   # To visualize rpart modele
+  - conda-forge::r-caret        # To supervised classification
   - conda-forge::r-cowplot      # Add-on to ggplot2 for enhanced design
   - conda-forge::r-corrplot     # Graphical display of a correlation matrix, confidence interval
 #  - conda-forge::r-momr         # Analysis of metagenomic data
