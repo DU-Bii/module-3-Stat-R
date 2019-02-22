@@ -450,29 +450,46 @@ Par défaut, elle effectue simultanément un clustering hiérarchique sur les li
 
 ```{r heatmap, out.width="80%", fig.width=10, fig.height=10, fig.cap="Heat map of the expression matrix clustered by genes (rows) and samples (columns)."} 
 
-heatmap(as.matrix(BIC.expr),
+heatmap(as.matrix(BIC.expr), 
         distfun = function(x) as.dist(1 - cor(t(x), method = "spearman")), 
         hclustfun = function(x) hclust(x, method = "ward.D2"),
         labRow = NA, labCol = NA)
 ```
 
 
-```{r heatmap_genes_standardized, out.width="80%", fig.width=10, fig.height=10, fig.cap="Heat map of the expression matrix clustered by genes (rows) and samples (columns). Genes were centered on the mean in order to highlight over- and under-expression"} 
+```{r standardize_genes, out.width="80%", fig.width=7, fig.height=5, fig.cap="Histogram of expression values after gene-wise standardization (centering and scaling)."} 
 
 # Compute mean value per gene
 gene.means <- apply(BIC.expr, 1, mean)
 gene.sd <-  apply(BIC.expr, 1, sd)
 
 # Compute gene-wise centered expression values
-BIC.expr.genes.centered <- BIC.expr / gene.means
+BIC.expr.genes.centered <- BIC.expr - gene.means
 
 # Compute gene-wise centred + scaled expression values
 BIC.expr.genes.standardized <- BIC.expr.genes.centered / gene.sd
 
+summary(unlist(BIC.expr.genes.standardized))
+hist(unlist(BIC.expr.genes.standardized), breaks = 100,
+     main = "Gene-wise standardized expression values",
+     xlab = "z-score", ylab = "Number of measures", 
+     col = "#DDEEFF", xlim = c(-7,7))
+
+abline(v = -7:7, col = "#BBBBBB", lty = "dotted")
+
+abline(v = 0, col = "#880000", lwd = 2)
+arrows(x0 = -1, y0 = 50000, x1 = 1, y1 = 50000, length = 0.05, angle = 30, code = 3, lwd = 2)
+
+```
+
+```{r heatmap, out.width="80%", fig.width=10, fig.height=10, fig.cap="Heat map of the expression matrix clustered by genes (rows) and samples (columns)."} 
+
 heatmap(as.matrix(BIC.expr.genes.standardized),
+        zlim=c(-3,3),
         distfun = function(x) as.dist(1 - cor(t(x), method = "spearman")), 
         hclustfun = function(x) hclust(x, method = "ward.D2"),
-        labRow = NA, labCol = NA, col = rainbow(n = 100),
+        labRow = NA, labCol = NA, 
+        col = rainbow(n = 100),
         scale = "none")
 ```
 
