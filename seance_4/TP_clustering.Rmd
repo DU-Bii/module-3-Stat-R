@@ -475,21 +475,29 @@ hist(unlist(BIC.expr.genes.standardized), breaks = 100,
      xlab = "z-score", ylab = "Number of measures", 
      col = "#DDEEFF", xlim = c(-7,7))
 
+# Draw a vertical grid
 abline(v = -7:7, col = "#BBBBBB", lty = "dotted")
 
-abline(v = 0, col = "#880000", lwd = 2)
-arrows(x0 = -1, y0 = 50000, x1 = 1, y1 = 50000, length = 0.05, angle = 30, code = 3, lwd = 2)
+#Mark center
+abline(v = 0, col = "#008800", lwd = 2)
+
+# Mark dispersion (mean +- 1 sdev)
+arrows(x0 = -1, y0 = 50000, x1 = 1, y1 = 50000, length = 0.05, angle = 30, code = 3, lwd = 2, col = "#008800")
 
 ```
 
 ```{r heatmap, out.width="80%", fig.width=10, fig.height=10, fig.cap="Heat map of the expression matrix clustered by genes (rows) and samples (columns)."} 
 
+## define a Blue - White - Red palette
+frenchflag.palette <- colorRampPalette(c('dark blue','white','dark red'))
+
 heatmap(as.matrix(BIC.expr.genes.standardized),
-        zlim=c(-3,3),
+        zlim = c(-4,4),
         distfun = function(x) as.dist(1 - cor(t(x), method = "spearman")), 
         hclustfun = function(x) hclust(x, method = "ward.D2"),
-        labRow = NA, labCol = NA, 
-        col = rainbow(n = 100),
+        labRow = NA, labCol = NA,  # DO not print the labels (unreadable anyway)
+        col = frenchflag.palette(100),
+        #col = brewer.pal(11,"RdBu"),
         scale = "none")
 ```
 
