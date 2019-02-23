@@ -486,7 +486,7 @@ arrows(x0 = -1, y0 = 50000, x1 = 1, y1 = 50000, length = 0.05, angle = 30, code 
 
 ```
 
-```{r heatmap, out.width="80%", fig.width=10, fig.height=10, fig.cap="Heat map of the expression matrix clustered by genes (rows) and samples (columns)."} 
+```{r heatmap_frenchflag_palette, out.width="80%", fig.width=10, fig.height=10, fig.cap="Heat map of the expression matrix clustered by genes (rows) and samples (columns)."} 
 
 ## define a Blue - White - Red palette
 frenchflag.palette <- colorRampPalette(c('dark blue','white','dark red'))
