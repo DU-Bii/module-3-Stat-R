@@ -506,7 +506,7 @@ heatmap(as.matrix(BIC.expr.genes.standardized),
 
 The function `heatmap.2()` is derived from `heatmap()` but offers nice additional formatting options.
 
-```{r}
+```{r complex_heatmap, out.width="95%", fig.width=21, fig.height=8}
 # Define a color for the heatmap
 expr.colors <- heat.colors(n = 100)
 
