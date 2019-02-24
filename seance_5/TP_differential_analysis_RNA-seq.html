@@ -400,7 +400,7 @@ div.tocify {
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Load libraries
 <span class="kw">message</span>(<span class="st">&quot;Loading libraries&quot;</span>)
 <span class="kw">library</span>(knitr)
-<span class="kw">library</span>(kableExtra)
+<span class="co">#library(kableExtra)</span>
 <span class="kw">library</span>(FactoMineR)
 <span class="kw">library</span>(clues)
 <span class="kw">library</span>(RColorBrewer)
@@ -420,57 +420,34 @@ div.tocify {
   <span class="dt">epsilon =</span> <span class="fl">0.1</span> <span class="co"># pseudo-comptage pour la transformation log2</span>
 )
 
-<span class="kw">kable</span>(<span class="kw">t</span>(<span class="kw">data.frame</span>(parameters)), <span class="dt">col.names =</span> <span class="st">&quot;Parameter Value&quot;</span>)</code></pre></div>
+<span class="kw">kable</span>(<span class="kw">t</span>(<span class="kw">data.frame</span>(parameters)), <span class="dt">col.names =</span> <span class="st">&quot;Parameter Value&quot;</span>, <span class="dt">padding =</span> <span class="dv">2</span>)</code></pre></div>
 <table>
 <thead>
-<tr>
-<th style="text-align:left;">
-</th>
-<th style="text-align:left;">
-Parameter Value
-</th>
+<tr class="header">
+<th></th>
+<th align="left">Parameter Value</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-data.folder
-</td>
-<td style="text-align:left;">
-data/GSE89530
-</td>
+<tr class="odd">
+<td>data.folder</td>
+<td align="left">data/GSE89530</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-counts
-</td>
-<td style="text-align:left;">
-GSE89530_counts.tsv.gz
-</td>
+<tr class="even">
+<td>counts</td>
+<td align="left">GSE89530_counts.tsv.gz</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-sample.descr
-</td>
-<td style="text-align:left;">
-GSE89530_samples.tsv.gz
-</td>
+<tr class="odd">
+<td>sample.descr</td>
+<td align="left">GSE89530_samples.tsv.gz</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-alpha
-</td>
-<td style="text-align:left;">
-0.05
-</td>
+<tr class="even">
+<td>alpha</td>
+<td align="left">0.05</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-epsilon
-</td>
-<td style="text-align:left;">
-0.1
-</td>
+<tr class="odd">
+<td>epsilon</td>
+<td align="left">0.1</td>
 </tr>
 </tbody>
 </table>
@@ -491,197 +468,86 @@ some.samples &lt;-<span class="st"> </span><span class="kw">sample</span>(<span 
 
 <span class="kw">kable</span>(counts[some.genes, some.samples], <span class="dt">caption =</span> <span class="st">&quot;Random selection of some genes and some columns of the raw count table. &quot;</span>)</code></pre></div>
 <table>
-<caption>
-Random selection of some genes and some columns of the raw count table.
-</caption>
+<caption>Random selection of some genes and some columns of the raw count table.</caption>
 <thead>
-<tr>
-<th style="text-align:left;">
-</th>
-<th style="text-align:right;">
-GSM2375278
-</th>
-<th style="text-align:right;">
-GSM2375286
-</th>
-<th style="text-align:right;">
-GSM2375288
-</th>
-<th style="text-align:right;">
-GSM2375292
-</th>
+<tr class="header">
+<th></th>
+<th align="right">GSM2375283</th>
+<th align="right">GSM2375282</th>
+<th align="right">GSM2375289</th>
+<th align="right">GSM2375279</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-YMR186W
-</td>
-<td style="text-align:right;">
-6185
-</td>
-<td style="text-align:right;">
-7832
-</td>
-<td style="text-align:right;">
-14898
-</td>
-<td style="text-align:right;">
-5209
-</td>
+<tr class="odd">
+<td>YMR306C-A</td>
+<td align="right">73</td>
+<td align="right">91</td>
+<td align="right">82</td>
+<td align="right">252</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-YMR302C
-</td>
-<td style="text-align:right;">
-2203
-</td>
-<td style="text-align:right;">
-658
-</td>
-<td style="text-align:right;">
-1375
-</td>
-<td style="text-align:right;">
-646
-</td>
+<tr class="even">
+<td>YFL031W_intron</td>
+<td align="right">356</td>
+<td align="right">178</td>
+<td align="right">410</td>
+<td align="right">137</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-YER137W-A
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
+<tr class="odd">
+<td>YJR077C</td>
+<td align="right">2330</td>
+<td align="right">2777</td>
+<td align="right">2790</td>
+<td align="right">3944</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-YER152W-A
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
+<tr class="even">
+<td>YHR073W-A</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-YIL113W
-</td>
-<td style="text-align:right;">
-43
-</td>
-<td style="text-align:right;">
-389
-</td>
-<td style="text-align:right;">
-150
-</td>
-<td style="text-align:right;">
-512
-</td>
+<tr class="odd">
+<td>tL(UAA)D</td>
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-YPR145W
-</td>
-<td style="text-align:right;">
-3295
-</td>
-<td style="text-align:right;">
-2466
-</td>
-<td style="text-align:right;">
-1853
-</td>
-<td style="text-align:right;">
-682
-</td>
+<tr class="even">
+<td>YDR366C</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">7</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-YKL192C
-</td>
-<td style="text-align:right;">
-2062
-</td>
-<td style="text-align:right;">
-394
-</td>
-<td style="text-align:right;">
-346
-</td>
-<td style="text-align:right;">
-459
-</td>
+<tr class="odd">
+<td>YOR179C</td>
+<td align="right">113</td>
+<td align="right">206</td>
+<td align="right">153</td>
+<td align="right">165</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-YDR260C
-</td>
-<td style="text-align:right;">
-220
-</td>
-<td style="text-align:right;">
-1643
-</td>
-<td style="text-align:right;">
-404
-</td>
-<td style="text-align:right;">
-2252
-</td>
+<tr class="even">
+<td>YBL027W_intron</td>
+<td align="right">14</td>
+<td align="right">10</td>
+<td align="right">9</td>
+<td align="right">11</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-YDR221W
-</td>
-<td style="text-align:right;">
-567
-</td>
-<td style="text-align:right;">
-179
-</td>
-<td style="text-align:right;">
-272
-</td>
-<td style="text-align:right;">
-198
-</td>
+<tr class="odd">
+<td>tE(UUC)J</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">0</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-YKL056C
-</td>
-<td style="text-align:right;">
-13462
-</td>
-<td style="text-align:right;">
-2269
-</td>
-<td style="text-align:right;">
-949
-</td>
-<td style="text-align:right;">
-1318
-</td>
+<tr class="even">
+<td>YOR193W</td>
+<td align="right">113</td>
+<td align="right">197</td>
+<td align="right">145</td>
+<td align="right">163</td>
 </tr>
 </tbody>
 </table>
@@ -691,110 +557,49 @@ YKL056C
       <span class="dt">caption =</span> <span class="st">&quot;**Table de comptage de lectures (short reads) par gène.** Sélection arbitraire de quelques gènes (lignes) et échantillons (colonnes)&quot;</span>, 
       <span class="dt">align =</span> <span class="st">&quot;c&quot;</span>)</code></pre></div>
 <table>
-<caption>
-<strong>Table de comptage de lectures (short reads) par gène.</strong> Sélection arbitraire de quelques gènes (lignes) et échantillons (colonnes)
-</caption>
+<caption><strong>Table de comptage de lectures (short reads) par gène.</strong> Sélection arbitraire de quelques gènes (lignes) et échantillons (colonnes)</caption>
 <thead>
-<tr>
-<th style="text-align:left;">
-</th>
-<th style="text-align:center;">
-Condition
-</th>
-<th style="text-align:center;">
-Replpicate
-</th>
-<th style="text-align:center;">
-Genotype
-</th>
-<th style="text-align:center;">
-Time.point
-</th>
-<th style="text-align:center;">
-Label
-</th>
+<tr class="header">
+<th></th>
+<th align="center">Condition</th>
+<th align="center">Replpicate</th>
+<th align="center">Genotype</th>
+<th align="center">Time.point</th>
+<th align="center">Label</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-GSM2375281
-</td>
-<td style="text-align:center;">
-bdf1_Y187F_Y354F_mutant_0
-</td>
-<td style="text-align:center;">
-1
-</td>
-<td style="text-align:center;">
-bdf1-Y187F-Y354F mutant
-</td>
-<td style="text-align:center;">
-0
-</td>
-<td style="text-align:center;">
-bd1bd2mut_0h_1
-</td>
+<tr class="odd">
+<td>GSM2375290</td>
+<td align="center">Wild_type_0</td>
+<td align="center">3</td>
+<td align="center">Wild-type</td>
+<td align="center">0</td>
+<td align="center">Sc_WT_0h_3</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-GSM2375294
-</td>
-<td style="text-align:center;">
-bdf1_Y187F_Y354F_mutant_4
-</td>
-<td style="text-align:center;">
-3
-</td>
-<td style="text-align:center;">
-bdf1-Y187F-Y354F mutant
-</td>
-<td style="text-align:center;">
-4
-</td>
-<td style="text-align:center;">
-bd1bd2mut_4h_3
-</td>
+<tr class="even">
+<td>GSM2375284</td>
+<td align="center">Wild_type_0</td>
+<td align="center">2</td>
+<td align="center">Wild-type</td>
+<td align="center">0</td>
+<td align="center">Sc_WT_0h_2</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-GSM2375285
-</td>
-<td style="text-align:center;">
-Wild_type_4
-</td>
-<td style="text-align:center;">
-2
-</td>
-<td style="text-align:center;">
-Wild-type
-</td>
-<td style="text-align:center;">
-4
-</td>
-<td style="text-align:center;">
-Sc_WT_4h_2
-</td>
+<tr class="odd">
+<td>GSM2375291</td>
+<td align="center">Wild_type_4</td>
+<td align="center">3</td>
+<td align="center">Wild-type</td>
+<td align="center">4</td>
+<td align="center">Sc_WT_4h_3</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-GSM2375295
-</td>
-<td style="text-align:center;">
-bdf1_Y187F_Y354F_mutant_8
-</td>
-<td style="text-align:center;">
-3
-</td>
-<td style="text-align:center;">
-bdf1-Y187F-Y354F mutant
-</td>
-<td style="text-align:center;">
-8
-</td>
-<td style="text-align:center;">
-bd1bd2mut_8h_3
-</td>
+<tr class="even">
+<td>GSM2375287</td>
+<td align="center">bdf1_Y187F_Y354F_mutant_0</td>
+<td align="center">2</td>
+<td align="center">bdf1-Y187F-Y354F mutant</td>
+<td align="center">0</td>
+<td align="center">bd1bd2mut_0h_2</td>
 </tr>
 </tbody>
 </table>
@@ -806,13 +611,13 @@ bd1bd2mut_8h_3
 <h3>Statistiques descriptives</h3>
 <p>La fonction R <code>summary()</code> calcule des statistiques de base pour chaque colonne d’une matrice ou data frame. Nous imprimons ici un sous-ensemble de ces échantillons.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(counts[, some.samples])</code></pre></div>
-<pre><code>   GSM2375278       GSM2375286         GSM2375288         GSM2375292      
- Min.   :     0   Min.   :     0.0   Min.   :     0.0   Min.   :     0.0  
- 1st Qu.:    32   1st Qu.:    28.0   1st Qu.:    20.0   1st Qu.:    24.0  
- Median :   297   Median :   189.0   Median :   173.0   Median :   166.0  
- Mean   :  1127   Mean   :   755.6   Mean   :   638.4   Mean   :   982.6  
- 3rd Qu.:   775   3rd Qu.:   475.8   3rd Qu.:   435.8   3rd Qu.:   462.0  
- Max.   :722346   Max.   :421827.0   Max.   :425896.0   Max.   :571353.0  </code></pre>
+<pre><code>   GSM2375283         GSM2375282       GSM2375289         GSM2375279      
+ Min.   :     0.0   Min.   :     0   Min.   :     0.0   Min.   :     0.0  
+ 1st Qu.:    28.0   1st Qu.:    32   1st Qu.:    34.0   1st Qu.:    36.0  
+ Median :   190.0   Median :   262   Median :   248.0   Median :   310.0  
+ Mean   :   804.2   Mean   :   903   Mean   :   955.7   Mean   :   979.8  
+ 3rd Qu.:   500.0   3rd Qu.:   647   3rd Qu.:   626.0   3rd Qu.:   734.8  
+ Max.   :531472.0   Max.   :542630   Max.   :578443.0   Max.   :565085.0  </code></pre>
 <p>Nous pouvons calculer quelques paramètres additionnels, qui nous éclaireront sur les données.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">all.counts.vector &lt;-<span class="st"> </span><span class="kw">unlist</span>(counts) <span class="co"># Regroup all counts in a vevtor to compute statistics</span>
 
@@ -831,101 +636,312 @@ count.stats &lt;-<span class="st"> </span><span class="kw">data.frame</span>(
   )
 <span class="kw">kable</span>(<span class="kw">t</span>(count.stats), <span class="dt">caption =</span> <span class="st">&quot;Statistics on raw count values (all samples together)&quot;</span>, <span class="dt">digits =</span> <span class="dv">1</span>, <span class="dt">col.names =</span> <span class="ot">NULL</span>)</code></pre></div>
 <table>
-<caption>
-Statistics on raw count values (all samples together)
-</caption>
+<caption>Statistics on raw count values (all samples together)</caption>
 <tbody>
-<tr>
-<td style="text-align:left;">
-mean
-</td>
-<td style="text-align:right;">
-827.4
-</td>
+<tr class="odd">
+<td align="left">mean</td>
+<td align="right">827.4</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-sd
-</td>
-<td style="text-align:right;">
-8891.1
-</td>
+<tr class="even">
+<td align="left">sd</td>
+<td align="right">8891.1</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-iqr
-</td>
-<td style="text-align:right;">
-524.0
-</td>
+<tr class="odd">
+<td align="left">iqr</td>
+<td align="right">524.0</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-min
-</td>
-<td style="text-align:right;">
-0.0
-</td>
+<tr class="even">
+<td align="left">min</td>
+<td align="right">0.0</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-P05
-</td>
-<td style="text-align:right;">
-0.0
-</td>
+<tr class="odd">
+<td align="left">P05</td>
+<td align="right">0.0</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Q1
-</td>
-<td style="text-align:right;">
-24.0
-</td>
+<tr class="even">
+<td align="left">Q1</td>
+<td align="right">24.0</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-median
-</td>
-<td style="text-align:right;">
-206.0
-</td>
+<tr class="odd">
+<td align="left">median</td>
+<td align="right">206.0</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Q3
-</td>
-<td style="text-align:right;">
-548.0
-</td>
+<tr class="even">
+<td align="left">Q3</td>
+<td align="right">548.0</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-P95
-</td>
-<td style="text-align:right;">
-2321.7
-</td>
+<tr class="odd">
+<td align="left">P95</td>
+<td align="right">2321.7</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-P99
-</td>
-<td style="text-align:right;">
-7759.7
-</td>
+<tr class="even">
+<td align="left">P99</td>
+<td align="right">7759.7</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-max
-</td>
-<td style="text-align:right;">
-722346.0
-</td>
+<tr class="odd">
+<td align="left">max</td>
+<td align="right">722346.0</td>
 </tr>
 </tbody>
 </table>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(all.counts.vector) ## Free memory space</code></pre></div>
+<p>Nous pouvons également appliquer ces méthodes à chaque échantillon séparément, au moyen de la fonction <code>apply()</code></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Compute sample means using the apply() function
+sample.means &lt;-<span class="st"> </span><span class="kw">apply</span>(counts, <span class="dv">2</span>, mean)
+
+## Compute different stats per sample and store them as columns of a data frame
+sample.stats &lt;-<span class="st"> </span><span class="kw">data.frame</span>(
+  <span class="dt">label =</span> samples<span class="op">$</span>Label,
+  <span class="dt">mean =</span> <span class="kw">apply</span>(counts, <span class="dv">2</span>, mean),
+  <span class="dt">sd =</span> <span class="kw">apply</span>(counts, <span class="dv">2</span>, sd),
+  <span class="dt">zeros =</span> <span class="kw">apply</span>(counts <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="dv">2</span>, sum),
+  <span class="dt">Q1 =</span> <span class="kw">apply</span>(counts, <span class="dv">2</span>, quantile, <span class="dt">probs =</span> <span class="fl">0.75</span>),
+  <span class="dt">median =</span> <span class="kw">apply</span>(counts, <span class="dv">2</span>, median),
+  <span class="dt">Q3 =</span> <span class="kw">apply</span>(counts, <span class="dv">2</span>, quantile, <span class="dt">probs =</span> <span class="fl">0.75</span>),
+  <span class="dt">P95 =</span> <span class="kw">apply</span>(counts, <span class="dv">2</span>, quantile, <span class="dt">probs =</span> <span class="fl">0.95</span>),
+  <span class="dt">lib.size.Mb =</span> <span class="kw">apply</span>(counts, <span class="dv">2</span>, sum)<span class="op">/</span><span class="fl">1e6</span>
+)
+
+<span class="kw">kable</span>(sample.stats, 
+      <span class="dt">caption =</span> <span class="st">&quot;Sample-wise statistics&quot;</span>, 
+      <span class="dt">digits =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>), 
+      <span class="dt">format.args =</span> <span class="kw">list</span>(<span class="dt">decimal.mark =</span> <span class="st">&#39;.&#39;</span>, <span class="dt">big.mark =</span> <span class="st">&quot;,&quot;</span>),
+      <span class="dt">align =</span> <span class="st">&quot;l&quot;</span>)</code></pre></div>
+<table>
+<caption>Sample-wise statistics</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th align="left">label</th>
+<th align="left">mean</th>
+<th align="left">sd</th>
+<th align="left">zeros</th>
+<th align="left">Q1</th>
+<th align="left">median</th>
+<th align="left">Q3</th>
+<th align="left">P95</th>
+<th align="left">lib.size.Mb</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>GSM2375278</td>
+<td align="left">bd1bd2mut_0h_1</td>
+<td align="left">1,127</td>
+<td align="left">11,725</td>
+<td align="left">957</td>
+<td align="left">775</td>
+<td align="left">297</td>
+<td align="left">775</td>
+<td align="left">3,385</td>
+<td align="left">8.4</td>
+</tr>
+<tr class="even">
+<td>GSM2375279</td>
+<td align="left">bd1bd2mut_0h_2</td>
+<td align="left">980</td>
+<td align="left">9,135</td>
+<td align="left">878</td>
+<td align="left">735</td>
+<td align="left">310</td>
+<td align="left">735</td>
+<td align="left">2,830</td>
+<td align="left">7.3</td>
+</tr>
+<tr class="odd">
+<td>GSM2375280</td>
+<td align="left">bd1bd2mut_0h_3</td>
+<td align="left">1,078</td>
+<td align="left">10,956</td>
+<td align="left">879</td>
+<td align="left">607</td>
+<td align="left">230</td>
+<td align="left">607</td>
+<td align="left">2,672</td>
+<td align="left">8.1</td>
+</tr>
+<tr class="even">
+<td>GSM2375281</td>
+<td align="left">Sc_WT_0h_1</td>
+<td align="left">1,007</td>
+<td align="left">10,212</td>
+<td align="left">957</td>
+<td align="left">684</td>
+<td align="left">253</td>
+<td align="left">684</td>
+<td align="left">2,952</td>
+<td align="left">7.5</td>
+</tr>
+<tr class="odd">
+<td>GSM2375282</td>
+<td align="left">Sc_WT_0h_2</td>
+<td align="left">903</td>
+<td align="left">9,814</td>
+<td align="left">811</td>
+<td align="left">647</td>
+<td align="left">262</td>
+<td align="left">647</td>
+<td align="left">2,569</td>
+<td align="left">6.8</td>
+</tr>
+<tr class="even">
+<td>GSM2375283</td>
+<td align="left">Sc_WT_0h_3</td>
+<td align="left">804</td>
+<td align="left">9,438</td>
+<td align="left">835</td>
+<td align="left">500</td>
+<td align="left">190</td>
+<td align="left">500</td>
+<td align="left">2,187</td>
+<td align="left">6.0</td>
+</tr>
+<tr class="odd">
+<td>GSM2375284</td>
+<td align="left">bd1bd2mut_4h_1</td>
+<td align="left">521</td>
+<td align="left">5,592</td>
+<td align="left">1,101</td>
+<td align="left">362</td>
+<td align="left">135</td>
+<td align="left">362</td>
+<td align="left">1,567</td>
+<td align="left">3.9</td>
+</tr>
+<tr class="even">
+<td>GSM2375285</td>
+<td align="left">bd1bd2mut_4h_2</td>
+<td align="left">810</td>
+<td align="left">8,039</td>
+<td align="left">898</td>
+<td align="left">595</td>
+<td align="left">254</td>
+<td align="left">595</td>
+<td align="left">2,264</td>
+<td align="left">6.1</td>
+</tr>
+<tr class="odd">
+<td>GSM2375286</td>
+<td align="left">bd1bd2mut_4h_3</td>
+<td align="left">756</td>
+<td align="left">8,022</td>
+<td align="left">893</td>
+<td align="left">476</td>
+<td align="left">189</td>
+<td align="left">476</td>
+<td align="left">1,942</td>
+<td align="left">5.7</td>
+</tr>
+<tr class="even">
+<td>GSM2375287</td>
+<td align="left">Sc_WT_4h_1</td>
+<td align="left">632</td>
+<td align="left">6,591</td>
+<td align="left">1,083</td>
+<td align="left">412</td>
+<td align="left">147</td>
+<td align="left">412</td>
+<td align="left">1,897</td>
+<td align="left">4.7</td>
+</tr>
+<tr class="odd">
+<td>GSM2375288</td>
+<td align="left">Sc_WT_4h_2</td>
+<td align="left">638</td>
+<td align="left">7,149</td>
+<td align="left">942</td>
+<td align="left">436</td>
+<td align="left">173</td>
+<td align="left">436</td>
+<td align="left">1,818</td>
+<td align="left">4.8</td>
+</tr>
+<tr class="even">
+<td>GSM2375289</td>
+<td align="left">Sc_WT_4h_3</td>
+<td align="left">956</td>
+<td align="left">10,819</td>
+<td align="left">808</td>
+<td align="left">626</td>
+<td align="left">248</td>
+<td align="left">626</td>
+<td align="left">2,608</td>
+<td align="left">7.1</td>
+</tr>
+<tr class="odd">
+<td>GSM2375290</td>
+<td align="left">bd1bd2mut_8h_1</td>
+<td align="left">779</td>
+<td align="left">7,821</td>
+<td align="left">1,026</td>
+<td align="left">548</td>
+<td align="left">194</td>
+<td align="left">548</td>
+<td align="left">2,187</td>
+<td align="left">5.8</td>
+</tr>
+<tr class="even">
+<td>GSM2375291</td>
+<td align="left">bd1bd2mut_8h_2</td>
+<td align="left">632</td>
+<td align="left">5,556</td>
+<td align="left">1,013</td>
+<td align="left">470</td>
+<td align="left">194</td>
+<td align="left">470</td>
+<td align="left">1,853</td>
+<td align="left">4.7</td>
+</tr>
+<tr class="odd">
+<td>GSM2375292</td>
+<td align="left">bd1bd2mut_8h_3</td>
+<td align="left">983</td>
+<td align="left">11,193</td>
+<td align="left">973</td>
+<td align="left">462</td>
+<td align="left">166</td>
+<td align="left">462</td>
+<td align="left">2,219</td>
+<td align="left">7.3</td>
+</tr>
+<tr class="even">
+<td>GSM2375293</td>
+<td align="left">Sc_WT_8h_1</td>
+<td align="left">636</td>
+<td align="left">6,584</td>
+<td align="left">1,078</td>
+<td align="left">423</td>
+<td align="left">151</td>
+<td align="left">423</td>
+<td align="left">1,898</td>
+<td align="left">4.8</td>
+</tr>
+<tr class="odd">
+<td>GSM2375294</td>
+<td align="left">Sc_WT_8h_2</td>
+<td align="left">732</td>
+<td align="left">8,118</td>
+<td align="left">850</td>
+<td align="left">515</td>
+<td align="left">208</td>
+<td align="left">515</td>
+<td align="left">2,102</td>
+<td align="left">5.5</td>
+</tr>
+<tr class="even">
+<td>GSM2375295</td>
+<td align="left">Sc_WT_8h_3</td>
+<td align="left">919</td>
+<td align="left">9,672</td>
+<td align="left">862</td>
+<td align="left">643</td>
+<td align="left">239</td>
+<td align="left">643</td>
+<td align="left">2,689</td>
+<td align="left">6.9</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="distribution-des-comptages" class="section level3">
 <h3>Distribution des comptages</h3>
@@ -966,10 +982,11 @@ condition.colors &lt;-<span class="st"> </span><span class="kw">rainbow</span>(<
 ## Associate a color to each sample according to its condition
 samples<span class="op">$</span>color &lt;-<span class="st"> </span>condition.colors[samples<span class="op">$</span>Condition]
 
+par.ori &lt;-<span class="st"> </span><span class="kw">par</span>(<span class="dt">no.readonly =</span> <span class="ot">TRUE</span>) <span class="co"># Store the original value of the graphical parameters before modifying them</span>
+
 <span class="co"># Box plot of counts and log2-transformed counts</span>
 <span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))
-mar.ori &lt;-<span class="st"> </span><span class="kw">par</span>(<span class="st">&quot;mar&quot;</span>) <span class="co"># Store the original value of the margin parameter</span>
-<span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="fl">5.1</span>, <span class="fl">10.1</span>, <span class="fl">4.1</span>, <span class="fl">1.1</span>)) <span class="co"># Increase leftmargin for sample labels</span>
+<span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="fl">5.1</span>, <span class="fl">8.1</span>, <span class="fl">4.1</span>, <span class="fl">1.1</span>)) <span class="co"># Increase leftmargin for sample labels</span>
 
 <span class="kw">boxplot</span>(counts, <span class="dt">horizontal =</span> <span class="ot">TRUE</span>, <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">names =</span> samples<span class="op">$</span>Label, <span class="dt">col =</span> samples<span class="op">$</span>color, <span class="dt">xlab =</span> <span class="st">&quot;Raw counts&quot;</span>)
 
@@ -980,25 +997,38 @@ mar.ori &lt;-<span class="st"> </span><span class="kw">par</span>(<span class="s
 <strong>Boxplot of the counts per gene in each sample.</strong> Left: raw counts. Right: log2_transformed counts.
 </p>
 </div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mar =</span> mar.ori) <span class="co"># reset original margins</span>
-<span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(par.ori)</code></pre></div>
+</div>
+<div id="violin-plots" class="section level2">
+<h2>Violin plots</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Violin Plots</span>
-<span class="co"># </span>
-<span class="co"># vioplot(x1, x2, x3, names=c(&quot;4 cyl&quot;, &quot;6 cyl&quot;, &quot;8 cyl&quot;), </span>
-<span class="co">#    col=&quot;gold&quot;)</span>
-<span class="co"># title(&quot;Violin Plots of Miles Per Gallon&quot;)</span>
-<span class="co"># </span>
-<span class="co"># as.list(counts[1:10,1:2])</span>
-<span class="co"># library(sm)</span>
-<span class="co"># library(vioplot)</span>
-<span class="kw">vioplot</span>(<span class="kw">as.list</span>(counts), <span class="dt">horizontal =</span> <span class="ot">TRUE</span>, <span class="dt">las =</span> <span class="dv">1</span>,
-        <span class="dt">col =</span> samples<span class="op">$</span>color)</code></pre></div>
+<span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))
+<span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="fl">5.1</span>, <span class="fl">8.1</span>, <span class="fl">4.1</span>, <span class="fl">1.1</span>)) <span class="co"># Increase left margin for sample labels</span>
+<span class="kw">par</span>(<span class="dt">las =</span> <span class="dv">1</span>)
+<span class="kw">vioplot</span>(<span class="kw">as.list</span>(counts), <span class="dt">horizontal =</span> <span class="ot">TRUE</span>, 
+        <span class="dt">col =</span> samples<span class="op">$</span>color, <span class="dt">xlab =</span> <span class="st">&quot;Raw counts&quot;</span>,
+        <span class="dt">main =</span> <span class="st">&quot;Violin plot</span><span class="ch">\n</span><span class="st">Raw counts&quot;</span>,
+        <span class="dt">names =</span> samples<span class="op">$</span>Label)
+
+<span class="kw">vioplot</span>(<span class="kw">as.list</span>(counts.log2), <span class="dt">horizontal =</span> <span class="ot">TRUE</span>, 
+        <span class="dt">col =</span> samples<span class="op">$</span>color, <span class="dt">xlab =</span> <span class="st">&quot;Log2(counts + epsilon)&quot;</span>,
+        <span class="dt">main =</span> <span class="st">&quot;Violin plot</span><span class="ch">\n</span><span class="st">log-transformed counts&quot;</span>,
+        <span class="dt">names =</span> samples<span class="op">$</span>Label)</code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figures/TP_violin_plot-1.png" alt="**Violin plots**. Left: raw counts. Right: log2-transformed counts. " width="80%" />
 <p class="caption">
 <strong>Violin plots</strong>. Left: raw counts. Right: log2-transformed counts.
 </p>
 </div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(par.ori)</code></pre></div>
+</div>
+<div id="filtrage-des-genes" class="section level2">
+<h2>Filtrage des gènes</h2>
+<p>Nous écartons les gènes qui ont une variance nulle.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Zero-variance filter</code></pre></div>
+</div>
+<div id="normalisation-des-tailles-de-librairies" class="section level2">
+<h2>Normalisation des tailles de librairies</h2>
 </div>
 
 

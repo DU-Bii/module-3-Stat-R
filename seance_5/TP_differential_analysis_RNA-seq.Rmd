@@ -136,7 +136,7 @@ options(scipen = 12)
 ## Load libraries
 message("Loading libraries")
 library(knitr)
-library(kableExtra)
+#library(kableExtra) ## Note: kableExtra has some side effect on kable: column padding is null, so all numbers seem to be mixed up
 library(FactoMineR)
 library(clues)
 library(RColorBrewer)
@@ -241,6 +241,33 @@ rm(all.counts.vector) ## Free memory space
 
 ```
 
+Nous pouvons également appliquer ces méthodes à chaque échantillon séparément, au moyen de la fonction `apply()`
+
+```{r sample_stats}
+## Compute sample means using the apply() function
+sample.means <- apply(counts, 2, mean)
+
+## Compute different stats per sample and store them as columns of a data frame
+sample.stats <- data.frame(
+  label = samples$Label,
+  mean = apply(counts, 2, mean),
+  sd = apply(counts, 2, sd),
+  zeros = apply(counts == 0, 2, sum),
+  Q1 = apply(counts, 2, quantile, probs = 0.75),
+  median = apply(counts, 2, median),
+  Q3 = apply(counts, 2, quantile, probs = 0.75),
+  P95 = apply(counts, 2, quantile, probs = 0.95),
+  lib.size.Mb = apply(counts, 2, sum)/1e6
+)
+
+kable(sample.stats, 
+      caption = "Sample-wise statistics", 
+      digits = c(0,0,0,0,0,0,0,0,1), 
+      format.args = list(decimal.mark = '.', big.mark = ","),
+      align = "l")
+
+```
+
 
 ### Distribution des comptages
 
@@ -297,39 +324,54 @@ names(condition.colors) <- conditions
 ## Associate a color to each sample according to its condition
 samples$color <- condition.colors[samples$Condition]
 
+par.ori <- par(no.readonly = TRUE) # Store the original value of the graphical parameters before modifying them
+
 # Box plot of counts and log2-transformed counts
 par(mfrow = c(1,2))
-mar.ori <- par("mar") # Store the original value of the margin parameter
-par(mar = c(5.1, 10.1, 4.1, 1.1)) # Increase leftmargin for sample labels
+par(mar = c(5.1, 8.1, 4.1, 1.1)) # Increase leftmargin for sample labels
 
 boxplot(counts, horizontal = TRUE, las = 1, names = samples$Label, col = samples$color, xlab = "Raw counts")
 
 boxplot(counts.log2, horizontal = TRUE, las = 1, names = samples$Label, col = samples$color, xlab = "log2counts")
 
-par(mar = mar.ori) # reset original margins
-par(mfrow = c(1,1))
-
+par(par.ori)
 ```
 
-
+## Violin plots
 
 ```{r violin_plot, out.width="80%", fig.width=10, fig.height=8, fig.cap="**Violin plots**. Left: raw counts. Right: log2-transformed counts. "}
  
 # Violin Plots
-# 
-# vioplot(x1, x2, x3, names=c("4 cyl", "6 cyl", "8 cyl"), 
-#    col="gold")
-# title("Violin Plots of Miles Per Gallon")
-# 
-# as.list(counts[1:10,1:2])
-# library(sm)
-# library(vioplot)
-vioplot(as.list(counts), horizontal = TRUE, las = 1,
-        col = samples$color)
+par(mfrow = c(1,2))
+par(mar = c(5.1, 8.1, 4.1, 1.1)) # Increase left margin for sample labels
+par(las = 1)
+vioplot(as.list(counts), horizontal = TRUE, 
+        col = samples$color, xlab = "Raw counts",
+        main = "Violin plot\nRaw counts",
+        names = samples$Label)
+
+vioplot(as.list(counts.log2), horizontal = TRUE, 
+        col = samples$color, xlab = "Log2(counts + epsilon)",
+        main = "Violin plot\nlog-transformed counts",
+        names = samples$Label)
+
+par(par.ori)
+
+```
+
+
+## Filtrage des gènes
+
+Nous écartons les gènes qui ont une variance nulle.
+
+```{r gene_filtering}
+## Zero-variance filter
+
 
 
 ```
 
 
 
+## Normalisation des tailles de librairies
 
