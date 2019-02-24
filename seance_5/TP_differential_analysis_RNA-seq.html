@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Jacques van Helden" />
+
+<meta name="date" content="2019-02-24" />
+
+<title>Détection de gènes différentiellement exprimés à partir de données RNA-seq</title>
+
+<script src="TP_differential_analysis_RNA-seq_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="TP_differential_analysis_RNA-seq_files/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="TP_differential_analysis_RNA-seq_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="TP_differential_analysis_RNA-seq_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="TP_differential_analysis_RNA-seq_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="TP_differential_analysis_RNA-seq_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="TP_differential_analysis_RNA-seq_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="TP_differential_analysis_RNA-seq_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="TP_differential_analysis_RNA-seq_files/navigation-1.1/tabsets.js"></script>
+<script src="TP_differential_analysis_RNA-seq_files/navigation-1.1/codefolding.js"></script>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #303030; color: #cccccc; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; }
+td.sourceCode { padding-left: 5px; }
+pre, code { color: #cccccc; background-color: #303030; }
+code > span.kw { color: #f0dfaf; } /* Keyword */
+code > span.dt { color: #dfdfbf; } /* DataType */
+code > span.dv { color: #dcdccc; } /* DecVal */
+code > span.bn { color: #dca3a3; } /* BaseN */
+code > span.fl { color: #c0bed1; } /* Float */
+code > span.ch { color: #dca3a3; } /* Char */
+code > span.st { color: #cc9393; } /* String */
+code > span.co { color: #7f9f7f; } /* Comment */
+code > span.ot { color: #efef8f; } /* Other */
+code > span.al { color: #ffcfaf; } /* Alert */
+code > span.fu { color: #efef8f; } /* Function */
+code > span.er { color: #c3bf9f; } /* Error */
+code > span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
+code > span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+code > span.sc { color: #dca3a3; } /* SpecialChar */
+code > span.vs { color: #cc9393; } /* VerbatimString */
+code > span.ss { color: #cc9393; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { } /* Variable */
+code > span.cf { color: #f0dfaf; } /* ControlFlow */
+code > span.op { color: #f0efd0; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+code > span.at { } /* Attribute */
+code > span.do { color: #7f9f7f; } /* Documentation */
+code > span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+code > span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+code > span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+
+.sourceCode .row {
+  width: 100%;
+}
+.sourceCode {
+  overflow-x: auto;
+}
+.code-folding-btn {
+  margin-right: -30px;
+}
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Détection de gènes différentiellement exprimés à partir de données RNA-seq</h1>
+<h3 class="subtitle"><em>Diplôme Interuniversitaire en Bioinformatique intégrative (DU-Bii 2019)</em></h3>
+<h4 class="author"><em>Jacques van Helden</em></h4>
+<h4 class="date"><em>2019-02-24</em></h4>
+
+</div>
+
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>Depuis l’avénement du du séquençage massivement parallèle (NGS, Next Generation Sequencing) en 2007, la détection de gènes différentiellement exprimés (DEG) à partir de données transcriptomiques RNA-seq constitue l’une de ses application les plus populaires.</p>
+<p>Le principe est de mesurer, dans différentes conditions, la concentration d’ARN correspondant à chaque gène, et de comparer ces concentrations entre les échantillons de deux (<strong>comparaison à 2 groupes</strong> ou <strong>binaire</strong>) ou plusieurs conditions (comparaison <strong>multi-groupes</strong>).</p>
+<p>Dès les premières analyses, les chercheurs se sont rendus compte que les méthodes classiques d’analyse différentielles (tests de Student, ANOVA) ne se prêtaient pas du tout à l’analyse de telles données, car leur nature diffère fondamentalement des hypothèss de travail sous-jacentes, pour différentes raisons.</p>
+<ol style="list-style-type: decimal">
+<li><p>Le niveau d’expression d’un gène est quantifié sur une échelle discrète (comptage du nombre de lectures alignées qui chevauchent le gène), alors que les tests paramétriques reposent sur une hypoothèse de normalité.</p></li>
+<li><p>Les ordres de grandeur des comptages varient fortement d’un gène à l’autre: certains gènes ont une poignée de comptages par échantillons, d’autres des centaines de milliers. Les gènes très très fortement représentés correspondent généralement à des gènes non-codants (par exemple ARN ribosomique) ou à des fonctions cellulaires particulières liées au métabolisme de l’ARN, et on comprend les raisons biologiques de leur sur-représentation. Ils n’en constituent pas moins ce qu’on appelle en statistique des “valeurs aberrantes” (“outliers”).</p></li>
+<li><p>Les distributions de comptages comptent généralement un très grand nombre de valeurs nulles (“zero-inflated distributions”).</p></li>
+<li><p>Ces particularités posent des problèmes particuliers pour la normalisation des librairies de comptages :</p>
+<ul>
+<li><p>la présence d’outliers affecte fortement la moyenne, et de façon très instable, ce qui biaise fortement l’estimation de la tendance centrale.</p></li>
+<li><p>la stratégie de repli sur des estimateurs robustes, comme la médiane est contestable du fait du très grand nombre de valeurs nulles (dans certains cas, plusn d’un quart voire la moitié des gènes ont une valeur nulle pour un échantillon).</p></li>
+</ul></li>
+</ol>
+<p>Des méthodes spécifiques ont donc été développées dès 2010 pour affronter ces difficultés particulières de la normalisation et de l’analyse différentielle des données de RNA-seq.</p>
+</div>
+<div id="but-de-ce-tp" class="section level2">
+<h2>But de ce TP</h2>
+<p>Le but de ce TP est d’effectuer une première exploration de l’analyse différentielle des données d’expression, sur base d’un petit cas d’étude simple: l’analyse transcriptionnelle de mutants de sporulation chez la levure <strong>Saccharomyces cerevisiae</strong>.</p>
+</div>
+<div id="cas-detude" class="section level2">
+<h2>Cas d’étude</h2>
+<p>… A ECRIRE: DESCRIPTION DU CAS D’ETUDE</p>
+</div>
+<div id="sources-des-donnees" class="section level2">
+<h2>Sources des données</h2>
+</div>
+<div id="parametres-de-lanalyse" class="section level2">
+<h2>Paramètres de l’analyse</h2>
+<p>Nous définissons dans une variable R (de type liste) les paramètres de l’analyse. Ceci nous permettra de reproduire ultérieurement exactement la même succession d’étapes soit en utilisant des données différentes, soit en modifiant les paramètres particuliers (design, seuils, …).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Load libraries
+<span class="kw">message</span>(<span class="st">&quot;Loading libraries&quot;</span>)
+<span class="kw">library</span>(knitr)
+<span class="kw">library</span>(kableExtra)
+<span class="kw">library</span>(FactoMineR)
+<span class="kw">library</span>(clues)
+<span class="kw">library</span>(RColorBrewer)
+<span class="kw">library</span>(ComplexHeatmap)
+
+<span class="co"># library(corrplot)</span>
+<span class="kw">library</span>(FactoMineR)
+<span class="kw">library</span>(ClassDiscovery)
+<span class="co"># library(formattable)</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">parameters &lt;-<span class="st"> </span><span class="kw">list</span>(
+  <span class="dt">data.folder =</span> <span class="st">&quot;data/GSE89530&quot;</span>, <span class="co"># dossier des données</span>
+  <span class="co"># data.folder = &quot;/shared/projects/du_bii_2019/data/module3/seance5/GSE89530&quot; # on the IFB-cluster-core</span>
+  <span class="dt">counts =</span> <span class="st">&quot;GSE89530_counts.tsv.gz&quot;</span>,
+  <span class="dt">sample.descr =</span> <span class="st">&quot;GSE89530_samples.tsv.gz&quot;</span>,
+  <span class="dt">alpha =</span> <span class="fl">0.05</span>, <span class="co"># seuil de significativité</span>
+  <span class="dt">epsilon =</span> <span class="fl">0.1</span> <span class="co"># pseudo-comptage pour la transformation log2</span>
+)
+
+<span class="kw">kable</span>(<span class="kw">t</span>(<span class="kw">data.frame</span>(parameters)), <span class="dt">col.names =</span> <span class="st">&quot;Parameter Value&quot;</span>)</code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+Parameter Value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+data.folder
+</td>
+<td style="text-align:left;">
+data/GSE89530
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+counts
+</td>
+<td style="text-align:left;">
+GSE89530_counts.tsv.gz
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+sample.descr
+</td>
+<td style="text-align:left;">
+GSE89530_samples.tsv.gz
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+alpha
+</td>
+<td style="text-align:left;">
+0.05
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+epsilon
+</td>
+<td style="text-align:left;">
+0.1
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="telechargement-des-donnees" class="section level2">
+<h2>Téléchargement des données</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## List files in the data folder
+<span class="co"># list.files(parameters$data.folder)</span>
+
+## Load counts of reads per gene
+counts &lt;-<span class="st"> </span><span class="kw">read.delim</span>(<span class="kw">file.path</span>(parameters<span class="op">$</span>data.folder, parameters<span class="op">$</span>counts), <span class="dt">row.names =</span> <span class="dv">1</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>)
+
+## Load sample descriptions
+samples &lt;-<span class="st"> </span><span class="kw">read.delim</span>(<span class="kw">file.path</span>(parameters<span class="op">$</span>data.folder, parameters<span class="op">$</span>sample.descr), <span class="dt">row.names =</span> <span class="dv">1</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<p>La table de comptages comporte 7478 lignes (correspondant aux gènes) et 18 colonnes (correspondant aux échantillons). Nous pouvons afficher un petit morceau de cette table, ens électionnant au hasard quelques lignes et colonnes.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">some.genes &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(counts), <span class="dt">size =</span> <span class="dv">10</span>, <span class="dt">replace =</span> <span class="ot">FALSE</span>)
+some.samples &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(counts), <span class="dt">size =</span> <span class="dv">4</span>, <span class="dt">replace =</span> <span class="ot">FALSE</span>)
+<span class="kw">kable</span>(counts[some.genes, some.samples])</code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+GSM2375283
+</th>
+<th style="text-align:right;">
+GSM2375278
+</th>
+<th style="text-align:right;">
+GSM2375295
+</th>
+<th style="text-align:right;">
+GSM2375288
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+YKL114C
+</td>
+<td style="text-align:right;">
+268
+</td>
+<td style="text-align:right;">
+515
+</td>
+<td style="text-align:right;">
+365
+</td>
+<td style="text-align:right;">
+201
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+YNR046W
+</td>
+<td style="text-align:right;">
+92
+</td>
+<td style="text-align:right;">
+334
+</td>
+<td style="text-align:right;">
+172
+</td>
+<td style="text-align:right;">
+78
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+YGR072W
+</td>
+<td style="text-align:right;">
+485
+</td>
+<td style="text-align:right;">
+393
+</td>
+<td style="text-align:right;">
+652
+</td>
+<td style="text-align:right;">
+239
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+YPR160C-A
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+tI(UAU)L
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+YHR028W-A
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+tS(AGA)M
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+YOL140W
+</td>
+<td style="text-align:right;">
+429
+</td>
+<td style="text-align:right;">
+665
+</td>
+<td style="text-align:right;">
+1260
+</td>
+<td style="text-align:right;">
+176
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+YNR048W
+</td>
+<td style="text-align:right;">
+214
+</td>
+<td style="text-align:right;">
+241
+</td>
+<td style="text-align:right;">
+240
+</td>
+<td style="text-align:right;">
+241
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+tH(GUG)K
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+</tbody>
+</table>
+<p>Le tableau GSE89530_samples.tsv.gz fournit une description de chaque échantillon.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># print(samples[some.samples, ])</span>
+<span class="kw">kable</span>(samples[some.samples, ], 
+      <span class="dt">caption =</span> <span class="st">&quot;**Table de comptage de lectures (short reads) par gène.** Sélection arbitraire de quelques gènes (lignes) et échantillons (colonnes)&quot;</span>, 
+      <span class="dt">align =</span> <span class="st">&quot;c&quot;</span>)</code></pre></div>
+<table>
+<caption>
+<strong>Table de comptage de lectures (short reads) par gène.</strong> Sélection arbitraire de quelques gènes (lignes) et échantillons (colonnes)
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:center;">
+Condition
+</th>
+<th style="text-align:center;">
+Replpicate
+</th>
+<th style="text-align:center;">
+Genotype
+</th>
+<th style="text-align:center;">
+Time.point
+</th>
+<th style="text-align:center;">
+Label
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+GSM2375290
+</td>
+<td style="text-align:center;">
+Wild_type_0
+</td>
+<td style="text-align:center;">
+3
+</td>
+<td style="text-align:center;">
+Wild-type
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+Sc_WT_0h_3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+GSM2375281
+</td>
+<td style="text-align:center;">
+bdf1_Y187F_Y354F_mutant_0
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+bdf1-Y187F-Y354F mutant
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+bd1bd2mut_0h_1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+GSM2375292
+</td>
+<td style="text-align:center;">
+Wild_type_8
+</td>
+<td style="text-align:center;">
+3
+</td>
+<td style="text-align:center;">
+Wild-type
+</td>
+<td style="text-align:center;">
+8
+</td>
+<td style="text-align:center;">
+Sc_WT_8h_3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+GSM2375285
+</td>
+<td style="text-align:center;">
+Wild_type_4
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+Wild-type
+</td>
+<td style="text-align:center;">
+4
+</td>
+<td style="text-align:center;">
+Sc_WT_4h_2
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="exploration-des-donnees" class="section level2">
+<h2>Exploration des données</h2>
+<p>Avant toute autre chose, il convient de mener une exploration préliminaire des données, afin de se familiariser avec leur distribution.</p>
+<div id="statistiques-descriptives" class="section level3">
+<h3>Statistiques descriptives</h3>
+<p>La fonction R <code>summary()</code> calcule des statistiques de base pour chaque colonne d’une matrice ou data frame. Nous imprimons ici un sous-ensemble de ces échantillons.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(counts[, some.samples])</code></pre></div>
+<pre><code>   GSM2375283         GSM2375278       GSM2375295         GSM2375288      
+ Min.   :     0.0   Min.   :     0   Min.   :     0.0   Min.   :     0.0  
+ 1st Qu.:    28.0   1st Qu.:    32   1st Qu.:    35.2   1st Qu.:    20.0  
+ Median :   190.0   Median :   297   Median :   239.0   Median :   173.0  
+ Mean   :   804.2   Mean   :  1127   Mean   :   919.0   Mean   :   638.4  
+ 3rd Qu.:   500.0   3rd Qu.:   775   3rd Qu.:   643.0   3rd Qu.:   435.8  
+ Max.   :531472.0   Max.   :722346   Max.   :511934.0   Max.   :425896.0  </code></pre>
+</div>
+<div id="distribution-des-comptages" class="section level3">
+<h3>Distribution des comptages</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">count.stats &lt;-<span class="st"> </span><span class="kw">mean</span>(<span class="kw">unlist</span>(counts))
+
+## Display histogram of the raw counts
+<span class="kw">hist</span>(<span class="kw">unlist</span>(counts), <span class="dt">breaks =</span> <span class="dv">100</span>, <span class="dt">xlab =</span> <span class="st">&quot;Reads per gene&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Number of observations&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;Distribution of raw counts&quot;</span>)</code></pre></div>
+<p><img src="figures/TP_count_distribution-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Cet histogramme n’est pas très informatif, car toutes les valeurs sont concentrées dans la première tranche (à l’extrême gauche). Ceci résulte du fiat que les intervalles de classe ont été définis sur base de l’étendue totale, et qu’il existe apparemment une observation qui a une valeur énorme par rapport aux autres (valeur aberrante, “<strong>outlier</strong>”). De fait, la valeur la plus élevée (722346) dépasse de très loin la moyenne (NA)</p>
+<p>Afin de visualiser toute l’étendue des observations tout en mettant plus de détail sur les valeurs faibles, nous pouvons effectuer une transformation logarithmique. Nous devons cependant prêter attention à certains détails.</p>
+<ul>
+<li><p>Conventionnellement, on utlise la transformation log2 pour les données RNA-seq, car elle fournit un découpage plus fin des valeurs couvertes.</p></li>
+<li><p>Les données RnA-seq contiennent généralement un bon nombre de valeurs nulles (gènes non détectés), qui posent un problème pour la conversion logarithmique (<span class="math inline">\(log(0) = -\infty\)</span>). On contourne ce problème en ajoutant aux comptages un petit nombre arbitraire, qu’on dénomme <strong>pseudo-comptage</strong> et qu’on symbolise par la lettre grècque epsilon (<span class="math inline">\(\epsilon\)</span>).</p></li>
+</ul>
+<p>Il est cournant d’ajouter la valeur <span class="math inline">\(1\)</span>, mais nous préférons ajouter une valeur inférieure à 1, pour bien distinguer les comptages réels (qui peuvent de fait prendre une valeur 1) des pseudo-comptages.</p>
+<p>Pour cette analyse nous choisissons <span class="math inline">\(\epsilon = 0.1\)</span>.</p>
+<p>La conversion donne donc.</p>
+<p><span class="math display">\[\text{log2count}= log2(n + \epsilon) = log2(n + 0.1) \]</span> L’histogramme des log2counts est plus informatif que celui des comptages bruts.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">counts.log2 &lt;-<span class="st"> </span><span class="kw">log2</span>(counts <span class="op">+</span><span class="st"> </span>parameters<span class="op">$</span>epsilon)
+
+<span class="kw">hist</span>(<span class="kw">unlist</span>(counts.log2), 
+     <span class="dt">xlab =</span> <span class="st">&quot;log2(counts + epsilon)&quot;</span>, 
+     <span class="dt">ylab =</span> <span class="st">&quot;Number of observations&quot;</span>, 
+     <span class="dt">main =</span> <span class="st">&quot;Distribution of log2(counts)&quot;</span>, 
+     <span class="dt">breaks =</span> <span class="dv">100</span>, <span class="dt">col =</span> <span class="st">&quot;#BBDDEE&quot;</span>)</code></pre></div>
+<p><img src="figures/TP_log2_conversion-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Notons d’emblée le pic très élevé à gauche, qui correspond à toutes les observations nulles. Sur l’axe <span class="math inline">\(X\)</span>, il apparait à la valeur <span class="math inline">\(-3.3\)</span>, qui correspond à <span class="math inline">\(log_2(\epsilon) = log_2(0.1)\)</span>.</p>
+</div>
+</div>
+<div id="boites-a-moustache" class="section level2">
+<h2>Boîtes à moustache</h2>
+<p>Les boîtes à moustache sont très utilisées pour obtenir une vision d’ensemble de plusieurs distribution.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Associate a specific color to each condition
+conditions &lt;-<span class="st"> </span><span class="kw">unique</span>(samples<span class="op">$</span>Condition)
+condition.colors &lt;-<span class="st"> </span><span class="kw">rainbow</span>(<span class="dt">n =</span> <span class="kw">length</span>(conditions))
+<span class="kw">names</span>(condition.colors) &lt;-<span class="st"> </span>conditions
+
+## Associate a color to each sample according to its condition
+samples<span class="op">$</span>color &lt;-<span class="st"> </span>condition.colors[samples<span class="op">$</span>Condition]
+
+<span class="co"># Box plot of counts and log2-transformed counts</span>
+<span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))
+mar.ori &lt;-<span class="st"> </span><span class="kw">par</span>(<span class="st">&quot;mar&quot;</span>) <span class="co"># Store the original value of the margin parameter</span>
+<span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="fl">5.1</span>, <span class="fl">10.1</span>, <span class="fl">4.1</span>, <span class="fl">1.1</span>)) <span class="co"># Increase leftmargin for sample labels</span>
+
+<span class="kw">boxplot</span>(counts, <span class="dt">horizontal =</span> <span class="ot">TRUE</span>, <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">names =</span> samples<span class="op">$</span>Label, <span class="dt">col =</span> samples<span class="op">$</span>color, <span class="dt">xlab =</span> <span class="st">&quot;Raw counts&quot;</span>)
+
+<span class="kw">boxplot</span>(counts.log2, <span class="dt">horizontal =</span> <span class="ot">TRUE</span>, <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">names =</span> samples<span class="op">$</span>Label, <span class="dt">col =</span> samples<span class="op">$</span>color, <span class="dt">xlab =</span> <span class="st">&quot;log2counts&quot;</span>)</code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/TP_boxplots-1.png" alt="Boxplot of the counts per gene in each sample. " width="80%" />
+<p class="caption">
+Boxplot of the counts per gene in each sample.
+</p>
+</div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mar =</span> mar.ori) <span class="co"># reset original margins</span>
+<span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</code></pre></div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

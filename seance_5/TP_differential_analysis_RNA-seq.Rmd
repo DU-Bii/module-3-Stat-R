@@ -3,15 +3,11 @@ title: "Détection de gènes différentiellement exprimés à partir de données
 author: "Jacques van Helden"
 date: '`r Sys.Date()`'
 output:
-  html_document:
-    self_contained: no
+  pdf_document:
     fig_caption: yes
     highlight: zenburn
-    theme: cerulean
     toc: yes
     toc_depth: 3
-    toc_float: yes
-    code_folding: "hide"
   beamer_presentation:
     colortheme: dolphin
     fig_caption: yes
@@ -29,11 +25,15 @@ output:
     transition: none
     self_contained: true
     css: ../slides.css
-  pdf_document:
+  html_document:
+    self_contained: no
     fig_caption: yes
     highlight: zenburn
+    theme: cerulean
     toc: yes
     toc_depth: 3
+    toc_float: yes
+    code_folding: "hide"
   slidy_presentation:
     smart: no
     slide_level: 2
@@ -155,10 +155,10 @@ library(ClassDiscovery)
 
 
 parameters <- list(
-  data.folder = "~/DU-Bii/module-3-Stat-R/seance_5/data/GSE89530", # dossier des données
+  data.folder = "data/GSE89530", # dossier des données
   # data.folder = "/shared/projects/du_bii_2019/data/module3/seance5/GSE89530" # on the IFB-cluster-core
-  counts = "GSE89530_counts.tsv",
-  sample.descr = "GSE89530_samples.tsv",
+  counts = "GSE89530_counts.tsv.gz",
+  sample.descr = "GSE89530_samples.tsv.gz",
   alpha = 0.05, # seuil de significativité
   epsilon = 0.1 # pseudo-comptage pour la transformation log2
 )
@@ -172,27 +172,124 @@ kable(t(data.frame(parameters)), col.names = "Parameter Value")
 
 
 ```{r load_data}
+## List files in the data folder
+# list.files(parameters$data.folder)
+
 ## Load counts of reads per gene
 counts <- read.delim(file.path(parameters$data.folder, parameters$counts), row.names = 1, header = TRUE)
 
 ## Load sample descriptions
-samples <- read.delim(file.path(parameters$data.folder, parameters$sample.descr))
+samples <- read.delim(file.path(parameters$data.folder, parameters$sample.descr), row.names = 1, header = TRUE)
+
 
 ```
 
 La table de comptages comporte `r prettyNum(nrow(counts))` lignes (correspondant aux gènes) et `r ncol(counts)` colonnes (correspondant aux échantillons). Nous pouvons afficher un petit morceau de cette table, ens électionnant au hasard quelques lignes et colonnes. 
 
 ```{r display_some_counts}
-some.rows <- sample(1:nrow(counts), size = 10, replace = FALSE)
-some.columns <- sample(1:ncol(counts), size = 4, replace = FALSE)
-kable(counts[some.rows, some.columns])
+some.genes <- sample(1:nrow(counts), size = 10, replace = FALSE)
+some.samples <- sample(1:ncol(counts), size = 4, replace = FALSE)
+kable(counts[some.genes, some.samples])
+```
+
+
+Le tableau `r parameters$sample.descr` fournit une description de chaque échantillon. 
+
+```{r sample-kable}
+# print(samples[some.samples, ])
+kable(samples[some.samples, ], 
+      caption = "**Table de comptage de lectures (short reads) par gène.** Sélection arbitraire de quelques gènes (lignes) et échantillons (colonnes)", 
+      align = "c")
 ```
 
 
 ## Exploration des données
 
-Avant toute autre chose, il convient de mener une exploration préliminaire des données, afin de se familiariser avec leur distribution.
+Avant toute autre chose, il convient de mener une exploration préliminaire des données, afin de se familiariser avec leur distribution. 
+
 
 ### Statistiques descriptives
+
+La fonction R `summary()` calcule des statistiques de base pour chaque colonne d'une matrice ou data frame. Nous imprimons ici un sous-ensemble de ces échantillons. 
+
+```{r counts_summary, echo=TRUE}
+summary(counts[, some.samples])
+```
+
+### Distribution des comptages
+
+
+```{r count_distribution, out.width="80%", fig.width=7, fig.height=5}
+
+count.stats <- mean(unlist(counts))
+
+## Display histogram of the raw counts
+hist(unlist(counts), breaks = 100, xlab = "Reads per gene", ylab = "Number of observations", main = "Distribution of raw counts")
+
+
+```
+
+Cet histogramme n'est pas très informatif, car toutes les valeurs sont concentrées dans la première tranche (à l'extrême gauche). Ceci résulte du fiat que les intervalles de classe ont été définis sur base de l'étendue totale, et qu'il existe apparemment une observation qui a une valeur énorme par rapport aux autres (valeur aberrante, "**outlier**"). De fait, la valeur la plus élevée (`r max(counts)`) dépasse de très loin la moyenne (`r mean(counts)`)
+
+Afin de visualiser toute l'étendue des observations tout en mettant plus de détail sur les valeurs faibles, nous pouvons effectuer une transformation logarithmique. Nous devons cependant prêter attention à certains détails. 
+
+- Conventionnellement, on utlise la transformation log2 pour les données RNA-seq, car elle fournit un découpage plus fin des valeurs couvertes. 
+
+- Les données RnA-seq contiennent généralement un bon nombre de valeurs nulles (gènes non détectés), qui posent un problème pour la conversion logarithmique ($log(0) = -\infty$). On contourne ce problème en ajoutant aux comptages un petit nombre arbitraire, qu'on dénomme **pseudo-comptage** et qu'on symbolise par la lettre grècque epsilon ($\epsilon$). 
+
+Il est cournant d'ajouter la valeur $1$, mais nous préférons ajouter une valeur inférieure à 1, pour bien distinguer les comptages réels (qui peuvent de fait prendre une valeur 1) des pseudo-comptages. 
+
+Pour cette analyse nous choisissons $\epsilon = `r  parameters$epsilon`$.
+
+La conversion donne donc. 
+
+
+$$\text{log2count}= log2(n + \epsilon) = log2(n + `r parameters$epsilon`) $$
+L'histogramme des log2counts est plus informatif que celui des comptages bruts. 
+
+```{r log2_conversion, out.width="80%", fig.width=7, fig.height=5}
+counts.log2 <- log2(counts + parameters$epsilon)
+
+hist(unlist(counts.log2), 
+     xlab = "log2(counts + epsilon)", 
+     ylab = "Number of observations", 
+     main = "Distribution of log2(counts)", 
+     breaks = 100, col = "#BBDDEE")
+```
+
+Notons d'emblée le pic très élevé à gauche, qui correspond à toutes les observations nulles. Sur l'axe $X$, il apparait à la valeur $`r signif(digits = 2, log2(parameters$epsilon))`$, qui correspond à $log_2(\epsilon) = log_2(`r parameters$epsilon`)$. 
+
+
+## Boîtes à moustache
+
+Les boîtes à moustache sont très utilisées pour obtenir une vision d'ensemble de plusieurs distribution. 
+
+```{r boxplots, out.width="80%", fig.width=10, fig.height=7, fig.cap="Boxplot of the counts per gene in each sample. "}
+
+## Associate a specific color to each condition
+conditions <- unique(samples$Condition)
+condition.colors <- rainbow(n = length(conditions))
+names(condition.colors) <- conditions
+
+## Associate a color to each sample according to its condition
+samples$color <- condition.colors[samples$Condition]
+
+# Box plot of counts and log2-transformed counts
+par(mfrow = c(1,2))
+mar.ori <- par("mar") # Store the original value of the margin parameter
+par(mar = c(5.1, 10.1, 4.1, 1.1)) # Increase leftmargin for sample labels
+
+boxplot(counts, horizontal = TRUE, las = 1, names = samples$Label, col = samples$color, xlab = "Raw counts")
+
+boxplot(counts.log2, horizontal = TRUE, las = 1, names = samples$Label, col = samples$color, xlab = "log2counts")
+
+
+par(mar = mar.ori) # reset original margins
+par(mfrow = c(1,1))
+
+```
+
+
+
 
 
