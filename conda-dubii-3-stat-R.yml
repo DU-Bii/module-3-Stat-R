@@ -36,6 +36,9 @@ dependencies:
   - conda-forge::r-ggpubr       # Stats on the graphs
   - conda-forge::r-clues        # For clustering
   - conda-forge::r-gprofiler    # functional enrichment 
+  - conda-forge::r-vioplot      # Violin plots
+  - conda-forge::r-sm            # undeclared dependency of vioplot
+
 
   ## Bioconda packages
   - bioconda::bioconductor-deseq2

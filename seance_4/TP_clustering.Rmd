@@ -80,7 +80,7 @@ data.folder <- "~/TCGA_import/data/BIC/" # Just for preparation
 ## Load libraries
 message("Loading libraries")
 library(knitr)
-library(kableExtra)
+#library(kableExtra) ## Note: kableExtra has some side effect on kable: column padding is null, so all numbers seem to be mixed up
 library(FactoMineR)
 library(clues)
 library(RColorBrewer)

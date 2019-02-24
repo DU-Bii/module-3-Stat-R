@@ -400,7 +400,7 @@ div.tocify {
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Load libraries
 <span class="kw">message</span>(<span class="st">&quot;Loading libraries&quot;</span>)
 <span class="kw">library</span>(knitr)
-<span class="co">#library(kableExtra)</span>
+<span class="co">#library(kableExtra) ## Note: kableExtra has some side effect on kable: column padding is null, so all numbers seem to be mixed up</span>
 <span class="kw">library</span>(FactoMineR)
 <span class="kw">library</span>(clues)
 <span class="kw">library</span>(RColorBrewer)
@@ -410,17 +410,20 @@ div.tocify {
 <span class="co"># library(corrplot)</span>
 <span class="kw">library</span>(FactoMineR)
 <span class="kw">library</span>(ClassDiscovery)
-<span class="co"># library(formattable)</span></code></pre></div>
+<span class="co"># library(formattable)</span>
+
+<span class="co"># message(&quot;getwd()\t&quot;, getwd())</span></code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">parameters &lt;-<span class="st"> </span><span class="kw">list</span>(
   <span class="dt">data.folder =</span> <span class="st">&quot;data/GSE89530&quot;</span>, <span class="co"># dossier des données</span>
   <span class="co"># data.folder = &quot;/shared/projects/du_bii_2019/data/module3/seance5/GSE89530&quot; # on the IFB-cluster-core</span>
   <span class="dt">counts =</span> <span class="st">&quot;GSE89530_counts.tsv.gz&quot;</span>,
   <span class="dt">sample.descr =</span> <span class="st">&quot;GSE89530_samples.tsv.gz&quot;</span>,
   <span class="dt">alpha =</span> <span class="fl">0.05</span>, <span class="co"># seuil de significativité</span>
-  <span class="dt">epsilon =</span> <span class="fl">0.1</span> <span class="co"># pseudo-comptage pour la transformation log2</span>
+  <span class="dt">epsilon =</span> <span class="fl">0.1</span>, <span class="co"># pseudo-comptage pour la transformation log2</span>
+  <span class="dt">gene.filter.percent.zeros =</span> <span class="dv">90</span> <span class="co"># Discard genes having zero values in more than this percentage of samples</span>
 )
 
-<span class="kw">kable</span>(<span class="kw">t</span>(<span class="kw">data.frame</span>(parameters)), <span class="dt">col.names =</span> <span class="st">&quot;Parameter Value&quot;</span>, <span class="dt">padding =</span> <span class="dv">2</span>)</code></pre></div>
+<span class="kw">kable</span>(<span class="kw">t</span>(<span class="kw">data.frame</span>(parameters)), <span class="dt">col.names =</span> <span class="st">&quot;Parameter Value&quot;</span>)</code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -449,6 +452,10 @@ div.tocify {
 <td>epsilon</td>
 <td align="left">0.1</td>
 </tr>
+<tr class="even">
+<td>gene.filter.percent.zeros</td>
+<td align="left">90</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -472,82 +479,82 @@ some.samples &lt;-<span class="st"> </span><span class="kw">sample</span>(<span 
 <thead>
 <tr class="header">
 <th></th>
+<th align="right">GSM2375288</th>
+<th align="right">GSM2375292</th>
 <th align="right">GSM2375283</th>
-<th align="right">GSM2375282</th>
-<th align="right">GSM2375289</th>
-<th align="right">GSM2375279</th>
+<th align="right">GSM2375287</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>YMR306C-A</td>
-<td align="right">73</td>
-<td align="right">91</td>
-<td align="right">82</td>
-<td align="right">252</td>
-</tr>
-<tr class="even">
-<td>YFL031W_intron</td>
-<td align="right">356</td>
-<td align="right">178</td>
-<td align="right">410</td>
-<td align="right">137</td>
-</tr>
-<tr class="odd">
-<td>YJR077C</td>
-<td align="right">2330</td>
-<td align="right">2777</td>
-<td align="right">2790</td>
-<td align="right">3944</td>
-</tr>
-<tr class="even">
-<td>YHR073W-A</td>
+<td>tF(GAA)M</td>
 <td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-</tr>
-<tr class="odd">
-<td>tL(UAA)D</td>
-<td align="right">2</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td>YDR366C</td>
-<td align="right">2</td>
 <td align="right">3</td>
-<td align="right">2</td>
-<td align="right">7</td>
-</tr>
-<tr class="odd">
-<td>YOR179C</td>
-<td align="right">113</td>
-<td align="right">206</td>
-<td align="right">153</td>
-<td align="right">165</td>
-</tr>
-<tr class="even">
-<td>YBL027W_intron</td>
-<td align="right">14</td>
-<td align="right">10</td>
-<td align="right">9</td>
-<td align="right">11</td>
-</tr>
-<tr class="odd">
-<td>tE(UUC)J</td>
 <td align="right">1</td>
-<td align="right">2</td>
-<td align="right">0</td>
-<td align="right">0</td>
+<td align="right">3</td>
 </tr>
 <tr class="even">
-<td>YOR193W</td>
-<td align="right">113</td>
-<td align="right">197</td>
-<td align="right">145</td>
-<td align="right">163</td>
+<td>YHR061C</td>
+<td align="right">66</td>
+<td align="right">233</td>
+<td align="right">54</td>
+<td align="right">43</td>
+</tr>
+<tr class="odd">
+<td>YDL171C</td>
+<td align="right">8993</td>
+<td align="right">2201</td>
+<td align="right">7640</td>
+<td align="right">480</td>
+</tr>
+<tr class="even">
+<td>RUF20</td>
+<td align="right">90</td>
+<td align="right">148</td>
+<td align="right">116</td>
+<td align="right">86</td>
+</tr>
+<tr class="odd">
+<td>YPR034W</td>
+<td align="right">397</td>
+<td align="right">524</td>
+<td align="right">390</td>
+<td align="right">312</td>
+</tr>
+<tr class="even">
+<td>YLR336C</td>
+<td align="right">316</td>
+<td align="right">206</td>
+<td align="right">372</td>
+<td align="right">148</td>
+</tr>
+<tr class="odd">
+<td>YNL046W</td>
+<td align="right">81</td>
+<td align="right">61</td>
+<td align="right">52</td>
+<td align="right">89</td>
+</tr>
+<tr class="even">
+<td>YNL044W</td>
+<td align="right">379</td>
+<td align="right">730</td>
+<td align="right">508</td>
+<td align="right">188</td>
+</tr>
+<tr class="odd">
+<td>YGL228W</td>
+<td align="right">2032</td>
+<td align="right">1688</td>
+<td align="right">1707</td>
+<td align="right">944</td>
+</tr>
+<tr class="even">
+<td>YPR005C</td>
+<td align="right">297</td>
+<td align="right">154</td>
+<td align="right">233</td>
+<td align="right">137</td>
 </tr>
 </tbody>
 </table>
@@ -570,6 +577,22 @@ some.samples &lt;-<span class="st"> </span><span class="kw">sample</span>(<span 
 </thead>
 <tbody>
 <tr class="odd">
+<td>GSM2375285</td>
+<td align="center">Wild_type_4</td>
+<td align="center">2</td>
+<td align="center">Wild-type</td>
+<td align="center">4</td>
+<td align="center">Sc_WT_4h_2</td>
+</tr>
+<tr class="even">
+<td>GSM2375295</td>
+<td align="center">bdf1_Y187F_Y354F_mutant_8</td>
+<td align="center">3</td>
+<td align="center">bdf1-Y187F-Y354F mutant</td>
+<td align="center">8</td>
+<td align="center">bd1bd2mut_8h_3</td>
+</tr>
+<tr class="odd">
 <td>GSM2375290</td>
 <td align="center">Wild_type_0</td>
 <td align="center">3</td>
@@ -578,28 +601,12 @@ some.samples &lt;-<span class="st"> </span><span class="kw">sample</span>(<span 
 <td align="center">Sc_WT_0h_3</td>
 </tr>
 <tr class="even">
-<td>GSM2375284</td>
-<td align="center">Wild_type_0</td>
-<td align="center">2</td>
-<td align="center">Wild-type</td>
-<td align="center">0</td>
-<td align="center">Sc_WT_0h_2</td>
-</tr>
-<tr class="odd">
-<td>GSM2375291</td>
+<td>GSM2375279</td>
 <td align="center">Wild_type_4</td>
-<td align="center">3</td>
+<td align="center">1</td>
 <td align="center">Wild-type</td>
 <td align="center">4</td>
-<td align="center">Sc_WT_4h_3</td>
-</tr>
-<tr class="even">
-<td>GSM2375287</td>
-<td align="center">bdf1_Y187F_Y354F_mutant_0</td>
-<td align="center">2</td>
-<td align="center">bdf1-Y187F-Y354F mutant</td>
-<td align="center">0</td>
-<td align="center">bd1bd2mut_0h_2</td>
+<td align="center">Sc_WT_4h_1</td>
 </tr>
 </tbody>
 </table>
@@ -611,13 +618,13 @@ some.samples &lt;-<span class="st"> </span><span class="kw">sample</span>(<span 
 <h3>Statistiques descriptives</h3>
 <p>La fonction R <code>summary()</code> calcule des statistiques de base pour chaque colonne d’une matrice ou data frame. Nous imprimons ici un sous-ensemble de ces échantillons.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(counts[, some.samples])</code></pre></div>
-<pre><code>   GSM2375283         GSM2375282       GSM2375289         GSM2375279      
- Min.   :     0.0   Min.   :     0   Min.   :     0.0   Min.   :     0.0  
- 1st Qu.:    28.0   1st Qu.:    32   1st Qu.:    34.0   1st Qu.:    36.0  
- Median :   190.0   Median :   262   Median :   248.0   Median :   310.0  
- Mean   :   804.2   Mean   :   903   Mean   :   955.7   Mean   :   979.8  
- 3rd Qu.:   500.0   3rd Qu.:   647   3rd Qu.:   626.0   3rd Qu.:   734.8  
- Max.   :531472.0   Max.   :542630   Max.   :578443.0   Max.   :565085.0  </code></pre>
+<pre><code>   GSM2375288         GSM2375292         GSM2375283         GSM2375287      
+ Min.   :     0.0   Min.   :     0.0   Min.   :     0.0   Min.   :     0.0  
+ 1st Qu.:    20.0   1st Qu.:    24.0   1st Qu.:    28.0   1st Qu.:    15.0  
+ Median :   173.0   Median :   166.0   Median :   190.0   Median :   147.0  
+ Mean   :   638.4   Mean   :   982.6   Mean   :   804.2   Mean   :   631.8  
+ 3rd Qu.:   435.8   3rd Qu.:   462.0   3rd Qu.:   500.0   3rd Qu.:   412.0  
+ Max.   :425896.0   Max.   :571353.0   Max.   :531472.0   Max.   :389038.0  </code></pre>
 <p>Nous pouvons calculer quelques paramètres additionnels, qui nous éclaireront sur les données.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">all.counts.vector &lt;-<span class="st"> </span><span class="kw">unlist</span>(counts) <span class="co"># Regroup all counts in a vevtor to compute statistics</span>
 
@@ -634,53 +641,64 @@ count.stats &lt;-<span class="st"> </span><span class="kw">data.frame</span>(
   <span class="dt">P99 =</span> <span class="kw">quantile</span>(all.counts.vector, <span class="dt">probs =</span> <span class="fl">0.99</span>),
   <span class="dt">max =</span> <span class="kw">max</span>(all.counts.vector)
   )
-<span class="kw">kable</span>(<span class="kw">t</span>(count.stats), <span class="dt">caption =</span> <span class="st">&quot;Statistics on raw count values (all samples together)&quot;</span>, <span class="dt">digits =</span> <span class="dv">1</span>, <span class="dt">col.names =</span> <span class="ot">NULL</span>)</code></pre></div>
+
+<span class="co"># View(count.stat) # for quick check in R interface</span>
+<span class="kw">kable</span>(<span class="kw">t</span>(count.stats), 
+      <span class="dt">caption =</span> <span class="st">&quot;Statistics on raw count values (all samples together)&quot;</span>, 
+      <span class="dt">format.args =</span> <span class="kw">list</span>(<span class="dt">decimal.mark =</span> <span class="st">&#39;.&#39;</span>, <span class="dt">big.mark =</span> <span class="st">&quot;,&quot;</span>), <span class="dt">digits =</span> <span class="dv">2</span>,
+      <span class="dt">col.names =</span> <span class="st">&quot;Parameter value&quot;</span>)</code></pre></div>
 <table>
 <caption>Statistics on raw count values (all samples together)</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">Parameter value</th>
+</tr>
+</thead>
 <tbody>
 <tr class="odd">
-<td align="left">mean</td>
-<td align="right">827.4</td>
+<td>mean</td>
+<td align="right">827.44</td>
 </tr>
 <tr class="even">
-<td align="left">sd</td>
-<td align="right">8891.1</td>
+<td>sd</td>
+<td align="right">8,891.07</td>
 </tr>
 <tr class="odd">
-<td align="left">iqr</td>
-<td align="right">524.0</td>
+<td>iqr</td>
+<td align="right">524.00</td>
 </tr>
 <tr class="even">
-<td align="left">min</td>
-<td align="right">0.0</td>
+<td>min</td>
+<td align="right">0.00</td>
 </tr>
 <tr class="odd">
-<td align="left">P05</td>
-<td align="right">0.0</td>
+<td>P05</td>
+<td align="right">0.00</td>
 </tr>
 <tr class="even">
-<td align="left">Q1</td>
-<td align="right">24.0</td>
+<td>Q1</td>
+<td align="right">24.00</td>
 </tr>
 <tr class="odd">
-<td align="left">median</td>
-<td align="right">206.0</td>
+<td>median</td>
+<td align="right">206.00</td>
 </tr>
 <tr class="even">
-<td align="left">Q3</td>
-<td align="right">548.0</td>
+<td>Q3</td>
+<td align="right">548.00</td>
 </tr>
 <tr class="odd">
-<td align="left">P95</td>
-<td align="right">2321.7</td>
+<td>P95</td>
+<td align="right">2,321.70</td>
 </tr>
 <tr class="even">
-<td align="left">P99</td>
-<td align="right">7759.7</td>
+<td>P99</td>
+<td align="right">7,759.73</td>
 </tr>
 <tr class="odd">
-<td align="left">max</td>
-<td align="right">722346.0</td>
+<td>max</td>
+<td align="right">722,346.00</td>
 </tr>
 </tbody>
 </table>
@@ -948,7 +966,12 @@ sample.stats &lt;-<span class="st"> </span><span class="kw">data.frame</span>(
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Compute some basic statistics
 
 ## Display histogram of the raw counts
-<span class="kw">hist</span>(<span class="kw">unlist</span>(counts), <span class="dt">breaks =</span> <span class="dv">100</span>, <span class="dt">xlab =</span> <span class="st">&quot;Reads per gene&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Number of observations&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;Distribution of raw counts&quot;</span>)</code></pre></div>
+<span class="kw">hist</span>(<span class="kw">unlist</span>(counts), 
+     <span class="dt">breaks =</span> <span class="dv">100</span>, 
+     <span class="dt">col =</span> <span class="st">&quot;#FFDDBB&quot;</span>,
+     <span class="dt">xlab =</span> <span class="st">&quot;Reads per gene&quot;</span>, 
+     <span class="dt">ylab =</span> <span class="st">&quot;Number of observations&quot;</span>, 
+     <span class="dt">main =</span> <span class="st">&quot;Distribution of raw counts&quot;</span>)</code></pre></div>
 <p><img src="figures/TP_count_distribution-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Cet histogramme n’est pas très informatif, car toutes les valeurs sont concentrées dans la première tranche (à l’extrême gauche). Ceci résulte du fiat que les intervalles de classe ont été définis sur base de l’étendue totale, et qu’il existe apparemment une observation qui a une valeur énorme par rapport aux autres (valeur aberrante, “<strong>outlier</strong>”). De fait, la valeur la plus élevée (722346) dépasse de très loin la moyenne (827.4361757)</p>
 <p>Afin de visualiser toute l’étendue des observations tout en mettant plus de détail sur les valeurs faibles, nous pouvons effectuer une transformation logarithmique. Nous devons cependant prêter attention à certains détails.</p>
@@ -1024,11 +1047,92 @@ par.ori &lt;-<span class="st"> </span><span class="kw">par</span>(<span class="d
 </div>
 <div id="filtrage-des-genes" class="section level2">
 <h2>Filtrage des gènes</h2>
-<p>Nous écartons les gènes qui ont une variance nulle.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Zero-variance filter</code></pre></div>
+<div id="genes-a-variance-nulle-valeur-constante" class="section level3">
+<h3>Gènes à variance nulle (valeur constante)</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Zero-variance filter
+gene.var &lt;-<span class="st"> </span><span class="kw">apply</span>(counts, <span class="dv">1</span>, var)
+
+## Define a Boolean vector (TRUE/FALSE) 
+## indicating whether each gene has a null variance.
+zero.var.genes &lt;-<span class="st"> </span>gene.var <span class="op">==</span><span class="st"> </span><span class="dv">0</span>
+
+<span class="kw">kable</span>(<span class="kw">table</span>(zero.var.genes))</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">zero.var.genes</th>
+<th align="right">Freq</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">FALSE</td>
+<td align="right">6918</td>
+</tr>
+<tr class="even">
+<td align="left">TRUE</td>
+<td align="right">560</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Count the number of genes having a zero variance
+<span class="co"># sum(gene.var == 0)</span></code></pre></div>
+<p>Nous écartons les gènes qui ont une variance nulle (autrement dit, qui ont les mêmes valeurs pour tous les échantillons), puisque leurs moyennes seront forcément identiques entre conditions. Dans notre jeu de données, ceci nous amène à écarter 560</p>
+</div>
+<div id="pourcentage-de-valeurs-nulles" class="section level3">
+<h3>Pourcentage de valeurs nulles</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Discard genes having zeros in at least 95% of samples
+<span class="kw">message</span>(<span class="st">&quot;Applying threshold on the percent of non-zero counts per gene: &quot;</span>, parameters<span class="op">$</span>gene.filter.percent.zeros, <span class="st">&quot;%&quot;</span>)
+
+## A Boolean table indicating whether each count is null (TRUE) or not (FALSE)
+zero.counts &lt;-<span class="st"> </span>counts <span class="op">==</span><span class="st"> </span><span class="dv">0</span> 
+
+## Count number of zero values per gene (=row of the expression table)
+percent.zeros &lt;-<span class="st"> </span><span class="dv">100</span><span class="op">*</span><span class="kw">apply</span>(zero.counts, <span class="dv">1</span>, sum) <span class="op">/</span><span class="st"> </span><span class="kw">ncol</span>(counts)
+
+<span class="co"># Note: we store the histogram values in a variable named &quot;h&quot; for further use</span>
+h &lt;-<span class="st"> </span><span class="kw">hist</span>(percent.zeros, 
+          <span class="dt">breaks =</span> <span class="dv">20</span>, <span class="dt">col =</span> <span class="st">&quot;#DDDDDD&quot;</span>, 
+          <span class="dt">main =</span> <span class="st">&quot;Filter on the percentage of zero counts&quot;</span>, 
+          <span class="dt">xlab =</span> <span class="st">&quot;Percent of samples&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Number of genes&quot;</span>, <span class="dt">las =</span> <span class="dv">1</span>)
+
+<span class="co"># View(h)</span>
+
+## Get maximal count per class from the histogram
+## to position the arrow
+max.count &lt;-<span class="st"> </span><span class="kw">max</span>(h<span class="op">$</span>counts) 
+<span class="kw">arrows</span>(<span class="dt">x0 =</span> parameters<span class="op">$</span>gene.filter.percent.zeros, 
+       <span class="dt">y0 =</span> max.count <span class="op">*</span><span class="st"> </span><span class="fl">0.5</span>, 
+       <span class="dt">x1 =</span> parameters<span class="op">$</span>gene.filter.percent.zeros, 
+       <span class="dt">y1 =</span> max.count <span class="op">*</span><span class="st"> </span><span class="fl">0.3</span>, 
+       <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>,
+       <span class="dt">angle =</span> <span class="dv">30</span>, <span class="dt">length =</span> <span class="fl">0.1</span>)
+<span class="kw">text</span>(<span class="dt">x =</span> parameters<span class="op">$</span>gene.filter.percent.zeros, 
+     <span class="dt">y =</span> max.count<span class="op">*</span><span class="fl">0.5</span>, 
+     <span class="dt">labels =</span> <span class="kw">paste</span>(<span class="dt">sep =</span> <span class="st">&quot;&quot;</span>, parameters<span class="op">$</span>gene.filter.percent.zeros, <span class="st">&quot;%&quot;</span>),
+     <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">pos =</span> <span class="dv">3</span>)</code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/TP_gene_filtering_zero_counts-1.png" alt="Frequency of samples with zero counts per gene. Genes exceeding the thresold (red arrow) were filtered out. " width="80%" />
+<p class="caption">
+Frequency of samples with zero counts per gene. Genes exceeding the thresold (red arrow) were filtered out.
+</p>
+</div>
+</div>
 </div>
 <div id="normalisation-des-tailles-de-librairies" class="section level2">
 <h2>Normalisation des tailles de librairies</h2>
+</div>
+<div id="analyse-differentielle" class="section level2">
+<h2>Analyse différentielle</h2>
+<div id="comparaison-entre-2-groupes" class="section level3">
+<h3>Comparaison entre 2 groupes</h3>
+</div>
+<div id="comparaison-de-groupes-multiples" class="section level3">
+<h3>Comparaison de groupes multiples</h3>
+</div>
+</div>
+<div id="controles-negatifs" class="section level2">
+<h2>Contrôles négatifs</h2>
 </div>
 
 

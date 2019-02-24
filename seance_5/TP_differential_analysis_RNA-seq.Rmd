@@ -148,12 +148,12 @@ library(FactoMineR)
 library(ClassDiscovery)
 # library(formattable)
 
+# message("getwd()\t", getwd())
+
 ```
 
 
 ```{r custom_parameters}
-
-
 
 parameters <- list(
   data.folder = "data/GSE89530", # dossier des données
@@ -161,7 +161,8 @@ parameters <- list(
   counts = "GSE89530_counts.tsv.gz",
   sample.descr = "GSE89530_samples.tsv.gz",
   alpha = 0.05, # seuil de significativité
-  epsilon = 0.1 # pseudo-comptage pour la transformation log2
+  epsilon = 0.1, # pseudo-comptage pour la transformation log2
+  gene.filter.percent.zeros = 90 # Discard genes having zero values in more than this percentage of samples
 )
 
 kable(t(data.frame(parameters)), col.names = "Parameter Value")
@@ -236,7 +237,12 @@ count.stats <- data.frame(
   P99 = quantile(all.counts.vector, probs = 0.99),
   max = max(all.counts.vector)
   )
-kable(t(count.stats), caption = "Statistics on raw count values (all samples together)", digits = 1, col.names = NULL)
+
+# View(count.stat) # for quick check in R interface
+kable(t(count.stats), 
+      caption = "Statistics on raw count values (all samples together)", 
+      format.args = list(decimal.mark = '.', big.mark = ","), digits = 2,
+      col.names = "Parameter value")
 rm(all.counts.vector) ## Free memory space
 
 ```
@@ -276,7 +282,12 @@ kable(sample.stats,
 ## Compute some basic statistics
 
 ## Display histogram of the raw counts
-hist(unlist(counts), breaks = 100, xlab = "Reads per gene", ylab = "Number of observations", main = "Distribution of raw counts")
+hist(unlist(counts), 
+     breaks = 100, 
+     col = "#FFDDBB",
+     xlab = "Reads per gene", 
+     ylab = "Number of observations", 
+     main = "Distribution of raw counts")
 ```
 
 Cet histogramme n'est pas très informatif, car toutes les valeurs sont concentrées dans la première tranche (à l'extrême gauche). Ceci résulte du fiat que les intervalles de classe ont été définis sur base de l'étendue totale, et qu'il existe apparemment une observation qui a une valeur énorme par rapport aux autres (valeur aberrante, "**outlier**"). De fait, la valeur la plus élevée (`r max(counts)`) dépasse de très loin la moyenne (`r count.stats$mean`)
@@ -362,16 +373,70 @@ par(par.ori)
 
 ## Filtrage des gènes
 
-Nous écartons les gènes qui ont une variance nulle.
+### Gènes à variance nulle (valeur constante)
 
 ```{r gene_filtering}
 ## Zero-variance filter
+gene.var <- apply(counts, 1, var)
 
+## Define a Boolean vector (TRUE/FALSE) 
+## indicating whether each gene has a null variance.
+zero.var.genes <- gene.var == 0
 
+kable(table(zero.var.genes))
+
+## Count the number of genes having a zero variance
+# sum(gene.var == 0)
 
 ```
 
+Nous écartons les gènes qui ont une variance nulle (autrement dit, qui ont les mêmes valeurs pour tous les échantillons), puisque leurs moyennes seront forcément identiques entre conditions. Dans notre jeu de données, ceci nous amène à écarter `r sum(gene.var == 0)`
+
+### Pourcentage de valeurs nulles
+
+```{r gene_filtering_zero_counts, out.width = "80%", fig.width=7, fig.height=4.5, fig.cap="Frequency of samples with zero counts per gene. Genes exceeding the thresold (red arrow) were filtered out. "}
+
+
+## Discard genes having zeros in at least 95% of samples
+message("Applying threshold on the percent of non-zero counts per gene: ", parameters$gene.filter.percent.zeros, "%")
+
+## A Boolean table indicating whether each count is null (TRUE) or not (FALSE)
+zero.counts <- counts == 0 
+
+## Count number of zero values per gene (=row of the expression table)
+percent.zeros <- 100*apply(zero.counts, 1, sum) / ncol(counts)
+
+# Note: we store the histogram values in a variable named "h" for further use
+h <- hist(percent.zeros, 
+          breaks = 20, col = "#DDDDDD", 
+          main = "Filter on the percentage of zero counts", 
+          xlab = "Percent of samples", ylab = "Number of genes", las = 1)
+
+# View(h)
+
+## Get maximal count per class from the histogram
+## to position the arrow
+max.count <- max(h$counts) 
+arrows(x0 = parameters$gene.filter.percent.zeros, 
+       y0 = max.count * 0.5, 
+       x1 = parameters$gene.filter.percent.zeros, 
+       y1 = max.count * 0.3, 
+       col = "red", lwd = 2,
+       angle = 30, length = 0.1)
+text(x = parameters$gene.filter.percent.zeros, 
+     y = max.count*0.5, 
+     labels = paste(sep = "", parameters$gene.filter.percent.zeros, "%"),
+     col = "red", pos = 3)
+```
 
 
 ## Normalisation des tailles de librairies
 
+## Analyse différentielle
+
+### Comparaison entre 2 groupes
+
+### Comparaison de groupes multiples
+
+
+## Contrôles négatifs
