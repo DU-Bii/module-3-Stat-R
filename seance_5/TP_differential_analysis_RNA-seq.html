@@ -405,6 +405,7 @@ div.tocify {
 <span class="kw">library</span>(clues)
 <span class="kw">library</span>(RColorBrewer)
 <span class="kw">library</span>(ComplexHeatmap)
+<span class="kw">library</span>(vioplot)
 
 <span class="co"># library(corrplot)</span>
 <span class="kw">library</span>(FactoMineR)
@@ -487,81 +488,68 @@ samples &lt;-<span class="st"> </span><span class="kw">read.delim</span>(<span c
 <p>La table de comptages comporte 7478 lignes (correspondant aux gènes) et 18 colonnes (correspondant aux échantillons). Nous pouvons afficher un petit morceau de cette table, ens électionnant au hasard quelques lignes et colonnes.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">some.genes &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(counts), <span class="dt">size =</span> <span class="dv">10</span>, <span class="dt">replace =</span> <span class="ot">FALSE</span>)
 some.samples &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(counts), <span class="dt">size =</span> <span class="dv">4</span>, <span class="dt">replace =</span> <span class="ot">FALSE</span>)
-<span class="kw">kable</span>(counts[some.genes, some.samples])</code></pre></div>
+
+<span class="kw">kable</span>(counts[some.genes, some.samples], <span class="dt">caption =</span> <span class="st">&quot;Random selection of some genes and some columns of the raw count table. &quot;</span>)</code></pre></div>
 <table>
+<caption>
+Random selection of some genes and some columns of the raw count table.
+</caption>
 <thead>
 <tr>
 <th style="text-align:left;">
 </th>
 <th style="text-align:right;">
-GSM2375283
-</th>
-<th style="text-align:right;">
 GSM2375278
 </th>
 <th style="text-align:right;">
-GSM2375295
+GSM2375286
 </th>
 <th style="text-align:right;">
 GSM2375288
+</th>
+<th style="text-align:right;">
+GSM2375292
 </th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align:left;">
-YKL114C
+YMR186W
 </td>
 <td style="text-align:right;">
-268
+6185
 </td>
 <td style="text-align:right;">
-515
+7832
 </td>
 <td style="text-align:right;">
-365
+14898
 </td>
 <td style="text-align:right;">
-201
+5209
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-YNR046W
+YMR302C
 </td>
 <td style="text-align:right;">
-92
+2203
 </td>
 <td style="text-align:right;">
-334
+658
 </td>
 <td style="text-align:right;">
-172
+1375
 </td>
 <td style="text-align:right;">
-78
+646
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-YGR072W
-</td>
-<td style="text-align:right;">
-485
-</td>
-<td style="text-align:right;">
-393
-</td>
-<td style="text-align:right;">
-652
-</td>
-<td style="text-align:right;">
-239
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-YPR160C-A
+YER137W-A
 </td>
 <td style="text-align:right;">
 0
@@ -578,41 +566,7 @@ YPR160C-A
 </tr>
 <tr>
 <td style="text-align:left;">
-tI(UAU)L
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-YHR028W-A
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-4
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-tS(AGA)M
+YER152W-A
 </td>
 <td style="text-align:right;">
 0
@@ -629,53 +583,104 @@ tS(AGA)M
 </tr>
 <tr>
 <td style="text-align:left;">
-YOL140W
+YIL113W
 </td>
 <td style="text-align:right;">
-429
+43
 </td>
 <td style="text-align:right;">
-665
+389
 </td>
 <td style="text-align:right;">
-1260
+150
 </td>
 <td style="text-align:right;">
-176
+512
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-YNR048W
+YPR145W
 </td>
 <td style="text-align:right;">
-214
+3295
 </td>
 <td style="text-align:right;">
-241
+2466
 </td>
 <td style="text-align:right;">
-240
+1853
 </td>
 <td style="text-align:right;">
-241
+682
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-tH(GUG)K
+YKL192C
 </td>
 <td style="text-align:right;">
-2
+2062
 </td>
 <td style="text-align:right;">
-1
+394
 </td>
 <td style="text-align:right;">
-0
+346
 </td>
 <td style="text-align:right;">
-0
+459
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+YDR260C
+</td>
+<td style="text-align:right;">
+220
+</td>
+<td style="text-align:right;">
+1643
+</td>
+<td style="text-align:right;">
+404
+</td>
+<td style="text-align:right;">
+2252
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+YDR221W
+</td>
+<td style="text-align:right;">
+567
+</td>
+<td style="text-align:right;">
+179
+</td>
+<td style="text-align:right;">
+272
+</td>
+<td style="text-align:right;">
+198
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+YKL056C
+</td>
+<td style="text-align:right;">
+13462
+</td>
+<td style="text-align:right;">
+2269
+</td>
+<td style="text-align:right;">
+949
+</td>
+<td style="text-align:right;">
+1318
 </td>
 </tr>
 </tbody>
@@ -713,26 +718,6 @@ Label
 <tbody>
 <tr>
 <td style="text-align:left;">
-GSM2375290
-</td>
-<td style="text-align:center;">
-Wild_type_0
-</td>
-<td style="text-align:center;">
-3
-</td>
-<td style="text-align:center;">
-Wild-type
-</td>
-<td style="text-align:center;">
-0
-</td>
-<td style="text-align:center;">
-Sc_WT_0h_3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 GSM2375281
 </td>
 <td style="text-align:center;">
@@ -753,22 +738,22 @@ bd1bd2mut_0h_1
 </tr>
 <tr>
 <td style="text-align:left;">
-GSM2375292
+GSM2375294
 </td>
 <td style="text-align:center;">
-Wild_type_8
+bdf1_Y187F_Y354F_mutant_4
 </td>
 <td style="text-align:center;">
 3
 </td>
 <td style="text-align:center;">
-Wild-type
+bdf1-Y187F-Y354F mutant
 </td>
 <td style="text-align:center;">
-8
+4
 </td>
 <td style="text-align:center;">
-Sc_WT_8h_3
+bd1bd2mut_4h_3
 </td>
 </tr>
 <tr>
@@ -791,6 +776,26 @@ Wild-type
 Sc_WT_4h_2
 </td>
 </tr>
+<tr>
+<td style="text-align:left;">
+GSM2375295
+</td>
+<td style="text-align:center;">
+bdf1_Y187F_Y354F_mutant_8
+</td>
+<td style="text-align:center;">
+3
+</td>
+<td style="text-align:center;">
+bdf1-Y187F-Y354F mutant
+</td>
+<td style="text-align:center;">
+8
+</td>
+<td style="text-align:center;">
+bd1bd2mut_8h_3
+</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -801,22 +806,135 @@ Sc_WT_4h_2
 <h3>Statistiques descriptives</h3>
 <p>La fonction R <code>summary()</code> calcule des statistiques de base pour chaque colonne d’une matrice ou data frame. Nous imprimons ici un sous-ensemble de ces échantillons.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(counts[, some.samples])</code></pre></div>
-<pre><code>   GSM2375283         GSM2375278       GSM2375295         GSM2375288      
- Min.   :     0.0   Min.   :     0   Min.   :     0.0   Min.   :     0.0  
- 1st Qu.:    28.0   1st Qu.:    32   1st Qu.:    35.2   1st Qu.:    20.0  
- Median :   190.0   Median :   297   Median :   239.0   Median :   173.0  
- Mean   :   804.2   Mean   :  1127   Mean   :   919.0   Mean   :   638.4  
- 3rd Qu.:   500.0   3rd Qu.:   775   3rd Qu.:   643.0   3rd Qu.:   435.8  
- Max.   :531472.0   Max.   :722346   Max.   :511934.0   Max.   :425896.0  </code></pre>
+<pre><code>   GSM2375278       GSM2375286         GSM2375288         GSM2375292      
+ Min.   :     0   Min.   :     0.0   Min.   :     0.0   Min.   :     0.0  
+ 1st Qu.:    32   1st Qu.:    28.0   1st Qu.:    20.0   1st Qu.:    24.0  
+ Median :   297   Median :   189.0   Median :   173.0   Median :   166.0  
+ Mean   :  1127   Mean   :   755.6   Mean   :   638.4   Mean   :   982.6  
+ 3rd Qu.:   775   3rd Qu.:   475.8   3rd Qu.:   435.8   3rd Qu.:   462.0  
+ Max.   :722346   Max.   :421827.0   Max.   :425896.0   Max.   :571353.0  </code></pre>
+<p>Nous pouvons calculer quelques paramètres additionnels, qui nous éclaireront sur les données.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">all.counts.vector &lt;-<span class="st"> </span><span class="kw">unlist</span>(counts) <span class="co"># Regroup all counts in a vevtor to compute statistics</span>
+
+count.stats &lt;-<span class="st"> </span><span class="kw">data.frame</span>(
+  <span class="dt">mean =</span> <span class="kw">mean</span>(all.counts.vector),
+  <span class="dt">sd =</span> <span class="kw">sd</span>(all.counts.vector),
+  <span class="dt">iqr =</span> <span class="kw">IQR</span>(all.counts.vector),
+  <span class="dt">min =</span> <span class="kw">min</span>(all.counts.vector),
+  <span class="dt">P05 =</span> <span class="kw">quantile</span>(all.counts.vector, <span class="dt">probs =</span> <span class="fl">0.05</span>),
+  <span class="dt">Q1 =</span> <span class="kw">quantile</span>(all.counts.vector, <span class="dt">probs =</span> <span class="fl">0.25</span>),
+  <span class="dt">median =</span> <span class="kw">quantile</span>(all.counts.vector, <span class="dt">probs =</span> <span class="fl">0.5</span>),
+  <span class="dt">Q3 =</span> <span class="kw">quantile</span>(all.counts.vector, <span class="dt">probs =</span> <span class="fl">0.75</span>),
+  <span class="dt">P95 =</span> <span class="kw">quantile</span>(all.counts.vector, <span class="dt">probs =</span> <span class="fl">0.95</span>),
+  <span class="dt">P99 =</span> <span class="kw">quantile</span>(all.counts.vector, <span class="dt">probs =</span> <span class="fl">0.99</span>),
+  <span class="dt">max =</span> <span class="kw">max</span>(all.counts.vector)
+  )
+<span class="kw">kable</span>(<span class="kw">t</span>(count.stats), <span class="dt">caption =</span> <span class="st">&quot;Statistics on raw count values (all samples together)&quot;</span>, <span class="dt">digits =</span> <span class="dv">1</span>, <span class="dt">col.names =</span> <span class="ot">NULL</span>)</code></pre></div>
+<table>
+<caption>
+Statistics on raw count values (all samples together)
+</caption>
+<tbody>
+<tr>
+<td style="text-align:left;">
+mean
+</td>
+<td style="text-align:right;">
+827.4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+sd
+</td>
+<td style="text-align:right;">
+8891.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+iqr
+</td>
+<td style="text-align:right;">
+524.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+min
+</td>
+<td style="text-align:right;">
+0.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+P05
+</td>
+<td style="text-align:right;">
+0.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Q1
+</td>
+<td style="text-align:right;">
+24.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+median
+</td>
+<td style="text-align:right;">
+206.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Q3
+</td>
+<td style="text-align:right;">
+548.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+P95
+</td>
+<td style="text-align:right;">
+2321.7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+P99
+</td>
+<td style="text-align:right;">
+7759.7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+max
+</td>
+<td style="text-align:right;">
+722346.0
+</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(all.counts.vector) ## Free memory space</code></pre></div>
 </div>
 <div id="distribution-des-comptages" class="section level3">
 <h3>Distribution des comptages</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">count.stats &lt;-<span class="st"> </span><span class="kw">mean</span>(<span class="kw">unlist</span>(counts))
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Compute some basic statistics
 
 ## Display histogram of the raw counts
 <span class="kw">hist</span>(<span class="kw">unlist</span>(counts), <span class="dt">breaks =</span> <span class="dv">100</span>, <span class="dt">xlab =</span> <span class="st">&quot;Reads per gene&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Number of observations&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;Distribution of raw counts&quot;</span>)</code></pre></div>
 <p><img src="figures/TP_count_distribution-1.png" width="80%" style="display: block; margin: auto;" /></p>
-<p>Cet histogramme n’est pas très informatif, car toutes les valeurs sont concentrées dans la première tranche (à l’extrême gauche). Ceci résulte du fiat que les intervalles de classe ont été définis sur base de l’étendue totale, et qu’il existe apparemment une observation qui a une valeur énorme par rapport aux autres (valeur aberrante, “<strong>outlier</strong>”). De fait, la valeur la plus élevée (722346) dépasse de très loin la moyenne (NA)</p>
+<p>Cet histogramme n’est pas très informatif, car toutes les valeurs sont concentrées dans la première tranche (à l’extrême gauche). Ceci résulte du fiat que les intervalles de classe ont été définis sur base de l’étendue totale, et qu’il existe apparemment une observation qui a une valeur énorme par rapport aux autres (valeur aberrante, “<strong>outlier</strong>”). De fait, la valeur la plus élevée (722346) dépasse de très loin la moyenne (827.4361757)</p>
 <p>Afin de visualiser toute l’étendue des observations tout en mettant plus de détail sur les valeurs faibles, nous pouvons effectuer une transformation logarithmique. Nous devons cependant prêter attention à certains détails.</p>
 <ul>
 <li><p>Conventionnellement, on utlise la transformation log2 pour les données RNA-seq, car elle fournit un découpage plus fin des valeurs couvertes.</p></li>
@@ -857,13 +975,30 @@ mar.ori &lt;-<span class="st"> </span><span class="kw">par</span>(<span class="s
 
 <span class="kw">boxplot</span>(counts.log2, <span class="dt">horizontal =</span> <span class="ot">TRUE</span>, <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">names =</span> samples<span class="op">$</span>Label, <span class="dt">col =</span> samples<span class="op">$</span>color, <span class="dt">xlab =</span> <span class="st">&quot;log2counts&quot;</span>)</code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figures/TP_boxplots-1.png" alt="Boxplot of the counts per gene in each sample. " width="80%" />
+<img src="figures/TP_boxplots-1.png" alt="**Boxplot of the counts per gene in each sample.** Left: raw counts. Right: log2_transformed counts. " width="80%" />
 <p class="caption">
-Boxplot of the counts per gene in each sample.
+<strong>Boxplot of the counts per gene in each sample.</strong> Left: raw counts. Right: log2_transformed counts.
 </p>
 </div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mar =</span> mar.ori) <span class="co"># reset original margins</span>
 <span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Violin Plots</span>
+<span class="co"># </span>
+<span class="co"># vioplot(x1, x2, x3, names=c(&quot;4 cyl&quot;, &quot;6 cyl&quot;, &quot;8 cyl&quot;), </span>
+<span class="co">#    col=&quot;gold&quot;)</span>
+<span class="co"># title(&quot;Violin Plots of Miles Per Gallon&quot;)</span>
+<span class="co"># </span>
+<span class="co"># as.list(counts[1:10,1:2])</span>
+<span class="co"># library(sm)</span>
+<span class="co"># library(vioplot)</span>
+<span class="kw">vioplot</span>(<span class="kw">as.list</span>(counts), <span class="dt">horizontal =</span> <span class="ot">TRUE</span>, <span class="dt">las =</span> <span class="dv">1</span>,
+        <span class="dt">col =</span> samples<span class="op">$</span>color)</code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/TP_violin_plot-1.png" alt="**Violin plots**. Left: raw counts. Right: log2-transformed counts. " width="80%" />
+<p class="caption">
+<strong>Violin plots</strong>. Left: raw counts. Right: log2-transformed counts.
+</p>
+</div>
 </div>
 
 

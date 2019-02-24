@@ -3,11 +3,15 @@ title: "Détection de gènes différentiellement exprimés à partir de données
 author: "Jacques van Helden"
 date: '`r Sys.Date()`'
 output:
-  pdf_document:
+  html_document:
+    self_contained: no
     fig_caption: yes
     highlight: zenburn
+    theme: cerulean
     toc: yes
     toc_depth: 3
+    toc_float: yes
+    code_folding: "hide"
   beamer_presentation:
     colortheme: dolphin
     fig_caption: yes
@@ -25,15 +29,11 @@ output:
     transition: none
     self_contained: true
     css: ../slides.css
-  html_document:
-    self_contained: no
+  pdf_document:
     fig_caption: yes
     highlight: zenburn
-    theme: cerulean
     toc: yes
     toc_depth: 3
-    toc_float: yes
-    code_folding: "hide"
   slidy_presentation:
     smart: no
     slide_level: 2
@@ -141,6 +141,7 @@ library(FactoMineR)
 library(clues)
 library(RColorBrewer)
 library(ComplexHeatmap)
+library(vioplot)
 
 # library(corrplot)
 library(FactoMineR)
@@ -189,7 +190,8 @@ La table de comptages comporte `r prettyNum(nrow(counts))` lignes (correspondant
 ```{r display_some_counts}
 some.genes <- sample(1:nrow(counts), size = 10, replace = FALSE)
 some.samples <- sample(1:ncol(counts), size = 4, replace = FALSE)
-kable(counts[some.genes, some.samples])
+
+kable(counts[some.genes, some.samples], caption = "Random selection of some genes and some columns of the raw count table. ")
 ```
 
 
@@ -216,20 +218,41 @@ La fonction R `summary()` calcule des statistiques de base pour chaque colonne d
 summary(counts[, some.samples])
 ```
 
+Nous pouvons calculer quelques paramètres additionnels, qui nous éclaireront sur les données. 
+
+```{r count_stats}
+all.counts.vector <- unlist(counts) # Regroup all counts in a vevtor to compute statistics
+
+count.stats <- data.frame(
+  mean = mean(all.counts.vector),
+  sd = sd(all.counts.vector),
+  iqr = IQR(all.counts.vector),
+  min = min(all.counts.vector),
+  P05 = quantile(all.counts.vector, probs = 0.05),
+  Q1 = quantile(all.counts.vector, probs = 0.25),
+  median = quantile(all.counts.vector, probs = 0.5),
+  Q3 = quantile(all.counts.vector, probs = 0.75),
+  P95 = quantile(all.counts.vector, probs = 0.95),
+  P99 = quantile(all.counts.vector, probs = 0.99),
+  max = max(all.counts.vector)
+  )
+kable(t(count.stats), caption = "Statistics on raw count values (all samples together)", digits = 1, col.names = NULL)
+rm(all.counts.vector) ## Free memory space
+
+```
+
+
 ### Distribution des comptages
 
 
 ```{r count_distribution, out.width="80%", fig.width=7, fig.height=5}
-
-count.stats <- mean(unlist(counts))
+## Compute some basic statistics
 
 ## Display histogram of the raw counts
 hist(unlist(counts), breaks = 100, xlab = "Reads per gene", ylab = "Number of observations", main = "Distribution of raw counts")
-
-
 ```
 
-Cet histogramme n'est pas très informatif, car toutes les valeurs sont concentrées dans la première tranche (à l'extrême gauche). Ceci résulte du fiat que les intervalles de classe ont été définis sur base de l'étendue totale, et qu'il existe apparemment une observation qui a une valeur énorme par rapport aux autres (valeur aberrante, "**outlier**"). De fait, la valeur la plus élevée (`r max(counts)`) dépasse de très loin la moyenne (`r mean(counts)`)
+Cet histogramme n'est pas très informatif, car toutes les valeurs sont concentrées dans la première tranche (à l'extrême gauche). Ceci résulte du fiat que les intervalles de classe ont été définis sur base de l'étendue totale, et qu'il existe apparemment une observation qui a une valeur énorme par rapport aux autres (valeur aberrante, "**outlier**"). De fait, la valeur la plus élevée (`r max(counts)`) dépasse de très loin la moyenne (`r count.stats$mean`)
 
 Afin de visualiser toute l'étendue des observations tout en mettant plus de détail sur les valeurs faibles, nous pouvons effectuer une transformation logarithmique. Nous devons cependant prêter attention à certains détails. 
 
@@ -264,7 +287,7 @@ Notons d'emblée le pic très élevé à gauche, qui correspond à toutes les ob
 
 Les boîtes à moustache sont très utilisées pour obtenir une vision d'ensemble de plusieurs distribution. 
 
-```{r boxplots, out.width="80%", fig.width=10, fig.height=7, fig.cap="Boxplot of the counts per gene in each sample. "}
+```{r boxplots, out.width="80%", fig.width=10, fig.height=7, fig.cap="**Boxplot of the counts per gene in each sample.** Left: raw counts. Right: log2_transformed counts. "}
 
 ## Associate a specific color to each condition
 conditions <- unique(samples$Condition)
@@ -283,12 +306,29 @@ boxplot(counts, horizontal = TRUE, las = 1, names = samples$Label, col = samples
 
 boxplot(counts.log2, horizontal = TRUE, las = 1, names = samples$Label, col = samples$color, xlab = "log2counts")
 
-
 par(mar = mar.ori) # reset original margins
 par(mfrow = c(1,1))
 
 ```
 
+
+
+```{r violin_plot, out.width="80%", fig.width=10, fig.height=8, fig.cap="**Violin plots**. Left: raw counts. Right: log2-transformed counts. "}
+ 
+# Violin Plots
+# 
+# vioplot(x1, x2, x3, names=c("4 cyl", "6 cyl", "8 cyl"), 
+#    col="gold")
+# title("Violin Plots of Miles Per Gallon")
+# 
+# as.list(counts[1:10,1:2])
+# library(sm)
+# library(vioplot)
+vioplot(as.list(counts), horizontal = TRUE, las = 1,
+        col = samples$color)
+
+
+```
 
 
 
