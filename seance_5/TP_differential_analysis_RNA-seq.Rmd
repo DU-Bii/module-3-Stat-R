@@ -1,0 +1,198 @@
+---
+title: "Détection de gènes différentiellement exprimés à partir de données RNA-seq"
+author: "Jacques van Helden"
+date: '`r Sys.Date()`'
+output:
+  html_document:
+    self_contained: no
+    fig_caption: yes
+    highlight: zenburn
+    theme: cerulean
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+    code_folding: "hide"
+  beamer_presentation:
+    colortheme: dolphin
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    fonttheme: structurebold
+    highlight: tango
+    incremental: no
+    keep_tex: no
+    slide_level: 2
+    theme: Montpellier
+    toc: yes
+  revealjs::revealjs_presentation:
+    theme: night
+    transition: none
+    self_contained: true
+    css: ../slides.css
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
+  slidy_presentation:
+    smart: no
+    slide_level: 2
+    self_contained: yes
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    highlight: tango
+    incremental: no
+    keep_md: yes
+    smaller: yes
+    theme: cerulean
+    toc: yes
+    widescreen: yes
+  ioslides_presentation:
+    slide_level: 2
+    self_contained: no
+    colortheme: dolphin
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    fonttheme: structurebold
+    highlight: tango
+    smaller: yes
+    toc: yes
+    widescreen: yes
+font-import: http://fonts.googleapis.com/css?family=Risque
+subtitle: "Diplôme Interuniversitaire en Bioinformatique intégrative (DU-Bii 2019)"
+font-family: Garamond
+transition: linear
+editor_options: 
+  chunk_output_type: console
+---
+
+
+## Introduction
+
+Depuis l'avénement du du séquençage massivement parallèle (NGS, Next Generation Sequencing) en 2007, la détection de gènes différentiellement exprimés (DEG) à partir de données transcriptomiques RNA-seq constitue l'une de ses application les plus populaires. 
+
+Le principe est de mesurer, dans différentes conditions, la concentration d'ARN correspondant à chaque gène, et de comparer ces concentrations entre les échantillons de deux (**comparaison à 2 groupes** ou **binaire**) ou plusieurs conditions (comparaison **multi-groupes**).
+
+Dès les premières analyses, les chercheurs se sont rendus compte que les méthodes classiques d'analyse différentielles (tests de Student, ANOVA) ne se prêtaient pas du tout à l'analyse de telles données, car leur nature diffère fondamentalement des hypothèss de travail sous-jacentes, pour différentes raisons. 
+
+1. Le niveau d'expression d'un gène est quantifié sur une échelle discrète (comptage du nombre de lectures alignées qui chevauchent le gène), alors que les tests paramétriques reposent sur une hypoothèse de normalité. 
+
+2. Les ordres de grandeur des comptages varient fortement d'un gène à l'autre: certains gènes ont une poignée de comptages par échantillons, d'autres des centaines de milliers. Les gènes très très fortement représentés correspondent généralement à des gènes non-codants (par exemple ARN ribosomique) ou à des fonctions cellulaires particulières liées au métabolisme de l'ARN, et on comprend les raisons biologiques de leur sur-représentation. Ils n'en constituent pas moins ce qu'on appelle en statistique des "valeurs aberrantes" ("outliers"). 
+
+3. Les distributions de comptages comptent généralement un très grand nombre de valeurs nulles ("zero-inflated distributions"). 
+
+4. Ces particularités posent des problèmes particuliers pour la normalisation des librairies de comptages : 
+
+    - la présence d'outliers affecte fortement la moyenne, et de façon très instable, ce qui biaise fortement l'estimation de la tendance centrale. 
+    
+    - la stratégie de repli sur des estimateurs robustes, comme la médiane est contestable du fait du très grand nombre de valeurs nulles (dans certains cas, plusn d'un quart voire la moitié des gènes ont une valeur nulle pour un échantillon). 
+    
+    
+Des méthodes spécifiques ont donc été développées dès 2010 pour affronter ces difficultés particulières de la normalisation et de l'analyse différentielle des données de RNA-seq. 
+
+
+## But de ce TP
+
+Le but de ce TP est d'effectuer une première exploration de l'analyse différentielle des données d'expression, sur base d'un petit cas d'étude simple: l'analyse transcriptionnelle de mutants de sporulation chez la levure **Saccharomyces cerevisiae**. 
+
+## Cas d'étude
+
+... A ECRIRE: DESCRIPTION DU CAS D'ETUDE
+
+
+## Sources des données
+
+## Paramètres de l'analyse
+
+Nous définissons dans une variable R (de type liste) les paramètres de l'analyse. Ceci nous permettra de reproduire ultérieurement exactement la même succession d'étapes soit en utilisant des données différentes, soit en modifiant les paramètres particuliers (design, seuils, ...). 
+
+
+
+```{r knitr_options, echo=FALSE, include=FALSE, eval=TRUE}
+
+## Define options for the R markdown output
+options(width = 300)
+# options(encoding = 'UTF-8')
+knitr::opts_chunk$set(
+  fig.width = 5, fig.height = 5, 
+  fig.path = 'figures/TP_',
+  fig.align = "center", 
+  size = "tiny", 
+  echo = TRUE, 
+  eval = TRUE, 
+  warning = FALSE, 
+  message = FALSE, 
+  results = TRUE, 
+  comment = "")
+
+## Max number of digits for non-scientific notation
+options(scipen = 12) 
+```
+
+
+```{r load_libraries}
+## Load libraries
+message("Loading libraries")
+library(knitr)
+library(kableExtra)
+library(FactoMineR)
+library(clues)
+library(RColorBrewer)
+library(ComplexHeatmap)
+
+# library(corrplot)
+library(FactoMineR)
+library(ClassDiscovery)
+# library(formattable)
+
+```
+
+
+```{r custom_parameters}
+
+
+
+parameters <- list(
+  data.folder = "~/DU-Bii/module-3-Stat-R/seance_5/data/GSE89530", # dossier des données
+  # data.folder = "/shared/projects/du_bii_2019/data/module3/seance5/GSE89530" # on the IFB-cluster-core
+  counts = "GSE89530_counts.tsv",
+  sample.descr = "GSE89530_samples.tsv",
+  alpha = 0.05, # seuil de significativité
+  epsilon = 0.1 # pseudo-comptage pour la transformation log2
+)
+
+kable(t(data.frame(parameters)), col.names = "Parameter Value")
+
+```
+
+
+## Téléchargement des données
+
+
+```{r load_data}
+## Load counts of reads per gene
+counts <- read.delim(file.path(parameters$data.folder, parameters$counts), row.names = 1, header = TRUE)
+
+## Load sample descriptions
+samples <- read.delim(file.path(parameters$data.folder, parameters$sample.descr))
+
+```
+
+La table de comptages comporte `r prettyNum(nrow(counts))` lignes (correspondant aux gènes) et `r ncol(counts)` colonnes (correspondant aux échantillons). Nous pouvons afficher un petit morceau de cette table, ens électionnant au hasard quelques lignes et colonnes. 
+
+```{r display_some_counts}
+some.rows <- sample(1:nrow(counts), size = 10, replace = FALSE)
+some.columns <- sample(1:ncol(counts), size = 4, replace = FALSE)
+kable(counts[some.rows, some.columns])
+```
+
+
+## Exploration des données
+
+Avant toute autre chose, il convient de mener une exploration préliminaire des données, afin de se familiariser avec leur distribution.
+
+### Statistiques descriptives
+
+
