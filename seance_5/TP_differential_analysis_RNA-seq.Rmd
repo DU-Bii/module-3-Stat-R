@@ -3,15 +3,11 @@ title: "Détection de gènes différentiellement exprimés à partir de données
 author: "Jacques van Helden"
 date: '`r Sys.Date()`'
 output:
-  html_document:
-    self_contained: no
+  pdf_document:
     fig_caption: yes
     highlight: zenburn
-    theme: cerulean
     toc: yes
     toc_depth: 3
-    toc_float: yes
-    code_folding: "hide"
   beamer_presentation:
     colortheme: dolphin
     fig_caption: yes
@@ -29,11 +25,15 @@ output:
     transition: none
     self_contained: true
     css: ../slides.css
-  pdf_document:
+  html_document:
+    self_contained: no
     fig_caption: yes
     highlight: zenburn
+    theme: cerulean
     toc: yes
     toc_depth: 3
+    toc_float: yes
+    code_folding: "hide"
   slidy_presentation:
     smart: no
     slide_level: 2
@@ -142,6 +142,8 @@ library(clues)
 library(RColorBrewer)
 library(ComplexHeatmap)
 library(vioplot)
+library(DESeq2)
+library(edgeR)
 
 # library(corrplot)
 library(FactoMineR)
@@ -162,7 +164,12 @@ parameters <- list(
   sample.descr = "GSE89530_samples.tsv.gz",
   alpha = 0.05, # seuil de significativité
   epsilon = 0.1, # pseudo-comptage pour la transformation log2
-  gene.filter.percent.zeros = 90 # Discard genes having zero values in more than this percentage of samples
+  gene.filter.percent.zeros = 90, # Discard genes having zero values in more than this percentage of samples
+  gene.filter.min.count = 10, # Minimal counts per gene
+  
+  ## Test and control groups for differential analysis
+  test.group = "bdf1_Y187F_Y354F_mutant_0",
+  control.group = "Wild_type_0"
 )
 
 kable(t(data.frame(parameters)), col.names = "Parameter Value")
@@ -177,12 +184,26 @@ kable(t(data.frame(parameters)), col.names = "Parameter Value")
 ## List files in the data folder
 # list.files(parameters$data.folder)
 
+## Load sample descriptions
+samples <- read.delim(file.path(parameters$data.folder, parameters$sample.descr), row.names = 1, header = TRUE)
+# View(samples) # Check visually the content of the samples data frame
+
 ## Load counts of reads per gene
 counts <- read.delim(file.path(parameters$data.folder, parameters$counts), row.names = 1, header = TRUE)
 
-## Load sample descriptions
-samples <- read.delim(file.path(parameters$data.folder, parameters$sample.descr), row.names = 1, header = TRUE)
+## Check that the count table contains the same sample IDs as the sample description table. If not, stop everything here.
+if (!setequal(rownames(samples), colnames(counts))) {
+  stop("The sample IDs differ between count table (column names) and sample descriptions (row names). ")
+}
 
+## Check that sample IDs are ordered in the same way between sample descriptions (rows) and count table (columns). 
+differing.IDs <- colnames(counts) != rownames(samples)
+if (sum(differing.IDs) > 0) {
+  ## If not, re-order columnts of the count table to match the rows of the sample description.  
+  message("Reordering columns of the count table in order to match the order of sample descrition row names")
+  counts <- counts[, rownames(samples)]
+  
+}
 
 ```
 
@@ -273,6 +294,8 @@ kable(sample.stats,
       align = "l")
 
 ```
+
+
 
 
 ### Distribution des comptages
@@ -375,7 +398,7 @@ par(par.ori)
 
 ### Gènes à variance nulle (valeur constante)
 
-```{r gene_filtering}
+```{r gene_filtering_zero_var}
 ## Zero-variance filter
 gene.var <- apply(counts, 1, var)
 
@@ -414,23 +437,254 @@ h <- hist(percent.zeros,
 
 # View(h)
 
-## Get maximal count per class from the histogram
-## to position the arrow
-max.count <- max(h$counts) 
+## Get histogram max counts (y value) to position the arrow
+h.max <- max(h$counts) 
 arrows(x0 = parameters$gene.filter.percent.zeros, 
-       y0 = max.count * 0.5, 
+       y0 = h.max * 0.5, 
        x1 = parameters$gene.filter.percent.zeros, 
-       y1 = max.count * 0.3, 
+       y1 = h.max * 0.3, 
        col = "red", lwd = 2,
        angle = 30, length = 0.1)
+arrows(x0 = parameters$gene.filter.percent.zeros, 
+       y0 = h.max * 0.5, 
+       x1 = 100, 
+       y1 = h.max * 0.5, code = 0,
+       col = "red", lwd = 4,
+       angle = 30, length = 0.1)
 text(x = parameters$gene.filter.percent.zeros, 
-     y = max.count*0.5, 
+     y = h.max*0.5, 
      labels = paste(sep = "", parameters$gene.filter.percent.zeros, "%"),
      col = "red", pos = 3)
 ```
 
+### Comptages minimaux par gène
+
+Un autre critère possible est de supprimer les gènes faiblement détectés, en écartant les gènes pour lesquels les comptages sont inférieurs à un seuil donné pour tous les échantillons. Nous fixons ici (arbitrairement) le seuil à `r parameters$gene.filter.min.count`. 
+
+Nous procédont comme suit: 
+
+- Calculer pour chaque gène $i$ le comptage maximal observé parmi tous les échantillons.
+
+$$x_{max,i} = \text{max}_{j = 0}^{s} x_{i,j}$$
+
+où $i$ est l'indice de lignes (gènes), $j$ l'indice de colonnes (échantillons), et $s$ le nombre d'échantillons. 
+
+- Tester si la valeur maximale observée est inférieure au seuil minimum. 
+
+### Min counts per gene
+
+```{r gene_filtering_min_count, out.width = "80%", fig.width=7, fig.height=4.5, fig.cap="Distribution of min counts per gene. Genes below the thresold (red arrow) are filtered out. "}
+
+max.per.gene <- apply(counts, 1, max)
+
+# View(summary(min.count))
+h <- hist(log2(max.per.gene + parameters$epsilon), breaks = 100, col = "#BBBBFF",
+          xlab = "log2(max count per gene)",
+          ylab = "Number of genes", las = 1,
+          main = "Filtering on min count per gene")
+h.max <- max(h$counts)
+arrows(x0 = log2(parameters$gene.filter.min.count), 
+       y0 = h.max * 0.5, 
+       x1 = log2(parameters$gene.filter.min.count), 
+       y1 = h.max * 0.3, 
+       col = "red", lwd = 2,
+       angle = 30, length = 0.1)
+arrows(x0 = log2(parameters$epsilon), 
+       y0 = h.max * 0.5, 
+       x1 = log2(parameters$gene.filter.min.count), 
+       y1 = h.max * 0.5, 
+       col = "red", lwd = 4, code = 0,
+       angle = 30, length = 0.1)
+text(x = log2(parameters$gene.filter.min.count), 
+     y = h.max * 0.5, 
+     labels = paste(sep = "", "log2(", 
+                    parameters$gene.filter.min.count,
+                    ") = ", signif(digits = 3, log2(parameters$gene.filter.min.count))),
+     col = "red", pos = 3)
+
+```
+
+
+```{r gene_filtering, out.width="50%", fig.width=6, fig.height=6, fig.cap="Number of genes discarded during the filtering step. "}
+
+
+# Build a data frame with one row per gene and one column per filtering criterion
+discarded.genes <- data.frame(
+  zero.var = zero.var.genes,
+  too.many.zeros = (percent.zeros > parameters$gene.filter.percent.zeros),
+  too.small.counts = max.per.gene < parameters$gene.filter.min.count
+)
+
+
+## Print the discarding criteria for some genes 
+kable(discarded.genes[some.genes, ], caption = "Gene filtering criteria. TRUE indicates that a gene is discarded. ")
+
+
+## Draw a venn diagram indicating the number of genes 
+## discarded by the different criteria. 
+venn.counts <- vennCounts(discarded.genes)
+vennDiagram(venn.counts, cex = 0.7,
+            main = "Genes discarded by different criteria")
+
+
+## Genes passing the filters are those for which 
+## all the discarding criteria are FALSE, 
+## i.e. the sum of the row is 0
+filtered.genes <- apply(discarded.genes, 1, sum) == 0
+
+## Select a matrix with the filtered genes, 
+## i.e. those not discarded by any criterion
+filtered.counts <- counts[filtered.genes, ]
+
+## Update the set of test genes to avoir NA values
+some.genes <- sample(1:nrow(filtered.counts), size = 10, replace = FALSE)
+
+
+```
+
+## Détection de gènes différentiellement exprimés avec DESeq2
+
+### Comparaison de 2 groupes
+
+Dans un premier temps, nous allons effectuer une simple comparaison de 2 groupes: sauvage versus mutant au temps 0. 
+```{r deseq2_2groups}
+
+## Select the subsets of counts (columns) and samples (rows) corresponding to the control and test groups
+control.samples <- which(samples$Condition == parameters$control.group)
+test.samples <- which(samples$Condition == parameters$test.group)
+selected.samples <- c(test.samples, control.samples)
+
+## Use the DESeqDataSetFromMatrix to create a DESeqDataSet object
+message("Creating DESeq2 dataset")
+dds.2groups <- DESeqDataSetFromMatrix(
+  countData = filtered.counts[, selected.samples], 
+  colData = samples[selected.samples, ], 
+  design = ~ Condition)
+# View(dds.all.conditions)
+
+## Run differential expression analysis with DESeq2
+dds.2groups <- DESeq(dds.2groups)
+# View(dds.all.conditions)
+
+resultsNames(dds.2groups)
+
+## Get the result table
+deseq2.res.dds.2groups <- as.data.frame(results(dds.2groups))
+kable(deseq2.res.dds.2groups[some.genes, ])
+
+```
+
+### Diagnostic plots
+
+```{r deg_diagnostic_plots_2groups}
+
+par(mfrow = c(2,2))
+## MA plot
+
+
+## Volcano plot
+
+## P-value histogram
+hist(deseq2.res.dds.2groups$pvalue, 
+     breaks = 20, col = "#DDEEFF", 
+     xlab = "Nominal P-value", 
+     ylab = "Number of genes")
+
+
+```
+
+
+### Toutes conditions confondues
+
+```{r deseq2_all_conditions}
+
+## Use the DESeqDataSetFromMatrix to create a DESeqDataSet object
+message("Creating DESeq2 dataset")
+dds.all.conditions <- DESeqDataSetFromMatrix(
+  countData = filtered.counts, 
+  colData = samples, 
+  design = ~ Condition)
+# View(dds.all.conditions)
+
+## Run differential expression analysis with DESeq2
+dds.all.conditions <- DESeq(dds.all.conditions)
+# View(dds.all.conditions)
+
+resultsNames(dds.all.conditions)
+
+## Get the result table
+deseq2.res.all.conditions <- results(dds.all.conditions)
+deseq2.res.all.conditions.df <- as.data.frame(deseq2.res.all.conditions)
+kable(deseq2.res.all.conditions.df[some.genes, ])
+
+```
+
 
 ## Normalisation des tailles de librairies
+
+Nous utilisons la fonction  `estimateSizeFactors()` de la bibliothèse Bioconductor `DESeq2` pour estimer le facteur correctif pour la taille des librairies, qui sera utilisé pour standardiser les comptages. 
+
+
+Dans ce cas-ci 
+
+- la standardisation se limite à une mise à l'échelle (multiplier les comptages par un nombre spécifique à chaque librairie), 
+
+- il n'y a pas de centrage (on ne veut pas ramener la moyenne des comptages par librairie à zéro, sinon on obtiendrait des comptages négatifs !).  
+
+Nous appliquons ensuite une transformation logarithmique pour normaliser ces comptages standardisés. 
+
+```{r count_normalisation, eval=FALSE}
+
+
+## Normalizing using the method for an object of class"CountDataSet" 
+message("Normalizing raw counts with DESeq2")
+dds.norm <-  estimateSizeFactors(dds)
+# sizeFactors(dds.norm)
+
+## Compute log2-transformed counts from the normalized counts
+counts.norm <- counts(dds.norm, normalized = TRUE) + parameters$epsilon
+# dim(counts.norm)
+counts.log2.norm <- log2(counts.norm)
+# dim(counts.log2.norm)
+
+
+## Compute quick estimation of dispersion trend + apply variance-stabilizing transformation
+message("\tDESeq2::vst()\tQuickly estimate dispersion trend and apply variance-stabilizing transformation")
+system.time(dds.vst <- vst(dds))
+
+## Compute regularized log transformation
+## BEWARE: with big datasets like TCGA this takes ages. 
+message("\tDESeq2::rlog()\tComputing regularized log transformation")
+system.time(rld <- rlog(dds)) ## Takes a long time with large number of samples
+
+
+```
+
+```{r norm_count_hist, eval=FALSE, out.width="80%", fig.width=7, fig.height=9, fig.cap="**Histogram of all counts.** (a) **Before filtering and standardization.** Distribution of log2(raw counts + epsilon). The epsilon is added to avoid -Inf values for log2-transformed zeros. (b) **Normalised counts.** Normalization consists in scaling counts in order to ensure library size standardization, followed by a  log2 transformation. "}
+
+log2.count.breaks <- seq(
+  from = log2(parameters$epsilon), 
+  to = 32, 
+  by = 0.4)
+
+par(mfrow = c(2, 1))
+
+hist(unlist(log2(unlist(counts.per.gene + parameters$epsilon))), main = "Log2(raw counts)",
+     xlab = "log2(raw counts + epsilon)",
+     ylab = "Number of measures",
+     breaks = log2.count.breaks, 
+     col = "#FFDDBB")
+
+hist(unlist(counts.log2.norm), main = "Normalized counts",
+     xlab = "log2(standardized counts)",
+     ylab = "Number of measures",
+     breaks = log2.count.breaks, 
+     col = "#DDFFBB")
+
+par(mfrow = c(1, 1))
+```
+
+
 
 ## Analyse différentielle
 

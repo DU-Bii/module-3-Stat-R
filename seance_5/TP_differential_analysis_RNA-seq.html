@@ -406,6 +406,8 @@ div.tocify {
 <span class="kw">library</span>(RColorBrewer)
 <span class="kw">library</span>(ComplexHeatmap)
 <span class="kw">library</span>(vioplot)
+<span class="kw">library</span>(DESeq2)
+<span class="kw">library</span>(edgeR)
 
 <span class="co"># library(corrplot)</span>
 <span class="kw">library</span>(FactoMineR)
@@ -420,7 +422,12 @@ div.tocify {
   <span class="dt">sample.descr =</span> <span class="st">&quot;GSE89530_samples.tsv.gz&quot;</span>,
   <span class="dt">alpha =</span> <span class="fl">0.05</span>, <span class="co"># seuil de significativité</span>
   <span class="dt">epsilon =</span> <span class="fl">0.1</span>, <span class="co"># pseudo-comptage pour la transformation log2</span>
-  <span class="dt">gene.filter.percent.zeros =</span> <span class="dv">90</span> <span class="co"># Discard genes having zero values in more than this percentage of samples</span>
+  <span class="dt">gene.filter.percent.zeros =</span> <span class="dv">90</span>, <span class="co"># Discard genes having zero values in more than this percentage of samples</span>
+  <span class="dt">gene.filter.min.count =</span> <span class="dv">10</span>, <span class="co"># Minimal counts per gene</span>
+  
+  ## Test and control groups for differential analysis
+  <span class="dt">test.group =</span> <span class="st">&quot;bdf1_Y187F_Y354F_mutant_0&quot;</span>,
+  <span class="dt">control.group =</span> <span class="st">&quot;Wild_type_0&quot;</span>
 )
 
 <span class="kw">kable</span>(<span class="kw">t</span>(<span class="kw">data.frame</span>(parameters)), <span class="dt">col.names =</span> <span class="st">&quot;Parameter Value&quot;</span>)</code></pre></div>
@@ -456,6 +463,18 @@ div.tocify {
 <td>gene.filter.percent.zeros</td>
 <td align="left">90</td>
 </tr>
+<tr class="odd">
+<td>gene.filter.min.count</td>
+<td align="left">10</td>
+</tr>
+<tr class="even">
+<td>test.group</td>
+<td align="left">bdf1_Y187F_Y354F_mutant_0</td>
+</tr>
+<tr class="odd">
+<td>control.group</td>
+<td align="left">Wild_type_0</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -464,11 +483,26 @@ div.tocify {
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## List files in the data folder
 <span class="co"># list.files(parameters$data.folder)</span>
 
+## Load sample descriptions
+samples &lt;-<span class="st"> </span><span class="kw">read.delim</span>(<span class="kw">file.path</span>(parameters<span class="op">$</span>data.folder, parameters<span class="op">$</span>sample.descr), <span class="dt">row.names =</span> <span class="dv">1</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>)
+<span class="co"># View(samples) # Check visually the content of the samples data frame</span>
+
 ## Load counts of reads per gene
 counts &lt;-<span class="st"> </span><span class="kw">read.delim</span>(<span class="kw">file.path</span>(parameters<span class="op">$</span>data.folder, parameters<span class="op">$</span>counts), <span class="dt">row.names =</span> <span class="dv">1</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>)
 
-## Load sample descriptions
-samples &lt;-<span class="st"> </span><span class="kw">read.delim</span>(<span class="kw">file.path</span>(parameters<span class="op">$</span>data.folder, parameters<span class="op">$</span>sample.descr), <span class="dt">row.names =</span> <span class="dv">1</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>)</code></pre></div>
+## Check that the count table contains the same sample IDs as the sample description table. If not, stop everything here.
+<span class="cf">if</span> (<span class="op">!</span><span class="kw">setequal</span>(<span class="kw">rownames</span>(samples), <span class="kw">colnames</span>(counts))) {
+  <span class="kw">stop</span>(<span class="st">&quot;The sample IDs differ between count table (column names) and sample descriptions (row names). &quot;</span>)
+}
+
+## Check that sample IDs are ordered in the same way between sample descriptions (rows) and count table (columns). 
+differing.IDs &lt;-<span class="st"> </span><span class="kw">colnames</span>(counts) <span class="op">!=</span><span class="st"> </span><span class="kw">rownames</span>(samples)
+<span class="cf">if</span> (<span class="kw">sum</span>(differing.IDs) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) {
+  ## If not, re-order columnts of the count table to match the rows of the sample description.  
+  <span class="kw">message</span>(<span class="st">&quot;Reordering columns of the count table in order to match the order of sample descrition row names&quot;</span>)
+  counts &lt;-<span class="st"> </span>counts[, <span class="kw">rownames</span>(samples)]
+  
+}</code></pre></div>
 <p>La table de comptages comporte 7478 lignes (correspondant aux gènes) et 18 colonnes (correspondant aux échantillons). Nous pouvons afficher un petit morceau de cette table, ens électionnant au hasard quelques lignes et colonnes.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">some.genes &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(counts), <span class="dt">size =</span> <span class="dv">10</span>, <span class="dt">replace =</span> <span class="ot">FALSE</span>)
 some.samples &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(counts), <span class="dt">size =</span> <span class="dv">4</span>, <span class="dt">replace =</span> <span class="ot">FALSE</span>)
@@ -479,82 +513,82 @@ some.samples &lt;-<span class="st"> </span><span class="kw">sample</span>(<span 
 <thead>
 <tr class="header">
 <th></th>
-<th align="right">GSM2375288</th>
-<th align="right">GSM2375292</th>
-<th align="right">GSM2375283</th>
 <th align="right">GSM2375287</th>
+<th align="right">GSM2375294</th>
+<th align="right">GSM2375291</th>
+<th align="right">GSM2375282</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>tF(GAA)M</td>
+<td>YJR051W</td>
+<td align="right">361</td>
+<td align="right">426</td>
+<td align="right">663</td>
+<td align="right">615</td>
+</tr>
+<tr class="even">
+<td>YOR393W</td>
 <td align="right">0</td>
-<td align="right">3</td>
-<td align="right">1</td>
-<td align="right">3</td>
-</tr>
-<tr class="even">
-<td>YHR061C</td>
-<td align="right">66</td>
-<td align="right">233</td>
-<td align="right">54</td>
-<td align="right">43</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
 </tr>
 <tr class="odd">
-<td>YDL171C</td>
-<td align="right">8993</td>
-<td align="right">2201</td>
-<td align="right">7640</td>
-<td align="right">480</td>
+<td>YLR099W-A</td>
+<td align="right">182</td>
+<td align="right">190</td>
+<td align="right">117</td>
+<td align="right">198</td>
 </tr>
 <tr class="even">
-<td>RUF20</td>
-<td align="right">90</td>
-<td align="right">148</td>
-<td align="right">116</td>
-<td align="right">86</td>
-</tr>
-<tr class="odd">
-<td>YPR034W</td>
-<td align="right">397</td>
-<td align="right">524</td>
-<td align="right">390</td>
-<td align="right">312</td>
-</tr>
-<tr class="even">
-<td>YLR336C</td>
-<td align="right">316</td>
-<td align="right">206</td>
-<td align="right">372</td>
-<td align="right">148</td>
-</tr>
-<tr class="odd">
-<td>YNL046W</td>
-<td align="right">81</td>
-<td align="right">61</td>
-<td align="right">52</td>
-<td align="right">89</td>
-</tr>
-<tr class="even">
-<td>YNL044W</td>
+<td>YDL077C</td>
+<td align="right">164</td>
+<td align="right">254</td>
 <td align="right">379</td>
-<td align="right">730</td>
-<td align="right">508</td>
-<td align="right">188</td>
+<td align="right">290</td>
 </tr>
 <tr class="odd">
-<td>YGL228W</td>
-<td align="right">2032</td>
-<td align="right">1688</td>
-<td align="right">1707</td>
-<td align="right">944</td>
+<td>YGL242C</td>
+<td align="right">91</td>
+<td align="right">144</td>
+<td align="right">177</td>
+<td align="right">173</td>
 </tr>
 <tr class="even">
-<td>YPR005C</td>
-<td align="right">297</td>
-<td align="right">154</td>
-<td align="right">233</td>
-<td align="right">137</td>
+<td>YJR110W</td>
+<td align="right">142</td>
+<td align="right">240</td>
+<td align="right">156</td>
+<td align="right">280</td>
+</tr>
+<tr class="odd">
+<td>YML132W</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td>YCL057C-A</td>
+<td align="right">2014</td>
+<td align="right">844</td>
+<td align="right">623</td>
+<td align="right">1095</td>
+</tr>
+<tr class="odd">
+<td>YBL051C</td>
+<td align="right">280</td>
+<td align="right">314</td>
+<td align="right">282</td>
+<td align="right">366</td>
+</tr>
+<tr class="even">
+<td>YKR010C</td>
+<td align="right">107</td>
+<td align="right">268</td>
+<td align="right">290</td>
+<td align="right">315</td>
 </tr>
 </tbody>
 </table>
@@ -569,7 +603,7 @@ some.samples &lt;-<span class="st"> </span><span class="kw">sample</span>(<span 
 <tr class="header">
 <th></th>
 <th align="center">Condition</th>
-<th align="center">Replpicate</th>
+<th align="center">Replicate</th>
 <th align="center">Genotype</th>
 <th align="center">Time.point</th>
 <th align="center">Label</th>
@@ -577,36 +611,36 @@ some.samples &lt;-<span class="st"> </span><span class="kw">sample</span>(<span 
 </thead>
 <tbody>
 <tr class="odd">
-<td>GSM2375285</td>
-<td align="center">Wild_type_4</td>
+<td>GSM2375287</td>
+<td align="center">bdf1_Y187F_Y354F_mutant_0</td>
 <td align="center">2</td>
-<td align="center">Wild-type</td>
-<td align="center">4</td>
-<td align="center">Sc_WT_4h_2</td>
+<td align="center">bdf1-Y187F-Y354F mutant</td>
+<td align="center">0</td>
+<td align="center">bd1bd2mut_0h_2</td>
 </tr>
 <tr class="even">
-<td>GSM2375295</td>
-<td align="center">bdf1_Y187F_Y354F_mutant_8</td>
+<td>GSM2375294</td>
+<td align="center">bdf1_Y187F_Y354F_mutant_4</td>
 <td align="center">3</td>
 <td align="center">bdf1-Y187F-Y354F mutant</td>
-<td align="center">8</td>
-<td align="center">bd1bd2mut_8h_3</td>
+<td align="center">4</td>
+<td align="center">bd1bd2mut_4h_3</td>
 </tr>
 <tr class="odd">
-<td>GSM2375290</td>
-<td align="center">Wild_type_0</td>
+<td>GSM2375291</td>
+<td align="center">Wild_type_4</td>
 <td align="center">3</td>
 <td align="center">Wild-type</td>
-<td align="center">0</td>
-<td align="center">Sc_WT_0h_3</td>
+<td align="center">4</td>
+<td align="center">Sc_WT_4h_3</td>
 </tr>
 <tr class="even">
-<td>GSM2375279</td>
-<td align="center">Wild_type_4</td>
+<td>GSM2375282</td>
+<td align="center">bdf1_Y187F_Y354F_mutant_4</td>
 <td align="center">1</td>
-<td align="center">Wild-type</td>
+<td align="center">bdf1-Y187F-Y354F mutant</td>
 <td align="center">4</td>
-<td align="center">Sc_WT_4h_1</td>
+<td align="center">bd1bd2mut_4h_1</td>
 </tr>
 </tbody>
 </table>
@@ -618,13 +652,13 @@ some.samples &lt;-<span class="st"> </span><span class="kw">sample</span>(<span 
 <h3>Statistiques descriptives</h3>
 <p>La fonction R <code>summary()</code> calcule des statistiques de base pour chaque colonne d’une matrice ou data frame. Nous imprimons ici un sous-ensemble de ces échantillons.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(counts[, some.samples])</code></pre></div>
-<pre><code>   GSM2375288         GSM2375292         GSM2375283         GSM2375287      
- Min.   :     0.0   Min.   :     0.0   Min.   :     0.0   Min.   :     0.0  
- 1st Qu.:    20.0   1st Qu.:    24.0   1st Qu.:    28.0   1st Qu.:    15.0  
- Median :   173.0   Median :   166.0   Median :   190.0   Median :   147.0  
- Mean   :   638.4   Mean   :   982.6   Mean   :   804.2   Mean   :   631.8  
- 3rd Qu.:   435.8   3rd Qu.:   462.0   3rd Qu.:   500.0   3rd Qu.:   412.0  
- Max.   :425896.0   Max.   :571353.0   Max.   :531472.0   Max.   :389038.0  </code></pre>
+<pre><code>   GSM2375287         GSM2375294         GSM2375291         GSM2375282    
+ Min.   :     0.0   Min.   :     0.0   Min.   :     0.0   Min.   :     0  
+ 1st Qu.:    15.0   1st Qu.:    27.0   1st Qu.:    21.0   1st Qu.:    32  
+ Median :   147.0   Median :   208.0   Median :   193.5   Median :   262  
+ Mean   :   631.8   Mean   :   732.3   Mean   :   632.5   Mean   :   903  
+ 3rd Qu.:   412.0   3rd Qu.:   514.8   3rd Qu.:   470.0   3rd Qu.:   647  
+ Max.   :389038.0   Max.   :454911.0   Max.   :330189.0   Max.   :542630  </code></pre>
 <p>Nous pouvons calculer quelques paramètres additionnels, qui nous éclaireront sur les données.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">all.counts.vector &lt;-<span class="st"> </span><span class="kw">unlist</span>(counts) <span class="co"># Regroup all counts in a vevtor to compute statistics</span>
 
@@ -743,44 +777,8 @@ sample.stats &lt;-<span class="st"> </span><span class="kw">data.frame</span>(
 </thead>
 <tbody>
 <tr class="odd">
-<td>GSM2375278</td>
-<td align="left">bd1bd2mut_0h_1</td>
-<td align="left">1,127</td>
-<td align="left">11,725</td>
-<td align="left">957</td>
-<td align="left">775</td>
-<td align="left">297</td>
-<td align="left">775</td>
-<td align="left">3,385</td>
-<td align="left">8.4</td>
-</tr>
-<tr class="even">
-<td>GSM2375279</td>
-<td align="left">bd1bd2mut_0h_2</td>
-<td align="left">980</td>
-<td align="left">9,135</td>
-<td align="left">878</td>
-<td align="left">735</td>
-<td align="left">310</td>
-<td align="left">735</td>
-<td align="left">2,830</td>
-<td align="left">7.3</td>
-</tr>
-<tr class="odd">
-<td>GSM2375280</td>
-<td align="left">bd1bd2mut_0h_3</td>
-<td align="left">1,078</td>
-<td align="left">10,956</td>
-<td align="left">879</td>
-<td align="left">607</td>
-<td align="left">230</td>
-<td align="left">607</td>
-<td align="left">2,672</td>
-<td align="left">8.1</td>
-</tr>
-<tr class="even">
 <td>GSM2375281</td>
-<td align="left">Sc_WT_0h_1</td>
+<td align="left">bd1bd2mut_0h_1</td>
 <td align="left">1,007</td>
 <td align="left">10,212</td>
 <td align="left">957</td>
@@ -790,69 +788,9 @@ sample.stats &lt;-<span class="st"> </span><span class="kw">data.frame</span>(
 <td align="left">2,952</td>
 <td align="left">7.5</td>
 </tr>
-<tr class="odd">
-<td>GSM2375282</td>
-<td align="left">Sc_WT_0h_2</td>
-<td align="left">903</td>
-<td align="left">9,814</td>
-<td align="left">811</td>
-<td align="left">647</td>
-<td align="left">262</td>
-<td align="left">647</td>
-<td align="left">2,569</td>
-<td align="left">6.8</td>
-</tr>
-<tr class="even">
-<td>GSM2375283</td>
-<td align="left">Sc_WT_0h_3</td>
-<td align="left">804</td>
-<td align="left">9,438</td>
-<td align="left">835</td>
-<td align="left">500</td>
-<td align="left">190</td>
-<td align="left">500</td>
-<td align="left">2,187</td>
-<td align="left">6.0</td>
-</tr>
-<tr class="odd">
-<td>GSM2375284</td>
-<td align="left">bd1bd2mut_4h_1</td>
-<td align="left">521</td>
-<td align="left">5,592</td>
-<td align="left">1,101</td>
-<td align="left">362</td>
-<td align="left">135</td>
-<td align="left">362</td>
-<td align="left">1,567</td>
-<td align="left">3.9</td>
-</tr>
-<tr class="even">
-<td>GSM2375285</td>
-<td align="left">bd1bd2mut_4h_2</td>
-<td align="left">810</td>
-<td align="left">8,039</td>
-<td align="left">898</td>
-<td align="left">595</td>
-<td align="left">254</td>
-<td align="left">595</td>
-<td align="left">2,264</td>
-<td align="left">6.1</td>
-</tr>
-<tr class="odd">
-<td>GSM2375286</td>
-<td align="left">bd1bd2mut_4h_3</td>
-<td align="left">756</td>
-<td align="left">8,022</td>
-<td align="left">893</td>
-<td align="left">476</td>
-<td align="left">189</td>
-<td align="left">476</td>
-<td align="left">1,942</td>
-<td align="left">5.7</td>
-</tr>
 <tr class="even">
 <td>GSM2375287</td>
-<td align="left">Sc_WT_4h_1</td>
+<td align="left">bd1bd2mut_0h_2</td>
 <td align="left">632</td>
 <td align="left">6,591</td>
 <td align="left">1,083</td>
@@ -863,68 +801,8 @@ sample.stats &lt;-<span class="st"> </span><span class="kw">data.frame</span>(
 <td align="left">4.7</td>
 </tr>
 <tr class="odd">
-<td>GSM2375288</td>
-<td align="left">Sc_WT_4h_2</td>
-<td align="left">638</td>
-<td align="left">7,149</td>
-<td align="left">942</td>
-<td align="left">436</td>
-<td align="left">173</td>
-<td align="left">436</td>
-<td align="left">1,818</td>
-<td align="left">4.8</td>
-</tr>
-<tr class="even">
-<td>GSM2375289</td>
-<td align="left">Sc_WT_4h_3</td>
-<td align="left">956</td>
-<td align="left">10,819</td>
-<td align="left">808</td>
-<td align="left">626</td>
-<td align="left">248</td>
-<td align="left">626</td>
-<td align="left">2,608</td>
-<td align="left">7.1</td>
-</tr>
-<tr class="odd">
-<td>GSM2375290</td>
-<td align="left">bd1bd2mut_8h_1</td>
-<td align="left">779</td>
-<td align="left">7,821</td>
-<td align="left">1,026</td>
-<td align="left">548</td>
-<td align="left">194</td>
-<td align="left">548</td>
-<td align="left">2,187</td>
-<td align="left">5.8</td>
-</tr>
-<tr class="even">
-<td>GSM2375291</td>
-<td align="left">bd1bd2mut_8h_2</td>
-<td align="left">632</td>
-<td align="left">5,556</td>
-<td align="left">1,013</td>
-<td align="left">470</td>
-<td align="left">194</td>
-<td align="left">470</td>
-<td align="left">1,853</td>
-<td align="left">4.7</td>
-</tr>
-<tr class="odd">
-<td>GSM2375292</td>
-<td align="left">bd1bd2mut_8h_3</td>
-<td align="left">983</td>
-<td align="left">11,193</td>
-<td align="left">973</td>
-<td align="left">462</td>
-<td align="left">166</td>
-<td align="left">462</td>
-<td align="left">2,219</td>
-<td align="left">7.3</td>
-</tr>
-<tr class="even">
 <td>GSM2375293</td>
-<td align="left">Sc_WT_8h_1</td>
+<td align="left">bd1bd2mut_0h_3</td>
 <td align="left">636</td>
 <td align="left">6,584</td>
 <td align="left">1,078</td>
@@ -934,9 +812,69 @@ sample.stats &lt;-<span class="st"> </span><span class="kw">data.frame</span>(
 <td align="left">1,898</td>
 <td align="left">4.8</td>
 </tr>
+<tr class="even">
+<td>GSM2375278</td>
+<td align="left">Sc_WT_0h_1</td>
+<td align="left">1,127</td>
+<td align="left">11,725</td>
+<td align="left">957</td>
+<td align="left">775</td>
+<td align="left">297</td>
+<td align="left">775</td>
+<td align="left">3,385</td>
+<td align="left">8.4</td>
+</tr>
+<tr class="odd">
+<td>GSM2375284</td>
+<td align="left">Sc_WT_0h_2</td>
+<td align="left">521</td>
+<td align="left">5,592</td>
+<td align="left">1,101</td>
+<td align="left">362</td>
+<td align="left">135</td>
+<td align="left">362</td>
+<td align="left">1,567</td>
+<td align="left">3.9</td>
+</tr>
+<tr class="even">
+<td>GSM2375290</td>
+<td align="left">Sc_WT_0h_3</td>
+<td align="left">779</td>
+<td align="left">7,821</td>
+<td align="left">1,026</td>
+<td align="left">548</td>
+<td align="left">194</td>
+<td align="left">548</td>
+<td align="left">2,187</td>
+<td align="left">5.8</td>
+</tr>
+<tr class="odd">
+<td>GSM2375282</td>
+<td align="left">bd1bd2mut_4h_1</td>
+<td align="left">903</td>
+<td align="left">9,814</td>
+<td align="left">811</td>
+<td align="left">647</td>
+<td align="left">262</td>
+<td align="left">647</td>
+<td align="left">2,569</td>
+<td align="left">6.8</td>
+</tr>
+<tr class="even">
+<td>GSM2375288</td>
+<td align="left">bd1bd2mut_4h_2</td>
+<td align="left">638</td>
+<td align="left">7,149</td>
+<td align="left">942</td>
+<td align="left">436</td>
+<td align="left">173</td>
+<td align="left">436</td>
+<td align="left">1,818</td>
+<td align="left">4.8</td>
+</tr>
 <tr class="odd">
 <td>GSM2375294</td>
-<td align="left">Sc_WT_8h_2</td>
+<td align="left">bd1bd2mut_4h_3</td>
 <td align="left">732</td>
 <td align="left">8,118</td>
 <td align="left">850</td>
@@ -947,8 +885,68 @@ sample.stats &lt;-<span class="st"> </span><span class="kw">data.frame</span>(
 <td align="left">5.5</td>
 </tr>
 <tr class="even">
+<td>GSM2375279</td>
+<td align="left">Sc_WT_4h_1</td>
+<td align="left">980</td>
+<td align="left">9,135</td>
+<td align="left">878</td>
+<td align="left">735</td>
+<td align="left">310</td>
+<td align="left">735</td>
+<td align="left">2,830</td>
+<td align="left">7.3</td>
+</tr>
+<tr class="odd">
+<td>GSM2375285</td>
+<td align="left">Sc_WT_4h_2</td>
+<td align="left">810</td>
+<td align="left">8,039</td>
+<td align="left">898</td>
+<td align="left">595</td>
+<td align="left">254</td>
+<td align="left">595</td>
+<td align="left">2,264</td>
+<td align="left">6.1</td>
+</tr>
+<tr class="even">
+<td>GSM2375291</td>
+<td align="left">Sc_WT_4h_3</td>
+<td align="left">632</td>
+<td align="left">5,556</td>
+<td align="left">1,013</td>
+<td align="left">470</td>
+<td align="left">194</td>
+<td align="left">470</td>
+<td align="left">1,853</td>
+<td align="left">4.7</td>
+</tr>
+<tr class="odd">
+<td>GSM2375283</td>
+<td align="left">bd1bd2mut_8h_1</td>
+<td align="left">804</td>
+<td align="left">9,438</td>
+<td align="left">835</td>
+<td align="left">500</td>
+<td align="left">190</td>
+<td align="left">500</td>
+<td align="left">2,187</td>
+<td align="left">6.0</td>
+</tr>
+<tr class="even">
+<td>GSM2375289</td>
+<td align="left">bd1bd2mut_8h_2</td>
+<td align="left">956</td>
+<td align="left">10,819</td>
+<td align="left">808</td>
+<td align="left">626</td>
+<td align="left">248</td>
+<td align="left">626</td>
+<td align="left">2,608</td>
+<td align="left">7.1</td>
+</tr>
+<tr class="odd">
 <td>GSM2375295</td>
-<td align="left">Sc_WT_8h_3</td>
+<td align="left">bd1bd2mut_8h_3</td>
 <td align="left">919</td>
 <td align="left">9,672</td>
 <td align="left">862</td>
@@ -957,6 +955,42 @@ sample.stats &lt;-<span class="st"> </span><span class="kw">data.frame</span>(
 <td align="left">643</td>
 <td align="left">2,689</td>
 <td align="left">6.9</td>
+</tr>
+<tr class="even">
+<td>GSM2375280</td>
+<td align="left">Sc_WT_8h_1</td>
+<td align="left">1,078</td>
+<td align="left">10,956</td>
+<td align="left">879</td>
+<td align="left">607</td>
+<td align="left">230</td>
+<td align="left">607</td>
+<td align="left">2,672</td>
+<td align="left">8.1</td>
+</tr>
+<tr class="odd">
+<td>GSM2375286</td>
+<td align="left">Sc_WT_8h_2</td>
+<td align="left">756</td>
+<td align="left">8,022</td>
+<td align="left">893</td>
+<td align="left">476</td>
+<td align="left">189</td>
+<td align="left">476</td>
+<td align="left">1,942</td>
+<td align="left">5.7</td>
+</tr>
+<tr class="even">
+<td>GSM2375292</td>
+<td align="left">Sc_WT_8h_3</td>
+<td align="left">983</td>
+<td align="left">11,193</td>
+<td align="left">973</td>
+<td align="left">462</td>
+<td align="left">166</td>
+<td align="left">462</td>
+<td align="left">2,219</td>
+<td align="left">7.3</td>
 </tr>
 </tbody>
 </table>
@@ -1098,17 +1132,22 @@ h &lt;-<span class="st"> </span><span class="kw">hist</span>(percent.zeros,
 
 <span class="co"># View(h)</span>
 
-## Get maximal count per class from the histogram
-## to position the arrow
-max.count &lt;-<span class="st"> </span><span class="kw">max</span>(h<span class="op">$</span>counts) 
+## Get histogram max counts (y value) to position the arrow
+h.max &lt;-<span class="st"> </span><span class="kw">max</span>(h<span class="op">$</span>counts) 
 <span class="kw">arrows</span>(<span class="dt">x0 =</span> parameters<span class="op">$</span>gene.filter.percent.zeros, 
-       <span class="dt">y0 =</span> max.count <span class="op">*</span><span class="st"> </span><span class="fl">0.5</span>, 
+       <span class="dt">y0 =</span> h.max <span class="op">*</span><span class="st"> </span><span class="fl">0.5</span>, 
        <span class="dt">x1 =</span> parameters<span class="op">$</span>gene.filter.percent.zeros, 
-       <span class="dt">y1 =</span> max.count <span class="op">*</span><span class="st"> </span><span class="fl">0.3</span>, 
+       <span class="dt">y1 =</span> h.max <span class="op">*</span><span class="st"> </span><span class="fl">0.3</span>, 
        <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>,
        <span class="dt">angle =</span> <span class="dv">30</span>, <span class="dt">length =</span> <span class="fl">0.1</span>)
+<span class="kw">arrows</span>(<span class="dt">x0 =</span> parameters<span class="op">$</span>gene.filter.percent.zeros, 
+       <span class="dt">y0 =</span> h.max <span class="op">*</span><span class="st"> </span><span class="fl">0.5</span>, 
+       <span class="dt">x1 =</span> <span class="dv">100</span>, 
+       <span class="dt">y1 =</span> h.max <span class="op">*</span><span class="st"> </span><span class="fl">0.5</span>, <span class="dt">code =</span> <span class="dv">0</span>,
+       <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">lwd =</span> <span class="dv">4</span>,
+       <span class="dt">angle =</span> <span class="dv">30</span>, <span class="dt">length =</span> <span class="fl">0.1</span>)
 <span class="kw">text</span>(<span class="dt">x =</span> parameters<span class="op">$</span>gene.filter.percent.zeros, 
-     <span class="dt">y =</span> max.count<span class="op">*</span><span class="fl">0.5</span>, 
+     <span class="dt">y =</span> h.max<span class="op">*</span><span class="fl">0.5</span>, 
      <span class="dt">labels =</span> <span class="kw">paste</span>(<span class="dt">sep =</span> <span class="st">&quot;&quot;</span>, parameters<span class="op">$</span>gene.filter.percent.zeros, <span class="st">&quot;%&quot;</span>),
      <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">pos =</span> <span class="dv">3</span>)</code></pre></div>
 <div class="figure" style="text-align: center">
@@ -1118,9 +1157,485 @@ Frequency of samples with zero counts per gene. Genes exceeding the thresold (re
 </p>
 </div>
 </div>
+<div id="comptages-minimaux-par-gene" class="section level3">
+<h3>Comptages minimaux par gène</h3>
+<p>Un autre critère possible est de supprimer les gènes faiblement détectés, en écartant les gènes pour lesquels les comptages sont inférieurs à un seuil donné pour tous les échantillons. Nous fixons ici (arbitrairement) le seuil à 10.</p>
+<p>Nous procédont comme suit:</p>
+<ul>
+<li>Calculer pour chaque gène <span class="math inline">\(i\)</span> le comptage maximal observé parmi tous les échantillons.</li>
+</ul>
+<p><span class="math display">\[x_{max,i} = \text{max}_{j = 0}^{s} x_{i,j}\]</span></p>
+<p>où <span class="math inline">\(i\)</span> est l’indice de lignes (gènes), <span class="math inline">\(j\)</span> l’indice de colonnes (échantillons), et <span class="math inline">\(s\)</span> le nombre d’échantillons.</p>
+<ul>
+<li>Tester si la valeur maximale observée est inférieure au seuil minimum.</li>
+</ul>
+</div>
+<div id="min-counts-per-gene" class="section level3">
+<h3>Min counts per gene</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">max.per.gene &lt;-<span class="st"> </span><span class="kw">apply</span>(counts, <span class="dv">1</span>, max)
+
+<span class="co"># View(summary(min.count))</span>
+h &lt;-<span class="st"> </span><span class="kw">hist</span>(<span class="kw">log2</span>(max.per.gene <span class="op">+</span><span class="st"> </span>parameters<span class="op">$</span>epsilon), <span class="dt">breaks =</span> <span class="dv">100</span>, <span class="dt">col =</span> <span class="st">&quot;#BBBBFF&quot;</span>,
+          <span class="dt">xlab =</span> <span class="st">&quot;log2(max count per gene)&quot;</span>,
+          <span class="dt">ylab =</span> <span class="st">&quot;Number of genes&quot;</span>, <span class="dt">las =</span> <span class="dv">1</span>,
+          <span class="dt">main =</span> <span class="st">&quot;Filtering on min count per gene&quot;</span>)
+h.max &lt;-<span class="st"> </span><span class="kw">max</span>(h<span class="op">$</span>counts)
+<span class="kw">arrows</span>(<span class="dt">x0 =</span> <span class="kw">log2</span>(parameters<span class="op">$</span>gene.filter.min.count), 
+       <span class="dt">y0 =</span> h.max <span class="op">*</span><span class="st"> </span><span class="fl">0.5</span>, 
+       <span class="dt">x1 =</span> <span class="kw">log2</span>(parameters<span class="op">$</span>gene.filter.min.count), 
+       <span class="dt">y1 =</span> h.max <span class="op">*</span><span class="st"> </span><span class="fl">0.3</span>, 
+       <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>,
+       <span class="dt">angle =</span> <span class="dv">30</span>, <span class="dt">length =</span> <span class="fl">0.1</span>)
+<span class="kw">arrows</span>(<span class="dt">x0 =</span> <span class="kw">log2</span>(parameters<span class="op">$</span>epsilon), 
+       <span class="dt">y0 =</span> h.max <span class="op">*</span><span class="st"> </span><span class="fl">0.5</span>, 
+       <span class="dt">x1 =</span> <span class="kw">log2</span>(parameters<span class="op">$</span>gene.filter.min.count), 
+       <span class="dt">y1 =</span> h.max <span class="op">*</span><span class="st"> </span><span class="fl">0.5</span>, 
+       <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">lwd =</span> <span class="dv">4</span>, <span class="dt">code =</span> <span class="dv">0</span>,
+       <span class="dt">angle =</span> <span class="dv">30</span>, <span class="dt">length =</span> <span class="fl">0.1</span>)
+<span class="kw">text</span>(<span class="dt">x =</span> <span class="kw">log2</span>(parameters<span class="op">$</span>gene.filter.min.count), 
+     <span class="dt">y =</span> h.max <span class="op">*</span><span class="st"> </span><span class="fl">0.5</span>, 
+     <span class="dt">labels =</span> <span class="kw">paste</span>(<span class="dt">sep =</span> <span class="st">&quot;&quot;</span>, <span class="st">&quot;log2(&quot;</span>, 
+                    parameters<span class="op">$</span>gene.filter.min.count,
+                    <span class="st">&quot;) = &quot;</span>, <span class="kw">signif</span>(<span class="dt">digits =</span> <span class="dv">3</span>, <span class="kw">log2</span>(parameters<span class="op">$</span>gene.filter.min.count))),
+     <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">pos =</span> <span class="dv">3</span>)</code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/TP_gene_filtering_min_count-1.png" alt="Distribution of min counts per gene. Genes below the thresold (red arrow) are filtered out. " width="80%" />
+<p class="caption">
+Distribution of min counts per gene. Genes below the thresold (red arrow) are filtered out.
+</p>
+</div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Build a data frame with one row per gene and one column per filtering criterion</span>
+discarded.genes &lt;-<span class="st"> </span><span class="kw">data.frame</span>(
+  <span class="dt">zero.var =</span> zero.var.genes,
+  <span class="dt">too.many.zeros =</span> (percent.zeros <span class="op">&gt;</span><span class="st"> </span>parameters<span class="op">$</span>gene.filter.percent.zeros),
+  <span class="dt">too.small.counts =</span> max.per.gene <span class="op">&lt;</span><span class="st"> </span>parameters<span class="op">$</span>gene.filter.min.count
+)
+
+
+## Print the discarding criteria for some genes 
+<span class="kw">kable</span>(discarded.genes[some.genes, ], <span class="dt">caption =</span> <span class="st">&quot;Gene filtering criteria. TRUE indicates that a gene is discarded. &quot;</span>)</code></pre></div>
+<table>
+<caption>Gene filtering criteria. TRUE indicates that a gene is discarded.</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th align="left">zero.var</th>
+<th align="left">too.many.zeros</th>
+<th align="left">too.small.counts</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>YJR051W</td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td>YOR393W</td>
+<td align="left">TRUE</td>
+<td align="left">TRUE</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td>YLR099W-A</td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td>YDL077C</td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td>YGL242C</td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td>YJR110W</td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td>YML132W</td>
+<td align="left">TRUE</td>
+<td align="left">TRUE</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td>YCL057C-A</td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td>YBL051C</td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td>YKR010C</td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Draw a venn diagram indicating the number of genes 
+## discarded by the different criteria. 
+venn.counts &lt;-<span class="st"> </span><span class="kw">vennCounts</span>(discarded.genes)
+<span class="kw">vennDiagram</span>(venn.counts, <span class="dt">cex =</span> <span class="fl">0.7</span>,
+            <span class="dt">main =</span> <span class="st">&quot;Genes discarded by different criteria&quot;</span>)</code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/TP_gene_filtering-1.png" alt="Number of genes discarded during the filtering step. " width="50%" />
+<p class="caption">
+Number of genes discarded during the filtering step.
+</p>
+</div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Genes passing the filters are those for which 
+## all the discarding criteria are FALSE, 
+## i.e. the sum of the row is 0
+filtered.genes &lt;-<span class="st"> </span><span class="kw">apply</span>(discarded.genes, <span class="dv">1</span>, sum) <span class="op">==</span><span class="st"> </span><span class="dv">0</span>
+
+## Select a matrix with the filtered genes, 
+## i.e. those not discarded by any criterion
+filtered.counts &lt;-<span class="st"> </span>counts[filtered.genes, ]
+
+## Update the set of test genes to avoir NA values
+some.genes &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(filtered.counts), <span class="dt">size =</span> <span class="dv">10</span>, <span class="dt">replace =</span> <span class="ot">FALSE</span>)</code></pre></div>
+</div>
+</div>
+<div id="detection-de-genes-differentiellement-exprimes-avec-deseq2" class="section level2">
+<h2>Détection de gènes différentiellement exprimés avec DESeq2</h2>
+<div id="comparaison-de-2-groupes" class="section level3">
+<h3>Comparaison de 2 groupes</h3>
+<p>Dans un premier temps, nous allons effectuer une simple comparaison de 2 groupes: sauvage versus mutant au temps 0.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Select the subsets of counts (columns) and samples (rows) corresponding to the control and test groups
+control.samples &lt;-<span class="st"> </span><span class="kw">which</span>(samples<span class="op">$</span>Condition <span class="op">==</span><span class="st"> </span>parameters<span class="op">$</span>control.group)
+test.samples &lt;-<span class="st"> </span><span class="kw">which</span>(samples<span class="op">$</span>Condition <span class="op">==</span><span class="st"> </span>parameters<span class="op">$</span>test.group)
+selected.samples &lt;-<span class="st"> </span><span class="kw">c</span>(test.samples, control.samples)
+
+## Use the DESeqDataSetFromMatrix to create a DESeqDataSet object
+<span class="kw">message</span>(<span class="st">&quot;Creating DESeq2 dataset&quot;</span>)
+dds.2groups &lt;-<span class="st"> </span><span class="kw">DESeqDataSetFromMatrix</span>(
+  <span class="dt">countData =</span> filtered.counts[, selected.samples], 
+  <span class="dt">colData =</span> samples[selected.samples, ], 
+  <span class="dt">design =</span> <span class="op">~</span><span class="st"> </span>Condition)
+<span class="co"># View(dds.all.conditions)</span>
+
+## Run differential expression analysis with DESeq2
+dds.2groups &lt;-<span class="st"> </span><span class="kw">DESeq</span>(dds.2groups)
+<span class="co"># View(dds.all.conditions)</span>
+
+<span class="kw">resultsNames</span>(dds.2groups)</code></pre></div>
+<pre><code>[1] &quot;Intercept&quot;                                          &quot;Condition_Wild_type_0_vs_bdf1_Y187F_Y354F_mutant_0&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Get the result table
+deseq2.res.dds.2groups &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">results</span>(dds.2groups))
+<span class="kw">kable</span>(deseq2.res.dds.2groups[some.genes, ])</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">baseMean</th>
+<th align="right">log2FoldChange</th>
+<th align="right">lfcSE</th>
+<th align="right">stat</th>
+<th align="right">pvalue</th>
+<th align="right">padj</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>YOR353C</td>
+<td align="right">209.22173</td>
+<td align="right">-0.1347126</td>
+<td align="right">0.1752358</td>
+<td align="right">-0.7687506</td>
+<td align="right">0.4420414</td>
+<td align="right">0.7891968</td>
+</tr>
+<tr class="even">
+<td>YKR061W</td>
+<td align="right">155.10744</td>
+<td align="right">-0.3359697</td>
+<td align="right">0.2170404</td>
+<td align="right">-1.5479593</td>
+<td align="right">0.1216321</td>
+<td align="right">0.4965566</td>
+</tr>
+<tr class="odd">
+<td>snR76</td>
+<td align="right">10.73125</td>
+<td align="right">0.3734631</td>
+<td align="right">0.7560273</td>
+<td align="right">0.4939810</td>
+<td align="right">0.6213196</td>
+<td align="right">0.8810929</td>
+</tr>
+<tr class="even">
+<td>YER140W</td>
+<td align="right">135.65882</td>
+<td align="right">0.0111861</td>
+<td align="right">0.2217701</td>
+<td align="right">0.0504401</td>
+<td align="right">0.9597717</td>
+<td align="right">0.9905214</td>
+</tr>
+<tr class="odd">
+<td>YBR176W</td>
+<td align="right">138.57081</td>
+<td align="right">0.5377450</td>
+<td align="right">0.1864003</td>
+<td align="right">2.8848939</td>
+<td align="right">0.0039155</td>
+<td align="right">0.0770542</td>
+</tr>
+<tr class="even">
+<td>YPR148C</td>
+<td align="right">1770.06464</td>
+<td align="right">-0.3143457</td>
+<td align="right">0.1700219</td>
+<td align="right">-1.8488538</td>
+<td align="right">0.0644789</td>
+<td align="right">0.3668017</td>
+</tr>
+<tr class="odd">
+<td>YCL043C</td>
+<td align="right">3118.99061</td>
+<td align="right">-0.0565886</td>
+<td align="right">0.1360723</td>
+<td align="right">-0.4158716</td>
+<td align="right">0.6775039</td>
+<td align="right">0.9028293</td>
+</tr>
+<tr class="even">
+<td>YGR011W</td>
+<td align="right">22.27918</td>
+<td align="right">0.0674106</td>
+<td align="right">0.4082356</td>
+<td align="right">0.1651267</td>
+<td align="right">0.8688443</td>
+<td align="right">0.9629429</td>
+</tr>
+<tr class="odd">
+<td>YIL061C</td>
+<td align="right">138.15218</td>
+<td align="right">0.0215209</td>
+<td align="right">0.1797294</td>
+<td align="right">0.1197408</td>
+<td align="right">0.9046885</td>
+<td align="right">0.9758464</td>
+</tr>
+<tr class="even">
+<td>YLR297W</td>
+<td align="right">100.56450</td>
+<td align="right">0.2816986</td>
+<td align="right">0.2370663</td>
+<td align="right">1.1882693</td>
+<td align="right">0.2347273</td>
+<td align="right">0.6288403</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="diagnostic-plots" class="section level3">
+<h3>Diagnostic plots</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))
+## MA plot
+
+
+## Volcano plot
+
+## P-value histogram
+<span class="kw">hist</span>(deseq2.res.dds.2groups<span class="op">$</span>pvalue, 
+     <span class="dt">breaks =</span> <span class="dv">20</span>, <span class="dt">col =</span> <span class="st">&quot;#DDEEFF&quot;</span>, 
+     <span class="dt">xlab =</span> <span class="st">&quot;Nominal P-value&quot;</span>, 
+     <span class="dt">ylab =</span> <span class="st">&quot;Number of genes&quot;</span>)</code></pre></div>
+<p><img src="figures/TP_deg_diagnostic_plots_2groups-1.png" width="480" style="display: block; margin: auto;" /></p>
+</div>
+<div id="toutes-conditions-confondues" class="section level3">
+<h3>Toutes conditions confondues</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Use the DESeqDataSetFromMatrix to create a DESeqDataSet object
+<span class="kw">message</span>(<span class="st">&quot;Creating DESeq2 dataset&quot;</span>)
+dds.all.conditions &lt;-<span class="st"> </span><span class="kw">DESeqDataSetFromMatrix</span>(
+  <span class="dt">countData =</span> filtered.counts, 
+  <span class="dt">colData =</span> samples, 
+  <span class="dt">design =</span> <span class="op">~</span><span class="st"> </span>Condition)
+<span class="co"># View(dds.all.conditions)</span>
+
+## Run differential expression analysis with DESeq2
+dds.all.conditions &lt;-<span class="st"> </span><span class="kw">DESeq</span>(dds.all.conditions)
+<span class="co"># View(dds.all.conditions)</span>
+
+<span class="kw">resultsNames</span>(dds.all.conditions)</code></pre></div>
+<pre><code>[1] &quot;Intercept&quot;                                                        &quot;Condition_bdf1_Y187F_Y354F_mutant_4_vs_bdf1_Y187F_Y354F_mutant_0&quot; &quot;Condition_bdf1_Y187F_Y354F_mutant_8_vs_bdf1_Y187F_Y354F_mutant_0&quot; &quot;Condition_Wild_type_0_vs_bdf1_Y187F_Y354F_mutant_0&quot;              
+[5] &quot;Condition_Wild_type_4_vs_bdf1_Y187F_Y354F_mutant_0&quot;               &quot;Condition_Wild_type_8_vs_bdf1_Y187F_Y354F_mutant_0&quot;              </code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Get the result table
+deseq2.res.all.conditions &lt;-<span class="st"> </span><span class="kw">results</span>(dds.all.conditions)
+deseq2.res.all.conditions.df &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(deseq2.res.all.conditions)
+<span class="kw">kable</span>(deseq2.res.all.conditions.df[some.genes, ])</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">baseMean</th>
+<th align="right">log2FoldChange</th>
+<th align="right">lfcSE</th>
+<th align="right">stat</th>
+<th align="right">pvalue</th>
+<th align="right">padj</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>YOR353C</td>
+<td align="right">288.78861</td>
+<td align="right">-0.1875847</td>
+<td align="right">0.1516872</td>
+<td align="right">-1.2366553</td>
+<td align="right">0.2162151</td>
+<td align="right">0.2671393</td>
+</tr>
+<tr class="even">
+<td>YKR061W</td>
+<td align="right">200.45856</td>
+<td align="right">-0.4864049</td>
+<td align="right">0.3023702</td>
+<td align="right">-1.6086401</td>
+<td align="right">0.1076951</td>
+<td align="right">0.1414146</td>
+</tr>
+<tr class="odd">
+<td>snR76</td>
+<td align="right">7.99277</td>
+<td align="right">-0.5731163</td>
+<td align="right">0.6478677</td>
+<td align="right">-0.8846193</td>
+<td align="right">0.3763620</td>
+<td align="right">0.4364686</td>
+</tr>
+<tr class="even">
+<td>YER140W</td>
+<td align="right">193.29596</td>
+<td align="right">0.3594976</td>
+<td align="right">0.1419976</td>
+<td align="right">2.5317160</td>
+<td align="right">0.0113506</td>
+<td align="right">0.0176796</td>
+</tr>
+<tr class="odd">
+<td>YBR176W</td>
+<td align="right">90.47315</td>
+<td align="right">-0.9338070</td>
+<td align="right">0.1845184</td>
+<td align="right">-5.0607800</td>
+<td align="right">0.0000004</td>
+<td align="right">0.0000010</td>
+</tr>
+<tr class="even">
+<td>YPR148C</td>
+<td align="right">1662.62734</td>
+<td align="right">-1.2014121</td>
+<td align="right">0.1472054</td>
+<td align="right">-8.1614655</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="odd">
+<td>YCL043C</td>
+<td align="right">5625.91587</td>
+<td align="right">0.8727008</td>
+<td align="right">0.1522345</td>
+<td align="right">5.7326092</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td>YGR011W</td>
+<td align="right">21.79403</td>
+<td align="right">-0.7652920</td>
+<td align="right">0.3642826</td>
+<td align="right">-2.1008194</td>
+<td align="right">0.0356568</td>
+<td align="right">0.0510522</td>
+</tr>
+<tr class="odd">
+<td>YIL061C</td>
+<td align="right">145.92729</td>
+<td align="right">-0.7661357</td>
+<td align="right">0.1662410</td>
+<td align="right">-4.6085834</td>
+<td align="right">0.0000041</td>
+<td align="right">0.0000092</td>
+</tr>
+<tr class="even">
+<td>YLR297W</td>
+<td align="right">164.66646</td>
+<td align="right">0.3895691</td>
+<td align="right">0.1810778</td>
+<td align="right">2.1513911</td>
+<td align="right">0.0314453</td>
+<td align="right">0.0454790</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <div id="normalisation-des-tailles-de-librairies" class="section level2">
 <h2>Normalisation des tailles de librairies</h2>
+<p>Nous utilisons la fonction <code>estimateSizeFactors()</code> de la bibliothèse Bioconductor <code>DESeq2</code> pour estimer le facteur correctif pour la taille des librairies, qui sera utilisé pour standardiser les comptages.</p>
+<p>Dans ce cas-ci</p>
+<ul>
+<li><p>la standardisation se limite à une mise à l’échelle (multiplier les comptages par un nombre spécifique à chaque librairie),</p></li>
+<li><p>il n’y a pas de centrage (on ne veut pas ramener la moyenne des comptages par librairie à zéro, sinon on obtiendrait des comptages négatifs !).</p></li>
+</ul>
+<p>Nous appliquons ensuite une transformation logarithmique pour normaliser ces comptages standardisés.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Normalizing using the method for an object of class&quot;CountDataSet&quot; 
+<span class="kw">message</span>(<span class="st">&quot;Normalizing raw counts with DESeq2&quot;</span>)
+dds.norm &lt;-<span class="st">  </span><span class="kw">estimateSizeFactors</span>(dds)
+<span class="co"># sizeFactors(dds.norm)</span>
+
+## Compute log2-transformed counts from the normalized counts
+counts.norm &lt;-<span class="st"> </span><span class="kw">counts</span>(dds.norm, <span class="dt">normalized =</span> <span class="ot">TRUE</span>) <span class="op">+</span><span class="st"> </span>parameters<span class="op">$</span>epsilon
+<span class="co"># dim(counts.norm)</span>
+counts.log2.norm &lt;-<span class="st"> </span><span class="kw">log2</span>(counts.norm)
+<span class="co"># dim(counts.log2.norm)</span>
+
+
+## Compute quick estimation of dispersion trend + apply variance-stabilizing transformation
+<span class="kw">message</span>(<span class="st">&quot;</span><span class="ch">\t</span><span class="st">DESeq2::vst()</span><span class="ch">\t</span><span class="st">Quickly estimate dispersion trend and apply variance-stabilizing transformation&quot;</span>)
+<span class="kw">system.time</span>(dds.vst &lt;-<span class="st"> </span><span class="kw">vst</span>(dds))
+
+## Compute regularized log transformation
+## BEWARE: with big datasets like TCGA this takes ages. 
+<span class="kw">message</span>(<span class="st">&quot;</span><span class="ch">\t</span><span class="st">DESeq2::rlog()</span><span class="ch">\t</span><span class="st">Computing regularized log transformation&quot;</span>)
+<span class="kw">system.time</span>(rld &lt;-<span class="st"> </span><span class="kw">rlog</span>(dds)) ## Takes a long time with large number of samples</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">log2.count.breaks &lt;-<span class="st"> </span><span class="kw">seq</span>(
+  <span class="dt">from =</span> <span class="kw">log2</span>(parameters<span class="op">$</span>epsilon), 
+  <span class="dt">to =</span> <span class="dv">32</span>, 
+  <span class="dt">by =</span> <span class="fl">0.4</span>)
+
+<span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">1</span>))
+
+<span class="kw">hist</span>(<span class="kw">unlist</span>(<span class="kw">log2</span>(<span class="kw">unlist</span>(counts.per.gene <span class="op">+</span><span class="st"> </span>parameters<span class="op">$</span>epsilon))), <span class="dt">main =</span> <span class="st">&quot;Log2(raw counts)&quot;</span>,
+     <span class="dt">xlab =</span> <span class="st">&quot;log2(raw counts + epsilon)&quot;</span>,
+     <span class="dt">ylab =</span> <span class="st">&quot;Number of measures&quot;</span>,
+     <span class="dt">breaks =</span> log2.count.breaks, 
+     <span class="dt">col =</span> <span class="st">&quot;#FFDDBB&quot;</span>)
+
+<span class="kw">hist</span>(<span class="kw">unlist</span>(counts.log2.norm), <span class="dt">main =</span> <span class="st">&quot;Normalized counts&quot;</span>,
+     <span class="dt">xlab =</span> <span class="st">&quot;log2(standardized counts)&quot;</span>,
+     <span class="dt">ylab =</span> <span class="st">&quot;Number of measures&quot;</span>,
+     <span class="dt">breaks =</span> log2.count.breaks, 
+     <span class="dt">col =</span> <span class="st">&quot;#DDFFBB&quot;</span>)
+
+<span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</code></pre></div>
 </div>
 <div id="analyse-differentielle" class="section level2">
 <h2>Analyse différentielle</h2>
