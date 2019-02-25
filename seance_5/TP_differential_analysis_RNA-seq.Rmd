@@ -146,8 +146,7 @@ library(DESeq2)
 library(edgeR)
 
 # library(corrplot)
-library(FactoMineR)
-library(ClassDiscovery)
+# library(ClassDiscovery)
 # library(formattable)
 
 # message("getwd()\t", getwd())
@@ -471,9 +470,8 @@ où $i$ est l'indice de lignes (gènes), $j$ l'indice de colonnes (échantillons
 
 - Tester si la valeur maximale observée est inférieure au seuil minimum. 
 
-### Min counts per gene
 
-```{r gene_filtering_min_count, out.width = "80%", fig.width=7, fig.height=4.5, fig.cap="Distribution of min counts per gene. Genes below the thresold (red arrow) are filtered out. "}
+```{r gene_filtering_min_count, out.width = "80%", fig.width=7, fig.height=4.5, fig.cap="Distribution of max counts per gene. Genes below the thresold (red arrow) are filtered out. "}
 
 max.per.gene <- apply(counts, 1, max)
 
@@ -505,7 +503,7 @@ text(x = log2(parameters$gene.filter.min.count),
 ```
 
 
-```{r gene_filtering, out.width="50%", fig.width=6, fig.height=6, fig.cap="Number of genes discarded during the filtering step. "}
+```{r gene_filtering, out.width="70%", fig.width=6, fig.height=4, fig.cap="Number of genes discarded during the filtering step. "}
 
 
 # Build a data frame with one row per gene and one column per filtering criterion
@@ -523,7 +521,7 @@ kable(discarded.genes[some.genes, ], caption = "Gene filtering criteria. TRUE in
 ## Draw a venn diagram indicating the number of genes 
 ## discarded by the different criteria. 
 venn.counts <- vennCounts(discarded.genes)
-vennDiagram(venn.counts, cex = 0.7,
+vennDiagram(venn.counts, cex = 0.8,
             main = "Genes discarded by different criteria")
 
 
@@ -571,6 +569,52 @@ resultsNames(dds.2groups)
 ## Get the result table
 deseq2.res.dds.2groups <- as.data.frame(results(dds.2groups))
 kable(deseq2.res.dds.2groups[some.genes, ])
+
+## Sort genes by significance (increasing adjusted pvalue)
+deseq2.res.dds.2groups <- deseq2.res.dds.2groups[order(deseq2.res.dds.2groups$padj, decreasing = FALSE), ]
+
+## Compute the E-value, i.e. the expected number of false positives
+deseq2.res.dds.2groups$evalue <- deseq2.res.dds.2groups$pvalue * nrow(deseq2.res.dds.2groups)
+
+## Flag the genes declared positive 
+## (i.e. differentially expressed genes)
+deseq2.res.dds.2groups$positive <- deseq2.res.dds.2groups$padj < parameters$alpha
+
+## Replace NA values by FALSE for the flag
+deseq2.res.dds.2groups$positive[is.na(deseq2.res.dds.2groups$positive)] <- FALSE
+
+
+kable(head(deseq2.res.dds.2groups, n=20), caption = "Most significant genes")
+
+## BEWARE, DESeq2 produces NA values for some genes
+kable(tail(deseq2.res.dds.2groups, n=10), caption = "Less significant genes")
+
+kable(table(deseq2.res.dds.2groups$positive), 
+      caption = "Number of genes declared positive")
+
+## Export the results
+
+## DESeq2 result table
+parameters$workdir <- "~/DU-Bii/m3s5/"
+dir.create(parameters$workdir, showWarnings = FALSE, recursive = TRUE)
+write.table(
+  x = deseq2.res.dds.2groups, 
+  quote = FALSE, row.names = 1, col.names = NA,
+  file = file.path(parameters$workdir, "DESeq2_all_genes.tsv"))
+
+## Differentially expressed genes
+write.table(
+  x = deseq2.res.dds.2groups[deseq2.res.dds.2groups$positive, ], 
+  quote = FALSE, row.names = 1, col.names = NA,
+  file = file.path(parameters$workdir, "DESeq2_positive.tsv"))
+
+## Differentially expressed genes
+write.table(
+  x = row.names(deseq2.res.dds.2groups[deseq2.res.dds.2groups$positive, ]), 
+  quote = FALSE, row.names = FALSE, col.names = FALSE,
+  file = file.path(parameters$workdir, "DESeq2_positive_geneIDs.txt"))
+
+
 
 ```
 
