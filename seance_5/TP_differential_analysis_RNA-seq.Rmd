@@ -168,8 +168,8 @@ parameters <- list(
   gene.filter.min.count = 10, # Minimal counts per gene
   
   ## Test and control groups for differential analysis
-  test.group = "bdf1_Y187F_Y354F_mutant_4",
-  control.group = "Wild_type_4"
+  test.group = "bdf1_Y187F_Y354F_mutant_0",
+  control.group = "Wild_type_0"
 )
 
 ## Create output directory
@@ -804,12 +804,6 @@ kable(table(deseq2.res.dds.2groups$positive),
 outfiles <- vector()
 
 
-## DESeq2 result table
-outfiles["DESeq2 all genes"] <- file.path(parameters$workdir, "DESeq2_all_genes.tsv")
-write.table(
-  x = deseq2.res.dds.2groups, 
-  quote = FALSE, row.names = TRUE, col.names = NA,
-  file = outfiles["DESeq2 all genes"])
 
 ```
 
@@ -912,20 +906,37 @@ Effectuez une analyse différentielle sur ces données.
 
 ```{r export_results}
 
+file.prefix <- paste(sep = "__", parameters$test.group, 
+                     "vs", parameters$control.group)
+
+
+## DESeq2 result table
+outfiles["DESeq2 all genes"] <- file.path(
+  parameters$workdir, 
+  paste(sep = "", file.prefix, "_DESeq2_all_genes.tsv"))
+write.table(
+  x = deseq2.res.dds.2groups, 
+  quote = FALSE, row.names = TRUE, col.names = NA,
+  file = outfiles["DESeq2 all genes"])
+
+
 ## Differentially expressed genes
-outfiles["DESeq2 positive genes"] <- file.path(parameters$workdir, "DESeq2_positive.tsv")
+outfiles["DESeq2 positive genes"] <- file.path(
+  parameters$workdir, 
+  paste(sep = "", file.prefix, "_DESeq2_positive.tsv"))
 write.table(
   x = deseq2.res.dds.2groups[deseq2.res.dds.2groups$positive, ], 
   quote = FALSE, row.names = TRUE, col.names = NA,
   file = outfiles["DESeq2 positive genes"] )
 
 ## Differentially expressed genes
-outfiles["DESeq2 DEG iDs"] <- file.path(parameters$workdir, "DESeq2_positive_geneIDs.txt")
+outfiles["DESeq2 DEG iDs"] <- file.path(
+  parameters$workdir, paste(sep = "", file.prefix, "_DESeq2_positive_geneIDs.txt"))
 write.table(
   x = row.names(deseq2.res.dds.2groups[deseq2.res.dds.2groups$positive, ]), 
   quote = FALSE, row.names = FALSE, col.names = FALSE,
   file = outfiles["DESeq2 DEG iDs"] )
 
-kable(outfiles, caption = "fichiers re résultats", col.names = "Result file")
+kable(outfiles, caption = "fichiers de résultats", col.names = "Result file")
 ```
 
