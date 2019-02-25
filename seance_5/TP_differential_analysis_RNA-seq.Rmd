@@ -673,7 +673,7 @@ Interprétez le résultat en 2 ou 3 phrases. Commentez la relation entre le logF
 plot(edgeR.DEG.table$PValue, edgeR.DEG.table$FDR, 
      main = "Multiple testing correction",
      xlab = "Nominal p-value",
-     ylab = parameters$p.adjust.method,
+     ylab = "FDR",
      log = "xy", 
      col = densCols(x = edgeR.DEG.table$PValue,
                     y = edgeR.DEG.table$FDR),
@@ -685,7 +685,7 @@ legend("topleft",
        legend = c(
          paste(sep = "", "p-value < ", parameters$alpha, ": ", 
                sum(edgeR.DEG.table$PValue < parameters$alpha), " genes"),
-         paste(sep = "", parameters$p.adjust.method, " < ", parameters$alpha, ": ", sum(edgeR.DEG.table$FDR < parameters$alpha), " genes" )))
+         paste(sep = "", "FDR < ", parameters$alpha, ": ", sum(edgeR.DEG.table$FDR < parameters$alpha), " genes" )))
 ```
 
 
@@ -832,8 +832,9 @@ gene.pch[deseq2.res.dds.2groups$positive] <- "#+"
 
 par(mfrow = c(2,2))
 ## MA plot
-plotMA(object = results(dds.2groups), las = 1, panel.first = grid(),
-       main = "DESDeq2 : MA plot")
+DESeq2::plotMA(object = results(dds.2groups), las = 1, 
+               panel.first = grid(),
+               main = "DESDeq2 : MA plot")
 
 
 ## Volcano plot of adjusted p-values
