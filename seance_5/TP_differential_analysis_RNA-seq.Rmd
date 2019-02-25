@@ -3,11 +3,15 @@ title: "Détection de gènes différentiellement exprimés à partir de données
 author: "Jacques van Helden"
 date: '`r Sys.Date()`'
 output:
-  pdf_document:
+  html_document:
+    self_contained: no
     fig_caption: yes
     highlight: zenburn
+    theme: cerulean
     toc: yes
     toc_depth: 3
+    toc_float: yes
+    code_folding: "hide"
   beamer_presentation:
     colortheme: dolphin
     fig_caption: yes
@@ -25,15 +29,11 @@ output:
     transition: none
     self_contained: true
     css: ../slides.css
-  html_document:
-    self_contained: no
+  pdf_document:
     fig_caption: yes
     highlight: zenburn
-    theme: cerulean
     toc: yes
     toc_depth: 3
-    toc_float: yes
-    code_folding: "hide"
   slidy_presentation:
     smart: no
     slide_level: 2
@@ -545,17 +545,182 @@ some.genes <- sample(1:nrow(filtered.counts), size = 10, replace = FALSE)
 
 ```
 
-## Détection de gènes différentiellement exprimés avec DESeq2
 
-### Comparaison de 2 groupes
+## Détection de gènes différentiellement exprimés avec edgeR
+
+
+### Comparaison entre 2 groupes
 
 Dans un premier temps, nous allons effectuer une simple comparaison de 2 groupes: sauvage versus mutant au temps 0. 
-```{r deseq2_2groups}
+
+
+```{r differential_analysis_edgeR}
+## Detection of Differentially Expressed Genes (DEG) with edgeR
+message("Detecting Differentially Expressed Genes (DEG) with edgeR")
+
 
 ## Select the subsets of counts (columns) and samples (rows) corresponding to the control and test groups
 control.samples <- which(samples$Condition == parameters$control.group)
 test.samples <- which(samples$Condition == parameters$test.group)
 selected.samples <- c(test.samples, control.samples)
+
+## Select samples for a 2-group
+
+## Build a "model matrix" from the class labels
+## This matrix contains one row per sample and one column per class
+designMat <- model.matrix(~ as.vector(samples[selected.samples, "Condition"]))
+# View(designMat)
+
+## Build an edgeR::DGEList object which is required to run edgeR DE analysis
+dgList <- DGEList(counts = filtered.counts[, selected.samples])
+# class(dgList)
+# is(dgList)
+
+## Estimate the dispersion parameters. 
+message("\tedgeR\tEstimating dispersion")
+dgList <- estimateDisp(dgList, design = designMat)
+
+## Fit edgeR model for differential expression analysis.
+## We chose glmQLFit because it is claimed to offer a more accurate control of type I error. 
+message("\tedgeR\tmodel fitting with glmQLFit()")
+fit <- glmQLFit(dgList, design = designMat)
+
+## Run test to detect differentially expressed genes
+message("\tedgeR\tdetecting differentially expressed genes with glmQLFTest()")
+qlf <- glmQLFTest(fit, coef = 2:ncol(designMat))
+qlf.TT <- topTags(qlf, n = nrow(qlf$table), sort.by = "none",
+                  adjust.method = "fdr")
+
+
+## Select differentially expressed genes
+edgeR.DEG.table <- as.data.frame(qlf.TT$table)
+
+## Compute some additional statistics
+edgeR.DEG.table$evalue <- edgeR.DEG.table$PValue * nrow(edgeR.DEG.table)
+edgeR.DEG.table$rank <- rank(edgeR.DEG.table$FDR, ties.method = "average")
+edgeR.DEG.table$positive <- edgeR.DEG.table$FDR < parameters$alpha
+# table(edgeR.DEG.table$positive)
+# names(edgeR.DEG.table)
+# View(edgeR.DEG.table)
+# sum(egeR.DEG)
+
+```
+
+
+### Exercices (solutions ci-dessous)
+
+1. Dessinez un nuage de points (`plot()`) comparant les P-valeurs ajustées et non-ajustées.
+
+2. Quel serait le nombre de faux-positifs attendus sous hypothès nulle si l'on appliquait le seuil $\alpha = `r parameters["alpha"]`$ à la p-valeur non-ajustée ?
+
+3. Comptez le nombre de gènes déclarés positifs selon qu'on applique le seuil $\alpha = `r parameters["alpha"]`$ à la p-valeur ajustée ou non-ajustée. 
+
+3. Dessinez un histogramme (`hist()`) des P-valeurs *non ajustées*, avec 20 intervalles de classe (breaks = 20). Observez la répartition des gènes dans la moitié inférieure (p-valeur < 0.5) et supérieure (p-valeur > 0.5) de l'histogramme. Interprétez le résultat en 2 ou 3 phrases. A quoi s'attendrait-on si tous les gènes étaient sous hypothèse nulle ? 
+
+4. Dessinez un nuage de points (`plot()`) comparant le log2(fold-change) en abscisse et la P-valeur en ordonnée. Interprétez le résultat en 2 ou 3 phrases. Où se trouvent les gènes signicatifs ?
+
+5. Dessinez un **volcano plot**, c'est-à-dire un nuage de points (`plot()`) présentant en abscisse le log2(fold-change), et en ordonnée la significativité, définie comme suit.
+
+$$\text{sig} = -log_{10}(\text{FDR})$$
+
+Interprétez le résultat en 2 ou 3 phrases. Commentez la relation entre le logFC et la significativité.  Où se trouvent les gènes signicatifs ? 
+
+
+### Adjusted versus non-adjusted P-values
+
+```{r edger_nominal_vs_adjusted, out.width="60%", fig.width=6, fig.height=6, fig.cap="**Ajusted (ordinate) versus non-adjusted (abscissa) p-values returned by edger**. Strong colors indicate a higher density of overlapping points. Note the strong impact of the multiple testing correction."}
+
+                 
+# class(qlf.TT)
+plot(edgeR.DEG.table$PValue, edgeR.DEG.table$FDR, 
+     main = "Multiple testing correction",
+     xlab = "Nominal p-value",
+     ylab = parameters$p.adjust.method,
+     log = "xy", 
+     col = densCols(x = edgeR.DEG.table$PValue,
+                    y = edgeR.DEG.table$FDR),
+     panel.first = grid(), 
+     las = 1)
+abline(h = parameters$alpha, col = "#BB0000")
+abline(v = parameters$alpha, col = "#FF0000", lty = "dashed")
+legend("topleft",
+       legend = c(
+         paste(sep = "", "p-value < ", parameters$alpha, ": ", 
+               sum(edgeR.DEG.table$PValue < parameters$alpha), " genes"),
+         paste(sep = "", parameters$p.adjust.method, " < ", parameters$alpha, ": ", sum(edgeR.DEG.table$FDR < parameters$alpha), " genes" )))
+```
+
+
+### Histogram of the nominal P-values
+
+```{r edger_pvalue_histogram, out.width="80%", fig.width=7, fig.height=5, fig.cap="**Histogram of edgeR nominal P-values.**"}
+
+## P-value histogram
+hist(edgeR.DEG.table$PValue, 
+     breaks = 20, col = "#DDEEFF", las = 1,
+     main = "edgeR P-value histogram",
+     xlab = "Nominal P-value", 
+     ylab = "Number of genes")
+
+
+```
+
+### Volcano plot
+
+```{r edger_volcano, out.width="95%", fig.width=10, fig.height=5, fig.cap="**Volcano plots of edgeR unadjusted (left) and adjusted (right) P-values**. Multple testing correction method: FDR. "}
+
+# Quick test: plot the different symbols
+# plot(1:30, pch = 1:30)
+
+
+# Assign a graphical symbol to each gene according to its positive/negative status
+edgeR.DEG.table$pch <- 1 # circle symbol
+edgeR.DEG.table$pch[edgeR.DEG.table$positive] <- 3 # + symbol
+
+par(mfrow = c(1,2))
+plot(x = edgeR.DEG.table$logFC, 
+     y = -log10(edgeR.DEG.table$PValue),
+     las = 1, 
+     xlab = "log2(fold-change)",
+     main = "Volcano plot of edgeR unadjusted p-values",
+     ylab = "-log10(P-value)",
+     pch = edgeR.DEG.table$pch, 
+     col = densCols(x = edgeR.DEG.table$logFC, 
+                    y = -log10(edgeR.DEG.table$PValue)),
+     panel.first = grid())
+abline(v = 0)
+abline(h = 0)
+
+plot(x = edgeR.DEG.table$logFC, 
+     y = -log10(edgeR.DEG.table$FDR),
+     las = 1, 
+     xlab = "log2(fold-change)",
+     main = "Volcano plot of edgeR FDR",
+     ylab = "-log10(P-value)",
+     pch = edgeR.DEG.table$pch, 
+     col = densCols(x = edgeR.DEG.table$logFC, 
+                    y = -log10(edgeR.DEG.table$FDR)),
+     panel.first = grid())
+abline(v = 0)
+abline(h = 0)
+abline(h = -log10(parameters$alpha), col = "#BB0000")
+
+par(mfrow = c(1,1))
+
+```
+
+
+## Détection de gènes différentiellement exprimés avec DESeq2
+
+Nous allons maintenant utiliser DESeq2 pour détecter des gènes différentiellement exprimés sur le même jeu de données. Nous comparerons ensuite les résultats obtenus avec edgeR et DESeq2, respectivement. 
+
+### Comparaison de 2 groupes
+
+Dans un premier temps, nous allons effectuer une simple comparaison de 2 groupes: sauvage versus mutant au temps 0. 
+
+
+```{r deseq2_2groups}
+
 
 ## Use the DESeqDataSetFromMatrix to create a DESeqDataSet object
 message("Creating DESeq2 dataset")
@@ -615,13 +780,39 @@ write.table(
 
 ### Diagnostic plots
 
-```{r deg_diagnostic_plots_2groups}
+```{r deg_diagnostic_plots_2groups, out.width="95%", fig.width=10, fig.height=10, fig.caption="Diagnostic plots for DESeq2 analysis. "}
+
+## Assign a symbol to genes according to the test result
+deseq2.res.dds.2groups$pch <- 1 # circle
+deseq2.res.dds.2groups$pch[deseq2.res.dds.2groups$positive] <- 3 # + symbol
+
+## Set one color per gene depending on whether it is positive or not
+gene.color <- rep(x = "#BBBBBB", times = nrow(deseq2.res.dds.2groups))
+gene.color[deseq2.res.dds.2groups$positive] <- "#FF8844"
+gene.pch <- rep(x = 1, times = nrow(deseq2.res.dds.2groups))
+gene.pch[deseq2.res.dds.2groups$positive] <- "#+"
 
 par(mfrow = c(2,2))
 ## MA plot
+plotMA(object = results(dds.2groups), las = 1, panel.first = grid(),
+       main = "DESDeq2 : MA plot")
 
 
-## Volcano plot
+## Volcano plot of adjusted p-values
+plot(x = deseq2.res.dds.2groups$log2FoldChange, 
+     y = -log10(deseq2.res.dds.2groups$padj),
+     main = "Volcano plot\nAdjusted P-values",
+     las = 1, panel.first = grid(),
+     xlab = "Log2 fold change",
+     ylab  = "-log10(padj)",
+     col = densCols(
+       x = deseq2.res.dds.2groups$log2FoldChange, 
+       y = -log10(deseq2.res.dds.2groups$padj)),
+     pch = deseq2.res.dds.2groups$pch
+     )
+abline(v = 0)
+abline(h = 0)
+
 
 ## P-value histogram
 hist(deseq2.res.dds.2groups$pvalue, 
@@ -630,6 +821,7 @@ hist(deseq2.res.dds.2groups$pvalue,
      ylab = "Number of genes")
 
 
+par(mfrow = c(1,1))
 ```
 
 
@@ -659,81 +851,22 @@ kable(deseq2.res.all.conditions.df[some.genes, ])
 ```
 
 
-## Normalisation des tailles de librairies
+### Exercices
 
-Nous utilisons la fonction  `estimateSizeFactors()` de la bibliothèse Bioconductor `DESeq2` pour estimer le facteur correctif pour la taille des librairies, qui sera utilisé pour standardiser les comptages. 
+1. Dessinez un nuage (`plot()`)  qui compare lles p-valeurs nominales (non-ajustées)  retournées respectivement par edgeR et DEseq2. 
 
+2. Dessinez un nuage (`plot()`)  qui compare lles p-valeurs ajustées retournées respectivement par edgeR et DEseq2. 
 
-Dans ce cas-ci 
-
-- la standardisation se limite à une mise à l'échelle (multiplier les comptages par un nombre spécifique à chaque librairie), 
-
-- il n'y a pas de centrage (on ne veut pas ramener la moyenne des comptages par librairie à zéro, sinon on obtiendrait des comptages négatifs !).  
-
-Nous appliquons ensuite une transformation logarithmique pour normaliser ces comptages standardisés. 
-
-```{r count_normalisation, eval=FALSE}
-
-
-## Normalizing using the method for an object of class"CountDataSet" 
-message("Normalizing raw counts with DESeq2")
-dds.norm <-  estimateSizeFactors(dds)
-# sizeFactors(dds.norm)
-
-## Compute log2-transformed counts from the normalized counts
-counts.norm <- counts(dds.norm, normalized = TRUE) + parameters$epsilon
-# dim(counts.norm)
-counts.log2.norm <- log2(counts.norm)
-# dim(counts.log2.norm)
-
-
-## Compute quick estimation of dispersion trend + apply variance-stabilizing transformation
-message("\tDESeq2::vst()\tQuickly estimate dispersion trend and apply variance-stabilizing transformation")
-system.time(dds.vst <- vst(dds))
-
-## Compute regularized log transformation
-## BEWARE: with big datasets like TCGA this takes ages. 
-message("\tDESeq2::rlog()\tComputing regularized log transformation")
-system.time(rld <- rlog(dds)) ## Takes a long time with large number of samples
-
-
-```
-
-```{r norm_count_hist, eval=FALSE, out.width="80%", fig.width=7, fig.height=9, fig.cap="**Histogram of all counts.** (a) **Before filtering and standardization.** Distribution of log2(raw counts + epsilon). The epsilon is added to avoid -Inf values for log2-transformed zeros. (b) **Normalised counts.** Normalization consists in scaling counts in order to ensure library size standardization, followed by a  log2 transformation. "}
-
-log2.count.breaks <- seq(
-  from = log2(parameters$epsilon), 
-  to = 32, 
-  by = 0.4)
-
-par(mfrow = c(2, 1))
-
-hist(unlist(log2(unlist(counts.per.gene + parameters$epsilon))), main = "Log2(raw counts)",
-     xlab = "log2(raw counts + epsilon)",
-     ylab = "Number of measures",
-     breaks = log2.count.breaks, 
-     col = "#FFDDBB")
-
-hist(unlist(counts.log2.norm), main = "Normalized counts",
-     xlab = "log2(standardized counts)",
-     ylab = "Number of measures",
-     breaks = log2.count.breaks, 
-     col = "#DDFFBB")
-
-par(mfrow = c(1, 1))
-```
-
-
-
-## Analyse différentielle
-
-### Comparaison entre 2 groupes
-
-### Comparaison de groupes multiples
+3. Dessinez un diagramme de Venn qui compare les ensemble de gènes déclarés positifs par edgeR et DESeq2. 
 
 
 ## Contrôles négatifs
 
+### Exercice
+
+Générez un tableau ayant les mêmes dimensions (lignes, colonnes) que votre tableau d'expresion, en le remplissant de nombres aléatoires tirés selon une distribution de Poisson d'espérance 200 (fonction `rpois()`). 
+
+Effectuez une analyse différentielle sur ces données. 
 
 ## Fichiers de résultats
 
