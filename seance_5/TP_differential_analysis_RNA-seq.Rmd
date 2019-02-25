@@ -3,15 +3,11 @@ title: "Détection de gènes différentiellement exprimés à partir de données
 author: "Jacques van Helden"
 date: '`r Sys.Date()`'
 output:
-  html_document:
-    self_contained: no
+  pdf_document:
     fig_caption: yes
     highlight: zenburn
-    theme: cerulean
     toc: yes
     toc_depth: 3
-    toc_float: yes
-    code_folding: "hide"
   beamer_presentation:
     colortheme: dolphin
     fig_caption: yes
@@ -29,11 +25,15 @@ output:
     transition: none
     self_contained: true
     css: ../slides.css
-  pdf_document:
+  html_document:
+    self_contained: no
     fig_caption: yes
     highlight: zenburn
+    theme: cerulean
     toc: yes
     toc_depth: 3
+    toc_float: yes
+    code_folding: "hide"
   slidy_presentation:
     smart: no
     slide_level: 2
@@ -831,7 +831,8 @@ gene.pch <- rep(x = 1, times = nrow(deseq2.res.dds.2groups))
 gene.pch[deseq2.res.dds.2groups$positive] <- "#+"
 
 par(mfrow = c(2,2))
-## MA plot
+## MA plot? 
+## Note: we explicitly indicate the package name to avoid confusion with limma::plotMA()
 DESeq2::plotMA(object = results(dds.2groups), las = 1, 
                panel.first = grid(),
                main = "DESDeq2 : MA plot")
