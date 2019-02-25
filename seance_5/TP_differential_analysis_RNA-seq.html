@@ -415,8 +415,8 @@ div.tocify {
 
 <span class="co"># message(&quot;getwd()\t&quot;, getwd())</span></code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">parameters &lt;-<span class="st"> </span><span class="kw">list</span>(
-  <span class="dt">data.folder =</span> <span class="st">&quot;data/GSE89530&quot;</span>, <span class="co"># dossier des données</span>
-  <span class="co"># data.folder = &quot;/shared/projects/du_bii_2019/data/module3/seance5/GSE89530&quot;, # on the IFB-cluster-core</span>
+  <span class="co"># data.folder = &quot;data/GSE89530&quot;, # dossier des données locales</span>
+  <span class="dt">data.folder =</span> <span class="st">&quot;/shared/projects/du_bii_2019/data/module3/seance5/GSE89530&quot;</span>, <span class="co"># on the IFB-cluster-core</span>
   <span class="dt">workdir =</span> <span class="st">&quot;~/DU-Bii/m3s5/&quot;</span>, <span class="co"># Directory to export the results</span>
   <span class="dt">counts =</span> <span class="st">&quot;GSE89530_counts.tsv.gz&quot;</span>,
   <span class="dt">sample.descr =</span> <span class="st">&quot;GSE89530_samples.tsv.gz&quot;</span>,
@@ -445,7 +445,7 @@ div.tocify {
 <tbody>
 <tr class="odd">
 <td>data.folder</td>
-<td align="left">data/GSE89530</td>
+<td align="left">/shared/projects/du_bii_2019/data/module3/seance5/GSE89530</td>
 </tr>
 <tr class="even">
 <td>workdir</td>
@@ -492,10 +492,12 @@ div.tocify {
 <span class="co"># list.files(parameters$data.folder)</span>
 
 ## Load sample descriptions
+<span class="kw">message</span>(<span class="st">&quot;Loading sample descriptions from file</span><span class="ch">\t</span><span class="st">&quot;</span>, parameters<span class="op">$</span>sample.descr)
 samples &lt;-<span class="st"> </span><span class="kw">read.delim</span>(<span class="kw">file.path</span>(parameters<span class="op">$</span>data.folder, parameters<span class="op">$</span>sample.descr), <span class="dt">row.names =</span> <span class="dv">1</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>)
 <span class="co"># View(samples) # Check visually the content of the samples data frame</span>
 
 ## Load counts of reads per gene
+<span class="kw">message</span>(<span class="st">&quot;Loading counts from file</span><span class="ch">\t</span><span class="st">&quot;</span>, parameters<span class="op">$</span>counts)
 counts &lt;-<span class="st"> </span><span class="kw">read.delim</span>(<span class="kw">file.path</span>(parameters<span class="op">$</span>data.folder, parameters<span class="op">$</span>counts), <span class="dt">row.names =</span> <span class="dv">1</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>)
 
 ## Check that the count table contains the same sample IDs as the sample description table. If not, stop everything here.
@@ -521,82 +523,82 @@ some.samples &lt;-<span class="st"> </span><span class="kw">sample</span>(<span 
 <thead>
 <tr class="header">
 <th></th>
-<th align="right">GSM2375292</th>
-<th align="right">GSM2375290</th>
-<th align="right">GSM2375282</th>
 <th align="right">GSM2375295</th>
+<th align="right">GSM2375284</th>
+<th align="right">GSM2375285</th>
+<th align="right">GSM2375294</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>tR(UCU)M1</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">4</td>
-<td align="right">2</td>
+<td>YJR083C</td>
+<td align="right">123</td>
+<td align="right">108</td>
+<td align="right">243</td>
+<td align="right">170</td>
 </tr>
 <tr class="even">
-<td>YHR059W</td>
-<td align="right">39</td>
-<td align="right">425</td>
-<td align="right">52</td>
-<td align="right">52</td>
+<td>YHR006W</td>
+<td align="right">1029</td>
+<td align="right">142</td>
+<td align="right">733</td>
+<td align="right">813</td>
 </tr>
 <tr class="odd">
-<td>YJL147C</td>
-<td align="right">226</td>
-<td align="right">105</td>
-<td align="right">202</td>
-<td align="right">140</td>
+<td>YLR310C</td>
+<td align="right">1676</td>
+<td align="right">618</td>
+<td align="right">1642</td>
+<td align="right">2530</td>
 </tr>
 <tr class="even">
-<td>YBR252W</td>
-<td align="right">74</td>
-<td align="right">197</td>
-<td align="right">244</td>
-<td align="right">130</td>
+<td>YOR094W</td>
+<td align="right">154</td>
+<td align="right">102</td>
+<td align="right">245</td>
+<td align="right">221</td>
 </tr>
 <tr class="odd">
-<td>YPR170W-B</td>
-<td align="right">33</td>
-<td align="right">83</td>
-<td align="right">87</td>
-<td align="right">62</td>
+<td>YMR121C</td>
+<td align="right">421</td>
+<td align="right">127</td>
+<td align="right">555</td>
+<td align="right">464</td>
 </tr>
 <tr class="even">
-<td>YMR304W</td>
-<td align="right">461</td>
-<td align="right">692</td>
-<td align="right">2043</td>
-<td align="right">767</td>
+<td>YPL146C</td>
+<td align="right">1135</td>
+<td align="right">587</td>
+<td align="right">486</td>
+<td align="right">434</td>
 </tr>
 <tr class="odd">
-<td>YOR081C</td>
-<td align="right">1230</td>
-<td align="right">166</td>
-<td align="right">153</td>
-<td align="right">296</td>
+<td>YNL130C</td>
+<td align="right">1136</td>
+<td align="right">277</td>
+<td align="right">1788</td>
+<td align="right">1696</td>
 </tr>
 <tr class="even">
-<td>tK(UUU)L</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">5</td>
-<td align="right">3</td>
+<td>YOR196C</td>
+<td align="right">744</td>
+<td align="right">440</td>
+<td align="right">695</td>
+<td align="right">785</td>
 </tr>
 <tr class="odd">
-<td>YOR150W</td>
-<td align="right">164</td>
-<td align="right">1169</td>
-<td align="right">426</td>
-<td align="right">279</td>
+<td>YCR016W</td>
+<td align="right">361</td>
+<td align="right">340</td>
+<td align="right">230</td>
+<td align="right">159</td>
 </tr>
 <tr class="even">
-<td>YDL241W</td>
-<td align="right">388</td>
-<td align="right">95</td>
-<td align="right">59</td>
-<td align="right">308</td>
+<td>YJR135W-A</td>
+<td align="right">86</td>
+<td align="right">230</td>
+<td align="right">114</td>
+<td align="right">61</td>
 </tr>
 </tbody>
 </table>
@@ -619,36 +621,36 @@ some.samples &lt;-<span class="st"> </span><span class="kw">sample</span>(<span 
 </thead>
 <tbody>
 <tr class="odd">
-<td>GSM2375292</td>
-<td align="center">Wild_type_8</td>
-<td align="center">3</td>
-<td align="center">Wild-type</td>
-<td align="center">8</td>
-<td align="center">Sc_WT_8h_3</td>
-</tr>
-<tr class="even">
-<td>GSM2375290</td>
-<td align="center">Wild_type_0</td>
-<td align="center">3</td>
-<td align="center">Wild-type</td>
-<td align="center">0</td>
-<td align="center">Sc_WT_0h_3</td>
-</tr>
-<tr class="odd">
-<td>GSM2375282</td>
-<td align="center">bdf1_Y187F_Y354F_mutant_4</td>
-<td align="center">1</td>
-<td align="center">bdf1-Y187F-Y354F mutant</td>
-<td align="center">4</td>
-<td align="center">bd1bd2mut_4h_1</td>
-</tr>
-<tr class="even">
 <td>GSM2375295</td>
 <td align="center">bdf1_Y187F_Y354F_mutant_8</td>
 <td align="center">3</td>
 <td align="center">bdf1-Y187F-Y354F mutant</td>
 <td align="center">8</td>
 <td align="center">bd1bd2mut_8h_3</td>
+</tr>
+<tr class="even">
+<td>GSM2375284</td>
+<td align="center">Wild_type_0</td>
+<td align="center">2</td>
+<td align="center">Wild-type</td>
+<td align="center">0</td>
+<td align="center">Sc_WT_0h_2</td>
+</tr>
+<tr class="odd">
+<td>GSM2375285</td>
+<td align="center">Wild_type_4</td>
+<td align="center">2</td>
+<td align="center">Wild-type</td>
+<td align="center">4</td>
+<td align="center">Sc_WT_4h_2</td>
+</tr>
+<tr class="even">
+<td>GSM2375294</td>
+<td align="center">bdf1_Y187F_Y354F_mutant_4</td>
+<td align="center">3</td>
+<td align="center">bdf1-Y187F-Y354F mutant</td>
+<td align="center">4</td>
+<td align="center">bd1bd2mut_4h_3</td>
 </tr>
 </tbody>
 </table>
@@ -660,13 +662,13 @@ some.samples &lt;-<span class="st"> </span><span class="kw">sample</span>(<span 
 <h3>Statistiques descriptives</h3>
 <p>La fonction R <code>summary()</code> calcule des statistiques de base pour chaque colonne d’une matrice ou data frame. Nous imprimons ici un sous-ensemble de ces échantillons.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(counts[, some.samples])</code></pre></div>
-<pre><code>   GSM2375292         GSM2375290         GSM2375282       GSM2375295      
- Min.   :     0.0   Min.   :     0.0   Min.   :     0   Min.   :     0.0  
- 1st Qu.:    24.0   1st Qu.:    18.2   1st Qu.:    32   1st Qu.:    35.2  
- Median :   166.0   Median :   194.0   Median :   262   Median :   239.0  
- Mean   :   982.6   Mean   :   779.5   Mean   :   903   Mean   :   919.0  
- 3rd Qu.:   462.0   3rd Qu.:   548.0   3rd Qu.:   647   3rd Qu.:   643.0  
- Max.   :571353.0   Max.   :452683.0   Max.   :542630   Max.   :511934.0  </code></pre>
+<pre><code>   GSM2375295         GSM2375284       GSM2375285         GSM2375294      
+ Min.   :     0.0   Min.   :     0   Min.   :     0.0   Min.   :     0.0  
+ 1st Qu.:    35.2   1st Qu.:    15   1st Qu.:    30.2   1st Qu.:    27.0  
+ Median :   239.0   Median :   135   Median :   254.0   Median :   208.0  
+ Mean   :   919.0   Mean   :   521   Mean   :   809.9   Mean   :   732.3  
+ 3rd Qu.:   643.0   3rd Qu.:   362   3rd Qu.:   595.0   3rd Qu.:   514.8  
+ Max.   :511934.0   Max.   :340576   Max.   :472819.0   Max.   :454911.0  </code></pre>
 <p>Nous pouvons calculer quelques paramètres additionnels, qui nous éclaireront sur les données.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">all.counts.vector &lt;-<span class="st"> </span><span class="kw">unlist</span>(counts) <span class="co"># Regroup all counts in a vevtor to compute statistics</span>
 
@@ -1231,61 +1233,61 @@ discarded.genes &lt;-<span class="st"> </span><span class="kw">data.frame</span>
 </thead>
 <tbody>
 <tr class="odd">
-<td>tR(UCU)M1</td>
+<td>YJR083C</td>
 <td align="left">FALSE</td>
 <td align="left">FALSE</td>
-<td align="left">TRUE</td>
+<td align="left">FALSE</td>
 </tr>
 <tr class="even">
-<td>YHR059W</td>
+<td>YHR006W</td>
 <td align="left">FALSE</td>
 <td align="left">FALSE</td>
 <td align="left">FALSE</td>
 </tr>
 <tr class="odd">
-<td>YJL147C</td>
+<td>YLR310C</td>
 <td align="left">FALSE</td>
 <td align="left">FALSE</td>
 <td align="left">FALSE</td>
 </tr>
 <tr class="even">
-<td>YBR252W</td>
+<td>YOR094W</td>
 <td align="left">FALSE</td>
 <td align="left">FALSE</td>
 <td align="left">FALSE</td>
 </tr>
 <tr class="odd">
-<td>YPR170W-B</td>
+<td>YMR121C</td>
 <td align="left">FALSE</td>
 <td align="left">FALSE</td>
 <td align="left">FALSE</td>
 </tr>
 <tr class="even">
-<td>YMR304W</td>
+<td>YPL146C</td>
 <td align="left">FALSE</td>
 <td align="left">FALSE</td>
 <td align="left">FALSE</td>
 </tr>
 <tr class="odd">
-<td>YOR081C</td>
+<td>YNL130C</td>
 <td align="left">FALSE</td>
 <td align="left">FALSE</td>
 <td align="left">FALSE</td>
 </tr>
 <tr class="even">
-<td>tK(UUU)L</td>
+<td>YOR196C</td>
 <td align="left">FALSE</td>
 <td align="left">FALSE</td>
-<td align="left">TRUE</td>
+<td align="left">FALSE</td>
 </tr>
 <tr class="odd">
-<td>YOR150W</td>
+<td>YCR016W</td>
 <td align="left">FALSE</td>
 <td align="left">FALSE</td>
 <td align="left">FALSE</td>
 </tr>
 <tr class="even">
-<td>YDL241W</td>
+<td>YJR135W-A</td>
 <td align="left">FALSE</td>
 <td align="left">FALSE</td>
 <td align="left">FALSE</td>
@@ -1314,6 +1316,21 @@ filtered.counts &lt;-<span class="st"> </span>counts[filtered.genes, ]
 
 ## Update the set of test genes to avoir NA values
 some.genes &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(filtered.counts), <span class="dt">size =</span> <span class="dv">10</span>, <span class="dt">replace =</span> <span class="ot">FALSE</span>)</code></pre></div>
+</div>
+</div>
+<div id="reproductibilite-des-replicats" class="section level2">
+<h2>Reproductibilité des réplicats</h2>
+<p>Nous pouvons comparer les réplicats pour une même condition au moyen d’un nuage de points, avec la fonction <code>plot()</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Sélectionner les échantillons de la condition &quot;test&quot;
+<span class="kw">message</span>(<span class="st">&quot;Comparing counts between replicates for condition&quot;</span>, parameters<span class="op">$</span>test.group)
+selected.samples &lt;-<span class="st"> </span>samples<span class="op">$</span>Condition  <span class="op">==</span><span class="st"> </span>parameters<span class="op">$</span>test.group
+<span class="kw">plot</span>(counts.log2[, selected.samples], 
+     <span class="dt">col =</span> samples[selected.samples, <span class="st">&quot;color&quot;</span>])</code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/TP_between_replicate_reproducibility-1.png" alt="Between-replicate comparison of counts per gene for the test condition. " width="80%" />
+<p class="caption">
+Between-replicate comparison of counts per gene for the test condition.
+</p>
 </div>
 </div>
 <div id="detection-de-genes-differentiellement-exprimes-avec-edger" class="section level2">
@@ -1507,94 +1524,94 @@ deseq2.res.dds.2groups &lt;-<span class="st"> </span><span class="kw">as.data.fr
 </thead>
 <tbody>
 <tr class="odd">
-<td>YAL042W</td>
-<td align="right">1208.39609</td>
-<td align="right">-0.1911225</td>
-<td align="right">0.1073534</td>
-<td align="right">-1.7803123</td>
-<td align="right">0.0750249</td>
-<td align="right">0.3964309</td>
+<td>YGL043W</td>
+<td align="right">401.568840</td>
+<td align="right">-0.2383488</td>
+<td align="right">0.1286523</td>
+<td align="right">-1.8526585</td>
+<td align="right">0.0639313</td>
+<td align="right">0.3658326</td>
 </tr>
 <tr class="even">
-<td>YCL011C</td>
-<td align="right">1001.90478</td>
-<td align="right">-0.1744534</td>
-<td align="right">0.1484380</td>
-<td align="right">-1.1752609</td>
-<td align="right">0.2398903</td>
-<td align="right">0.6359201</td>
+<td>YOL056W</td>
+<td align="right">82.666047</td>
+<td align="right">0.1116472</td>
+<td align="right">0.2863447</td>
+<td align="right">0.3899049</td>
+<td align="right">0.6966068</td>
+<td align="right">0.9111694</td>
 </tr>
 <tr class="odd">
-<td>YOR342C</td>
-<td align="right">495.98513</td>
-<td align="right">-0.2546529</td>
-<td align="right">0.3744130</td>
-<td align="right">-0.6801391</td>
-<td align="right">0.4964164</td>
-<td align="right">0.8185546</td>
+<td>YDR354W</td>
+<td align="right">213.429943</td>
+<td align="right">-0.3735973</td>
+<td align="right">0.2460904</td>
+<td align="right">-1.5181300</td>
+<td align="right">0.1289816</td>
+<td align="right">0.5069029</td>
 </tr>
 <tr class="even">
-<td>YDR110W</td>
-<td align="right">136.83044</td>
-<td align="right">0.2579008</td>
-<td align="right">0.3583639</td>
-<td align="right">0.7196619</td>
-<td align="right">0.4717332</td>
-<td align="right">0.8066402</td>
+<td>YMR296C</td>
+<td align="right">1023.654389</td>
+<td align="right">-0.1746305</td>
+<td align="right">0.2085776</td>
+<td align="right">-0.8372445</td>
+<td align="right">0.4024551</td>
+<td align="right">0.7617851</td>
 </tr>
 <tr class="odd">
-<td>YGL131C</td>
-<td align="right">244.16470</td>
-<td align="right">0.3426646</td>
-<td align="right">0.1823387</td>
-<td align="right">1.8792749</td>
-<td align="right">0.0602070</td>
-<td align="right">0.3561375</td>
+<td>YDR219C</td>
+<td align="right">288.426844</td>
+<td align="right">-0.4492941</td>
+<td align="right">0.2196477</td>
+<td align="right">-2.0455221</td>
+<td align="right">0.0408034</td>
+<td align="right">0.2943983</td>
 </tr>
 <tr class="even">
-<td>YLR457C</td>
-<td align="right">50.45495</td>
-<td align="right">-0.1179547</td>
-<td align="right">0.2487355</td>
-<td align="right">-0.4742176</td>
-<td align="right">0.6353447</td>
-<td align="right">0.8888167</td>
+<td>YDR045C</td>
+<td align="right">47.607485</td>
+<td align="right">0.3531085</td>
+<td align="right">0.4066530</td>
+<td align="right">0.8683289</td>
+<td align="right">0.3852143</td>
+<td align="right">0.7510037</td>
 </tr>
 <tr class="odd">
-<td>YAL026C</td>
-<td align="right">408.22348</td>
-<td align="right">-0.0042952</td>
-<td align="right">0.1626728</td>
-<td align="right">-0.0264037</td>
-<td align="right">0.9789354</td>
-<td align="right">0.9927572</td>
+<td>YIL171W</td>
+<td align="right">3.592411</td>
+<td align="right">0.7526275</td>
+<td align="right">0.8940281</td>
+<td align="right">0.8418388</td>
+<td align="right">0.3998782</td>
+<td align="right">0.7591998</td>
 </tr>
 <tr class="even">
-<td>YML083C</td>
-<td align="right">12.88938</td>
-<td align="right">0.7514240</td>
-<td align="right">0.5365106</td>
-<td align="right">1.4005762</td>
-<td align="right">0.1613408</td>
-<td align="right">0.5442000</td>
+<td>YDR038C</td>
+<td align="right">6.330522</td>
+<td align="right">0.2592645</td>
+<td align="right">0.8945100</td>
+<td align="right">0.2898397</td>
+<td align="right">0.7719389</td>
+<td align="right">0.9356426</td>
 </tr>
 <tr class="odd">
-<td>YOR262W</td>
-<td align="right">223.51665</td>
-<td align="right">-0.0081303</td>
-<td align="right">0.1911744</td>
-<td align="right">-0.0425283</td>
-<td align="right">0.9660775</td>
-<td align="right">0.9905214</td>
+<td>YOR358W</td>
+<td align="right">314.045208</td>
+<td align="right">0.6521427</td>
+<td align="right">0.2981591</td>
+<td align="right">2.1872303</td>
+<td align="right">0.0287257</td>
+<td align="right">0.2449665</td>
 </tr>
 <tr class="even">
-<td>YDR540C</td>
-<td align="right">19.48411</td>
-<td align="right">0.1500292</td>
-<td align="right">0.5033963</td>
-<td align="right">0.2980339</td>
-<td align="right">0.7656773</td>
-<td align="right">0.9330228</td>
+<td>YMR261C</td>
+<td align="right">609.823144</td>
+<td align="right">0.0871394</td>
+<td align="right">0.3342563</td>
+<td align="right">0.2606964</td>
+<td align="right">0.7943267</td>
+<td align="right">0.9398844</td>
 </tr>
 </tbody>
 </table>
@@ -2092,94 +2109,94 @@ deseq2.res.all.conditions.df &lt;-<span class="st"> </span><span class="kw">as.d
 </thead>
 <tbody>
 <tr class="odd">
-<td>YAL042W</td>
-<td align="right">821.57849</td>
-<td align="right">-1.7721786</td>
-<td align="right">0.0960645</td>
-<td align="right">-18.447802</td>
+<td>YGL043W</td>
+<td align="right">253.25495</td>
+<td align="right">-1.7913547</td>
+<td align="right">0.1395576</td>
+<td align="right">-12.8359538</td>
 <td align="right">0.0000000</td>
 <td align="right">0.0000000</td>
 </tr>
 <tr class="even">
-<td>YCL011C</td>
-<td align="right">1127.45248</td>
-<td align="right">0.8964380</td>
-<td align="right">0.1474908</td>
-<td align="right">6.077923</td>
+<td>YOL056W</td>
+<td align="right">157.78644</td>
+<td align="right">2.0008682</td>
+<td align="right">0.2011097</td>
+<td align="right">9.9491373</td>
 <td align="right">0.0000000</td>
 <td align="right">0.0000000</td>
 </tr>
 <tr class="odd">
-<td>YOR342C</td>
-<td align="right">249.37258</td>
-<td align="right">-2.3327681</td>
-<td align="right">0.3380258</td>
-<td align="right">-6.901155</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
+<td>YDR354W</td>
+<td align="right">232.59233</td>
+<td align="right">-0.8223129</td>
+<td align="right">0.2309737</td>
+<td align="right">-3.5602013</td>
+<td align="right">0.0003706</td>
+<td align="right">0.0006887</td>
 </tr>
 <tr class="even">
-<td>YDR110W</td>
-<td align="right">177.47170</td>
-<td align="right">0.2709980</td>
-<td align="right">0.2616494</td>
-<td align="right">1.035730</td>
-<td align="right">0.3003283</td>
-<td align="right">0.3575445</td>
+<td>YMR296C</td>
+<td align="right">1271.80314</td>
+<td align="right">0.1386121</td>
+<td align="right">0.1604966</td>
+<td align="right">0.8636447</td>
+<td align="right">0.3877831</td>
+<td align="right">0.4478099</td>
 </tr>
 <tr class="odd">
-<td>YGL131C</td>
-<td align="right">259.59263</td>
-<td align="right">-0.7520007</td>
-<td align="right">0.2042155</td>
-<td align="right">-3.682388</td>
-<td align="right">0.0002311</td>
-<td align="right">0.0004393</td>
+<td>YDR219C</td>
+<td align="right">814.83644</td>
+<td align="right">2.7807565</td>
+<td align="right">0.2101605</td>
+<td align="right">13.2315825</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
 </tr>
 <tr class="even">
-<td>YLR457C</td>
-<td align="right">85.33950</td>
-<td align="right">0.3368598</td>
-<td align="right">0.2139570</td>
-<td align="right">1.574428</td>
-<td align="right">0.1153886</td>
-<td align="right">0.1506029</td>
+<td>YDR045C</td>
+<td align="right">57.23169</td>
+<td align="right">0.4473462</td>
+<td align="right">0.4115775</td>
+<td align="right">1.0869063</td>
+<td align="right">0.2770782</td>
+<td align="right">0.3330246</td>
 </tr>
 <tr class="odd">
-<td>YAL026C</td>
-<td align="right">840.07036</td>
-<td align="right">2.4617257</td>
-<td align="right">0.1942883</td>
-<td align="right">12.670478</td>
+<td>YIL171W</td>
+<td align="right">18.17905</td>
+<td align="right">3.5673928</td>
+<td align="right">0.5680582</td>
+<td align="right">6.2799781</td>
 <td align="right">0.0000000</td>
 <td align="right">0.0000000</td>
 </tr>
 <tr class="even">
-<td>YML083C</td>
-<td align="right">31.63095</td>
-<td align="right">2.3838345</td>
-<td align="right">0.4136043</td>
-<td align="right">5.763563</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
+<td>YDR038C</td>
+<td align="right">33.19064</td>
+<td align="right">1.8496642</td>
+<td align="right">0.5185762</td>
+<td align="right">3.5668124</td>
+<td align="right">0.0003613</td>
+<td align="right">0.0006729</td>
 </tr>
 <tr class="odd">
-<td>YOR262W</td>
-<td align="right">386.41214</td>
-<td align="right">1.0167842</td>
-<td align="right">0.1335089</td>
-<td align="right">7.615851</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
+<td>YOR358W</td>
+<td align="right">187.22665</td>
+<td align="right">-1.4018111</td>
+<td align="right">0.2750086</td>
+<td align="right">-5.0973353</td>
+<td align="right">0.0000003</td>
+<td align="right">0.0000009</td>
 </tr>
 <tr class="even">
-<td>YDR540C</td>
-<td align="right">35.50735</td>
-<td align="right">1.6382723</td>
-<td align="right">0.3580389</td>
-<td align="right">4.575683</td>
-<td align="right">0.0000047</td>
-<td align="right">0.0000107</td>
+<td>YMR261C</td>
+<td align="right">399.21669</td>
+<td align="right">-1.2521636</td>
+<td align="right">0.2692192</td>
+<td align="right">-4.6510926</td>
+<td align="right">0.0000033</td>
+<td align="right">0.0000075</td>
 </tr>
 </tbody>
 </table>

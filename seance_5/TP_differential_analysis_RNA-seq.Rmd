@@ -3,11 +3,15 @@ title: "Détection de gènes différentiellement exprimés à partir de données
 author: "Jacques van Helden"
 date: '`r Sys.Date()`'
 output:
-  pdf_document:
+  html_document:
+    self_contained: no
     fig_caption: yes
     highlight: zenburn
+    theme: cerulean
     toc: yes
     toc_depth: 3
+    toc_float: yes
+    code_folding: "hide"
   beamer_presentation:
     colortheme: dolphin
     fig_caption: yes
@@ -25,15 +29,11 @@ output:
     transition: none
     self_contained: true
     css: ../slides.css
-  html_document:
-    self_contained: no
+  pdf_document:
     fig_caption: yes
     highlight: zenburn
-    theme: cerulean
     toc: yes
     toc_depth: 3
-    toc_float: yes
-    code_folding: "hide"
   slidy_presentation:
     smart: no
     slide_level: 2
