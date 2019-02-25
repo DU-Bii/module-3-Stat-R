@@ -589,14 +589,14 @@ draw(my.heatmap)
 **Astuce:** dans le résultat de `prcomp()`, les coordonnées des points se trouvent dans le champs `x`
 .
 
-```{r}
+```{r intra_cluster_variance, fig.width=8, fig.height=5, fig.cap="Intra-cluster variance plot. for a series of k-mean clustering with increasing values of k.  "}
 ## Run k-means clustering with 20 centers
 BIC.kmeans <- kmeans(BIC.expr.transposed, centers=20)
 
 ## Report the table of the clusters
 table(BIC.kmeans$cluster)
 
-T1 = Sys.time()
+T1 = Sys.time() # take time at the beginning of the task
 I.intra = numeric(length=20)
 I.intra[1] = kmeans(BIC.expr.transposed, centers=2)$totss
 for (i in 2:20) {
@@ -605,8 +605,12 @@ for (i in 2:20) {
   I.intra[i] <- kmi$tot.withinss
 }
 
-# Plot a curve showint the intra-cluster information as a function of the number of clusters 
-plot((1:20)-0.5, I.intra, type="s")
+# Plot a curve showint the intra-cluster variance as a function of the number of clusters 
+plot((1:20)-0.5, I.intra, type="h", lwd=2, col = "blue", 
+     xlab = "k", ylab = "Intra-cluster variance",
+     main = "k-mean: impact of k on the intra-cluster variance")
+
+# Measure elapsed time
 T2 = Sys.time()
 Tdiff = difftime(T2,T1) ## Measure elapsed time
 
