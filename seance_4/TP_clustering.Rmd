@@ -8,6 +8,7 @@ output:
     fig_caption: yes
     highlight: zenburn
     theme: cerulean
+    toc: yes
     toc_depth: 3
     toc_float: yes
     code_folding: "hide"
@@ -79,7 +80,7 @@ data.folder <- "~/TCGA_import/data/BIC/" # Just for preparation
 ## Load libraries
 message("Loading libraries")
 library(knitr)
-library(kableExtra)
+#library(kableExtra) ## Note: kableExtra has some side effect on kable: column padding is null, so all numbers seem to be mixed up
 library(FactoMineR)
 library(clues)
 library(RColorBrewer)
@@ -491,14 +492,17 @@ arrows(x0 = -1, y0 = 50000, x1 = 1, y1 = 50000, length = 0.05, angle = 30, code 
 ## define a Blue - White - Red palette
 frenchflag.palette <- colorRampPalette(c('dark blue','white','dark red'))
 
+## Define a green - black - red palette
+GBR.palette <- colorRampPalette(c('green','black','red'))
+
 heatmap(as.matrix(BIC.expr.genes.standardized),
         zlim = c(-4,4),
         distfun = function(x) as.dist(1 - cor(t(x), method = "spearman")), 
         hclustfun = function(x) hclust(x, method = "ward.D2"),
         labRow = NA, labCol = NA,  # DO not print the labels (unreadable anyway)
-        col = frenchflag.palette(100),
-        #col = brewer.pal(11,"RdBu"),
+        col = GBR.palette(100),
         scale = "none")
+
 ```
 
 
@@ -506,7 +510,7 @@ heatmap(as.matrix(BIC.expr.genes.standardized),
 
 The function `heatmap.2()` is derived from `heatmap()` but offers nice additional formatting options.
 
-```{r}
+```{r complex_heatmap, out.width="95%", fig.width=21, fig.height=8}
 # Define a color for the heatmap
 expr.colors <- heat.colors(n = 100)
 
@@ -557,9 +561,10 @@ annot.tumeur.column = HeatmapAnnotation(
 
 # A first heatmap
 my.heatmap <- ComplexHeatmap::Heatmap(
-  as.matrix(BIC.expr), 
+  as.matrix(BIC.expr.genes.standardized), 
   name = "TCGA Breast Invasive Cancer", 
-  col = expr.colors,
+  # col = frenchflag.palette(100),
+  col = brewer.pal(11,"RdBu"),
   column_title = "Samples",
   row_title = "Genes",
   cluster_columns = sample.tree,

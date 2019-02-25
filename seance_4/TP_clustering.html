@@ -11,7 +11,7 @@
 
 <meta name="author" content="Anne Badel, Frederic Guyon &amp; Jacques van Helden" />
 
-<meta name="date" content="2019-02-22" />
+<meta name="date" content="2019-02-23" />
 
 <title>TP de la séance 4, Clustering</title>
 
@@ -263,7 +263,7 @@ $(document).ready(function () {
 <h1 class="title toc-ignore">TP de la séance 4, Clustering</h1>
 <h3 class="subtitle"><em>Diplôme Interuniversitaire en Bioinformatique intégrative (DU-Bii 2019)</em></h3>
 <h4 class="author"><em>Anne Badel, Frederic Guyon &amp; Jacques van Helden</em></h4>
-<h4 class="date"><em>2019-02-22</em></h4>
+<h4 class="date"><em>2019-02-23</em></h4>
 
 </div>
 
@@ -279,7 +279,19 @@ data.folder &lt;-<span class="st"> &quot;~/TCGA_import/data/BIC/&quot;</span> <s
 <span class="kw">library</span>(FactoMineR)
 <span class="kw">library</span>(clues)
 <span class="kw">library</span>(RColorBrewer)
-<span class="co"># library(corrplot)</span>
+<span class="kw">library</span>(ComplexHeatmap)</code></pre></div>
+<pre><code>## Loading required package: grid</code></pre>
+<pre><code>## ========================================
+## ComplexHeatmap version 1.20.0
+## Bioconductor page: http://bioconductor.org/packages/ComplexHeatmap/
+## Github page: https://github.com/jokergoo/ComplexHeatmap
+## Documentation: http://bioconductor.org/packages/ComplexHeatmap/
+## 
+## If you use it in published research, please cite:
+## Gu, Z. Complex heatmaps reveal patterns and correlations in multidimensional 
+##   genomic data. Bioinformatics 2016.
+## ========================================</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># library(corrplot)</span>
 <span class="kw">library</span>(FactoMineR)
 <span class="kw">library</span>(ClassDiscovery)</code></pre></div>
 <pre><code>## Loading required package: cluster</code></pre>
@@ -356,14 +368,137 @@ data.folder <- "/home/sdv/dubii/data-m3/s4/"
 <li>Calculez la taille des fichiers en bytes et en Megabytes (<span class="math inline">\(1Mb = 1024 \cot 1024 \cdot b\)</span>), sachant que pour chaque conversion il faut diviser par 1024.</li>
 <li>Vous pouvez consulter notre solution à l’aide du code suivant (cliquer sur <strong><em>Code</em></strong> pour l’afficher).</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">message</span>(<span class="st">&quot;Listing files in data folder: &quot;</span>, data.folder)
-<span class="kw">list.files</span>(<span class="dt">path =</span> data.folder) <span class="co"># List the data files</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Return file sizes (in bytes)</span>
+<span class="kw">message</span>(<span class="st">&quot;Listing files in data folder: &quot;</span>, data.folder)
+
+data.files &lt;-<span class="st"> </span><span class="kw">list.files</span>(<span class="dt">path =</span> data.folder) <span class="co"># List the data files</span>
+<span class="kw">print</span>(data.files)</code></pre></div>
 <pre><code> [1] &quot;BIC_counts_all-genes.tsv.gz&quot;                    &quot;BIC_counts_filtered-genes.tsv.gz&quot;               &quot;BIC_edgeR_DEG_table.tsv&quot;                        &quot;BIC_edgeR_DEG_table.tsv.gz&quot;                     &quot;BIC_log2-norm-counts_all-genes.tsv.gz&quot;          &quot;BIC_log2-norm-counts_edgeR_DEG_fdr_0.01.tsv&quot;   
  [7] &quot;BIC_log2-norm-counts_edgeR_DEG_fdr_0.01.tsv.gz&quot; &quot;BIC_log2-norm-counts_edgeR_DEG_top_1000.tsv.gz&quot; &quot;BIC_log2-norm-counts_filtered-genes.tsv&quot;        &quot;BIC_log2-norm-counts_filtered-genes.tsv.gz&quot;     &quot;BIC_pheno.tsv.gz&quot;                               &quot;BIC_sample-classes.tsv.gz&quot;                     </code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">file.size</span>(<span class="kw">list.files</span>(<span class="dt">path =</span> data.folder, <span class="dt">full.names =</span> <span class="ot">TRUE</span>)) <span class="co"># Get the size of the data files, in bytes</span></code></pre></div>
-<pre><code> [1]  44072960  49147679   1711620   1713633 127084028  89596985  89596985   6274068 127084028 127084028    997550     19464</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">file.size</span>(<span class="kw">list.files</span>(<span class="dt">path =</span> data.folder, <span class="dt">full.names =</span> <span class="ot">TRUE</span>))<span class="op">/</span><span class="st"> </span><span class="dv">1024</span><span class="op">^</span><span class="dv">2</span> <span class="co"># Get the size of the data files In Mv</span></code></pre></div>
-<pre><code> [1]  42.03125000  46.87087917   1.63232803   1.63424778 121.19677353  85.44634342  85.44634342   5.98341751 121.19677353 121.19677353   0.95133781   0.01856232</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Full path
+data.path &lt;-<span class="st"> </span><span class="kw">list.files</span>(<span class="dt">path =</span> data.folder, <span class="dt">full.names =</span> <span class="ot">TRUE</span>) <span class="co"># List the data files</span>
+<span class="kw">print</span>(data.files)</code></pre></div>
+<pre><code> [1] &quot;BIC_counts_all-genes.tsv.gz&quot;                    &quot;BIC_counts_filtered-genes.tsv.gz&quot;               &quot;BIC_edgeR_DEG_table.tsv&quot;                        &quot;BIC_edgeR_DEG_table.tsv.gz&quot;                     &quot;BIC_log2-norm-counts_all-genes.tsv.gz&quot;          &quot;BIC_log2-norm-counts_edgeR_DEG_fdr_0.01.tsv&quot;   
+ [7] &quot;BIC_log2-norm-counts_edgeR_DEG_fdr_0.01.tsv.gz&quot; &quot;BIC_log2-norm-counts_edgeR_DEG_top_1000.tsv.gz&quot; &quot;BIC_log2-norm-counts_filtered-genes.tsv&quot;        &quot;BIC_log2-norm-counts_filtered-genes.tsv.gz&quot;     &quot;BIC_pheno.tsv.gz&quot;                               &quot;BIC_sample-classes.tsv.gz&quot;                     </code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data.file.sizes &lt;-<span class="st"> </span><span class="kw">file.size</span>(data.path) <span class="co"># Get the size of the data files, in bytes</span>
+
+## Add file names 
+## (for some strange reason, file.size returns a vector
+## with no names, which is not very convenient)
+<span class="kw">names</span>(data.file.sizes) &lt;-<span class="st"> </span>data.files
+
+## Compute file sizes in megabytes
+data.file.Mb &lt;-<span class="st"> </span><span class="kw">signif</span>(<span class="dt">digits =</span> <span class="dv">2</span>, data.file.sizes <span class="op">/</span><span class="st"> </span>(<span class="dv">1024</span><span class="op">^</span><span class="dv">2</span>))
+<span class="kw">kable</span>(<span class="kw">data.frame</span>(data.file.Mb))</code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+data.file.Mb
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+BIC_counts_all-genes.tsv.gz
+</td>
+<td style="text-align:right;">
+79.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BIC_counts_filtered-genes.tsv.gz
+</td>
+<td style="text-align:right;">
+47.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BIC_edgeR_DEG_table.tsv
+</td>
+<td style="text-align:right;">
+1.600
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BIC_edgeR_DEG_table.tsv.gz
+</td>
+<td style="text-align:right;">
+1.600
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BIC_log2-norm-counts_all-genes.tsv.gz
+</td>
+<td style="text-align:right;">
+120.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BIC_log2-norm-counts_edgeR_DEG_fdr_0.01.tsv
+</td>
+<td style="text-align:right;">
+85.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BIC_log2-norm-counts_edgeR_DEG_fdr_0.01.tsv.gz
+</td>
+<td style="text-align:right;">
+85.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BIC_log2-norm-counts_edgeR_DEG_top_1000.tsv.gz
+</td>
+<td style="text-align:right;">
+6.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BIC_log2-norm-counts_filtered-genes.tsv
+</td>
+<td style="text-align:right;">
+120.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BIC_log2-norm-counts_filtered-genes.tsv.gz
+</td>
+<td style="text-align:right;">
+120.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BIC_pheno.tsv.gz
+</td>
+<td style="text-align:right;">
+0.950
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BIC_sample-classes.tsv.gz
+</td>
+<td style="text-align:right;">
+0.019
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="lire-le-tableau-de-valeurs-dexpression" class="section level2">
 <h2>Lire le tableau de valeurs d’expression</h2>
@@ -702,8 +837,7 @@ sample.colors &lt;-<span class="st"> </span>class.colors[BIC.sample.classes<span
 <li><p>transformation du corrélation de Spearman en une distance à l’aide de la transformation : <span class="math inline">\(d = 1 - r\)</span></p></li>
 </ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Compute Spearman correlation coefficient
-BIC.cor &lt;-<span class="st"> </span><span class="kw">cor</span>(<span class="kw">t</span>(BIC.expr.transposed), 
-               <span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>)
+BIC.cor &lt;-<span class="st"> </span><span class="kw">cor</span>(BIC.expr, <span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>)
 
 <span class="co"># Check the dimensions of the correlation matrix</span>
 <span class="co"># (should be N x N, where N is the number of samples)</span>
@@ -722,7 +856,7 @@ BIC.hclust.complete &lt;-<span class="st"> </span><span class="kw">hclust</span>
 ## Plot the resulting tree
 <span class="kw">plot</span>(BIC.hclust.complete, <span class="dt">labels =</span> F, <span class="dt">hang =</span> <span class="op">-</span><span class="dv">1</span>, <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="st">&quot;grey&quot;</span>,
      <span class="dt">main =</span> <span class="st">&quot;Spearman dissimilarity, complete linkage&quot;</span>)</code></pre></div>
-<p><img src="figures/TP_unnamed-chunk-6-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="figures/TP_unnamed-chunk-5-1.png" width="480" style="display: block; margin: auto;" /></p>
 <ol start="2" style="list-style-type: decimal">
 <li>faire un deuxième clustering hiérarchique, avec le critère d’aggrégation de Ward</li>
 </ol>
@@ -732,7 +866,7 @@ BIC.hclust.ward &lt;-<span class="st"> </span><span class="kw">hclust</span>(BIC
 ## Plot the resulting tree
 <span class="kw">plot</span>(BIC.hclust.ward, <span class="dt">labels =</span> F, <span class="dt">hang =</span> <span class="op">-</span><span class="dv">1</span>, <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="st">&quot;#88BB66&quot;</span>, 
      <span class="dt">main =</span> <span class="st">&quot;Spearman dissimilarity, Ward linkage&quot;</span>)</code></pre></div>
-<p><img src="figures/TP_unnamed-chunk-7-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="figures/TP_unnamed-chunk-6-1.png" width="480" style="display: block; margin: auto;" /></p>
 <ol start="3" style="list-style-type: decimal">
 <li>Redessiner les arbres de ces deux résultats de clustering en colorant les échantillons selon la classe de cancer.</li>
 </ol>
@@ -758,23 +892,134 @@ BIC.hclust.ward &lt;-<span class="st"> </span><span class="kw">hclust</span>(BIC
 <h3>Combinaison d’un arbre et d’une carte de température</h3>
 <p>La fonction R <code>heatmap()</code> permet de représenter à la fois les arbres produit par le clustering hiérarchique, et les profils d’expression.</p>
 <p>Par défaut, elle effectue simultanément un clustering hiérarchique sur les lignes et sur les colonnes, ce qui permet de distinguer non seulement les groupes d’échantillons biologiques, mais également ceux de gènes.</p>
-<p><strong>Attention:</strong></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># trop long pour nos machines</span>
-<span class="co"># heatmap(as.matrix(BIC.expr))</span>
-
-<span class="co"># si on ne fait pas attention</span>
-<span class="co"># heatmap(as.matrix(BIC.expr[sample.int(nrow(BIC.expr), 50), ]))</span>
-        
-<span class="co"># extrayons qqs gènes aux hasard (qqs = 1000)</span>
-<span class="kw">heatmap</span>(<span class="kw">as.matrix</span>(BIC.expr),
+<p><strong>Attention:</strong> la fonction <code>heatmap()</code> effectue par défaut un clustering hiérarchique sur les lignes et colonnes de votre matrice d’expression.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">heatmap</span>(<span class="kw">as.matrix</span>(BIC.expr), 
         <span class="dt">distfun =</span> <span class="cf">function</span>(x) <span class="kw">as.dist</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">cor</span>(<span class="kw">t</span>(x), <span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>)), 
-        <span class="dt">hclustfun =</span> <span class="cf">function</span>(x) <span class="kw">hclust</span>(x, <span class="dt">method =</span> <span class="st">&quot;ward.D2&quot;</span>) )</code></pre></div>
+        <span class="dt">hclustfun =</span> <span class="cf">function</span>(x) <span class="kw">hclust</span>(x, <span class="dt">method =</span> <span class="st">&quot;ward.D2&quot;</span>),
+        <span class="dt">labRow =</span> <span class="ot">NA</span>, <span class="dt">labCol =</span> <span class="ot">NA</span>)</code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figures/TP_heatmap-1.png" alt="Heat map of th eexpression table clustered by genes (rows) and samples (columns)." width="95%" />
+<img src="figures/TP_heatmap-1.png" alt="Heat map of the expression matrix clustered by genes (rows) and samples (columns)." width="80%" />
 <p class="caption">
-Heat map of th eexpression table clustered by genes (rows) and samples (columns).
+Heat map of the expression matrix clustered by genes (rows) and samples (columns).
 </p>
 </div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Compute mean value per gene</span>
+gene.means &lt;-<span class="st"> </span><span class="kw">apply</span>(BIC.expr, <span class="dv">1</span>, mean)
+gene.sd &lt;-<span class="st">  </span><span class="kw">apply</span>(BIC.expr, <span class="dv">1</span>, sd)
+
+<span class="co"># Compute gene-wise centered expression values</span>
+BIC.expr.genes.centered &lt;-<span class="st"> </span>BIC.expr <span class="op">-</span><span class="st"> </span>gene.means
+
+<span class="co"># Compute gene-wise centred + scaled expression values</span>
+BIC.expr.genes.standardized &lt;-<span class="st"> </span>BIC.expr.genes.centered <span class="op">/</span><span class="st"> </span>gene.sd
+
+<span class="kw">summary</span>(<span class="kw">unlist</span>(BIC.expr.genes.standardized))</code></pre></div>
+<pre><code>     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-8.969062 -0.622261 -0.001282  0.000000  0.618155  9.470421 </code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(<span class="kw">unlist</span>(BIC.expr.genes.standardized), <span class="dt">breaks =</span> <span class="dv">100</span>,
+     <span class="dt">main =</span> <span class="st">&quot;Gene-wise standardized expression values&quot;</span>,
+     <span class="dt">xlab =</span> <span class="st">&quot;z-score&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Number of measures&quot;</span>, 
+     <span class="dt">col =</span> <span class="st">&quot;#DDEEFF&quot;</span>, <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">7</span>,<span class="dv">7</span>))
+
+<span class="co"># Draw a vertical grid</span>
+<span class="kw">abline</span>(<span class="dt">v =</span> <span class="op">-</span><span class="dv">7</span><span class="op">:</span><span class="dv">7</span>, <span class="dt">col =</span> <span class="st">&quot;#BBBBBB&quot;</span>, <span class="dt">lty =</span> <span class="st">&quot;dotted&quot;</span>)
+
+<span class="co">#Mark center</span>
+<span class="kw">abline</span>(<span class="dt">v =</span> <span class="dv">0</span>, <span class="dt">col =</span> <span class="st">&quot;#008800&quot;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)
+
+<span class="co"># Mark dispersion (mean +- 1 sdev)</span>
+<span class="kw">arrows</span>(<span class="dt">x0 =</span> <span class="op">-</span><span class="dv">1</span>, <span class="dt">y0 =</span> <span class="dv">50000</span>, <span class="dt">x1 =</span> <span class="dv">1</span>, <span class="dt">y1 =</span> <span class="dv">50000</span>, <span class="dt">length =</span> <span class="fl">0.05</span>, <span class="dt">angle =</span> <span class="dv">30</span>, <span class="dt">code =</span> <span class="dv">3</span>, <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">col =</span> <span class="st">&quot;#008800&quot;</span>)</code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/TP_standardize_genes-1.png" alt="Histogram of expression values after gene-wise standardization (centering and scaling)." width="80%" />
+<p class="caption">
+Histogram of expression values after gene-wise standardization (centering and scaling).
+</p>
+</div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## define a Blue - White - Red palette
+frenchflag.palette &lt;-<span class="st"> </span><span class="kw">colorRampPalette</span>(<span class="kw">c</span>(<span class="st">&#39;dark blue&#39;</span>,<span class="st">&#39;white&#39;</span>,<span class="st">&#39;dark red&#39;</span>))
+
+<span class="kw">heatmap</span>(<span class="kw">as.matrix</span>(BIC.expr.genes.standardized),
+        <span class="dt">zlim =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">4</span>,<span class="dv">4</span>),
+        <span class="dt">distfun =</span> <span class="cf">function</span>(x) <span class="kw">as.dist</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">cor</span>(<span class="kw">t</span>(x), <span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>)), 
+        <span class="dt">hclustfun =</span> <span class="cf">function</span>(x) <span class="kw">hclust</span>(x, <span class="dt">method =</span> <span class="st">&quot;ward.D2&quot;</span>),
+        <span class="dt">labRow =</span> <span class="ot">NA</span>, <span class="dt">labCol =</span> <span class="ot">NA</span>,  <span class="co"># DO not print the labels (unreadable anyway)</span>
+        <span class="dt">col =</span> <span class="kw">frenchflag.palette</span>(<span class="dv">100</span>),
+        <span class="dt">scale =</span> <span class="st">&quot;none&quot;</span>)</code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/TP_heatmap_frenchflag_palette-1.png" alt="Heat map of the expression matrix clustered by genes (rows) and samples (columns)." width="80%" />
+<p class="caption">
+Heat map of the expression matrix clustered by genes (rows) and samples (columns).
+</p>
+</div>
+</div>
+<div id="draw-a-tree-with-heatmap.2" class="section level3">
+<h3>Draw a tree with heatmap.2()</h3>
+<p>The function <code>heatmap.2()</code> is derived from <code>heatmap()</code> but offers nice additional formatting options.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Define a color for the heatmap</span>
+expr.colors &lt;-<span class="st"> </span><span class="kw">heat.colors</span>(<span class="dt">n =</span> <span class="dv">100</span>)
+
+<span class="co"># Compute dendrogram with the hclust() function</span>
+<span class="co"># Choose a custom dissimilirity measure</span>
+<span class="co"># and agglomeration rule</span>
+
+<span class="co"># compute dissimilarity between samples</span>
+sample.dist &lt;-<span class="st"> </span><span class="kw">as.dist</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">cor</span>(BIC.expr, <span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>)) 
+
+<span class="co"># Run hierarchical clustering on samples</span>
+sample.clust =<span class="st"> </span><span class="kw">hclust</span>(sample.dist, <span class="dt">method =</span> <span class="st">&quot;complete&quot;</span>)
+
+<span class="co"># Convert the clustering result in a tree object that can be used with plot() and / or heatmap()</span>
+sample.tree &lt;-<span class="st"> </span><span class="kw">as.dendrogram</span>(sample.clust)
+
+<span class="co"># Define colors for the cancer type</span>
+cancer.type &lt;-<span class="st"> </span><span class="kw">unique</span>(BIC.sample.classes<span class="op">$</span>cancer.type)
+type.cancer.colors &lt;-<span class="st"> </span><span class="kw">rainbow</span>(<span class="dt">n =</span> <span class="kw">length</span>(cancer.type))
+<span class="kw">names</span>(type.cancer.colors) &lt;-<span class="st"> </span>cancer.type
+
+<span class="co"># Define colors for ER1 marker</span>
+ER1.classes &lt;-<span class="st"> </span><span class="kw">unique</span>(BIC.sample.classes<span class="op">$</span>ER1)
+ER1.colors &lt;-<span class="st"> </span><span class="kw">rainbow</span>(<span class="dt">n =</span> <span class="kw">length</span>(ER1.classes))
+<span class="kw">names</span>(ER1.colors) &lt;-<span class="st"> </span>ER1.classes
+<span class="kw">print</span>(ER1.colors)</code></pre></div>
+<pre><code>   Positive    Negative 
+&quot;#FF0000FF&quot; &quot;#00FFFFFF&quot; </code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Define colors for PR1 marker</span>
+PR1.classes &lt;-<span class="st"> </span><span class="kw">unique</span>(BIC.sample.classes<span class="op">$</span>PR1)
+PR1.colors &lt;-<span class="st"> </span><span class="kw">heat.colors</span>(<span class="dt">n =</span> <span class="kw">length</span>(PR1.classes))
+<span class="kw">names</span>(PR1.colors) &lt;-<span class="st"> </span>PR1.classes
+<span class="kw">print</span>(PR1.colors)</code></pre></div>
+<pre><code>   Positive    Negative 
+&quot;#FF0000FF&quot; &quot;#FFFF00FF&quot; </code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Define colors for Her2 marker</span>
+Her2.classes &lt;-<span class="st"> </span><span class="kw">unique</span>(BIC.sample.classes<span class="op">$</span>Her2)
+Her2.colors &lt;-<span class="st"> </span><span class="kw">topo.colors</span>(<span class="dt">n =</span> <span class="kw">length</span>(Her2.classes))
+<span class="kw">names</span>(Her2.colors) &lt;-<span class="st"> </span>Her2.classes
+
+## Detiine annotations for the heatmap
+## combining the 3 markers + cancer type
+annot.tumeur.column =<span class="st"> </span><span class="kw">HeatmapAnnotation</span>(
+  <span class="dt">df =</span> BIC.sample.classes,
+  <span class="dt">col =</span> <span class="kw">list</span>(<span class="dt">cancer.type =</span> type.cancer.colors,
+             <span class="dt">ER1 =</span> ER1.colors, 
+             <span class="dt">PR1 =</span> PR1.colors,
+             <span class="dt">Her2 =</span> Her2.colors)
+)
+
+<span class="co"># A first heatmap</span>
+my.heatmap &lt;-<span class="st"> </span>ComplexHeatmap<span class="op">::</span><span class="kw">Heatmap</span>(
+  <span class="kw">as.matrix</span>(BIC.expr.genes.standardized), 
+  <span class="dt">name =</span> <span class="st">&quot;TCGA Breast Invasive Cancer&quot;</span>, 
+  <span class="co"># col = frenchflag.palette(100),</span>
+  <span class="dt">col =</span> <span class="kw">brewer.pal</span>(<span class="dv">11</span>,<span class="st">&quot;RdBu&quot;</span>),
+  <span class="dt">column_title =</span> <span class="st">&quot;Samples&quot;</span>,
+  <span class="dt">row_title =</span> <span class="st">&quot;Genes&quot;</span>,
+  <span class="dt">cluster_columns =</span> sample.tree,
+  <span class="dt">show_column_names =</span> <span class="ot">FALSE</span>, 
+  <span class="dt">show_row_names =</span> <span class="ot">FALSE</span>,
+  <span class="dt">bottom_annotation =</span> annot.tumeur.column
+)
+<span class="kw">draw</span>(my.heatmap)</code></pre></div>
+<p><img src="figures/TP_complex_heatmap-1.png" width="95%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="kmeans" class="section level3">
 <h3>kmeans</h3>
@@ -792,7 +1037,7 @@ BIC.kmeans &lt;-<span class="st"> </span><span class="kw">kmeans</span>(BIC.expr
 <span class="kw">table</span>(BIC.kmeans<span class="op">$</span>cluster)</code></pre></div>
 <pre><code>
   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20 
- 93  20  10  30  13 116  62  38  37  44  41   5  16  36  69  34  43  42  36  34 </code></pre>
+  5  33  64  32 119  38  32  56  86  67  20  44  19  27  35  65  12  27  15  23 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">T1 =<span class="st"> </span><span class="kw">Sys.time</span>()
 I.intra =<span class="st"> </span><span class="kw">numeric</span>(<span class="dt">length=</span><span class="dv">20</span>)
 I.intra[<span class="dv">1</span>] =<span class="st"> </span><span class="kw">kmeans</span>(BIC.expr.transposed, <span class="dt">centers=</span><span class="dv">2</span>)<span class="op">$</span>totss
@@ -804,7 +1049,7 @@ I.intra[<span class="dv">1</span>] =<span class="st"> </span><span class="kw">km
 
 <span class="co"># Plot a curve showint the intra-cluster information as a function of the number of clusters </span>
 <span class="kw">plot</span>((<span class="dv">1</span><span class="op">:</span><span class="dv">20</span>)<span class="op">-</span><span class="fl">0.5</span>, I.intra, <span class="dt">type=</span><span class="st">&quot;s&quot;</span>)</code></pre></div>
-<p><img src="figures/TP_unnamed-chunk-8-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="figures/TP_unnamed-chunk-7-1.png" width="480" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">T2 =<span class="st"> </span><span class="kw">Sys.time</span>()
 Tdiff =<span class="st"> </span><span class="kw">difftime</span>(T2,T1) ## Measure elapsed time
 
@@ -813,19 +1058,19 @@ BIC.kmeans2 &lt;-<span class="st"> </span><span class="kw">kmeans</span>(BIC.exp
 <span class="kw">table</span>(BIC.kmeans2<span class="op">$</span>cluster) ## Cluster sizes</code></pre></div>
 <pre><code>
   1   2 
-297 522 </code></pre>
+650 169 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Run k-means clustering with 3 clusters
 BIC.kmeans3 &lt;-<span class="st"> </span><span class="kw">kmeans</span>(BIC.expr.transposed, <span class="dt">centers =</span> <span class="dv">3</span>)
 <span class="kw">table</span>(BIC.kmeans3<span class="op">$</span>cluster) ## Cluster sizes</code></pre></div>
 <pre><code>
   1   2   3 
-144 195 480 </code></pre>
+205 475 139 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Run k-means clustering with 10 clusters
 BIC.kmeans10 &lt;-<span class="st"> </span><span class="kw">kmeans</span>(BIC.expr.transposed, <span class="dt">centers =</span> <span class="dv">10</span>)
 <span class="kw">table</span>(BIC.kmeans10<span class="op">$</span>cluster) ## Cluster sizes</code></pre></div>
 <pre><code>
   1   2   3   4   5   6   7   8   9  10 
-  5  72 185 145  57  17  75  80  66 117 </code></pre>
+114 167  34  80   5  87 170  12  70  80 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Cut the tree at some arbitrary levels to get clusters
 
 ## 2 clusters to see if the first subdivision corresponds to one of the 3 markers (ER1, PR1, Her2)
@@ -861,7 +1106,7 @@ pch.her2 &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(BIC.sa
      <span class="dt">pch =</span> pch.er1,
      <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">cex =</span> <span class="fl">0.7</span>, 
      <span class="dt">main =</span> <span class="st">&quot;K-means 10 clusters versus markers&quot;</span>)</code></pre></div>
-<p><img src="figures/TP_unnamed-chunk-8-2.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="figures/TP_unnamed-chunk-7-2.png" width="480" style="display: block; margin: auto;" /></p>
 </div>
 <div id="comparaisons" class="section level3">
 <h3>Comparaisons</h3>
@@ -882,42 +1127,42 @@ BIC.cutree3 &lt;-<span class="st"> </span><span class="kw">cutree</span>(BIC.hcl
 <span class="kw">plot</span>(BIC.hclust.ward, <span class="dt">labels =</span> F, <span class="dt">hang =</span> <span class="op">-</span><span class="dv">1</span>, <span class="dt">main =</span> <span class="st">&quot;complete&quot;</span>)
 
 <span class="kw">rect.hclust</span>(BIC.hclust.ward, <span class="dt">k =</span> <span class="dv">10</span>)</code></pre></div>
-<p><img src="figures/TP_unnamed-chunk-9-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="figures/TP_unnamed-chunk-8-1.png" width="480" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">BIC.cutree10 &lt;-<span class="st"> </span><span class="kw">cutree</span>(BIC.hclust.ward, <span class="dt">k =</span> <span class="dv">10</span>)
 
 <span class="kw">table</span>(BIC.cutree3, BIC.kmeans<span class="op">$</span>cluster)</code></pre></div>
 <pre><code>           
 BIC.cutree3   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20
-          1  93  20   0  25  13 110  60   0   1  43  41   0   0   2  69   2  34   3  36  33
-          2   0   0  10   0   0   6   2   0   0   0   0   5  16  34   0  32   9   0   0   1
-          3   0   0   0   5   0   0   0  38  36   1   0   0   0   0   0   0   0  39   0   0</code></pre>
+          1   0  33  64  32 117   2  32  56  85  67  19  38  19  12   0   2   0   6   0   1
+          2   5   0   0   0   2   0   0   0   1   0   1   0   0  15   0  63  12   0  15   1
+          3   0   0   0   0   0  36   0   0   0   0   0   6   0   0  35   0   0  21   0  21</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(BIC.cutree10, BIC.kmeans<span class="op">$</span>cluster)</code></pre></div>
 <pre><code>            
 BIC.cutree10   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20
-          1   50   0   0   2   0 106  13   0   0   3   2   0   0   0  19   0   6   0   0  13
-          2    0   0  10   0   0   0   0   0   0   0   0   0   0  34   0  32   0   0   0   0
-          3   21   0   0   5   0   0   0   0   0  35  10   0   0   0   0   0  14   3   0   0
-          4    0   0   0   0   0   6   2   0   0   0   0   0  16   0   0   0   9   0   0   1
-          5   22   0   0   0  13   4  46   0   1   5   8   0   0   0   2   0  14   0  36  19
-          6    0   0   0   4   0   0   0  36  20   1   0   0   0   0   0   0   0   3   0   0
-          7    0   0   0  15   0   0   0   0   0   0   1   0   0   0   0   0   0   0   0   0
-          8    0  20   0   3   0   0   1   0   0   0  20   0   0   2  48   2   0   0   0   1
-          9    0   0   0   1   0   0   0   2  16   0   0   0   0   0   0   0   0  36   0   0
-          10   0   0   0   0   0   0   0   0   0   0   0   5   0   0   0   0   0   0   0   0</code></pre>
+          1    0   2   6   2 113   0   3   7  56  19   0   4   0   2   0   0   0   0   0   0
+          2    0   0   0   0   0   0   0   0   0   0   0   0   0   0   0  63  12   0   0   1
+          3    0   1  15   4   2   1   0   0   0  38   0  17   0   4   0   0   0   6   0   0
+          4    0   0   0   0   2   0   0   0   1   0   1   0   0  15   0   0   0   0  15   0
+          5    0  30  43   2   2   0  28   2  27  10  19   0   0   6   0   0   0   0   0   1
+          6    0   0   0   0   0  32   0   0   0   0   0   5   0   0  15   0   0   0   0  12
+          7    0   0   0   0   0   1   0   0   0   0   0  15   0   0   0   0   0   0   0   0
+          8    0   0   0  24   0   0   1  47   2   0   0   2  19   0   0   2   0   0   0   0
+          9    0   0   0   0   0   4   0   0   0   0   0   1   0   0  20   0   0  21   0   9
+          10   5   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))
 
 clues<span class="op">::</span><span class="kw">adjustedRand</span>(BIC.cutree3, BIC.kmeans3<span class="op">$</span>cluster)</code></pre></div>
 <pre><code>     Rand        HA        MA        FM   Jaccard 
-0.7636183 0.5337892 0.5343635 0.7647639 0.6116180 </code></pre>
+0.7572506 0.5215418 0.5221341 0.7577480 0.6021684 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">clues<span class="op">::</span><span class="kw">adjustedRand</span>(BIC.cutree10, BIC.kmeans10<span class="op">$</span>cluster)</code></pre></div>
 <pre><code>     Rand        HA        MA        FM   Jaccard 
-0.8682990 0.4787843 0.4824130 0.5567939 0.3848085 </code></pre>
+0.8631404 0.4633921 0.4670789 0.5443166 0.3733135 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">clues<span class="op">::</span><span class="kw">adjustedRand</span>(BIC.cutree3, BIC.kmeans10<span class="op">$</span>cluster)</code></pre></div>
 <pre><code>     Rand        HA        MA        FM   Jaccard 
-0.5631443 0.1856241 0.1870561 0.4566686 0.2244206 </code></pre>
+0.5744766 0.2062339 0.2076250 0.4774890 0.2392171 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">clues<span class="op">::</span><span class="kw">adjustedRand</span>(BIC.cutree10, BIC.kmeans3<span class="op">$</span>cluster)</code></pre></div>
 <pre><code>     Rand        HA        MA        FM   Jaccard 
-0.6463485 0.2180892 0.2201105 0.4497390 0.2486077 </code></pre>
+0.6472829 0.2162725 0.2183201 0.4469531 0.2472317 </code></pre>
 </div>
 <div id="clustering-versus-statut" class="section level4">
 <h4>clustering versus statut</h4>
@@ -1025,18 +1270,18 @@ BIC.cutree2 Negative Positive
 <span class="kw">table</span>(BIC.kmeans2<span class="op">$</span>cluster, BIC.sample.classes<span class="op">$</span>ER1)</code></pre></div>
 <pre><code>   
     Negative Positive
-  1      155      142
-  2       29      493</code></pre>
+  1       41      609
+  2      143       26</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(BIC.kmeans2<span class="op">$</span>cluster, BIC.sample.classes<span class="op">$</span>PR1)</code></pre></div>
 <pre><code>   
     Negative Positive
-  1      175      122
-  2       92      430</code></pre>
+  1      113      537
+  2      154       15</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(BIC.kmeans2<span class="op">$</span>cluster, BIC.sample.classes<span class="op">$</span>Her2)</code></pre></div>
 <pre><code>   
     Negative Positive
-  1      247       50
-  2      384      138</code></pre>
+  1      497      153
+  2      134       35</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## 5 clusters
 <span class="kw">table</span>(BIC.cutree5, BIC.sample.classes<span class="op">$</span>Her2)</code></pre></div>
 <pre><code>           
@@ -1238,36 +1483,36 @@ BIC.cutree5 Basal.like HER2pos Luminal.A Luminal.B Unclassified
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">clues<span class="op">::</span><span class="kw">adjustedRand</span>(
   <span class="kw">sample</span>(BIC.cutree5), 
   <span class="kw">as.numeric</span>(BIC.sample.classes<span class="op">$</span>cancer.type))</code></pre></div>
-<pre><code>         Rand            HA            MA            FM       Jaccard 
- 0.5329207603 -0.0018258244  0.0002761862  0.3626218776  0.2202325477 </code></pre>
+<pre><code>      Rand         HA         MA         FM    Jaccard 
+0.54360228 0.02108469 0.02313863 0.37730269 0.23121021 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(BIC.kmeans3<span class="op">$</span>cluster, BIC.sample.classes<span class="op">$</span>cancer.type)</code></pre></div>
 <pre><code>   
     Basal.like HER2pos Luminal.A Luminal.B Unclassified
-  1        105      14         2         1           22
-  2         19       4       128        25           19
-  3          7      23       292        92           66</code></pre>
+  1         20       5       132        26           22
+  2          7      23       288        91           66
+  3        104      13         2         1           19</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">clues<span class="op">::</span><span class="kw">adjustedRand</span>(
   BIC.kmeans3<span class="op">$</span>cluster,
   <span class="kw">as.numeric</span>(BIC.sample.classes<span class="op">$</span>cancer.type))</code></pre></div>
 <pre><code>     Rand        HA        MA        FM   Jaccard 
-0.6190387 0.2003639 0.2019237 0.5037409 0.3327913 </code></pre>
+0.6175311 0.1953289 0.1969111 0.4993093 0.3291162 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(BIC.kmeans10<span class="op">$</span>cluster, BIC.sample.classes[,<span class="dv">1</span>])</code></pre></div>
 <pre><code>    
      Basal.like HER2pos Luminal.A Luminal.B Unclassified
-  1           5       0         0         0            0
-  2           0       0        46        11           15
-  3           3       0       148        22           12
-  4           6      23        49        38           29
-  5           0       0        47         5            5
-  6           0       0        14         3            0
-  7           3       2        46        15            9
-  8          12       4        40        14           10
-  9          10       4        32        10           10
-  10         92       8         0         0           17</code></pre>
+  1          90       9         0         0           15
+  2           2       0       135        17           13
+  3           0       1        27         5            1
+  4           3       2        51        15            9
+  5           5       0         0         0            0
+  6          15      16        23        15           18
+  7           4       9        87        44           26
+  8           2       0         8         1            1
+  9          10       4        34        13            9
+  10          0       0        57         8           15</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">clues<span class="op">::</span><span class="kw">adjustedRand</span>(BIC.kmeans10<span class="op">$</span>cluster,
                     <span class="kw">as.numeric</span>(BIC.sample.classes[,<span class="dv">1</span>]))</code></pre></div>
 <pre><code>     Rand        HA        MA        FM   Jaccard 
-0.6692490 0.1244273 0.1276767 0.3240693 0.1736750 </code></pre>
+0.6669025 0.1209366 0.1241759 0.3226683 0.1737962 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Visualisation</span>
 
 
@@ -1283,7 +1528,7 @@ texte.legend &lt;-<span class="st"> </span><span class="kw">c</span>(<span class
        <span class="dt">col =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>), 
        <span class="dt">pch =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="ot">NA</span>, <span class="ot">NA</span>), 
        <span class="dt">text.col =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>))</code></pre></div>
-<p><img src="figures/TP_unnamed-chunk-11-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/TP_unnamed-chunk-10-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Draw a confusion table of cluster versus ER1
 <span class="kw">kable</span>(<span class="kw">table</span>(BIC.cutree2, BIC.sample.classes<span class="op">$</span>ER1), <span class="dt">caption =</span> <span class="st">&quot;hclust clusters versus ER1 marker&quot;</span>)</code></pre></div>
 <table>
@@ -1339,15 +1584,16 @@ locale:
 [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 
 attached base packages:
-[1] stats     graphics  grDevices utils     datasets  methods   base     
+[1] grid      stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] ClassDiscovery_3.3.9 oompaBase_3.2.6      cluster_2.0.7-1      RColorBrewer_1.1-2   clues_0.5.9          FactoMineR_1.41      kableExtra_1.0.1     knitr_1.21          
+[1] ClassDiscovery_3.3.9  oompaBase_3.2.6       cluster_2.0.7-1       ComplexHeatmap_1.20.0 RColorBrewer_1.1-2    clues_0.5.9           FactoMineR_1.41       kableExtra_1.0.1      knitr_1.21           
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.0           oompaData_3.1.1      highr_0.7            pillar_1.3.1         compiler_3.5.2       tools_3.5.2          mclust_5.4.2         digest_0.6.18        evaluate_0.12        tibble_2.0.1         viridisLite_0.3.0    lattice_0.20-38      pkgconfig_2.0.2      rlang_0.3.1         
-[15] rstudioapi_0.9.0     yaml_2.2.0           xfun_0.4             httr_1.4.0           stringr_1.3.1        xml2_1.2.0           hms_0.4.2            flashClust_1.01-2    webshot_0.5.1        grid_3.5.2           scatterplot3d_0.3-41 glue_1.3.0           R6_2.3.0             rmarkdown_1.11      
-[29] readr_1.3.1          magrittr_1.5         scales_1.0.0         htmltools_0.3.6      leaps_3.0            MASS_7.3-51.1        rvest_0.3.2          colorspace_1.4-0     stringi_1.2.4        munsell_0.5.0        crayon_1.3.4        </code></pre>
+ [1] Rcpp_1.0.0           oompaData_3.1.1      highr_0.7            pillar_1.3.1         compiler_3.5.2       tools_3.5.2          mclust_5.4.2         digest_0.6.18        evaluate_0.13        tibble_2.0.1         viridisLite_0.3.0    lattice_0.20-38      pkgconfig_2.0.2      rlang_0.3.1         
+[15] rstudioapi_0.9.0     yaml_2.2.0           xfun_0.5             httr_1.4.0           stringr_1.4.0        xml2_1.2.0           GlobalOptions_0.1.0  hms_0.4.2            flashClust_1.01-2    webshot_0.5.1        scatterplot3d_0.3-41 glue_1.3.0           R6_2.4.0             GetoptLong_0.1.7    
+[29] rmarkdown_1.11       readr_1.3.1          magrittr_1.5         scales_1.0.0         htmltools_0.3.6      leaps_3.0            MASS_7.3-51.1        rvest_0.3.2          shape_1.4.4          circlize_0.4.5       colorspace_1.4-0     stringi_1.3.1        munsell_0.5.0        rjson_0.2.20        
+[43] crayon_1.3.4        </code></pre>
 </div>
 
 
