@@ -4,7 +4,7 @@ author: "Jacques van Helden"
 date: '`r Sys.Date()`'
 output:
   html_document:
-    self_contained: no
+    self_contained: yes
     fig_caption: yes
     highlight: zenburn
     theme: cerulean
@@ -168,8 +168,8 @@ parameters <- list(
   gene.filter.min.count = 10, # Minimal counts per gene
   
   ## Test and control groups for differential analysis
-  test.group = "bdf1_Y187F_Y354F_mutant_0",
-  control.group = "Wild_type_0"
+  test.group = "bdf1_Y187F_Y354F_mutant_4",
+  control.group = "Wild_type_4"
 )
 
 ## Create output directory
