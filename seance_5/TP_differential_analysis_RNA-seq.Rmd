@@ -158,7 +158,8 @@ library(edgeR)
 
 parameters <- list(
   data.folder = "data/GSE89530", # dossier des données
-  # data.folder = "/shared/projects/du_bii_2019/data/module3/seance5/GSE89530" # on the IFB-cluster-core
+  # data.folder = "/shared/projects/du_bii_2019/data/module3/seance5/GSE89530", # on the IFB-cluster-core
+  workdir = "~/DU-Bii/m3s5/", # Directory to export the results
   counts = "GSE89530_counts.tsv.gz",
   sample.descr = "GSE89530_samples.tsv.gz",
   alpha = 0.05, # seuil de significativité
@@ -171,6 +172,10 @@ parameters <- list(
   control.group = "Wild_type_0"
 )
 
+## Create output directory
+dir.create(parameters$workdir, showWarnings = FALSE, recursive = TRUE)
+
+## Print the parameter values in the report
 kable(t(data.frame(parameters)), col.names = "Parameter Value")
 
 ```
@@ -593,30 +598,20 @@ kable(table(deseq2.res.dds.2groups$positive),
       caption = "Number of genes declared positive")
 
 ## Export the results
+outfiles <- vector()
+
 
 ## DESeq2 result table
-parameters$workdir <- "~/DU-Bii/m3s5/"
-dir.create(parameters$workdir, showWarnings = FALSE, recursive = TRUE)
+outfiles["DESeq2 all genes"] <- file.path(parameters$workdir, "DESeq2_all_genes.tsv")
 write.table(
   x = deseq2.res.dds.2groups, 
-  quote = FALSE, row.names = 1, col.names = NA,
-  file = file.path(parameters$workdir, "DESeq2_all_genes.tsv"))
-
-## Differentially expressed genes
-write.table(
-  x = deseq2.res.dds.2groups[deseq2.res.dds.2groups$positive, ], 
-  quote = FALSE, row.names = 1, col.names = NA,
-  file = file.path(parameters$workdir, "DESeq2_positive.tsv"))
-
-## Differentially expressed genes
-write.table(
-  x = row.names(deseq2.res.dds.2groups[deseq2.res.dds.2groups$positive, ]), 
-  quote = FALSE, row.names = FALSE, col.names = FALSE,
-  file = file.path(parameters$workdir, "DESeq2_positive_geneIDs.txt"))
-
-
+  quote = FALSE, row.names = TRUE, col.names = NA,
+  file = outfiles["DESeq2 all genes"])
 
 ```
+
+
+
 
 ### Diagnostic plots
 
@@ -738,3 +733,26 @@ par(mfrow = c(1, 1))
 
 
 ## Contrôles négatifs
+
+
+## Fichiers de résultats
+
+```{r export_results}
+
+## Differentially expressed genes
+outfiles["DESeq2 positive genes"] <- file.path(parameters$workdir, "DESeq2_positive.tsv")
+write.table(
+  x = deseq2.res.dds.2groups[deseq2.res.dds.2groups$positive, ], 
+  quote = FALSE, row.names = TRUE, col.names = NA,
+  file = outfiles["DESeq2 positive genes"] )
+
+## Differentially expressed genes
+outfiles["DESeq2 DEG iDs"] <- file.path(parameters$workdir, "DESeq2_positive_geneIDs.txt")
+write.table(
+  x = row.names(deseq2.res.dds.2groups[deseq2.res.dds.2groups$positive, ]), 
+  quote = FALSE, row.names = FALSE, col.names = FALSE,
+  file = outfiles["DESeq2 DEG iDs"] )
+
+kable(outfiles, caption = "fichiers re résultats", col.names = "Result file")
+```
+
