@@ -3,15 +3,11 @@ title: "Détection de gènes différentiellement exprimés à partir de données
 author: "Jacques van Helden"
 date: '`r Sys.Date()`'
 output:
-  html_document:
-    self_contained: no
+  pdf_document:
     fig_caption: yes
     highlight: zenburn
-    theme: cerulean
     toc: yes
     toc_depth: 3
-    toc_float: yes
-    code_folding: "hide"
   beamer_presentation:
     colortheme: dolphin
     fig_caption: yes
@@ -29,11 +25,15 @@ output:
     transition: none
     self_contained: true
     css: ../slides.css
-  pdf_document:
+  html_document:
+    self_contained: no
     fig_caption: yes
     highlight: zenburn
+    theme: cerulean
     toc: yes
     toc_depth: 3
+    toc_float: yes
+    code_folding: "hide"
   slidy_presentation:
     smart: no
     slide_level: 2
@@ -189,10 +189,12 @@ kable(t(data.frame(parameters)), col.names = "Parameter Value")
 # list.files(parameters$data.folder)
 
 ## Load sample descriptions
+message("Loading sample descriptions from file\t", parameters$sample.descr)
 samples <- read.delim(file.path(parameters$data.folder, parameters$sample.descr), row.names = 1, header = TRUE)
 # View(samples) # Check visually the content of the samples data frame
 
 ## Load counts of reads per gene
+message("Loading counts from file\t", parameters$counts)
 counts <- read.delim(file.path(parameters$data.folder, parameters$counts), row.names = 1, header = TRUE)
 
 ## Check that the count table contains the same sample IDs as the sample description table. If not, stop everything here.
@@ -542,6 +544,22 @@ filtered.counts <- counts[filtered.genes, ]
 ## Update the set of test genes to avoir NA values
 some.genes <- sample(1:nrow(filtered.counts), size = 10, replace = FALSE)
 
+
+```
+
+## Reproductibilité des réplicats
+
+
+Nous pouvons comparer les réplicats pour une même condition au moyen d'un nuage de points, avec la fonction `plot()`. 
+
+
+```{r between_replicate_reproducibility,  out.width="80%", fig.width=10, fig.height=10, fig.cap="Between-replicate comparison of counts per gene for the test condition. "}
+
+## Sélectionner les échantillons de la condition "test"
+message("Comparing counts between replicates for condition", parameters$test.group)
+selected.samples <- samples$Condition  == parameters$test.group
+plot(counts.log2[, selected.samples], 
+     col = samples[selected.samples, "color"])
 
 ```
 
