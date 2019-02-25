@@ -157,8 +157,8 @@ library(edgeR)
 ```{r custom_parameters}
 
 parameters <- list(
-  data.folder = "data/GSE89530", # dossier des données
-  # data.folder = "/shared/projects/du_bii_2019/data/module3/seance5/GSE89530", # on the IFB-cluster-core
+  # data.folder = "data/GSE89530", # dossier des données locales
+  data.folder = "/shared/projects/du_bii_2019/data/module3/seance5/GSE89530", # on the IFB-cluster-core
   workdir = "~/DU-Bii/m3s5/", # Directory to export the results
   counts = "GSE89530_counts.tsv.gz",
   sample.descr = "GSE89530_samples.tsv.gz",
