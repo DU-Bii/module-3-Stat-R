@@ -3,11 +3,15 @@ title: "Détection de gènes différentiellement exprimés à partir de données
 author: "Jacques van Helden"
 date: '`r Sys.Date()`'
 output:
-  pdf_document:
+  html_document:
+    self_contained: no
     fig_caption: yes
     highlight: zenburn
+    theme: cerulean
     toc: yes
     toc_depth: 3
+    toc_float: yes
+    code_folding: "hide"
   beamer_presentation:
     colortheme: dolphin
     fig_caption: yes
@@ -25,15 +29,11 @@ output:
     transition: none
     self_contained: true
     css: ../slides.css
-  html_document:
-    self_contained: no
+  pdf_document:
     fig_caption: yes
     highlight: zenburn
-    theme: cerulean
     toc: yes
     toc_depth: 3
-    toc_float: yes
-    code_folding: "hide"
   slidy_presentation:
     smart: no
     slide_level: 2
@@ -168,8 +168,8 @@ parameters <- list(
   gene.filter.min.count = 10, # Minimal counts per gene
   
   ## Test and control groups for differential analysis
-  test.group = "bdf1_Y187F_Y354F_mutant_0",
-  control.group = "Wild_type_0"
+  test.group = "bdf1_Y187F_Y354F_mutant_4",
+  control.group = "Wild_type_4"
 )
 
 ## Create output directory
@@ -301,6 +301,25 @@ kable(sample.stats,
 
 ```
 
+
+### Comparaison moyenne - variance par gène
+
+```{r mean_var_plot, out.width="80%", fig.width=6, fig.height=6, fig.cap="Mean-Variance plot"}
+
+gene.stats <- data.frame(
+  mean = apply(counts, 1, mean),
+  var = apply(counts, 1, var),
+  sd = apply(counts, 1, sd)
+)
+
+
+plot(x = gene.stats$mean, y = gene.stats$var,
+     main = "Mean / variance plot",
+     xlab = "Mean per gene",
+     ylab = "Var per gene", log="xy",
+     col = densCols(x = gene.stats$mean, y = gene.stats$var))
+abline()
+```
 
 
 
@@ -597,6 +616,7 @@ dgList <- DGEList(counts = filtered.counts[, selected.samples])
 ## Estimate the dispersion parameters. 
 message("\tedgeR\tEstimating dispersion")
 dgList <- estimateDisp(dgList, design = designMat)
+dgList <- estimateTagwiseDisp(dgList, design = designMat)
 
 ## Fit edgeR model for differential expression analysis.
 ## We chose glmQLFit because it is claimed to offer a more accurate control of type I error. 
