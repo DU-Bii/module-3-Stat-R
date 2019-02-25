@@ -11,7 +11,7 @@
 
 <meta name="author" content="Jacques van Helden" />
 
-<meta name="date" content="2019-02-24" />
+<meta name="date" content="2019-02-25" />
 
 <title>Détection de gènes différentiellement exprimés à partir de données RNA-seq</title>
 
@@ -361,7 +361,7 @@ div.tocify {
 <h1 class="title toc-ignore">Détection de gènes différentiellement exprimés à partir de données RNA-seq</h1>
 <h3 class="subtitle"><em>Diplôme Interuniversitaire en Bioinformatique intégrative (DU-Bii 2019)</em></h3>
 <h4 class="author"><em>Jacques van Helden</em></h4>
-<h4 class="date"><em>2019-02-24</em></h4>
+<h4 class="date"><em>2019-02-25</em></h4>
 
 </div>
 
@@ -401,23 +401,23 @@ div.tocify {
 <span class="kw">message</span>(<span class="st">&quot;Loading libraries&quot;</span>)
 <span class="kw">library</span>(knitr)
 <span class="co">#library(kableExtra) ## Note: kableExtra has some side effect on kable: column padding is null, so all numbers seem to be mixed up</span>
-<span class="kw">library</span>(FactoMineR)
-<span class="kw">library</span>(clues)
-<span class="kw">library</span>(RColorBrewer)
-<span class="kw">library</span>(ComplexHeatmap)
+<span class="co">#library(FactoMineR)</span>
+<span class="co"># library(clues)</span>
+<span class="co">#library(RColorBrewer)</span>
+<span class="co"># library(ComplexHeatmap)</span>
 <span class="kw">library</span>(vioplot)
 <span class="kw">library</span>(DESeq2)
 <span class="kw">library</span>(edgeR)
 
 <span class="co"># library(corrplot)</span>
-<span class="kw">library</span>(FactoMineR)
-<span class="kw">library</span>(ClassDiscovery)
+<span class="co"># library(ClassDiscovery)</span>
 <span class="co"># library(formattable)</span>
 
 <span class="co"># message(&quot;getwd()\t&quot;, getwd())</span></code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">parameters &lt;-<span class="st"> </span><span class="kw">list</span>(
   <span class="dt">data.folder =</span> <span class="st">&quot;data/GSE89530&quot;</span>, <span class="co"># dossier des données</span>
-  <span class="co"># data.folder = &quot;/shared/projects/du_bii_2019/data/module3/seance5/GSE89530&quot; # on the IFB-cluster-core</span>
+  <span class="co"># data.folder = &quot;/shared/projects/du_bii_2019/data/module3/seance5/GSE89530&quot;, # on the IFB-cluster-core</span>
+  <span class="dt">workdir =</span> <span class="st">&quot;~/DU-Bii/m3s5/&quot;</span>, <span class="co"># Directory to export the results</span>
   <span class="dt">counts =</span> <span class="st">&quot;GSE89530_counts.tsv.gz&quot;</span>,
   <span class="dt">sample.descr =</span> <span class="st">&quot;GSE89530_samples.tsv.gz&quot;</span>,
   <span class="dt">alpha =</span> <span class="fl">0.05</span>, <span class="co"># seuil de significativité</span>
@@ -430,6 +430,10 @@ div.tocify {
   <span class="dt">control.group =</span> <span class="st">&quot;Wild_type_0&quot;</span>
 )
 
+## Create output directory
+<span class="kw">dir.create</span>(parameters<span class="op">$</span>workdir, <span class="dt">showWarnings =</span> <span class="ot">FALSE</span>, <span class="dt">recursive =</span> <span class="ot">TRUE</span>)
+
+## Print the parameter values in the report
 <span class="kw">kable</span>(<span class="kw">t</span>(<span class="kw">data.frame</span>(parameters)), <span class="dt">col.names =</span> <span class="st">&quot;Parameter Value&quot;</span>)</code></pre></div>
 <table>
 <thead>
@@ -444,34 +448,38 @@ div.tocify {
 <td align="left">data/GSE89530</td>
 </tr>
 <tr class="even">
+<td>workdir</td>
+<td align="left">~/DU-Bii/m3s5/</td>
+</tr>
+<tr class="odd">
 <td>counts</td>
 <td align="left">GSE89530_counts.tsv.gz</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>sample.descr</td>
 <td align="left">GSE89530_samples.tsv.gz</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>alpha</td>
 <td align="left">0.05</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>epsilon</td>
 <td align="left">0.1</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>gene.filter.percent.zeros</td>
 <td align="left">90</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>gene.filter.min.count</td>
 <td align="left">10</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>test.group</td>
 <td align="left">bdf1_Y187F_Y354F_mutant_0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>control.group</td>
 <td align="left">Wild_type_0</td>
 </tr>
@@ -513,82 +521,82 @@ some.samples &lt;-<span class="st"> </span><span class="kw">sample</span>(<span 
 <thead>
 <tr class="header">
 <th></th>
-<th align="right">GSM2375287</th>
-<th align="right">GSM2375294</th>
-<th align="right">GSM2375291</th>
+<th align="right">GSM2375292</th>
+<th align="right">GSM2375290</th>
 <th align="right">GSM2375282</th>
+<th align="right">GSM2375295</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>YJR051W</td>
-<td align="right">361</td>
-<td align="right">426</td>
-<td align="right">663</td>
-<td align="right">615</td>
+<td>tR(UCU)M1</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">4</td>
+<td align="right">2</td>
 </tr>
 <tr class="even">
-<td>YOR393W</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
+<td>YHR059W</td>
+<td align="right">39</td>
+<td align="right">425</td>
+<td align="right">52</td>
+<td align="right">52</td>
 </tr>
 <tr class="odd">
-<td>YLR099W-A</td>
-<td align="right">182</td>
-<td align="right">190</td>
-<td align="right">117</td>
-<td align="right">198</td>
+<td>YJL147C</td>
+<td align="right">226</td>
+<td align="right">105</td>
+<td align="right">202</td>
+<td align="right">140</td>
 </tr>
 <tr class="even">
-<td>YDL077C</td>
+<td>YBR252W</td>
+<td align="right">74</td>
+<td align="right">197</td>
+<td align="right">244</td>
+<td align="right">130</td>
+</tr>
+<tr class="odd">
+<td>YPR170W-B</td>
+<td align="right">33</td>
+<td align="right">83</td>
+<td align="right">87</td>
+<td align="right">62</td>
+</tr>
+<tr class="even">
+<td>YMR304W</td>
+<td align="right">461</td>
+<td align="right">692</td>
+<td align="right">2043</td>
+<td align="right">767</td>
+</tr>
+<tr class="odd">
+<td>YOR081C</td>
+<td align="right">1230</td>
+<td align="right">166</td>
+<td align="right">153</td>
+<td align="right">296</td>
+</tr>
+<tr class="even">
+<td>tK(UUU)L</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">5</td>
+<td align="right">3</td>
+</tr>
+<tr class="odd">
+<td>YOR150W</td>
 <td align="right">164</td>
-<td align="right">254</td>
-<td align="right">379</td>
-<td align="right">290</td>
-</tr>
-<tr class="odd">
-<td>YGL242C</td>
-<td align="right">91</td>
-<td align="right">144</td>
-<td align="right">177</td>
-<td align="right">173</td>
+<td align="right">1169</td>
+<td align="right">426</td>
+<td align="right">279</td>
 </tr>
 <tr class="even">
-<td>YJR110W</td>
-<td align="right">142</td>
-<td align="right">240</td>
-<td align="right">156</td>
-<td align="right">280</td>
-</tr>
-<tr class="odd">
-<td>YML132W</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td>YCL057C-A</td>
-<td align="right">2014</td>
-<td align="right">844</td>
-<td align="right">623</td>
-<td align="right">1095</td>
-</tr>
-<tr class="odd">
-<td>YBL051C</td>
-<td align="right">280</td>
-<td align="right">314</td>
-<td align="right">282</td>
-<td align="right">366</td>
-</tr>
-<tr class="even">
-<td>YKR010C</td>
-<td align="right">107</td>
-<td align="right">268</td>
-<td align="right">290</td>
-<td align="right">315</td>
+<td>YDL241W</td>
+<td align="right">388</td>
+<td align="right">95</td>
+<td align="right">59</td>
+<td align="right">308</td>
 </tr>
 </tbody>
 </table>
@@ -611,36 +619,36 @@ some.samples &lt;-<span class="st"> </span><span class="kw">sample</span>(<span 
 </thead>
 <tbody>
 <tr class="odd">
-<td>GSM2375287</td>
-<td align="center">bdf1_Y187F_Y354F_mutant_0</td>
-<td align="center">2</td>
-<td align="center">bdf1-Y187F-Y354F mutant</td>
-<td align="center">0</td>
-<td align="center">bd1bd2mut_0h_2</td>
-</tr>
-<tr class="even">
-<td>GSM2375294</td>
-<td align="center">bdf1_Y187F_Y354F_mutant_4</td>
-<td align="center">3</td>
-<td align="center">bdf1-Y187F-Y354F mutant</td>
-<td align="center">4</td>
-<td align="center">bd1bd2mut_4h_3</td>
-</tr>
-<tr class="odd">
-<td>GSM2375291</td>
-<td align="center">Wild_type_4</td>
+<td>GSM2375292</td>
+<td align="center">Wild_type_8</td>
 <td align="center">3</td>
 <td align="center">Wild-type</td>
-<td align="center">4</td>
-<td align="center">Sc_WT_4h_3</td>
+<td align="center">8</td>
+<td align="center">Sc_WT_8h_3</td>
 </tr>
 <tr class="even">
+<td>GSM2375290</td>
+<td align="center">Wild_type_0</td>
+<td align="center">3</td>
+<td align="center">Wild-type</td>
+<td align="center">0</td>
+<td align="center">Sc_WT_0h_3</td>
+</tr>
+<tr class="odd">
 <td>GSM2375282</td>
 <td align="center">bdf1_Y187F_Y354F_mutant_4</td>
 <td align="center">1</td>
 <td align="center">bdf1-Y187F-Y354F mutant</td>
 <td align="center">4</td>
 <td align="center">bd1bd2mut_4h_1</td>
+</tr>
+<tr class="even">
+<td>GSM2375295</td>
+<td align="center">bdf1_Y187F_Y354F_mutant_8</td>
+<td align="center">3</td>
+<td align="center">bdf1-Y187F-Y354F mutant</td>
+<td align="center">8</td>
+<td align="center">bd1bd2mut_8h_3</td>
 </tr>
 </tbody>
 </table>
@@ -652,13 +660,13 @@ some.samples &lt;-<span class="st"> </span><span class="kw">sample</span>(<span 
 <h3>Statistiques descriptives</h3>
 <p>La fonction R <code>summary()</code> calcule des statistiques de base pour chaque colonne d’une matrice ou data frame. Nous imprimons ici un sous-ensemble de ces échantillons.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(counts[, some.samples])</code></pre></div>
-<pre><code>   GSM2375287         GSM2375294         GSM2375291         GSM2375282    
- Min.   :     0.0   Min.   :     0.0   Min.   :     0.0   Min.   :     0  
- 1st Qu.:    15.0   1st Qu.:    27.0   1st Qu.:    21.0   1st Qu.:    32  
- Median :   147.0   Median :   208.0   Median :   193.5   Median :   262  
- Mean   :   631.8   Mean   :   732.3   Mean   :   632.5   Mean   :   903  
- 3rd Qu.:   412.0   3rd Qu.:   514.8   3rd Qu.:   470.0   3rd Qu.:   647  
- Max.   :389038.0   Max.   :454911.0   Max.   :330189.0   Max.   :542630  </code></pre>
+<pre><code>   GSM2375292         GSM2375290         GSM2375282       GSM2375295      
+ Min.   :     0.0   Min.   :     0.0   Min.   :     0   Min.   :     0.0  
+ 1st Qu.:    24.0   1st Qu.:    18.2   1st Qu.:    32   1st Qu.:    35.2  
+ Median :   166.0   Median :   194.0   Median :   262   Median :   239.0  
+ Mean   :   982.6   Mean   :   779.5   Mean   :   903   Mean   :   919.0  
+ 3rd Qu.:   462.0   3rd Qu.:   548.0   3rd Qu.:   647   3rd Qu.:   643.0  
+ Max.   :571353.0   Max.   :452683.0   Max.   :542630   Max.   :511934.0  </code></pre>
 <p>Nous pouvons calculer quelques paramètres additionnels, qui nous éclaireront sur les données.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">all.counts.vector &lt;-<span class="st"> </span><span class="kw">unlist</span>(counts) <span class="co"># Regroup all counts in a vevtor to compute statistics</span>
 
@@ -1169,9 +1177,6 @@ Frequency of samples with zero counts per gene. Genes exceeding the thresold (re
 <ul>
 <li>Tester si la valeur maximale observée est inférieure au seuil minimum.</li>
 </ul>
-</div>
-<div id="min-counts-per-gene" class="section level3">
-<h3>Min counts per gene</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">max.per.gene &lt;-<span class="st"> </span><span class="kw">apply</span>(counts, <span class="dv">1</span>, max)
 
 <span class="co"># View(summary(min.count))</span>
@@ -1199,9 +1204,9 @@ h.max &lt;-<span class="st"> </span><span class="kw">max</span>(h<span class="op
                     <span class="st">&quot;) = &quot;</span>, <span class="kw">signif</span>(<span class="dt">digits =</span> <span class="dv">3</span>, <span class="kw">log2</span>(parameters<span class="op">$</span>gene.filter.min.count))),
      <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">pos =</span> <span class="dv">3</span>)</code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figures/TP_gene_filtering_min_count-1.png" alt="Distribution of min counts per gene. Genes below the thresold (red arrow) are filtered out. " width="80%" />
+<img src="figures/TP_gene_filtering_min_count-1.png" alt="Distribution of max counts per gene. Genes below the thresold (red arrow) are filtered out. " width="80%" />
 <p class="caption">
-Distribution of min counts per gene. Genes below the thresold (red arrow) are filtered out.
+Distribution of max counts per gene. Genes below the thresold (red arrow) are filtered out.
 </p>
 </div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Build a data frame with one row per gene and one column per filtering criterion</span>
@@ -1226,61 +1231,61 @@ discarded.genes &lt;-<span class="st"> </span><span class="kw">data.frame</span>
 </thead>
 <tbody>
 <tr class="odd">
-<td>YJR051W</td>
+<td>tR(UCU)M1</td>
 <td align="left">FALSE</td>
 <td align="left">FALSE</td>
-<td align="left">FALSE</td>
+<td align="left">TRUE</td>
 </tr>
 <tr class="even">
-<td>YOR393W</td>
-<td align="left">TRUE</td>
-<td align="left">TRUE</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="odd">
-<td>YLR099W-A</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-</tr>
-<tr class="even">
-<td>YDL077C</td>
+<td>YHR059W</td>
 <td align="left">FALSE</td>
 <td align="left">FALSE</td>
 <td align="left">FALSE</td>
 </tr>
 <tr class="odd">
-<td>YGL242C</td>
+<td>YJL147C</td>
 <td align="left">FALSE</td>
 <td align="left">FALSE</td>
 <td align="left">FALSE</td>
 </tr>
 <tr class="even">
-<td>YJR110W</td>
+<td>YBR252W</td>
 <td align="left">FALSE</td>
 <td align="left">FALSE</td>
 <td align="left">FALSE</td>
 </tr>
 <tr class="odd">
-<td>YML132W</td>
-<td align="left">TRUE</td>
-<td align="left">TRUE</td>
-<td align="left">TRUE</td>
+<td>YPR170W-B</td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
 </tr>
 <tr class="even">
-<td>YCL057C-A</td>
+<td>YMR304W</td>
 <td align="left">FALSE</td>
 <td align="left">FALSE</td>
 <td align="left">FALSE</td>
 </tr>
 <tr class="odd">
-<td>YBL051C</td>
+<td>YOR081C</td>
 <td align="left">FALSE</td>
 <td align="left">FALSE</td>
 <td align="left">FALSE</td>
 </tr>
 <tr class="even">
-<td>YKR010C</td>
+<td>tK(UUU)L</td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td>YOR150W</td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td>YDL241W</td>
 <td align="left">FALSE</td>
 <td align="left">FALSE</td>
 <td align="left">FALSE</td>
@@ -1290,10 +1295,10 @@ discarded.genes &lt;-<span class="st"> </span><span class="kw">data.frame</span>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Draw a venn diagram indicating the number of genes 
 ## discarded by the different criteria. 
 venn.counts &lt;-<span class="st"> </span><span class="kw">vennCounts</span>(discarded.genes)
-<span class="kw">vennDiagram</span>(venn.counts, <span class="dt">cex =</span> <span class="fl">0.7</span>,
+<span class="kw">vennDiagram</span>(venn.counts, <span class="dt">cex =</span> <span class="fl">0.8</span>,
             <span class="dt">main =</span> <span class="st">&quot;Genes discarded by different criteria&quot;</span>)</code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figures/TP_gene_filtering-1.png" alt="Number of genes discarded during the filtering step. " width="50%" />
+<img src="figures/TP_gene_filtering-1.png" alt="Number of genes discarded during the filtering step. " width="70%" />
 <p class="caption">
 Number of genes discarded during the filtering step.
 </p>
@@ -1311,17 +1316,167 @@ filtered.counts &lt;-<span class="st"> </span>counts[filtered.genes, ]
 some.genes &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(filtered.counts), <span class="dt">size =</span> <span class="dv">10</span>, <span class="dt">replace =</span> <span class="ot">FALSE</span>)</code></pre></div>
 </div>
 </div>
-<div id="detection-de-genes-differentiellement-exprimes-avec-deseq2" class="section level2">
-<h2>Détection de gènes différentiellement exprimés avec DESeq2</h2>
-<div id="comparaison-de-2-groupes" class="section level3">
-<h3>Comparaison de 2 groupes</h3>
+<div id="detection-de-genes-differentiellement-exprimes-avec-edger" class="section level2">
+<h2>Détection de gènes différentiellement exprimés avec edgeR</h2>
+<div id="comparaison-entre-2-groupes" class="section level3">
+<h3>Comparaison entre 2 groupes</h3>
 <p>Dans un premier temps, nous allons effectuer une simple comparaison de 2 groupes: sauvage versus mutant au temps 0.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Select the subsets of counts (columns) and samples (rows) corresponding to the control and test groups
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Detection of Differentially Expressed Genes (DEG) with edgeR
+<span class="kw">message</span>(<span class="st">&quot;Detecting Differentially Expressed Genes (DEG) with edgeR&quot;</span>)
+
+
+## Select the subsets of counts (columns) and samples (rows) corresponding to the control and test groups
 control.samples &lt;-<span class="st"> </span><span class="kw">which</span>(samples<span class="op">$</span>Condition <span class="op">==</span><span class="st"> </span>parameters<span class="op">$</span>control.group)
 test.samples &lt;-<span class="st"> </span><span class="kw">which</span>(samples<span class="op">$</span>Condition <span class="op">==</span><span class="st"> </span>parameters<span class="op">$</span>test.group)
 selected.samples &lt;-<span class="st"> </span><span class="kw">c</span>(test.samples, control.samples)
 
-## Use the DESeqDataSetFromMatrix to create a DESeqDataSet object
+## Select samples for a 2-group
+
+## Build a &quot;model matrix&quot; from the class labels
+## This matrix contains one row per sample and one column per class
+designMat &lt;-<span class="st"> </span><span class="kw">model.matrix</span>(<span class="op">~</span><span class="st"> </span><span class="kw">as.vector</span>(samples[selected.samples, <span class="st">&quot;Condition&quot;</span>]))
+<span class="co"># View(designMat)</span>
+
+## Build an edgeR::DGEList object which is required to run edgeR DE analysis
+dgList &lt;-<span class="st"> </span><span class="kw">DGEList</span>(<span class="dt">counts =</span> filtered.counts[, selected.samples])
+<span class="co"># class(dgList)</span>
+<span class="co"># is(dgList)</span>
+
+## Estimate the dispersion parameters. 
+<span class="kw">message</span>(<span class="st">&quot;</span><span class="ch">\t</span><span class="st">edgeR</span><span class="ch">\t</span><span class="st">Estimating dispersion&quot;</span>)
+dgList &lt;-<span class="st"> </span><span class="kw">estimateDisp</span>(dgList, <span class="dt">design =</span> designMat)
+
+## Fit edgeR model for differential expression analysis.
+## We chose glmQLFit because it is claimed to offer a more accurate control of type I error. 
+<span class="kw">message</span>(<span class="st">&quot;</span><span class="ch">\t</span><span class="st">edgeR</span><span class="ch">\t</span><span class="st">model fitting with glmQLFit()&quot;</span>)
+fit &lt;-<span class="st"> </span><span class="kw">glmQLFit</span>(dgList, <span class="dt">design =</span> designMat)
+
+## Run test to detect differentially expressed genes
+<span class="kw">message</span>(<span class="st">&quot;</span><span class="ch">\t</span><span class="st">edgeR</span><span class="ch">\t</span><span class="st">detecting differentially expressed genes with glmQLFTest()&quot;</span>)
+qlf &lt;-<span class="st"> </span><span class="kw">glmQLFTest</span>(fit, <span class="dt">coef =</span> <span class="dv">2</span><span class="op">:</span><span class="kw">ncol</span>(designMat))
+qlf.TT &lt;-<span class="st"> </span><span class="kw">topTags</span>(qlf, <span class="dt">n =</span> <span class="kw">nrow</span>(qlf<span class="op">$</span>table), <span class="dt">sort.by =</span> <span class="st">&quot;none&quot;</span>,
+                  <span class="dt">adjust.method =</span> <span class="st">&quot;fdr&quot;</span>)
+
+
+## Select differentially expressed genes
+edgeR.DEG.table &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(qlf.TT<span class="op">$</span>table)
+
+## Compute some additional statistics
+edgeR.DEG.table<span class="op">$</span>evalue &lt;-<span class="st"> </span>edgeR.DEG.table<span class="op">$</span>PValue <span class="op">*</span><span class="st"> </span><span class="kw">nrow</span>(edgeR.DEG.table)
+edgeR.DEG.table<span class="op">$</span>rank &lt;-<span class="st"> </span><span class="kw">rank</span>(edgeR.DEG.table<span class="op">$</span>FDR, <span class="dt">ties.method =</span> <span class="st">&quot;average&quot;</span>)
+edgeR.DEG.table<span class="op">$</span>positive &lt;-<span class="st"> </span>edgeR.DEG.table<span class="op">$</span>FDR <span class="op">&lt;</span><span class="st"> </span>parameters<span class="op">$</span>alpha
+<span class="co"># table(edgeR.DEG.table$positive)</span>
+<span class="co"># names(edgeR.DEG.table)</span>
+<span class="co"># View(edgeR.DEG.table)</span>
+<span class="co"># sum(egeR.DEG)</span></code></pre></div>
+</div>
+<div id="exercices-solutions-ci-dessous" class="section level3">
+<h3>Exercices (solutions ci-dessous)</h3>
+<ol style="list-style-type: decimal">
+<li><p>Dessinez un nuage de points (<code>plot()</code>) comparant les P-valeurs ajustées et non-ajustées.</p></li>
+<li><p>Quel serait le nombre de faux-positifs attendus sous hypothès nulle si l’on appliquait le seuil <span class="math inline">\(\alpha = 0.05\)</span> à la p-valeur non-ajustée ?</p></li>
+<li><p>Comptez le nombre de gènes déclarés positifs selon qu’on applique le seuil <span class="math inline">\(\alpha = 0.05\)</span> à la p-valeur ajustée ou non-ajustée.</p></li>
+<li><p>Dessinez un histogramme (<code>hist()</code>) des P-valeurs <em>non ajustées</em>, avec 20 intervalles de classe (breaks = 20). Observez la répartition des gènes dans la moitié inférieure (p-valeur &lt; 0.5) et supérieure (p-valeur &gt; 0.5) de l’histogramme. Interprétez le résultat en 2 ou 3 phrases. A quoi s’attendrait-on si tous les gènes étaient sous hypothèse nulle ?</p></li>
+<li><p>Dessinez un nuage de points (<code>plot()</code>) comparant le log2(fold-change) en abscisse et la P-valeur en ordonnée. Interprétez le résultat en 2 ou 3 phrases. Où se trouvent les gènes signicatifs ?</p></li>
+<li><p>Dessinez un <strong>volcano plot</strong>, c’est-à-dire un nuage de points (<code>plot()</code>) présentant en abscisse le log2(fold-change), et en ordonnée la significativité, définie comme suit.</p></li>
+</ol>
+<p><span class="math display">\[\text{sig} = -log_{10}(\text{FDR})\]</span></p>
+<p>Interprétez le résultat en 2 ou 3 phrases. Commentez la relation entre le logFC et la significativité. Où se trouvent les gènes signicatifs ?</p>
+</div>
+<div id="adjusted-versus-non-adjusted-p-values" class="section level3">
+<h3>Adjusted versus non-adjusted P-values</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># class(qlf.TT)</span>
+<span class="kw">plot</span>(edgeR.DEG.table<span class="op">$</span>PValue, edgeR.DEG.table<span class="op">$</span>FDR, 
+     <span class="dt">main =</span> <span class="st">&quot;Multiple testing correction&quot;</span>,
+     <span class="dt">xlab =</span> <span class="st">&quot;Nominal p-value&quot;</span>,
+     <span class="dt">ylab =</span> parameters<span class="op">$</span>p.adjust.method,
+     <span class="dt">log =</span> <span class="st">&quot;xy&quot;</span>, 
+     <span class="dt">col =</span> <span class="kw">densCols</span>(<span class="dt">x =</span> edgeR.DEG.table<span class="op">$</span>PValue,
+                    <span class="dt">y =</span> edgeR.DEG.table<span class="op">$</span>FDR),
+     <span class="dt">panel.first =</span> <span class="kw">grid</span>(), 
+     <span class="dt">las =</span> <span class="dv">1</span>)
+<span class="kw">abline</span>(<span class="dt">h =</span> parameters<span class="op">$</span>alpha, <span class="dt">col =</span> <span class="st">&quot;#BB0000&quot;</span>)
+<span class="kw">abline</span>(<span class="dt">v =</span> parameters<span class="op">$</span>alpha, <span class="dt">col =</span> <span class="st">&quot;#FF0000&quot;</span>, <span class="dt">lty =</span> <span class="st">&quot;dashed&quot;</span>)
+<span class="kw">legend</span>(<span class="st">&quot;topleft&quot;</span>,
+       <span class="dt">legend =</span> <span class="kw">c</span>(
+         <span class="kw">paste</span>(<span class="dt">sep =</span> <span class="st">&quot;&quot;</span>, <span class="st">&quot;p-value &lt; &quot;</span>, parameters<span class="op">$</span>alpha, <span class="st">&quot;: &quot;</span>, 
+               <span class="kw">sum</span>(edgeR.DEG.table<span class="op">$</span>PValue <span class="op">&lt;</span><span class="st"> </span>parameters<span class="op">$</span>alpha), <span class="st">&quot; genes&quot;</span>),
+         <span class="kw">paste</span>(<span class="dt">sep =</span> <span class="st">&quot;&quot;</span>, parameters<span class="op">$</span>p.adjust.method, <span class="st">&quot; &lt; &quot;</span>, parameters<span class="op">$</span>alpha, <span class="st">&quot;: &quot;</span>, <span class="kw">sum</span>(edgeR.DEG.table<span class="op">$</span>FDR <span class="op">&lt;</span><span class="st"> </span>parameters<span class="op">$</span>alpha), <span class="st">&quot; genes&quot;</span> )))</code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/TP_edger_nominal_vs_adjusted-1.png" alt="**Ajusted (ordinate) versus non-adjusted (abscissa) p-values returned by edger**. Strong colors indicate a higher density of overlapping points. Note the strong impact of the multiple testing correction." width="60%" />
+<p class="caption">
+<strong>Ajusted (ordinate) versus non-adjusted (abscissa) p-values returned by edger</strong>. Strong colors indicate a higher density of overlapping points. Note the strong impact of the multiple testing correction.
+</p>
+</div>
+</div>
+<div id="histogram-of-the-nominal-p-values" class="section level3">
+<h3>Histogram of the nominal P-values</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## P-value histogram
+<span class="kw">hist</span>(edgeR.DEG.table<span class="op">$</span>PValue, 
+     <span class="dt">breaks =</span> <span class="dv">20</span>, <span class="dt">col =</span> <span class="st">&quot;#DDEEFF&quot;</span>, <span class="dt">las =</span> <span class="dv">1</span>,
+     <span class="dt">main =</span> <span class="st">&quot;edgeR P-value histogram&quot;</span>,
+     <span class="dt">xlab =</span> <span class="st">&quot;Nominal P-value&quot;</span>, 
+     <span class="dt">ylab =</span> <span class="st">&quot;Number of genes&quot;</span>)</code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/TP_edger_pvalue_histogram-1.png" alt="**Histogram of edgeR nominal P-values.**" width="80%" />
+<p class="caption">
+<strong>Histogram of edgeR nominal P-values.</strong>
+</p>
+</div>
+</div>
+<div id="volcano-plot" class="section level3">
+<h3>Volcano plot</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Quick test: plot the different symbols</span>
+<span class="co"># plot(1:30, pch = 1:30)</span>
+
+
+<span class="co"># Assign a graphical symbol to each gene according to its positive/negative status</span>
+edgeR.DEG.table<span class="op">$</span>pch &lt;-<span class="st"> </span><span class="dv">1</span> <span class="co"># circle symbol</span>
+edgeR.DEG.table<span class="op">$</span>pch[edgeR.DEG.table<span class="op">$</span>positive] &lt;-<span class="st"> </span><span class="dv">3</span> <span class="co"># + symbol</span>
+
+<span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))
+<span class="kw">plot</span>(<span class="dt">x =</span> edgeR.DEG.table<span class="op">$</span>logFC, 
+     <span class="dt">y =</span> <span class="op">-</span><span class="kw">log10</span>(edgeR.DEG.table<span class="op">$</span>PValue),
+     <span class="dt">las =</span> <span class="dv">1</span>, 
+     <span class="dt">xlab =</span> <span class="st">&quot;log2(fold-change)&quot;</span>,
+     <span class="dt">main =</span> <span class="st">&quot;Volcano plot of edgeR unadjusted p-values&quot;</span>,
+     <span class="dt">ylab =</span> <span class="st">&quot;-log10(P-value)&quot;</span>,
+     <span class="dt">pch =</span> edgeR.DEG.table<span class="op">$</span>pch, 
+     <span class="dt">col =</span> <span class="kw">densCols</span>(<span class="dt">x =</span> edgeR.DEG.table<span class="op">$</span>logFC, 
+                    <span class="dt">y =</span> <span class="op">-</span><span class="kw">log10</span>(edgeR.DEG.table<span class="op">$</span>PValue)),
+     <span class="dt">panel.first =</span> <span class="kw">grid</span>())
+<span class="kw">abline</span>(<span class="dt">v =</span> <span class="dv">0</span>)
+<span class="kw">abline</span>(<span class="dt">h =</span> <span class="dv">0</span>)
+
+<span class="kw">plot</span>(<span class="dt">x =</span> edgeR.DEG.table<span class="op">$</span>logFC, 
+     <span class="dt">y =</span> <span class="op">-</span><span class="kw">log10</span>(edgeR.DEG.table<span class="op">$</span>FDR),
+     <span class="dt">las =</span> <span class="dv">1</span>, 
+     <span class="dt">xlab =</span> <span class="st">&quot;log2(fold-change)&quot;</span>,
+     <span class="dt">main =</span> <span class="st">&quot;Volcano plot of edgeR FDR&quot;</span>,
+     <span class="dt">ylab =</span> <span class="st">&quot;-log10(P-value)&quot;</span>,
+     <span class="dt">pch =</span> edgeR.DEG.table<span class="op">$</span>pch, 
+     <span class="dt">col =</span> <span class="kw">densCols</span>(<span class="dt">x =</span> edgeR.DEG.table<span class="op">$</span>logFC, 
+                    <span class="dt">y =</span> <span class="op">-</span><span class="kw">log10</span>(edgeR.DEG.table<span class="op">$</span>FDR)),
+     <span class="dt">panel.first =</span> <span class="kw">grid</span>())
+<span class="kw">abline</span>(<span class="dt">v =</span> <span class="dv">0</span>)
+<span class="kw">abline</span>(<span class="dt">h =</span> <span class="dv">0</span>)
+<span class="kw">abline</span>(<span class="dt">h =</span> <span class="op">-</span><span class="kw">log10</span>(parameters<span class="op">$</span>alpha), <span class="dt">col =</span> <span class="st">&quot;#BB0000&quot;</span>)</code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/TP_edger_volcano-1.png" alt="**Volcano plots of edgeR unadjusted (left) and adjusted (right) P-values**. Multple testing correction method: FDR. " width="95%" />
+<p class="caption">
+<strong>Volcano plots of edgeR unadjusted (left) and adjusted (right) P-values</strong>. Multple testing correction method: FDR.
+</p>
+</div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</code></pre></div>
+</div>
+</div>
+<div id="detection-de-genes-differentiellement-exprimes-avec-deseq2" class="section level2">
+<h2>Détection de gènes différentiellement exprimés avec DESeq2</h2>
+<p>Nous allons maintenant utiliser DESeq2 pour détecter des gènes différentiellement exprimés sur le même jeu de données. Nous comparerons ensuite les résultats obtenus avec edgeR et DESeq2, respectivement.</p>
+<div id="comparaison-de-2-groupes" class="section level3">
+<h3>Comparaison de 2 groupes</h3>
+<p>Dans un premier temps, nous allons effectuer une simple comparaison de 2 groupes: sauvage versus mutant au temps 0.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Use the DESeqDataSetFromMatrix to create a DESeqDataSet object
 <span class="kw">message</span>(<span class="st">&quot;Creating DESeq2 dataset&quot;</span>)
 dds.2groups &lt;-<span class="st"> </span><span class="kw">DESeqDataSetFromMatrix</span>(
   <span class="dt">countData =</span> filtered.counts[, selected.samples], 
@@ -1352,112 +1507,555 @@ deseq2.res.dds.2groups &lt;-<span class="st"> </span><span class="kw">as.data.fr
 </thead>
 <tbody>
 <tr class="odd">
-<td>YOR353C</td>
-<td align="right">209.22173</td>
-<td align="right">-0.1347126</td>
-<td align="right">0.1752358</td>
-<td align="right">-0.7687506</td>
-<td align="right">0.4420414</td>
-<td align="right">0.7891968</td>
+<td>YAL042W</td>
+<td align="right">1208.39609</td>
+<td align="right">-0.1911225</td>
+<td align="right">0.1073534</td>
+<td align="right">-1.7803123</td>
+<td align="right">0.0750249</td>
+<td align="right">0.3964309</td>
 </tr>
 <tr class="even">
-<td>YKR061W</td>
-<td align="right">155.10744</td>
-<td align="right">-0.3359697</td>
-<td align="right">0.2170404</td>
-<td align="right">-1.5479593</td>
-<td align="right">0.1216321</td>
-<td align="right">0.4965566</td>
+<td>YCL011C</td>
+<td align="right">1001.90478</td>
+<td align="right">-0.1744534</td>
+<td align="right">0.1484380</td>
+<td align="right">-1.1752609</td>
+<td align="right">0.2398903</td>
+<td align="right">0.6359201</td>
 </tr>
 <tr class="odd">
-<td>snR76</td>
-<td align="right">10.73125</td>
-<td align="right">0.3734631</td>
-<td align="right">0.7560273</td>
-<td align="right">0.4939810</td>
-<td align="right">0.6213196</td>
-<td align="right">0.8810929</td>
+<td>YOR342C</td>
+<td align="right">495.98513</td>
+<td align="right">-0.2546529</td>
+<td align="right">0.3744130</td>
+<td align="right">-0.6801391</td>
+<td align="right">0.4964164</td>
+<td align="right">0.8185546</td>
 </tr>
 <tr class="even">
-<td>YER140W</td>
-<td align="right">135.65882</td>
-<td align="right">0.0111861</td>
-<td align="right">0.2217701</td>
-<td align="right">0.0504401</td>
-<td align="right">0.9597717</td>
+<td>YDR110W</td>
+<td align="right">136.83044</td>
+<td align="right">0.2579008</td>
+<td align="right">0.3583639</td>
+<td align="right">0.7196619</td>
+<td align="right">0.4717332</td>
+<td align="right">0.8066402</td>
+</tr>
+<tr class="odd">
+<td>YGL131C</td>
+<td align="right">244.16470</td>
+<td align="right">0.3426646</td>
+<td align="right">0.1823387</td>
+<td align="right">1.8792749</td>
+<td align="right">0.0602070</td>
+<td align="right">0.3561375</td>
+</tr>
+<tr class="even">
+<td>YLR457C</td>
+<td align="right">50.45495</td>
+<td align="right">-0.1179547</td>
+<td align="right">0.2487355</td>
+<td align="right">-0.4742176</td>
+<td align="right">0.6353447</td>
+<td align="right">0.8888167</td>
+</tr>
+<tr class="odd">
+<td>YAL026C</td>
+<td align="right">408.22348</td>
+<td align="right">-0.0042952</td>
+<td align="right">0.1626728</td>
+<td align="right">-0.0264037</td>
+<td align="right">0.9789354</td>
+<td align="right">0.9927572</td>
+</tr>
+<tr class="even">
+<td>YML083C</td>
+<td align="right">12.88938</td>
+<td align="right">0.7514240</td>
+<td align="right">0.5365106</td>
+<td align="right">1.4005762</td>
+<td align="right">0.1613408</td>
+<td align="right">0.5442000</td>
+</tr>
+<tr class="odd">
+<td>YOR262W</td>
+<td align="right">223.51665</td>
+<td align="right">-0.0081303</td>
+<td align="right">0.1911744</td>
+<td align="right">-0.0425283</td>
+<td align="right">0.9660775</td>
 <td align="right">0.9905214</td>
 </tr>
-<tr class="odd">
-<td>YBR176W</td>
-<td align="right">138.57081</td>
-<td align="right">0.5377450</td>
-<td align="right">0.1864003</td>
-<td align="right">2.8848939</td>
-<td align="right">0.0039155</td>
-<td align="right">0.0770542</td>
-</tr>
 <tr class="even">
-<td>YPR148C</td>
-<td align="right">1770.06464</td>
-<td align="right">-0.3143457</td>
-<td align="right">0.1700219</td>
-<td align="right">-1.8488538</td>
-<td align="right">0.0644789</td>
-<td align="right">0.3668017</td>
-</tr>
-<tr class="odd">
-<td>YCL043C</td>
-<td align="right">3118.99061</td>
-<td align="right">-0.0565886</td>
-<td align="right">0.1360723</td>
-<td align="right">-0.4158716</td>
-<td align="right">0.6775039</td>
-<td align="right">0.9028293</td>
-</tr>
-<tr class="even">
-<td>YGR011W</td>
-<td align="right">22.27918</td>
-<td align="right">0.0674106</td>
-<td align="right">0.4082356</td>
-<td align="right">0.1651267</td>
-<td align="right">0.8688443</td>
-<td align="right">0.9629429</td>
-</tr>
-<tr class="odd">
-<td>YIL061C</td>
-<td align="right">138.15218</td>
-<td align="right">0.0215209</td>
-<td align="right">0.1797294</td>
-<td align="right">0.1197408</td>
-<td align="right">0.9046885</td>
-<td align="right">0.9758464</td>
-</tr>
-<tr class="even">
-<td>YLR297W</td>
-<td align="right">100.56450</td>
-<td align="right">0.2816986</td>
-<td align="right">0.2370663</td>
-<td align="right">1.1882693</td>
-<td align="right">0.2347273</td>
-<td align="right">0.6288403</td>
+<td>YDR540C</td>
+<td align="right">19.48411</td>
+<td align="right">0.1500292</td>
+<td align="right">0.5033963</td>
+<td align="right">0.2980339</td>
+<td align="right">0.7656773</td>
+<td align="right">0.9330228</td>
 </tr>
 </tbody>
 </table>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Sort genes by significance (increasing adjusted pvalue)
+deseq2.res.dds.2groups &lt;-<span class="st"> </span>deseq2.res.dds.2groups[<span class="kw">order</span>(deseq2.res.dds.2groups<span class="op">$</span>padj, <span class="dt">decreasing =</span> <span class="ot">FALSE</span>), ]
+
+## Compute the E-value, i.e. the expected number of false positives
+deseq2.res.dds.2groups<span class="op">$</span>evalue &lt;-<span class="st"> </span>deseq2.res.dds.2groups<span class="op">$</span>pvalue <span class="op">*</span><span class="st"> </span><span class="kw">nrow</span>(deseq2.res.dds.2groups)
+
+## Flag the genes declared positive 
+## (i.e. differentially expressed genes)
+deseq2.res.dds.2groups<span class="op">$</span>positive &lt;-<span class="st"> </span>deseq2.res.dds.2groups<span class="op">$</span>padj <span class="op">&lt;</span><span class="st"> </span>parameters<span class="op">$</span>alpha
+
+## Replace NA values by FALSE for the flag
+deseq2.res.dds.2groups<span class="op">$</span>positive[<span class="kw">is.na</span>(deseq2.res.dds.2groups<span class="op">$</span>positive)] &lt;-<span class="st"> </span><span class="ot">FALSE</span>
+
+
+<span class="kw">kable</span>(<span class="kw">head</span>(deseq2.res.dds.2groups, <span class="dt">n=</span><span class="dv">20</span>), <span class="dt">caption =</span> <span class="st">&quot;Most significant genes&quot;</span>)</code></pre></div>
+<table>
+<caption>Most significant genes</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">baseMean</th>
+<th align="right">log2FoldChange</th>
+<th align="right">lfcSE</th>
+<th align="right">stat</th>
+<th align="right">pvalue</th>
+<th align="right">padj</th>
+<th align="right">evalue</th>
+<th align="left">positive</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>YLR399C</td>
+<td align="right">1493.19551</td>
+<td align="right">-2.3243504</td>
+<td align="right">0.2069533</td>
+<td align="right">-11.231280</td>
+<td align="right">0</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td>YDR007W</td>
+<td align="right">418.91210</td>
+<td align="right">-1.6043646</td>
+<td align="right">0.1445706</td>
+<td align="right">-11.097447</td>
+<td align="right">0</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td>YJL088W</td>
+<td align="right">229.89814</td>
+<td align="right">2.9262730</td>
+<td align="right">0.2724641</td>
+<td align="right">10.740032</td>
+<td align="right">0</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td>YOL058W</td>
+<td align="right">981.12872</td>
+<td align="right">2.3988022</td>
+<td align="right">0.2344494</td>
+<td align="right">10.231642</td>
+<td align="right">0</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td>YFR047C</td>
+<td align="right">109.01669</td>
+<td align="right">2.1077362</td>
+<td align="right">0.2433336</td>
+<td align="right">8.661921</td>
+<td align="right">0</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td>YBR294W</td>
+<td align="right">98.81111</td>
+<td align="right">1.7506191</td>
+<td align="right">0.2318293</td>
+<td align="right">7.551327</td>
+<td align="right">0</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td>YIL014C-A</td>
+<td align="right">45.77600</td>
+<td align="right">2.4609476</td>
+<td align="right">0.3410869</td>
+<td align="right">7.215017</td>
+<td align="right">0</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td>YAL067C</td>
+<td align="right">381.48174</td>
+<td align="right">2.6737612</td>
+<td align="right">0.3791296</td>
+<td align="right">7.052368</td>
+<td align="right">0</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td>YBR240C</td>
+<td align="right">34.35300</td>
+<td align="right">2.8207147</td>
+<td align="right">0.4109765</td>
+<td align="right">6.863446</td>
+<td align="right">0</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td>YHR047C</td>
+<td align="right">530.78940</td>
+<td align="right">-1.0718867</td>
+<td align="right">0.1593139</td>
+<td align="right">-6.728141</td>
+<td align="right">0</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000001</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td>YNL030W</td>
+<td align="right">3072.10338</td>
+<td align="right">-0.7370082</td>
+<td align="right">0.1097727</td>
+<td align="right">-6.713950</td>
+<td align="right">0</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000001</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td>YHR137W</td>
+<td align="right">1509.94606</td>
+<td align="right">-1.0567978</td>
+<td align="right">0.1647401</td>
+<td align="right">-6.414938</td>
+<td align="right">0</td>
+<td align="right">0.0000001</td>
+<td align="right">0.0000009</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td>YKR093W</td>
+<td align="right">650.83783</td>
+<td align="right">-1.4441538</td>
+<td align="right">0.2253986</td>
+<td align="right">-6.407110</td>
+<td align="right">0</td>
+<td align="right">0.0000001</td>
+<td align="right">0.0000009</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td>YFR006W</td>
+<td align="right">1368.72765</td>
+<td align="right">-0.9060062</td>
+<td align="right">0.1416934</td>
+<td align="right">-6.394132</td>
+<td align="right">0</td>
+<td align="right">0.0000001</td>
+<td align="right">0.0000010</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td>YBR022W</td>
+<td align="right">142.26456</td>
+<td align="right">1.1756615</td>
+<td align="right">0.1848333</td>
+<td align="right">6.360659</td>
+<td align="right">0</td>
+<td align="right">0.0000001</td>
+<td align="right">0.0000013</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td>YJR024C</td>
+<td align="right">202.72279</td>
+<td align="right">1.2492129</td>
+<td align="right">0.1970188</td>
+<td align="right">6.340577</td>
+<td align="right">0</td>
+<td align="right">0.0000001</td>
+<td align="right">0.0000014</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td>YBR183W</td>
+<td align="right">406.55059</td>
+<td align="right">-0.8474896</td>
+<td align="right">0.1346188</td>
+<td align="right">-6.295475</td>
+<td align="right">0</td>
+<td align="right">0.0000001</td>
+<td align="right">0.0000019</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td>YKL216W</td>
+<td align="right">4004.60474</td>
+<td align="right">1.2198179</td>
+<td align="right">0.1942348</td>
+<td align="right">6.280120</td>
+<td align="right">0</td>
+<td align="right">0.0000001</td>
+<td align="right">0.0000021</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td>YBR054W</td>
+<td align="right">1334.84237</td>
+<td align="right">1.5952637</td>
+<td align="right">0.2578580</td>
+<td align="right">6.186599</td>
+<td align="right">0</td>
+<td align="right">0.0000002</td>
+<td align="right">0.0000039</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td>YIR039C</td>
+<td align="right">38.30521</td>
+<td align="right">2.5536706</td>
+<td align="right">0.4191538</td>
+<td align="right">6.092443</td>
+<td align="right">0</td>
+<td align="right">0.0000003</td>
+<td align="right">0.0000070</td>
+<td align="left">TRUE</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## BEWARE, DESeq2 produces NA values for some genes
+<span class="kw">kable</span>(<span class="kw">tail</span>(deseq2.res.dds.2groups, <span class="dt">n=</span><span class="dv">10</span>), <span class="dt">caption =</span> <span class="st">&quot;Less significant genes&quot;</span>)</code></pre></div>
+<table>
+<caption>Less significant genes</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">baseMean</th>
+<th align="right">log2FoldChange</th>
+<th align="right">lfcSE</th>
+<th align="right">stat</th>
+<th align="right">pvalue</th>
+<th align="right">padj</th>
+<th align="right">evalue</th>
+<th align="left">positive</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>YOR263C</td>
+<td align="right">2.3089312</td>
+<td align="right">-1.1595815</td>
+<td align="right">1.149310</td>
+<td align="right">-1.0089372</td>
+<td align="right">0.3130048</td>
+<td align="right">NA</td>
+<td align="right">1963.7918</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td>YOR331C</td>
+<td align="right">0.1231839</td>
+<td align="right">-1.0750364</td>
+<td align="right">4.080249</td>
+<td align="right">-0.2634732</td>
+<td align="right">0.7921859</td>
+<td align="right">NA</td>
+<td align="right">4970.1742</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td>YOR391C</td>
+<td align="right">0.2780969</td>
+<td align="right">-0.0879149</td>
+<td align="right">3.035988</td>
+<td align="right">-0.0289576</td>
+<td align="right">0.9768984</td>
+<td align="right">NA</td>
+<td align="right">6129.0607</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td>YPL038W-A</td>
+<td align="right">2.2393034</td>
+<td align="right">-1.0117635</td>
+<td align="right">1.190819</td>
+<td align="right">-0.8496366</td>
+<td align="right">0.3955272</td>
+<td align="right">NA</td>
+<td align="right">2481.5375</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td>YPL152W-A</td>
+<td align="right">0.1079283</td>
+<td align="right">0.8293298</td>
+<td align="right">4.077941</td>
+<td align="right">0.2033697</td>
+<td align="right">0.8388461</td>
+<td align="right">NA</td>
+<td align="right">5262.9202</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td>YPL241C_intron</td>
+<td align="right">0.8880141</td>
+<td align="right">0.5482611</td>
+<td align="right">1.729875</td>
+<td align="right">0.3169369</td>
+<td align="right">0.7512915</td>
+<td align="right">NA</td>
+<td align="right">4713.6029</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td>YPR002C-A</td>
+<td align="right">1.2750214</td>
+<td align="right">-1.8836811</td>
+<td align="right">1.553112</td>
+<td align="right">-1.2128429</td>
+<td align="right">0.2251899</td>
+<td align="right">NA</td>
+<td align="right">1412.8413</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td>YPR076W</td>
+<td align="right">1.9291144</td>
+<td align="right">2.3035824</td>
+<td align="right">1.370506</td>
+<td align="right">1.6808258</td>
+<td align="right">0.0927968</td>
+<td align="right">NA</td>
+<td align="right">582.2068</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td>YPR077C</td>
+<td align="right">1.6462730</td>
+<td align="right">1.0861263</td>
+<td align="right">1.275033</td>
+<td align="right">0.8518414</td>
+<td align="right">0.3943021</td>
+<td align="right">NA</td>
+<td align="right">2473.8515</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td>YPR170C</td>
+<td align="right">2.1750791</td>
+<td align="right">-0.0237664</td>
+<td align="right">1.069474</td>
+<td align="right">-0.0222225</td>
+<td align="right">0.9822704</td>
+<td align="right">NA</td>
+<td align="right">6162.7648</td>
+<td align="left">FALSE</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">kable</span>(<span class="kw">table</span>(deseq2.res.dds.2groups<span class="op">$</span>positive), 
+      <span class="dt">caption =</span> <span class="st">&quot;Number of genes declared positive&quot;</span>)</code></pre></div>
+<table>
+<caption>Number of genes declared positive</caption>
+<thead>
+<tr class="header">
+<th align="left">Var1</th>
+<th align="right">Freq</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">FALSE</td>
+<td align="right">6029</td>
+</tr>
+<tr class="even">
+<td align="left">TRUE</td>
+<td align="right">245</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Export the results
+outfiles &lt;-<span class="st"> </span><span class="kw">vector</span>()
+
+
+## DESeq2 result table
+outfiles[<span class="st">&quot;DESeq2 all genes&quot;</span>] &lt;-<span class="st"> </span><span class="kw">file.path</span>(parameters<span class="op">$</span>workdir, <span class="st">&quot;DESeq2_all_genes.tsv&quot;</span>)
+<span class="kw">write.table</span>(
+  <span class="dt">x =</span> deseq2.res.dds.2groups, 
+  <span class="dt">quote =</span> <span class="ot">FALSE</span>, <span class="dt">row.names =</span> <span class="ot">TRUE</span>, <span class="dt">col.names =</span> <span class="ot">NA</span>,
+  <span class="dt">file =</span> outfiles[<span class="st">&quot;DESeq2 all genes&quot;</span>])</code></pre></div>
 </div>
 <div id="diagnostic-plots" class="section level3">
 <h3>Diagnostic plots</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Assign a symbol to genes according to the test result
+deseq2.res.dds.2groups<span class="op">$</span>pch &lt;-<span class="st"> </span><span class="dv">1</span> <span class="co"># circle</span>
+deseq2.res.dds.2groups<span class="op">$</span>pch[deseq2.res.dds.2groups<span class="op">$</span>positive] &lt;-<span class="st"> </span><span class="dv">3</span> <span class="co"># + symbol</span>
+
+## Set one color per gene depending on whether it is positive or not
+gene.color &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dt">x =</span> <span class="st">&quot;#BBBBBB&quot;</span>, <span class="dt">times =</span> <span class="kw">nrow</span>(deseq2.res.dds.2groups))
+gene.color[deseq2.res.dds.2groups<span class="op">$</span>positive] &lt;-<span class="st"> &quot;#FF8844&quot;</span>
+gene.pch &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dt">x =</span> <span class="dv">1</span>, <span class="dt">times =</span> <span class="kw">nrow</span>(deseq2.res.dds.2groups))
+gene.pch[deseq2.res.dds.2groups<span class="op">$</span>positive] &lt;-<span class="st"> &quot;#+&quot;</span>
+
+<span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))
 ## MA plot
+<span class="kw">plotMA</span>(<span class="dt">object =</span> <span class="kw">results</span>(dds.2groups), <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">panel.first =</span> <span class="kw">grid</span>(),
+       <span class="dt">main =</span> <span class="st">&quot;DESDeq2 : MA plot&quot;</span>)
 
 
-## Volcano plot
+## Volcano plot of adjusted p-values
+<span class="kw">plot</span>(<span class="dt">x =</span> deseq2.res.dds.2groups<span class="op">$</span>log2FoldChange, 
+     <span class="dt">y =</span> <span class="op">-</span><span class="kw">log10</span>(deseq2.res.dds.2groups<span class="op">$</span>padj),
+     <span class="dt">main =</span> <span class="st">&quot;Volcano plot</span><span class="ch">\n</span><span class="st">Adjusted P-values&quot;</span>,
+     <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">panel.first =</span> <span class="kw">grid</span>(),
+     <span class="dt">xlab =</span> <span class="st">&quot;Log2 fold change&quot;</span>,
+     <span class="dt">ylab  =</span> <span class="st">&quot;-log10(padj)&quot;</span>,
+     <span class="dt">col =</span> <span class="kw">densCols</span>(
+       <span class="dt">x =</span> deseq2.res.dds.2groups<span class="op">$</span>log2FoldChange, 
+       <span class="dt">y =</span> <span class="op">-</span><span class="kw">log10</span>(deseq2.res.dds.2groups<span class="op">$</span>padj)),
+     <span class="dt">pch =</span> deseq2.res.dds.2groups<span class="op">$</span>pch
+     )
+<span class="kw">abline</span>(<span class="dt">v =</span> <span class="dv">0</span>)
+<span class="kw">abline</span>(<span class="dt">h =</span> <span class="dv">0</span>)
+
 
 ## P-value histogram
 <span class="kw">hist</span>(deseq2.res.dds.2groups<span class="op">$</span>pvalue, 
      <span class="dt">breaks =</span> <span class="dv">20</span>, <span class="dt">col =</span> <span class="st">&quot;#DDEEFF&quot;</span>, 
      <span class="dt">xlab =</span> <span class="st">&quot;Nominal P-value&quot;</span>, 
-     <span class="dt">ylab =</span> <span class="st">&quot;Number of genes&quot;</span>)</code></pre></div>
-<p><img src="figures/TP_deg_diagnostic_plots_2groups-1.png" width="480" style="display: block; margin: auto;" /></p>
+     <span class="dt">ylab =</span> <span class="st">&quot;Number of genes&quot;</span>)
+
+
+<span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</code></pre></div>
+<p><img src="figures/TP_deg_diagnostic_plots_2groups-1.png" width="95%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="toutes-conditions-confondues" class="section level3">
 <h3>Toutes conditions confondues</h3>
@@ -1494,160 +2092,155 @@ deseq2.res.all.conditions.df &lt;-<span class="st"> </span><span class="kw">as.d
 </thead>
 <tbody>
 <tr class="odd">
-<td>YOR353C</td>
-<td align="right">288.78861</td>
-<td align="right">-0.1875847</td>
-<td align="right">0.1516872</td>
-<td align="right">-1.2366553</td>
-<td align="right">0.2162151</td>
-<td align="right">0.2671393</td>
-</tr>
-<tr class="even">
-<td>YKR061W</td>
-<td align="right">200.45856</td>
-<td align="right">-0.4864049</td>
-<td align="right">0.3023702</td>
-<td align="right">-1.6086401</td>
-<td align="right">0.1076951</td>
-<td align="right">0.1414146</td>
-</tr>
-<tr class="odd">
-<td>snR76</td>
-<td align="right">7.99277</td>
-<td align="right">-0.5731163</td>
-<td align="right">0.6478677</td>
-<td align="right">-0.8846193</td>
-<td align="right">0.3763620</td>
-<td align="right">0.4364686</td>
-</tr>
-<tr class="even">
-<td>YER140W</td>
-<td align="right">193.29596</td>
-<td align="right">0.3594976</td>
-<td align="right">0.1419976</td>
-<td align="right">2.5317160</td>
-<td align="right">0.0113506</td>
-<td align="right">0.0176796</td>
-</tr>
-<tr class="odd">
-<td>YBR176W</td>
-<td align="right">90.47315</td>
-<td align="right">-0.9338070</td>
-<td align="right">0.1845184</td>
-<td align="right">-5.0607800</td>
-<td align="right">0.0000004</td>
-<td align="right">0.0000010</td>
-</tr>
-<tr class="even">
-<td>YPR148C</td>
-<td align="right">1662.62734</td>
-<td align="right">-1.2014121</td>
-<td align="right">0.1472054</td>
-<td align="right">-8.1614655</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-</tr>
-<tr class="odd">
-<td>YCL043C</td>
-<td align="right">5625.91587</td>
-<td align="right">0.8727008</td>
-<td align="right">0.1522345</td>
-<td align="right">5.7326092</td>
+<td>YAL042W</td>
+<td align="right">821.57849</td>
+<td align="right">-1.7721786</td>
+<td align="right">0.0960645</td>
+<td align="right">-18.447802</td>
 <td align="right">0.0000000</td>
 <td align="right">0.0000000</td>
 </tr>
 <tr class="even">
-<td>YGR011W</td>
-<td align="right">21.79403</td>
-<td align="right">-0.7652920</td>
-<td align="right">0.3642826</td>
-<td align="right">-2.1008194</td>
-<td align="right">0.0356568</td>
-<td align="right">0.0510522</td>
+<td>YCL011C</td>
+<td align="right">1127.45248</td>
+<td align="right">0.8964380</td>
+<td align="right">0.1474908</td>
+<td align="right">6.077923</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
 </tr>
 <tr class="odd">
-<td>YIL061C</td>
-<td align="right">145.92729</td>
-<td align="right">-0.7661357</td>
-<td align="right">0.1662410</td>
-<td align="right">-4.6085834</td>
-<td align="right">0.0000041</td>
-<td align="right">0.0000092</td>
+<td>YOR342C</td>
+<td align="right">249.37258</td>
+<td align="right">-2.3327681</td>
+<td align="right">0.3380258</td>
+<td align="right">-6.901155</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
 </tr>
 <tr class="even">
-<td>YLR297W</td>
-<td align="right">164.66646</td>
-<td align="right">0.3895691</td>
-<td align="right">0.1810778</td>
-<td align="right">2.1513911</td>
-<td align="right">0.0314453</td>
-<td align="right">0.0454790</td>
+<td>YDR110W</td>
+<td align="right">177.47170</td>
+<td align="right">0.2709980</td>
+<td align="right">0.2616494</td>
+<td align="right">1.035730</td>
+<td align="right">0.3003283</td>
+<td align="right">0.3575445</td>
+</tr>
+<tr class="odd">
+<td>YGL131C</td>
+<td align="right">259.59263</td>
+<td align="right">-0.7520007</td>
+<td align="right">0.2042155</td>
+<td align="right">-3.682388</td>
+<td align="right">0.0002311</td>
+<td align="right">0.0004393</td>
+</tr>
+<tr class="even">
+<td>YLR457C</td>
+<td align="right">85.33950</td>
+<td align="right">0.3368598</td>
+<td align="right">0.2139570</td>
+<td align="right">1.574428</td>
+<td align="right">0.1153886</td>
+<td align="right">0.1506029</td>
+</tr>
+<tr class="odd">
+<td>YAL026C</td>
+<td align="right">840.07036</td>
+<td align="right">2.4617257</td>
+<td align="right">0.1942883</td>
+<td align="right">12.670478</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td>YML083C</td>
+<td align="right">31.63095</td>
+<td align="right">2.3838345</td>
+<td align="right">0.4136043</td>
+<td align="right">5.763563</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="odd">
+<td>YOR262W</td>
+<td align="right">386.41214</td>
+<td align="right">1.0167842</td>
+<td align="right">0.1335089</td>
+<td align="right">7.615851</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td>YDR540C</td>
+<td align="right">35.50735</td>
+<td align="right">1.6382723</td>
+<td align="right">0.3580389</td>
+<td align="right">4.575683</td>
+<td align="right">0.0000047</td>
+<td align="right">0.0000107</td>
 </tr>
 </tbody>
 </table>
 </div>
-</div>
-<div id="normalisation-des-tailles-de-librairies" class="section level2">
-<h2>Normalisation des tailles de librairies</h2>
-<p>Nous utilisons la fonction <code>estimateSizeFactors()</code> de la bibliothèse Bioconductor <code>DESeq2</code> pour estimer le facteur correctif pour la taille des librairies, qui sera utilisé pour standardiser les comptages.</p>
-<p>Dans ce cas-ci</p>
-<ul>
-<li><p>la standardisation se limite à une mise à l’échelle (multiplier les comptages par un nombre spécifique à chaque librairie),</p></li>
-<li><p>il n’y a pas de centrage (on ne veut pas ramener la moyenne des comptages par librairie à zéro, sinon on obtiendrait des comptages négatifs !).</p></li>
-</ul>
-<p>Nous appliquons ensuite une transformation logarithmique pour normaliser ces comptages standardisés.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Normalizing using the method for an object of class&quot;CountDataSet&quot; 
-<span class="kw">message</span>(<span class="st">&quot;Normalizing raw counts with DESeq2&quot;</span>)
-dds.norm &lt;-<span class="st">  </span><span class="kw">estimateSizeFactors</span>(dds)
-<span class="co"># sizeFactors(dds.norm)</span>
-
-## Compute log2-transformed counts from the normalized counts
-counts.norm &lt;-<span class="st"> </span><span class="kw">counts</span>(dds.norm, <span class="dt">normalized =</span> <span class="ot">TRUE</span>) <span class="op">+</span><span class="st"> </span>parameters<span class="op">$</span>epsilon
-<span class="co"># dim(counts.norm)</span>
-counts.log2.norm &lt;-<span class="st"> </span><span class="kw">log2</span>(counts.norm)
-<span class="co"># dim(counts.log2.norm)</span>
-
-
-## Compute quick estimation of dispersion trend + apply variance-stabilizing transformation
-<span class="kw">message</span>(<span class="st">&quot;</span><span class="ch">\t</span><span class="st">DESeq2::vst()</span><span class="ch">\t</span><span class="st">Quickly estimate dispersion trend and apply variance-stabilizing transformation&quot;</span>)
-<span class="kw">system.time</span>(dds.vst &lt;-<span class="st"> </span><span class="kw">vst</span>(dds))
-
-## Compute regularized log transformation
-## BEWARE: with big datasets like TCGA this takes ages. 
-<span class="kw">message</span>(<span class="st">&quot;</span><span class="ch">\t</span><span class="st">DESeq2::rlog()</span><span class="ch">\t</span><span class="st">Computing regularized log transformation&quot;</span>)
-<span class="kw">system.time</span>(rld &lt;-<span class="st"> </span><span class="kw">rlog</span>(dds)) ## Takes a long time with large number of samples</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">log2.count.breaks &lt;-<span class="st"> </span><span class="kw">seq</span>(
-  <span class="dt">from =</span> <span class="kw">log2</span>(parameters<span class="op">$</span>epsilon), 
-  <span class="dt">to =</span> <span class="dv">32</span>, 
-  <span class="dt">by =</span> <span class="fl">0.4</span>)
-
-<span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">1</span>))
-
-<span class="kw">hist</span>(<span class="kw">unlist</span>(<span class="kw">log2</span>(<span class="kw">unlist</span>(counts.per.gene <span class="op">+</span><span class="st"> </span>parameters<span class="op">$</span>epsilon))), <span class="dt">main =</span> <span class="st">&quot;Log2(raw counts)&quot;</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;log2(raw counts + epsilon)&quot;</span>,
-     <span class="dt">ylab =</span> <span class="st">&quot;Number of measures&quot;</span>,
-     <span class="dt">breaks =</span> log2.count.breaks, 
-     <span class="dt">col =</span> <span class="st">&quot;#FFDDBB&quot;</span>)
-
-<span class="kw">hist</span>(<span class="kw">unlist</span>(counts.log2.norm), <span class="dt">main =</span> <span class="st">&quot;Normalized counts&quot;</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;log2(standardized counts)&quot;</span>,
-     <span class="dt">ylab =</span> <span class="st">&quot;Number of measures&quot;</span>,
-     <span class="dt">breaks =</span> log2.count.breaks, 
-     <span class="dt">col =</span> <span class="st">&quot;#DDFFBB&quot;</span>)
-
-<span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</code></pre></div>
-</div>
-<div id="analyse-differentielle" class="section level2">
-<h2>Analyse différentielle</h2>
-<div id="comparaison-entre-2-groupes" class="section level3">
-<h3>Comparaison entre 2 groupes</h3>
-</div>
-<div id="comparaison-de-groupes-multiples" class="section level3">
-<h3>Comparaison de groupes multiples</h3>
+<div id="exercices" class="section level3">
+<h3>Exercices</h3>
+<ol style="list-style-type: decimal">
+<li><p>Dessinez un nuage (<code>plot()</code>) qui compare lles p-valeurs nominales (non-ajustées) retournées respectivement par edgeR et DEseq2.</p></li>
+<li><p>Dessinez un nuage (<code>plot()</code>) qui compare lles p-valeurs ajustées retournées respectivement par edgeR et DEseq2.</p></li>
+<li><p>Dessinez un diagramme de Venn qui compare les ensemble de gènes déclarés positifs par edgeR et DESeq2.</p></li>
+</ol>
 </div>
 </div>
 <div id="controles-negatifs" class="section level2">
 <h2>Contrôles négatifs</h2>
+<div id="exercice" class="section level3">
+<h3>Exercice</h3>
+<p>Générez un tableau ayant les mêmes dimensions (lignes, colonnes) que votre tableau d’expresion, en le remplissant de nombres aléatoires tirés selon une distribution de Poisson d’espérance 200 (fonction <code>rpois()</code>).</p>
+<p>Effectuez une analyse différentielle sur ces données.</p>
+</div>
+</div>
+<div id="fichiers-de-resultats" class="section level2">
+<h2>Fichiers de résultats</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Differentially expressed genes
+outfiles[<span class="st">&quot;DESeq2 positive genes&quot;</span>] &lt;-<span class="st"> </span><span class="kw">file.path</span>(parameters<span class="op">$</span>workdir, <span class="st">&quot;DESeq2_positive.tsv&quot;</span>)
+<span class="kw">write.table</span>(
+  <span class="dt">x =</span> deseq2.res.dds.2groups[deseq2.res.dds.2groups<span class="op">$</span>positive, ], 
+  <span class="dt">quote =</span> <span class="ot">FALSE</span>, <span class="dt">row.names =</span> <span class="ot">TRUE</span>, <span class="dt">col.names =</span> <span class="ot">NA</span>,
+  <span class="dt">file =</span> outfiles[<span class="st">&quot;DESeq2 positive genes&quot;</span>] )
+
+## Differentially expressed genes
+outfiles[<span class="st">&quot;DESeq2 DEG iDs&quot;</span>] &lt;-<span class="st"> </span><span class="kw">file.path</span>(parameters<span class="op">$</span>workdir, <span class="st">&quot;DESeq2_positive_geneIDs.txt&quot;</span>)
+<span class="kw">write.table</span>(
+  <span class="dt">x =</span> <span class="kw">row.names</span>(deseq2.res.dds.2groups[deseq2.res.dds.2groups<span class="op">$</span>positive, ]), 
+  <span class="dt">quote =</span> <span class="ot">FALSE</span>, <span class="dt">row.names =</span> <span class="ot">FALSE</span>, <span class="dt">col.names =</span> <span class="ot">FALSE</span>,
+  <span class="dt">file =</span> outfiles[<span class="st">&quot;DESeq2 DEG iDs&quot;</span>] )
+
+<span class="kw">kable</span>(outfiles, <span class="dt">caption =</span> <span class="st">&quot;fichiers re résultats&quot;</span>, <span class="dt">col.names =</span> <span class="st">&quot;Result file&quot;</span>)</code></pre></div>
+<table>
+<caption>fichiers re résultats</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th align="left">Result file</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>DESeq2 all genes</td>
+<td align="left">~/DU-Bii/m3s5//DESeq2_all_genes.tsv</td>
+</tr>
+<tr class="even">
+<td>DESeq2 positive genes</td>
+<td align="left">~/DU-Bii/m3s5//DESeq2_positive.tsv</td>
+</tr>
+<tr class="odd">
+<td>DESeq2 DEG iDs</td>
+<td align="left">~/DU-Bii/m3s5//DESeq2_positive_geneIDs.txt</td>
+</tr>
+</tbody>
+</table>
 </div>
 
 
