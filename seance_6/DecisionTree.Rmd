@@ -96,15 +96,6 @@ options(scipen = 12) ## Max number of digits for non-scientific notation
 ```
 
 
-
-
-## Plan
-
-* Présentation générale des méthodes de classification
-* Arbres de décision
-* *Random forest*
-
-
 # Présentation générale des méthodes de classification
 
 ## Méthodes multivariées
