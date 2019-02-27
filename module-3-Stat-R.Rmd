@@ -10,7 +10,7 @@
 | 4 | Classification non supervisée (clustering) | [seance_4](seance_4) |
 | 5 | Analyse différentielle de données RNA-seq | [seance_5](seance_5) |
 | 6 | Classification supervisée (classement) | [seance_6](seance_6) |
-
+|   | Travaux personnels | [travaux](travaux) |
 
 ## Table des matières
 
