@@ -296,8 +296,8 @@ div.tocify {
 </ul></li>
 <li>Dans un second temps, vous construirez un modèle de <em>random forest</em> pour prédire un des 4 types de cancer : Basal.like, HER2pos, Luminal.A ou Luminal.B.</li>
 </ul>
-<div id="etape-1-preparation-des-donnees" class="section level1">
-<h1><span class="header-section-number">1</span> Etape 1 : Préparation des données</h1>
+<div id="preparation-des-donnees" class="section level1">
+<h1><span class="header-section-number">1</span> Préparation des données</h1>
 <ol style="list-style-type: decimal">
 <li>Ouvrez le fichier d’expression des gènes en utilisant la commande <code>read.table()</code>. Stockez ce data.frame dans l’objet <code>BIC.expr</code>. Vérifiez la taille du data.frame généré en utilisant la commande <code>dim()</code>.</li>
 </ol>
@@ -325,7 +325,8 @@ BIC.expr &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span 
  Luminal.A   :422                                               
  Luminal.B   :118                                               
  Unclassified:107                                               </code></pre>
-<p>La première colonne du data.frame <code>BIC.sample.classes</code> renseigne sur le type de cancer de chaque échantillon. Comme vous pouvez le voir, il y a 5 types de cancer, dont un type qui est <code>Unclassified</code>. Lors de la prédiction du type de cancer, ce type risque de biaiser les résultats. On va donc supprimer ces échantillons des jeux de données. A la fin du TP, vous utiliserez les modèles statistiques construits pour prédire le type de cancer de ces échantillons.</p>
+<p>La première colonne du data.frame <code>BIC.sample.classes</code> renseigne sur le type de cancer de chaque échantillon. Comme vous pouvez le voir, il y a 5 types de cancer, dont un type qui est <code>Unclassified</code>. Lors de la prédiction du type de cancer, ce type risque de biaiser les résultats. Vous allez supprimer ces échantillons des jeux de données.<br />
+A la fin du TP, vous utiliserez les modèles statistiques construits pour prédire le type de cancer de ces échantillons de type “Unclassified”.</p>
 <ol start="3" style="list-style-type: decimal">
 <li>Supprimez les échantillons correspondant au type <code>Unclassified</code> dans les deux data.frames.</li>
 </ol>
@@ -348,32 +349,34 @@ BIC.expr &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span 
 <span class="kw">dim</span>(BIC.expr.<span class="dv">4</span>)</code></pre></div>
 <pre><code>[1] 1000  712</code></pre>
 <ul>
-<li>Pour construire les modèles, vous n’allez pas utiliser les quatre types de cancers, mais seulement deux :
+<li>Pour construire les premiers modèles, vous n’allez pas utiliser les quatre types de cancers, mais seulement deux :
 <ul>
 <li>Luminal.A,<br />
 </li>
-<li>non Luminal.A. Vous allez donc transformer la colonne <code>cancer.type</code> du data.frame <code>BIC.sample.classes.2</code> en une variable qualitative à deux classes : “Luminal.A” ou “no.Luminal.A”.</li>
+<li>non Luminal.A : qui correspondent aux autres types. Vous allez donc transformer la colonne <code>cancer.type</code> du data.frame <code>BIC.sample.classes.2</code> en une variable qualitative à deux classes : “Luminal.A” ou “no.Luminal.A”.</li>
 </ul></li>
+</ul>
+<ol style="list-style-type: lower-alpha">
 <li>Créez le vecteur <code>new.type</code> qui contient 712 fois (<code>nrow(BIC.sample.classes.2)</code>) la valeur “Luminal.A”.</li>
-</ul>
+</ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">new.type &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="st">&quot;Luminal.A&quot;</span>, <span class="dt">length =</span> <span class="kw">nrow</span>(BIC.sample.classes.<span class="dv">4</span>))</code></pre></div>
-<ul>
+<ol start="2" style="list-style-type: lower-alpha">
 <li>Identifiez les individus qui ne contiennent pas “Luminal.A” dans la première colonne (colonne <code>cancer.type</code>) du data.frame <code>BIC.sample.classes.4</code>.</li>
-</ul>
+</ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ind.noLA &lt;-<span class="st"> </span><span class="kw">which</span>(BIC.sample.classes.<span class="dv">4</span>[,<span class="st">&quot;cancer.type&quot;</span>]<span class="op">!=</span><span class="st">&quot;Luminal.A&quot;</span>)</code></pre></div>
-<ul>
+<ol start="3" style="list-style-type: lower-alpha">
 <li>Pour ces individus, assignez la valeur “no.Luminal.A” au vecteur <code>new.type</code>.</li>
-</ul>
+</ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">new.type[ind.noLA] =<span class="st"> &quot;no.Luminal.A&quot;</span></code></pre></div>
-<ul>
-<li>remplacez la colonne <code>cancer.type</code> du data.frame <code>BIC.sample.classes.2</code> par le vecteur <code>new.type</code> que vous aurez transformé en facteur (fonction <code>as.factor()</code>)</li>
-</ul>
+<ol start="4" style="list-style-type: lower-alpha">
+<li>Remplacez la colonne <code>cancer.type</code> du data.frame <code>BIC.sample.classes.2</code> par le vecteur <code>new.type</code> que vous aurez transformé en facteur (fonction <code>as.factor()</code>)</li>
+</ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">BIC.sample.classes.<span class="dv">2</span> &lt;-<span class="st"> </span>BIC.sample.classes.<span class="dv">4</span>
 BIC.sample.classes.<span class="dv">2</span>[,<span class="st">&quot;cancer.type&quot;</span>] =<span class="st"> </span><span class="kw">as.factor</span>(new.type)</code></pre></div>
 <ol start="4" style="list-style-type: decimal">
 <li>Suppression des variables corrélées</li>
 </ol>
-<p>La première étape du nettoyage du jeu de données correspond à supprimer les variables (ici les gènes) corrélées. Pour cela, vous allez utiliser la fonction <code>findCorrelation()</code> du package <code>caret</code>. Cette fonction nécessite en entrée la matrice de corrélation entre les variables et le seuil de corrélation à partir duquel on considère que deux variables sont corrélées.</p>
+<p>Une des étapes du nettoyage du jeu de données correspond à supprimer les variables (ici les gènes) corrélées. Pour cela, vous allez utiliser la fonction <code>findCorrelation()</code> de la librairie <code>caret</code>. Cette fonction prend en entrée la matrice de corrélation entre les variables et le seuil de corrélation à partir duquel on considère que deux variables sont corrélées.</p>
 <ul>
 <li>Calculez la matrice de corrélation entre les gènes différentiellement exprimés. Comme dans le data.frame <code>BIC.expr.4</code> les gènes sont en lignes, pensez à transposer votre data.frame.</li>
 </ul>
@@ -386,17 +389,22 @@ var.supp =<span class="st"> </span><span class="kw">findCorrelation</span>(mat.c
 <span class="kw">length</span>(var.supp)</code></pre></div>
 <pre><code>[1] 36</code></pre>
 <ul>
-<li>Supprimez ces gènes du data.frame <code>BIC.expr</code>.</li>
+<li>Supprimez ces gènes du data.frame <code>BIC.expr.4</code>.</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">BIC.expr.<span class="dv">4</span> &lt;-<span class="st"> </span>BIC.expr.<span class="dv">4</span>[<span class="op">-</span>var.supp,]
 <span class="kw">dim</span>(BIC.expr.<span class="dv">4</span>)</code></pre></div>
 <pre><code>[1] 964 712</code></pre>
 <ol start="5" style="list-style-type: decimal">
-<li>Pour créer les modèles de prédiction, il est nécessaire d’avoir un data.frame qui regroupe pour chaque échantillons les gènes et le type de cancer associé.</li>
+<li>Pour créer les modèles de prédiction, il est nécessaire d’avoir un data.frame qui regroupe pour chaque échantillon les gènes et son type de cancer.</li>
 </ol>
 <ul>
-<li>Créez le data.frame <code>df.data</code> qui contient les échantillons en lignes et les gènes ainsi que le type de cancer en colonne. Pour cela, utilisez la commande <code>data.frame()</code>.
+<li>Créez le data.frame <code>df.data</code> qui contient :
 <ul>
+<li>en lignes ; les échantillons<br />
+</li>
+<li>en colonnes : les gènes et le type de cancer.<br />
+Pour cela, utilisez la commande <code>data.frame()</code>.<br />
+</li>
 <li>La première colonne de votre data.frame <code>df.data</code> doit correspondre aux types de cancer.<br />
 </li>
 <li>les colonnes 2 à 965 doivent correspondre aux gènes.</li>
@@ -411,22 +419,22 @@ var.supp =<span class="st"> </span><span class="kw">findCorrelation</span>(mat.c
 <div id="preparation-des-echantillons-dapprentissage-et-de-test" class="section level1">
 <h1><span class="header-section-number">2</span> Préparation des échantillons d’apprentissage et de test</h1>
 <ul>
-<li>L’échantillon d’apprentissage est l’échantillon qui va permettre d’apprendre les modèles. Il sera constitué de 2/3 des échantillons sélectionnés de manière aléatoire.<br />
+<li>L’<strong>échantillon d’apprentissage</strong> est l’échantillon qui va permettre d’apprendre les modèles. Il sera constitué de 2/3 des échantillons sélectionnés de manière aléatoire.<br />
 </li>
-<li>L’échantillon de test est l’échantillon qui va permettre d’estimer les performances non biaisées des modèles. Il sera constitué du 1/3 des échantillons restant.</li>
+<li>L’<strong>échantillon de test</strong> est l’échantillon qui va permettre d’estimer les performances non biaisées des modèles. Il sera constitué du 1/3 des échantillons restant.</li>
 </ul>
 <ol style="list-style-type: decimal">
 <li>En utilisant la fonction <code>sample()</code> créez un vecteur qui contient le numéro d’indice de 2/3 des individus choisis aléatoirement. Ces individus vont constituter les individus du jeu d’apprentissage.</li>
 </ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ind.app &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(df.data), <span class="dt">size=</span><span class="dv">2</span><span class="op">/</span><span class="dv">3</span><span class="op">*</span><span class="kw">nrow</span>(df.data))</code></pre></div>
 <ol start="2" style="list-style-type: decimal">
-<li>Créez le data.frame <code>mat.app</code> qui contient les valeurs d’expression des gènes pour les individus choisis aléatoirement. Cette matrice correspond au jeu d’apprentissage.</li>
+<li>Créez le data.frame <code>mat.app</code> qui contient les valeurs d’expression des gènes et le type de cancer pour les individus choisis aléatoirement. Cette matrice correspond au jeu d’apprentissage.</li>
 </ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mat.app &lt;-<span class="st"> </span>df.data[ind.app,]
 <span class="kw">dim</span>(mat.app)</code></pre></div>
 <pre><code>[1] 474 965</code></pre>
 <ol start="3" style="list-style-type: decimal">
-<li>Créez le data.frame <code>mat.test</code> qui contient les valeurs d’expression de gènes pour les individus restants (1/3). Cette matrice correspond au jeu test.</li>
+<li>Créez le data.frame <code>mat.test</code> qui contient les valeurs d’expression de gènes et le type de cancer pour les individus restants (1/3). Cette matrice correspond au jeu test.</li>
 </ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mat.test &lt;-<span class="st"> </span>df.data[<span class="op">-</span>ind.app,]
 <span class="kw">dim</span>(mat.test)</code></pre></div>
@@ -435,7 +443,7 @@ var.supp =<span class="st"> </span><span class="kw">findCorrelation</span>(mat.c
 <div id="validation-des-deux-echantillons." class="section level1">
 <h1><span class="header-section-number">3</span> Validation des deux échantillons.</h1>
 <ol style="list-style-type: decimal">
-<li>Calculez une analyse en composantes principale en utilisant le data.frame <code>df.data</code>. Pour cela, utilisez la fonction <code>PCA()</code> de la librairie <code>FactoMineR</code>.</li>
+<li>Calculez une analyse en composantes principale en utilisant le data.frame <code>df.data</code>. Pour cela, utilisez la fonction <code>PCA()</code> de la librairie <code>FactoMineR</code>. Pensez à ne pas prendre en compte la colonne renseignant sur le type de cancer car ce n’est pas une variable quantitative.</li>
 </ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(FactoMineR)
 pca.res &lt;-<span class="st"> </span><span class="kw">PCA</span>(df.data[,<span class="op">-</span><span class="dv">1</span>], <span class="dt">graph=</span><span class="ot">FALSE</span>)</code></pre></div>
@@ -461,12 +469,12 @@ vcol.set[ind.app] &lt;-<span class="st"> &quot;magenta&quot;</span></code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">1</span>))
 <span class="kw">barplot</span>(<span class="kw">table</span>(mat.app[,<span class="st">&quot;cancer.type&quot;</span>]), <span class="dt">main=</span><span class="st">&quot;jeu d&#39;apprentissage&quot;</span>)
 <span class="kw">barplot</span>(<span class="kw">table</span>(mat.test[,<span class="st">&quot;cancer.type&quot;</span>]), <span class="dt">main=</span><span class="st">&quot;jeu de test&quot;</span>)</code></pre></div>
-<p><img src="figures/07_tests_multiplesunnamed-chunk-24-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figures/07_tests_multiplesunnamed-chunk-24-1.png" width="672" style="display: block; margin: auto;" /> D’après les résultats obtenus, concluez sur la validité les échantillons d’apprentissage et test. Si vous concluez au fait que les deux échantillons ne sont pas valides, alors reprenez la procédure pour générer à nouveau des échantillons d’apprentissage et de test.</p>
 </div>
 <div id="prediction-du-type-de-cancer-en-utilisant-une-approche-de-cart" class="section level1">
 <h1><span class="header-section-number">4</span> Prédiction du type de cancer en utilisant une approche de CART</h1>
 <ol style="list-style-type: decimal">
-<li>A partir des données de l’échantillon d’apprentissage (<code>mat.app</code>), construisez un modèle de CART permettant de prédire le type de cancer en fonction de l’expression des gènes. Pour cela, utilisez la fonction <code>rpart()</code> du package <code>rpart</code>.</li>
+<li>A partir des données de l’échantillon d’apprentissage (<code>mat.app</code>), construisez un modèle de CART permettant de prédire le type de cancer (2 classes) en fonction de l’expression des gènes. Pour cela, utilisez la fonction <code>rpart()</code> de la librairie <code>rpart</code>.</li>
 </ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(rpart)
 <span class="kw">library</span>(rpart.plot)
@@ -478,59 +486,57 @@ rpart.fit</code></pre></div>
 node), split, n, loss, yval, (yprob)
       * denotes terminal node
 
- 1) root 474 180 Luminal.A (0.62025316 0.37974684)  
-   2) ENSG00000004838.13&gt;=14.84811 311  62 Luminal.A (0.80064309 0.19935691)  
-     4) ENSG00000008838.18&lt; 20.67364 296  47 Luminal.A (0.84121622 0.15878378)  
-       8) ENSG00000066468.21&gt;=15.1548 280  37 Luminal.A (0.86785714 0.13214286)  
-        16) ENSG00000025796.13&lt; 20.21649 263  28 Luminal.A (0.89353612 0.10646388)  
-          32) ENSG00000057935.13&gt;=17.9603 234  17 Luminal.A (0.92735043 0.07264957) *
-          33) ENSG00000057935.13&lt; 17.9603 29  11 Luminal.A (0.62068966 0.37931034)  
-            66) ENSG00000007062.11&lt; 19.07049 21   4 Luminal.A (0.80952381 0.19047619) *
-            67) ENSG00000007062.11&gt;=19.07049 8   1 no.Luminal.A (0.12500000 0.87500000) *
-        17) ENSG00000025796.13&gt;=20.21649 17   8 no.Luminal.A (0.47058824 0.52941176) *
-       9) ENSG00000066468.21&lt; 15.1548 16   6 no.Luminal.A (0.37500000 0.62500000) *
-     5) ENSG00000008838.18&gt;=20.67364 15   0 no.Luminal.A (0.00000000 1.00000000) *
-   3) ENSG00000004838.13&lt; 14.84811 163  45 no.Luminal.A (0.27607362 0.72392638)  
-     6) ENSG00000029725.16&gt;=19.41748 70  30 Luminal.A (0.57142857 0.42857143)  
-      12) ENSG00000008838.18&lt; 19.29407 58  19 Luminal.A (0.67241379 0.32758621)  
-        24) ENSG00000025156.12&lt; 16.90125 50  12 Luminal.A (0.76000000 0.24000000)  
-          48) ENSG00000062725.9&gt;=18.70459 27   1 Luminal.A (0.96296296 0.03703704) *
-          49) ENSG00000062725.9&lt; 18.70459 23  11 Luminal.A (0.52173913 0.47826087)  
-            98) ENSG00000061676.14&lt; 20.27352 12   1 Luminal.A (0.91666667 0.08333333) *
-            99) ENSG00000061676.14&gt;=20.27352 11   1 no.Luminal.A (0.09090909 0.90909091) *
-        25) ENSG00000025156.12&gt;=16.90125 8   1 no.Luminal.A (0.12500000 0.87500000) *
-      13) ENSG00000008838.18&gt;=19.29407 12   1 no.Luminal.A (0.08333333 0.91666667) *
-     7) ENSG00000029725.16&lt; 19.41748 93   5 no.Luminal.A (0.05376344 0.94623656) *</code></pre>
+  1) root 474 187 Luminal.A (0.60548523 0.39451477)  
+    2) ENSG00000029725.16&gt;=18.9784 377  98 Luminal.A (0.74005305 0.25994695)  
+      4) ENSG00000043143.20&gt;=17.38587 347  73 Luminal.A (0.78962536 0.21037464)  
+        8) ENSG00000034152.18&lt; 18.71317 331  61 Luminal.A (0.81570997 0.18429003)  
+         16) ENSG00000008838.18&lt; 20.24429 317  51 Luminal.A (0.83911672 0.16088328)  
+           32) ENSG00000025156.12&lt; 16.90443 298  40 Luminal.A (0.86577181 0.13422819)  
+             64) ENSG00000066735.14&lt; 15.74111 241  20 Luminal.A (0.91701245 0.08298755)  
+              128) ENSG00000010704.18&lt; 17.86318 233  15 Luminal.A (0.93562232 0.06437768) *
+              129) ENSG00000010704.18&gt;=17.86318 8   3 no.Luminal.A (0.37500000 0.62500000) *
+             65) ENSG00000066735.14&gt;=15.74111 57  20 Luminal.A (0.64912281 0.35087719)  
+              130) ENSG00000006712.14&gt;=18.49866 42   8 Luminal.A (0.80952381 0.19047619)  
+                260) ENSG00000042753.11&lt; 18.88345 35   3 Luminal.A (0.91428571 0.08571429) *
+                261) ENSG00000042753.11&gt;=18.88345 7   2 no.Luminal.A (0.28571429 0.71428571) *
+              131) ENSG00000006712.14&lt; 18.49866 15   3 no.Luminal.A (0.20000000 0.80000000) *
+           33) ENSG00000025156.12&gt;=16.90443 19   8 no.Luminal.A (0.42105263 0.57894737) *
+         17) ENSG00000008838.18&gt;=20.24429 14   4 no.Luminal.A (0.28571429 0.71428571) *
+        9) ENSG00000034152.18&gt;=18.71317 16   4 no.Luminal.A (0.25000000 0.75000000) *
+      5) ENSG00000043143.20&lt; 17.38587 30   5 no.Luminal.A (0.16666667 0.83333333)  
+       10) ENSG00000036549.12&lt; 17.71504 8   3 Luminal.A (0.62500000 0.37500000) *
+       11) ENSG00000036549.12&gt;=17.71504 22   0 no.Luminal.A (0.00000000 1.00000000) *
+    3) ENSG00000029725.16&lt; 18.9784 97   8 no.Luminal.A (0.08247423 0.91752577) *</code></pre>
 <ol start="2" style="list-style-type: decimal">
 <li>En utilisant la fonction <code>prp()</code> de la librairie <code>rpart.plot()</code>, représentez le modèle obtenu.</li>
 </ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prp</span>(rpart.fit, <span class="dt">extra=</span><span class="dv">2</span>)</code></pre></div>
 <p><img src="figures/07_tests_multiplesunnamed-chunk-26-1.png" width="672" style="display: block; margin: auto;" /></p>
 <ol start="3" style="list-style-type: decimal">
-<li>Sur les données de l’échantillon d’apprentissage calculez l’<em>accuracy</em> (=le taux de bien prédit) (<span class="math inline">\(Acc = \frac{VP+VN}{VP+VN+FP+FN}\)</span>) .</li>
+<li>Sur les données de l’échantillon d’apprentissage calculez l’<em>accuracy</em> du modèle (=le taux de bien prédit) (<span class="math inline">\(Acc = \frac{VP+VN}{VP+VN+FP+FN}\)</span>) .</li>
 </ol>
 <ul>
 <li>En utilisant la fonction <code>predict()</code>, prédisez le type de cancer pour chaque individu de l’échantillon d’apprentissage. N’oubliez pas de préciser l’argument <code>type=&quot;class&quot;</code> pour préciser que vous faites de la classification. Stockez ces valeurs prédites dans le vecteur <code>pred.app</code>.<br />
 Attention, la fonction <code>predict()</code>est une fonction générique. Dans ce cas, vous utilisez la fonction <code>predict()</code> appliquée à un objet <code>rpart</code>. Pour avoir plus d’informations sur les arguments de la fonction, vous devez utiliser l’aide de la fonction <code>predict.rpart()</code>.</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pred.app &lt;-<span class="st"> </span><span class="kw">predict</span>(rpart.fit, <span class="dt">newdata =</span> mat.app, <span class="dt">type=</span><span class="st">&quot;class&quot;</span>)</code></pre></div>
-<ol start="4" style="list-style-type: decimal">
+<ul>
 <li>A l’aide de la fonction <code>table()</code>, calculez la matrice de confusion entre les données prédites sur l’échantillon d’apprentissage (contenues dans le vecteur <code>pred.app</code>) et les vraies valeurs (contenues dans la colonne <code>cancer.type</code> du data.frame <code>mat.app</code>).</li>
-</ol>
+</ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tc.rpart.app &lt;-<span class="st"> </span><span class="kw">table</span>(pred.app, mat.app[,<span class="st">&quot;cancer.type&quot;</span>])
 tc.rpart.app</code></pre></div>
 <pre><code>              
 pred.app       Luminal.A no.Luminal.A
-  Luminal.A          271           23
-  no.Luminal.A        23          157</code></pre>
-<ol start="5" style="list-style-type: decimal">
-<li>Calculez l’<em>accuracy</em> sur les données de l’apprentissage</li>
-</ol>
+  Luminal.A          255           21
+  no.Luminal.A        32          166</code></pre>
+<ul>
+<li>Calculez l’<em>accuracy</em> du modèle sur les données de l’apprentissage</li>
+</ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">acc.rpart.app &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">diag</span>(tc.rpart.app))<span class="op">/</span><span class="kw">sum</span>(tc.rpart.app)
 acc.rpart.app</code></pre></div>
-<pre><code>[1] 0.9029536</code></pre>
-<ol start="6" style="list-style-type: decimal">
-<li>En utilisant la même procédure que celle utilisée pour calculer l’<em>accuracy</em> sur le jeu d’apprentissage, calculez l’<em>accuracy</em> sur l’échantillon test</li>
+<pre><code>[1] 0.8881857</code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li>En utilisant la même procédure que celle utilisée pour calculer l’<em>accuracy</em> sur le jeu d’apprentissage, calculez l’<em>accuracy</em> du modèle sur l’échantillon test</li>
 </ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pred.test &lt;-<span class="st"> </span><span class="kw">predict</span>(rpart.fit, <span class="dt">newdata =</span> mat.test, <span class="dt">type=</span><span class="st">&quot;class&quot;</span>)
 
@@ -538,21 +544,21 @@ tc.rpart.test &lt;-<span class="st"> </span><span class="kw">table</span>(pred.t
 tc.rpart.test</code></pre></div>
 <pre><code>              
 pred.test      Luminal.A no.Luminal.A
-  Luminal.A          111           40
-  no.Luminal.A        17           70</code></pre>
+  Luminal.A           94           25
+  no.Luminal.A        41           78</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">acc.rpart.test &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">diag</span>(tc.rpart.test))<span class="op">/</span><span class="kw">sum</span>(tc.rpart.test)
 acc.rpart.test</code></pre></div>
-<pre><code>[1] 0.7605042</code></pre>
-<p>En comparant les performances obtenues sur l’échantillon d’apprentissage et de test, vous constatez que les performances obtenues sur l’échantillon d’apprentissage (Acc=0.9) sont plus grandes que celles obtenues sur l’échantillon test (Acc=0.76). Ainsi, vous observez un phénomène de sur-apprentissage. Le modèle apprend très bien les données de l’échantillon d’apprentissage, mais prédit moins bien les données du jeu test.<br />
+<pre><code>[1] 0.7226891</code></pre>
+<p>En comparant les performances obtenues sur l’échantillon d’apprentissage et de test, vous constatez que les performances obtenues sur l’échantillon d’apprentissage (Acc=0.89) sont plus grandes que celles obtenues sur l’échantillon test (Acc=0.72). Ainsi, vous observez un <strong>phénomène de sur-apprentissage</strong>. Le modèle apprend très bien les données de l’échantillon d’apprentissage, mais prédit moins bien les données du jeu test.<br />
 Pour diminuer ce sur-apprentissage, une des solutions serait d’élaguer l’arbre, c’est-à-dire d’enlever certaines branches. Ainsi, le nouveau modèle obtenu serait moins performant sur les données d’apprentissage, mais plus performant sur les données du jeu test.</p>
 </div>
-<div id="prediction-du-type-de-cancer-en-utilisant-une-approche-de-cart-1" class="section level1">
-<h1><span class="header-section-number">5</span> Prédiction du type de cancer en utilisant une approche de CART</h1>
+<div id="prediction-du-type-de-cancer-en-utilisant-une-approche-de-random-forest" class="section level1">
+<h1><span class="header-section-number">5</span> Prédiction du type de cancer en utilisant une approche de <em>random forest</em></h1>
 <ol style="list-style-type: decimal">
 <li>A partir des données de l’échantillon d’apprentissage, construisez une forêt aléatoire permettant de prédire le type de cancer (2 types) en fonction de l’expression des gènes.</li>
 </ol>
 <ul>
-<li>Pour cela, utilisez la fonction <code>randomForest()</code> du package <code>randomForest</code> avec les paramètres <code>mtry</code> et <code>mtree</code> par défaut. Stockez le modèle dans l’objet <code>rf.fit</code>.</li>
+<li>Pour cela, utilisez la fonction <code>randomForest()</code> de la librairie <code>randomForest</code> avec les paramètres <code>mtry</code> et <code>mtree</code> par défaut. Stockez le modèle dans l’objet <code>rf.fit</code>.</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(randomForest)
 rf.fit &lt;-<span class="st"> </span><span class="kw">randomForest</span>(cancer.type<span class="op">~</span>., <span class="dt">data =</span> mat.app)</code></pre></div>
@@ -567,11 +573,11 @@ Call:
                      Number of trees: 500
 No. of variables tried at each split: 31
 
-        OOB estimate of  error rate: 17.3%
+        OOB estimate of  error rate: 18.14%
 Confusion matrix:
              Luminal.A no.Luminal.A class.error
-Luminal.A          280           14  0.04761905
-no.Luminal.A        68          112  0.37777778</code></pre>
+Luminal.A          268           19  0.06620209
+no.Luminal.A        67          120  0.35828877</code></pre>
 <ol start="2" style="list-style-type: decimal">
 <li>Choix de la valeur du paramètre <code>ntree</code>.</li>
 </ol>
@@ -585,10 +591,10 @@ no.Luminal.A        68          112  0.37777778</code></pre>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ntree.opt &lt;-<span class="st"> </span><span class="dv">200</span></code></pre></div>
 <ol start="3" style="list-style-type: decimal">
-<li>Choix de la valeur optimal pour le paramètre <code>mtry</code>.<br />
+<li>Choix de la valeur optimale pour le paramètre <code>mtry</code>.<br />
 Remarque : cette étape est coûteuse en temps de calculs.</li>
 </ol>
-<p>Pour trouver la valeur optimal de <code>mtry</code>, vous allez calculer plusieurs modèles en variant la valeur du paramètre <code>mtry</code>. Pour chaque modèle l’erreur commise par le modèle sera stockée dans un vecteur. La valeur optimale de <code>mtry</code> correspondra à la valeur du <code>mtry</code> du modèle donnant le plus faible taux d’erreur.</p>
+<p>Pour trouver la valeur optimale de <code>mtry</code>, vous allez calculer plusieurs modèles en variant la valeur du paramètre <code>mtry</code>. Pour chaque modèle l’erreur commise par le modèle sera stockée dans un vecteur. La valeur optimale de <code>mtry</code> correspondra à la valeur du <code>mtry</code> du modèle donnant le plus faible taux d’erreur.</p>
 <ul>
 <li>Calculez les modèles pour des valeurs de <code>mtry</code> de 15, 30, 62, 124, 248, 350, 500, et la valeur de <code>ntree</code> optimale. Le taux d’erreur de chaque modèle sera stockée dans le vecteur <code>v.err</code>.</li>
 </ul>
@@ -612,7 +618,7 @@ v.mtry &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">
 <li>Calcul du modèle avec les paramètres optimaux.</li>
 </ol>
 <ul>
-<li>Calculez le modèle <em>random forest</em> sur l’échantillon d’apprentissage en utilisant les valeurs optimales des paramètres <code>mtry</code> et <code>ntree</code>. Dans la fonction <code>randomForest()</code>, ajouter l’argument <code>importance=TRUE</code>. Cet argument vous stocker l’importance des variables.</li>
+<li>Calculez le modèle <em>random forest</em> sur l’échantillon d’apprentissage en utilisant les valeurs optimales des paramètres <code>mtry</code> et <code>ntree</code>. Dans la fonction <code>randomForest()</code>, ajouter l’argument <code>importance=TRUE</code>. Cet argument vous permettra de stocker l’importance des variables.</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rf.fit &lt;-<span class="st"> </span><span class="kw">randomForest</span>(cancer.type<span class="op">~</span>., <span class="dt">data =</span> mat.app, <span class="dt">ntree=</span>ntree.opt, <span class="dt">mtry=</span><span class="dv">248</span>, <span class="dt">importance=</span><span class="ot">TRUE</span>)</code></pre></div>
 <ul>
@@ -626,50 +632,53 @@ Call:
                      Number of trees: 200
 No. of variables tried at each split: 248
 
-        OOB estimate of  error rate: 17.09%
+        OOB estimate of  error rate: 16.67%
 Confusion matrix:
              Luminal.A no.Luminal.A class.error
-Luminal.A          272           22  0.07482993
-no.Luminal.A        59          121  0.32777778</code></pre>
+Luminal.A          267           20  0.06968641
+no.Luminal.A        59          128  0.31550802</code></pre>
 <ol start="3" style="list-style-type: decimal">
 <li>Calcul des performances du modèle <em>random forest</em></li>
 </ol>
-<p>Pour comparer les performances de ce modèle, avec le modèle CART calculé précédemment, il faut calculer les performances du modèle <code>rf.fit</code> sur les données de l’échantillon d’apprentissage et de test.</p>
-<ul>
-<li>Calculez l’<em>accuracy</em> sur l’échantillon d’apprentissage.</li>
-</ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pred.app &lt;-<span class="st"> </span><span class="kw">predict</span>(rf.fit, <span class="dt">newdata =</span> mat.app, <span class="dt">type=</span><span class="st">&quot;class&quot;</span>)</code></pre></div>
-<ul>
-<li>Calculez la matrice de confusion entre les données prédites sur l’échantillon d’apprentissage et les vraies valeurs.</li>
-</ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tc.rf.app &lt;-<span class="st"> </span><span class="kw">table</span>(pred.app, mat.app[,<span class="st">&quot;cancer.type&quot;</span>])
-tc.rf.app</code></pre></div>
-<pre><code>              
-pred.app       Luminal.A no.Luminal.A
-  Luminal.A          294            0
-  no.Luminal.A         0          180</code></pre>
+<p>Pour comparer les performances de ce modèle, avec le modèle CART calculé précédemment, il faut calculer l’<em>accuracy</em> du modèle <code>rf.fit</code> sur les données des échantillons d’apprentissage et de test.</p>
 <ul>
 <li>Calculez l’<em>accuracy</em> du modèle sur les données de l’apprentissage</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">acc.rf.app &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">diag</span>(tc.rf.app))<span class="op">/</span><span class="kw">sum</span>(tc.rf.app)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Prédiction du type de cancer des individus du jeu d&#39;apprentissage</span>
+pred.app &lt;-<span class="st"> </span><span class="kw">predict</span>(rf.fit, <span class="dt">newdata =</span> mat.app, <span class="dt">type=</span><span class="st">&quot;class&quot;</span>)
+
+<span class="co"># matrice de confusion entre les données prédites sur l&#39;échantillon d&#39;apprentissage et les vraies valeurs.</span>
+
+tc.rf.app &lt;-<span class="st"> </span><span class="kw">table</span>(pred.app, mat.app[,<span class="st">&quot;cancer.type&quot;</span>])
+tc.rf.app</code></pre></div>
+<pre><code>              
+pred.app       Luminal.A no.Luminal.A
+  Luminal.A          287            0
+  no.Luminal.A         0          187</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#  accuracy* du modèle sur les données de l&#39;apprentissage</span>
+acc.rf.app &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">diag</span>(tc.rf.app))<span class="op">/</span><span class="kw">sum</span>(tc.rf.app)
 acc.rf.app</code></pre></div>
 <pre><code>[1] 1</code></pre>
-<ol start="6" style="list-style-type: decimal">
+<ul>
 <li>Calcul de l’<em>accuracy</em> sur l’échantillon test</li>
-</ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pred.test &lt;-<span class="st"> </span><span class="kw">predict</span>(rf.fit, <span class="dt">newdata =</span> mat.test, <span class="dt">type=</span><span class="st">&quot;class&quot;</span>)
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># prediction</span>
+pred.test &lt;-<span class="st"> </span><span class="kw">predict</span>(rf.fit, <span class="dt">newdata =</span> mat.test, <span class="dt">type=</span><span class="st">&quot;class&quot;</span>)
 
+<span class="co"># table de confusion</span>
 tc.rf.test &lt;-<span class="st"> </span><span class="kw">table</span>(pred.test, mat.test[,<span class="st">&quot;cancer.type&quot;</span>])
 tc.rf.test</code></pre></div>
 <pre><code>              
 pred.test      Luminal.A no.Luminal.A
-  Luminal.A          120           37
-  no.Luminal.A         8           73</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">acc.rf.test &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">diag</span>(tc.rf.test))<span class="op">/</span><span class="kw">sum</span>(tc.rf.test)
+  Luminal.A          128           35
+  no.Luminal.A         7           68</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#accuracy</span>
+acc.rf.test &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">diag</span>(tc.rf.test))<span class="op">/</span><span class="kw">sum</span>(tc.rf.test)
 acc.rf.test</code></pre></div>
-<pre><code>[1] 0.8109244</code></pre>
-<ol start="7" style="list-style-type: decimal">
-<li>Etude de l’importance des variables (ici les gènes) dans le modèle.</li>
+<pre><code>[1] 0.8235294</code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li><p>Comparez les performances des modèles de CART et de Random forest.</p></li>
+<li><p>Etude de l’importance des variables (ici les gènes) dans le modèle.</p></li>
 </ol>
 <ul>
 <li>Représentez graphiquement l’importance de chaque gène en utilisant la fonction <code>varImpPlot()</code></li>
@@ -775,7 +784,7 @@ pred.uncl.rf &lt;-<span class="st"> </span><span class="kw">predict</span>(rf.fi
 <span class="kw">table</span>(pred.uncl.rf)</code></pre></div>
 <pre><code>pred.uncl.rf
    Luminal.A no.Luminal.A 
-          59           48 </code></pre>
+          58           49 </code></pre>
 <ul>
 <li>Prédiction du type de cancer en utilisant le modèle SVM</li>
 </ul>
@@ -783,7 +792,7 @@ pred.uncl.rf &lt;-<span class="st"> </span><span class="kw">predict</span>(rf.fi
 <span class="kw">table</span>(pred.uncl.svm)</code></pre></div>
 <pre><code>pred.uncl.svm
    Luminal.A no.Luminal.A 
-          67           40 </code></pre>
+          70           37 </code></pre>
 <ul>
 <li>Calcul de la table de confusion entre les deux vecteurs de prédiction.</li>
 </ul>
@@ -791,8 +800,8 @@ pred.uncl.rf &lt;-<span class="st"> </span><span class="kw">predict</span>(rf.fi
 tc</code></pre></div>
 <pre><code>              pred.uncl.svm
 pred.uncl.rf   Luminal.A no.Luminal.A
-  Luminal.A           55            4
-  no.Luminal.A        12           36</code></pre>
+  Luminal.A           56            2
+  no.Luminal.A        14           35</code></pre>
 <p># Prédiction des 4 types de cancer.</p>
 <ol style="list-style-type: decimal">
 <li>Préparation du jeu de données</li>
@@ -826,17 +835,23 @@ df.data.<span class="dv">4</span>[,<span class="dv">1</span>] &lt;-<span class="
 <span class="kw">plot</span>(rf.fit.<span class="dv">4</span><span class="op">$</span>err.rate[,<span class="dv">1</span>], <span class="dt">type=</span><span class="st">&quot;l&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;taux d&#39;erreur&quot;</span>, <span class="dt">xlab=</span><span class="st">&quot;nombre d&#39;arbres&quot;</span>)</code></pre></div>
 <p><img src="figures/07_tests_multiplesunnamed-chunk-52-1.png" width="672" style="display: block; margin: auto;" /></p>
 <ul>
-<li>Déterminez la valeur optimale du paramètre <code>mtry</code></li>
+<li>Déterminez la valeur optimale du paramètre <code>mtry</code>.</li>
 </ul>
-<p>```r v.err &lt;- NULL v.mtry &lt;- c(15, 31, 62, 124, 248, 350, 500) for(i in v.mtry){ set.seed(123) rf.fit &lt;- randomForest(cancer.type~., data = mat.app.4, ntree=150, mtry=i) v.err &lt;- c(v.err, rf.fit$err.rate[150,1]) }</p>
-<p>plot(v.mtry, v.err, type =“b”, xlab=“mtry values”, ylab=“taux d’erreur”, xaxt=“n”) axis(1, at=v.mtry, labels=v.mtry, las=2) ```</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">v.err &lt;-<span class="st">  </span><span class="ot">NULL</span>
+v.mtry &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">15</span>, <span class="dv">31</span>, <span class="dv">62</span>, <span class="dv">124</span>, <span class="dv">248</span>, <span class="dv">350</span>, <span class="dv">500</span>)
+<span class="cf">for</span>(i <span class="cf">in</span> v.mtry){
+    <span class="kw">set.seed</span>(<span class="dv">123</span>)
+    rf.fit &lt;-<span class="st"> </span><span class="kw">randomForest</span>(cancer.type<span class="op">~</span>., <span class="dt">data =</span> mat.app.<span class="dv">4</span>, <span class="dt">ntree=</span><span class="dv">150</span>, <span class="dt">mtry=</span>i)
+    v.err &lt;-<span class="st"> </span><span class="kw">c</span>(v.err, rf.fit<span class="op">$</span>err.rate[<span class="dv">150</span>,<span class="dv">1</span>])
+}
+
+<span class="kw">plot</span>(v.mtry, v.err, <span class="dt">type =</span><span class="st">&quot;b&quot;</span>, <span class="dt">xlab=</span><span class="st">&quot;mtry values&quot;</span>, <span class="dt">ylab=</span><span class="st">&quot;taux d&#39;erreur&quot;</span>, <span class="dt">xaxt=</span><span class="st">&quot;n&quot;</span>)
+<span class="kw">axis</span>(<span class="dv">1</span>, <span class="dt">at=</span>v.mtry, <span class="dt">labels=</span>v.mtry, <span class="dt">las=</span><span class="dv">2</span>)</code></pre></div>
 <p><img src="figures/07_tests_multiplesunnamed-chunk-53-1.png" width="672" style="display: block; margin: auto;" /></p>
 <ol start="4" style="list-style-type: decimal">
-<li>Calcul du modèle avec les paramètres optimaux.</li>
+<li>Calculez le modèle avec les paramètres optimaux.<br />
+Calculez à nouveau le modèle sur l’échantillon d’apprentissage en utilisant les valeurs optimales des paramètres <code>mtry</code> et <code>ntree</code>. Dans la fonction <code>randomForest()</code>, ajouter l’argument <code>importance=TRUE</code>.</li>
 </ol>
-<ul>
-<li>Calculez à nouveau le modèle sur l’échantillon d’apprentissage en utilisant les valeurs optimales des paramètres <code>mtry</code> et <code>ntree</code>. Dans la fonction <code>randomForest()</code>, ajouter l’argument <code>importance=TRUE</code>.</li>
-</ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rf.fit.<span class="dv">4</span> &lt;-<span class="st"> </span><span class="kw">randomForest</span>(cancer.type<span class="op">~</span>., <span class="dt">data =</span> mat.app.<span class="dv">4</span>, <span class="dt">ntree=</span><span class="dv">150</span>, <span class="dt">mtry=</span><span class="dv">124</span>, <span class="dt">importance=</span><span class="ot">TRUE</span>)</code></pre></div>
 <ul>
 <li>Visualisez le modèle et la table de confusion obtenue sur les échantillons OOB.</li>
@@ -849,15 +864,15 @@ Call:
                      Number of trees: 150
 No. of variables tried at each split: 124
 
-        OOB estimate of  error rate: 20.46%
+        OOB estimate of  error rate: 22.36%
 Confusion matrix:
            Basal.like HER2pos Luminal.A Luminal.B class.error
-Basal.like         64       1         7         3  0.14666667
-HER2pos             6       2        13         7  0.92857143
-Luminal.A           1       0       290         3  0.01360544
-Luminal.B           1       0        55        21  0.72727273</code></pre>
+Basal.like         71       1         9         0  0.12345679
+HER2pos             8       2        11         7  0.92857143
+Luminal.A           1       0       283         3  0.01393728
+Luminal.B           1       0        65        12  0.84615385</code></pre>
 <ol start="5" style="list-style-type: decimal">
-<li>Calcul des performances du modèle <em>random forest</em> sur l’échantillon d’apprentissage et de test.</li>
+<li>Calculez les performances du modèle <em>random forest</em> sur l’échantillon d’apprentissage et de test.</li>
 </ol>
 <ul>
 <li>Calcul de l’<em>accuracy</em> sur l’échantillon d’apprentissage.</li>
@@ -867,10 +882,10 @@ tc.rf4.app &lt;-<span class="st"> </span><span class="kw">table</span>(pred.app.
 tc.rf4.app</code></pre></div>
 <pre><code>            
 pred.app.4   Basal.like HER2pos Luminal.A Luminal.B
-  Basal.like         75       0         0         0
+  Basal.like         81       0         0         0
   HER2pos             0      28         0         0
-  Luminal.A           0       0       294         0
-  Luminal.B           0       0         0        77</code></pre>
+  Luminal.A           0       0       287         0
+  Luminal.B           0       0         0        78</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">acc.rf4.app &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">diag</span>(tc.rf4.app))<span class="op">/</span><span class="kw">sum</span>(tc.rf4.app)
 acc.rf4.app</code></pre></div>
 <pre><code>[1] 1</code></pre>
@@ -883,13 +898,13 @@ tc.rf4.test &lt;-<span class="st"> </span><span class="kw">table</span>(pred.tes
 tc.rf4.test</code></pre></div>
 <pre><code>            
 pred.test.4  Basal.like HER2pos Luminal.A Luminal.B
-  Basal.like         44       5         0         0
-  HER2pos             0       3         0         1
-  Luminal.A          12       3       127        32
-  Luminal.B           0       2         1         8</code></pre>
+  Basal.like         39       8         1         0
+  HER2pos             0       2         0         0
+  Luminal.A          10       0       132        29
+  Luminal.B           1       3         2        11</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">acc.rf4.test &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">diag</span>(tc.rf4.test))<span class="op">/</span><span class="kw">sum</span>(tc.rf4.test)
 acc.rf4.test</code></pre></div>
-<pre><code>[1] 0.7647059</code></pre>
+<pre><code>[1] 0.7731092</code></pre>
 <ol start="6" style="list-style-type: decimal">
 <li>Etude de l’importance des descripteurs dans le modèle.</li>
 </ol>
