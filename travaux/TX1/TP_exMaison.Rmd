@@ -3,13 +3,7 @@ title: "Module 3 - Analyse statistique avec R - Séance 2"
 author: "Travail maison"
 date: '`r Sys.Date()`'
 output:
-  pdf_document:
-    fig_caption: yes
-    highlight: zenburn
-    toc: yes
-    toc_depth: 3
   html_document:
-    code_folding: hide #show #
     self_contained: no
     number_sections: no
     fig_caption: yes
@@ -18,6 +12,11 @@ output:
     toc: yes
     toc_depth: 3
     toc_float: yes
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
 font-import: http://fonts.googleapis.com/css?family=Risque
 subtitle: DUBii 2019
 font-family: Garamond

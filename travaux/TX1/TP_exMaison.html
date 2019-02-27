@@ -11,7 +11,7 @@
 
 <meta name="author" content="Travail maison" />
 
-<meta name="date" content="2019-02-07" />
+<meta name="date" content="2019-02-28" />
 
 <title>Module 3 - Analyse statistique avec R - Séance 2</title>
 
@@ -25,7 +25,6 @@
 <link href="TP_exMaison_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="TP_exMaison_files/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="TP_exMaison_files/navigation-1.1/tabsets.js"></script>
-<script src="TP_exMaison_files/navigation-1.1/codefolding.js"></script>
 
 
 
@@ -85,6 +84,9 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
 </style>
 
 
@@ -92,22 +94,74 @@ button.code-folding-btn:focus {
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
 });
-</script>
 
-<!-- code folding -->
-<style type="text/css">
-.code-folding-btn { margin-bottom: 4px; }
-</style>
-<script>
 $(document).ready(function () {
-  window.initializeCodeFolding("hide" === "show");
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
 });
 </script>
 
+<!-- code folding -->
 
 
 
@@ -210,20 +264,12 @@ div.tocify {
 
 <div class="fluid-row" id="header">
 
-<div class="btn-group pull-right">
-<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
-<ul class="dropdown-menu" style="min-width: 50px;">
-<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
-<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
-</ul>
-</div>
-
 
 
 <h1 class="title toc-ignore">Module 3 - Analyse statistique avec R - Séance 2</h1>
 <h3 class="subtitle"><em>DUBii 2019</em></h3>
 <h4 class="author"><em>Travail maison</em></h4>
-<h4 class="date"><em>2019-02-07</em></h4>
+<h4 class="date"><em>2019-02-28</em></h4>
 
 </div>
 
