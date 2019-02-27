@@ -9,7 +9,7 @@
 | 3 | Analyse de données métagénomiques | [seance_3](seance_3) |
 | 4 | Clustering | [seance_4](seance_4) |
 | 5 | Analyse différentielle de données RNA-seq | [seance_5](seance_5) |
-| 6 | Classification supervisée (classement) | |
+| 6 | Classification supervisée (classement) | [seance_6](seance_6) |
 
 
 ## Table des matières
@@ -185,6 +185,7 @@ Applications:
 #### Clustering
 
 - Concepts
+
     - Approches de clustering: hiérarchique, K-means
     - Hiérarchique: critères d'agglomération (single, average, complete)
     - Métrique de (dis)similarité: Euclidienne, corrélation, dot product
@@ -205,22 +206,20 @@ Applications:
     - Visualisation (heat maps, arbres, PCs)
     - Impact de la dimensionalité: 
 
-- A évaluer
-    - tSNE ? (à évaluer, au cas où on aborderait le single-cell RNA-seq): pas le temps d'approfondir, mais peut-être mentionner en montrant les graphes
+
 
 - Applications
+
     - Clustering et heat-maps de densités de reads autour des pics ChIP-seq (marques épigénétiques, facteurs transcriptionnels) avec K-means
     
     - Clustering hiérarchique de données d'expression pour identifier les groupes de gènes co-exprimés
         - TCGA visualisation des profils temporels (on choisir un type de cancer et on fait des heatmaps en fonction des stades)
 
-    
-- A évaluer
-    - Clustering sur les graphes (brève présentation des problématiques et approches, pas forcément de TP) ? A discuter avec Costas et Anaïs
 
 - Messages
+
     - Différentes méthodes sont appropriées pour différents types de données
-    - Au-delà de la méthode, influence des paramètres 
+    - Outre la méthode, fort impact des paramètres sur les résultats
 
     
 ### [Séance 5. Analyse différentielle de données RNA-seq](seance_5/README.md)
@@ -247,30 +246,36 @@ Applications:
         
 - Cas d'étude
 
+    - *Saccharomyces cerevisiae*: sporulationhb 
+
+
+
     - TCGA: 
         - détection de gènes différentiellement exprimés entre deux groupes (types de cancer, stades)
         - analyse différentielle entre plusieurs groupes (types de cancer, stades)
     - *Escherichia coli* FNR study case: détection de gènes différentiellement exprimés entre deux conditions (aérobie / anaérobie; sauvage versus mutant FNR)
     
-    - *Saccharomyces cerevisiae*
     
 ### [Séance 6. Classification supervisée](seance_6/README.md)
 
-*Intervenants: Jacques van Helden et Leslie Regad*
+*Intervenants:Leslie Regad et Frédéric Guyon*
 
 - Cas d'étude: transcriptome de cancer (données TCGA)
-- Méthodes: k-nearest neighbours, Random Forest, SVM
+
+- Méthodes: Random Forest, SVM, neural networks
+
 - Concepts:
+
     - Approches de classification supervisées
     - Entraînement / test
     - Evaluation des résultats (évaluation croisée, mesures de performance)
 
 - Messages
+
     - SVM: importance du choix du noyau, et des paramètres
     - RF: interprétabilité des résultats, score d'importance des variables.
-    - réseaux neuronaux: 
+    - réseaux neuronaux: complexité
 
-## Contributeurs
 
 ### Responsables
 

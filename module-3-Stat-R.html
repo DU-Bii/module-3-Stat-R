@@ -217,18 +217,18 @@ $(document).ready(function () {
 </tr>
 <tr class="even">
 <td>4</td>
-<td>Analyse de données RNA-seq</td>
+<td>Clustering</td>
 <td><a href="seance_4" class="uri">seance_4</a></td>
 </tr>
 <tr class="odd">
 <td>5</td>
-<td>Comparaison de groupes et enrichissement</td>
-<td></td>
+<td>Analyse différentielle de données RNA-seq</td>
+<td><a href="seance_5" class="uri">seance_5</a></td>
 </tr>
 <tr class="even">
 <td>6</td>
 <td>Classification supervisée (classement)</td>
-<td></td>
+<td><a href="seance_6" class="uri">seance_6</a></td>
 </tr>
 </tbody>
 </table>
@@ -246,8 +246,8 @@ $(document).ready(function () {
 <li><a href="#seance-1.-introduction-a-r">Séance 1. Introduction à R</a></li>
 <li><a href="#seance-2.-analyse-statistique-avec-r">Séance 2; Analyse statistique avec R</a></li>
 <li><a href="#seance-3.-analyse-de-donnees-metagenomiques">Séance 3. Analyse de données métagénomiques</a></li>
-<li><a href="#seance-4.-analyse-de-donnees-rna-seq">Séance 4. Clustering</a></li>
-<li><a href="#seance-5.-analyse-de-donnees-rna-seq">Séance 5. Analyse de données RNA-seq</a></li>
+<li><a href="#seance-4.-clustering">Séance 4. Clustering</a></li>
+<li><a href="#seance-5.-analyse-differentielle-de-donnees-rna-seq">Séance 5. Analyse différentielle de données RNA-seq</a></li>
 <li><a href="#seance-6.-classification-supervisee">Séance 6. Classification supervisée</a></li>
 </ul></li>
 <li><a href="#contributeurs">Contributeurs</a></li>
@@ -400,42 +400,13 @@ $(document).ready(function () {
 </ul></li>
 </ul>
 </div>
-<div id="seance-4.-analyse-de-donnees-rna-seq" class="section level3">
-<h3><a href="seance_4/README.md">Séance 4. Analyse de données RNA-seq</a></h3>
+<div id="seance-4.-clustering" class="section level3">
+<h3><a href="seance_4/README.md">Séance 4. Clustering</a></h3>
 <p><em>Intervenants: Frédéric Guyon &amp; Anne Badel &amp; Jacques van Helden</em></p>
-<div id="detection-de-genes-differentiellement-exprimes" class="section level4">
-<h4>Détection de gènes différentiellement exprimés</h4>
-<ul>
-<li><p>Concepts</p>
-<ul>
-<li>visualisation des résultats globaux (MA plots, volcano plots, histogrammes de p-vlaeurs)</li>
-<li>évaluation de l’impact des choix de logiciels et paramètres</li>
-<li>comparer les projections ACP avec tous les gènes et avec la sélection de gènes différentiellement exprimés
-<ul>
-<li>coloration des classes pour évaluer la pertinence de la sélection de variables</li>
-</ul></li>
-</ul></li>
-<li><p>Application</p>
-<ul>
-<li>Normalisation des données RNA-seq
-<ul>
-<li>standardisation des tailles de librairies (scaling)</li>
-<li>transformation log</li>
-<li>visualisation des résultats par box plots + violin plots</li>
-</ul></li>
-<li>TCGA:
-<ul>
-<li>détection de gènes différentiellement exprimés entre deux groupes (types de cancer, stades)</li>
-<li>analyse différentielle entre plusieurs groupes (types de cancer, stades)</li>
-</ul></li>
-<li>Escherichia coli FNR: détection de gènes différentiellement exprimés entre deux conditions (aérobie / anaérobie; sauvage versus mutant FNR)</li>
-</ul></li>
-</ul>
-</div>
 <div id="clustering" class="section level4">
 <h4>Clustering</h4>
 <ul>
-<li>Concepts
+<li><p>Concepts</p>
 <ul>
 <li>Approches de clustering: hiérarchique, K-means</li>
 <li>Hiérarchique: critères d’agglomération (single, average, complete)</li>
@@ -465,11 +436,7 @@ $(document).ready(function () {
 <li>Visualisation (heat maps, arbres, PCs)</li>
 <li>Impact de la dimensionalité:</li>
 </ul></li>
-<li>A évaluer
-<ul>
-<li>tSNE ? (à évaluer, au cas où on aborderait le single-cell RNA-seq): pas le temps d’approfondir, mais peut-être mentionner en montrant les graphes</li>
-</ul></li>
-<li>Applications
+<li><p>Applications</p>
 <ul>
 <li><p>Clustering et heat-maps de densités de reads autour des pics ChIP-seq (marques épigénétiques, facteurs transcriptionnels) avec K-means</p></li>
 <li>Clustering hiérarchique de données d’expression pour identifier les groupes de gènes co-exprimés
@@ -477,60 +444,71 @@ $(document).ready(function () {
 <li>TCGA visualisation des profils temporels (on choisir un type de cancer et on fait des heatmaps en fonction des stades)</li>
 </ul></li>
 </ul></li>
-<li>A évaluer
-<ul>
-<li>Clustering sur les graphes (brève présentation des problématiques et approches, pas forcément de TP) ? A discuter avec Costas et Anaïs</li>
-</ul></li>
-<li>Messages
+<li><p>Messages</p>
 <ul>
 <li>Différentes méthodes sont appropriées pour différents types de données</li>
-<li>Au-delà de la méthode, influence des paramètres</li>
+<li>Outre la méthode, fort impact des paramètres sur les résultats</li>
 </ul></li>
 </ul>
 </div>
 </div>
-<div id="seance-5.-analyse-de-donnees-rna-seq" class="section level3">
-<h3><a href="seance_5/README.md">Séance 5. Analyse de données RNA-seq</a></h3>
+<div id="seance-5.-analyse-differentielle-de-donnees-rna-seq" class="section level3">
+<h3><a href="seance_5/README.md">Séance 5. Analyse différentielle de données RNA-seq</a></h3>
 <p><em>Intervenants: Jacques van Helden + Claire Vandiedonck (à confirmer)</em></p>
+<div id="detection-de-genes-differentiellement-exprimes" class="section level4">
+<h4>Détection de gènes différentiellement exprimés</h4>
 <ul>
-<li>Concepts
+<li><p>Concepts</p>
 <ul>
-<li>Distributions discrètes de probabilité</li>
-<li>Test exact de Fisher</li>
-<li>Détection d’enrichissement</li>
-<li>Corrections de tests multiples (avec dépendances)</li>
+<li>visualisation des résultats globaux (MA plots, volcano plots, histogrammes de p-vlaeurs)</li>
+<li>évaluation de l’impact des choix de logiciels et paramètres</li>
+<li>comparer les projections ACP avec tous les gènes et avec la sélection de gènes différentiellement exprimés
+<ul>
+<li>coloration des classes pour évaluer la pertinence de la sélection de variables</li>
 </ul></li>
-<li>Applications
+</ul></li>
+<li><p>Application</p>
 <ul>
-<li>Analyse de séquences: détection de motifs sur-représentés (binomiale, Poisson, …)</li>
-<li>Analyse de données NGS ChIP-seq: détection de pics (binomiale, Poisson)</li>
-<li>Enrichissement fonctionnel (hypergéométrique)</li>
+<li>Normalisation des données RNA-seq
+<ul>
+<li>standardisation des tailles de librairies (scaling)</li>
+<li>transformation log</li>
+<li>visualisation des résultats par box plots + violin plots</li>
+</ul></li>
+</ul></li>
+<li><p>Cas d’étude</p>
+<ul>
+<li><p><em>Saccharomyces cerevisiae</em>: sporulationhb</p></li>
+<li>TCGA:
+<ul>
+<li>détection de gènes différentiellement exprimés entre deux groupes (types de cancer, stades)</li>
+<li>analyse différentielle entre plusieurs groupes (types de cancer, stades)</li>
+</ul></li>
+<li><p><em>Escherichia coli</em> FNR study case: détection de gènes différentiellement exprimés entre deux conditions (aérobie / anaérobie; sauvage versus mutant FNR)</p></li>
 </ul></li>
 </ul>
+</div>
 </div>
 <div id="seance-6.-classification-supervisee" class="section level3">
 <h3><a href="seance_6/README.md">Séance 6. Classification supervisée</a></h3>
-<p><em>Intervenants: Jacques van Helden et Leslie Regad</em></p>
+<p><em>Intervenants:Leslie Regad et Frédéric Guyon</em></p>
 <ul>
-<li>Cas d’étude: transcriptome de cancer (données TCGA)</li>
-<li>Méthodes: k-nearest neighbours, Random Forest, SVM</li>
-<li>Concepts:
+<li><p>Cas d’étude: transcriptome de cancer (données TCGA)</p></li>
+<li><p>Méthodes: Random Forest, SVM, neural networks</p></li>
+<li><p>Concepts:</p>
 <ul>
 <li>Approches de classification supervisées</li>
 <li>Entraînement / test</li>
 <li>Evaluation des résultats (évaluation croisée, mesures de performance)</li>
 </ul></li>
-<li>Messages
+<li><p>Messages</p>
 <ul>
 <li>SVM: importance du choix du noyau, et des paramètres</li>
 <li>RF: interprétabilité des résultats, score d’importance des variables.</li>
-<li>réseaux neuronaux:</li>
+<li>réseaux neuronaux: complexité</li>
 </ul></li>
 </ul>
 </div>
-</div>
-<div id="contributeurs" class="section level2">
-<h2>Contributeurs</h2>
 <div id="responsables" class="section level3">
 <h3>Responsables</h3>
 <ol style="list-style-type: decimal">
