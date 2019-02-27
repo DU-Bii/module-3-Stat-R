@@ -68,6 +68,31 @@ editor_options:
   chunk_output_type: console
 ---
 
+
+
+```{r knitr_options, echo=FALSE, include=FALSE, eval=TRUE}
+
+## Define options for the R markdown output
+options(width = 300)
+# options(encoding = 'UTF-8')
+knitr::opts_chunk$set(
+  fig.width = 5, fig.height = 5, 
+  fig.path = 'figures/TP_',
+  fig.align = "center", 
+  size = "tiny", 
+  echo = TRUE, 
+  eval = TRUE, 
+  warning = FALSE, 
+  message = FALSE, 
+  results = TRUE, 
+  comment = "")
+
+## Max number of digits for non-scientific notation
+options(scipen = 12) 
+```
+
+
+
 ```{r custom_parameters}
 ## Location of the shared folder on the current install
 data.folder <- "~/TCGA_import/data/BIC/" # Just for preparation
@@ -92,29 +117,6 @@ library(ClassDiscovery)
 # library(formattable)
 
 ```
-
-
-```{r knitr_options, echo=FALSE, include=FALSE, eval=TRUE}
-
-## Define options for the R markdown output
-options(width = 300)
-# options(encoding = 'UTF-8')
-knitr::opts_chunk$set(
-  fig.width = 5, fig.height = 5, 
-  fig.path = 'figures/TP_',
-  fig.align = "center", 
-  size = "tiny", 
-  echo = TRUE, 
-  eval = TRUE, 
-  warning = FALSE, 
-  message = FALSE, 
-  results = TRUE, 
-  comment = "")
-
-## Max number of digits for non-scientific notation
-options(scipen = 12) 
-```
-
 
 ## Introduction
 

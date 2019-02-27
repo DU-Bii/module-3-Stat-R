@@ -3,15 +3,11 @@ title: "Détection de gènes différentiellement exprimés à partir de données
 author: "Jacques van Helden"
 date: '`r Sys.Date()`'
 output:
-  html_document:
-    self_contained: yes
+  pdf_document:
     fig_caption: yes
     highlight: zenburn
-    theme: cerulean
     toc: yes
     toc_depth: 3
-    toc_float: yes
-    code_folding: "hide"
   beamer_presentation:
     colortheme: dolphin
     fig_caption: yes
@@ -29,11 +25,15 @@ output:
     transition: none
     self_contained: true
     css: ../slides.css
-  pdf_document:
+  html_document:
+    self_contained: no
     fig_caption: yes
     highlight: zenburn
+    theme: cerulean
     toc: yes
     toc_depth: 3
+    toc_float: yes
+    code_folding: "hide"
   slidy_presentation:
     smart: no
     slide_level: 2
@@ -168,8 +168,8 @@ parameters <- list(
   gene.filter.min.count = 10, # Minimal counts per gene
   
   ## Test and control groups for differential analysis
-  test.group = "bdf1_Y187F_Y354F_mutant_0",
-  control.group = "Wild_type_0"
+  test.group = "bdf1_Y187F_Y354F_mutant_8",
+  control.group = "Wild_type_8"
 )
 
 ## Create output directory
@@ -906,6 +906,7 @@ Effectuez une analyse différentielle sur ces données.
 
 ```{r export_results}
 
+## Build a file prefix by concatenating the two compared groups
 file.prefix <- paste(sep = "__", parameters$test.group, 
                      "vs", parameters$control.group)
 
