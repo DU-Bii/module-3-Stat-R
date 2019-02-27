@@ -1,6 +1,6 @@
 ---
 title: "Module 3 - Analyse statistique avec R - Séance 6"
-author: "Leslie REGAD (Université Paris Diderot)"
+author: "Leslie REGAD et Frédéric GUYON (Université Paris Diderot)"
 date: '`r Sys.Date()`'
 output:
   html_document:
@@ -69,9 +69,17 @@ Au cours de ce TP, vous allez développer différents modèles statistiques :
 
 1. Ouvrez le fichier d'expression des gènes en utilisant la commande `read.table()`. Stockez ce data.frame dans l'objet `BIC.expr`. Vérifiez la taille du data.frame généré en utilisant la commande `dim()`.
 
-```{r}
+```{r echo=TRUE, eval=FALSE}
+data.folder<-"../../projects/du_bii_2019/data/module3/seance4/BIC/"
+```
+
+```{r echo=FALSE, eval=TRUE}
 data.folder="data/BIC/" 
-#data.folder<-"../../projects/du_bii_2019/data/module3/seance4/BIC/"
+```
+
+
+
+```{r}
 BIC.expr.file <- file.path(data.folder, "BIC_log2-norm-counts_edgeR_DEG_top_1000.tsv.gz")
 BIC.expr <- read.table(file = BIC.expr.file, header = TRUE)
 dim(BIC.expr)
@@ -445,6 +453,39 @@ for(gene in gene.sel){
 ```
 
 * Représentez la matrice des données en focalisant sur les gènes sélectionnées et en utilisant une heatmap.
+
+```{r standardize_genes, out.width="80%", fig.width=7, fig.height=5} 
+
+#Trier les individus par type de cancer
+ind.app.lA <- which(mat.app[,"cancer.type"]=="Luminal.A")
+ind.tri <- c(ind.app.lA, setdiff(1:nrow(mat.app), ind.app.lA))
+mat.app.tri <- t(mat.app[ind.tri, gene.sel])
+
+# Compute mean value per gene
+gene.means <- apply(mat.app.tri, 1, mean)
+gene.sd <-  apply(mat.app.tri, 1, sd)
+
+# Compute gene-wise centered expression values
+BIC.expr.genes.centered <- mat.app.tri - gene.means
+
+# Compute gene-wise centred + scaled expression values
+BIC.expr.genes.standardized <- BIC.expr.genes.centered / gene.sd
+
+## define a Blue - White - Red palette
+frenchflag.palette <- colorRampPalette(c('dark blue','white','dark red'))
+
+## Define a green - black - red palette
+GBR.palette <- colorRampPalette(c('green','black','red'))
+
+heatmap(as.matrix(BIC.expr.genes.standardized),
+        zlim = c(-4,4), Colv=NA,
+        distfun = function(x) as.dist(1 - cor(t(x), method = "spearman")), 
+        hclustfun = function(x) hclust(x, method = "ward.D2"),
+        labRow = NA, labCol = NA,  # DO not print the labels (unreadable anyway)
+        col = GBR.palette(100),
+        scale = "none")
+
+```
 
 
 

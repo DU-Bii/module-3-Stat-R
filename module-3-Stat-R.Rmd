@@ -7,7 +7,7 @@
 | 1 | Premiers pas avec R | [seance_1](seance_1) |
 | 2 | Analyse statistique avec R |  [seance_2](seance_2)|
 | 3 | Analyse de données métagénomiques | [seance_3](seance_3) |
-| 4 | Clustering | [seance_4](seance_4) |
+| 4 | Classification non supervisée (clustering) | [seance_4](seance_4) |
 | 5 | Analyse différentielle de données RNA-seq | [seance_5](seance_5) |
 | 6 | Classification supervisée (classement) | [seance_6](seance_6) |
 
@@ -258,7 +258,11 @@ Applications:
     
 ### [Séance 6. Classification supervisée](seance_6/README.md)
 
+<<<<<<< HEAD
 *Intervenants:Leslie Regad et Frédéric Guyon*
+=======
+*Intervenants: Jacques van Helden, Frédéric Guyon et Leslie Regad*
+>>>>>>> e8372d03203118bc033ac6900fb0bafdd114ff40
 
 - Cas d'étude: transcriptome de cancer (données TCGA)
 

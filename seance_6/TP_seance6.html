@@ -9,9 +9,9 @@
 <meta name="generator" content="pandoc" />
 
 
-<meta name="author" content="Leslie REGAD (Université Paris Diderot)" />
+<meta name="author" content="Leslie REGAD et Frédéric GUYON (Université Paris Diderot)" />
 
-<meta name="date" content="2019-02-26" />
+<meta name="date" content="2019-02-27" />
 
 <title>Module 3 - Analyse statistique avec R - Séance 6</title>
 
@@ -269,8 +269,8 @@ div.tocify {
 
 <h1 class="title toc-ignore">Module 3 - Analyse statistique avec R - Séance 6</h1>
 <h3 class="subtitle"><em>DUBii 2019</em></h3>
-<h4 class="author"><em>Leslie REGAD (Université Paris Diderot)</em></h4>
-<h4 class="date"><em>2019-02-26</em></h4>
+<h4 class="author"><em>Leslie REGAD et Frédéric GUYON (Université Paris Diderot)</em></h4>
+<h4 class="date"><em>2019-02-27</em></h4>
 
 </div>
 
@@ -301,8 +301,8 @@ div.tocify {
 <ol style="list-style-type: decimal">
 <li>Ouvrez le fichier d’expression des gènes en utilisant la commande <code>read.table()</code>. Stockez ce data.frame dans l’objet <code>BIC.expr</code>. Vérifiez la taille du data.frame généré en utilisant la commande <code>dim()</code>.</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data.folder=<span class="st">&quot;data/BIC/&quot;</span>
-BIC.expr.file &lt;-<span class="st"> </span><span class="kw">file.path</span>(data.folder, <span class="st">&quot;BIC_log2-norm-counts_edgeR_DEG_top_1000.tsv.gz&quot;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data.folder&lt;-<span class="st">&quot;../../projects/du_bii_2019/data/module3/seance4/BIC/&quot;</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">BIC.expr.file &lt;-<span class="st"> </span><span class="kw">file.path</span>(data.folder, <span class="st">&quot;BIC_log2-norm-counts_edgeR_DEG_top_1000.tsv.gz&quot;</span>)
 BIC.expr &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="dt">file =</span> BIC.expr.file, <span class="dt">header =</span> <span class="ot">TRUE</span>)
 <span class="kw">dim</span>(BIC.expr)</code></pre></div>
 <pre><code>[1] 1000  819</code></pre>
@@ -454,14 +454,14 @@ vcol.set[ind.app] &lt;-<span class="st"> &quot;magenta&quot;</span></code></pre>
 </ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(pca.res, <span class="dt">col.ind =</span> vcol.set, <span class="dt">label=</span><span class="st">&quot;none&quot;</span>)
 <span class="kw">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="dt">legend=</span><span class="kw">c</span>(<span class="st">&quot;jeu d&#39;apprentissage&quot;</span>, <span class="st">&quot;jeu test&quot;</span>), <span class="dt">col=</span><span class="kw">c</span>(<span class="st">&quot;blue&quot;</span>,<span class="st">&quot;magenta&quot;</span>), <span class="dt">pch=</span><span class="dv">19</span>)</code></pre></div>
-<p><img src="figures/07_tests_multiplesunnamed-chunk-21-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figures/07_tests_multiplesunnamed-chunk-23-1.png" width="672" style="display: block; margin: auto;" /></p>
 <ol start="4" style="list-style-type: decimal">
 <li>Déterminez la répartition des deux types de cancer dans les échantillons d’apprentissage et test.</li>
 </ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">1</span>))
 <span class="kw">barplot</span>(<span class="kw">table</span>(mat.app[,<span class="st">&quot;cancer.type&quot;</span>]), <span class="dt">main=</span><span class="st">&quot;jeu d&#39;apprentissage&quot;</span>)
 <span class="kw">barplot</span>(<span class="kw">table</span>(mat.test[,<span class="st">&quot;cancer.type&quot;</span>]), <span class="dt">main=</span><span class="st">&quot;jeu de test&quot;</span>)</code></pre></div>
-<p><img src="figures/07_tests_multiplesunnamed-chunk-22-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figures/07_tests_multiplesunnamed-chunk-24-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="prediction-du-type-de-cancer-en-utilisant-une-approche-de-cart" class="section level1">
 <h1><span class="header-section-number">4</span> Prédiction du type de cancer en utilisant une approche de CART</h1>
@@ -478,36 +478,34 @@ rpart.fit</code></pre></div>
 node), split, n, loss, yval, (yprob)
       * denotes terminal node
 
-  1) root 474 195 Luminal.A (0.58860759 0.41139241)  
-    2) ENSG00000004838.13&gt;=15.44435 255  43 Luminal.A (0.83137255 0.16862745)  
-      4) ENSG00000008838.18&lt; 20.52395 244  32 Luminal.A (0.86885246 0.13114754)  
-        8) ENSG00000010704.18&lt; 17.86318 235  25 Luminal.A (0.89361702 0.10638298)  
-         16) ENSG00000006432.15&gt;=15.06891 226  19 Luminal.A (0.91592920 0.08407080)  
-           32) ENSG00000025156.12&lt; 17.01296 216  13 Luminal.A (0.93981481 0.06018519) *
-           33) ENSG00000025156.12&gt;=17.01296 10   4 no.Luminal.A (0.40000000 0.60000000) *
-         17) ENSG00000006432.15&lt; 15.06891 9   3 no.Luminal.A (0.33333333 0.66666667) *
-        9) ENSG00000010704.18&gt;=17.86318 9   2 no.Luminal.A (0.22222222 0.77777778) *
-      5) ENSG00000008838.18&gt;=20.52395 11   0 no.Luminal.A (0.00000000 1.00000000) *
-    3) ENSG00000004838.13&lt; 15.44435 219  67 no.Luminal.A (0.30593607 0.69406393)  
-      6) ENSG00000029725.16&gt;=19.20474 125  61 Luminal.A (0.51200000 0.48800000)  
-       12) ENSG00000006744.18&lt; 18.34374 50  13 Luminal.A (0.74000000 0.26000000)  
-         24) ENSG00000001461.16&lt; 18.54492 41   6 Luminal.A (0.85365854 0.14634146) *
-         25) ENSG00000001461.16&gt;=18.54492 9   2 no.Luminal.A (0.22222222 0.77777778) *
-       13) ENSG00000006744.18&gt;=18.34374 75  27 no.Luminal.A (0.36000000 0.64000000)  
-         26) ENSG00000014138.8&lt; 16.30313 23   7 Luminal.A (0.69565217 0.30434783)  
-           52) ENSG00000070882.12&gt;=16.03959 15   1 Luminal.A (0.93333333 0.06666667) *
-           53) ENSG00000070882.12&lt; 16.03959 8   2 no.Luminal.A (0.25000000 0.75000000) *
-         27) ENSG00000014138.8&gt;=16.30313 52  11 no.Luminal.A (0.21153846 0.78846154)  
-           54) ENSG00000064933.16&lt; 16.46654 21  10 no.Luminal.A (0.47619048 0.52380952)  
-            108) ENSG00000050405.13&lt; 19.98392 12   2 Luminal.A (0.83333333 0.16666667) *
-            109) ENSG00000050405.13&gt;=19.98392 9   0 no.Luminal.A (0.00000000 1.00000000) *
-           55) ENSG00000064933.16&gt;=16.46654 31   1 no.Luminal.A (0.03225806 0.96774194) *
-      7) ENSG00000029725.16&lt; 19.20474 94   3 no.Luminal.A (0.03191489 0.96808511) *</code></pre>
+ 1) root 474 180 Luminal.A (0.62025316 0.37974684)  
+   2) ENSG00000004838.13&gt;=14.84811 311  62 Luminal.A (0.80064309 0.19935691)  
+     4) ENSG00000008838.18&lt; 20.67364 296  47 Luminal.A (0.84121622 0.15878378)  
+       8) ENSG00000066468.21&gt;=15.1548 280  37 Luminal.A (0.86785714 0.13214286)  
+        16) ENSG00000025796.13&lt; 20.21649 263  28 Luminal.A (0.89353612 0.10646388)  
+          32) ENSG00000057935.13&gt;=17.9603 234  17 Luminal.A (0.92735043 0.07264957) *
+          33) ENSG00000057935.13&lt; 17.9603 29  11 Luminal.A (0.62068966 0.37931034)  
+            66) ENSG00000007062.11&lt; 19.07049 21   4 Luminal.A (0.80952381 0.19047619) *
+            67) ENSG00000007062.11&gt;=19.07049 8   1 no.Luminal.A (0.12500000 0.87500000) *
+        17) ENSG00000025796.13&gt;=20.21649 17   8 no.Luminal.A (0.47058824 0.52941176) *
+       9) ENSG00000066468.21&lt; 15.1548 16   6 no.Luminal.A (0.37500000 0.62500000) *
+     5) ENSG00000008838.18&gt;=20.67364 15   0 no.Luminal.A (0.00000000 1.00000000) *
+   3) ENSG00000004838.13&lt; 14.84811 163  45 no.Luminal.A (0.27607362 0.72392638)  
+     6) ENSG00000029725.16&gt;=19.41748 70  30 Luminal.A (0.57142857 0.42857143)  
+      12) ENSG00000008838.18&lt; 19.29407 58  19 Luminal.A (0.67241379 0.32758621)  
+        24) ENSG00000025156.12&lt; 16.90125 50  12 Luminal.A (0.76000000 0.24000000)  
+          48) ENSG00000062725.9&gt;=18.70459 27   1 Luminal.A (0.96296296 0.03703704) *
+          49) ENSG00000062725.9&lt; 18.70459 23  11 Luminal.A (0.52173913 0.47826087)  
+            98) ENSG00000061676.14&lt; 20.27352 12   1 Luminal.A (0.91666667 0.08333333) *
+            99) ENSG00000061676.14&gt;=20.27352 11   1 no.Luminal.A (0.09090909 0.90909091) *
+        25) ENSG00000025156.12&gt;=16.90125 8   1 no.Luminal.A (0.12500000 0.87500000) *
+      13) ENSG00000008838.18&gt;=19.29407 12   1 no.Luminal.A (0.08333333 0.91666667) *
+     7) ENSG00000029725.16&lt; 19.41748 93   5 no.Luminal.A (0.05376344 0.94623656) *</code></pre>
 <ol start="2" style="list-style-type: decimal">
 <li>En utilisant la fonction <code>prp()</code> de la librairie <code>rpart.plot()</code>, représentez le modèle obtenu.</li>
 </ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prp</span>(rpart.fit, <span class="dt">extra=</span><span class="dv">2</span>)</code></pre></div>
-<p><img src="figures/07_tests_multiplesunnamed-chunk-24-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figures/07_tests_multiplesunnamed-chunk-26-1.png" width="672" style="display: block; margin: auto;" /></p>
 <ol start="3" style="list-style-type: decimal">
 <li>Sur les données de l’échantillon d’apprentissage calculez l’<em>accuracy</em> (=le taux de bien prédit) (<span class="math inline">\(Acc = \frac{VP+VN}{VP+VN+FP+FN}\)</span>) .</li>
 </ol>
@@ -523,14 +521,14 @@ Attention, la fonction <code>predict()</code>est une fonction générique. Dans 
 tc.rpart.app</code></pre></div>
 <pre><code>              
 pred.app       Luminal.A no.Luminal.A
-  Luminal.A          262           22
-  no.Luminal.A        17          173</code></pre>
+  Luminal.A          271           23
+  no.Luminal.A        23          157</code></pre>
 <ol start="5" style="list-style-type: decimal">
 <li>Calculez l’<em>accuracy</em> sur les données de l’apprentissage</li>
 </ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">acc.rpart.app &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">diag</span>(tc.rpart.app))<span class="op">/</span><span class="kw">sum</span>(tc.rpart.app)
 acc.rpart.app</code></pre></div>
-<pre><code>[1] 0.9177215</code></pre>
+<pre><code>[1] 0.9029536</code></pre>
 <ol start="6" style="list-style-type: decimal">
 <li>En utilisant la même procédure que celle utilisée pour calculer l’<em>accuracy</em> sur le jeu d’apprentissage, calculez l’<em>accuracy</em> sur l’échantillon test</li>
 </ol>
@@ -540,12 +538,12 @@ tc.rpart.test &lt;-<span class="st"> </span><span class="kw">table</span>(pred.t
 tc.rpart.test</code></pre></div>
 <pre><code>              
 pred.test      Luminal.A no.Luminal.A
-  Luminal.A          115           30
-  no.Luminal.A        28           65</code></pre>
+  Luminal.A          111           40
+  no.Luminal.A        17           70</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">acc.rpart.test &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">diag</span>(tc.rpart.test))<span class="op">/</span><span class="kw">sum</span>(tc.rpart.test)
 acc.rpart.test</code></pre></div>
-<pre><code>[1] 0.7563025</code></pre>
-<p>En comparant les performances obtenues sur l’échantillon d’apprentissage et de test, vous constatez que les performances obtenues sur l’échantillon d’apprentissage (Acc=0.92) sont plus grandes que celles obtenues sur l’échantillon test (Acc=0.76). Ainsi, vous observez un phénomène de sur-apprentissage. Le modèle apprend très bien les données de l’échantillon d’apprentissage, mais prédit moins bien les données du jeu test.<br />
+<pre><code>[1] 0.7605042</code></pre>
+<p>En comparant les performances obtenues sur l’échantillon d’apprentissage et de test, vous constatez que les performances obtenues sur l’échantillon d’apprentissage (Acc=0.9) sont plus grandes que celles obtenues sur l’échantillon test (Acc=0.76). Ainsi, vous observez un phénomène de sur-apprentissage. Le modèle apprend très bien les données de l’échantillon d’apprentissage, mais prédit moins bien les données du jeu test.<br />
 Pour diminuer ce sur-apprentissage, une des solutions serait d’élaguer l’arbre, c’est-à-dire d’enlever certaines branches. Ainsi, le nouveau modèle obtenu serait moins performant sur les données d’apprentissage, mais plus performant sur les données du jeu test.</p>
 </div>
 <div id="prediction-du-type-de-cancer-en-utilisant-une-approche-de-cart-1" class="section level1">
@@ -569,11 +567,11 @@ Call:
                      Number of trees: 500
 No. of variables tried at each split: 31
 
-        OOB estimate of  error rate: 19.62%
+        OOB estimate of  error rate: 17.3%
 Confusion matrix:
              Luminal.A no.Luminal.A class.error
-Luminal.A          250           29   0.1039427
-no.Luminal.A        64          131   0.3282051</code></pre>
+Luminal.A          280           14  0.04761905
+no.Luminal.A        68          112  0.37777778</code></pre>
 <ol start="2" style="list-style-type: decimal">
 <li>Choix de la valeur du paramètre <code>ntree</code>.</li>
 </ol>
@@ -581,7 +579,7 @@ no.Luminal.A        64          131   0.3282051</code></pre>
 <li>L’objet <code>rf.fit</code> créé est une liste qui contient plusieurs éléments. L’élement <code>err.rate</code> contient les erreurs commises par le modèle contenant <span class="math inline">\(m\)</span> arbres Représentez le taux d’erreur (<em>Misclassification Rate</em>) en fonction du nombre d’arbres présentant dans la forêt.</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(rf.fit<span class="op">$</span>err.rate[,<span class="dv">1</span>], <span class="dt">type=</span><span class="st">&quot;l&quot;</span>, <span class="dt">xlab=</span><span class="st">&quot;nombre d&#39;arbre dans la foret&quot;</span>, <span class="dt">ylab=</span><span class="st">&quot;taux d&#39;erreur&quot;</span>)</code></pre></div>
-<p><img src="figures/07_tests_multiplesunnamed-chunk-28-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figures/07_tests_multiplesunnamed-chunk-30-1.png" width="672" style="display: block; margin: auto;" /></p>
 <ul>
 <li>A partir de ce graphique, choisissez le nombre d’arbres optimal, noté <span class="math inline">\(ntree_{opt}\)</span>.</li>
 </ul>
@@ -606,7 +604,7 @@ v.mtry &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(v.mtry, v.err, <span class="dt">type =</span><span class="st">&quot;b&quot;</span>, <span class="dt">xlab=</span><span class="st">&quot;mtry values&quot;</span>, <span class="dt">ylab=</span><span class="st">&quot;taux d&#39;erreur&quot;</span>, <span class="dt">xaxt=</span><span class="st">&quot;n&quot;</span>)
 <span class="kw">axis</span>(<span class="dv">1</span>, <span class="dt">at=</span>v.mtry, <span class="dt">labels=</span>v.mtry, <span class="dt">las=</span><span class="dv">2</span>)</code></pre></div>
-<p><img src="figures/07_tests_multiplesunnamed-chunk-31-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figures/07_tests_multiplesunnamed-chunk-33-1.png" width="672" style="display: block; margin: auto;" /></p>
 <ul>
 <li>A partir de ce graphique, déterminez la valeur optimale de <code>mtry</code>.</li>
 </ul>
@@ -628,11 +626,11 @@ Call:
                      Number of trees: 200
 No. of variables tried at each split: 248
 
-        OOB estimate of  error rate: 16.67%
+        OOB estimate of  error rate: 17.09%
 Confusion matrix:
              Luminal.A no.Luminal.A class.error
-Luminal.A          259           20  0.07168459
-no.Luminal.A        59          136  0.30256410</code></pre>
+Luminal.A          272           22  0.07482993
+no.Luminal.A        59          121  0.32777778</code></pre>
 <ol start="3" style="list-style-type: decimal">
 <li>Calcul des performances du modèle <em>random forest</em></li>
 </ol>
@@ -648,8 +646,8 @@ no.Luminal.A        59          136  0.30256410</code></pre>
 tc.rf.app</code></pre></div>
 <pre><code>              
 pred.app       Luminal.A no.Luminal.A
-  Luminal.A          279            0
-  no.Luminal.A         0          195</code></pre>
+  Luminal.A          294            0
+  no.Luminal.A         0          180</code></pre>
 <ul>
 <li>Calculez l’<em>accuracy</em> du modèle sur les données de l’apprentissage</li>
 </ul>
@@ -665,11 +663,11 @@ tc.rf.test &lt;-<span class="st"> </span><span class="kw">table</span>(pred.test
 tc.rf.test</code></pre></div>
 <pre><code>              
 pred.test      Luminal.A no.Luminal.A
-  Luminal.A          128           29
-  no.Luminal.A        15           66</code></pre>
+  Luminal.A          120           37
+  no.Luminal.A         8           73</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">acc.rf.test &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">diag</span>(tc.rf.test))<span class="op">/</span><span class="kw">sum</span>(tc.rf.test)
 acc.rf.test</code></pre></div>
-<pre><code>[1] 0.8151261</code></pre>
+<pre><code>[1] 0.8109244</code></pre>
 <ol start="7" style="list-style-type: decimal">
 <li>Etude de l’importance des variables (ici les gènes) dans le modèle.</li>
 </ol>
@@ -677,7 +675,7 @@ acc.rf.test</code></pre></div>
 <li>Représentez graphiquement l’importance de chaque gène en utilisant la fonction <code>varImpPlot()</code></li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">varImpPlot</span>(rf.fit, <span class="dt">n.var=</span><span class="dv">50</span>, <span class="dt">cex =</span> <span class="fl">0.7</span>, <span class="dt">type=</span><span class="dv">1</span>)</code></pre></div>
-<p><img src="figures/07_tests_multiplesunnamed-chunk-35-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figures/07_tests_multiplesunnamed-chunk-37-1.png" width="672" style="display: block; margin: auto;" /></p>
 <ul>
 <li><p>Identifiez les gènes qui permettent de différentier le cancer Luminal.A des autres cancers.</p></li>
 <li><p>Pour chaque gene sélectionné, tracez la distribution de l’expression du gène chez les patients atteints d’un cancer de type Luminal.A et chez les autres patients d’après les données d’apprentissage.</p></li>
@@ -689,10 +687,39 @@ gene.sel &lt;-<span class="st"> </span><span class="kw">names</span>(<span class
 <span class="cf">for</span>(gene <span class="cf">in</span> gene.sel){
   <span class="kw">boxplot</span>(mat.app[,gene]<span class="op">~</span>mat.app[,<span class="dv">1</span>],<span class="dt">col=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">3</span>), <span class="dt">main=</span>gene)
 }</code></pre></div>
-<p><img src="figures/07_tests_multiplesunnamed-chunk-36-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figures/07_tests_multiplesunnamed-chunk-38-1.png" width="672" style="display: block; margin: auto;" /><img src="figures/07_tests_multiplesunnamed-chunk-38-2.png" width="672" style="display: block; margin: auto;" /></p>
 <ul>
 <li>Représentez la matrice des données en focalisant sur les gènes sélectionnées et en utilisant une heatmap.</li>
 </ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Trier les individus par type de cancer</span>
+ind.app.lA &lt;-<span class="st"> </span><span class="kw">which</span>(mat.app[,<span class="st">&quot;cancer.type&quot;</span>]<span class="op">==</span><span class="st">&quot;Luminal.A&quot;</span>)
+ind.tri &lt;-<span class="st"> </span><span class="kw">c</span>(ind.app.lA, <span class="kw">setdiff</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(mat.app), ind.app.lA))
+mat.app.tri &lt;-<span class="st"> </span><span class="kw">t</span>(mat.app[ind.tri, gene.sel])
+
+<span class="co"># Compute mean value per gene</span>
+gene.means &lt;-<span class="st"> </span><span class="kw">apply</span>(mat.app.tri, <span class="dv">1</span>, mean)
+gene.sd &lt;-<span class="st">  </span><span class="kw">apply</span>(mat.app.tri, <span class="dv">1</span>, sd)
+
+<span class="co"># Compute gene-wise centered expression values</span>
+BIC.expr.genes.centered &lt;-<span class="st"> </span>mat.app.tri <span class="op">-</span><span class="st"> </span>gene.means
+
+<span class="co"># Compute gene-wise centred + scaled expression values</span>
+BIC.expr.genes.standardized &lt;-<span class="st"> </span>BIC.expr.genes.centered <span class="op">/</span><span class="st"> </span>gene.sd
+
+## define a Blue - White - Red palette
+frenchflag.palette &lt;-<span class="st"> </span><span class="kw">colorRampPalette</span>(<span class="kw">c</span>(<span class="st">&#39;dark blue&#39;</span>,<span class="st">&#39;white&#39;</span>,<span class="st">&#39;dark red&#39;</span>))
+
+## Define a green - black - red palette
+GBR.palette &lt;-<span class="st"> </span><span class="kw">colorRampPalette</span>(<span class="kw">c</span>(<span class="st">&#39;green&#39;</span>,<span class="st">&#39;black&#39;</span>,<span class="st">&#39;red&#39;</span>))
+
+<span class="kw">heatmap</span>(<span class="kw">as.matrix</span>(BIC.expr.genes.standardized),
+        <span class="dt">zlim =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">4</span>,<span class="dv">4</span>), <span class="dt">Colv=</span><span class="ot">NA</span>,
+        <span class="dt">distfun =</span> <span class="cf">function</span>(x) <span class="kw">as.dist</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">cor</span>(<span class="kw">t</span>(x), <span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>)), 
+        <span class="dt">hclustfun =</span> <span class="cf">function</span>(x) <span class="kw">hclust</span>(x, <span class="dt">method =</span> <span class="st">&quot;ward.D2&quot;</span>),
+        <span class="dt">labRow =</span> <span class="ot">NA</span>, <span class="dt">labCol =</span> <span class="ot">NA</span>,  <span class="co"># DO not print the labels (unreadable anyway)</span>
+        <span class="dt">col =</span> <span class="kw">GBR.palette</span>(<span class="dv">100</span>),
+        <span class="dt">scale =</span> <span class="st">&quot;none&quot;</span>)</code></pre></div>
+<p><img src="figures/07_tests_multiplesstandardize_genes-1.png" width="80%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="prediction-du-type-de-cancer-en-utilisant-les-support-vecteur-machines" class="section level1">
 <h1><span class="header-section-number">6</span> Prédiction du type de cancer en utilisant les Support Vecteur Machines</h1>
@@ -748,7 +775,7 @@ pred.uncl.rf &lt;-<span class="st"> </span><span class="kw">predict</span>(rf.fi
 <span class="kw">table</span>(pred.uncl.rf)</code></pre></div>
 <pre><code>pred.uncl.rf
    Luminal.A no.Luminal.A 
-          53           54 </code></pre>
+          59           48 </code></pre>
 <ul>
 <li>Prédiction du type de cancer en utilisant le modèle SVM</li>
 </ul>
@@ -756,7 +783,7 @@ pred.uncl.rf &lt;-<span class="st"> </span><span class="kw">predict</span>(rf.fi
 <span class="kw">table</span>(pred.uncl.svm)</code></pre></div>
 <pre><code>pred.uncl.svm
    Luminal.A no.Luminal.A 
-          61           46 </code></pre>
+          67           40 </code></pre>
 <ul>
 <li>Calcul de la table de confusion entre les deux vecteurs de prédiction.</li>
 </ul>
@@ -764,8 +791,8 @@ pred.uncl.rf &lt;-<span class="st"> </span><span class="kw">predict</span>(rf.fi
 tc</code></pre></div>
 <pre><code>              pred.uncl.svm
 pred.uncl.rf   Luminal.A no.Luminal.A
-  Luminal.A           52            1
-  no.Luminal.A         9           45</code></pre>
+  Luminal.A           55            4
+  no.Luminal.A        12           36</code></pre>
 <p># Prédiction des 4 types de cancer.</p>
 <ol style="list-style-type: decimal">
 <li>Préparation du jeu de données</li>
@@ -797,13 +824,13 @@ df.data.<span class="dv">4</span>[,<span class="dv">1</span>] &lt;-<span class="
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rf.fit.<span class="dv">4</span> &lt;-<span class="st"> </span><span class="kw">randomForest</span>(cancer.type<span class="op">~</span>., <span class="dt">data=</span>mat.app.<span class="dv">4</span>)
 <span class="kw">plot</span>(rf.fit.<span class="dv">4</span><span class="op">$</span>err.rate[,<span class="dv">1</span>], <span class="dt">type=</span><span class="st">&quot;l&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;taux d&#39;erreur&quot;</span>, <span class="dt">xlab=</span><span class="st">&quot;nombre d&#39;arbres&quot;</span>)</code></pre></div>
-<p><img src="figures/07_tests_multiplesunnamed-chunk-50-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figures/07_tests_multiplesunnamed-chunk-52-1.png" width="672" style="display: block; margin: auto;" /></p>
 <ul>
 <li>Déterminez la valeur optimale du paramètre <code>mtry</code></li>
 </ul>
 <p>```r v.err &lt;- NULL v.mtry &lt;- c(15, 31, 62, 124, 248, 350, 500) for(i in v.mtry){ set.seed(123) rf.fit &lt;- randomForest(cancer.type~., data = mat.app.4, ntree=150, mtry=i) v.err &lt;- c(v.err, rf.fit$err.rate[150,1]) }</p>
 <p>plot(v.mtry, v.err, type =“b”, xlab=“mtry values”, ylab=“taux d’erreur”, xaxt=“n”) axis(1, at=v.mtry, labels=v.mtry, las=2) ```</p>
-<p><img src="figures/07_tests_multiplesunnamed-chunk-51-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figures/07_tests_multiplesunnamed-chunk-53-1.png" width="672" style="display: block; margin: auto;" /></p>
 <ol start="4" style="list-style-type: decimal">
 <li>Calcul du modèle avec les paramètres optimaux.</li>
 </ol>
@@ -822,13 +849,13 @@ Call:
                      Number of trees: 150
 No. of variables tried at each split: 124
 
-        OOB estimate of  error rate: 23.42%
+        OOB estimate of  error rate: 20.46%
 Confusion matrix:
            Basal.like HER2pos Luminal.A Luminal.B class.error
-Basal.like         74       1        12         0  0.14942529
-HER2pos             9       5         8         7  0.82758621
-Luminal.A           5       0       266         8  0.04659498
-Luminal.B           0       0        61        18  0.77215190</code></pre>
+Basal.like         64       1         7         3  0.14666667
+HER2pos             6       2        13         7  0.92857143
+Luminal.A           1       0       290         3  0.01360544
+Luminal.B           1       0        55        21  0.72727273</code></pre>
 <ol start="5" style="list-style-type: decimal">
 <li>Calcul des performances du modèle <em>random forest</em> sur l’échantillon d’apprentissage et de test.</li>
 </ol>
@@ -840,10 +867,10 @@ tc.rf4.app &lt;-<span class="st"> </span><span class="kw">table</span>(pred.app.
 tc.rf4.app</code></pre></div>
 <pre><code>            
 pred.app.4   Basal.like HER2pos Luminal.A Luminal.B
-  Basal.like         87       0         0         0
-  HER2pos             0      29         0         0
-  Luminal.A           0       0       279         0
-  Luminal.B           0       0         0        79</code></pre>
+  Basal.like         75       0         0         0
+  HER2pos             0      28         0         0
+  Luminal.A           0       0       294         0
+  Luminal.B           0       0         0        77</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">acc.rf4.app &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">diag</span>(tc.rf4.app))<span class="op">/</span><span class="kw">sum</span>(tc.rf4.app)
 acc.rf4.app</code></pre></div>
 <pre><code>[1] 1</code></pre>
@@ -856,13 +883,13 @@ tc.rf4.test &lt;-<span class="st"> </span><span class="kw">table</span>(pred.tes
 tc.rf4.test</code></pre></div>
 <pre><code>            
 pred.test.4  Basal.like HER2pos Luminal.A Luminal.B
-  Basal.like         36       3         0         1
-  HER2pos             0       3         0         0
-  Luminal.A           8       4       139        30
-  Luminal.B           0       2         4         8</code></pre>
+  Basal.like         44       5         0         0
+  HER2pos             0       3         0         1
+  Luminal.A          12       3       127        32
+  Luminal.B           0       2         1         8</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">acc.rf4.test &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">diag</span>(tc.rf4.test))<span class="op">/</span><span class="kw">sum</span>(tc.rf4.test)
 acc.rf4.test</code></pre></div>
-<pre><code>[1] 0.7815126</code></pre>
+<pre><code>[1] 0.7647059</code></pre>
 <ol start="6" style="list-style-type: decimal">
 <li>Etude de l’importance des descripteurs dans le modèle.</li>
 </ol>
@@ -870,7 +897,7 @@ acc.rf4.test</code></pre></div>
 <li>Représentez graphiquement la valeur d’importance des différents gènes en utilisant la fonction <code>varImpPlot()</code></li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">varImpPlot</span>(rf.fit.<span class="dv">4</span>, <span class="dt">n.var=</span><span class="dv">50</span>, <span class="dt">cex =</span> <span class="fl">0.6</span>, <span class="dt">type=</span><span class="dv">1</span>)</code></pre></div>
-<p><img src="figures/07_tests_multiplesunnamed-chunk-55-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figures/07_tests_multiplesunnamed-chunk-57-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 
 
