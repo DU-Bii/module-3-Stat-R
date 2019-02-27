@@ -114,7 +114,7 @@ ind.uncl <- which(BIC.sample.classes[,"cancer.type"]=="Unclassified")
 length(ind.uncl)
 ```
 
-* Supprimez ces individus dans le data.frame `BIC.sample.classes` en utilisant l'indexation négative. Vérifiez la taille du nouveau data.frame.
+* Supprimez ces individus dans le data.frame `BIC.sample.classes` en utilisant l'indexation négative. Vérifiez la taille du nouveau data.frame. Le nouveau data.frame se nommera `BIC.sample.classes.4`. 
 
 ```{r}
 BIC.sample.classes.4 <- BIC.sample.classes[-ind.uncl,]
@@ -543,7 +543,9 @@ table(pred, mat.test$cancer.type)
 ```
 
 
+
 # Prédiction des échantillons classés comme "Unclassified"
+
 
 Lors de l'étude du jeu de données initial, vous avez déterminé que `r length(ind.uncl)` échantillons avaient été classés comme "Unclassified". En utilisant les modèles de *random forest* et de SVM, prédisez le type de cancer pour ces individus. Comparez les résultats obtenus avec les deux modèles.
 
@@ -567,7 +569,7 @@ tc
 ```
 
 
- # Prédiction des 4 types de cancer.
+# Prédiction des 4 types de cancer
  
  1. Préparation du jeu de données
  

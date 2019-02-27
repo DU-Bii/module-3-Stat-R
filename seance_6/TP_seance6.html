@@ -337,7 +337,7 @@ A la fin du TP, vous utiliserez les modèles statistiques construits pour prédi
 <span class="kw">length</span>(ind.uncl)</code></pre></div>
 <pre><code>[1] 107</code></pre>
 <ul>
-<li>Supprimez ces individus dans le data.frame <code>BIC.sample.classes</code> en utilisant l’indexation négative. Vérifiez la taille du nouveau data.frame.</li>
+<li>Supprimez ces individus dans le data.frame <code>BIC.sample.classes</code> en utilisant l’indexation négative. Vérifiez la taille du nouveau data.frame. Le nouveau data.frame se nommera <code>BIC.sample.classes.4</code>.</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">BIC.sample.classes.<span class="dv">4</span> &lt;-<span class="st"> </span>BIC.sample.classes[<span class="op">-</span>ind.uncl,]
 <span class="kw">dim</span>(BIC.sample.classes.<span class="dv">4</span>)</code></pre></div>
@@ -486,31 +486,23 @@ rpart.fit</code></pre></div>
 node), split, n, loss, yval, (yprob)
       * denotes terminal node
 
-  1) root 474 197 Luminal.A (0.58438819 0.41561181)  
-    2) ENSG00000029725.16&gt;=19.10373 362  99 Luminal.A (0.72651934 0.27348066)  
-      4) ENSG00000043143.20&gt;=17.37762 332  72 Luminal.A (0.78313253 0.21686747)  
-        8) ENSG00000016864.17&gt;=18.28027 211  26 Luminal.A (0.87677725 0.12322275)  
-         16) ENSG00000010704.18&lt; 17.85276 204  21 Luminal.A (0.89705882 0.10294118)  
-           32) ENSG00000007047.14&gt;=17.37626 166   9 Luminal.A (0.94578313 0.05421687) *
-           33) ENSG00000007047.14&lt; 17.37626 38  12 Luminal.A (0.68421053 0.31578947)  
-             66) ENSG00000066027.11&gt;=19.12812 29   5 Luminal.A (0.82758621 0.17241379) *
-             67) ENSG00000066027.11&lt; 19.12812 9   2 no.Luminal.A (0.22222222 0.77777778) *
-         17) ENSG00000010704.18&gt;=17.85276 7   2 no.Luminal.A (0.28571429 0.71428571) *
-        9) ENSG00000016864.17&lt; 18.28027 121  46 Luminal.A (0.61983471 0.38016529)  
-         18) ENSG00000047644.18&gt;=18.7892 39   5 Luminal.A (0.87179487 0.12820513) *
-         19) ENSG00000047644.18&lt; 18.7892 82  41 Luminal.A (0.50000000 0.50000000)  
-           38) ENSG00000061455.10&lt; 13.72227 33   8 Luminal.A (0.75757576 0.24242424)  
-             76) ENSG00000064726.9&gt;=18.43362 22   1 Luminal.A (0.95454545 0.04545455) *
-             77) ENSG00000064726.9&lt; 18.43362 11   4 no.Luminal.A (0.36363636 0.63636364) *
-           39) ENSG00000061455.10&gt;=13.72227 49  16 no.Luminal.A (0.32653061 0.67346939)  
-             78) ENSG00000047662.4&gt;=16.35255 27  12 Luminal.A (0.55555556 0.44444444)  
-              156) ENSG00000013561.17&gt;=18.50679 14   2 Luminal.A (0.85714286 0.14285714) *
-              157) ENSG00000013561.17&lt; 18.50679 13   3 no.Luminal.A (0.23076923 0.76923077) *
-             79) ENSG00000047662.4&lt; 16.35255 22   1 no.Luminal.A (0.04545455 0.95454545) *
-      5) ENSG00000043143.20&lt; 17.37762 30   3 no.Luminal.A (0.10000000 0.90000000) *
-    3) ENSG00000029725.16&lt; 19.10373 112  14 no.Luminal.A (0.12500000 0.87500000)  
-      6) ENSG00000004864.13&lt; 16.79845 18   7 Luminal.A (0.61111111 0.38888889) *
-      7) ENSG00000004864.13&gt;=16.79845 94   3 no.Luminal.A (0.03191489 0.96808511) *</code></pre>
+ 1) root 474 200 Luminal.A (0.57805907 0.42194093)  
+   2) ENSG00000029725.16&gt;=19.01545 368 105 Luminal.A (0.71467391 0.28532609)  
+     4) ENSG00000008838.18&lt; 20.6166 351  88 Luminal.A (0.74928775 0.25071225)  
+       8) ENSG00000043143.20&gt;=16.82009 336  73 Luminal.A (0.78273810 0.21726190)  
+        16) ENSG00000054598.6&lt; 17.72386 318  59 Luminal.A (0.81446541 0.18553459)  
+          32) ENSG00000025796.13&lt; 19.96534 280  41 Luminal.A (0.85357143 0.14642857)  
+            64) ENSG00000026103.20&lt; 17.55003 273  36 Luminal.A (0.86813187 0.13186813) *
+            65) ENSG00000026103.20&gt;=17.55003 7   2 no.Luminal.A (0.28571429 0.71428571) *
+          33) ENSG00000025796.13&gt;=19.96534 38  18 Luminal.A (0.52631579 0.47368421)  
+            66) ENSG00000033867.16&gt;=18.38166 19   3 Luminal.A (0.84210526 0.15789474) *
+            67) ENSG00000033867.16&lt; 18.38166 19   4 no.Luminal.A (0.21052632 0.78947368) *
+        17) ENSG00000054598.6&gt;=17.72386 18   4 no.Luminal.A (0.22222222 0.77777778) *
+       9) ENSG00000043143.20&lt; 16.82009 15   0 no.Luminal.A (0.00000000 1.00000000) *
+     5) ENSG00000008838.18&gt;=20.6166 17   0 no.Luminal.A (0.00000000 1.00000000) *
+   3) ENSG00000029725.16&lt; 19.01545 106  11 no.Luminal.A (0.10377358 0.89622642)  
+     6) ENSG00000004864.13&lt; 16.80038 16   6 Luminal.A (0.62500000 0.37500000) *
+     7) ENSG00000004864.13&gt;=16.80038 90   1 no.Luminal.A (0.01111111 0.98888889) *</code></pre>
 <ol start="2" style="list-style-type: decimal">
 <li>En utilisant la fonction <code>prp()</code> de la librairie <code>rpart.plot()</code>, représentez le modèle obtenu.</li>
 </ol>
@@ -531,14 +523,14 @@ Attention, la fonction <code>predict()</code>est une fonction générique. Dans 
 tc.rpart.app</code></pre></div>
 <pre><code>              
 pred.app       Luminal.A no.Luminal.A
-  Luminal.A          259           29
-  no.Luminal.A        18          168</code></pre>
+  Luminal.A          263           45
+  no.Luminal.A        11          155</code></pre>
 <ul>
 <li>Calculez l’<em>accuracy</em> du modèle sur les données de l’apprentissage</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">acc.rpart.app &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">diag</span>(tc.rpart.app))<span class="op">/</span><span class="kw">sum</span>(tc.rpart.app)
 acc.rpart.app</code></pre></div>
-<pre><code>[1] 0.9008439</code></pre>
+<pre><code>[1] 0.8818565</code></pre>
 <ol start="4" style="list-style-type: decimal">
 <li>En utilisant la même procédure que celle utilisée pour calculer l’<em>accuracy</em> sur le jeu d’apprentissage, calculez l’<em>accuracy</em> du modèle sur l’échantillon test</li>
 </ol>
@@ -548,12 +540,12 @@ tc.rpart.test &lt;-<span class="st"> </span><span class="kw">table</span>(pred.t
 tc.rpart.test</code></pre></div>
 <pre><code>              
 pred.test      Luminal.A no.Luminal.A
-  Luminal.A          112           26
-  no.Luminal.A        33           67</code></pre>
+  Luminal.A          127           33
+  no.Luminal.A        21           57</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">acc.rpart.test &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">diag</span>(tc.rpart.test))<span class="op">/</span><span class="kw">sum</span>(tc.rpart.test)
 acc.rpart.test</code></pre></div>
-<pre><code>[1] 0.7521008</code></pre>
-<p>En comparant les performances obtenues sur l’échantillon d’apprentissage et de test, vous constatez que les performances obtenues sur l’échantillon d’apprentissage (Acc=0.9) sont plus grandes que celles obtenues sur l’échantillon test (Acc=0.75). Ainsi, vous observez un <strong>phénomène de sur-apprentissage</strong>. Le modèle apprend très bien les données de l’échantillon d’apprentissage, mais prédit moins bien les données du jeu test.<br />
+<pre><code>[1] 0.7731092</code></pre>
+<p>En comparant les performances obtenues sur l’échantillon d’apprentissage et de test, vous constatez que les performances obtenues sur l’échantillon d’apprentissage (Acc=0.88) sont plus grandes que celles obtenues sur l’échantillon test (Acc=0.77). Ainsi, vous observez un <strong>phénomène de sur-apprentissage</strong>. Le modèle apprend très bien les données de l’échantillon d’apprentissage, mais prédit moins bien les données du jeu test.<br />
 Pour diminuer ce sur-apprentissage, une des solutions serait d’élaguer l’arbre, c’est-à-dire d’enlever certaines branches. Ainsi, le nouveau modèle obtenu serait moins performant sur les données d’apprentissage, mais plus performant sur les données du jeu test.</p>
 </div>
 <div id="prediction-du-type-de-cancer-en-utilisant-une-approche-de-random-forest" class="section level1">
@@ -577,11 +569,11 @@ Call:
                      Number of trees: 500
 No. of variables tried at each split: 31
 
-        OOB estimate of  error rate: 21.1%
+        OOB estimate of  error rate: 20.25%
 Confusion matrix:
              Luminal.A no.Luminal.A class.error
-Luminal.A          248           29   0.1046931
-no.Luminal.A        71          126   0.3604061</code></pre>
+Luminal.A          248           26  0.09489051
+no.Luminal.A        70          130  0.35000000</code></pre>
 <ol start="2" style="list-style-type: decimal">
 <li>Choix de la valeur du paramètre <code>ntree</code>.</li>
 </ol>
@@ -636,11 +628,11 @@ Call:
                      Number of trees: 200
 No. of variables tried at each split: 248
 
-        OOB estimate of  error rate: 19.62%
+        OOB estimate of  error rate: 18.14%
 Confusion matrix:
              Luminal.A no.Luminal.A class.error
-Luminal.A          251           26  0.09386282
-no.Luminal.A        67          130  0.34010152</code></pre>
+Luminal.A          247           27  0.09854015
+no.Luminal.A        59          141  0.29500000</code></pre>
 <ol start="3" style="list-style-type: decimal">
 <li>Calcul des performances du modèle <em>random forest</em></li>
 </ol>
@@ -657,8 +649,8 @@ tc.rf.app &lt;-<span class="st"> </span><span class="kw">table</span>(pred.app, 
 tc.rf.app</code></pre></div>
 <pre><code>              
 pred.app       Luminal.A no.Luminal.A
-  Luminal.A          277            0
-  no.Luminal.A         0          197</code></pre>
+  Luminal.A          274            0
+  no.Luminal.A         0          200</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#  accuracy* du modèle sur les données de l&#39;apprentissage</span>
 acc.rf.app &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">diag</span>(tc.rf.app))<span class="op">/</span><span class="kw">sum</span>(tc.rf.app)
 acc.rf.app</code></pre></div>
@@ -674,12 +666,12 @@ tc.rf.test &lt;-<span class="st"> </span><span class="kw">table</span>(pred.test
 tc.rf.test</code></pre></div>
 <pre><code>              
 pred.test      Luminal.A no.Luminal.A
-  Luminal.A          132           28
-  no.Luminal.A        13           65</code></pre>
+  Luminal.A          136           28
+  no.Luminal.A        12           62</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#accuracy</span>
 acc.rf.test &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">diag</span>(tc.rf.test))<span class="op">/</span><span class="kw">sum</span>(tc.rf.test)
 acc.rf.test</code></pre></div>
-<pre><code>[1] 0.8277311</code></pre>
+<pre><code>[1] 0.8319328</code></pre>
 <ol start="4" style="list-style-type: decimal">
 <li><p>Comparez les performances des modèles de CART et de Random forest.</p></li>
 <li><p>Etude de l’importance des variables (ici les gènes) dans le modèle.</p></li>
@@ -788,7 +780,7 @@ pred.uncl.rf &lt;-<span class="st"> </span><span class="kw">predict</span>(rf.fi
 <span class="kw">table</span>(pred.uncl.rf)</code></pre></div>
 <pre><code>pred.uncl.rf
    Luminal.A no.Luminal.A 
-          51           56 </code></pre>
+          57           50 </code></pre>
 <ul>
 <li>Prédiction du type de cancer en utilisant le modèle SVM</li>
 </ul>
@@ -796,7 +788,7 @@ pred.uncl.rf &lt;-<span class="st"> </span><span class="kw">predict</span>(rf.fi
 <span class="kw">table</span>(pred.uncl.svm)</code></pre></div>
 <pre><code>pred.uncl.svm
    Luminal.A no.Luminal.A 
-          65           42 </code></pre>
+          66           41 </code></pre>
 <ul>
 <li>Calcul de la table de confusion entre les deux vecteurs de prédiction.</li>
 </ul>
@@ -804,9 +796,11 @@ pred.uncl.rf &lt;-<span class="st"> </span><span class="kw">predict</span>(rf.fi
 tc</code></pre></div>
 <pre><code>              pred.uncl.svm
 pred.uncl.rf   Luminal.A no.Luminal.A
-  Luminal.A           51            0
-  no.Luminal.A        14           42</code></pre>
-<p># Prédiction des 4 types de cancer.</p>
+  Luminal.A           55            2
+  no.Luminal.A        11           39</code></pre>
+</div>
+<div id="prediction-des-4-types-de-cancer" class="section level1">
+<h1><span class="header-section-number">8</span> Prédiction des 4 types de cancer</h1>
 <ol style="list-style-type: decimal">
 <li>Préparation du jeu de données</li>
 </ol>
@@ -868,13 +862,13 @@ Call:
                      Number of trees: 150
 No. of variables tried at each split: 124
 
-        OOB estimate of  error rate: 23%
+        OOB estimate of  error rate: 23.63%
 Confusion matrix:
            Basal.like HER2pos Luminal.A Luminal.B class.error
-Basal.like         75       2        13         1  0.17582418
-HER2pos             8       6         8         8  0.80000000
-Luminal.A           2       0       272         3  0.01805054
-Luminal.B           0       1        63        12  0.84210526</code></pre>
+Basal.like         74       1        15         2  0.19565217
+HER2pos             9       2         7         8  0.92307692
+Luminal.A           5       0       264         5  0.03649635
+Luminal.B           1       0        59        22  0.73170732</code></pre>
 <ol start="5" style="list-style-type: decimal">
 <li>Calculez les performances du modèle <em>random forest</em> sur l’échantillon d’apprentissage et de test.</li>
 </ol>
@@ -886,10 +880,10 @@ tc.rf4.app &lt;-<span class="st"> </span><span class="kw">table</span>(pred.app.
 tc.rf4.app</code></pre></div>
 <pre><code>            
 pred.app.4   Basal.like HER2pos Luminal.A Luminal.B
-  Basal.like         91       0         0         0
-  HER2pos             0      30         0         0
-  Luminal.A           0       0       277         0
-  Luminal.B           0       0         0        76</code></pre>
+  Basal.like         92       0         0         0
+  HER2pos             0      26         0         0
+  Luminal.A           0       0       274         0
+  Luminal.B           0       0         0        82</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">acc.rf4.app &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">diag</span>(tc.rf4.app))<span class="op">/</span><span class="kw">sum</span>(tc.rf4.app)
 acc.rf4.app</code></pre></div>
 <pre><code>[1] 1</code></pre>
@@ -902,13 +896,13 @@ tc.rf4.test &lt;-<span class="st"> </span><span class="kw">table</span>(pred.tes
 tc.rf4.test</code></pre></div>
 <pre><code>            
 pred.test.4  Basal.like HER2pos Luminal.A Luminal.B
-  Basal.like         35       4         2         1
+  Basal.like         35       1         0         0
   HER2pos             0       2         0         0
-  Luminal.A           4       2       142        35
-  Luminal.B           1       3         1         6</code></pre>
+  Luminal.A           4       8       147        28
+  Luminal.B           0       4         1         8</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">acc.rf4.test &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">diag</span>(tc.rf4.test))<span class="op">/</span><span class="kw">sum</span>(tc.rf4.test)
 acc.rf4.test</code></pre></div>
-<pre><code>[1] 0.7773109</code></pre>
+<pre><code>[1] 0.8067227</code></pre>
 <ol start="6" style="list-style-type: decimal">
 <li>Etude de l’importance des descripteurs dans le modèle.</li>
 </ol>
