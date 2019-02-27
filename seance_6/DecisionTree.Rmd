@@ -100,6 +100,9 @@ options(scipen = 12) ## Max number of digits for non-scientific notation
 
 ## Plan
 
+* Présentation générale des méthodes de classification
+* Arbres de décision
+* *Random forest*
 
 ## Méthodes multivariées
 ![](img/machineLearning.png)
@@ -134,6 +137,14 @@ str(iris)
 ## Protocole général
 
 ![](img/protocole.png)
+
+
+## Calcul des performances d'un modèle
+
+* prédiction de deux classes : 
+    + ![performances d'un modèle] (https://en.wikipedia.org/wiki/Sensitivity_and_specificity)
+* prédiction de plus de deux classes :  
+    + accuracy  
 
 ## Méthodes
 * Arbres de décision : CART (Classification and Regression Trees)
@@ -273,7 +284,7 @@ $\rightarrow$ Sélection de variables souvent drastique
 
 * Avantages :   
     + Pas besoin de normaliser les données  
-    + La variable à prédire peut être muti-classe  
+    + La variable à prédire peut être muti-classes  
     + Facilité d'interprétation   
     + Sélection de variables  
 * Inconvénients :   
@@ -281,6 +292,7 @@ $\rightarrow$ Sélection de variables souvent drastique
     + Sélection des variables drastique
     + Sur-apprentissage  
 
+***
 
 ## Forêts aléatoires : Principe
 
@@ -302,11 +314,13 @@ $\rightarrow$ Sélection de variables souvent drastique
 
 <center> **Double randomisation sur les individus et sur les variables**</center>
 
-* Création d'un **échantillon bootstrap** contenant $n$ fleurs = tirage aléatoire avec remise de $n$ fleurs dans le jeu d'apprentissage
-```{r}
-ech.B1<-sample(1:nrow(mat.app),size=nrow(mat.app),replace=T)
-sort(ech.B1)
+* Création d'un **échantillon bootstrap** contenant $n$ individus = **tirage aléatoire avec remise** de $n$ individus dans le jeu d'apprentissage
+```{r strip.white=TRUE, tidy=TRUE}
+ech.B1<-sample(1:nrow(mat.app),size=nrow(mat.app),
+               replace=T)
+length(ech.B1) ; sort(ech.B1)[1:15]
 ```
+
 
 ## Construction du $k^{ème}$ arbre - randomisation sur les individus
 
@@ -316,8 +330,9 @@ sort(ech.B1)
 
 ```{r}
 ech.OOB1 <- setdiff(1:nrow(mat.app), ech.B1)
-ech.OOB1
+head(ech.OOB1)
 ```
+
 
 * Chaque arbre de la forêt va être construit sur un jeu bootstrap différent
 
@@ -344,7 +359,7 @@ random.data1 <- mat.app[ech.B1, var.sel]
 head(random.data1)
 ```
 
-* pour les noeud suivant : sélectionne à chaque fois $q$ variable  
+* pour les noeud suivant : sélectionne à chaque fois $q$ variables  
 
 * nouvel arbre : création d'un nouvel échantillon bootstrap  
 
@@ -366,7 +381,9 @@ head(random.data1)
 ## Performance du modèle  
 
 * Calcul de la performance non biaisée du modèle  
-$\rightarrow$ : utilisation des données des échantillons OOB
+$\rightarrow$ : utilisation des données des échantillons OOB  
+* Calcul des performances sur l'échantillon d'apprentissage  
+* Calcul des performances sur l'échantillon test  
 
 
 
@@ -375,8 +392,17 @@ $\rightarrow$ : utilisation des données des échantillons OOB
 library(randomForest)
 rf.fit<-randomForest(Species~.,data=mat.app,mtree=500,
                      mtry=2,importance=TRUE)
-rf.fit
+rf.fit$ntree
+rf.fit$mtry
 ```
+## Prédiction de l'espèce d'iris - Estimation des performances du modèle
+
+* sur les jeux OOB
+```{r}
+rf.fit$confusion
+```
+
+
 
 ## Prédiction de l'espèce d'iris - Estimation des performances du modèle
 ```{r echo=FALSE}
@@ -387,10 +413,14 @@ plot(rf.fit, main="")
 ```
 
 ## Etude de l'importance des variables 
-<center>
-![](img/Importance.png){width=60%}
-</center>
 
+* Random forest : aucune visualisation du modèle  
+* calcul de l'importance de chaque variable dans le modèle par permutations
+
+![](img/Importance.png){width=80%}
+
+
+## Etude de l'importance des variables 
 
 * Importance de la variable $j$ dans l'arbre $i$ : $Imp(j,i)=b-a$  
 * Importance globale de la variable $j$ = moyenne des importances sur les $k$ arbres impliquant la variable $j$  
@@ -401,13 +431,26 @@ $$Imp(j) = \sum\limits_{i=1}^{k}Imp(j,i)$$
 ```{r echo=FALSE}
 par(mar=c(2,1,1,1))
 ```
-```{r}
-varImpPlot(rf.fit, main="")
+```{r fig.width=6, fig.height=3.5}
+varImpPlot(rf.fit, main="", type=1)
 ```
+
+## Avantage et inconvénients des random forests
+
+* Avantages :  
+    + méthodes très puissantes  
+    + permet de gérer des gros jeux de données  
+    + quantification de l'importance des descripteurs  
+* Inconvénients :
+    + Risque de sur-ajustement
+    + Mauvaises performances si beaucoup de variables bruits
+    + Modèle plus complexe et moins interprétable que les arbres classiques
+    + Paramètres à optimiser
+ 
 
 ## Merci de votre attention !!!
 
-* Prédiction du type de tumeur sur les données 
+* Prédiction du type de tumeurs sur les données 
     + apprentissage d'un modèle de CART
     + apprentissage d'une forêt aléatoire
 $\quad$
