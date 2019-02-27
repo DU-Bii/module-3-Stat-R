@@ -1,5 +1,5 @@
 ---
-title: "Module 3 - Analyse statistique avec R - Séance 2"
+title: "Module 3 - Analyse statistique avec R - Séance 6"
 author: "Leslie REGAD"
 date: '`r Sys.Date()`'
 output:
@@ -104,6 +104,9 @@ options(scipen = 12) ## Max number of digits for non-scientific notation
 * Arbres de décision
 * *Random forest*
 
+
+# Présentation générale des méthodes de classification
+
 ## Méthodes multivariées
 ![](img/machineLearning.png)
 
@@ -153,6 +156,7 @@ str(iris)
 * Réseaux de neurones
 
 
+# Arbres de décision
 
 ## Qu'est qu'un arbre de décision 
 
@@ -292,9 +296,10 @@ $\rightarrow$ Sélection de variables souvent drastique
     + Sélection des variables drastique
     + Sur-apprentissage  
 
-***
 
-## Forêts aléatoires : Principe
+# *Random forest* (Forêts aléatoires)
+
+## Random forest : Principe
 
 <center>
 ![](img/randomForest_1.png){width=50%}
