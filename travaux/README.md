@@ -14,7 +14,7 @@ Les MCC combinent
 | Travail | Objet | HTML | pdf | Rmd | 
 |--------------|---------------------------------------|------|------|------|
 | Prérequis | Quiz d'aquisition des prérequis sur Data Camp | (moodle)[http://...] | | |
-| TP1 | test d'hypothèse et analyse en composante principale | [[html](TX1/TP_exMaison.html)] | [[pdf](TX1/TP_exMaison.pdf)] | [[Rmd](TX1/TP_exMaison.Rmd)] |
+| TP1 | test d'hypothèse et analyse en composante principale | [[html](TX1/TP_exMaison.html)] | [[pdf](TX1/TP_exMaison.pdf)] | [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/travaux/TX1/TP_exMaison.Rmd)] |
 | TP2 | clustering |  | [[pdf](TX2/CR3R2.pdf)] | |
 
 
