@@ -13,4 +13,4 @@
 |-----------------------------|------|-----|-----|
 | Arbres de décision |   | [[pdf](DecisionTree.pdf)] | [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/seance_6/DecisionTree.Rmd)] |
 | SVM et réseaux de neurones |  |  [[pdf](NN+SVM.pdf)] | [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/seance_6/NN+SVM.Rmd)] |
-| Travaux pratiques | [[html](TP_seance6.html)]  |  |  [Rmd](TP_seance6.Rmd)] |
+| Travaux pratiques | [[html](TP_seance6.html)]  |  |  [[Rmd](TP_seance6.Rmd)] |
