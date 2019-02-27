@@ -168,8 +168,8 @@ parameters <- list(
   gene.filter.min.count = 10, # Minimal counts per gene
   
   ## Test and control groups for differential analysis
-  test.group = "bdf1_Y187F_Y354F_mutant_0",
-  control.group = "Wild_type_0"
+  test.group = "bdf1_Y187F_Y354F_mutant_8",
+  control.group = "Wild_type_8"
 )
 
 ## Create output directory
@@ -906,6 +906,7 @@ Effectuez une analyse différentielle sur ces données.
 
 ```{r export_results}
 
+## Build a file prefix by concatenating the two compared groups
 file.prefix <- paste(sep = "__", parameters$test.group, 
                      "vs", parameters$control.group)
 
