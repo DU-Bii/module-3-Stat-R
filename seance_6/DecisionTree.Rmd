@@ -131,9 +131,9 @@ str(iris)
 * Facile à interpréter  
     
 
-## Protocole
+## Protocole général
 
-
+![](img/protocole.png)
 
 ## Méthodes
 * Arbres de décision : CART (Classification and Regression Trees)
@@ -161,8 +161,6 @@ prp(rpart.fit, type=0, extra=1, nn=TRUE, box.col = "lightblue2", split.box.col="
 plot(iris[,3], iris[,4], col = as.numeric(iris[,5]), pch=19, xlab=colnames(iris)[3], ylab=colnames(iris)[4])
 abline(v=2.5, h=1.8, lty=2, col="gray80")
 ```
-
-## Mise en place du modèle de prédiction
 
 
 ## Création des échantillons d'apprentissage et de test
@@ -227,9 +225,9 @@ pred.app<-predict(rpart.fit,newdata=mat.app,type="class")
 (tc <- table(mat.app[,"Species"],pred.app))
 ```
 
-* Taux de bien prédit
+* *Accuracy* (taux de bien prédit) = $\frac{VN+VP}{VN+VP+FN+FP}$
 ```{r}
-(TBP <- sum(diag(tc))/sum(tc))
+(acc <- sum(diag(tc))/sum(tc))
 ```
 
 ##Evaluation du modèle sur le jeu test
@@ -240,9 +238,9 @@ pred.test<-predict(rpart.fit,newdata=mat.test,type="class")
 (tc<-table(mat.test[,"Species"], pred.test))
 ```
 
-* Taux de bien prédit
+* *Accuracy*
 ```{r}
-(TBP <- sum(diag(tc))/sum(tc))
+(acc <- sum(diag(tc))/sum(tc))
 ```
 
 
@@ -251,9 +249,7 @@ pred.test<-predict(rpart.fit,newdata=mat.test,type="class")
 * Deux descripteurs `Petal.Length` et `Petal.Width` sont nécéssaires pour prédire l'espèce.
 
 ```{r fig.height=2}
-nf<-layout(matrix(c(1,2), 1, 2))
 prp(rpart.fit,type=0,extra=1,nn=TRUE)
-corrplot(cor(iris[,-5]),method="circle",tl.cex=0.8,cl.cex=0.8)
 ```
 
 $\quad$  
