@@ -9,7 +9,7 @@
 | 3 | Analyse de données métagénomiques | [seance_3](seance_3) |
 | 4 | Clustering | [seance_4](seance_4) |
 | 5 | Analyse différentielle de données RNA-seq | [seance_5](seance_5) |
-| 6 | Classification supervisée (classement) | | [seance_6](seance_6)
+| 6 | Classification supervisée (classement) | | [seance_6](seance_6) |
 
 
 ## Table des matières
