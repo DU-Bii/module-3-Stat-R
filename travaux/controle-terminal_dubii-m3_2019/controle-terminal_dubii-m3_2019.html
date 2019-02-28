@@ -27,6 +27,81 @@
 <script src="controle-terminal_dubii-m3_2019_files/navigation-1.1/codefolding.js"></script>
 
 
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #303030; color: #cccccc; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; }
+td.sourceCode { padding-left: 5px; }
+pre, code { color: #cccccc; background-color: #303030; }
+code > span.kw { color: #f0dfaf; } /* Keyword */
+code > span.dt { color: #dfdfbf; } /* DataType */
+code > span.dv { color: #dcdccc; } /* DecVal */
+code > span.bn { color: #dca3a3; } /* BaseN */
+code > span.fl { color: #c0bed1; } /* Float */
+code > span.ch { color: #dca3a3; } /* Char */
+code > span.st { color: #cc9393; } /* String */
+code > span.co { color: #7f9f7f; } /* Comment */
+code > span.ot { color: #efef8f; } /* Other */
+code > span.al { color: #ffcfaf; } /* Alert */
+code > span.fu { color: #efef8f; } /* Function */
+code > span.er { color: #c3bf9f; } /* Error */
+code > span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
+code > span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+code > span.sc { color: #dca3a3; } /* SpecialChar */
+code > span.vs { color: #cc9393; } /* VerbatimString */
+code > span.ss { color: #cc9393; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { } /* Variable */
+code > span.cf { color: #f0dfaf; } /* ControlFlow */
+code > span.op { color: #f0efd0; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+code > span.at { } /* Attribute */
+code > span.do { color: #7f9f7f; } /* Documentation */
+code > span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+code > span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+code > span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+
+.sourceCode .row {
+  width: 100%;
+}
+.sourceCode {
+  overflow-x: auto;
+}
+.code-folding-btn {
+  margin-right: -30px;
+}
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
 
 
 <style type="text/css">
@@ -299,9 +374,35 @@ div.tocify {
 <p>En-dessous de chaque question nous vous demandons de fournir d’une part le code qui permet d’y repondre, et une interprétation sommaire des résultats (5 à 15 lignes par question).</p>
 <p>Le rapport de travail consistera en un document R markdown permettant aux évaluateurs de reproduire l’ensemble des résultats, et le rapport pdf produit au moyen de ce markdown.</p>
 </div>
+<div id="jeu-de-donnees" class="section level2">
+<h2>Jeu de données</h2>
+<p>Pour vous faciliter la tâche, les analyses se baseront sur le jeu de données de transcriptome RNA-seq de l’étude Breast Invasive Cancer du TCGA (<strong>TCGA-BIC</strong>), mais nous sélectionnerons des sous-ensembles de données de tailles raisonnables pour les différentes parties du travail.</p>
+</div>
 <div id="chargement-des-donnees" class="section level2">
 <h2>Chargement des données</h2>
-<p>Pour vous ééviter de perdre trop de temps avec la localisation des fichiers, nous fournissons ci-dessous une</p>
+<p>Pour vous éviter de perdre trop de temps avec la localisation des fichiers de données, nous fournissons nous-même les instructions qui permettent de les charger.</p>
+</div>
+<div id="exploration-des-donnees" class="section level2">
+<h2>Exploration des données</h2>
+<ol style="list-style-type: decimal">
+<li>Dessinez un histogramme des comptages bruts pour toutes les valeurs de la table, et commentez la figure en quelques lignes.</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Histogram of the raw counts</code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li>Dessinez un histogramme des log2(counts + epsilon) pour toutes les valeurs de la table, en fixant <span class="math inline">\(\epsilon = 0.1\)</span>, et commentez la figure en quelques lignes</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## histogram of log2-transformed counts</code></pre></div>
+<ol start="3" style="list-style-type: decimal">
+<li>Sélectionnez aléatoirement un sous-ensemble de 20 échantillons (<code>sample()</code>), et dessinez un box plot des comptages bruts et log2-transformés. Commentez la figure en quelques lignes.</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Box plot of the raw counts</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Box plot of the log2-transformed counts</code></pre></div>
+<ol start="4" style="list-style-type: decimal">
+<li>Calculez les composantes principales du tableau de données log2-transformées, et générez les plots “PC1 vs PC2” et “PC3 vs PC4” en associant une couleur et/ou un symbole spécifique à chaque échantillon en fonction de sa class. Commentez le résultat en quelques lignes.</li>
+</ol>
+</div>
+<div id="analyse-diffeerentielle" class="section level2">
+<h2>Analyse difféerentielle</h2>
 </div>
 
 
