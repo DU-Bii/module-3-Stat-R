@@ -16,6 +16,9 @@ Les MCC combinent
 | Prérequis | Quiz d'aquisition des prérequis sur Data Camp | (moodle)[http://...] | | |
 | TP1 | test d'hypothèse et analyse en composante principale | [[html](TX1/TP_exMaison.html)] | [[pdf](TX1/TP_exMaison.pdf)] | [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/travaux/TX1/TP_exMaison.Rmd)] |
 | TP2 | clustering |  | [[pdf](TX2/CR3R2.pdf)] | |
+| Contrôle terminal | Analyse de données RNA-seq TCGA AML | [[html](controle-terminal_dubii-m3_2019/controle-terminal_dubii-m3_2019.html)] | | [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/travaux/controle-terminal_dubii-m3_2019/controle-terminal_dubii-m3_2019.Rmd)] |
+
+Pour le contrôle terminal, téléchargez le fichier Rmd puis complétez-le en insérant votre code et vos interprétations. 
 
 
 ## Contrôle terminal
