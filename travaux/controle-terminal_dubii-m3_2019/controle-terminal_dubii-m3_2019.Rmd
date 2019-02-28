@@ -1,0 +1,93 @@
+---
+title: "Contrôle Terminal - Module 3: Analyse statistique avec R"
+date: '`r Sys.Date()`'
+output:
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
+  beamer_presentation:
+    colortheme: dolphin
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    fonttheme: structurebold
+    highlight: tango
+    incremental: no
+    keep_tex: no
+    slide_level: 2
+    theme: Montpellier
+    toc: yes
+  revealjs::revealjs_presentation:
+    theme: night
+    transition: none
+    self_contained: true
+    css: ../slides.css
+  html_document:
+    self_contained: no
+    fig_caption: yes
+    highlight: zenburn
+    theme: cerulean
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+    code_folding: "hide"
+  slidy_presentation:
+    smart: no
+    slide_level: 2
+    self_contained: yes
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    highlight: tango
+    incremental: no
+    keep_md: yes
+    smaller: yes
+    theme: cerulean
+    toc: yes
+    widescreen: yes
+  ioslides_presentation:
+    slide_level: 2
+    self_contained: no
+    colortheme: dolphin
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    fonttheme: structurebold
+    highlight: tango
+    smaller: yes
+    toc: yes
+    widescreen: yes
+font-import: http://fonts.googleapis.com/css?family=Risque
+subtitle: "Diplôme Interuniversitaire en Bioinformatique intégrative (DU-Bii 2019)"
+font-family: Garamond
+transition: linear
+editor_options: 
+  chunk_output_type: console
+---
+
+## But de ce TP
+
+Le but de ce travail est de mobiliser les différentes méthodes statistiques enseignées durant les cours et travaux pratiques afin d'analyser un jeu de données, et d'interpréter les résultats.
+
+## Rendu
+
+
+Les énoncés et questions sont fournis sous forme d'un document  R markdown, qui servira également de modèle pour répondre auw questions. 
+
+En-dessous de chaque question nous vous demandons de fournir d'une part le code qui permet d'y repondre, et une interprétation sommaire des résultats (5 à 15 lignes par question). 
+
+Le rapport de travail consistera en un document R markdown permettant aux évaluateurs de reproduire l'ensemble des résultats, et le rapport pdf produit au moyen de ce markdown. 
+
+
+## Chargement des données
+
+Pour vous éviter de perdre trop de temps avec la localisation des fichiers de données, nous fournissons nous-même les instructions qui permettent de les charger.
+
+```{r load_data}
+
+```
+
+
+
