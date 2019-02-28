@@ -372,15 +372,105 @@ div.tocify {
 <h2>Rendu</h2>
 <p>Les énoncés et questions sont fournis sous forme d’un document R markdown, qui servira également de modèle pour répondre auw questions.</p>
 <p>En-dessous de chaque question nous vous demandons de fournir d’une part le code qui permet d’y repondre, et une interprétation sommaire des résultats (5 à 15 lignes par question).</p>
-<p>Le rapport de travail consistera en un document R markdown permettant aux évaluateurs de reproduire l’ensemble des résultats, et le rapport pdf produit au moyen de ce markdown.</p>
+<p>Le rapport de travail consistera à remettre un document Rmd permettant aux évaluateurs de reproduire l’ensemble des résultats, et le rapport pdf produit au moyen de ce markdown.</p>
 </div>
 <div id="jeu-de-donnees" class="section level2">
 <h2>Jeu de données</h2>
 <p>Pour vous faciliter la tâche, les analyses se baseront sur le jeu de données de transcriptome RNA-seq de l’étude Breast Invasive Cancer du TCGA (<strong>TCGA-BIC</strong>), mais nous sélectionnerons des sous-ensembles de données de tailles raisonnables pour les différentes parties du travail.</p>
 </div>
+<div id="votre-espace-de-travail" class="section level2">
+<h2>Votre espace de travail</h2>
+<p>Le code ci-dessous définit l’endroit où les données et résultats seront sauvegardés dans votre compte. Vous pouvez bien entendu le modifier.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">workdir &lt;-<span class="st"> &quot;~/DU-Bii/m3/TGCA_AML_analysis&quot;</span>
+<span class="kw">dir.create</span>(<span class="dt">path =</span> workdir, <span class="dt">showWarnings =</span> <span class="ot">FALSE</span>, <span class="dt">recursive =</span> <span class="ot">TRUE</span>)
+<span class="kw">message</span>(<span class="st">&quot;Working directory</span><span class="ch">\t</span><span class="st">&quot;</span>, workdir)</code></pre></div>
+</div>
 <div id="chargement-des-donnees" class="section level2">
 <h2>Chargement des données</h2>
 <p>Pour vous éviter de perdre trop de temps avec la localisation des fichiers de données, nous fournissons nous-même les instructions qui permettent de les charger.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Set the URL of the data folder
+data.folder.URL &lt;-<span class="st"> &quot;https://du-bii.github.io/study-cases/Homo_sapiens/TCGA_study-case/TCGA_AML_data/&quot;</span>
+
+## Download a local copy of the expression file if not already done
+## This avoids wasting time to re-download all the data at each run of the script.
+expr.file &lt;-<span class="st"> &quot;AML_counts_filtered-genes.tsv.gz&quot;</span> <span class="co"># Expression file name</span>
+expr.URL &lt;-<span class="st"> </span><span class="kw">file.path</span>(data.folder.URL, expr.file) <span class="co"># URL of expression file on the server</span>
+expr.path &lt;-<span class="st"> </span><span class="kw">file.path</span>(workdir, expr.file) <span class="co"># Full path of the local copy of the expression file</span>
+<span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(expr.path)) {
+  <span class="kw">message</span>(<span class="st">&quot;Downloading expression file from &quot;</span>, expr.URL)
+  <span class="kw">download.file</span>(<span class="dt">url =</span> expr.URL, <span class="dt">destfile =</span> expr.path)
+}
+
+## Load expression table
+expr.table &lt;-<span class="st"> </span><span class="kw">read.delim</span>(
+  <span class="dt">file =</span> expr.path, 
+  <span class="dt">header =</span> <span class="ot">TRUE</span>, 
+  <span class="dt">row.names =</span> <span class="ot">NULL</span>)
+<span class="kw">message</span>(<span class="st">&quot;Loaded expression table with &quot;</span> , 
+        <span class="kw">nrow</span>(expr.table), <span class="st">&quot; rows (genes) x &quot;</span>, 
+        <span class="kw">ncol</span>(expr.table), <span class="st">&quot; columns&quot;</span>)
+
+## Download a local copy of the pheno table if not already done
+## This avoids wasting time to re-download all the data at each run of the script.
+pheno.file &lt;-<span class="st"> &quot;AML_pheno.tsv.gz&quot;</span> <span class="co"># pheno file name</span>
+pheno.URL &lt;-<span class="st"> </span><span class="kw">file.path</span>(data.folder.URL, pheno.file) <span class="co"># URL of pheno file on the server</span>
+pheno.path &lt;-<span class="st"> </span><span class="kw">file.path</span>(workdir, pheno.file) <span class="co"># Full path of the local copy of the pheno file</span>
+<span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(pheno.path)) {
+  <span class="kw">message</span>(<span class="st">&quot;Downloading pheno file from &quot;</span>, pheno.URL)
+  <span class="kw">download.file</span>(<span class="dt">url =</span> pheno.URL, <span class="dt">destfile =</span> pheno.path)
+}
+
+## Load pheno table
+pheno.table &lt;-<span class="st"> </span><span class="kw">read.delim</span>(
+  <span class="dt">file =</span> pheno.path, 
+  <span class="dt">header =</span> <span class="ot">TRUE</span>, 
+  <span class="dt">row.names =</span> <span class="ot">NULL</span>)
+<span class="kw">message</span>(<span class="st">&quot;Loaded pheno table with &quot;</span> , 
+        <span class="kw">nrow</span>(pheno.table), <span class="st">&quot; rows (genes) x &quot;</span>, 
+        <span class="kw">ncol</span>(pheno.table), <span class="st">&quot; columns&quot;</span>)
+
+
+## Download a local copy of the sample classes if not already done
+## This avoids wasting time to re-download all the data at each run of the script.
+sample.class.file &lt;-<span class="st"> &quot;AML_sample-classes.tsv.gz&quot;</span> <span class="co"># sample.class file name</span>
+sample.class.URL &lt;-<span class="st"> </span><span class="kw">file.path</span>(data.folder.URL, sample.class.file) <span class="co"># URL of sample.class file on the server</span>
+sample.class.path &lt;-<span class="st"> </span><span class="kw">file.path</span>(workdir, sample.class.file) <span class="co"># Full path of the local copy of the sample.class file</span>
+<span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(sample.class.path)) {
+  <span class="kw">message</span>(<span class="st">&quot;Downloading sample.class file from &quot;</span>, sample.class.URL)
+  <span class="kw">download.file</span>(<span class="dt">url =</span> sample.class.URL, <span class="dt">destfile =</span> sample.class.path)
+}
+
+## Load sample.class table
+sample.class.table &lt;-<span class="st"> </span><span class="kw">read.delim</span>(
+  <span class="dt">file =</span> sample.class.path, 
+  <span class="dt">header =</span> <span class="ot">TRUE</span>, 
+  <span class="dt">row.names =</span> <span class="ot">NULL</span>)
+sample.classes &lt;-<span class="st"> </span><span class="kw">as.vector</span>(sample.class.table<span class="op">$</span>sample.class)
+<span class="kw">message</span>(<span class="st">&quot;Loaded sample.classes in a vector names sample.classes &quot;</span>)
+<span class="kw">kable</span>(<span class="kw">table</span>(sample.classes), <span class="dt">caption =</span> <span class="st">&quot;Samples per classe&quot;</span>)</code></pre></div>
+<table>
+<caption>Samples per classe</caption>
+<thead>
+<tr class="header">
+<th align="left">sample.classes</th>
+<th align="right">Freq</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Favorable</td>
+<td align="right">25</td>
+</tr>
+<tr class="even">
+<td align="left">Intermediate/Normal</td>
+<td align="right">70</td>
+</tr>
+<tr class="odd">
+<td align="left">Poor</td>
+<td align="right">30</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="exploration-des-donnees" class="section level2">
 <h2>Exploration des données</h2>
@@ -401,8 +491,27 @@ div.tocify {
 <li>Calculez les composantes principales du tableau de données log2-transformées, et générez les plots “PC1 vs PC2” et “PC3 vs PC4” en associant une couleur et/ou un symbole spécifique à chaque échantillon en fonction de sa class. Commentez le résultat en quelques lignes.</li>
 </ol>
 </div>
-<div id="analyse-diffeerentielle" class="section level2">
-<h2>Analyse difféerentielle</h2>
+<div id="analyse-differentielle" class="section level2">
+<h2>Analyse différentielle</h2>
+<ol style="list-style-type: decimal">
+<li>Avec DESeq2, faites une analyse des gènes différentiellement exprimés entre les classes “Favorable” et “Poor”. Ajoutez à la table de résultat (celle avec les log-FC et p-valeurs) une colonne “positive” qui contiendra la valeur TRUE si la p-valeur ajustée est inférieure à <span class="math inline">\(\alpha = 0.05\)</span>, et FALSE dans le cas contraire.</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Selection of differentially expressed genes with edgeR</code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li>Dessinez un histogramme des P-valeurs nominales et commentez le résultat.</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## P-value histogram</code></pre></div>
+<ol start="3" style="list-style-type: decimal">
+<li>Dessinez le MA-plot et commentez le résultat.</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## MA plot</code></pre></div>
+<ol start="4" style="list-style-type: decimal">
+<li>Dessinez un volcano plot et commentez le résultat</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Volcano plot</code></pre></div>
+</div>
+<div id="classification-supervisee" class="section level2">
+<h2>Classification supervisée</h2>
 </div>
 
 

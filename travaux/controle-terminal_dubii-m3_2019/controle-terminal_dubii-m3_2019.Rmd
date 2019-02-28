@@ -67,6 +67,50 @@ editor_options:
   chunk_output_type: console
 ---
 
+
+```{r settings, include=FALSE, echo=FALSE, eval=TRUE}
+library(knitr)
+
+options(width = 300)
+# options(encoding = 'UTF-8')
+knitr::opts_chunk$set(
+  fig.width = 7, fig.height = 5, 
+  fig.path = 'figures/TCGA_BIC_',
+  fig.align = "center", 
+  size = "tiny", 
+  echo = TRUE, 
+  eval = TRUE, 
+  warning = FALSE, 
+  message = FALSE, 
+  results = TRUE, 
+  comment = "")
+
+options(scipen = 12) ## Max number of digits for non-scientific notation
+# knitr::asis_output("\\footnotesize")
+
+```
+
+
+```{r libraries, include=FALSE, echo=FALSE, eval=TRUE}
+message("Loading required libraries")
+
+library(knitr)
+library(data.table)
+library(VennDiagram)
+
+## Install the library if needed then load it
+required.bioconductor <- c("DESeq2", "edgeR")
+for (pkg in required.bioconductor) {
+  message("Loading bioconductor package\t", pkg)
+  if (!require(pkg, character.only = TRUE)) {
+    message("Installing bioconductor package\t", pkg)
+    source("http://bioconductor.org/biocLite.R")
+    biocLite(pkg)
+    require(pkg, character.only = TRUE)
+  }
+}
+```
+
 ## But de ce TP
 
 Le but de ce travail est de mobiliser les différentes méthodes statistiques enseignées durant les cours et travaux pratiques afin d'analyser un jeu de données, et d'interpréter les résultats.
@@ -78,17 +122,90 @@ Les énoncés et questions sont fournis sous forme d'un document  R markdown, q
 
 En-dessous de chaque question nous vous demandons de fournir d'une part le code qui permet d'y repondre, et une interprétation sommaire des résultats (5 à 15 lignes par question). 
 
-Le rapport de travail consistera en un document R markdown permettant aux évaluateurs de reproduire l'ensemble des résultats, et le rapport pdf produit au moyen de ce markdown. 
+Le rapport de travail consistera à remettre un document Rmd permettant aux évaluateurs de reproduire l'ensemble des résultats, et le rapport pdf produit au moyen de ce markdown. 
 
 ## Jeu de données
 
 Pour vous faciliter la tâche, les analyses se baseront sur le jeu de données de transcriptome RNA-seq de l'étude  Breast Invasive Cancer du TCGA  (**TCGA-BIC**), mais nous sélectionnerons des sous-ensembles de données de tailles raisonnables pour les différentes parties du travail. 
+
+## Votre espace de travail
+
+Le code ci-dessous définit l'endroit où les données et résultats seront sauvegardés dans votre compte. Vous pouvez bien entendu le modifier.
+
+```{r}
+workdir <- "~/DU-Bii/m3/TGCA_AML_analysis"
+dir.create(path = workdir, showWarnings = FALSE, recursive = TRUE)
+message("Working directory\t", workdir)
+
+```
+
 
 ## Chargement des données
 
 Pour vous éviter de perdre trop de temps avec la localisation des fichiers de données, nous fournissons nous-même les instructions qui permettent de les charger.
 
 ```{r load_data}
+## Set the URL of the data folder
+data.folder.URL <- "https://du-bii.github.io/study-cases/Homo_sapiens/TCGA_study-case/TCGA_AML_data/"
+
+## Download a local copy of the expression file if not already done
+## This avoids wasting time to re-download all the data at each run of the script.
+expr.file <- "AML_counts_filtered-genes.tsv.gz" # Expression file name
+expr.URL <- file.path(data.folder.URL, expr.file) # URL of expression file on the server
+expr.path <- file.path(workdir, expr.file) # Full path of the local copy of the expression file
+if (!file.exists(expr.path)) {
+  message("Downloading expression file from ", expr.URL)
+  download.file(url = expr.URL, destfile = expr.path)
+}
+
+## Load expression table
+expr.table <- read.delim(
+  file = expr.path, 
+  header = TRUE, 
+  row.names = NULL)
+message("Loaded expression table with " , 
+        nrow(expr.table), " rows (genes) x ", 
+        ncol(expr.table), " columns")
+
+## Download a local copy of the pheno table if not already done
+## This avoids wasting time to re-download all the data at each run of the script.
+pheno.file <- "AML_pheno.tsv.gz" # pheno file name
+pheno.URL <- file.path(data.folder.URL, pheno.file) # URL of pheno file on the server
+pheno.path <- file.path(workdir, pheno.file) # Full path of the local copy of the pheno file
+if (!file.exists(pheno.path)) {
+  message("Downloading pheno file from ", pheno.URL)
+  download.file(url = pheno.URL, destfile = pheno.path)
+}
+
+## Load pheno table
+pheno.table <- read.delim(
+  file = pheno.path, 
+  header = TRUE, 
+  row.names = NULL)
+message("Loaded pheno table with " , 
+        nrow(pheno.table), " rows (genes) x ", 
+        ncol(pheno.table), " columns")
+
+
+## Download a local copy of the sample classes if not already done
+## This avoids wasting time to re-download all the data at each run of the script.
+sample.class.file <- "AML_sample-classes.tsv.gz" # sample.class file name
+sample.class.URL <- file.path(data.folder.URL, sample.class.file) # URL of sample.class file on the server
+sample.class.path <- file.path(workdir, sample.class.file) # Full path of the local copy of the sample.class file
+if (!file.exists(sample.class.path)) {
+  message("Downloading sample.class file from ", sample.class.URL)
+  download.file(url = sample.class.URL, destfile = sample.class.path)
+}
+
+## Load sample.class table
+sample.class.table <- read.delim(
+  file = sample.class.path, 
+  header = TRUE, 
+  row.names = NULL)
+sample.classes <- as.vector(sample.class.table$sample.class)
+message("Loaded sample.classes in a vector names sample.classes ")
+kable(table(sample.classes), caption = "Samples per classe")
+
 
 ```
 
@@ -128,8 +245,54 @@ Pour vous éviter de perdre trop de temps avec la localisation des fichiers de d
 ```
 
 
-## Analyse difféerentielle
+## Analyse différentielle
 
+1. Avec DESeq2, faites une analyse des gènes différentiellement exprimés entre les classes "Favorable" et "Poor". Ajoutez à la table de résultat (celle avec les log-FC et p-valeurs) une colonne "positive" qui contiendra la valeur TRUE si la p-valeur ajustée est inférieure à $\alpha = 0.05$, et FALSE dans le cas contraire. 
+
+```{r DEG}
+## Selection of differentially expressed genes with edgeR
+
+```
+
+2. Dessinez un histogramme des P-valeurs nominales et commentez le résultat.
+
+```{r pvalue_histogram}
+## P-value histogram
+
+```
+
+3. Dessinez le MA-plot et commentez le résultat. 
+
+```{r MA_plot}
+## MA plot
+
+```
+
+4. Dessinez un volcano plot et commentez le résultat
+
+```{r volcano_plot}
+## Volcano plot
+
+```
+
+5.Avec la fonction `write.table()`, exportez dans votre espace de travail 
+
+    - le tableau complet de résultats de DESeq2
+    - ce tableau limité aux gènes déclarés positifs
+    - un fichier texte avec uniquement les noms des gènes déclarés positifs (un nom par ligne)
+
+```{r export_DEG_results}
+## Export DEG full table
+
+## Export DEG table for genes declared positive only
+
+## Export text file with DEG names (one gene name per line)
+
+
+```
+
+
+## Classification supervisée
 
 
 
