@@ -122,12 +122,23 @@ Les énoncés et questions sont fournis sous forme d'un document  R markdown, q
 
 En-dessous de chaque question nous vous demandons de fournir d'une part le code qui permet d'y repondre, et une interprétation sommaire des résultats (5 à 15 lignes par question). 
 
-Le rapport de travail consistera à remettre un document Rmd permettant aux évaluateurs de reproduire l'ensemble des résultats, et le rapport pdf produit au moyen de ce markdown. Ces deux documents sont à mettre dans une archive (nom.tgz) et à déposer sur **[moodle](https://moodlesupd.script.univ-paris-diderot.fr/mod/assign/view.php?id=176370)** avant le **lundi 11 mars à 3h00**. Cette date-limite permettra de s'assurer que vous soyez tous affranchis des contrôles et ayez approfondi votre pratique de R avant le début des stages.
-Cette date est négociable, revenir vers nous (Jacques ou Anne) pour en discuter.
+Le rapport de travail consistera à remettre un document Rmd permettant aux évaluateurs de reproduire l'ensemble des résultats, et le rapport pdf produit au moyen de ce markdown. Ces deux documents sont à mettre dans une archive (nom.tgz) et à déposer sur **[moodle](https://moodlesupd.script.univ-paris-diderot.fr/mod/assign/view.php?id=176370)** avant le **lundi 11 mars à 3h00**. Cette date-limite permettra de s'assurer que vous vous soyez tous affranchis des contrôles et ayez approfondi votre pratique de R avant le début des stages.
+Elle est cependant négociable; revenir vers nous (Jacques ou Anne) pour en discuter.
 
 ## Jeu de données
 
-Pour vous faciliter la tâche, les analyses se baseront sur le jeu de données de transcriptome RNA-seq de l'étude  Breast Invasive Cancer du TCGA  (**TCGA-BIC**), mais nous sélectionnerons des sous-ensembles de données de tailles raisonnables pour les différentes parties du travail. 
+Le jeu de données se base sur une analyse de 125 patients souffrant de **leucémie myéloïde aiguë** (**AML**), disponible sur le site du projet **The Cancer Genome Atlas** (**TCGA**). Pour ce travail-ci nous nous focaliserons sur les données transcriptomiques (RNA-seq). Notez que le site TCGA fournit aussi des données de méthylome pour les mêmes patients. 
+
+Les données de comptage et métadonnées ont été téléchargées de la base de données **Recount2** via la librairie R `recount`, et pré-moulinées pour les fournir dans un format directement utilisable. 
+
+Le jeu de données fourni consiste en 2 tableaux
+
+- **Expression :** comptages bruts des comptages de lectures courtes (reads) par gène (lignes) pour chaque patient (colonnes). Les gènes ont été filtrés pour écarter les lignes contenant trop de zeros et celles dont toutes les valeurs étaient inférieures à 10. Vous ne devez donc plus effectuer cette étape de filtrage. 
+
+- **Classes de patients: ** le pronostic associé à chaque patient, avec trois valeurs: "Favorable", "Poor", "Intermediate/Normal". 
+
+
+
 
 ## Votre espace de travail
 
@@ -168,24 +179,6 @@ message("Loaded expression table with " ,
         nrow(expr.table), " rows (genes) x ", 
         ncol(expr.table), " columns")
 
-## Download a local copy of the pheno table if not already done
-## This avoids wasting time to re-download all the data at each run of the script.
-pheno.file <- "AML_pheno.tsv.gz" # pheno file name
-pheno.URL <- file.path(data.folder.URL, pheno.file) # URL of pheno file on the server
-pheno.path <- file.path(workdir, pheno.file) # Full path of the local copy of the pheno file
-if (!file.exists(pheno.path)) {
-  message("Downloading pheno file from ", pheno.URL)
-  download.file(url = pheno.URL, destfile = pheno.path)
-}
-
-## Load pheno table
-pheno.table <- read.delim(
-  file = pheno.path, 
-  header = TRUE, 
-  row.names = NULL)
-message("Loaded pheno table with " , 
-        nrow(pheno.table), " rows (genes) x ", 
-        ncol(pheno.table), " columns")
 
 
 ## Download a local copy of the sample classes if not already done
@@ -206,9 +199,31 @@ sample.class.table <- read.delim(
 sample.classes <- as.vector(sample.class.table$sample.class)
 message("Loaded sample.classes in a vector names sample.classes ")
 kable(table(sample.classes), caption = "Samples per classe")
+```
 
+
+```{r FOR_INFO_pheno_table}
+## Download a local copy of the pheno table if not already done
+## This avoids wasting time to re-download all the data at each run of the script.
+pheno.file <- "AML_pheno.tsv.gz" # pheno file name
+pheno.URL <- file.path(data.folder.URL, pheno.file) # URL of pheno file on the server
+pheno.path <- file.path(workdir, pheno.file) # Full path of the local copy of the pheno file
+if (!file.exists(pheno.path)) {
+  message("Downloading pheno file from ", pheno.URL)
+  download.file(url = pheno.URL, destfile = pheno.path)
+}
+
+## Load pheno table
+pheno.table <- read.delim(
+  file = pheno.path, 
+  header = TRUE, 
+  row.names = NULL)
+message("Loaded pheno table with " , 
+        nrow(pheno.table), " rows (genes) x ", 
+        ncol(pheno.table), " columns")
 
 ```
+
 
 ## Exploration des données
 
