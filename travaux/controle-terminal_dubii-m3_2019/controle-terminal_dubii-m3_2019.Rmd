@@ -122,7 +122,7 @@ Les énoncés et questions sont fournis sous forme d'un document  R markdown, q
 
 En-dessous de chaque question nous vous demandons de fournir d'une part le code qui permet d'y repondre, et une interprétation sommaire des résultats (5 à 15 lignes par question). 
 
-Le rapport de travail consistera à remettre un document Rmd permettant aux évaluateurs de reproduire l'ensemble des résultats, et le rapport pdf produit au moyen de ce markdown. Ces deux documents sont à mettre dans une archive (nom.tgz) et à déposer sur [moodle](https://moodlesupd.script.univ-paris-diderot.fr/mod/assign/view.php?id=176370) avant le lundi 11 mars à 3h00, soit avant le début des stages.
+Le rapport de travail consistera à remettre un document Rmd permettant aux évaluateurs de reproduire l'ensemble des résultats, et le rapport pdf produit au moyen de ce markdown. Ces deux documents sont à mettre dans une archive (nom.tgz) et à déposer sur **[moodle](https://moodlesupd.script.univ-paris-diderot.fr/mod/assign/view.php?id=176370)** avant le **lundi 11 mars à 3h00**. Cette date-limite permettra de s'assurer que vous soyez tous affranchis des contrôles et ayez approfondi votre pratique de R avant le début des stages.
 Cette date est négociable, revenir vers nous (Jacques ou Anne) pour en discuter.
 
 ## Jeu de données
