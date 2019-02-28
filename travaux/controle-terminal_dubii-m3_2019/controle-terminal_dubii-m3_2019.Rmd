@@ -2,11 +2,15 @@
 title: "Contrôle Terminal - Module 3: Analyse statistique avec R"
 date: '`r Sys.Date()`'
 output:
-  pdf_document:
+  html_document:
+    self_contained: no
     fig_caption: yes
     highlight: zenburn
+    theme: cerulean
     toc: yes
     toc_depth: 3
+    toc_float: yes
+    code_folding: "hide"
   beamer_presentation:
     colortheme: dolphin
     fig_caption: yes
@@ -24,15 +28,11 @@ output:
     transition: none
     self_contained: true
     css: ../slides.css
-  html_document:
-    self_contained: no
+  pdf_document:
     fig_caption: yes
     highlight: zenburn
-    theme: cerulean
     toc: yes
     toc_depth: 3
-    toc_float: yes
-    code_folding: "hide"
   slidy_presentation:
     smart: no
     slide_level: 2
@@ -80,6 +80,9 @@ En-dessous de chaque question nous vous demandons de fournir d'une part le code 
 
 Le rapport de travail consistera en un document R markdown permettant aux évaluateurs de reproduire l'ensemble des résultats, et le rapport pdf produit au moyen de ce markdown. 
 
+## Jeu de données
+
+Pour vous faciliter la tâche, les analyses se baseront sur le jeu de données de transcriptome RNA-seq de l'étude  Breast Invasive Cancer du TCGA  (**TCGA-BIC**), mais nous sélectionnerons des sous-ensembles de données de tailles raisonnables pour les différentes parties du travail. 
 
 ## Chargement des données
 
@@ -88,6 +91,45 @@ Pour vous éviter de perdre trop de temps avec la localisation des fichiers de d
 ```{r load_data}
 
 ```
+
+## Exploration des données
+
+
+1. Dessinez un histogramme des comptages bruts pour toutes les valeurs de la table, et commentez la figure en quelques lignes.  
+
+```{r raw_counts_histograms}
+## Histogram of the raw counts
+
+```
+
+2. Dessinez un histogramme des log2(counts + epsilon) pour toutes les valeurs de la table, en fixant $\epsilon = 0.1$, et commentez la figure en quelques lignes 
+
+```{r log2_counts_histogram}
+## histogram of log2-transformed counts
+
+```
+
+3. Sélectionnez aléatoirement un sous-ensemble de 20 échantillons (`sample()`), et dessinez un box plot des comptages bruts et log2-transformés. Commentez la figure en quelques lignes. 
+
+```{r raw_counts_boxplot}
+## Box plot of the raw counts
+
+```
+
+```{r log2_counts_boxplot}
+## Box plot of the log2-transformed counts
+
+```
+
+4. Calculez les composantes principales du tableau de données log2-transformées, et générez les plots "PC1 vs PC2" et "PC3 vs PC4" en associant une couleur et/ou un symbole spécifique à chaque échantillon en fonction de sa class. Commentez le résultat en quelques lignes. 
+
+```{r pc_plot_log2_counts}
+
+```
+
+
+## Analyse difféerentielle
+
 
 
 
