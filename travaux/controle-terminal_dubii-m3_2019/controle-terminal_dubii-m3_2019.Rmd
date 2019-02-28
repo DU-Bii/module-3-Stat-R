@@ -238,7 +238,7 @@ kable(table(sample.classes), caption = "Samples per classe")
 
 ```
 
-4. Calculez les composantes principales du tableau de données log2-transformées, et générez les plots "PC1 vs PC2" et "PC3 vs PC4" en associant une couleur et/ou un symbole spécifique à chaque échantillon en fonction de sa class. Commentez le résultat en quelques lignes. 
+4. Calculez les composantes principales du tableau de données log2-transformées, et générez les plots "PC1 vs PC2",  "PC3 vs PC4" et "PC5 vs PC6" en associant une couleur et/ou un symbole spécifique à chaque échantillon en fonction de sa class. Commentez le résultat en quelques lignes. 
 
 ```{r pc_plot_log2_counts}
 
