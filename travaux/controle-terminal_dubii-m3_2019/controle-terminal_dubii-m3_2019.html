@@ -509,9 +509,27 @@ sample.classes &lt;-<span class="st"> </span><span class="kw">as.vector</span>(s
 <li>Dessinez un volcano plot et commentez le résultat</li>
 </ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Volcano plot</code></pre></div>
+<ol start="5" style="list-style-type: decimal">
+<li><p>Avec la fonction <code>write.table()</code>, exportez dans votre espace de travail</p>
+<ul>
+<li>le tableau complet de résultats de DESeq2</li>
+<li>ce tableau limité aux gènes déclarés positifs</li>
+<li>un fichier texte avec uniquement les noms des gènes déclarés positifs (un nom par ligne)</li>
+</ul></li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Export DEG full table
+
+## Export DEG table for genes declared positive only
+
+## Export text file with DEG names (one gene name per line)</code></pre></div>
 </div>
 <div id="classification-supervisee" class="section level2">
 <h2>Classification supervisée</h2>
+<p>Effectuez une analyse de classification supervisée en comparant soit deux méthodes différentes (par exemple Random Forest versus SVM) soit deux valeurs de parameètres pour une méthode donnée (par exemple SVM avec un noyau.</p>
+<p>Pour cela, utilisez une stratégie de sous-échantilonnage aléatoire en utilisant 2/3 des échantillons pour l’apprentissage et 1/3 pour l’évaluation. Répétez l’opération 10 fois (par exemple au moyen d’une boucle <code>for</code>).</p>
+<p>Pour chaque méthode/paramètre, effectuez une analyse en multi-groupes (avec les 3 groupes d’AML), calculez la table de confusion, le taux de prédictions correctes (Accuracy) et d’erreurs de classification (Misclassification Error Rate, R).</p>
+<p>Commentez les résultats.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Multi-groups Supervised classification</code></pre></div>
 </div>
 
 
