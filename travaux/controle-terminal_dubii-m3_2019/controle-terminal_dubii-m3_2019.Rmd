@@ -133,11 +133,11 @@ Les données de comptage et métadonnées ont été téléchargées de la base d
 
 Le jeu de données fourni consiste en 2 tableaux
 
-- **Expression :** comptages bruts des comptages de lectures courtes (reads) par gène (lignes) pour chaque patient (colonnes). Les gènes ont été filtrés pour écarter les lignes contenant trop de zeros et celles dont toutes les valeurs étaient inférieures à 10. Vous ne devez donc plus effectuer cette étape de filtrage. 
+- **Expression** (fichier `AML_counts_filtered-genes.tsv.gz`) : comptages bruts des comptages de lectures courtes (reads) par gène (lignes) pour chaque patient (colonnes). Les gènes ont été filtrés pour écarter les lignes contenant trop de zeros et celles dont toutes les valeurs étaient inférieures à 10. Vous ne devez donc plus effectuer cette étape de filtrage. 
 
-- **Classes de patients: ** le pronostic associé à chaque patient, avec trois valeurs: "Favorable", "Poor", "Intermediate/Normal". 
+- **Classes de patients** (fichier `AML_sample-classes.tsv.gz`) : le pronostic associé à chaque patient, avec trois valeurs: "Favorable", "Poor", "Intermediate/Normal". 
 
-
+Nous fournissons également pour information un tableau complet des donnés phénotypiques (`AML_pheno.tsv.gz`) extraites des données TCGA via Recount, mais celui-ci n'est pas nécessaire à la réalisation du travail personnel.
 
 
 ## Votre espace de travail
@@ -156,7 +156,7 @@ message("Working directory\t", workdir)
 
 Pour vous éviter de perdre trop de temps avec la localisation des fichiers de données, nous fournissons nous-même les instructions qui permettent de les charger.
 
-```{r load_data}
+```{r load_expression_table}
 ## Set the URL of the data folder
 data.folder.URL <- "https://du-bii.github.io/study-cases/Homo_sapiens/TCGA_study-case/TCGA_AML_data/"
 
@@ -178,8 +178,15 @@ expr.table <- read.delim(
 message("Loaded expression table with " , 
         nrow(expr.table), " rows (genes) x ", 
         ncol(expr.table), " columns")
+```
+
+Le tableau d'expression contient 
+
+- `r format(big.mark = ".", nrow(expr.table))` lignes (gènes) 
+- `r ncol(expr.table)` colonnes (échantillons) 
 
 
+```{r load_sample_classes}
 
 ## Download a local copy of the sample classes if not already done
 ## This avoids wasting time to re-download all the data at each run of the script.
@@ -195,8 +202,15 @@ if (!file.exists(sample.class.path)) {
 sample.class.table <- read.delim(
   file = sample.class.path, 
   header = TRUE, 
-  row.names = NULL)
+  row.names = 1)
+
+## Get the sample class in a vector
 sample.classes <- as.vector(sample.class.table$sample.class)
+
+## Set patient ID as names to each entry of this vector
+names(sample.classes) <- row.names(sample.class.table)
+
+## Report class sizes
 message("Loaded sample.classes in a vector names sample.classes ")
 kable(table(sample.classes), caption = "Samples per classe")
 ```
