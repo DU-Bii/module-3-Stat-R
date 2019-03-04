@@ -242,14 +242,14 @@ message("Loaded pheno table with " ,
 ## Exploration des données
 
 
-1. Dessinez un histogramme des comptages bruts pour toutes les valeurs de la table, et commentez la figure en quelques lignes.  
+1. Dessinez un histogramme des comptages bruts pour l'ensemble des valeurs de la table d'expression (tous gènes et tous échantillons confondus), et commentez la figure en quelques lignes.  
 
 ```{r raw_counts_histograms}
 ## Histogram of the raw counts
 
 ```
 
-2. Dessinez un histogramme des log2(counts + epsilon) pour toutes les valeurs de la table, en fixant $\epsilon = 0.1$, et commentez la figure en quelques lignes 
+2. Dessinez un histogramme des log2(counts + $\epsilon$) pour l'ensemble des valeurs de la table (tous gènes et tous échantillons confondus), en fixant $\epsilon = 0.1$, et commentez la figure en quelques lignes 
 
 ```{r log2_counts_histogram}
 ## histogram of log2-transformed counts
@@ -271,6 +271,7 @@ message("Loaded pheno table with " ,
 4. Calculez les composantes principales du tableau de données log2-transformées, et générez les plots "PC1 vs PC2",  "PC3 vs PC4" et "PC5 vs PC6" en associant une couleur et/ou un symbole spécifique à chaque échantillon en fonction de sa class. Commentez le résultat en quelques lignes. 
 
 ```{r pc_plot_log2_counts}
+## Draw PC plots for PC1 vs PC2, PC3 vs PC4 and PC5 vs PC6
 
 ```
 
