@@ -325,11 +325,11 @@ message("Loaded pheno table with " ,
 
 ## Classification supervisée
 
-Effectuez une analyse de classification supervisée en comparant soit deux méthodes différentes (par exemple Random Forest versus SVM) soit deux valeurs de parameètres pour une méthode donnée (par exemple SVM avec un noyau. 
+Effectuez une analyse de classification supervisée en comparant soit deux méthodes différentes (par exemple Random Forest versus SVM) soit deux valeurs de parameètres pour une méthode donnée (par exemple les différents types de noyaux possibles pour SVM). 
 
-Pour cela, utilisez une stratégie de sous-échantilonnage aléatoire en utilisant 2/3 des échantillons pour l'apprentissage et 1/3 pour l'évaluation. Répétez l'opération 10 fois (par exemple au moyen d'une boucle `for`). 
+Pour cela, utilisez une stratégie de sous-échantilonnage aléatoire en utilisant 2/3 des échantillons pour l'apprentissage et 1/3 pour l'évaluation. Répétez l'opération 10 fois (par exemple au moyen d'une boucle `for`), et retentez à chaque itération l'indice de performance obtenu (par exemple "Accuracy": somme des classifications correctes / total). 
 
-Pour chaque méthode/paramètre, effectuez une analyse en multi-groupes (avec les 3 groupes d'AML), calculez la table de confusion, le taux de prédictions correctes (Accuracy) et d'erreurs de classification (Misclassification Error Rate, R). 
+Pour chaque méthode ou valeur de paramètre, effectuez une analyse en multi-groupes (avec les 3 groupes d'AML), calculez la table de confusion, le taux de prédictions correctes (Accuracy) et d'erreurs de classification (Misclassification Error Rate, R). 
 
 Commentez les résultats. 
 
