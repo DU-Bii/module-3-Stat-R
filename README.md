@@ -4,7 +4,7 @@
 
 | Name  | Role(s) |
 |-----------------------------|----------------|
-| Claire Vandiedonck | coordinator, teacher |
+| [Claire Vandiedonck](https://orcid.org/0000-0002-6669-6923) | coordinator, teacher |
 
 
 ## Supports for the successive editions
