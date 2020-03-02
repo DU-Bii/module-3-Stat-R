@@ -1,6 +1,6 @@
 # [DUBii](https://du-bii.github.io/accueil/) - module 3 - Analyse statistique avec R
 
-## Accès aux séances
+## Accès aux seances
 
 | Séance | Contenu | Lien |
 |------|-----------------------------------|------------------------|
