@@ -1,6 +1,10 @@
 # [DUBii](https://du-bii.github.io/accueil/) - module 3 - Analyse statistique avec R
 
+## Teachers
 
+| Name  | Role(s) |
+|-----------------------------|----------------|
+| Claire Vandiedonck | coordinator, teacher |
 
 
 ## Supports for the successive editions
