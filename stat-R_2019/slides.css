@@ -1,0 +1,55 @@
+.reveal .slides {
+  text-align: inherit;
+  font-size: 20px;
+  color: white;
+  line-height: 2;
+  /* padding-bottom: 8px; /* not working ?*/
+  /* margin: 0 0 15px; /* not working ? */
+}
+
+/* Title of the slide show */
+.reveal h1 {
+  font-size: 48px;
+  color: #88BBFF;
+  line-height: 1.3;
+}
+
+/* Slide titles */
+.reveal h2 {
+  font-size: 36px;
+  color: #FFFF88;
+  line-height: 1.3;
+}
+
+/* not used ? */
+.reveal .slide.level1 {
+  font-size: 28px;
+  color: white; /* to check if used, should be replaced if pops out */
+  line-height: 1.3;
+}
+
+/* Slide bullets */
+.reveal .slide.level2 {
+  font-size: 24px;
+  color: white;
+  line-height: 1.3;
+}
+
+
+.reveal pre code {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.reveal .sourceCode.r .co {
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.reveal .sourceCode.r .kw, .sourceCode.r .er {
+  color:inherit;
+  font-weight: normal;
+  line-height: 1;
+}
+
