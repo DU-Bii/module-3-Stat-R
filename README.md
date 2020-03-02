@@ -33,7 +33,7 @@
 
 | Doc | Description |URL |
 |------------|-------------------------------|---------------------------------------|
-| Cheet sheats | RStudio Cheet sheats | >https://rstudio.com/resources/cheatsheets/> |
+| Cheet sheats | RStudio Cheet sheats | <https://rstudio.com/resources/cheatsheets/> |
 | Tutorial | Tutorial for Beginners by E. Paradis - English version | <https://cran.r-project.org/doc/contrib/Paradis-rdebuts_en.pdf> |
 | Tutorial | Tutorial for Beginners by E. Paradis - French version | <https://cran.r-project.org/doc/contrib/Paradis-rdebuts_fr.pdf> |
 | R style guide | Google’s R Style Guide  | <https://google.github.io/styleguide/Rguide.html> |
