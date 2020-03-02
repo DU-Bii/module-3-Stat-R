@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<meta name="date" content="2019-03-07" />
+
+<title>Contrôle Terminal - Module 3: Analyse statistique avec R</title>
+
+<script src="controle-terminal_dubii-m3_2019_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="controle-terminal_dubii-m3_2019_files/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="controle-terminal_dubii-m3_2019_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="controle-terminal_dubii-m3_2019_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="controle-terminal_dubii-m3_2019_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="controle-terminal_dubii-m3_2019_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="controle-terminal_dubii-m3_2019_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="controle-terminal_dubii-m3_2019_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="controle-terminal_dubii-m3_2019_files/navigation-1.1/tabsets.js"></script>
+<script src="controle-terminal_dubii-m3_2019_files/navigation-1.1/codefolding.js"></script>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #303030; color: #cccccc; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; }
+td.sourceCode { padding-left: 5px; }
+pre, code { color: #cccccc; background-color: #303030; }
+code > span.kw { color: #f0dfaf; } /* Keyword */
+code > span.dt { color: #dfdfbf; } /* DataType */
+code > span.dv { color: #dcdccc; } /* DecVal */
+code > span.bn { color: #dca3a3; } /* BaseN */
+code > span.fl { color: #c0bed1; } /* Float */
+code > span.ch { color: #dca3a3; } /* Char */
+code > span.st { color: #cc9393; } /* String */
+code > span.co { color: #7f9f7f; } /* Comment */
+code > span.ot { color: #efef8f; } /* Other */
+code > span.al { color: #ffcfaf; } /* Alert */
+code > span.fu { color: #efef8f; } /* Function */
+code > span.er { color: #c3bf9f; } /* Error */
+code > span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
+code > span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+code > span.sc { color: #dca3a3; } /* SpecialChar */
+code > span.vs { color: #cc9393; } /* VerbatimString */
+code > span.ss { color: #cc9393; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { } /* Variable */
+code > span.cf { color: #f0dfaf; } /* ControlFlow */
+code > span.op { color: #f0efd0; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+code > span.at { } /* Attribute */
+code > span.do { color: #7f9f7f; } /* Documentation */
+code > span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+code > span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+code > span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+
+.sourceCode .row {
+  width: 100%;
+}
+.sourceCode {
+  overflow-x: auto;
+}
+.code-folding-btn {
+  margin-right: -30px;
+}
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Contrôle Terminal - Module 3: Analyse statistique avec R</h1>
+<h3 class="subtitle"><em>Diplôme Interuniversitaire en Bioinformatique intégrative (DU-Bii 2019)</em></h3>
+<h4 class="date"><em>2019-03-07</em></h4>
+
+</div>
+
+
+<div id="but-de-ce-tp" class="section level2">
+<h2>But de ce TP</h2>
+<p>Le but de ce travail est de mobiliser les différentes méthodes statistiques enseignées durant les cours et travaux pratiques afin d’analyser un jeu de données, et d’interpréter les résultats.</p>
+</div>
+<div id="rendu" class="section level2">
+<h2>Rendu</h2>
+<p>Les énoncés et questions sont fournis sous forme d’un document R markdown, qui servira également de modèle pour répondre auw questions.</p>
+<p>En-dessous de chaque question nous vous demandons de fournir d’une part le code qui permet d’y repondre, et une interprétation sommaire des résultats (5 à 15 lignes par question).</p>
+<p>Le rapport de travail consistera à remettre un document Rmd permettant aux évaluateurs de reproduire l’ensemble des résultats, et le rapport pdf produit au moyen de ce markdown. Ces deux documents sont à mettre dans une archive (nom.tgz) et à déposer sur <strong><a href="https://moodlesupd.script.univ-paris-diderot.fr/mod/assign/view.php?id=176370">moodle</a></strong> avant le <strong>lundi 11 mars à 3h00</strong>. Cette date-limite permettra de s’assurer que vous vous soyez tous affranchis des contrôles et ayez approfondi votre pratique de R avant le début des stages. Elle est cependant négociable; revenir vers nous (Jacques ou Anne) pour en discuter.</p>
+</div>
+<div id="jeu-de-donnees" class="section level2">
+<h2>Jeu de données</h2>
+<p>Le jeu de données se base sur une analyse de 125 patients souffrant de <strong>leucémie myéloïde aiguë</strong> (<strong>AML</strong>), disponible sur le site du projet <strong>The Cancer Genome Atlas</strong> (<strong>TCGA</strong>). Pour ce travail-ci nous nous focaliserons sur les données transcriptomiques (RNA-seq). Notez que le site TCGA fournit aussi des données de méthylome pour les mêmes patients.</p>
+<p>Les données de comptage et métadonnées ont été téléchargées de la base de données <strong>Recount2</strong> via la librairie R <code>recount</code>, et pré-moulinées pour les fournir dans un format directement utilisable.</p>
+<p>Le jeu de données fourni consiste en 2 tableaux</p>
+<ul>
+<li><p><strong>Expression</strong> (fichier <code>AML_counts_filtered-genes.tsv.gz</code>) : comptages bruts des comptages de lectures courtes (reads) par gène (lignes) pour chaque patient (colonnes). Les gènes ont été filtrés pour écarter les lignes contenant trop de zeros et celles dont toutes les valeurs étaient inférieures à 10. Vous ne devez donc plus effectuer cette étape de filtrage.</p></li>
+<li><p><strong>Classes de patients</strong> (fichier <code>AML_sample-classes.tsv.gz</code>) : le pronostic associé à chaque patient, avec trois valeurs: “Favorable”, “Poor”, “Intermediate/Normal”.</p></li>
+</ul>
+<p>Nous fournissons également pour information un tableau complet des donnés phénotypiques (<code>AML_pheno.tsv.gz</code>) extraites des données TCGA via Recount, mais celui-ci n’est pas nécessaire à la réalisation du travail personnel.</p>
+</div>
+<div id="votre-espace-de-travail" class="section level2">
+<h2>Votre espace de travail</h2>
+<p>Le code ci-dessous définit l’endroit où les données et résultats seront sauvegardés dans votre compte. Vous pouvez bien entendu le modifier.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">workdir &lt;-<span class="st"> &quot;~/DU-Bii/m3/TGCA_AML_analysis&quot;</span>
+<span class="kw">dir.create</span>(<span class="dt">path =</span> workdir, <span class="dt">showWarnings =</span> <span class="ot">FALSE</span>, <span class="dt">recursive =</span> <span class="ot">TRUE</span>)
+<span class="kw">message</span>(<span class="st">&quot;Working directory</span><span class="ch">\t</span><span class="st">&quot;</span>, workdir)</code></pre></div>
+</div>
+<div id="chargement-des-donnees" class="section level2">
+<h2>Chargement des données</h2>
+<p>Pour vous éviter de perdre trop de temps avec la localisation des fichiers de données, nous fournissons nous-même les instructions qui permettent de les charger.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Set the URL of the data folder
+data.folder.URL &lt;-<span class="st"> &quot;https://du-bii.github.io/study-cases/Homo_sapiens/TCGA_study-case/TCGA_AML_data/&quot;</span>
+
+## Download a local copy of the expression file if not already done
+## This avoids wasting time to re-download all the data at each run of the script.
+expr.file &lt;-<span class="st"> &quot;AML_counts_filtered-genes.tsv.gz&quot;</span> <span class="co"># Expression file name</span>
+expr.URL &lt;-<span class="st"> </span><span class="kw">file.path</span>(data.folder.URL, expr.file) <span class="co"># URL of expression file on the server</span>
+expr.path &lt;-<span class="st"> </span><span class="kw">file.path</span>(workdir, expr.file) <span class="co"># Full path of the local copy of the expression file</span>
+<span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(expr.path)) {
+  <span class="kw">message</span>(<span class="st">&quot;Downloading expression file from &quot;</span>, expr.URL)
+  <span class="kw">download.file</span>(<span class="dt">url =</span> expr.URL, <span class="dt">destfile =</span> expr.path)
+}
+
+## Load expression table
+expr.table &lt;-<span class="st"> </span><span class="kw">read.delim</span>(
+  <span class="dt">file =</span> expr.path, 
+  <span class="dt">header =</span> <span class="ot">TRUE</span>, 
+  <span class="dt">row.names =</span> <span class="ot">NULL</span>)
+<span class="kw">message</span>(<span class="st">&quot;Loaded expression table with &quot;</span> , 
+        <span class="kw">nrow</span>(expr.table), <span class="st">&quot; rows (genes) x &quot;</span>, 
+        <span class="kw">ncol</span>(expr.table), <span class="st">&quot; columns&quot;</span>)</code></pre></div>
+<p>Le tableau d’expression contient</p>
+<ul>
+<li>56.735 lignes (gènes)</li>
+<li>126 colonnes (échantillons)</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Download a local copy of the sample classes if not already done
+## This avoids wasting time to re-download all the data at each run of the script.
+sample.class.file &lt;-<span class="st"> &quot;AML_sample-classes.tsv.gz&quot;</span> <span class="co"># sample.class file name</span>
+sample.class.URL &lt;-<span class="st"> </span><span class="kw">file.path</span>(data.folder.URL, sample.class.file) <span class="co"># URL of sample.class file on the server</span>
+sample.class.path &lt;-<span class="st"> </span><span class="kw">file.path</span>(workdir, sample.class.file) <span class="co"># Full path of the local copy of the sample.class file</span>
+<span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(sample.class.path)) {
+  <span class="kw">message</span>(<span class="st">&quot;Downloading sample.class file from &quot;</span>, sample.class.URL)
+  <span class="kw">download.file</span>(<span class="dt">url =</span> sample.class.URL, <span class="dt">destfile =</span> sample.class.path)
+}
+
+## Load sample.class table
+sample.class.table &lt;-<span class="st"> </span><span class="kw">read.delim</span>(
+  <span class="dt">file =</span> sample.class.path, 
+  <span class="dt">header =</span> <span class="ot">TRUE</span>, 
+  <span class="dt">row.names =</span> <span class="dv">1</span>)
+
+## Get the sample class in a vector
+sample.classes &lt;-<span class="st"> </span><span class="kw">as.vector</span>(sample.class.table<span class="op">$</span>sample.class)
+
+## Set patient ID as names to each entry of this vector
+<span class="kw">names</span>(sample.classes) &lt;-<span class="st"> </span><span class="kw">row.names</span>(sample.class.table)
+
+## Report class sizes
+<span class="kw">message</span>(<span class="st">&quot;Loaded sample.classes in a vector names sample.classes &quot;</span>)
+<span class="kw">kable</span>(<span class="kw">table</span>(sample.classes), <span class="dt">caption =</span> <span class="st">&quot;Samples per classe&quot;</span>)</code></pre></div>
+<table>
+<caption>Samples per classe</caption>
+<thead>
+<tr class="header">
+<th align="left">sample.classes</th>
+<th align="right">Freq</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Favorable</td>
+<td align="right">25</td>
+</tr>
+<tr class="even">
+<td align="left">Intermediate/Normal</td>
+<td align="right">70</td>
+</tr>
+<tr class="odd">
+<td align="left">Poor</td>
+<td align="right">30</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Download a local copy of the pheno table if not already done
+## This avoids wasting time to re-download all the data at each run of the script.
+pheno.file &lt;-<span class="st"> &quot;AML_pheno.tsv.gz&quot;</span> <span class="co"># pheno file name</span>
+pheno.URL &lt;-<span class="st"> </span><span class="kw">file.path</span>(data.folder.URL, pheno.file) <span class="co"># URL of pheno file on the server</span>
+pheno.path &lt;-<span class="st"> </span><span class="kw">file.path</span>(workdir, pheno.file) <span class="co"># Full path of the local copy of the pheno file</span>
+<span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(pheno.path)) {
+  <span class="kw">message</span>(<span class="st">&quot;Downloading pheno file from &quot;</span>, pheno.URL)
+  <span class="kw">download.file</span>(<span class="dt">url =</span> pheno.URL, <span class="dt">destfile =</span> pheno.path)
+}
+
+## Load pheno table
+pheno.table &lt;-<span class="st"> </span><span class="kw">read.delim</span>(
+  <span class="dt">file =</span> pheno.path, 
+  <span class="dt">header =</span> <span class="ot">TRUE</span>, 
+  <span class="dt">row.names =</span> <span class="ot">NULL</span>)
+<span class="kw">message</span>(<span class="st">&quot;Loaded pheno table with &quot;</span> , 
+        <span class="kw">nrow</span>(pheno.table), <span class="st">&quot; rows (genes) x &quot;</span>, 
+        <span class="kw">ncol</span>(pheno.table), <span class="st">&quot; columns&quot;</span>)</code></pre></div>
+</div>
+<div id="exploration-des-donnees" class="section level2">
+<h2>Exploration des données</h2>
+<ol style="list-style-type: decimal">
+<li>Dessinez un histogramme des comptages bruts pour l’ensemble des valeurs de la table d’expression (tous gènes et tous échantillons confondus), et commentez la figure en quelques lignes.</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Histogram of the raw counts</code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li>Dessinez un histogramme des log2(counts + <span class="math inline">\(\epsilon\)</span>) pour l’ensemble des valeurs de la table (tous gènes et tous échantillons confondus), en fixant <span class="math inline">\(\epsilon = 0.1\)</span>, et commentez la figure en quelques lignes</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## histogram of log2-transformed counts</code></pre></div>
+<ol start="3" style="list-style-type: decimal">
+<li>Sélectionnez aléatoirement un sous-ensemble de 20 échantillons (<code>sample()</code>), et dessinez un box plot des comptages bruts et log2-transformés. Commentez la figure en quelques lignes.</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Box plot of the raw counts</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Box plot of the log2-transformed counts</code></pre></div>
+<ol start="4" style="list-style-type: decimal">
+<li>Calculez les composantes principales du tableau de données log2-transformées, et générez les plots “PC1 vs PC2”, “PC3 vs PC4” et “PC5 vs PC6” en associant une couleur et/ou un symbole spécifique à chaque échantillon en fonction de sa class. Commentez le résultat en quelques lignes.</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Draw PC plots for PC1 vs PC2, PC3 vs PC4 and PC5 vs PC6</code></pre></div>
+</div>
+<div id="analyse-differentielle" class="section level2">
+<h2>Analyse différentielle</h2>
+<ol style="list-style-type: decimal">
+<li>Avec DESeq2, faites une analyse des gènes différentiellement exprimés entre les classes “Favorable” et “Poor”. Ajoutez à la table de résultat (celle avec les log-FC et p-valeurs) une colonne “positive” qui contiendra la valeur TRUE si la p-valeur ajustée est inférieure à <span class="math inline">\(\alpha = 0.05\)</span>, et FALSE dans le cas contraire.</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Selection of differentially expressed genes with edgeR</code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li>Dessinez un histogramme des P-valeurs nominales et commentez le résultat.</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## P-value histogram</code></pre></div>
+<ol start="3" style="list-style-type: decimal">
+<li>Dessinez le MA-plot et commentez le résultat.</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## MA plot</code></pre></div>
+<ol start="4" style="list-style-type: decimal">
+<li>Dessinez un volcano plot et commentez le résultat</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Volcano plot</code></pre></div>
+<ol start="5" style="list-style-type: decimal">
+<li><p>Avec la fonction <code>write.table()</code>, exportez dans votre espace de travail</p>
+<ul>
+<li>le tableau complet de résultats de DESeq2</li>
+<li>ce tableau limité aux gènes déclarés positifs</li>
+<li>un fichier texte avec uniquement les noms des gènes déclarés positifs (un nom par ligne)</li>
+</ul></li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Export DEG full table
+
+## Export DEG table for genes declared positive only
+
+## Export text file with DEG names (one gene name per line)</code></pre></div>
+</div>
+<div id="classification-supervisee" class="section level2">
+<h2>Classification supervisée</h2>
+<p>Effectuez une analyse de classification supervisée en comparant soit deux méthodes différentes (par exemple Random Forest versus SVM) soit deux valeurs de parameètres pour une méthode donnée (par exemple les différents types de noyaux possibles pour SVM).</p>
+<p>Pour cela, utilisez une stratégie de sous-échantilonnage aléatoire en utilisant 2/3 des échantillons pour l’apprentissage et 1/3 pour l’évaluation. Répétez l’opération 10 fois (par exemple au moyen d’une boucle <code>for</code>), et retentez à chaque itération l’indice de performance obtenu (par exemple “Accuracy”: somme des classifications correctes / total).</p>
+<p>Pour chaque méthode ou valeur de paramètre, effectuez une analyse en multi-groupes (avec les 3 groupes d’AML), calculez la table de confusion, le taux de prédictions correctes (Accuracy) et d’erreurs de classification (Misclassification Error Rate, R).</p>
+<p>Commentez les résultats.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Multi-groups Supervised classification</code></pre></div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

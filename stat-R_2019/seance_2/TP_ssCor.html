@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Magali Berland (INRA) &amp; Leslie REGAD (Université Paris Diderot)" />
+
+<meta name="date" content="2019-02-06" />
+
+<title>Module 3 - Analyse statistique avec R - Séance 2</title>
+
+<script src="TP_ssCor_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="TP_ssCor_files/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="TP_ssCor_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="TP_ssCor_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="TP_ssCor_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="TP_ssCor_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="TP_ssCor_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="TP_ssCor_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="TP_ssCor_files/navigation-1.1/tabsets.js"></script>
+<script src="TP_ssCor_files/navigation-1.1/codefolding.js"></script>
+
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Module 3 - Analyse statistique avec R - Séance 2</h1>
+<h3 class="subtitle"><em>DUBii 2019</em></h3>
+<h4 class="author"><em>Magali Berland (INRA) &amp; Leslie REGAD (Université Paris Diderot)</em></h4>
+<h4 class="date"><em>2019-02-06</em></h4>
+
+</div>
+
+
+<div id="introduction" class="section level1">
+<h1><span class="header-section-number">1</span> Introduction</h1>
+<p>La cirrhose du foie est une maladie très fréquente à travers le monde ; en France, 700 000 cas étaient répertoriés en 2012. Les principales causes connues de cette maladie sont l’obésité, les infections virales (hépatites) et l’alcool. Selon la gravité de la cirrhose, celle-ci peut conduire à un cancer, voire à un arrêt du fonctionnement du foie, ce qui nécessite une transplantation. Les signes et symptômes de la cirrhose ou de ses complications sont nombreux et variés. Nombre d’entre eux ne sont pas spécifiques et peuvent se produire en l’absence de cirrhose. Réciproquement, leur absence ne permet pas d’exclure définitivement le diagnostic. Pendant une période plus ou moins longue, dite non compliquée, seul un examen clinique ou biologique peut mettre en évidence la maladie. Aujourd’hui, le diagnostic de la maladie se fait essentiellement à l’aide d’une biopsie du foie qui représente certaines contraintes (hospitalisation, méthode invasive parfois contre-indiquée).</p>
+<p>Une étude a été menée pour chercher à caractériser les populations bactériennes de l’intestin chez les patients ayant une cirrhose du foie (Qin et al. ”Alterations of the human gut microbiome in liver cirrhosis.” Nature, 2014). Pour cela, le microbiote (ensemble des gènes bactériens de l’intestin) de 237 individus a été analysé. La moitié (123 individus) étaient atteints d’une cirrhose du foie et l’autre (114 individus) étaient sains. La méthodologie suivie pour obtenir les données a été la suivante :</p>
+<ol style="list-style-type: decimal">
+<li>Un échantillon du microbiote intestinal a été prévelé chez chaque individu.</li>
+<li>L’ADN contenu dans l’échantillon (principalement l’ADN des bactéries présentes dans cet écosystème) est extrait puis séquencé. Des milions de petites séquences (appelées lectures) sont produites par les séquenceurs à haut débit.</li>
+<li>Ces lectures sont comparées à un catalogue de référence de 5.4 millions de gènes, lui-même clusterisé en 523 espèces bactériennes.</li>
+<li>La quantité de chaque gène est dénombrée et ces comptages sont divisés par la taille des gènes.</li>
+<li>Le comptage des gènes de cette matrice d’abondance est regroupé par espèce.</li>
+</ol>
+</div>
+<div id="les-donnees" class="section level1">
+<h1><span class="header-section-number">2</span> Les données</h1>
+<p>La matrice d’abondance est contenue dans le fichier <code>microbiota.abundance.log.RDS</code>, les métadonnées associées à ce jeu de données sont dans le fichier <code>metadata.RDS</code>. Les deux fichiers sont disponibles sous le cluster de l’IFB dans le répertoire : <code>../../projects/du_bii_2019/data/module3/seance2/</code>.</p>
+<p>Le fichier <code>microbiota.abundance.RDS</code> contient l’abondance (transformée en log) des 523 espèces bactériennes (colonnes) pour les 237 individus (lignes).</p>
+<p>Le fichier <code>metadata.RDS</code> contient les informations suivantes :</p>
+<ul>
+<li><code>Age</code> : l’âge des patients</li>
+<li><code>Gender</code> : le genre des patients</li>
+<li><code>BMI</code> (<em>body mass index</em>) : l’indice de masse corporelle, exprimé en kg/m<span class="math inline">\(^2\)</span></li>
+<li><code>status</code> : statut clinique du patient, sain (<em>healthy</em>) ou malade (<em>liver</em>)</li>
+<li><code>INR</code> (<em>international normalized ratio</em>) : mesure dérivée du taux de prothrombine utilisée pour évaluer la coagulation sanguine</li>
+<li><code>Crea</code> : taux de créatinine mesurée dans le sang (indication de la capacité de filtration rénale)</li>
+<li><code>Alb</code> : taux d’albumine mesurée dans le sang</li>
+<li><code>TB</code> : taux de bilirubine (pigment jaune produit par la dégradation de l’hémoglobine)</li>
+<li><code>PT</code> : taux de prothrombine</li>
+<li><code>CTP</code> (<em>Child-Turcotte-Pugh score</em>) : score qui permet la classification en groupes de gravité croissante selon le degré d’insuffisance hépato-cellulaire</li>
+<li><code>MELD</code> (<em>Model for End-Stage Liver Disease</em>) : système de notation pour évaluer la gravité d’une cirrhose du foie</li>
+<li><code>GC</code> (<em>gene count</em>) : Nombre de gènes différents dénombrés</li>
+<li><code>Enterotype</code> : Un entérotype est un groupe de composition bactérienne intestinale spécifique chez l’homme. Il en existe trois types bien distincts liés au régime alimentaire :
+<ul>
+<li>le type 1 est caractérisé par de hauts niveaux de bacteroides, c’est celui du régime occidental riche en viandes;</li>
+<li>le type 2 a peu de bacteroides mais beaucoup de prevotella, il est lié aux régimes riches en glucides;</li>
+<li>le type 3 a un haut niveau de ruminococcus (régime riche en graisses polyinsaturées).</li>
+</ul></li>
+</ul>
+</div>
+<div id="lancement-de-rstudio" class="section level1">
+<h1><span class="header-section-number">3</span> Lancement de <code>Rstudio</code></h1>
+<ol style="list-style-type: decimal">
+<li><p>Connectez vous à l’interface <code>Rstudio</code> de la plateforme IFB en utilisant l’adresse suivante : <a href="https://rstudio.cluster.france-bioinformatique.fr/">lien</a></p></li>
+<li><p>Ouvrez un nouveau fichier <code>R script</code> en utilisant le menu <code>File</code>.</p></li>
+</ol>
+</div>
+<div id="description-des-donnees" class="section level1">
+<h1><span class="header-section-number">4</span> Description des données</h1>
+<ol style="list-style-type: decimal">
+<li><p>Ouvrez les deux fichiers de données en utilisant la fonction <code>readRDS()</code>. Vérifiez que les objects créés ont les bonnes dimensions.</p></li>
+<li><p>Quels types de variables contient le fichier <code>metadata.RDS</code> (fonction <code>str()</code>).</p></li>
+<li><p>Déterminez le nombre et la proportion de patients sains et malades dans le jeu de données. Représentez ces distributions à l’aide de graphiques en bâtons (fonctions <code>table()</code> et <code>barplot()</code>).</p></li>
+<li><p>Déterminez le nombre et la proportion d’hommes et de femmes dans le jeu de données. Représentez ces distributions à l’aide de graphiques en bâtons (fonctions <code>table()</code> et <code>barplot()</code>).</p></li>
+<li><p>En utilisant la fonction <code>summary()</code>, étudiez la distribution des différentes variables. Que remarquez vous pour les variables <code>INR</code>, <code>Crea</code>, <code>Alb</code>, <code>TB</code>, <code>PT</code>, <code>CTP</code>, <code>MELD</code> et <code>Enterotype</code>.</p></li>
+<li><p>Identifiez les individus qui ont des <code>NA</code> pour la variable <code>Crea</code> (fonctions <code>which()</code> et <code>is.na()</code>). Quel est le statut clinique de ces patients ? Quel est le genre de ces individus ? Est-ce que ces individus ont des <code>NA</code> pour les autres variables ?</p></li>
+<li><p>Suppimez ces individus des deux objets qui contiennent les deux jeux de données.</p></li>
+<li><p>Déterminez la moyenne et l’écart-type de chaque variable quantitative (fonctions <code>apply()</code>, <code>mean()</code> et <code>sd()</code>).</p></li>
+</ol>
+</div>
+<div id="comparaison-des-patients-malades-et-sains" class="section level1">
+<h1><span class="header-section-number">5</span> Comparaison des patients malades et sains</h1>
+<div id="mise-en-place-de-tests-de-comparaison-de-deux-moyennes" class="section level2">
+<h2><span class="header-section-number">5.1</span> Mise en place de tests de comparaison de deux moyennes</h2>
+<p>On cherche à savoir si les patients et les individus contrôles présentent des caractéristiques différentes. Pour cela, on se pose les questions suivantes ?</p>
+<ul>
+<li>Est-ce que l’âge des patients est significativement différent de celui des contrôles sains ?</li>
+<li>Est-ce que l’indice de masse corporel des patients est significativement différent de celui des contrôles sains ?</li>
+<li>Le taux de créatinine des patients est-il significativement différent de celui des contrôles sains ?</li>
+<li>Le nombre de gènes différentiellement exprimés chez les patients est-il significativement différent de celui chez les contrôles sains ?</li>
+</ul>
+<p>Créez deux data.frames qui contiennent pour le premier les métadonnées pour les patients sains et pour le second les métadonnées pour les patients malades.</p>
+<p>Pour chacunes des questions précédentes, effectuez les étapes suivantes :</p>
+<ol style="list-style-type: decimal">
+<li>Identifiez la variable aléatoire étudiée.</li>
+<li>Identifiez le test que vous allez réaliser.</li>
+<li>Représentez, sur le même graphique, la distribution de la variable aléatoire chez les individus sains et les patients malades en utilisant des boîtes à moustaches (fonction <code>boxplot()</code>).</li>
+<li>Calculez la moyenne et l’écart-type de la variable chez les individus sains et malades (fonctions <code>by()</code>, <code>means()</code> et <code>sd()</code>).</li>
+<li>Calculez l’intervalle de confiance à 95% de l’espérance de la variable aléatoire pour les individus sains et les individus malades (fonctions <code>qnorm()</code> et <code>var()</code>).</li>
+<li>Effectuez le test statistique pour répondre à la question. Posez les hypothèses et concluez au test. (fonctions <code>t.test()</code>)</li>
+</ol>
+</div>
+<div id="mise-en-place-de-tests-de-chi2-dhomogeneite" class="section level2">
+<h2><span class="header-section-number">5.2</span> Mise en place de tests de chi2 d’homogénéité</h2>
+<p>Ensuite, on se demande si la maladie cirrhose touche autant les hommes que les femmes. Pour répondre à cette question, vous allez réaliser un test du Chi2 d’homogénéité.</p>
+<ol style="list-style-type: decimal">
+<li><p>Définissez les variables aléatoires sur lesquelles vous allez travailler pour répondre à cette question.</p></li>
+<li><p>Déterminez la table de contigence qui renvoie le nombre de femmes et d’hommes chez les individus sains et les patients malades (fonction <code>table()</code>).</p></li>
+</ol>
+<table>
+<thead>
+<tr class="header">
+<th>Status</th>
+<th>female</th>
+<th>male</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>healthy</td>
+<td>42</td>
+<td>72</td>
+</tr>
+<tr class="even">
+<td>liver</td>
+<td>39</td>
+<td>84</td>
+</tr>
+</tbody>
+</table>
+<ol start="3" style="list-style-type: decimal">
+<li>Réalisez le test du chi2 à partir de cett table de contigence. (fonction <code>chisq.test()</code>). Avant de conclure pensez à vérifier les conditions de validité du test qui sont que tous les effectifs théoriques doivent être supérieurs à 5 (argument <code>$expected</code> de la fonction <code>chisq.test()</code>).</li>
+</ol>
+<p>Pour finir nous cherchons à savoir si la distribution des enterotypes est différent chez les individus sains et les patients malades. Pour répondre à cette question, vous allez réaliser un test de chi2.</p>
+<ol style="list-style-type: decimal">
+<li>Identifiez les variables aléatoires que vous allez utiliser pour répondre à cette question.</li>
+<li>Déterminez la table de contingence (fonction <code>table()</code>).</li>
+<li><p>Effectuez le test du chi2 sur cette table de contingence (fonction <code>chisq.test()</code>).</p></li>
+<li><p>Comparez les effectifs théoriques et observés pour finaliser votre conclusion au test (argument <code>$expected</code> de la fonction <code>chisq.test()</code>).</p></li>
+</ol>
+</div>
+</div>
+<div id="etude-des-differents-enterotypes" class="section level1">
+<h1><span class="header-section-number">6</span> Etude des différents entérotypes</h1>
+<p>On se demande si la composition de l’entérotype à une influence sur l’indice de masse corporelle des individus.</p>
+<ol style="list-style-type: decimal">
+<li><p>Représentez la distribution de l’indice de masse corporelle pour les individus en fonction de leur entérotype (fonction <code>boxplot()</code>).</p></li>
+<li><p>Définissez la variable aléatoire et les échantillons</p></li>
+</ol>
+<p>Pour répondre à la question, il faut effectuer un test de comparaison de 3 moyennes en utilisant un test ANOVA.<br />
+Ce test a deux conditions de validité :</p>
+<ul>
+<li>Il faut que la variable aléatoire <span class="math inline">\(X\)</span> suive une loi normale dans les trois échantillons.</li>
+<li>Il faut que la variable aléatoire <span class="math inline">\(X\)</span> ait la même variance dans les trois échantillons (Homoscédaticité de <span class="math inline">\(X\)</span>).</li>
+</ul>
+<ol start="3" style="list-style-type: decimal">
+<li><p>Testez la normalité de <span class="math inline">\(X\)</span> dans les 3 échantillons. (fonction <code>by()</code>, <code>shapiro.test()</code>)</p></li>
+<li><p>Testez l’homoscédaticité de <span class="math inline">\(X\)</span> (foncion <code>bartlett.test()</code>).</p></li>
+</ol>
+<p>Les résultats que vous avez obtenus vous permettent de conclure que les conditions de validité du test ANOVA ne sont pas vérifiées. Pour répondre à la question, vous allez donc utiliser un test non paramétrique : le test de Kruskall-Wallis (fonction <code>kruskal.test()</code>).</p>
+</div>
+<div id="analyse-en-composante-principale" class="section level1">
+<h1><span class="header-section-number">7</span> Analyse en composante principale</h1>
+<div id="jeu-de-donnees-metadata" class="section level2">
+<h2><span class="header-section-number">7.1</span> Jeu de données <code>metadata</code></h2>
+<ol style="list-style-type: decimal">
+<li>Réalisez une ACP sur ce jeu de données</li>
+</ol>
+<ol style="list-style-type: lower-alpha">
+<li>Quel pourcentage de la variance expliquée est représentée dans le premier plan factoriel ?</li>
+<li>Proposez une représentation graphique des individus avec les individus malades d’une couleur et les individus sains d’une autre.</li>
+<li>Pouvez-vous donner une interprétation de ce graphique ? Vous pouvez pour cela vous aider du cercle des corrélations.</li>
+</ol>
+</div>
+<div id="jeu-de-donnees-microbiota.abundance" class="section level2">
+<h2><span class="header-section-number">7.2</span> Jeu de données <code>microbiota.abundance</code></h2>
+<ol start="2" style="list-style-type: decimal">
+<li>Réalisez une ACP centrée réduite sur ce jeu de données.</li>
+</ol>
+<ol style="list-style-type: lower-alpha">
+<li>Quel pourcentage de la variance expliquée est représentée dans le premier plan factoriel ?</li>
+<li>Proposez une représentation graphique des individus avec les individus malades d’une couleur et les individus sains d’une autre.</li>
+<li>Proposez une représentation graphique des individus avec les enterotypes de trois couleurs différentes. Que constatez-vous ?</li>
+</ol>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,357 @@
+---
+title: 'TP : traitement et analyse de données métagénomiques'
+author: "Magali Berland, Sana Zaghouani"
+date: "18 février 2019"
+output:
+  pdf_document:
+    toc: yes
+  html_notebook:
+    highlight: zenburn
+    theme: sandstone
+    toc: yes
+    toc_float: yes
+  html_document:
+    df_print: paged
+    toc: yes
+    toc_float: yes
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(ggpubr)
+library(momr)
+library(corrplot)
+
+knitr::opts_chunk$set(echo = TRUE, results = "show", warning = FALSE, message = FALSE,
+                      eval = FALSE)
+```
+
+# I. Identification des MGS contrastantes (différentiellement abondantes) 
+
+> Le jeu de données sur la cirrhose du foie à déjà été traité (downsizing, normalisation, calcul de l'abondance des MGS). Chacune ce des étape sera vue dans la deuxième partie du TP.
+
+1. Ouvrir les fichiers 'microbiota.abundance.log.RDS' et 'metadata.RDS' à l'aide de la fonction readRDS.
+
+```{r}
+
+data = readRDS("microbiota.abundance.log.RDS")
+metadata = readRDS("metadata.RDS")
+
+```
+
+
+2. Utiliser le test de Wilcoxon pour trouver les MGS contrastantes entre healthy et liver (fonction 'testRelations').
+
+```{r}
+
+res_test_rel = testRelations(t(data),
+                             trait = metadata$status,
+                             type = "wilcoxon")  
+
+```
+
+3. Sélectionner les MGS dont la q-value est inférieure ou égale à 0.001.
+
+```{r}
+
+mgs_signif = res_test_rel %>%
+  rownames_to_column("Species") %>%
+  filter(q <= 0.001)
+
+```
+
+4. Calculer le nombre de MGS significatives trouvées à la question précédente.
+
+```{r}
+
+nrow(mgs_signif)
+
+```
+
+
+5. Parmi les MGS significatives, trouvez celles dont l'abondance est corrélée avec la richesse en gènes (`GC`)
+
+```{r}
+
+data.signif = data[, mgs_signif$Species]
+cor.GC = cor(data.signif, metadata$GC)
+
+```
+
+6. Représentez à l'aide d'un corrplot celles dont la corrélation est supérieur à 0.5
+
+```{r}
+
+corrplot(as.matrix(cor.GC[abs(cor.GC) > 0.5,]))
+
+```
+
+
+
+# II. Traitement d'une matrice de comptage de gènes
+
+## 1. Importer la matrice
+
+La matrice de comptage brut est la matrice obtenue après mapping des reads sur un catalogue de gènes de référence. Afin de limiter le temps et la mémoire des processus, nous utiliserons une matrice réduite à 5000 gènes.
+
+1. Charger le jeu de données `hs_3.3_metahit_sample_dat_raw` du package momr
+
+```{r}
+
+library(momr)
+data("hs_3.3_metahit_sample_dat_raw")
+
+```
+
+2. Vérifier la classe et les dimensions de l'objet
+
+```{r}
+
+class(hs_3.3_metahit_sample_dat_raw)
+dim(hs_3.3_metahit_sample_dat_raw)
+
+```
+
+
+3. Afficher les 5 premières lignes et les 5 premières colonnes
+
+```{r}
+
+hs_3.3_metahit_sample_dat_raw[1:5, 1:5]
+
+```
+
+
+## 2. Distribution du nombre de reads mappés
+
+Le nombre de reads mappés par échantillon est très variable et peut induire un biais important dans les analyses. Pour réduire ce biais, il est possible de recourir au 'downsizing' (sélection aléatoire du même nombre de reads mappés dans tous les échantillons). Cela nécessite de regarder au préalable la distribution du nombre de reads mappés par échantillon.
+
+1. Calculer le nombre de reads mappés par échantillon ( = somme des comptages pour un échantillon) et créer un data.frame avec deux colonnes : 'sample' et 'mapped_read_count'
+
+```{r}
+
+metadata = data.frame(sample = colnames(hs_3.3_metahit_sample_dat_raw),
+                      mapped_read_count = colSums(hs_3.3_metahit_sample_dat_raw),
+                      stringsAsFactors = FALSE)
+
+```
+
+
+2. Vérifier la dimension de l'objet créé
+
+```{r}
+
+dim(metadata)
+
+```
+
+3. Afficher les premières lignes
+
+```{r}
+
+head(metadata)
+
+```
+
+
+4. Afficher le minimum, la moyenne, et le maximum du nombre de reads mappés
+
+```{r}
+
+summary(metadata$mapped_read_count)
+
+```
+
+
+5. Représenter le nombre de reads mappés par échantillons, les échantillons étant classés par nombre croissants de reads mappés
+
+```{r}
+# Classer les échantillons par nombre croissants de reads mappés
+metadata = arrange(metadata, mapped_read_count)
+```
+
+
+```{r}
+
+barplot(metadata$mapped_read_count)
+abline(h = 5000, col = "red")
+
+```
+
+
+## 3. Downsizing à 5000 reads
+
+La prochaine étape consiste à downsizer la matrice à un niveau choisi (ici : 5000). Les échantillons dont le nombre de reads mappé est inférieur à ce seuil pourront soit être supprimés (si leur nombre de reads est bien inférieur au seuil choisi), soit garder leurs comptages bruts.
+
+1. Downsizer la matrice à l'aide de la fonction `downsizeMatrix()` de momr
+
+```{r, results = "hide"}
+
+data.ds = downsizeMatrix(hs_3.3_metahit_sample_dat_raw, level = 5000)
+
+```
+
+
+2. Remplacer les échantillons non downsizés (valeurs NA dans la matrice) par leurs comptages initiaux
+
+```{r, results = "hide"}
+
+data.ds[, is.na(data.ds[1,])] = hs_3.3_metahit_sample_dat_raw[, is.na(data.ds[1,])]
+
+```
+
+
+## 4. Normalisation
+
+La normalisation réalisée ici a pour but de prendre en compte les différentes longueurs de gènes, et de passer d'une matrice de comptage à une matrice de fréquence.
+
+1. Charger l'objet `hs_3.3_metahit_genesize`
+
+```{r}
+
+data("hs_3.3_metahit_genesize")
+
+```
+
+2. Déterminer la classe et afficher les premiers éléments de cet objet
+
+```{r}
+
+class(hs_3.3_metahit_genesize)
+head(hs_3.3_metahit_genesize)
+
+```
+
+
+3. Utiliser la fonction `normFreqRPKM()` pour normaliser la matrice downsizée
+
+```{r}
+
+data.ds.norm = normFreqRPKM(data.ds, cat = hs_3.3_metahit_genesize)
+
+```
+
+
+4. Afficher les 5 premières lignes et les 5 premières colonnes de la matrice obtenue
+
+```{r}
+
+data.ds.norm[1:5,1:5]
+
+```
+
+
+5. Calculer la somme des fréquences par individus (= par colonnes) et afficher les premiers élements
+
+```{r}
+
+head(colSums(data.ds.norm))
+
+```
+
+
+## 5. Calcul de l'abondance des MetaGenomic Species (MGS)
+
+L'abondance d'une MGS se calcule comme la moyenne des 50 gènes marqueurs de cette MGS. Ici, dans la mesure où nous travaillons sur une matrice réduite, nous allons uniquement calculer l'abondance des MGS à partir des gènes qui la composent.
+
+1. Importer le jeu de données `mgs_hs_3.3_metahit_sup500` du package momr. Ce jeu de données décrit le contenu en gènes des MGS.
+
+```{r}
+
+data("mgs_hs_3.3_metahit_sup500")
+
+```
+
+2. Afficher la classe de l'objet, la longueur de l'objet, les premiers noms de l'objet, les premiers éléments de la MGS '10763_0_2', et les premiers éléments de la première MGS.
+
+```{r}
+
+class(mgs_hs_3.3_metahit_sup500)
+length(mgs_hs_3.3_metahit_sup500)
+head(names(mgs_hs_3.3_metahit_sup500))
+head(mgs_hs_3.3_metahit_sup500$`10763_0_2`)
+head(mgs_hs_3.3_metahit_sup500[[1]])
+
+```
+
+3. A l'aide de la fonction `projectOntoMGS()` de momr, projeter les gènes de la matrice sur les MGS
+
+```{r}
+
+genebag = rownames(data.ds.norm)
+length(genebag)
+head(genebag)
+mgs = projectOntoMGS(genebag, list.mgs = mgs_hs_3.3_metahit_sup500)
+
+```
+
+4. Afficher la classe, la longueur, et le résumé, des MGS après projection
+
+```{r}
+
+class(mgs)
+length(mgs)
+summary(mgs)
+
+```
+
+5. Extraire les profiles des 50 premiers gènes des MGS (après projection) grâce à la fonction `extractProfiles()` de momr (ne pas extraire la MGS appelée 'not_projected')
+
+```{r}
+
+profiles = extractProfiles(mgs[-which(names(mgs) == "not_projected")], 
+                           data.ds.norm, size.max = 50)
+
+```
+
+6. Afficher la classe, la longueur, et les noms des profiles
+
+```{r}
+
+class(profiles)
+length(profiles)
+names(profiles)
+
+
+```
+
+7. Afficher la classe, la dimension, et les premiers éléments de l'un des profiles
+
+```{r}
+
+class(profiles[[1]])
+dim(profiles[[1]])
+profiles[[1]][1:5,1:5]
+
+```
+
+8. Calculer l'abondance des MGS grâce à la fonction `computeFilteredVectors()` de momr (type : moyenne, filtrage : 10%)
+
+```{r}
+
+mgs.matrix = computeFilteredVectors(profile = profiles,
+                                    type = "mean", 
+                                    filt = 10)
+
+```
+
+9. Afficher la classe, les dimensions, et les premiers éléments de l'objet obtenu précédemment;
+
+```{r}
+
+class(mgs.matrix)
+dim(mgs.matrix)
+mgs.matrix[,1:5]
+
+```
+
+10. Tracez le barcode de la MGS 319_ (fonction `plotBarcode()`)
+
+```{r}
+
+plotBarcode(profiles$`319_`)
+
+```
+
+
+

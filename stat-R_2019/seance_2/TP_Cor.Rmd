@@ -1,0 +1,232 @@
+---
+title: "Module 3 - Analyse statistique avec R - Séance 2"
+author: "Magali Berland (INRA) & Leslie REGAD (Université Paris Diderot)"
+date: '`r Sys.Date()`'
+output:
+  html_document:
+    code_folding:  show #hide
+    self_contained: no
+    number_sections: yes
+    fig_caption: yes
+    highlight: zenburn
+    theme: cerulean
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
+font-import: http://fonts.googleapis.com/css?family=Risque
+subtitle: DUBii 2019
+font-family: Garamond
+transition: linear
+---
+
+```{r include=FALSE, echo=FALSE, eval=TRUE}
+library(knitr)
+library(kableExtra)
+# library(formattable)
+
+options(width = 300)
+# options(encoding = 'UTF-8')
+knitr::opts_chunk$set(
+  fig.width = 7, fig.height = 5, 
+  fig.path = 'figures/07_tests_multiples',
+  fig.align = "center", 
+  size = "tiny", 
+  echo = TRUE, eval = TRUE, 
+  warning = FALSE, message = FALSE, 
+  results = TRUE, comment = "")
+
+options(scipen = 12) ## Max number of digits for non-scientific notation
+# knitr::asis_output("\\footnotesize")
+
+```
+
+
+# Lancement de `Rstudio`
+
+1. Connectez vous à l'interface `Rstudio` de la plateforme IFB en utilisant l'adresse suivante : [lien](https://rstudio.cluster.france-bioinformatique.fr/)
+
+2. Ouvrez un nouveau fichier `R script` en utilisant le menu `File`.
+
+# Description des données
+
+1. Ouvrez les deux fichiers de données en utilisant la fonction `readRDS()`. Vérifiez que les objects créés ont les bonnes dimensions.
+
+```{r}
+metaFile <- readRDS("data/metadata.RDS")
+dim(metaFile)
+
+abonDF <- readRDS("data/microbiota.abundance.log.RDS")
+dim(abonDF)
+```
+Pensez à adapter la localisation des fichiers à votre environnemment et l'architecture de vos dossiers.
+
+
+2. Quels types de variables contient le fichier `metadata.RDS` (fonction `str()`).
+
+```{r}
+str(metaFile)
+```
+
+Les variables sont toutes numériques sauf les variables 
+
+* "Gender" : variable à 2 classes "female" et "male"
+* status : variable à 2 classes "healthy","liver" 
+
+3. Déterminez le nombre et la proportion de patients sains et malades dans le jeu de données.
+Représentez ces distributions à l'aide de graphiques en bâtons (fonctions `table()` et `barplot()`).
+
+```{r}
+table(metaFile[,"Gender"])
+table(metaFile[,"Gender"]) / nrow(metaFile)
+barplot(table(metaFile[,"Gender"]), ylab="Occurrence", xlab="Genre")
+```
+
+
+4. Déterminez le nombre et la proportion d'hommes et de femmes dans le jeu de données.
+Représentez ces distributions à l'aide de graphiques en bâtons (fonctions `table()` et `barplot()`).
+
+```{r}
+table(metaFile[,"status"])
+table(metaFile[,"status"])/nrow(metaFile)
+
+barplot(table(metaFile[,"status"]), ylab="Occurrence", xlab="Status")
+
+```
+
+5. En utilisant la fonction `summary()`, étudiez la distribution des différentes variables. Que remarquez vous pour les variables `INR`, `Crea`, `Alb`, `TB`, `PT`, `CTP`, `MELD` et `Enterotype`.
+```{r}
+summary(metaFile)
+```
+
+
+6. Identifiez les individus qui ont des `NA` pour la variable `Crea` (fonctions `which()` et `is.na()`). Quel est le statut clinique de ces patients ? Quel est le genre de ces individus ?
+
+```{r}
+ind.na <- which(is.na(metaFile[,"Crea"]))
+ind.na
+metaFile[ind.na,"status"]
+metaFile[ind.na, "Gender"]
+```
+Trois individus (56, 73, 74) ont des valeurs `NA` pour la variable `Crea`.
+Ces trois individus sont des patients contrôles de sexe féminin.
+
+
+7. Est-ce que ces individus ont des `NA` pour les autres variables ?
+```{r}
+metaFile[ind.na,]
+```
+
+On observe que ces trois individus contrôles ont aussi des `NA` pour `INR`, `Crea`, `Alb`, `TB`, `PT`, `CTP`, `MELD`.
+
+
+8. Suppimez ces individus des deux data.frames qui contiennent les deux jeux de données
+```{r}
+metaFile2 = metaFile[-ind.na,]
+abonDF2 <- abonDF[-ind.na,]
+dim(metaFile2) ; dim(abonDF2)
+```
+
+9. Déterminez la moyenne et l'écart-type de chaque variable quantitative (fonctions `apply()`, `mean()` et `sd()`).
+```{r}
+var.sel <- c( "Age", "BMI", "INR", "Crea", "Alb", "TB", "PT", "CTP", "MELD", "GC")
+round(apply(metaFile2[, var.sel],2,mean, na.rm=T),3)
+round(apply(metaFile2[, var.sel],2,sd, na.rm=T),3)
+```
+
+La fonction `round()` permet d'arrondir les valeurs à 3 chiffres après la virugle.
+
+
+# Comparaison des patients malades et sains
+  
+## Mise en place de tests de comparaison de deux moyennes  
+On cherche à savoir si les patients et les individus contrôles présentent des caractéristiques différentes. Pour cela, on se pose les questions suivantes ? 
+
+* Est-ce que l'âge des patients est significativement différent de celui des contrôles sains  ?
+* Est-ce que l'indice de masse corporel des patients est significativement différent de celui des contrôles sains ?
+* Le taux de créatinine des patients est-il significativement différent de celui des contrôles sains ?
+* Le nombre de gènes différentiellement exprimés chez les patients est-il significativement différent de celui chez les contrôles sains ?
+
+
+Créez deux data.frames qui contiennent pour le premier les métadonnées pour les patients sains et pour le second les métadonnées pour les patients malades.
+
+
+
+Pour chacunes des questions précédentes, effectuez les étapes suivantes : 
+
+1. Identifiez la variable aléatoire étudiée.
+3. Identifiez le test que vous allez réaliser.
+3. Représentez, sur le même graphique, la distribution de la variable aléatoire chez les individus sains et les patients malades en utilisant des boîtes à moustaches (fonction `boxplot()`). 
+4. Calculez la moyenne et l'écart-type de la variable chez les individus sains et malades (fonctions  `by()`, `means()` et `sd()`).
+5. Calculez l'intervalle de confiance à 95% de l'espérance de la variable aléatoire pour les individus sains et les individus malades (fonctions `qnorm()` et `var()`). 
+6. Effectuez le test statistique pour répondre à la question. Posez les hypothèses et concluez au test. (fonctions `t.test()`)
+
+## Mise en place de tests de chi2 d'homogénéité  
+
+Ensuite, on se demande si la maladie cirrhose touche autant les hommes que les femmes. Pour répondre à cette question, vous allez réaliser un test du Chi2 d'homogénéité. 
+
+1. Définissez les variables aléatoires sur lesquelles vous allez travailler pour répondre à cette question.
+
+2. Déterminez la table de contigence qui renvoie le nombre de femmes et d'hommes chez les individus sains et les patients malades (fonction `table()`). 
+
+Status | female | male 
+-------|--------|-----
+healthy|   42   | 72
+ liver |   39   | 84
+ 
+
+
+3. Réalisez le test du chi2 à partir de cett table de contigence. (fonction `chisq.test()`). Avant de conclure pensez à vérifier les conditions de validité du test qui sont que tous les effectifs théoriques doivent être supérieurs à 5 (argument `$expected` de la fonction `chisq.test()`). 
+
+
+Pour finir nous cherchons à savoir si la distribution des enterotypes est différent chez les individus sains et les patients malades. Pour répondre à cette question, vous allez réaliser un test de chi2.
+
+1. Identifiez les variables aléatoires que vous allez utiliser pour répondre à cette question.
+2. Déterminez la table de contingence (fonction `table()`).
+3. Effectuez le test du chi2 sur cette table de contingence (fonction `chisq.test()`).
+
+
+4. Comparez les effectifs théoriques et observés pour finaliser votre conclusion au test (argument `$expected` de la fonction `chisq.test()`). 
+
+
+# Etude des différents entérotypes
+
+On se demande si la composition de l'entérotype à une influence sur l'indice de masse corporelle des individus. 
+
+1. Représentez la distribution de l'indice de masse corporelle pour les individus en fonction de leur entérotype (fonction `boxplot()`).
+
+2. Définissez la variable aléatoire et les échantillons  
+
+Pour répondre à la question, il faut effectuer un test de comparaison de 3 moyennes en utilisant un test ANOVA.  
+Ce test a deux conditions de validité : 
+
+* Il faut que la variable aléatoire $X$ suive une loi normale dans les trois échantillons.
+* Il faut que la variable aléatoire $X$ ait la même variance dans les trois échantillons (Homoscédaticité de $X$).  
+
+3. Testez la normalité de $X$ dans les 3 échantillons. (fonction `by()`, `shapiro.test()`) 
+
+4. Testez l'homoscédaticité de $X$ (foncion `bartlett.test()`).
+
+
+Les résultats que vous avez obtenus vous permettent de conclure que les conditions de validité du test ANOVA ne sont pas vérifiées. Pour répondre à la question, vous allez donc utiliser un test non paramétrique : le test de Kruskall-Wallis (fonction `kruskal.test()`).  
+
+
+# Analyse en composante principale
+## Jeu de données `metadata`
+1. Réalisez une ACP sur ce jeu de données
+  a. Quel pourcentage de la variance expliquée est représentée dans le premier plan factoriel ?
+  b. Proposez une représentation graphique des individus avec les individus malades d'une couleur et les individus sains d'une autre.
+  c. Pouvez-vous donner une interprétation de ce graphique ? Vous pouvez pour cela vous aider du cercle des corrélations.
+
+## Jeu de données `microbiota.abundance`
+2. Réalisez une ACP centrée réduite sur ce jeu de données.
+  a. Quel pourcentage de la variance expliquée est représentée dans le premier plan factoriel ?
+  b. Proposez une représentation graphique des individus avec les individus malades d'une couleur et les individus sains d'une autre. 
+  c. Proposez une représentation graphique des individus avec les enterotypes de trois couleurs différentes. Que constatez-vous ?
+
+
+

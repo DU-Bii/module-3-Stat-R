@@ -1,0 +1,943 @@
+---
+title: "Détection de gènes différentiellement exprimés à partir de données RNA-seq"
+author: "Jacques van Helden"
+date: '`r Sys.Date()`'
+output:
+  html_document:
+    self_contained: no
+    fig_caption: yes
+    highlight: zenburn
+    theme: cerulean
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+    code_folding: "hide"
+  beamer_presentation:
+    colortheme: dolphin
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    fonttheme: structurebold
+    highlight: tango
+    incremental: no
+    keep_tex: no
+    slide_level: 2
+    theme: Montpellier
+    toc: yes
+  revealjs::revealjs_presentation:
+    theme: night
+    transition: none
+    self_contained: true
+    css: ../slides.css
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
+  slidy_presentation:
+    smart: no
+    slide_level: 2
+    self_contained: yes
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    highlight: tango
+    incremental: no
+    keep_md: yes
+    smaller: yes
+    theme: cerulean
+    toc: yes
+    widescreen: yes
+  ioslides_presentation:
+    slide_level: 2
+    self_contained: no
+    colortheme: dolphin
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    fonttheme: structurebold
+    highlight: tango
+    smaller: yes
+    toc: yes
+    widescreen: yes
+font-import: http://fonts.googleapis.com/css?family=Risque
+subtitle: "Diplôme Interuniversitaire en Bioinformatique intégrative (DU-Bii 2019)"
+font-family: Garamond
+transition: linear
+editor_options: 
+  chunk_output_type: console
+---
+
+
+## Introduction
+
+Depuis l'avénement du du séquençage massivement parallèle (NGS, Next Generation Sequencing) en 2007, la détection de gènes différentiellement exprimés (DEG) à partir de données transcriptomiques RNA-seq constitue l'une de ses application les plus populaires. 
+
+Le principe est de mesurer, dans différentes conditions, la concentration d'ARN correspondant à chaque gène, et de comparer ces concentrations entre les échantillons de deux (**comparaison à 2 groupes** ou **binaire**) ou plusieurs conditions (comparaison **multi-groupes**).
+
+Dès les premières analyses, les chercheurs se sont rendus compte que les méthodes classiques d'analyse différentielles (tests de Student, ANOVA) ne se prêtaient pas du tout à l'analyse de telles données, car leur nature diffère fondamentalement des hypothèss de travail sous-jacentes, pour différentes raisons. 
+
+1. Le niveau d'expression d'un gène est quantifié sur une échelle discrète (comptage du nombre de lectures alignées qui chevauchent le gène), alors que les tests paramétriques reposent sur une hypoothèse de normalité. 
+
+2. Les ordres de grandeur des comptages varient fortement d'un gène à l'autre: certains gènes ont une poignée de comptages par échantillons, d'autres des centaines de milliers. Les gènes très très fortement représentés correspondent généralement à des gènes non-codants (par exemple ARN ribosomique) ou à des fonctions cellulaires particulières liées au métabolisme de l'ARN, et on comprend les raisons biologiques de leur sur-représentation. Ils n'en constituent pas moins ce qu'on appelle en statistique des "valeurs aberrantes" ("outliers"). 
+
+3. Les distributions de comptages comptent généralement un très grand nombre de valeurs nulles ("zero-inflated distributions"). 
+
+4. Ces particularités posent des problèmes particuliers pour la normalisation des librairies de comptages : 
+
+    - la présence d'outliers affecte fortement la moyenne, et de façon très instable, ce qui biaise fortement l'estimation de la tendance centrale. 
+    
+    - la stratégie de repli sur des estimateurs robustes, comme la médiane est contestable du fait du très grand nombre de valeurs nulles (dans certains cas, plusn d'un quart voire la moitié des gènes ont une valeur nulle pour un échantillon). 
+    
+    
+Des méthodes spécifiques ont donc été développées dès 2010 pour affronter ces difficultés particulières de la normalisation et de l'analyse différentielle des données de RNA-seq. 
+
+
+## But de ce TP
+
+Le but de ce TP est d'effectuer une première exploration de l'analyse différentielle des données d'expression, sur base d'un petit cas d'étude simple: l'analyse transcriptionnelle de mutants de sporulation chez la levure **Saccharomyces cerevisiae**. 
+
+## Cas d'étude
+
+... A ECRIRE: DESCRIPTION DU CAS D'ETUDE
+
+
+## Sources des données
+
+## Paramètres de l'analyse
+
+Nous définissons dans une variable R (de type liste) les paramètres de l'analyse. Ceci nous permettra de reproduire ultérieurement exactement la même succession d'étapes soit en utilisant des données différentes, soit en modifiant les paramètres particuliers (design, seuils, ...). 
+
+
+
+```{r knitr_options, echo=FALSE, include=FALSE, eval=TRUE}
+
+## Define options for the R markdown output
+options(width = 300)
+# options(encoding = 'UTF-8')
+knitr::opts_chunk$set(
+  fig.width = 5, fig.height = 5, 
+  fig.path = 'figures/TP_',
+  fig.align = "center", 
+  size = "tiny", 
+  echo = TRUE, 
+  eval = TRUE, 
+  warning = FALSE, 
+  message = FALSE, 
+  results = TRUE, 
+  comment = "")
+
+## Max number of digits for non-scientific notation
+options(scipen = 12) 
+```
+
+
+```{r load_libraries}
+## Load libraries
+message("Loading libraries")
+library(knitr)
+#library(kableExtra) ## Note: kableExtra has some side effect on kable: column padding is null, so all numbers seem to be mixed up
+#library(FactoMineR)
+# library(clues)
+#library(RColorBrewer)
+# library(ComplexHeatmap)
+library(vioplot)
+library(DESeq2)
+library(edgeR)
+
+# library(corrplot)
+# library(ClassDiscovery)
+# library(formattable)
+
+# message("getwd()\t", getwd())
+
+```
+
+
+```{r custom_parameters}
+
+parameters <- list(
+  # data.folder = "data/GSE89530", # dossier des données locales
+  data.folder = "/shared/projects/du_bii_2019/data/module3/seance5/GSE89530", # on the IFB-cluster-core
+  workdir = "~/DU-Bii/m3s5/", # Directory to export the results
+  counts = "GSE89530_counts.tsv.gz",
+  sample.descr = "GSE89530_samples.tsv.gz",
+  alpha = 0.05, # seuil de significativité
+  epsilon = 0.1, # pseudo-comptage pour la transformation log2
+  gene.filter.percent.zeros = 90, # Discard genes having zero values in more than this percentage of samples
+  gene.filter.min.count = 10, # Minimal counts per gene
+  
+  ## Test and control groups for differential analysis
+  test.group = "bdf1_Y187F_Y354F_mutant_8",
+  control.group = "Wild_type_8"
+)
+
+## Create output directory
+dir.create(parameters$workdir, showWarnings = FALSE, recursive = TRUE)
+
+## Print the parameter values in the report
+kable(t(data.frame(parameters)), col.names = "Parameter Value")
+
+```
+
+
+## Téléchargement des données
+
+
+```{r load_data}
+## List files in the data folder
+# list.files(parameters$data.folder)
+
+## Load sample descriptions
+message("Loading sample descriptions from file\t", parameters$sample.descr)
+samples <- read.delim(file.path(parameters$data.folder, parameters$sample.descr), row.names = 1, header = TRUE)
+# View(samples) # Check visually the content of the samples data frame
+
+## Load counts of reads per gene
+message("Loading counts from file\t", parameters$counts)
+counts <- read.delim(file.path(parameters$data.folder, parameters$counts), row.names = 1, header = TRUE)
+
+## Check that the count table contains the same sample IDs as the sample description table. If not, stop everything here.
+if (!setequal(rownames(samples), colnames(counts))) {
+  stop("The sample IDs differ between count table (column names) and sample descriptions (row names). ")
+}
+
+## Check that sample IDs are ordered in the same way between sample descriptions (rows) and count table (columns). 
+differing.IDs <- colnames(counts) != rownames(samples)
+if (sum(differing.IDs) > 0) {
+  ## If not, re-order columnts of the count table to match the rows of the sample description.  
+  message("Reordering columns of the count table in order to match the order of sample descrition row names")
+  counts <- counts[, rownames(samples)]
+  
+}
+
+```
+
+La table de comptages comporte `r prettyNum(nrow(counts))` lignes (correspondant aux gènes) et `r ncol(counts)` colonnes (correspondant aux échantillons). Nous pouvons afficher un petit morceau de cette table, ens électionnant au hasard quelques lignes et colonnes. 
+
+```{r display_some_counts}
+some.genes <- sample(1:nrow(counts), size = 10, replace = FALSE)
+some.samples <- sample(1:ncol(counts), size = 4, replace = FALSE)
+
+kable(counts[some.genes, some.samples], caption = "Random selection of some genes and some columns of the raw count table. ")
+```
+
+
+Le tableau `r parameters$sample.descr` fournit une description de chaque échantillon. 
+
+```{r sample-kable}
+# print(samples[some.samples, ])
+kable(samples[some.samples, ], 
+      caption = "**Table de comptage de lectures (short reads) par gène.** Sélection arbitraire de quelques gènes (lignes) et échantillons (colonnes)", 
+      align = "c")
+```
+
+
+## Exploration des données
+
+Avant toute autre chose, il convient de mener une exploration préliminaire des données, afin de se familiariser avec leur distribution. 
+
+
+### Statistiques descriptives
+
+La fonction R `summary()` calcule des statistiques de base pour chaque colonne d'une matrice ou data frame. Nous imprimons ici un sous-ensemble de ces échantillons. 
+
+```{r counts_summary, echo=TRUE}
+summary(counts[, some.samples])
+```
+
+Nous pouvons calculer quelques paramètres additionnels, qui nous éclaireront sur les données. 
+
+```{r count_stats}
+all.counts.vector <- unlist(counts) # Regroup all counts in a vevtor to compute statistics
+
+count.stats <- data.frame(
+  mean = mean(all.counts.vector),
+  sd = sd(all.counts.vector),
+  iqr = IQR(all.counts.vector),
+  min = min(all.counts.vector),
+  P05 = quantile(all.counts.vector, probs = 0.05),
+  Q1 = quantile(all.counts.vector, probs = 0.25),
+  median = quantile(all.counts.vector, probs = 0.5),
+  Q3 = quantile(all.counts.vector, probs = 0.75),
+  P95 = quantile(all.counts.vector, probs = 0.95),
+  P99 = quantile(all.counts.vector, probs = 0.99),
+  max = max(all.counts.vector)
+  )
+
+# View(count.stat) # for quick check in R interface
+kable(t(count.stats), 
+      caption = "Statistics on raw count values (all samples together)", 
+      format.args = list(decimal.mark = '.', big.mark = ","), digits = 2,
+      col.names = "Parameter value")
+rm(all.counts.vector) ## Free memory space
+
+```
+
+Nous pouvons également appliquer ces méthodes à chaque échantillon séparément, au moyen de la fonction `apply()`
+
+```{r sample_stats}
+## Compute sample means using the apply() function
+sample.means <- apply(counts, 2, mean)
+
+## Compute different stats per sample and store them as columns of a data frame
+sample.stats <- data.frame(
+  label = samples$Label,
+  mean = apply(counts, 2, mean),
+  sd = apply(counts, 2, sd),
+  zeros = apply(counts == 0, 2, sum),
+  Q1 = apply(counts, 2, quantile, probs = 0.75),
+  median = apply(counts, 2, median),
+  Q3 = apply(counts, 2, quantile, probs = 0.75),
+  P95 = apply(counts, 2, quantile, probs = 0.95),
+  lib.size.Mb = apply(counts, 2, sum)/1e6
+)
+
+kable(sample.stats, 
+      caption = "Sample-wise statistics", 
+      digits = c(0,0,0,0,0,0,0,0,1), 
+      format.args = list(decimal.mark = '.', big.mark = ","),
+      align = "l")
+
+```
+
+
+### Comparaison moyenne - variance par gène
+
+```{r mean_var_plot, out.width="80%", fig.width=6, fig.height=6, fig.cap="Mean-Variance plot"}
+
+gene.stats <- data.frame(
+  mean = apply(counts, 1, mean),
+  var = apply(counts, 1, var),
+  sd = apply(counts, 1, sd)
+)
+
+
+plot(x = gene.stats$mean, y = gene.stats$var,
+     main = "Mean / variance plot",
+     xlab = "Mean per gene",
+     ylab = "Var per gene", log="xy",
+     col = densCols(x = gene.stats$mean, y = gene.stats$var))
+abline()
+```
+
+
+
+### Distribution des comptages
+
+
+```{r count_distribution, out.width="80%", fig.width=7, fig.height=5}
+## Compute some basic statistics
+
+## Display histogram of the raw counts
+hist(unlist(counts), 
+     breaks = 100, 
+     col = "#FFDDBB",
+     xlab = "Reads per gene", 
+     ylab = "Number of observations", 
+     main = "Distribution of raw counts")
+```
+
+Cet histogramme n'est pas très informatif, car toutes les valeurs sont concentrées dans la première tranche (à l'extrême gauche). Ceci résulte du fiat que les intervalles de classe ont été définis sur base de l'étendue totale, et qu'il existe apparemment une observation qui a une valeur énorme par rapport aux autres (valeur aberrante, "**outlier**"). De fait, la valeur la plus élevée (`r max(counts)`) dépasse de très loin la moyenne (`r count.stats$mean`)
+
+Afin de visualiser toute l'étendue des observations tout en mettant plus de détail sur les valeurs faibles, nous pouvons effectuer une transformation logarithmique. Nous devons cependant prêter attention à certains détails. 
+
+- Conventionnellement, on utlise la transformation log2 pour les données RNA-seq, car elle fournit un découpage plus fin des valeurs couvertes. 
+
+- Les données RnA-seq contiennent généralement un bon nombre de valeurs nulles (gènes non détectés), qui posent un problème pour la conversion logarithmique ($log(0) = -\infty$). On contourne ce problème en ajoutant aux comptages un petit nombre arbitraire, qu'on dénomme **pseudo-comptage** et qu'on symbolise par la lettre grècque epsilon ($\epsilon$). 
+
+Il est cournant d'ajouter la valeur $1$, mais nous préférons ajouter une valeur inférieure à 1, pour bien distinguer les comptages réels (qui peuvent de fait prendre une valeur 1) des pseudo-comptages. 
+
+Pour cette analyse nous choisissons $\epsilon = `r  parameters$epsilon`$.
+
+La conversion donne donc. 
+
+
+$$\text{log2count}= log2(n + \epsilon) = log2(n + `r parameters$epsilon`) $$
+L'histogramme des log2counts est plus informatif que celui des comptages bruts. 
+
+```{r log2_conversion, out.width="80%", fig.width=7, fig.height=5}
+counts.log2 <- log2(counts + parameters$epsilon)
+
+hist(unlist(counts.log2), 
+     xlab = "log2(counts + epsilon)", 
+     ylab = "Number of observations", 
+     main = "Distribution of log2(counts)", 
+     breaks = 100, col = "#BBDDEE")
+```
+
+Notons d'emblée le pic très élevé à gauche, qui correspond à toutes les observations nulles. Sur l'axe $X$, il apparait à la valeur $`r signif(digits = 2, log2(parameters$epsilon))`$, qui correspond à $log_2(\epsilon) = log_2(`r parameters$epsilon`)$. 
+
+
+## Boîtes à moustache
+
+Les boîtes à moustache sont très utilisées pour obtenir une vision d'ensemble de plusieurs distribution. 
+
+```{r boxplots, out.width="80%", fig.width=10, fig.height=7, fig.cap="**Boxplot of the counts per gene in each sample.** Left: raw counts. Right: log2_transformed counts. "}
+
+## Associate a specific color to each condition
+conditions <- unique(samples$Condition)
+condition.colors <- rainbow(n = length(conditions))
+names(condition.colors) <- conditions
+
+## Associate a color to each sample according to its condition
+samples$color <- condition.colors[samples$Condition]
+
+par.ori <- par(no.readonly = TRUE) # Store the original value of the graphical parameters before modifying them
+
+# Box plot of counts and log2-transformed counts
+par(mfrow = c(1,2))
+par(mar = c(5.1, 8.1, 4.1, 1.1)) # Increase leftmargin for sample labels
+
+boxplot(counts, horizontal = TRUE, las = 1, names = samples$Label, col = samples$color, xlab = "Raw counts")
+
+boxplot(counts.log2, horizontal = TRUE, las = 1, names = samples$Label, col = samples$color, xlab = "log2counts")
+
+par(par.ori)
+```
+
+## Violin plots
+
+```{r violin_plot, out.width="80%", fig.width=10, fig.height=8, fig.cap="**Violin plots**. Left: raw counts. Right: log2-transformed counts. "}
+ 
+# Violin Plots
+par(mfrow = c(1,2))
+par(mar = c(5.1, 8.1, 4.1, 1.1)) # Increase left margin for sample labels
+par(las = 1)
+vioplot(as.list(counts), horizontal = TRUE, 
+        col = samples$color, xlab = "Raw counts",
+        main = "Violin plot\nRaw counts",
+        names = samples$Label)
+
+vioplot(as.list(counts.log2), horizontal = TRUE, 
+        col = samples$color, xlab = "Log2(counts + epsilon)",
+        main = "Violin plot\nlog-transformed counts",
+        names = samples$Label)
+
+par(par.ori)
+
+```
+
+
+## Filtrage des gènes
+
+### Gènes à variance nulle (valeur constante)
+
+```{r gene_filtering_zero_var}
+## Zero-variance filter
+gene.var <- apply(counts, 1, var)
+
+## Define a Boolean vector (TRUE/FALSE) 
+## indicating whether each gene has a null variance.
+zero.var.genes <- gene.var == 0
+
+kable(table(zero.var.genes))
+
+## Count the number of genes having a zero variance
+# sum(gene.var == 0)
+
+```
+
+Nous écartons les gènes qui ont une variance nulle (autrement dit, qui ont les mêmes valeurs pour tous les échantillons), puisque leurs moyennes seront forcément identiques entre conditions. Dans notre jeu de données, ceci nous amène à écarter `r sum(gene.var == 0)`
+
+### Pourcentage de valeurs nulles
+
+```{r gene_filtering_zero_counts, out.width = "80%", fig.width=7, fig.height=4.5, fig.cap="Frequency of samples with zero counts per gene. Genes exceeding the thresold (red arrow) were filtered out. "}
+
+
+## Discard genes having zeros in at least 95% of samples
+message("Applying threshold on the percent of non-zero counts per gene: ", parameters$gene.filter.percent.zeros, "%")
+
+## A Boolean table indicating whether each count is null (TRUE) or not (FALSE)
+zero.counts <- counts == 0 
+
+## Count number of zero values per gene (=row of the expression table)
+percent.zeros <- 100*apply(zero.counts, 1, sum) / ncol(counts)
+
+# Note: we store the histogram values in a variable named "h" for further use
+h <- hist(percent.zeros, 
+          breaks = 20, col = "#DDDDDD", 
+          main = "Filter on the percentage of zero counts", 
+          xlab = "Percent of samples", ylab = "Number of genes", las = 1)
+
+# View(h)
+
+## Get histogram max counts (y value) to position the arrow
+h.max <- max(h$counts) 
+arrows(x0 = parameters$gene.filter.percent.zeros, 
+       y0 = h.max * 0.5, 
+       x1 = parameters$gene.filter.percent.zeros, 
+       y1 = h.max * 0.3, 
+       col = "red", lwd = 2,
+       angle = 30, length = 0.1)
+arrows(x0 = parameters$gene.filter.percent.zeros, 
+       y0 = h.max * 0.5, 
+       x1 = 100, 
+       y1 = h.max * 0.5, code = 0,
+       col = "red", lwd = 4,
+       angle = 30, length = 0.1)
+text(x = parameters$gene.filter.percent.zeros, 
+     y = h.max*0.5, 
+     labels = paste(sep = "", parameters$gene.filter.percent.zeros, "%"),
+     col = "red", pos = 3)
+```
+
+### Comptages minimaux par gène
+
+Un autre critère possible est de supprimer les gènes faiblement détectés, en écartant les gènes pour lesquels les comptages sont inférieurs à un seuil donné pour tous les échantillons. Nous fixons ici (arbitrairement) le seuil à `r parameters$gene.filter.min.count`. 
+
+Nous procédont comme suit: 
+
+- Calculer pour chaque gène $i$ le comptage maximal observé parmi tous les échantillons.
+
+$$x_{max,i} = \text{max}_{j = 0}^{s} x_{i,j}$$
+
+où $i$ est l'indice de lignes (gènes), $j$ l'indice de colonnes (échantillons), et $s$ le nombre d'échantillons. 
+
+- Tester si la valeur maximale observée est inférieure au seuil minimum. 
+
+
+```{r gene_filtering_min_count, out.width = "80%", fig.width=7, fig.height=4.5, fig.cap="Distribution of max counts per gene. Genes below the thresold (red arrow) are filtered out. "}
+
+max.per.gene <- apply(counts, 1, max)
+
+# View(summary(min.count))
+h <- hist(log2(max.per.gene + parameters$epsilon), breaks = 100, col = "#BBBBFF",
+          xlab = "log2(max count per gene)",
+          ylab = "Number of genes", las = 1,
+          main = "Filtering on min count per gene")
+h.max <- max(h$counts)
+arrows(x0 = log2(parameters$gene.filter.min.count), 
+       y0 = h.max * 0.5, 
+       x1 = log2(parameters$gene.filter.min.count), 
+       y1 = h.max * 0.3, 
+       col = "red", lwd = 2,
+       angle = 30, length = 0.1)
+arrows(x0 = log2(parameters$epsilon), 
+       y0 = h.max * 0.5, 
+       x1 = log2(parameters$gene.filter.min.count), 
+       y1 = h.max * 0.5, 
+       col = "red", lwd = 4, code = 0,
+       angle = 30, length = 0.1)
+text(x = log2(parameters$gene.filter.min.count), 
+     y = h.max * 0.5, 
+     labels = paste(sep = "", "log2(", 
+                    parameters$gene.filter.min.count,
+                    ") = ", signif(digits = 3, log2(parameters$gene.filter.min.count))),
+     col = "red", pos = 3)
+
+```
+
+
+```{r gene_filtering, out.width="70%", fig.width=6, fig.height=4, fig.cap="Number of genes discarded during the filtering step. "}
+
+
+# Build a data frame with one row per gene and one column per filtering criterion
+discarded.genes <- data.frame(
+  zero.var = zero.var.genes,
+  too.many.zeros = (percent.zeros > parameters$gene.filter.percent.zeros),
+  too.small.counts = max.per.gene < parameters$gene.filter.min.count
+)
+
+
+## Print the discarding criteria for some genes 
+kable(discarded.genes[some.genes, ], caption = "Gene filtering criteria. TRUE indicates that a gene is discarded. ")
+
+
+## Draw a venn diagram indicating the number of genes 
+## discarded by the different criteria. 
+venn.counts <- vennCounts(discarded.genes)
+vennDiagram(venn.counts, cex = 0.8,
+            main = "Genes discarded by different criteria")
+
+
+## Genes passing the filters are those for which 
+## all the discarding criteria are FALSE, 
+## i.e. the sum of the row is 0
+filtered.genes <- apply(discarded.genes, 1, sum) == 0
+
+## Select a matrix with the filtered genes, 
+## i.e. those not discarded by any criterion
+filtered.counts <- counts[filtered.genes, ]
+
+## Update the set of test genes to avoir NA values
+some.genes <- sample(1:nrow(filtered.counts), size = 10, replace = FALSE)
+
+
+```
+
+## Reproductibilité des réplicats
+
+
+Nous pouvons comparer les réplicats pour une même condition au moyen d'un nuage de points, avec la fonction `plot()`. 
+
+
+```{r between_replicate_reproducibility,  out.width="80%", fig.width=10, fig.height=10, fig.cap="Between-replicate comparison of counts per gene for the test condition. "}
+
+## Sélectionner les échantillons de la condition "test"
+message("Comparing counts between replicates for condition", parameters$test.group)
+selected.samples <- samples$Condition  == parameters$test.group
+plot(counts.log2[, selected.samples], 
+     col = samples[selected.samples, "color"])
+
+```
+
+
+## Détection de gènes différentiellement exprimés avec edgeR
+
+
+### Comparaison entre 2 groupes
+
+Dans un premier temps, nous allons effectuer une simple comparaison de 2 groupes: sauvage versus mutant au temps 0. 
+
+
+```{r differential_analysis_edgeR}
+## Detection of Differentially Expressed Genes (DEG) with edgeR
+message("Detecting Differentially Expressed Genes (DEG) with edgeR")
+
+
+## Select the subsets of counts (columns) and samples (rows) corresponding to the control and test groups
+control.samples <- which(samples$Condition == parameters$control.group)
+test.samples <- which(samples$Condition == parameters$test.group)
+selected.samples <- c(test.samples, control.samples)
+
+## Select samples for a 2-group
+
+## Build a "model matrix" from the class labels
+## This matrix contains one row per sample and one column per class
+designMat <- model.matrix(~ as.vector(samples[selected.samples, "Condition"]))
+# View(designMat)
+
+## Build an edgeR::DGEList object which is required to run edgeR DE analysis
+dgList <- DGEList(counts = filtered.counts[, selected.samples])
+# class(dgList)
+# is(dgList)
+
+## Estimate the dispersion parameters. 
+message("\tedgeR\tEstimating dispersion")
+dgList <- estimateDisp(dgList, design = designMat)
+dgList <- estimateTagwiseDisp(dgList, design = designMat)
+
+## Fit edgeR model for differential expression analysis.
+## We chose glmQLFit because it is claimed to offer a more accurate control of type I error. 
+message("\tedgeR\tmodel fitting with glmQLFit()")
+fit <- glmQLFit(dgList, design = designMat)
+
+## Run test to detect differentially expressed genes
+message("\tedgeR\tdetecting differentially expressed genes with glmQLFTest()")
+qlf <- glmQLFTest(fit, coef = 2:ncol(designMat))
+qlf.TT <- topTags(qlf, n = nrow(qlf$table), sort.by = "none",
+                  adjust.method = "fdr")
+
+
+## Select differentially expressed genes
+edgeR.DEG.table <- as.data.frame(qlf.TT$table)
+
+## Compute some additional statistics
+edgeR.DEG.table$evalue <- edgeR.DEG.table$PValue * nrow(edgeR.DEG.table)
+edgeR.DEG.table$rank <- rank(edgeR.DEG.table$FDR, ties.method = "average")
+edgeR.DEG.table$positive <- edgeR.DEG.table$FDR < parameters$alpha
+# table(edgeR.DEG.table$positive)
+# names(edgeR.DEG.table)
+# View(edgeR.DEG.table)
+# sum(egeR.DEG)
+
+```
+
+
+### Exercices (solutions ci-dessous)
+
+1. Dessinez un nuage de points (`plot()`) comparant les P-valeurs ajustées et non-ajustées.
+
+2. Quel serait le nombre de faux-positifs attendus sous hypothès nulle si l'on appliquait le seuil $\alpha = `r parameters["alpha"]`$ à la p-valeur non-ajustée ?
+
+3. Comptez le nombre de gènes déclarés positifs selon qu'on applique le seuil $\alpha = `r parameters["alpha"]`$ à la p-valeur ajustée ou non-ajustée. 
+
+3. Dessinez un histogramme (`hist()`) des P-valeurs *non ajustées*, avec 20 intervalles de classe (breaks = 20). Observez la répartition des gènes dans la moitié inférieure (p-valeur < 0.5) et supérieure (p-valeur > 0.5) de l'histogramme. Interprétez le résultat en 2 ou 3 phrases. A quoi s'attendrait-on si tous les gènes étaient sous hypothèse nulle ? 
+
+4. Dessinez un nuage de points (`plot()`) comparant le log2(fold-change) en abscisse et la P-valeur en ordonnée. Interprétez le résultat en 2 ou 3 phrases. Où se trouvent les gènes signicatifs ?
+
+5. Dessinez un **volcano plot**, c'est-à-dire un nuage de points (`plot()`) présentant en abscisse le log2(fold-change), et en ordonnée la significativité, définie comme suit.
+
+$$\text{sig} = -log_{10}(\text{FDR})$$
+
+Interprétez le résultat en 2 ou 3 phrases. Commentez la relation entre le logFC et la significativité.  Où se trouvent les gènes signicatifs ? 
+
+
+### Adjusted versus non-adjusted P-values
+
+```{r edger_nominal_vs_adjusted, out.width="60%", fig.width=6, fig.height=6, fig.cap="**Ajusted (ordinate) versus non-adjusted (abscissa) p-values returned by edger**. Strong colors indicate a higher density of overlapping points. Note the strong impact of the multiple testing correction."}
+
+                 
+# class(qlf.TT)
+plot(edgeR.DEG.table$PValue, edgeR.DEG.table$FDR, 
+     main = "Multiple testing correction",
+     xlab = "Nominal p-value",
+     ylab = "FDR",
+     log = "xy", 
+     col = densCols(x = edgeR.DEG.table$PValue,
+                    y = edgeR.DEG.table$FDR),
+     panel.first = grid(), 
+     las = 1)
+abline(h = parameters$alpha, col = "#BB0000")
+abline(v = parameters$alpha, col = "#FF0000", lty = "dashed")
+legend("topleft",
+       legend = c(
+         paste(sep = "", "p-value < ", parameters$alpha, ": ", 
+               sum(edgeR.DEG.table$PValue < parameters$alpha), " genes"),
+         paste(sep = "", "FDR < ", parameters$alpha, ": ", sum(edgeR.DEG.table$FDR < parameters$alpha), " genes" )))
+```
+
+
+### Histogram of the nominal P-values
+
+```{r edger_pvalue_histogram, out.width="80%", fig.width=7, fig.height=5, fig.cap="**Histogram of edgeR nominal P-values.**"}
+
+## P-value histogram
+hist(edgeR.DEG.table$PValue, 
+     breaks = 20, col = "#DDEEFF", las = 1,
+     main = "edgeR P-value histogram",
+     xlab = "Nominal P-value", 
+     ylab = "Number of genes")
+
+
+```
+
+### Volcano plot
+
+```{r edger_volcano, out.width="95%", fig.width=10, fig.height=5, fig.cap="**Volcano plots of edgeR unadjusted (left) and adjusted (right) P-values**. Multple testing correction method: FDR. "}
+
+# Quick test: plot the different symbols
+# plot(1:30, pch = 1:30)
+
+
+# Assign a graphical symbol to each gene according to its positive/negative status
+edgeR.DEG.table$pch <- 1 # circle symbol
+edgeR.DEG.table$pch[edgeR.DEG.table$positive] <- 3 # + symbol
+
+par(mfrow = c(1,2))
+plot(x = edgeR.DEG.table$logFC, 
+     y = -log10(edgeR.DEG.table$PValue),
+     las = 1, 
+     xlab = "log2(fold-change)",
+     main = "Volcano plot of edgeR unadjusted p-values",
+     ylab = "-log10(P-value)",
+     pch = edgeR.DEG.table$pch, 
+     col = densCols(x = edgeR.DEG.table$logFC, 
+                    y = -log10(edgeR.DEG.table$PValue)),
+     panel.first = grid())
+abline(v = 0)
+abline(h = 0)
+
+plot(x = edgeR.DEG.table$logFC, 
+     y = -log10(edgeR.DEG.table$FDR),
+     las = 1, 
+     xlab = "log2(fold-change)",
+     main = "Volcano plot of edgeR FDR",
+     ylab = "-log10(P-value)",
+     pch = edgeR.DEG.table$pch, 
+     col = densCols(x = edgeR.DEG.table$logFC, 
+                    y = -log10(edgeR.DEG.table$FDR)),
+     panel.first = grid())
+abline(v = 0)
+abline(h = 0)
+abline(h = -log10(parameters$alpha), col = "#BB0000")
+
+par(mfrow = c(1,1))
+
+```
+
+
+## Détection de gènes différentiellement exprimés avec DESeq2
+
+Nous allons maintenant utiliser DESeq2 pour détecter des gènes différentiellement exprimés sur le même jeu de données. Nous comparerons ensuite les résultats obtenus avec edgeR et DESeq2, respectivement. 
+
+### Comparaison de 2 groupes
+
+Dans un premier temps, nous allons effectuer une simple comparaison de 2 groupes: sauvage versus mutant au temps 0. 
+
+
+```{r deseq2_2groups}
+
+
+## Use the DESeqDataSetFromMatrix to create a DESeqDataSet object
+message("Creating DESeq2 dataset")
+dds.2groups <- DESeqDataSetFromMatrix(
+  countData = filtered.counts[, selected.samples], 
+  colData = samples[selected.samples, ], 
+  design = ~ Condition)
+# View(dds.all.conditions)
+
+## Run differential expression analysis with DESeq2
+dds.2groups <- DESeq(dds.2groups)
+# View(dds.all.conditions)
+
+resultsNames(dds.2groups)
+
+## Get the result table
+deseq2.res.dds.2groups <- as.data.frame(results(dds.2groups))
+kable(deseq2.res.dds.2groups[some.genes, ])
+
+## Sort genes by significance (increasing adjusted pvalue)
+deseq2.res.dds.2groups <- deseq2.res.dds.2groups[order(deseq2.res.dds.2groups$padj, decreasing = FALSE), ]
+
+## Compute the E-value, i.e. the expected number of false positives
+deseq2.res.dds.2groups$evalue <- deseq2.res.dds.2groups$pvalue * nrow(deseq2.res.dds.2groups)
+
+## Flag the genes declared positive 
+## (i.e. differentially expressed genes)
+deseq2.res.dds.2groups$positive <- deseq2.res.dds.2groups$padj < parameters$alpha
+
+## Replace NA values by FALSE for the flag
+deseq2.res.dds.2groups$positive[is.na(deseq2.res.dds.2groups$positive)] <- FALSE
+
+
+kable(head(deseq2.res.dds.2groups, n=20), caption = "Most significant genes")
+
+## BEWARE, DESeq2 produces NA values for some genes
+kable(tail(deseq2.res.dds.2groups, n=10), caption = "Less significant genes")
+
+kable(table(deseq2.res.dds.2groups$positive), 
+      caption = "Number of genes declared positive")
+
+## Export the results
+outfiles <- vector()
+
+
+
+```
+
+
+
+
+### Diagnostic plots
+
+```{r deg_diagnostic_plots_2groups, out.width="95%", fig.width=10, fig.height=10, fig.caption="Diagnostic plots for DESeq2 analysis. "}
+
+## Assign a symbol to genes according to the test result
+deseq2.res.dds.2groups$pch <- 1 # circle
+deseq2.res.dds.2groups$pch[deseq2.res.dds.2groups$positive] <- 3 # + symbol
+
+## Set one color per gene depending on whether it is positive or not
+gene.color <- rep(x = "#BBBBBB", times = nrow(deseq2.res.dds.2groups))
+gene.color[deseq2.res.dds.2groups$positive] <- "#FF8844"
+gene.pch <- rep(x = 1, times = nrow(deseq2.res.dds.2groups))
+gene.pch[deseq2.res.dds.2groups$positive] <- "#+"
+
+par(mfrow = c(2,2))
+## MA plot? 
+## Note: we explicitly indicate the package name to avoid confusion with limma::plotMA()
+DESeq2::plotMA(object = results(dds.2groups), las = 1, 
+               panel.first = grid(),
+               main = "DESDeq2 : MA plot")
+
+
+## Volcano plot of adjusted p-values
+plot(x = deseq2.res.dds.2groups$log2FoldChange, 
+     y = -log10(deseq2.res.dds.2groups$padj),
+     main = "Volcano plot\nAdjusted P-values",
+     las = 1, panel.first = grid(),
+     xlab = "Log2 fold change",
+     ylab  = "-log10(padj)",
+     col = densCols(
+       x = deseq2.res.dds.2groups$log2FoldChange, 
+       y = -log10(deseq2.res.dds.2groups$padj)),
+     pch = deseq2.res.dds.2groups$pch
+     )
+abline(v = 0)
+abline(h = 0)
+
+
+## P-value histogram
+hist(deseq2.res.dds.2groups$pvalue, 
+     breaks = 20, col = "#DDEEFF", 
+     xlab = "Nominal P-value", 
+     ylab = "Number of genes")
+
+
+par(mfrow = c(1,1))
+```
+
+
+### Toutes conditions confondues
+
+```{r deseq2_all_conditions}
+
+## Use the DESeqDataSetFromMatrix to create a DESeqDataSet object
+message("Creating DESeq2 dataset")
+dds.all.conditions <- DESeqDataSetFromMatrix(
+  countData = filtered.counts, 
+  colData = samples, 
+  design = ~ Condition)
+# View(dds.all.conditions)
+
+## Run differential expression analysis with DESeq2
+dds.all.conditions <- DESeq(dds.all.conditions)
+# View(dds.all.conditions)
+
+resultsNames(dds.all.conditions)
+
+## Get the result table
+deseq2.res.all.conditions <- results(dds.all.conditions)
+deseq2.res.all.conditions.df <- as.data.frame(deseq2.res.all.conditions)
+kable(deseq2.res.all.conditions.df[some.genes, ])
+
+```
+
+
+### Exercices
+
+1. Dessinez un nuage (`plot()`)  qui compare lles p-valeurs nominales (non-ajustées)  retournées respectivement par edgeR et DEseq2. 
+
+2. Dessinez un nuage (`plot()`)  qui compare lles p-valeurs ajustées retournées respectivement par edgeR et DEseq2. 
+
+3. Dessinez un diagramme de Venn qui compare les ensemble de gènes déclarés positifs par edgeR et DESeq2. 
+
+
+## Contrôles négatifs
+
+### Exercice
+
+Générez un tableau ayant les mêmes dimensions (lignes, colonnes) que votre tableau d'expresion, en le remplissant de nombres aléatoires tirés selon une distribution de Poisson d'espérance 200 (fonction `rpois()`). 
+
+Effectuez une analyse différentielle sur ces données. 
+
+## Fichiers de résultats
+
+```{r export_results}
+
+## Build a file prefix by concatenating the two compared groups
+file.prefix <- paste(sep = "__", parameters$test.group, 
+                     "vs", parameters$control.group)
+
+
+## DESeq2 result table
+outfiles["DESeq2 all genes"] <- file.path(
+  parameters$workdir, 
+  paste(sep = "", file.prefix, "_DESeq2_all_genes.tsv"))
+write.table(
+  x = deseq2.res.dds.2groups, 
+  quote = FALSE, row.names = TRUE, col.names = NA,
+  file = outfiles["DESeq2 all genes"])
+
+
+## Differentially expressed genes
+outfiles["DESeq2 positive genes"] <- file.path(
+  parameters$workdir, 
+  paste(sep = "", file.prefix, "_DESeq2_positive.tsv"))
+write.table(
+  x = deseq2.res.dds.2groups[deseq2.res.dds.2groups$positive, ], 
+  quote = FALSE, row.names = TRUE, col.names = NA,
+  file = outfiles["DESeq2 positive genes"] )
+
+## Differentially expressed genes
+outfiles["DESeq2 DEG iDs"] <- file.path(
+  parameters$workdir, paste(sep = "", file.prefix, "_DESeq2_positive_geneIDs.txt"))
+write.table(
+  x = row.names(deseq2.res.dds.2groups[deseq2.res.dds.2groups$positive, ]), 
+  quote = FALSE, row.names = FALSE, col.names = FALSE,
+  file = outfiles["DESeq2 DEG iDs"] )
+
+kable(outfiles, caption = "fichiers de résultats", col.names = "Result file")
+```
+
