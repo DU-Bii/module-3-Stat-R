@@ -1,0 +1,154 @@
+---
+title: "Start R -- First steps with R and RStudio"
+author: "Claire Vandiedonck & Jacques van Helden"
+date: "`r Sys.Date()`"
+output:
+  slidy_presentation:
+    self_contained: no
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    highlight: tango
+    incremental: no
+    keep_md: yes
+    smaller: yes
+    theme: cerulean
+    toc: yes
+    widescreen: yes
+  beamer_presentation:
+    colortheme: dolphin
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    fonttheme: structurebold
+    highlight: tango
+    incremental: no
+    keep_tex: no
+    slide_level: 2
+    theme: Montpellier
+    toc: yes
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
+  revealjs::revealjs_presentation:
+    theme: night
+    transition: none
+    self_contained: true
+    css: ../slides.css
+  html_document:
+    self_contained: no
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    highlight: tango
+    incremental: no
+    keep_md: yes
+    smaller: yes
+    theme: cerulean
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+    widescreen: yes
+  ioslides_presentation:
+    self_contained: no
+    css: slides.css
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    highlight: tango
+    smaller: yes
+    toc: yes
+    widescreen: yes
+font-import: http://fonts.googleapis.com/css?family=Risque
+subtitle: DUBii -- Statistics with R
+font-family: Garamond
+transition: linear
+---
+
+```{r include=FALSE, echo=FALSE, eval=TRUE}
+library(knitr)
+
+options(width = 300)
+knitr::opts_chunk$set(
+  fig.width = 7, fig.height = 5, 
+  out.width = "80%",
+  fig.align = "center", 
+  fig.path = "figures/start-R_",
+  size = "tiny", 
+  echo = TRUE, 
+  eval = TRUE, 
+  warning = FALSE, 
+  message = FALSE, 
+  results = TRUE, 
+  comment = "")
+# knitr::asis_output("\\footnotesize")
+
+# dir.main <- "~/stat1"
+# dir.slides <- file.path(dir.main, "slides")
+# setwd(dir.slides)
+```
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Connection to IFB RStudio server
+
+In a Web browser, open a connection to the IFB RStudio server
+
+<https://rstudio.cluster.france-bioinformatique.fr/>
+
+This requires your login and password. 
+
+
+## Navigating in your Unix account
+
+
+```{r eval=FALSE}
+## Where am I now?
+getwd()
+
+## Where is my home?
+Sys.getenv("HOME")
+
+## Who am I?
+Sys.getenv("LOGNAME")
+
+## Go home
+setwd(Sys.getenv("HOME"))
+setwd("~")  ## An easier way
+
+```
+
+### Explanations
+
+- `Sys.getenv()` returns all the environment variables
+- `$HOME` is a Unix variable environment indicating the home directory
+- `$LOGNAME` is my login name (did you guess?)
+- in Unix, `~` denotes your home directory (equivalent to `$HOME`)
+
+
+## Creating a work space for this course
+
+We will create specific directory to store the data and results of the practicals for this course.
+
+```{r eval=FALSE}
+## Define the directory for this course
+courseDir <- file.path("~", "dubii20", "stat-R", "session1")
+print(courseDir) ## Check the result
+
+## Create the directory
+dir.create(courseDir) ## THIS WILL LIKELY NOT WORK
+dir.create(path = courseDir, 
+           recursive = TRUE, ## Create the parent directories
+           showWarnings = FALSE) ## Don't shout it already exists
+
+## Go to this directory
+setwd(courseDir)
+getwd() ## Check that you are in the right place
+
+```
+
