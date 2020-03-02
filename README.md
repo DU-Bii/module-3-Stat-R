@@ -4,7 +4,7 @@
 
 | Name  | Role(s) |
 |-----------------------------|----------------|
-| Claire Vandiedonck | Coordinator, teacher |
+| [Claire Vandiedonck](https://orcid.org/0000-0002-6669-6923) | coordinator, teacher |
 | [Jacques van Helden](https://orcid.org/0000-0002-8799-8584) | Coordinator, teacher |
 | Guillaume Achaz | Trainer |
 | Anne Badel | Trainer |
