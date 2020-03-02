@@ -4,8 +4,14 @@
 
 | Name  | Role(s) |
 |-----------------------------|----------------|
-| Claire Vandiedonck | coordinator, teacher |
-
+| Claire Vandiedonck | Coordinator, teacher |
+| [Jacques van Helden](https://orcid.org/0000-0002-8799-8584) | Coordinator, teacher |
+| Guillaume Achaz | Trainer |
+| Anne Badel | Trainer |
+| Magali Berland | Trainer |
+| Antoine Bridier-Nahmias | Trainer |
+| Olivier Sand | Trainer |
+| Natacha Cerisier | Helper |
 
 ## Supports for the successive editions
 
