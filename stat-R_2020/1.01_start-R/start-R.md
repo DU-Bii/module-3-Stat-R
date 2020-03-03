@@ -1,7 +1,7 @@
 ---
 title: "Start R -- First steps with R and RStudio"
 author: "Claire Vandiedonck & Jacques van Helden"
-date: "`r Sys.Date()`"
+date: "2020-03-03"
 output:
   slidy_presentation:
     font_adjustment: 0   ## set to negative/positive values for smaller/bigger fonts
@@ -69,28 +69,7 @@ font-family: Garamond
 transition: linear
 ---
 
-```{r include=FALSE, echo=FALSE, eval=TRUE}
-library(knitr)
 
-options(width = 300)
-knitr::opts_chunk$set(
-  fig.width = 7, fig.height = 5, 
-  out.width = "80%",
-  fig.align = "center", 
-  fig.path = "figures/start-R_",
-  size = "tiny", 
-  echo = TRUE, 
-  eval = TRUE, 
-  warning = FALSE, 
-  message = FALSE, 
-  results = TRUE, 
-  comment = "")
-# knitr::asis_output("\\footnotesize")
-
-# dir.main <- "~/stat1"
-# dir.slides <- file.path(dir.main, "slides")
-# setwd(dir.slides)
-```
 
 
 
@@ -103,10 +82,32 @@ In a Web browser, open a connection to the IFB RStudio server
 This requires your login and password. 
 
 Check the version of R and of loaded packages.
-```{r eval=TRUE}
+
+```r
 ## Go home
 sessionInfo()
+```
 
+```
+R version 3.5.1 (2018-07-02)
+Platform: x86_64-redhat-linux-gnu (64-bit)
+Running under: CentOS Linux 7 (Core)
+
+Matrix products: default
+BLAS/LAPACK: /usr/lib64/R/lib/libRblas.so
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C               LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8     LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8    LC_PAPER=en_US.UTF-8       LC_NAME=C                  LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] knitr_1.25
+
+loaded via a namespace (and not attached):
+ [1] compiler_3.5.1  magrittr_1.5    tools_3.5.1     htmltools_0.4.0 yaml_2.2.0      Rcpp_1.0.3      stringi_1.4.6   rmarkdown_1.16  stringr_1.4.0   xfun_0.10       digest_0.6.25   rlang_0.4.5     evaluate_0.14  
 ```
 
 
@@ -116,7 +117,8 @@ sessionInfo()
 
 ## Where am I?
 
-```{r eval=FALSE}
+
+```r
 ## Where am I now?
 getwd()
 
@@ -129,7 +131,6 @@ Sys.getenv("LOGNAME")
 ## Go home
 setwd(Sys.getenv("HOME"))
 setwd("~")  ## An easier way
-
 ```
 
 ### Explanations
@@ -144,7 +145,8 @@ setwd("~")  ## An easier way
 
 We will create specific directory to store the data and results of the practicals for this course.
 
-```{r eval=FALSE}
+
+```r
 ## Define the directory for this course
 courseDir <- file.path("~", "dubii20", "stat-R", "session1")
 print(courseDir) ## Check the result
@@ -158,7 +160,6 @@ dir.create(path = courseDir,
 ## Go to this directory
 setwd(courseDir)
 getwd() ## Check that you are in the right place
-
 ```
 
 # Exercises: handling R objects: the main R objects
@@ -195,7 +196,8 @@ Data and files are stored on the cluster in the directory `/shared/projects/dubi
 
 We will download the data `Prerequis.RData`  that you saved during the prerequisites session.
 
-```{r eval=FALSE}
+
+```r
 ## Define the path of the files
 data_path <- "/shared/projects/dubii2020/data/module3/seance1/"
 print(data_path) ## Check the result
@@ -206,7 +208,6 @@ load(paste(data_path, "Prerequis.RData", sep=""))
 ## List the data you have dowloaded, check their struture and keep in your session only the three vectors called size, weight and bmi as well as the matrix called myData2
 ls()
     ## to complete...
-
 ```
 
 Finally, open the script `DUBii_R_Session1.R` stored in the same directory as the data.
