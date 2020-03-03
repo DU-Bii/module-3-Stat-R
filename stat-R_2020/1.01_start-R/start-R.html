@@ -7,7 +7,7 @@
   <meta http-equiv="Content-Style-Type" content="text/css" />
   <meta name="generator" content="pandoc" />
   <meta name="author" content="Claire Vandiedonck &amp; Jacques van Helden" />
-  <meta name="date" content="2020-03-02" />
+  <meta name="date" content="2020-03-03" />
   <title>Start R – First steps with R and RStudio</title>
   <style type="text/css">code{white-space: pre;}</style>
   <style type="text/css">
@@ -80,6 +80,7 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
   <script src="start-R_files/bootstrap-3.3.5/shim/respond.min.js"></script>
   <link href="start-R_files/slidy-2/styles/slidy.css" rel="stylesheet" />
   <script src="start-R_files/slidy-2/scripts/slidy.js"></script>
+  <meta name="duration" content="45" />
 </head>
 <body>
 <div class="slide titlepage">
@@ -88,7 +89,7 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
   <p class="author">
 Claire Vandiedonck &amp; Jacques van Helden
   </p>
-  <p class="date">2020-03-02</p>
+  <p class="date">2020-03-03</p>
 </div>
 <div id="connection-to-ifb-rstudio-server" class="slide section level2">
 <h1>Connection to IFB RStudio server</h1>
@@ -96,8 +97,8 @@ Claire Vandiedonck &amp; Jacques van Helden
 <p><a href="https://rstudio.cluster.france-bioinformatique.fr/" class="uri">https://rstudio.cluster.france-bioinformatique.fr/</a></p>
 <p>This requires your login and password.</p>
 </div>
-<div id="navigating-in-your-unix-account" class="slide section level2">
-<h1>Navigating in your Unix account</h1>
+<div id="navigating-in-your-folders" class="title-slide slide section level1"><h1>Navigating in your folders</h1></div><div id="where-am-i" class="slide section level2">
+<h1>Where am I?</h1>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co">## Where am I now?</span></a>
 <a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">getwd</span>()</a>
 <a class="sourceLine" id="cb1-3" data-line-number="3"></a>
@@ -117,8 +118,7 @@ Claire Vandiedonck &amp; Jacques van Helden
 <li><code>$LOGNAME</code> is my login name (did you guess?)</li>
 <li>in Unix, <code>~</code> denotes your home directory (equivalent to <code>$HOME</code>)</li>
 </ul>
-</div>
-<div id="creating-a-work-space-for-this-course" class="slide section level2">
+</div><div id="creating-a-work-space-for-this-course" class="slide section level2">
 <h1>Creating a work space for this course</h1>
 <p>We will create specific directory to store the data and results of the practicals for this course.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co">## Define the directory for this course</span></a>
@@ -134,6 +134,24 @@ Claire Vandiedonck &amp; Jacques van Helden
 <a class="sourceLine" id="cb2-11" data-line-number="11"><span class="co">## Go to this directory</span></a>
 <a class="sourceLine" id="cb2-12" data-line-number="12"><span class="kw">setwd</span>(courseDir)</a>
 <a class="sourceLine" id="cb2-13" data-line-number="13"><span class="kw">getwd</span>() <span class="co">## Check that you are in the right place</span></a></code></pre></div>
+</div>
+<div id="exercises-handling-r-objects-the-main-r-objects" class="title-slide slide section level1"><h1>Exercises: handling R objects: the main R objects</h1></div><div id="creating-matrices" class="slide section level2">
+<h1>1. Creating matrices</h1>
+<p>1.1. Create an identity matrix named <code>identityMat</code> of dimensions <span class="math inline">\(10 \times 10\)</span>. 1.2. Create a matrix named <code>randomMat</code> and fill it up with random values following a normal distribution with mean <span class="math inline">\(\mu=0\)</span> and variance <span class="math inline">\(\sigma^2=5\)</span>.</p>
+<p><strong>Tips</strong></p>
+<ul>
+<li>Identity matrices contain 1 on the diagonal, and 0 everywhere else</li>
+<li>Functions: <code>matrix()</code>, <code>diag()</code>, <code>rnorm()</code></li>
+</ul>
+</div><div id="combining-vectors-and-matrices" class="slide section level2">
+<h1>2. Combining vectors and matrices</h1>
+<p>2.1 Create two random vectors named <code>x1</code> and <code>x2</code>, containing 100 random values following respectively:</p>
+<pre><code>- a standard normal law
+- a uniform law spreading from 0 to 10</code></pre>
+<p>2.2. Create a matrix named <code>m1</code> whose first column contains the 10 first values of <code>x1</code>and the second one the 10 last values of <code>x2</code>.</p>
+</div><div id="combining-vectors-and-matrices-continued" class="slide section level2">
+<h1>2. Combining vectors and matrices (continued)</h1>
+<p>2.3. Create a matrix named <code>m2</code> whose first column contains contains the 16th, 51th, 79the, 31the et 27th values of <code>x2</code> valeurs de x1, and whose second column contains the 30th, 70th, 12th, 49th et 45th values of <code>x2</code>.</p>
 </div>
 
   <!-- dynamically load mathjax for compatibility with self-contained -->

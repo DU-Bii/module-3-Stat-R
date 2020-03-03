@@ -4,6 +4,8 @@ author: "Claire Vandiedonck & Jacques van Helden"
 date: "`r Sys.Date()`"
 output:
   slidy_presentation:
+    font_adjustment: 0   ## set to negative/positive values for smaller/bigger fonts
+    duration: 45
     self_contained: no
     fig_caption: yes
     fig_height: 6
@@ -91,9 +93,6 @@ knitr::opts_chunk$set(
 ```
 
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
 
 ## Connection to IFB RStudio server
 
@@ -104,8 +103,10 @@ In a Web browser, open a connection to the IFB RStudio server
 This requires your login and password. 
 
 
-## Navigating in your Unix account
+# Navigating in your folders
 
+
+## Where am I?
 
 ```{r eval=FALSE}
 ## Where am I now?
@@ -151,4 +152,32 @@ setwd(courseDir)
 getwd() ## Check that you are in the right place
 
 ```
+
+# Exercises: handling R objects: the main R objects
+
+## 1. Creating matrices
+
+1.1. Create an identity matrix named `identityMat` of dimensions $10 \times 10$. 
+1.2. Create a matrix named `randomMat` and fill it up with random values following a normal distribution with mean $\mu=0$ and variance $\sigma^2=5$.
+
+**Tips**
+
+- Identity matrices contain 1 on the diagonal, and 0 everywhere else
+- Functions: `matrix()`, `diag()`, `rnorm()`
+
+## 2. Combining vectors and matrices
+
+2.1 Create two random vectors named `x1` and `x2`, containing 100 random values following respectively: 
+
+    - a standard normal law
+    - a uniform law spreading from 0 to 10
+
+2.2. Create a matrix named `m1` whose first column contains the 10 first values of `x1`and the second one the 10 last values of `x2`. 
+
+## 2. Combining vectors and matrices (continued)
+
+2.3. Create a matrix named `m2` whose first column contains contains the  16th, 51th, 79the, 31the et 27th values of `x2` valeurs de x1, and whose second column contains the 30th, 70th, 12th, 49th et 45th values of `x2`.
+
+2.4. 
+
 
