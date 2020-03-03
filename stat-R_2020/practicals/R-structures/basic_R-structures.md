@@ -153,7 +153,6 @@ Sauvegardez dans une liste `session2_list` tous les objets créés pendant les e
 **Fonctions à utiliser :** `list()`, `names()`
 
 
-
 ## Á la maison
 
 
