@@ -1,5 +1,12 @@
 # [DUBii](https://du-bii.github.io/accueil/) - module 3 - Analyse statistique avec R
 
+The aim of this module is to provide you with the bases of R programming and to present you some statistical concepts for high-throuput data.
+
+To follow this course, prior knowledge is expected on: R environment, getting help in R, types of variables particularly on vectors.
+Link to the prerequesites: [https://du-bii.github.io/accueil/activites_preparatoires/] (https://du-bii.github.io/accueil/activites_preparatoires/)
+
+
+
 ## Teachers
 
 | Name  | Role(s) |
