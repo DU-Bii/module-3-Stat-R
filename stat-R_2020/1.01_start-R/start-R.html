@@ -7,7 +7,7 @@
   <meta http-equiv="Content-Style-Type" content="text/css" />
   <meta name="generator" content="pandoc" />
   <meta name="author" content="Claire Vandiedonck &amp; Jacques van Helden" />
-  <meta name="date" content="2020-03-02" />
+  <meta name="date" content="2020-03-03" />
   <title>Start R – First steps with R and RStudio</title>
   <style type="text/css">code{white-space: pre;}</style>
   <style type="text/css">
@@ -88,28 +88,50 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
   <p class="author">
 Claire Vandiedonck &amp; Jacques van Helden
   </p>
-  <p class="date">2020-03-02</p>
+  <p class="date">2020-03-03</p>
 </div>
 <div id="connection-to-ifb-rstudio-server" class="slide section level2">
 <h1>Connection to IFB RStudio server</h1>
 <p>In a Web browser, open a connection to the IFB RStudio server</p>
 <p><a href="https://rstudio.cluster.france-bioinformatique.fr/" class="uri">https://rstudio.cluster.france-bioinformatique.fr/</a></p>
 <p>This requires your login and password.</p>
+<p>Check the version of R and of loaded packages.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co">## Go home</span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">sessionInfo</span>()</a></code></pre></div>
+<pre><code>R version 3.5.1 (2018-07-02)
+Platform: x86_64-redhat-linux-gnu (64-bit)
+Running under: CentOS Linux 7 (Core)
+
+Matrix products: default
+BLAS/LAPACK: /usr/lib64/R/lib/libRblas.so
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C               LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8     LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8    LC_PAPER=en_US.UTF-8       LC_NAME=C                  LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] knitr_1.21
+
+loaded via a namespace (and not attached):
+ [1] compiler_3.5.1  magrittr_1.5    tools_3.5.1     htmltools_0.4.0 yaml_2.2.0      Rcpp_1.0.3      stringi_1.4.6   rmarkdown_1.11  stringr_1.4.0   xfun_0.4        digest_0.6.25   rlang_0.4.5     evaluate_0.12  </code></pre>
 </div>
 <div id="navigating-in-your-unix-account" class="slide section level2">
 <h1>Navigating in your Unix account</h1>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co">## Where am I now?</span></a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">getwd</span>()</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="co">## Where is my home?</span></a>
-<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="kw">Sys.getenv</span>(<span class="st">&quot;HOME&quot;</span>)</a>
-<a class="sourceLine" id="cb1-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="co">## Who am I?</span></a>
-<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="kw">Sys.getenv</span>(<span class="st">&quot;LOGNAME&quot;</span>)</a>
-<a class="sourceLine" id="cb1-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb1-10" data-line-number="10"><span class="co">## Go home</span></a>
-<a class="sourceLine" id="cb1-11" data-line-number="11"><span class="kw">setwd</span>(<span class="kw">Sys.getenv</span>(<span class="st">&quot;HOME&quot;</span>))</a>
-<a class="sourceLine" id="cb1-12" data-line-number="12"><span class="kw">setwd</span>(<span class="st">&quot;~&quot;</span>)  <span class="co">## An easier way</span></a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="co">## Where am I now?</span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw">getwd</span>()</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">## Where is my home?</span></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="kw">Sys.getenv</span>(<span class="st">&quot;HOME&quot;</span>)</a>
+<a class="sourceLine" id="cb3-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="co">## Who am I?</span></a>
+<a class="sourceLine" id="cb3-8" data-line-number="8"><span class="kw">Sys.getenv</span>(<span class="st">&quot;LOGNAME&quot;</span>)</a>
+<a class="sourceLine" id="cb3-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb3-10" data-line-number="10"><span class="co">## Go home</span></a>
+<a class="sourceLine" id="cb3-11" data-line-number="11"><span class="kw">setwd</span>(<span class="kw">Sys.getenv</span>(<span class="st">&quot;HOME&quot;</span>))</a>
+<a class="sourceLine" id="cb3-12" data-line-number="12"><span class="kw">setwd</span>(<span class="st">&quot;~&quot;</span>)  <span class="co">## An easier way</span></a></code></pre></div>
 <h3 id="explanations">Explanations</h3>
 <ul>
 <li><code>Sys.getenv()</code> returns all the environment variables</li>
@@ -121,19 +143,35 @@ Claire Vandiedonck &amp; Jacques van Helden
 <div id="creating-a-work-space-for-this-course" class="slide section level2">
 <h1>Creating a work space for this course</h1>
 <p>We will create specific directory to store the data and results of the practicals for this course.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co">## Define the directory for this course</span></a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">courseDir &lt;-<span class="st"> </span><span class="kw">file.path</span>(<span class="st">&quot;~&quot;</span>, <span class="st">&quot;dubii20&quot;</span>, <span class="st">&quot;stat-R&quot;</span>, <span class="st">&quot;session1&quot;</span>)</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="kw">print</span>(courseDir) <span class="co">## Check the result</span></a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co">## Create the directory</span></a>
-<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="kw">dir.create</span>(courseDir) <span class="co">## THIS WILL LIKELY NOT WORK</span></a>
-<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="kw">dir.create</span>(<span class="dt">path =</span> courseDir, </a>
-<a class="sourceLine" id="cb2-8" data-line-number="8">           <span class="dt">recursive =</span> <span class="ot">TRUE</span>, <span class="co">## Create the parent directories</span></a>
-<a class="sourceLine" id="cb2-9" data-line-number="9">           <span class="dt">showWarnings =</span> <span class="ot">FALSE</span>) <span class="co">## Don&#39;t shout it already exists</span></a>
-<a class="sourceLine" id="cb2-10" data-line-number="10"></a>
-<a class="sourceLine" id="cb2-11" data-line-number="11"><span class="co">## Go to this directory</span></a>
-<a class="sourceLine" id="cb2-12" data-line-number="12"><span class="kw">setwd</span>(courseDir)</a>
-<a class="sourceLine" id="cb2-13" data-line-number="13"><span class="kw">getwd</span>() <span class="co">## Check that you are in the right place</span></a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co">## Define the directory for this course</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">courseDir &lt;-<span class="st"> </span><span class="kw">file.path</span>(<span class="st">&quot;~&quot;</span>, <span class="st">&quot;dubii20&quot;</span>, <span class="st">&quot;stat-R&quot;</span>, <span class="st">&quot;session1&quot;</span>)</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="kw">print</span>(courseDir) <span class="co">## Check the result</span></a>
+<a class="sourceLine" id="cb4-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="co">## Create the directory</span></a>
+<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="kw">dir.create</span>(courseDir) <span class="co">## THIS WILL LIKELY NOT WORK</span></a>
+<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="kw">dir.create</span>(<span class="dt">path =</span> courseDir, </a>
+<a class="sourceLine" id="cb4-8" data-line-number="8">           <span class="dt">recursive =</span> <span class="ot">TRUE</span>, <span class="co">## Create the parent directories</span></a>
+<a class="sourceLine" id="cb4-9" data-line-number="9">           <span class="dt">showWarnings =</span> <span class="ot">FALSE</span>) <span class="co">## Don&#39;t shout it already exists</span></a>
+<a class="sourceLine" id="cb4-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb4-11" data-line-number="11"><span class="co">## Go to this directory</span></a>
+<a class="sourceLine" id="cb4-12" data-line-number="12"><span class="kw">setwd</span>(courseDir)</a>
+<a class="sourceLine" id="cb4-13" data-line-number="13"><span class="kw">getwd</span>() <span class="co">## Check that you are in the right place</span></a></code></pre></div>
+</div>
+<div id="load-the-data-for-this-course" class="slide section level2">
+<h1>Load the data for this course</h1>
+<p>Data and files are stored on the cluster in the directory <code>/shared/projects/dubii2020/data/module3/seance1/</code></p>
+<p>We will download the data <code>Prerequis.RData</code> that you saved during the prerequisites session.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co">## Define the path of the files</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">data_path &lt;-<span class="st"> &quot;/shared/projects/dubii2020/data/module3/seance1/&quot;</span></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="kw">print</span>(data_path) <span class="co">## Check the result</span></a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="co">## Load the data from this path</span></a>
+<a class="sourceLine" id="cb5-6" data-line-number="6"><span class="kw">load</span>(<span class="kw">paste</span>(data_path, <span class="st">&quot;Prerequis.RData&quot;</span>, <span class="dt">sep=</span><span class="st">&quot;&quot;</span>))</a>
+<a class="sourceLine" id="cb5-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb5-8" data-line-number="8"><span class="co">## List the data you have dowloaded, check their struture and keep in your session only the three vectors called size, weight and bmi as well as the matrix called myData2</span></a>
+<a class="sourceLine" id="cb5-9" data-line-number="9"><span class="kw">ls</span>()</a>
+<a class="sourceLine" id="cb5-10" data-line-number="10">    <span class="co">## to complete...</span></a></code></pre></div>
+<p>Finally, open the script <code>DUBii_R_Session1.R</code> stored in the same directory as the data.</p>
 </div>
 
   <!-- dynamically load mathjax for compatibility with self-contained -->
