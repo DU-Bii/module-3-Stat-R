@@ -103,6 +103,14 @@ In a Web browser, open a connection to the IFB RStudio server
 
 This requires your login and password. 
 
+Check the version of R and of loaded packages.
+```{r eval=TRUE}
+## Go home
+sessionInfo()
+
+```
+
+
 
 ## Navigating in your Unix account
 
@@ -152,3 +160,24 @@ getwd() ## Check that you are in the right place
 
 ```
 
+## Load the data for this course
+
+Data and files are stored on the cluster in the directory `/shared/projects/dubii2020/data/module3/seance1/`
+
+We will download the data `Prerequis.RData`  that you saved during the prerequisites session.
+
+```{r eval=FALSE}
+## Define the path of the files
+data_path <- "/shared/projects/dubii2020/data/module3/seance1/"
+print(data_path) ## Check the result
+
+## Load the data from this path
+load(paste(data_path, "Prerequis.RData", sep=""))
+
+## List the data you have dowloaded, check their struture and keep in your session only the three vectors called size, weight and bmi as well as the matrix called myData2
+ls()
+    ## to complete...
+
+```
+
+Finally, open the script `DUBii_R_Session1.R` stored in the same directory as the data.
