@@ -1,10 +1,14 @@
 # Séance 4: Clustering
 
-## Formateurs
+## Teachers
 
-- Anne Badel
-- Frédéric Guyon
-- Jacques van Helden
+| Name | Role |
+|-------------------------|------------------|
+| Anne Badel | Trainer |
+| Jacques van Helden |  Trainer |
+| Claire Vandiedonck | Helper |
+| Frédéric Guyon | Teaching material + teacher for 2019 session |
+
 
 ## Supports de cours
 
