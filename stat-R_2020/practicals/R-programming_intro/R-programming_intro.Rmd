@@ -3,23 +3,6 @@ title: "Programming with R"
 author: "Claire Vandiedonck & Jacques van Helden"
 date: "`r Sys.Date()`"
 output:
-  pdf_document:
-    fig_caption: yes
-    highlight: zenburn
-    toc: yes
-    toc_depth: 3
-  beamer_presentation:
-    colortheme: dolphin
-    fig_caption: yes
-    fig_height: 6
-    fig_width: 7
-    fonttheme: structurebold
-    highlight: tango
-    incremental: no
-    keep_tex: no
-    slide_level: 2
-    theme: Montpellier
-    toc: yes
   html_document:
     self_contained: no
     code_folding: hide
@@ -35,6 +18,23 @@ output:
     toc_depth: 3
     toc_float: yes
     widescreen: yes
+  beamer_presentation:
+    colortheme: dolphin
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    fonttheme: structurebold
+    highlight: tango
+    incremental: no
+    keep_tex: no
+    slide_level: 2
+    theme: Montpellier
+    toc: yes
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
   revealjs::revealjs_presentation:
     theme: night
     transition: none
