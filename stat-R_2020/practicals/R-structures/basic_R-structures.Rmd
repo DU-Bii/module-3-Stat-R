@@ -81,7 +81,7 @@ knitr::opts_chunk$set(
   fig.width = 7, fig.height = 5, 
   out.width = "80%",
   fig.align = "center", 
-  fig.path = "figures/start-R_",
+  fig.path = "figures/data-structures_",
   size = "tiny", 
   echo = TRUE, 
   eval = TRUE, 
