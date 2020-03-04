@@ -56,7 +56,7 @@ Link to the prerequisites:
 |---------------------------------|----------|-------------|
 | Slides for the whole session | 1/2 day | [[pdf](slides/DUBii_R_Session1.pdf)] |   
 | Start R | 20'  | [[html](practicals/1.01_start-R/start-R.html)] [[Rmd](practicals/1.01_start-R/start-R.Rmd)]  |
-| Validation of the prerequisites: quizz on Moodle | 15' + 20' | [[on your account](https://moodlesupd.script.univ-paris-diderot.fr/course/view.php?id=10629)] [[with password dubii2020](https://moodlesupd.script.univ-paris-diderot.fr/course/view.php?id=13420)] |
+| Validation of the prerequisites: quizz on Moodle | 15' + 20' | [[on your account](https://moodlesupd.script.univ-paris-diderot.fr/course/view.php?id=10629)] [[with password: dubii2020](https://moodlesupd.script.univ-paris-diderot.fr/course/view.php?id=13420)] |
 | Basic R structures (matrices, data frames and lists) | 45'  | [[html](practicals/R-structures/basic_R-structures.html)] [[Rmd](practicals/R-structures/basic_R-structures.Rmd)] |  
 | *Coffee break* | 15' | |
 | Programming with R | 35' |  practicals/R-programming_intro/R-programming_intro.html |
