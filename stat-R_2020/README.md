@@ -66,6 +66,8 @@ Link to the prerequisites:
 
 ## Session 3: differential analysis
 
+Contents: [clustering/](clustering/)
+
 ## Session 4: clustering
 
 ## Session 5
