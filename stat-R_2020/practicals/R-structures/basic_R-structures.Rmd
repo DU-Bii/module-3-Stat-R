@@ -3,9 +3,7 @@ title: "Basic data structures in R -- matrices, data frames and lists"
 author: "Claire Vandiedonck & Jacques van Helden"
 date: "`r Sys.Date()`"
 output:
-  slidy_presentation:
-    font_adjustment: 0   ## set to negative/positive values for smaller/bigger fonts
-    duration: 45
+  html_document:
     self_contained: no
     code_folding: hide
     fig_caption: yes
@@ -17,6 +15,8 @@ output:
     smaller: yes
     theme: cerulean
     toc: yes
+    toc_depth: 3
+    toc_float: yes
     widescreen: yes
   beamer_presentation:
     colortheme: dolphin
@@ -41,7 +41,9 @@ output:
     self_contained: no
     code_folding: hide
     css: ../../slides.css
-  html_document:
+  slidy_presentation:
+    font_adjustment: 0   ## set to negative/positive values for smaller/bigger fonts
+    duration: 45
     self_contained: no
     code_folding: hide
     fig_caption: yes
@@ -53,8 +55,6 @@ output:
     smaller: yes
     theme: cerulean
     toc: yes
-    toc_depth: 3
-    toc_float: yes
     widescreen: yes
   ioslides_presentation:
     self_contained: no
@@ -260,6 +260,8 @@ ncol(m3)
 
 Importez dans votre session R les données nommées `WorldPhones` (pré-existantes dans R). Affichez le contenu de la variable `WorldPhones`. Quelle est sa structure et sa classe ?
 
+
+
 ## Exercice 3.2
 
 Calculez le nombre total de numéros de téléphone attribués :
@@ -267,49 +269,103 @@ Calculez le nombre total de numéros de téléphone attribués :
 a. au cours des différentes années (vecteur `nbrTelAn`)
 b. pour chaque continent (vecteur `nbrTelCont`)
 
-
 ## Exercice 3.3
 
 Quel est le continent qui a le plus / moins de numéros attribués ?
 
 ## Exercice 3.4
 
-Dans combien de continents y a-t-il plus de : 20 000, 50 000 et 200 000 numéros de téléphone attribués ? 
+Dans combien de continents y a-t-il plus de : 20.000, 50.000 et 200.000 numéros de téléphone attribués ? 
+
+**Fonctions à utiliser :** 
+
+-`data(WorldPhones)`, 
+- `class()`, 
+- `dim()`, 
+- `rownames()`, 
+- `colnames()`, 
+- `str()`, 
+- `sum()`, 
+- `apply()`, 
+- `names()`, 
+- `max()`, 
+- `min()`,
+- `which()`, 
+- `which.max()`,
+- `which.min()`
+- ...
+
+## Solutions exercice 3
+
+```{r}
+data("WorldPhones")
+print(WorldPhones)
+class(WorldPhones)
+dim(WorldPhones)
+rownames(WorldPhones)
+colnames(WorldPhones)
+```
 
 
-**Fonctions à utiliser :** `data(WorldPhones)`, `str()`, `sum()`, `apply()`, `names()`, `which()`, `max()`, `min()` ...
+```{r}
+## Marginal sums per year
+nbrTelAn <- apply(WorldPhones, 1, sum)
+print(nbrTelAn)
+
+## Marginal sums per continent
+nbrTelCont <- apply(WorldPhones, 2, sum)
+print(nbrTelCont)
+```
+
+
+```{r}
+names(which.max(nbrTelCont))
+names(which.min(nbrTelCont))
+
+## Another way: with head and tail
+tail(sort(nbrTelCont), n = 1)
+head(sort(nbrTelCont), n = 1)
+```
+
+```{r}
+sum(nbrTelCont > 20000)
+sum(nbrTelCont > 50000)
+sum(nbrTelCont > 200000)
+```
+
 
 
 ## Exercice 4
 
-Téléchargez le fichier [test.txt](). Ouvrez-le avec un éditeur de texte ou un calculateur pour identifier sa structure et les cases non remplies.
+- Téléchargez le fichier [minitable1.tsv](data/minitable1.txt). 
 
+- Ouvrez-le avec un éditeur de texte ou un calculateur pour identifier sa structure et les cases non remplies.
 
 - Importez le dans R dans un objet `test.data` et vérifiez sa structure et son contenu.
 
 - Comment les données manquantes ont-elles été lues ? Remplacez-les par NA si elles n’ont pas été lues comme une donnée manquante.
 
-- Déplacer la colonne 1 en dernière colonne
+- Déplacez la colonne 1 en dernière colonne.
 
-- Renommez les colonnes colA, colB, colC, colD, colE etc…dans le nouvel ordre obtenu
+- Renommez les colonnes colA, colB, colC, colD, colE... dans le nouvel ordre obtenu.
 
-- Supprimez la deuxième ligne
+- Supprimez la deuxième ligne.
 
-- Ajoutez une colonne de valeurs numériques obtenues en divisant les valeurs de la `colE` par les valeurs de la `colA`
+- Ajoutez une colonne de valeurs numériques obtenues en divisant les valeurs de la `colE` par les valeurs de la `colA`.
 
-- Dans la `colC`, remplacez les valeurs `toto` par `tata` et vice-versa
+- Dans la `colC`, remplacez les valeurs `toto` par `tata` et vice-versa.
 
-- Dans la `colC`, remplacez les lettres `t` par des `m`
+- Dans la `colC`, remplacez les lettres $t$ par des $m$.
 
-- Triez le dataframe par ordre croissant de la colonne `colE`
+- Triez le dataframe par ordre croissant de la colonne `colE`.
 
-- Convertissez la colonne `colB` en valeurs numériques
+- Convertissez la colonne `colB` en valeurs numériques.
 
-- Dans un vecteur sumcolA, calculer la somme de la `colA`
+- Dans un vecteur sumcolA, calculer la somme de la `colA`.
 
-- Faites un sous-dataframe `test.data2` contenant les lignes pour lesquelles les éléments de la `colE` sont inférieurs ou égaux à ceux de la `colA` 
+- Faites un sous-dataframe `test.data2` contenant les lignes pour lesquelles les éléments de la `colE` sont inférieurs ou égaux à ceux de la `colA`.
 
-- Sauvegardez le dataframe test.data2 en fichier texte avec des `;` comme séparateurs de champs.
+- Sauvegardez le data frame `test.data2` en fichier texte avec des `;` comme séparateurs de champs.
 
 **Fonctions à utiliser dans l’ordre :** `read.table()`, `str()`, `is.na()`, `paste()`, `gsub()`, `order()`, `as.integer()`, `sum()`, `subset()`, `write.table()`
 

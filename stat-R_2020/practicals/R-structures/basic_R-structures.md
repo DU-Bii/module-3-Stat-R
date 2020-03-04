@@ -3,9 +3,7 @@ title: "Basic data structures in R -- matrices, data frames and lists"
 author: "Claire Vandiedonck & Jacques van Helden"
 date: "2020-03-04"
 output:
-  slidy_presentation:
-    font_adjustment: 0   ## set to negative/positive values for smaller/bigger fonts
-    duration: 45
+  html_document:
     self_contained: no
     code_folding: hide
     fig_caption: yes
@@ -17,6 +15,8 @@ output:
     smaller: yes
     theme: cerulean
     toc: yes
+    toc_depth: 3
+    toc_float: yes
     widescreen: yes
   beamer_presentation:
     colortheme: dolphin
@@ -41,7 +41,9 @@ output:
     self_contained: no
     code_folding: hide
     css: ../../slides.css
-  html_document:
+  slidy_presentation:
+    font_adjustment: 0   ## set to negative/positive values for smaller/bigger fonts
+    duration: 45
     self_contained: no
     code_folding: hide
     fig_caption: yes
@@ -53,8 +55,6 @@ output:
     smaller: yes
     theme: cerulean
     toc: yes
-    toc_depth: 3
-    toc_float: yes
     widescreen: yes
   ioslides_presentation:
     self_contained: no
@@ -132,16 +132,16 @@ print(round(matAleatoire, digits = 2))
 
 ```
        [,1]  [,2]  [,3]  [,4]  [,5]  [,6]  [,7]  [,8]  [,9] [,10]
- [1,]  0.87 -0.25 -2.98  0.61  1.45  2.25 -0.06 -2.34 -3.67  1.81
- [2,] -3.24  1.64  0.06 -0.76  1.74 -2.34  0.80 -0.60  2.74 -1.39
- [3,]  2.72 -1.07  0.27 -1.81 -1.61 -1.78  1.89 -0.05 -2.21  0.56
- [4,]  1.30 -1.10  1.54 -0.12 -1.05 -4.50 -2.01  0.93 -1.21  1.34
- [5,]  4.09  3.02  1.10 -2.15  1.69  0.16  5.31  2.03 -0.32  0.58
- [6,]  2.96 -2.06 -0.91  2.99 -2.24  0.95  0.37  0.01  1.72  1.87
- [7,]  1.45  1.98  0.19  2.00 -0.37 -3.24  0.45 -0.67  2.66  0.55
- [8,]  2.30 -2.67 -2.43 -0.23 -2.16  1.61 -0.61 -1.06 -3.23  1.70
- [9,]  0.40 -0.96 -0.65 -2.86 -2.01 -0.45 -2.21  0.02 -0.74 -1.19
-[10,]  0.07 -0.88  0.45 -0.45  1.30  6.52  1.52  2.51 -0.42 -2.46
+ [1,]  1.42  3.93 -0.66 -0.01 -2.08  1.67  3.34  4.18  3.36  1.07
+ [2,] -0.17 -1.70 -3.76  0.21  2.71 -3.25  1.15 -2.46  1.93  5.42
+ [3,]  0.37  2.81 -1.27 -2.07  0.30  1.68  0.08  0.30 -0.40 -0.92
+ [4,] -0.23  2.60  1.13  1.35  2.32  0.94 -0.04 -0.44  6.78 -1.53
+ [5,] -1.87 -1.32 -3.48 -1.43  1.62  3.37 -1.70  2.89  1.05  4.83
+ [6,] -0.93  1.61  0.69 -0.04 -1.82 -3.44  3.80 -1.68  0.99  0.64
+ [7,]  2.03  2.11 -0.83 -6.29  1.63  0.86 -0.91 -1.45  2.58  0.58
+ [8,] -4.73 -6.58  0.94  1.49 -0.58  1.85  0.51  0.30  2.30 -1.27
+ [9,]  1.37 -2.16  3.74 -4.84  0.35  2.39 -2.03  0.33  0.50  1.16
+[10,] -0.39  0.67  3.22  0.36  1.27 -0.56  2.09 -4.46 -0.50 -2.79
 ```
 
 
@@ -220,7 +220,7 @@ summary(x1)
 
 ```
      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
--3.355711 -0.674173  0.005888  0.009847  0.690854  3.721343 
+-3.863202 -0.656094  0.001648  0.005911  0.672342  3.978091 
 ```
 
 ## Exercice 2.2
@@ -246,16 +246,16 @@ print(round(m1, digits = 3))
 
 ```
         [,1]   [,2]
- [1,] -0.061  0.632
- [2,]  0.659  0.997
- [3,] -0.718 -0.355
- [4,]  1.540 -1.685
- [5,]  0.214 -0.595
- [6,] -0.246  0.047
- [7,] -1.224 -1.079
- [8,] -0.854  0.619
- [9,] -0.241 -0.777
-[10,] -1.393  0.265
+ [1,] -0.593  0.558
+ [2,]  0.206  1.801
+ [3,]  2.030  1.733
+ [4,]  0.425  0.382
+ [5,]  0.359 -0.283
+ [6,]  1.062  1.158
+ [7,]  1.074  1.342
+ [8,]  0.491 -0.847
+ [9,] -1.043  0.950
+[10,] -0.935 -0.386
 ```
 
 
@@ -281,12 +281,12 @@ print(m2)
 ```
 
 ```
-           [,1]      [,2]
-[1,]  0.5152093 0.8033432
-[2,]  1.5090420 1.5278477
-[3,] -0.3309752 1.2795750
-[4,] -0.2718170 2.7289499
-[5,]  0.1990590 7.8830609
+           [,1]     [,2]
+[1,]  1.5066232 8.131907
+[2,] -0.5333567 8.522819
+[3,]  0.9047095 4.380366
+[4,]  0.9588557 7.799391
+[5,]  0.1326172 6.933438
 ```
 
 ## Exercice 2.4
@@ -325,54 +325,215 @@ ncol(m3)
 
 
 
-## Exercice 3
+## Exercice 3.1
 
-3.1. Importez dans votre session R les données nommées `WorldPhones` (pré-existantes dans R). Affichez le contenu de la variable `WorldPhones`. Quelle est sa structure et sa classe ?
+Importez dans votre session R les données nommées `WorldPhones` (pré-existantes dans R). Affichez le contenu de la variable `WorldPhones`. Quelle est sa structure et sa classe ?
 
-3.2. Calculez le nombre total de numéros de téléphone attribués :
+
+
+## Exercice 3.2
+
+Calculez le nombre total de numéros de téléphone attribués :
 
 a. au cours des différentes années (vecteur `nbrTelAn`)
 b. pour chaque continent (vecteur `nbrTelCont`)
 
+## Exercice 3.3
 
-3.3. Quel est le continent qui a le plus / moins de numéros attribués ?
+Quel est le continent qui a le plus / moins de numéros attribués ?
 
-3.4. Dans combien de continents y a-t-il plus de : 20 000, 50 000 et 200 000 numéros de téléphone attribués ? 
+## Exercice 3.4
+
+Dans combien de continents y a-t-il plus de : 20.000, 50.000 et 200.000 numéros de téléphone attribués ? 
+
+**Fonctions à utiliser :** 
+
+-`data(WorldPhones)`, 
+- `class()`, 
+- `dim()`, 
+- `rownames()`, 
+- `colnames()`, 
+- `str()`, 
+- `sum()`, 
+- `apply()`, 
+- `names()`, 
+- `max()`, 
+- `min()`,
+- `which()`, 
+- `which.max()`,
+- `which.min()`
+- ...
+
+## Solutions exercice 3
 
 
-**Fonctions à utiliser :** `data(WorldPhones)`, `str()`, `sum()`, `apply()`, `names()`, `which()`, `max()`, `min()` ...
+```r
+data("WorldPhones")
+print(WorldPhones)
+```
+
+```
+     N.Amer Europe Asia S.Amer Oceania Africa Mid.Amer
+1951  45939  21574 2876   1815    1646     89      555
+1956  60423  29990 4708   2568    2366   1411      733
+1957  64721  32510 5230   2695    2526   1546      773
+1958  68484  35218 6662   2845    2691   1663      836
+1959  71799  37598 6856   3000    2868   1769      911
+1960  76036  40341 8220   3145    3054   1905     1008
+1961  79831  43173 9053   3338    3224   2005     1076
+```
+
+```r
+class(WorldPhones)
+```
+
+```
+[1] "matrix"
+```
+
+```r
+dim(WorldPhones)
+```
+
+```
+[1] 7 7
+```
+
+```r
+rownames(WorldPhones)
+```
+
+```
+[1] "1951" "1956" "1957" "1958" "1959" "1960" "1961"
+```
+
+```r
+colnames(WorldPhones)
+```
+
+```
+[1] "N.Amer"   "Europe"   "Asia"     "S.Amer"   "Oceania"  "Africa"   "Mid.Amer"
+```
+
+
+
+```r
+## Marginal sums per year
+nbrTelAn <- apply(WorldPhones, 1, sum)
+print(nbrTelAn)
+```
+
+```
+  1951   1956   1957   1958   1959   1960   1961 
+ 74494 102199 110001 118399 124801 133709 141700 
+```
+
+```r
+## Marginal sums per continent
+nbrTelCont <- apply(WorldPhones, 2, sum)
+print(nbrTelCont)
+```
+
+```
+  N.Amer   Europe     Asia   S.Amer  Oceania   Africa Mid.Amer 
+  467233   240404    43605    19406    18375    10388     5892 
+```
+
+
+
+```r
+names(which.max(nbrTelCont))
+```
+
+```
+[1] "N.Amer"
+```
+
+```r
+names(which.min(nbrTelCont))
+```
+
+```
+[1] "Mid.Amer"
+```
+
+```r
+## Another way: with head and tail
+tail(sort(nbrTelCont), n = 1)
+```
+
+```
+N.Amer 
+467233 
+```
+
+```r
+head(sort(nbrTelCont), n = 1)
+```
+
+```
+Mid.Amer 
+    5892 
+```
+
+
+```r
+sum(nbrTelCont > 20000)
+```
+
+```
+[1] 3
+```
+
+```r
+sum(nbrTelCont > 50000)
+```
+
+```
+[1] 2
+```
+
+```r
+sum(nbrTelCont > 200000)
+```
+
+```
+[1] 2
+```
+
 
 
 ## Exercice 4
 
-Téléchargez le fichier `test.txt` présent sur moodle. Ouvrez-le avec un éditeur de texte ou un calculateur pour identifier sa structure et les cases non remplies.
+- Téléchargez le fichier [minitable1.tsv](data/minitable1.txt). 
 
+- Ouvrez-le avec un éditeur de texte ou un calculateur pour identifier sa structure et les cases non remplies.
 
 - Importez le dans R dans un objet `test.data` et vérifiez sa structure et son contenu.
 
 - Comment les données manquantes ont-elles été lues ? Remplacez-les par NA si elles n’ont pas été lues comme une donnée manquante.
 
-- Déplacer la colonne 1 en dernière colonne
+- Déplacez la colonne 1 en dernière colonne.
 
-- Renommez les colonnes colA, colB, colC, colD, colE etc…dans le nouvel ordre obtenu
+- Renommez les colonnes colA, colB, colC, colD, colE... dans le nouvel ordre obtenu.
 
-- Supprimez la deuxième ligne
+- Supprimez la deuxième ligne.
 
-- Ajoutez une colonne de valeurs numériques obtenues en divisant les valeurs de la `colE` par les valeurs de la `colA`
+- Ajoutez une colonne de valeurs numériques obtenues en divisant les valeurs de la `colE` par les valeurs de la `colA`.
 
-- Dans la `colC`, remplacez les valeurs `toto` par `tata` et vice-versa
+- Dans la `colC`, remplacez les valeurs `toto` par `tata` et vice-versa.
 
-- Dans la `colC`, remplacez les lettres `t` par des `m`
+- Dans la `colC`, remplacez les lettres $t$ par des $m$.
 
-- Triez le dataframe par ordre croissant de la colonne `colE`
+- Triez le dataframe par ordre croissant de la colonne `colE`.
 
-- Convertissez la colonne `colB` en valeurs numériques
+- Convertissez la colonne `colB` en valeurs numériques.
 
-- Dans un vecteur sumcolA, calculer la somme de la `colA`
+- Dans un vecteur sumcolA, calculer la somme de la `colA`.
 
-- Faites un sous-dataframe `test.data2` contenant les lignes pour lesquelles les éléments de la `colE` sont inférieurs ou égaux à ceux de la `colA` 
+- Faites un sous-dataframe `test.data2` contenant les lignes pour lesquelles les éléments de la `colE` sont inférieurs ou égaux à ceux de la `colA`.
 
-- Sauvegardez le dataframe test.data2 en fichier texte avec des `;` comme séparateurs de champs.
+- Sauvegardez le data frame `test.data2` en fichier texte avec des `;` comme séparateurs de champs.
 
 **Fonctions à utiliser dans l’ordre :** `read.table()`, `str()`, `is.na()`, `paste()`, `gsub()`, `order()`, `as.integer()`, `sum()`, `subset()`, `write.table()`
 
@@ -382,16 +543,5 @@ Sauvegardez dans une liste `session2_list` tous les objets créés pendant les e
 
 **Fonctions à utiliser :** `list()`, `names()`
 
-
-## Á la maison
-
-
-- Revoyez toutes les fonctions vues en cours attentivement des sessions 1 et 2.
-
-- Les corrections des exercices de la session 2 seront disponibles le vendredi soir.
-
-- Vous devez terminer l’ensemble des exercices avant la prochaine session, lire et comprendre les corrections, puis refaire par vous-même les exercices sans les corrections.
-
-- Une évaluation QCM aura lieu à la prochaine séance
 
 
