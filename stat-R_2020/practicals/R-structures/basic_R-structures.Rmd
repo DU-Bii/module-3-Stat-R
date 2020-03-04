@@ -186,7 +186,7 @@ hist(x = x1, breaks = 100,
 ```{r runif_hist, fig.width=7, fig.height=4, out.width="60%", fig.cap="Histogram of uniformly distributed random numbers. "}
 hist(x = x2, breaks = 10, 
      las = 1, 
-     col = "grey",
+     col = "cyan",
      main = "Uniformly distributed random numbers",
      xlab = "Value"
      )
