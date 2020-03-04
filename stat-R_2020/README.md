@@ -50,7 +50,6 @@ Link to the prerequisites:
 
 ## Session 1: R and Rmd basics
 
-**Teachers: ** Claire Vandiedonck and Antoine 
 
 | Topics |  Duration | Material |
 |---------------------------------|----------|-------------|
