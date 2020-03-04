@@ -62,4 +62,17 @@ Link to the prerequisites:
 | R markdown | 45' | Demo |
 
 
-##
+## Session 2
+
+## Session 3: differential analysis
+
+Contents: [clustering/](clustering/)
+
+## Session 4: clustering
+
+## Session 5
+
+## Session 6
+
+
+
