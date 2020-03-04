@@ -1,0 +1,237 @@
+---
+title: "Tutorial on factors"
+author: "Claire Vandiedonck & Jacques van Helden"
+date: "`r Sys.Date()`"
+output: 
+html_document:
+    self_contained: no
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    highlight: tango
+    incremental: no
+    keep_md: yes
+    smaller: yes
+    theme: cerulean
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+    widescreen: yes
+font-import: http://fonts.googleapis.com/css?family=Risque
+subtitle: DUBii -- Statistics with R
+font-family: Garamond
+transition: linear
+---
+
+```{r include=FALSE, echo=FALSE, eval=TRUE}
+library(knitr)
+options(width = 300)
+knitr::opts_chunk$set(
+  fig.width = 7, fig.height = 5, 
+  out.width = "80%",
+  fig.align = "center", 
+  fig.path = "figures/start-R_",
+  size = "tiny", 
+  echo = TRUE, 
+  eval = TRUE, 
+  warning = FALSE, 
+  message = FALSE, 
+  results = TRUE, 
+  comment = "")
+# knitr::asis_output("\\footnotesize")
+
+# dir.main <- "~/stat1"
+# dir.slides <- file.path(dir.main, "slides")
+# setwd(dir.slides)
+```
+
+
+---
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+---
+### Qu'est-ce qu'un facteur?
+Les variables catégoriques peuvent prendre des valeurs numériques ou être des chaines de caractères. Pour
+les utiliser de manière correcte en modélisation statistique et tester leur impact sur d’autres variables, il est
+nécessaire de les transformer en facteurs qui doivent être des entiers, ce qui peut nécessiter une conversion.
+Certaines fonctions sous R le font de manière cachée : c'est le cas de boxplot!
+
+La fonction factor() permet de convertir vous-même un vecteur (une variable) en un facteur qui encode
+les différentes valeurs possibles de la variable. Sous R, les valeurs entières de 1 à n correspondront aux index
+du facteur. Ces valeurs d’index ou « codes » sont attribuées par défaut selon l'ordre alphabétique ou
+numérique (cf. help(factor)) des différentes valeurs possibles, appelés niveaux ou "levels", de la
+variable.
+
+Si les valeurs sont numériques, elles sont elles-mêmes renumérotées ou ré-indexées de 1 à n !
+Par exemple, si vous avez les entiers de 4 à 10 dans un vecteur v1 :
+
+```{r echo=T, eval=T}
+v1<-4:10
+factor(v1)
+str(factor(v1))
+```
+
+La factorisation de v1 a donc créé un 1 facteur à 7 niveaux correspondant aux valeurs catégoriques "4" à "10"
+mais indexées 1 à 7 !
+
+Si les valeurs sont des chaines de caractère, elles sont indexées de 1 à n :
+Par exemple, si je factorise le vecteur suivant contenant 4 valeurs :
+```{r echo=T, eval=T}
+v2 <- c("Homme","Femme","Homme","Homme")
+factor(v2)
+```
+
+Les valeurs "Homme" et "Femme" auront respectivement comme index les valeurs 2 et 1 car "Femme" sort
+avant "Homme" selon l’ordre alphabétique. Les valeurs 1, 3 et 4 du vecteur v2 seront donc codées 2, tandis
+que la 2ème sera codée 1, ce que vous voyez en regardant la structure du facteur créé :
+```{r echo=T, eval=T}
+str(factor(v2))
+```
+
+Mais ce n'est cependant pas nécessairement le code que vous voulez garder : souvent on met « 2 » pour les
+femmes et « 1 » pour les « hommes ». De même, "cas" et "controles" seront convertis en 1 et 2. Or il est
+souvent préférable de donner la valeur 1 à la référence à laquelle on compare et donc on peut souhaiter
+imposer que 1 corresponde aux "controles" et 2 aux "cas"
+
+Il peut donc être nécessaire d'imposer par vous-mêmes l'ordre de votre choix qui ne serait pas
+alphabétique ou numérique. L'argument "levels" permet d'imposer cet ordre.
+
+En utilisant la fonction factor(), vous pouvez utiliser en particulier deux arguments pour choisir vous-
+même l'ordre des niveaux d'une part et leurs noms d'autre part:
+
+* L'argument "levels" permet de préciser l'ordre de vos niveaux dans un ordre qui pourrait être
+différent de l'ordre alphabétique ou numérique.
+
+* L'argument "labels" permet de renommer chaque niveau du facteur, sans modifier l'ordre par
+défaut ou spécifié par levels. Par exemple, vous voulez renommer "Homme" par "Man" et "Femme"
+par "Woman".
+
+Pour ces deux arguments, vous donnez un vecteur avec les noms des niveaux.
+
+### Exemple pas à pas illustrant l’usage de factor() avec les arguments «levels» et «labels»
+Prenez par exemple le vecteur d'un score de satisfaction à une enquête:
+
+```{r echo=T, eval=T}
+satisfaction<-c("mauvais","bon","acceptable","bon","bon","mauvais")
+satisfaction
+```
+
+Vous pouvez le convertir en un facteur avec la fonction factor():
+```{r echo=T, eval=T}
+satisfaction_factor <- factor(satisfaction)
+satisfaction_factor
+```
+
+L'objet obtenu est un facteur à 3 niveaux recodés par les index 1, 2 et 3. Vous ne voyez pas les index
+directement, mais ils sont visibles si vous utiliser la fonction str().
+Par défaut, les codes/index 1 à n sont donnés aux niveaux selon l'ordre alphabétique des valeurs uniques. Dans
+l'exemple, "acceptable" est donc recodé 1, "bon" 2 et "mauvais" 3. Avant de factoriser, vous pouvez identifier
+l'ordre avec sort() appliqué aux valeurs uniques de votre vecteur de départ.
+
+```{r echo=T, eval=T}
+sort(unique(satisfaction))
+```
+Vous retrouvez cet ordre avec la fonction levels()appliquée à votre facteur.
+```{r echo=T, eval=T}
+levels(satisfaction_factor)
+```
+
+Ainsi, "acceptable" a l'index 1, "bon" l'index 2 et "mauvais" l'index 3 du vecteur levels
+Si vous regardez la structure de votre facteur avec la fonction str(), vous obtenez bien un facteur à 3 niveaux,
+dont le nom trié alpha-numériquement correspondant au résultats de levels() est donné, suivi de
+l’affichage des premières valeurs codées. Ici, vous obtenez 3 puis 2 puis 1 puis 2 puis 2 puis 3, correspondant
+aux index/codes des niveaux
+```{r echo=T, eval=T}
+str(satisfaction_factor)
+```
+
+Si vous voulez imposer que "mauvais" soit codé par 1, "acceptable" par 2 et "bon" par 3, vous ajoutez ces 3
+niveaux dans cet ordre au moment de créer votre facteur avec l'argument « levels » auquel vous donnez
+le vecteur_des_niveaux_du_facteur_dans_ordre_souhaité, par exemple de 1 à 3 du moins bon au meilleur.
+Dans l'exemple, j'ajoute "2" au nom de ce nouvel objet R:
+```{r echo=T, eval=T}
+satisfaction_factor2 <- factor(satisfaction, levels = c("mauvais","acceptable", "bon"))
+```
+
+Vous constatez alors avec la fonction str() que les données sont désormais 1, puis 3, puis 2, puis 3 etc...selon
+les niveaux choisis :
+```{r echo=T, eval=T}
+str(satisfaction_factor2)
+```
+
+Si maintenant vous souhaitez en plus renommer les niveaux par "bad", "satisfactory", "good", vous ajoutez
+l'argument "labels" dans une version 3:
+```{r echo=T, eval=T}
+satisfaction_factor3<-factor(satisfaction,levels=c("mauvais", "acceptable", "bon"), labels=c("bad","satisfactory", "good"))
+```
+
+Si vous regardez la structure et à quels index correspondent les données, c'est dans l'ordre souhaité comme
+dans le facteur version 2.
+```{r echo=T, eval=T}
+str(satisfaction_factor3)
+```
+
+Et vous pouvez voir la reconversion des noms des niveaux:
+```{r echo=T, eval=T}
+satisfaction_factor3
+```
+
+Attention toutefois lorsque vous utilisez l'argument "labels" dans l'ordre souhaité en oubliant d’utiliser
+l'argument "levels", car vous aboutissez à remplacer les valeurs de façon incorrecte. La version 4 ci-
+dessous n'est pas du tout celle souhaitée et a remplacé les données !
+```{r echo=T, eval=T}
+satisfaction_factor4<-factor(satisfaction,labels=c("bad", "satisfactory", "good"))
+satisfaction_factor4
+str(satisfaction_factor4)
+```
+
+### Facteurs et dataframes
+Finalement, attention aux factorisations indésirables, notamment lors de la création d'un dataframe à partir d'une matrice.
+Soit un vecteur numérique de 20 éléments créé avec la fonction rexp (de paramètre 7):
+```{r echo=T, eval=T}
+x <- rexp(20,7)
+```
+Avec le vecteur des 20 premières lettres de l'alphabet, on crée un data frame. On utilise pour commencer la fonction data.frame():
+```{r echo=T, eval=T}
+y <- data.frame(V1=LETTERS[1:20], V2=x)
+head(y)
+str(y)
+```
+
+Cependant très souvent, on utilise plutôt (et à tort) la fonction cbind() avant de créer le dataframe:
+```{r echo=T, eval=T}
+z <- cbind(V1=LETTERS[1:20], V2=x)
+head(z)
+str(z)
+```
+On voit que x a été contraint ('coerced') d'être transformé en vecteur chaine de caractères.
+Le plus souvent, cela passe inaperçu à cette étape et le problème est révélé lors de la transformation en dataframe:
+``` {r echo=T, eval=T}
+u <- as.data.frame(z)
+head(u)
+str(u)
+```
+On constate que les deux variables sont maintenant des facteurs. Pour la variable x qui était numérique au départ, cela est généralement involontaire.
+
+Pour rattraper cette "erreur", on utilise alors spontanément la fonction as.numeric():
+```{r echo=T, eval=T}
+u$V2 <- as.numeric(u$V2)
+str(u)
+```
+On constate que la transformation as.numeric() a en fait recyclé les niveaux correspondant aux valeurs, et pas du tout les valeurs elles-mêmes.
+Dans cet exemple, l'erreur est rapidement détectée car l'on partait de valeurs décimales. Lorsqu'il s'agit d'entiers au départ, le problème peut très facilement rester inaperçu. 
+
+Dans cette situation, il faut en fait procéder en deux étapes (après avoir recréé le dataframe à partir de la matrice):
+```{r echo=T, eval=T}
+t <- as.data.frame(z)
+t$V2 <- as.character(t$V2)
+str(t)
+t$V2 <- as.numeric(t$V2)
+str(t)
+head(t)
+```
+
