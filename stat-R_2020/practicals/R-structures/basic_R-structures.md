@@ -5,6 +5,7 @@ date: "2020-03-04"
 output:
   html_document:
     self_contained: no
+    code_folding: hide
     fig_caption: yes
     fig_height: 6
     fig_width: 7
@@ -37,12 +38,14 @@ output:
   revealjs::revealjs_presentation:
     theme: night
     transition: none
-    self_contained: true
+    self_contained: no
+    code_folding: hide
     css: ../../slides.css
   slidy_presentation:
     font_adjustment: 0   ## set to negative/positive values for smaller/bigger fonts
     duration: 45
     self_contained: no
+    code_folding: hide
     fig_caption: yes
     fig_height: 6
     fig_width: 7
@@ -55,7 +58,8 @@ output:
     widescreen: yes
   ioslides_presentation:
     self_contained: no
-    css: slides.css
+    code_folding: hide
+    css: ../../slides.css
     fig_caption: yes
     fig_height: 6
     fig_width: 7
@@ -71,20 +75,89 @@ transition: linear
 
 
 
+## Install knitr package if required
+if (!require(knitr)) {
+  message("Installing missing package: knitr")
+  install.packages("knitr")
+}
+
+
 
 ## Exercice 1
 
-- Créez la matrice identité `matIdentite` de dimension 10 lignes x 10 colonnes contenant uniquement le chiffre 0. Puis remplacez uniquement les valeurs de la diagonale par le chiffre $1$.
+- Créez la matrice identité `matIdentite` de dimension 10 lignes x 10 colonnes contenant uniquement le chiffre 0. Puis remplacez uniquement les valeurs de la diagonale par le chiffre $1$. Imprimez la matrice à l'écran.
 
-- Créez une matrice `matAleatoire` contenant des valeurs tirées aléatoirement de dimension 10 lignes x 10 colonnes, dont les éléments suivent une loi normale de moyenne 0 et de variance $5$.
+- Créez une matrice `matAleatoire` contenant des valeurs tirées aléatoirement de dimension 10 lignes x 10 colonnes, dont les éléments suivent une loi normale de moyenne 0 et de variance $5$. Imprimez la matrice à l'écran en arrondissant à 2 décimales. 
+
+
 
 ### Astuce
 
-- Fonctions: `matrix()`, `diag()`, `rnorm()`
+- Fonctions: `matrix()`, `diag()`, `print()`, rnorm()`, `round() 
+
+### Solutions
+
+En cas d'urgence poussez sur **Code** pour révéler la solution.
+
+
+```r
+matIdentite <- matrix(ncol = 10, nrow = 10, data = 0)
+diag(matIdentite) <- 1
+print(matIdentite)
+```
+
+```
+      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
+ [1,]    1    0    0    0    0    0    0    0    0     0
+ [2,]    0    1    0    0    0    0    0    0    0     0
+ [3,]    0    0    1    0    0    0    0    0    0     0
+ [4,]    0    0    0    1    0    0    0    0    0     0
+ [5,]    0    0    0    0    1    0    0    0    0     0
+ [6,]    0    0    0    0    0    1    0    0    0     0
+ [7,]    0    0    0    0    0    0    1    0    0     0
+ [8,]    0    0    0    0    0    0    0    1    0     0
+ [9,]    0    0    0    0    0    0    0    0    1     0
+[10,]    0    0    0    0    0    0    0    0    0     1
+```
+
+#### Matrice de nombres aléatoires
+
+
+```r
+## Generatre a 10x10 matrix with random normal numbers
+matAleatoire <- matrix(
+  nrow = 10, 
+  ncol = 10, 
+  data = rnorm(n = 100, 
+               mean = 0, 
+               sd = sqrt(5)))
+
+## Print the results rounded at 2 decimals
+print(round(matAleatoire, digits = 2))
+```
+
+```
+       [,1]  [,2]  [,3]  [,4]  [,5]  [,6]  [,7]  [,8]  [,9] [,10]
+ [1,] -2.18 -1.77  0.55  0.84  2.44  1.70 -6.03  1.59  1.86 -0.02
+ [2,]  2.80 -1.21  2.72  0.89  0.37  0.88 -3.87  7.10 -0.54 -0.76
+ [3,]  0.29 -0.47  2.98  0.87 -0.86  1.67  0.48 -0.05  1.54  1.85
+ [4,] -2.14 -2.91  1.48 -0.41 -2.96 -0.93  0.85  2.62  0.65 -0.70
+ [5,]  2.46  1.18 -1.67  4.06 -1.60  1.56 -1.29 -2.26 -1.94  3.26
+ [6,] -4.39 -2.54  4.22 -1.98  2.27  0.57  0.57 -1.74  0.20  0.50
+ [7,] -0.11  1.32 -1.73 -1.46  0.91 -4.74  1.37  0.23  0.47 -0.57
+ [8,]  1.27 -1.19 -1.41 -0.61  2.13  0.02 -1.85  0.59  1.55 -3.99
+ [9,] -4.03 -2.30 -5.64 -3.78  2.49 -2.77 -3.58  1.48 -0.96 -1.42
+[10,]  1.49  2.20  0.57  1.52  3.17  1.17 -2.78  2.93 -2.04  3.52
+```
+
 
 ## Exercice 2
 
-2.1. Créez deux vecteurs aléatoires nommés `x1` et `x2`, contenant chacun 100 valeurs aléatoires compatibles 1) avec une loi normale centrée réduite pour x1 et 2) avec une loi uniforme définie sur l’intervalle [0 ; 10] pour x2.
+2.1. Créez deux vecteurs aléatoires nommés `x1` et `x2`, contenant chacun 1000 valeurs aléatoires respectivement compatibles:
+
+a. avec une loi normale centrée réduite pour `x1`;
+b. avec une loi uniforme définie sur l’intervalle $[0, 10]$ pour `x2`.
+
 
 2.2. Créez une matrice `m1` qui contient les 10 premières valeurs de x1 (colonne 1 de m1) et les 10 dernières valeurs de x2 (colonne 2 de m1).
 
@@ -93,6 +166,60 @@ transition: linear
 2.4. Concaténez à la suite (l’une en dessous-de l’autre) les matrices m1 et m2, afin d’obtenir une nouvelle matrice m3. Quelles sont les dimensions (nombre de lignes et de colonnes) de m3?
 
 **Fonctions à utiliser :** `rnorm()`, `runif()`, `cbind()`, `rbind()`, `dim()`, ...
+
+### Solutions
+
+
+
+```r
+n <- 10000 ## define vector sizes
+x1 <- rnorm(n = n, mean = 0, sd = 1) ## normal random
+x2 <- runif(n = n, min = 0, max = 10) ## uniform random 
+```
+
+
+
+```r
+hist(x = x1, breaks = 100)
+```
+
+<div class="figure" style="text-align: center">
+<img src="figures/start-R_rnorm_hist_simple-1.png" alt="(too) simple istogram of normally distributed random numbers." width="60%" />
+<p class="caption">(too) simple istogram of normally distributed random numbers.</p>
+</div>
+
+
+
+```r
+hist(x = x1, breaks = 100, 
+     las = 1, 
+     col = "palegreen",
+     main = "Random normal numbers",
+     xlab = "Value"
+     )
+```
+
+<div class="figure" style="text-align: center">
+<img src="figures/start-R_rnorm_hist-1.png" alt="Histogram of normally distributed random numbers. " width="60%" />
+<p class="caption">Histogram of normally distributed random numbers. </p>
+</div>
+
+
+
+```r
+hist(x = x2, breaks = 10, 
+     las = 1, 
+     col = "grey",
+     main = "Uniformly distributed random numbers",
+     xlab = "Value"
+     )
+```
+
+<div class="figure" style="text-align: center">
+<img src="figures/start-R_runif_hist-1.png" alt="Histogram of uniformly distributed random numbers. " width="60%" />
+<p class="caption">Histogram of uniformly distributed random numbers. </p>
+</div>
+
 
 
 ## Exercice 3
@@ -144,7 +271,7 @@ Téléchargez le fichier `test.txt` présent sur moodle. Ouvrez-le avec un édit
 
 - Sauvegardez le dataframe test.data2 en fichier texte avec des `;` comme séparateurs de champs.
 
-**Fonctions à utiliser dans l’odre :** `read.table()`, `str()`, `is.na()`, `paste()`, `gsub()`, `order()`, `as.integer()`, `sum()`, `subset()`, `write.table()`
+**Fonctions à utiliser dans l’ordre :** `read.table()`, `str()`, `is.na()`, `paste()`, `gsub()`, `order()`, `as.integer()`, `sum()`, `subset()`, `write.table()`
 
 ## Exercice 5
 
