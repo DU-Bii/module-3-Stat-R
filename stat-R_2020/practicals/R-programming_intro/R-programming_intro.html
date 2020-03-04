@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Claire Vandiedonck &amp; Jacques van Helden" />
+
+<meta name="date" content="2020-03-04" />
+
+<title>Programming with R</title>
+
+<script src="R-programming_intro_files/header-attrs-2.1/header-attrs.js"></script>
+<script src="R-programming_intro_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="R-programming_intro_files/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="R-programming_intro_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="R-programming_intro_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="R-programming_intro_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="R-programming_intro_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="R-programming_intro_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="R-programming_intro_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="R-programming_intro_files/navigation-1.1/tabsets.js"></script>
+<script src="R-programming_intro_files/navigation-1.1/codefolding.js"></script>
+
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Programming with R</h1>
+<h3 class="subtitle">DUBii – Statistics with R</h3>
+<h4 class="author">Claire Vandiedonck &amp; Jacques van Helden</h4>
+<h4 class="date">2020-03-04</h4>
+
+</div>
+
+
+<div id="exercice-1-test" class="section level2">
+<h2>Exercice 1 : test</h2>
+<ul>
+<li><p>Créez un vecteur de 100 valeurs tirées aléatoirement selon une loi normale de moyenne 4 et d’écart type 5.</p></li>
+<li><p>Identifiez les indices des valeurs strictement supérieures à 3 et récupérez les valeurs correspondantes.</p></li>
+<li><p>Testez si la somme de ces valeurs est supérieure à 40, à 30 ou à 20 et affichez un message adéquat selon chaque éventualité.</p></li>
+</ul>
+<p><strong>Fonctions à utiliser :</strong> rnorm(), which(),sum(), if(),else if(),else(), cat() ou print()</p>
+</div>
+<div id="exercice-2-création-dune-boucle-simple" class="section level2">
+<h2>Exercice 2 : création d’une boucle simple</h2>
+<ul>
+<li>Créez une boucle de 10 itérations <code>i</code> qui affiche à chaque itération l’indice <code>i</code>.</li>
+<li>Calculez au fur et à mesure la somme cumulée des indices dans un vecteur.</li>
+<li>Affichez la somme cumulée finale.</li>
+</ul>
+<p><strong>Fonctions à utiliser :</strong> for(), cat() ou print()</p>
+</div>
+<div id="exercice-3-création-dune-fonction" class="section level2">
+<h2>Exercice 3 : création d’une fonction</h2>
+<ul>
+<li>Créez une fonction <code>calculSomme</code> qui calcule la somme de deux variables x et y passées en argument.</li>
+<li>Testez la fonction.</li>
+</ul>
+<p><strong>Fonctions à utiliser :</strong> function(), return()</p>
+</div>
+<div id="exercice-4-création-dune-fonction-avec-des-tests-utilisation-de-cette-fonction-de-manière-itérative" class="section level2">
+<h2>Exercice 4: création d’une fonction avec des tests, utilisation de cette fonction de manière itérative</h2>
+<ul>
+<li>Ecrivez une fonction <code>calculTarif</code> qui prend pour argument un âge et affiche “demi-tarif” si l’âge est inférieur à 12 ans, “tarif sénior” si l’âge est supérieur ou égal à 60 ans et “plein tarif” sinon.</li>
+<li>Testez votre fonction pour des personnes de 5, 65, 85, 41, 23 et 47 ans.</li>
+</ul>
+<p><strong>Fonctions à utiliser :</strong></p>
+<ul>
+<li><code>function()</code>,</li>
+<li><code>return()</code>,</li>
+<li><code>print()</code>,</li>
+<li><code>c()</code></li>
+</ul>
+<p><strong>Instructions conditionnelles: </strong> - <code>if</code> - <code>else</code> - <code>else if</code> - <code>for</code></p>
+</div>
+<div id="exercice-5-création-dune-fonction-avec-compteur-de-boucle" class="section level2">
+<h2>Exercice 5: création d’une fonction avec compteur de boucle</h2>
+<ul>
+<li><p>Ecrivez une fonction <code>sumCumul</code> qui calcule la somme cumulée des nombres entiers compris entre deux bornes <span class="math inline">\(a\)</span> et <span class="math inline">\(b\)</span> que vous mettrez en arguments <code>start</code> et <code>end</code>.</p></li>
+<li><p>De plus, toutes les 10 boucles, vous affichez la valeur de l’entier ajouté, sinon vous affichez un point <code>.</code>.</p></li>
+<li><p>Testez la fonction avec les entiers entre 3 et 55 par exemple.</p></li>
+<li><p>Améliorez la fonction en ajoutant un paramètre <code>interval</code> correspondant à l’incrément de boucles entre les affichages des entiers (dans la fonction précédente, cet incrément était de 10) Testez la fonction avec les entiers entre 3 et 55 et un intervalle de 15 par exemple.</p></li>
+</ul>
+<p><strong>Fonctions à utiliser :</strong></p>
+<ul>
+<li><code>function()</code>,</li>
+<li><code>return()</code>,</li>
+<li><code>cat()</code>,</li>
+<li><code>seq()</code></li>
+</ul>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -74,6 +74,11 @@ transition: linear
 ---
 
 ```{r include=FALSE, echo=FALSE, eval=TRUE}
+## Install knitr package if required
+if (!require(knitr)) {
+  message("Installing missing package: knitr")
+  install.packages("knitr")
+}
 library(knitr)
 
 options(width = 300)
@@ -90,18 +95,6 @@ knitr::opts_chunk$set(
   results = TRUE, 
   comment = "")
 # knitr::asis_output("\\footnotesize")
-
-# dir.main <- "~/stat1"
-# dir.slides <- file.path(dir.main, "slides")
-# setwd(dir.slides)
-
-
-## Install knitr package if required
-if (!require(knitr)) {
-  message("Installing missing package: knitr")
-  install.packages("knitr")
-}
-
 ```
 
 
