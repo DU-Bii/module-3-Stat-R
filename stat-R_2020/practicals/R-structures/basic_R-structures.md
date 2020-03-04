@@ -138,34 +138,32 @@ print(round(matAleatoire, digits = 2))
 
 ```
        [,1]  [,2]  [,3]  [,4]  [,5]  [,6]  [,7]  [,8]  [,9] [,10]
- [1,] -1.41 -0.06  0.19  0.00 -1.73  0.51 -0.83  0.93 -1.42 -0.28
- [2,] -0.96  2.49  0.26 -3.23  0.02  2.28 -4.24 -1.39  1.28 -2.32
- [3,]  2.13  0.73  2.05  1.70 -0.35  1.17  0.06 -3.89 -3.70 -2.16
- [4,]  0.16 -1.49 -2.85  3.69 -1.31 -0.24  3.74  0.65 -1.01  3.66
- [5,] -1.53  1.86 -0.19  2.09  2.00  0.24  1.13 -3.30  2.76 -1.24
- [6,] -0.54  4.35  1.07  1.06 -1.89 -2.93  0.73  2.38 -3.67 -0.85
- [7,] -3.40  1.18  0.09  4.46 -3.21  1.54 -3.74 -1.01  4.50 -0.05
- [8,]  5.25  2.14 -1.61 -2.81  0.33  1.26  2.44  3.33 -1.56 -0.44
- [9,]  0.80  0.05  0.67  3.73  1.59  2.17 -2.57 -0.59  0.54  3.60
-[10,] -2.25  4.62  0.55 -3.04 -1.08 -3.81  0.12  4.22 -1.28 -1.28
+ [1,] -2.52 -1.95  6.23  0.86 -0.11  3.23 -2.03  4.21  1.55 -3.34
+ [2,]  0.42 -4.13  1.45  0.14 -0.25  1.67  1.39 -5.61 -2.73  1.30
+ [3,]  1.66  2.98 -0.09  0.96  2.40 -3.24  1.40 -3.39  0.45  0.83
+ [4,] -0.21  1.87  1.44 -0.47 -0.42 -3.38  1.78 -0.51  1.15 -1.34
+ [5,] -0.79 -2.41  1.70 -6.49  3.78 -4.52 -1.14 -1.01 -2.20 -0.53
+ [6,] -1.44  0.71  0.99  1.71  0.45  1.25 -3.12  0.35 -0.47  1.99
+ [7,] -0.29  0.32 -2.38 -0.92 -1.86  1.51 -1.29 -2.73  0.64  0.68
+ [8,]  1.64  0.98  3.03 -4.63 -0.30 -0.11  2.57 -1.42 -2.68 -0.69
+ [9,] -3.72 -2.59 -0.83  0.00 -3.11 -0.71  1.21 -2.48 -0.87 -2.88
+[10,]  0.39 -1.69  0.57 -2.60  1.86 -0.03  2.35  2.39  0.08 -2.34
 ```
 
 
-## Exercice 2
+## Exercice 2.1
 
-2.1. Créez deux vecteurs aléatoires nommés `x1` et `x2`, contenant chacun 1000 valeurs aléatoires respectivement compatibles:
+Créez deux vecteurs aléatoires nommés `x1` et `x2`, contenant chacun $n = 10.000$ valeurs aléatoires respectivement compatibles:
 
 a. avec une loi normale centrée réduite pour `x1`;
 b. avec une loi uniforme définie sur l’intervalle $[0, 10]$ pour `x2`.
 
+Vérifiez la distribution empirique de ces échantillons en dessinant des histogrammes. 
 
-2.2. Créez une matrice `m1` qui contient les 10 premières valeurs de x1 (colonne 1 de m1) et les 10 dernières valeurs de x2 (colonne 2 de m1).
+Vérifiez si les paramètres de vos échantillons aléatoires correspondent à vos attentes (et à leur *espérance statistique*). 
 
-2.3. Créez une matrice `m2` qui contient les 16ème, 51ème, 79ème, 31ème et 27ème valeurs de x1 (colonne 1 de m2) et les 30ème, 70ème, 12ème, 49ème et 45ème de x2 (colonne 2 de m2).
 
-2.4. Concaténez à la suite (l’une en dessous-de l’autre) les matrices m1 et m2, afin d’obtenir une nouvelle matrice m3. Quelles sont les dimensions (nombre de lignes et de colonnes) de m3?
-
-**Fonctions à utiliser :** `rnorm()`, `runif()`, `cbind()`, `rbind()`, `dim()`, ...
+**Fonctions à utiliser :** `rnorm()`, `runif()`, `cbind()`, `rbind()`, `dim()`, `mean()`, `var()`, `min()`, `max()`, `summary()`, ...
 
 ### Solutions
 
@@ -221,6 +219,64 @@ hist(x = x2, breaks = 10,
 </div>
 
 
+
+```r
+summary(x1)
+```
+
+```
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-4.310823 -0.692132 -0.006301 -0.000454  0.674848  4.429588 
+```
+
+## Exercice 2.2
+
+Créez une matrice `m1` qui contient les 10 premières valeurs de `x1` (colonne 1 de `m1`) et les 10 dernières valeurs de `x2` (colonne 2 de `m1`).
+
+### Solution
+
+
+```r
+## Prepare an empty matrix
+m1 <- matrix(nrow = 10, ncol = 2)
+
+## Assign values to the first column
+m1[, 1] <- head(x = x1, n = 10)
+
+## Assign values to the second column
+m1[, 2] <- tail(x = x1, n = 10)
+
+## Print the result rounded to 3 decimals
+print(round(m1, digits = 3))
+```
+
+```
+        [,1]   [,2]
+ [1,]  0.683 -1.562
+ [2,]  1.822  0.183
+ [3,] -0.935 -0.286
+ [4,]  2.422  0.658
+ [5,] -0.379 -0.443
+ [6,]  0.375  0.433
+ [7,]  1.193  0.825
+ [8,]  1.067  1.127
+ [9,] -1.160 -1.461
+[10,]  0.194 -0.931
+```
+
+
+## Exercice 2.3
+
+Créez une matrice `m2` qui contient 
+
+- les 16ème, 51ème, 79ème, 31ème et 27ème valeurs de `x1` (colonne 1 de `m2`) et
+- les 30ème, 70ème, 12ème, 49ème et 45ème de `x2` (colonne 2 de `m2`).
+
+### Solutions
+
+## Exercice 2.4
+
+Concaténez à la suite (l’une en dessous-de l’autre) les matrices m1 et m2, afin d’obtenir une nouvelle matrice m3. Quelles sont les dimensions (nombre de lignes et de colonnes) de m3?
 
 ## Exercice 3
 

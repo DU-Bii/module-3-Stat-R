@@ -142,21 +142,19 @@ print(round(matAleatoire, digits = 2))
 ```
 
 
-## Exercice 2
+## Exercice 2.1
 
-2.1. Créez deux vecteurs aléatoires nommés `x1` et `x2`, contenant chacun 1000 valeurs aléatoires respectivement compatibles:
+Créez deux vecteurs aléatoires nommés `x1` et `x2`, contenant chacun $n = 10.000$ valeurs aléatoires respectivement compatibles:
 
 a. avec une loi normale centrée réduite pour `x1`;
 b. avec une loi uniforme définie sur l’intervalle $[0, 10]$ pour `x2`.
 
+Vérifiez la distribution empirique de ces échantillons en dessinant des histogrammes. 
 
-2.2. Créez une matrice `m1` qui contient les 10 premières valeurs de x1 (colonne 1 de m1) et les 10 dernières valeurs de x2 (colonne 2 de m1).
+Vérifiez si les paramètres de vos échantillons aléatoires correspondent à vos attentes (et à leur *espérance statistique*). 
 
-2.3. Créez une matrice `m2` qui contient les 16ème, 51ème, 79ème, 31ème et 27ème valeurs de x1 (colonne 1 de m2) et les 30ème, 70ème, 12ème, 49ème et 45ème de x2 (colonne 2 de m2).
 
-2.4. Concaténez à la suite (l’une en dessous-de l’autre) les matrices m1 et m2, afin d’obtenir une nouvelle matrice m3. Quelles sont les dimensions (nombre de lignes et de colonnes) de m3?
-
-**Fonctions à utiliser :** `rnorm()`, `runif()`, `cbind()`, `rbind()`, `dim()`, ...
+**Fonctions à utiliser :** `rnorm()`, `runif()`, `cbind()`, `rbind()`, `dim()`, `mean()`, `var()`, `min()`, `max()`, `summary()`, ...
 
 ### Solutions
 
@@ -193,6 +191,57 @@ hist(x = x2, breaks = 10,
 ```
 
 
+```{r x1_statistics}
+summary(x1)
+
+```
+
+## Exercice 2.2
+
+Créez une matrice `m1` qui contient les 10 premières valeurs de `x1` (colonne 1 de `m1`) et les 10 dernières valeurs de `x2` (colonne 2 de `m1`).
+
+### Solution
+
+```{r}
+## Prepare an empty matrix
+m1 <- matrix(nrow = 10, ncol = 2)
+
+## Assign values to the first column
+m1[, 1] <- head(x = x1, n = 10)
+
+## Assign values to the second column
+m1[, 2] <- tail(x = x1, n = 10)
+
+## Print the result rounded to 3 decimals
+print(round(m1, digits = 3))
+```
+
+
+## Exercice 2.3
+
+Créez une matrice `m2` qui contient 
+
+- les 16ème, 51ème, 79ème, 31ème et 27ème valeurs de `x1` (colonne 1 de `m2`) et
+- les 30ème, 70ème, 12ème, 49ème et 45ème de `x2` (colonne 2 de `m2`).
+
+### Solutions
+
+```{r}
+m2 <- matrix(nrow = 5, ncol = 2)
+
+## Assign values
+m2[, 1] <- x1[c(16, 51, 79, 31, 27)]
+m2[, 2] <- x2[c(30, 70, 12, 49, 45)]
+
+## Print the result
+print(m2)
+
+```
+
+
+## Exercice 2.4
+
+Concaténez à la suite (l’une en dessous-de l’autre) les matrices m1 et m2, afin d’obtenir une nouvelle matrice m3. Quelles sont les dimensions (nombre de lignes et de colonnes) de m3?
 
 ## Exercice 3
 
