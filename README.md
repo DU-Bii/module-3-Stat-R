@@ -30,8 +30,8 @@ Link to the prerequisites:
 
 | Edition | Site |
 |----------|--------------------------------------------------------|
-| 2020 | [stat-R_2020/stat-R_2020.html](stat-R_2020/) |
-| 2019 | [stat-R_2019/stat-R_2019.html](stat-R_2019/stat-R_2019.html) |
+| 2020 | [stat-R_2020/](stat-R_2020/) |
+| 2019 | [stat-R_2019/](stat-R_2019/) |
 
 
 ## Links
