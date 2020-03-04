@@ -59,7 +59,7 @@ Link to the prerequisites:
 | Validation of the prerequisites: quizz on Moodle | 15' + 20' | [[on your account](https://moodlesupd.script.univ-paris-diderot.fr/course/view.php?id=10629)] [[with password: dubii2020](https://moodlesupd.script.univ-paris-diderot.fr/course/view.php?id=13420)] |
 | Basic R structures (matrices, data frames and lists) | 45'  | [[html](practicals/R-structures/basic_R-structures.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/R-structures/basic_R-structures.Rmd)] |  
 | *Coffee break* | 15' | |
-| Programming with R | 35' |  practicals/R-programming_intro/R-programming_intro.html |
+| Programming with R | 35' |  [[html](practicals/R-programming_intro/R-programming_intro.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/R-programming_intro/R-programming_intro.Rmd)] |
 | R markdown | 45' | Demo |
 
 
