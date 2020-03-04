@@ -1,36 +1,16 @@
-<!DOCTYPE html>
-
-<html>
-
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-
-<meta charset="utf-8" />
-<meta name="generator" content="pandoc" />
-<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
-
-
-<meta name="author" content="Claire Vandiedonck &amp; Jacques van Helden" />
-
-<meta name="date" content="2020-03-04" />
-
-<title>Basic data structures in R – matrices, data frames and lists</title>
-
-<script src="basic_R-structures_files/header-attrs-2.1/header-attrs.js"></script>
-<script src="basic_R-structures_files/jquery-1.11.3/jquery.min.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="basic_R-structures_files/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
-<script src="basic_R-structures_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
-<script src="basic_R-structures_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
-<script src="basic_R-structures_files/bootstrap-3.3.5/shim/respond.min.js"></script>
-<script src="basic_R-structures_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
-<link href="basic_R-structures_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="basic_R-structures_files/tocify-1.9.1/jquery.tocify.js"></script>
-<script src="basic_R-structures_files/navigation-1.1/tabsets.js"></script>
-<script src="basic_R-structures_files/navigation-1.1/codefolding.js"></script>
-
-
-<style type="text/css">code{white-space: pre;}</style>
-<style type="text/css" data-origin="pandoc">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content="Claire Vandiedonck &amp; Jacques van Helden" />
+  <meta name="date" content="2020-03-04" />
+  <title>Basic data structures in R – matrices, data frames and lists</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -92,290 +72,39 @@ code span.st { color: #4e9a06; } /* String */
 code span.va { color: #000000; } /* Variable */
 code span.vs { color: #4e9a06; } /* VerbatimString */
 code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
-
-.sourceCode .row {
-  width: 100%;
-}
-.sourceCode {
-  overflow-x: auto;
-}
-.code-folding-btn {
-  margin-right: -30px;
-}
-</style>
-<script>
-// apply pandoc div.sourceCode style to pre.sourceCode instead
-(function() {
-  var sheets = document.styleSheets;
-  for (var i = 0; i < sheets.length; i++) {
-    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
-    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
-      var rule = rules[j];
-      // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
-      var style = rule.style.cssText;
-      // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
-      // replace div.sourceCode by a pre.sourceCode rule
-      sheets[i].deleteRule(j);
-      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
-    }
-  }
-})();
-</script>
-<style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
-
-
-<style type="text/css">
-h1 {
-  font-size: 34px;
-}
-h1.title {
-  font-size: 38px;
-}
-h2 {
-  font-size: 30px;
-}
-h3 {
-  font-size: 24px;
-}
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
-}
-</style>
-
-
-
-
-<style type = "text/css">
-.main-container {
-  max-width: 940px;
-  margin-left: auto;
-  margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
-}
-img {
-  max-width:100%;
-}
-.tabbed-pane {
-  padding-top: 12px;
-}
-.html-widget {
-  margin-bottom: 20px;
-}
-button.code-folding-btn:focus {
-  outline: none;
-}
-summary {
-  display: list-item;
-}
-</style>
-
-
-
-<!-- tabsets -->
-
-<style type="text/css">
-.tabset-dropdown > .nav-tabs {
-  display: inline-table;
-  max-height: 500px;
-  min-height: 44px;
-  overflow-y: auto;
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
-  font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
-  font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
-}
-
-.tabset-dropdown > .nav-tabs > li.active {
-  display: block;
-}
-
-.tabset-dropdown > .nav-tabs > li > a,
-.tabset-dropdown > .nav-tabs > li > a:focus,
-.tabset-dropdown > .nav-tabs > li > a:hover {
-  border: none;
-  display: inline-block;
-  border-radius: 4px;
-  background-color: transparent;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
-  display: block;
-  float: none;
-}
-
-.tabset-dropdown > .nav-tabs > li {
-  display: none;
-}
-</style>
-
-<!-- code folding -->
-<style type="text/css">
-.code-folding-btn { margin-bottom: 4px; }
-</style>
-
-
-
-<style type="text/css">
-
-#TOC {
-  margin: 25px 0px 20px 0px;
-}
-@media (max-width: 768px) {
-#TOC {
-  position: relative;
-  width: 100%;
-}
-}
-
-@media print {
-.toc-content {
-  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
-  float: right;
-}
-}
-
-.toc-content {
-  padding-left: 30px;
-  padding-right: 40px;
-}
-
-div.main-container {
-  max-width: 1200px;
-}
-
-div.tocify {
-  width: 20%;
-  max-width: 260px;
-  max-height: 85%;
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-  div.tocify {
-    width: 25%;
-  }
-}
-
-@media (max-width: 767px) {
-  div.tocify {
-    width: 100%;
-    max-width: none;
-  }
-}
-
-.tocify ul, .tocify li {
-  line-height: 20px;
-}
-
-.tocify-subheader .tocify-item {
-  font-size: 0.90em;
-}
-
-.tocify .list-group-item {
-  border-radius: 0px;
-}
-
-
-</style>
-
-
-
+  </style>
+  <script src="basic_R-structures_files/header-attrs-2.1/header-attrs.js"></script>
+  <script src="basic_R-structures_files/jquery-1.11.3/jquery.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="basic_R-structures_files/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+  <script src="basic_R-structures_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+  <script src="basic_R-structures_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+  <script src="basic_R-structures_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+  <link href="basic_R-structures_files/slidy-2/styles/slidy.css" rel="stylesheet" />
+  <script src="basic_R-structures_files/slidy-2/scripts/slidy.js"></script>
+  <script src="basic_R-structures_files/slidy_shiny-1/slidy_shiny.js"></script>
+  <meta name="duration" content="45" />
 </head>
-
 <body>
-
-
-<div class="container-fluid main-container">
-
-
-<!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row-fluid">
-<div class="col-xs-12 col-sm-4 col-md-3">
-<div id="TOC" class="tocify">
+<div class="slide titlepage">
+  <h1 class="title">Basic data structures in R – matrices, data frames and lists</h1>
+  <h1 class="subtitle">DUBii – Statistics with R</h1>
+  <p class="author">
+Claire Vandiedonck &amp; Jacques van Helden
+  </p>
+  <p class="date">2020-03-04</p>
 </div>
-</div>
-
-<div class="toc-content col-xs-12 col-sm-8 col-md-9">
-
-
-
-
-<div class="fluid-row" id="header">
-
-<div class="btn-group pull-right">
-<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
-<ul class="dropdown-menu" style="min-width: 50px;">
-<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
-<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
-</ul>
-</div>
-
-
-
-<h1 class="title toc-ignore">Basic data structures in R – matrices, data frames and lists</h1>
-<h3 class="subtitle">DUBii – Statistics with R</h3>
-<h4 class="author">Claire Vandiedonck &amp; Jacques van Helden</h4>
-<h4 class="date">2020-03-04</h4>
-
-</div>
-
-
-<div id="install-knitr-package-if-required" class="section level2">
-<h2>Install knitr package if required</h2>
-<p>if (!require(knitr)) { message(“Installing missing package: knitr”) install.packages(“knitr”) }</p>
-</div>
-<div id="exercice-1" class="section level2">
-<h2>Exercice 1</h2>
+<div id="exercice-1" class="slide section level2">
+<h1>Exercice 1</h1>
 <ul>
 <li><p>Créez la matrice identité <code>matIdentite</code> de dimension 10 lignes x 10 colonnes contenant uniquement le chiffre 0. Puis remplacez uniquement les valeurs de la diagonale par le chiffre <span class="math inline">\(1\)</span>. Imprimez la matrice à l’écran.</p></li>
 <li><p>Créez une matrice <code>matAleatoire</code> contenant des valeurs tirées aléatoirement de dimension 10 lignes x 10 colonnes, dont les éléments suivent une loi normale de moyenne 0 et de variance <span class="math inline">\(5\)</span>. Imprimez la matrice à l’écran en arrondissant à 2 décimales.</p></li>
 </ul>
-<div id="astuce" class="section level3">
-<h3>Astuce</h3>
+<h3 id="astuce">Astuce</h3>
 <ul>
 <li>Fonctions: <code>matrix()</code>, <code>diag()</code>, <code>print()</code>, rnorm()<code>,</code>round()</li>
 </ul>
-</div>
-<div id="solutions" class="section level3">
-<h3>Solutions</h3>
+<h3 id="solutions">Solutions</h3>
 <p>En cas d’urgence poussez sur <strong>Code</strong> pour révéler la solution.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>matIdentite &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dt">ncol =</span> <span class="dv">10</span>, <span class="dt">nrow =</span> <span class="dv">10</span>, <span class="dt">data =</span> <span class="dv">0</span>)</span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="kw">diag</span>(matIdentite) &lt;-<span class="st"> </span><span class="dv">1</span></span>
@@ -391,8 +120,7 @@ div.tocify {
  [8,]    0    0    0    0    0    0    0    1    0     0
  [9,]    0    0    0    0    0    0    0    0    1     0
 [10,]    0    0    0    0    0    0    0    0    0     1</code></pre>
-<div id="matrice-de-nombres-aléatoires" class="section level4">
-<h4>Matrice de nombres aléatoires</h4>
+<h4 id="matrice-de-nombres-aléatoires">Matrice de nombres aléatoires</h4>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co">## Generatre a 10x10 matrix with random normal numbers</span></span>
 <span id="cb3-2"><a href="#cb3-2"></a>matAleatoire &lt;-<span class="st"> </span><span class="kw">matrix</span>(</span>
 <span id="cb3-3"><a href="#cb3-3"></a>  <span class="dt">nrow =</span> <span class="dv">10</span>, </span>
@@ -404,21 +132,19 @@ div.tocify {
 <span id="cb3-9"><a href="#cb3-9"></a><span class="co">## Print the results rounded at 2 decimals</span></span>
 <span id="cb3-10"><a href="#cb3-10"></a><span class="kw">print</span>(<span class="kw">round</span>(matAleatoire, <span class="dt">digits =</span> <span class="dv">2</span>))</span></code></pre></div>
 <pre><code>       [,1]  [,2]  [,3]  [,4]  [,5]  [,6]  [,7]  [,8]  [,9] [,10]
- [1,] -2.52 -1.95  6.23  0.86 -0.11  3.23 -2.03  4.21  1.55 -3.34
- [2,]  0.42 -4.13  1.45  0.14 -0.25  1.67  1.39 -5.61 -2.73  1.30
- [3,]  1.66  2.98 -0.09  0.96  2.40 -3.24  1.40 -3.39  0.45  0.83
- [4,] -0.21  1.87  1.44 -0.47 -0.42 -3.38  1.78 -0.51  1.15 -1.34
- [5,] -0.79 -2.41  1.70 -6.49  3.78 -4.52 -1.14 -1.01 -2.20 -0.53
- [6,] -1.44  0.71  0.99  1.71  0.45  1.25 -3.12  0.35 -0.47  1.99
- [7,] -0.29  0.32 -2.38 -0.92 -1.86  1.51 -1.29 -2.73  0.64  0.68
- [8,]  1.64  0.98  3.03 -4.63 -0.30 -0.11  2.57 -1.42 -2.68 -0.69
- [9,] -3.72 -2.59 -0.83  0.00 -3.11 -0.71  1.21 -2.48 -0.87 -2.88
-[10,]  0.39 -1.69  0.57 -2.60  1.86 -0.03  2.35  2.39  0.08 -2.34</code></pre>
+ [1,]  0.87 -0.25 -2.98  0.61  1.45  2.25 -0.06 -2.34 -3.67  1.81
+ [2,] -3.24  1.64  0.06 -0.76  1.74 -2.34  0.80 -0.60  2.74 -1.39
+ [3,]  2.72 -1.07  0.27 -1.81 -1.61 -1.78  1.89 -0.05 -2.21  0.56
+ [4,]  1.30 -1.10  1.54 -0.12 -1.05 -4.50 -2.01  0.93 -1.21  1.34
+ [5,]  4.09  3.02  1.10 -2.15  1.69  0.16  5.31  2.03 -0.32  0.58
+ [6,]  2.96 -2.06 -0.91  2.99 -2.24  0.95  0.37  0.01  1.72  1.87
+ [7,]  1.45  1.98  0.19  2.00 -0.37 -3.24  0.45 -0.67  2.66  0.55
+ [8,]  2.30 -2.67 -2.43 -0.23 -2.16  1.61 -0.61 -1.06 -3.23  1.70
+ [9,]  0.40 -0.96 -0.65 -2.86 -2.01 -0.45 -2.21  0.02 -0.74 -1.19
+[10,]  0.07 -0.88  0.45 -0.45  1.30  6.52  1.52  2.51 -0.42 -2.46</code></pre>
 </div>
-</div>
-</div>
-<div id="exercice-2.1" class="section level2">
-<h2>Exercice 2.1</h2>
+<div id="exercice-2.1" class="slide section level2">
+<h1>Exercice 2.1</h1>
 <p>Créez deux vecteurs aléatoires nommés <code>x1</code> et <code>x2</code>, contenant chacun <span class="math inline">\(n = 10.000\)</span> valeurs aléatoires respectivement compatibles:</p>
 <ol style="list-style-type: lower-alpha">
 <li>avec une loi normale centrée réduite pour <code>x1</code>;</li>
@@ -427,8 +153,7 @@ div.tocify {
 <p>Vérifiez la distribution empirique de ces échantillons en dessinant des histogrammes.</p>
 <p>Vérifiez si les paramètres de vos échantillons aléatoires correspondent à vos attentes (et à leur <em>espérance statistique</em>).</p>
 <p><strong>Fonctions à utiliser :</strong> <code>rnorm()</code>, <code>runif()</code>, <code>cbind()</code>, <code>rbind()</code>, <code>dim()</code>, <code>mean()</code>, <code>var()</code>, <code>min()</code>, <code>max()</code>, <code>summary()</code>, …</p>
-<div id="solutions-1" class="section level3">
-<h3>Solutions</h3>
+<h3 id="solutions-1">Solutions</h3>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>n &lt;-<span class="st"> </span><span class="dv">10000</span> <span class="co">## define vector sizes</span></span>
 <span id="cb5-2"><a href="#cb5-2"></a>x1 &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dt">n =</span> n, <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> <span class="dv">1</span>) <span class="co">## normal random</span></span>
 <span id="cb5-3"><a href="#cb5-3"></a>x2 &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dt">n =</span> n, <span class="dt">min =</span> <span class="dv">0</span>, <span class="dt">max =</span> <span class="dv">10</span>) <span class="co">## uniform random </span></span></code></pre></div>
@@ -465,14 +190,12 @@ Histogram of uniformly distributed random numbers.
 </div>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">summary</span>(x1)</span></code></pre></div>
 <pre><code>     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
--4.310823 -0.692132 -0.006301 -0.000454  0.674848  4.429588 </code></pre>
+-3.355711 -0.674173  0.005888  0.009847  0.690854  3.721343 </code></pre>
 </div>
-</div>
-<div id="exercice-2.2" class="section level2">
-<h2>Exercice 2.2</h2>
+<div id="exercice-2.2" class="slide section level2">
+<h1>Exercice 2.2</h1>
 <p>Créez une matrice <code>m1</code> qui contient les 10 premières valeurs de <code>x1</code> (colonne 1 de <code>m1</code>) et les 10 dernières valeurs de <code>x2</code> (colonne 2 de <code>m1</code>).</p>
-<div id="solution" class="section level3">
-<h3>Solution</h3>
+<h3 id="solution">Solution</h3>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="co">## Prepare an empty matrix</span></span>
 <span id="cb11-2"><a href="#cb11-2"></a>m1 &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dt">nrow =</span> <span class="dv">10</span>, <span class="dt">ncol =</span> <span class="dv">2</span>)</span>
 <span id="cb11-3"><a href="#cb11-3"></a></span>
@@ -485,35 +208,55 @@ Histogram of uniformly distributed random numbers.
 <span id="cb11-10"><a href="#cb11-10"></a><span class="co">## Print the result rounded to 3 decimals</span></span>
 <span id="cb11-11"><a href="#cb11-11"></a><span class="kw">print</span>(<span class="kw">round</span>(m1, <span class="dt">digits =</span> <span class="dv">3</span>))</span></code></pre></div>
 <pre><code>        [,1]   [,2]
- [1,]  0.683 -1.562
- [2,]  1.822  0.183
- [3,] -0.935 -0.286
- [4,]  2.422  0.658
- [5,] -0.379 -0.443
- [6,]  0.375  0.433
- [7,]  1.193  0.825
- [8,]  1.067  1.127
- [9,] -1.160 -1.461
-[10,]  0.194 -0.931</code></pre>
+ [1,] -0.061  0.632
+ [2,]  0.659  0.997
+ [3,] -0.718 -0.355
+ [4,]  1.540 -1.685
+ [5,]  0.214 -0.595
+ [6,] -0.246  0.047
+ [7,] -1.224 -1.079
+ [8,] -0.854  0.619
+ [9,] -0.241 -0.777
+[10,] -1.393  0.265</code></pre>
 </div>
-</div>
-<div id="exercice-2.3" class="section level2">
-<h2>Exercice 2.3</h2>
+<div id="exercice-2.3" class="slide section level2">
+<h1>Exercice 2.3</h1>
 <p>Créez une matrice <code>m2</code> qui contient</p>
 <ul>
 <li>les 16ème, 51ème, 79ème, 31ème et 27ème valeurs de <code>x1</code> (colonne 1 de <code>m2</code>) et</li>
 <li>les 30ème, 70ème, 12ème, 49ème et 45ème de <code>x2</code> (colonne 2 de <code>m2</code>).</li>
 </ul>
-<div id="solutions-2" class="section level3">
-<h3>Solutions</h3>
+<h3 id="solutions-2">Solutions</h3>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>m2 &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dt">nrow =</span> <span class="dv">5</span>, <span class="dt">ncol =</span> <span class="dv">2</span>)</span>
+<span id="cb13-2"><a href="#cb13-2"></a></span>
+<span id="cb13-3"><a href="#cb13-3"></a><span class="co">## Assign values</span></span>
+<span id="cb13-4"><a href="#cb13-4"></a>m2[, <span class="dv">1</span>] &lt;-<span class="st"> </span>x1[<span class="kw">c</span>(<span class="dv">16</span>, <span class="dv">51</span>, <span class="dv">79</span>, <span class="dv">31</span>, <span class="dv">27</span>)]</span>
+<span id="cb13-5"><a href="#cb13-5"></a>m2[, <span class="dv">2</span>] &lt;-<span class="st"> </span>x2[<span class="kw">c</span>(<span class="dv">30</span>, <span class="dv">70</span>, <span class="dv">12</span>, <span class="dv">49</span>, <span class="dv">45</span>)]</span>
+<span id="cb13-6"><a href="#cb13-6"></a></span>
+<span id="cb13-7"><a href="#cb13-7"></a><span class="co">## Print the result</span></span>
+<span id="cb13-8"><a href="#cb13-8"></a><span class="kw">print</span>(m2)</span></code></pre></div>
+<pre><code>           [,1]      [,2]
+[1,]  0.5152093 0.8033432
+[2,]  1.5090420 1.5278477
+[3,] -0.3309752 1.2795750
+[4,] -0.2718170 2.7289499
+[5,]  0.1990590 7.8830609</code></pre>
 </div>
+<div id="exercice-2.4" class="slide section level2">
+<h1>Exercice 2.4</h1>
+<p>Concaténez à la suite (l’une en dessous-de l’autre) les matrices <code>m1</code> et <code>m2</code>, afin d’obtenir une nouvelle matrice <code>m3</code>. Quelles sont les dimensions (nombre de lignes et de colonnes) de <code>m3</code> ?</p>
+<p><strong>Fonctions : </strong> <code>rbind()</code>, <code>cbind()</code>, <code>dim()</code>, <code>ncol()</code>, <code>nrow()</code></p>
+<h3 id="solutions-3">Solutions</h3>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>m3 &lt;-<span class="st"> </span><span class="kw">rbind</span>(m1, m2)</span>
+<span id="cb15-2"><a href="#cb15-2"></a><span class="kw">dim</span>(m3)</span></code></pre></div>
+<pre><code>[1] 15  2</code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="kw">nrow</span>(m3)</span></code></pre></div>
+<pre><code>[1] 15</code></pre>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="kw">ncol</span>(m3)</span></code></pre></div>
+<pre><code>[1] 2</code></pre>
 </div>
-<div id="exercice-2.4" class="section level2">
-<h2>Exercice 2.4</h2>
-<p>Concaténez à la suite (l’une en dessous-de l’autre) les matrices m1 et m2, afin d’obtenir une nouvelle matrice m3. Quelles sont les dimensions (nombre de lignes et de colonnes) de m3?</p>
-</div>
-<div id="exercice-3" class="section level2">
-<h2>Exercice 3</h2>
+<div id="exercice-3" class="slide section level2">
+<h1>Exercice 3</h1>
 <p>3.1. Importez dans votre session R les données nommées <code>WorldPhones</code> (pré-existantes dans R). Affichez le contenu de la variable <code>WorldPhones</code>. Quelle est sa structure et sa classe ?</p>
 <p>3.2. Calculez le nombre total de numéros de téléphone attribués :</p>
 <ol style="list-style-type: lower-alpha">
@@ -524,8 +267,8 @@ Histogram of uniformly distributed random numbers.
 <p>3.4. Dans combien de continents y a-t-il plus de : 20 000, 50 000 et 200 000 numéros de téléphone attribués ?</p>
 <p><strong>Fonctions à utiliser :</strong> <code>data(WorldPhones)</code>, <code>str()</code>, <code>sum()</code>, <code>apply()</code>, <code>names()</code>, <code>which()</code>, <code>max()</code>, <code>min()</code> …</p>
 </div>
-<div id="exercice-4" class="section level2">
-<h2>Exercice 4</h2>
+<div id="exercice-4" class="slide section level2">
+<h1>Exercice 4</h1>
 <p>Téléchargez le fichier <code>test.txt</code> présent sur moodle. Ouvrez-le avec un éditeur de texte ou un calculateur pour identifier sa structure et les cases non remplies.</p>
 <ul>
 <li><p>Importez le dans R dans un objet <code>test.data</code> et vérifiez sa structure et son contenu.</p></li>
@@ -544,13 +287,13 @@ Histogram of uniformly distributed random numbers.
 </ul>
 <p><strong>Fonctions à utiliser dans l’ordre :</strong> <code>read.table()</code>, <code>str()</code>, <code>is.na()</code>, <code>paste()</code>, <code>gsub()</code>, <code>order()</code>, <code>as.integer()</code>, <code>sum()</code>, <code>subset()</code>, <code>write.table()</code></p>
 </div>
-<div id="exercice-5" class="section level2">
-<h2>Exercice 5</h2>
+<div id="exercice-5" class="slide section level2">
+<h1>Exercice 5</h1>
 <p>Sauvegardez dans une liste <code>session2_list</code> tous les objets créés pendant les exercices 1 à 4 en les mettant dans des sous-listes correspondant à chaque exercice que vous nommerez <code>exo1</code>, <code>exo2</code>, <code>exo3</code> et <code>exo4</code>.</p>
 <p><strong>Fonctions à utiliser :</strong> <code>list()</code>, <code>names()</code></p>
 </div>
-<div id="á-la-maison" class="section level2">
-<h2>Á la maison</h2>
+<div id="á-la-maison" class="slide section level2">
+<h1>Á la maison</h1>
 <ul>
 <li><p>Revoyez toutes les fonctions vues en cours attentivement des sessions 1 et 2.</p></li>
 <li><p>Les corrections des exercices de la session 2 seront disponibles le vendredi soir.</p></li>
@@ -559,83 +302,15 @@ Histogram of uniformly distributed random numbers.
 </ul>
 </div>
 
-
-
-</div>
-</div>
-
-</div>
-
-<script>
-
-// add bootstrap table styles to pandoc tables
-function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
-}
-$(document).ready(function () {
-  bootstrapStylePandocTables();
-});
-
-
-</script>
-
-<!-- tabsets -->
-
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
-<!-- code folding -->
-<script>
-$(document).ready(function () {
-  window.initializeCodeFolding("hide" === "show");
-});
-</script>
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
-
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
+  <!-- dynamically load mathjax for compatibility with self-contained -->
+  <script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script>
 
 </body>
 </html>

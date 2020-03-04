@@ -3,7 +3,9 @@ title: "Basic data structures in R -- matrices, data frames and lists"
 author: "Claire Vandiedonck & Jacques van Helden"
 date: "`r Sys.Date()`"
 output:
-  html_document:
+  slidy_presentation:
+    font_adjustment: 0   ## set to negative/positive values for smaller/bigger fonts
+    duration: 45
     self_contained: no
     code_folding: hide
     fig_caption: yes
@@ -15,8 +17,6 @@ output:
     smaller: yes
     theme: cerulean
     toc: yes
-    toc_depth: 3
-    toc_float: yes
     widescreen: yes
   beamer_presentation:
     colortheme: dolphin
@@ -41,9 +41,7 @@ output:
     self_contained: no
     code_folding: hide
     css: ../../slides.css
-  slidy_presentation:
-    font_adjustment: 0   ## set to negative/positive values for smaller/bigger fonts
-    duration: 45
+  html_document:
     self_contained: no
     code_folding: hide
     fig_caption: yes
@@ -55,6 +53,8 @@ output:
     smaller: yes
     theme: cerulean
     toc: yes
+    toc_depth: 3
+    toc_float: yes
     widescreen: yes
   ioslides_presentation:
     self_contained: no
@@ -94,13 +94,15 @@ knitr::opts_chunk$set(
 # dir.main <- "~/stat1"
 # dir.slides <- file.path(dir.main, "slides")
 # setwd(dir.slides)
-```
+
 
 ## Install knitr package if required
 if (!require(knitr)) {
   message("Installing missing package: knitr")
   install.packages("knitr")
 }
+
+```
 
 
 
@@ -235,27 +237,44 @@ m2[, 2] <- x2[c(30, 70, 12, 49, 45)]
 
 ## Print the result
 print(m2)
-
 ```
-
 
 ## Exercice 2.4
 
-Concaténez à la suite (l’une en dessous-de l’autre) les matrices m1 et m2, afin d’obtenir une nouvelle matrice m3. Quelles sont les dimensions (nombre de lignes et de colonnes) de m3?
+Concaténez à la suite (l’une en dessous-de l’autre) les matrices `m1` et `m2`, afin d’obtenir une nouvelle matrice `m3`. Quelles sont les dimensions (nombre de lignes et de colonnes) de `m3` ?
 
-## Exercice 3
+**Fonctions : ** `rbind()`, `cbind()`, `dim()`, `ncol()`, `nrow()`
 
-3.1. Importez dans votre session R les données nommées `WorldPhones` (pré-existantes dans R). Affichez le contenu de la variable `WorldPhones`. Quelle est sa structure et sa classe ?
+### Solutions
 
-3.2. Calculez le nombre total de numéros de téléphone attribués :
+```{r}
+m3 <- rbind(m1, m2)
+dim(m3)
+nrow(m3)
+ncol(m3)
+```
+
+
+
+## Exercice 3.1
+
+Importez dans votre session R les données nommées `WorldPhones` (pré-existantes dans R). Affichez le contenu de la variable `WorldPhones`. Quelle est sa structure et sa classe ?
+
+## Exercice 3.2
+
+Calculez le nombre total de numéros de téléphone attribués :
 
 a. au cours des différentes années (vecteur `nbrTelAn`)
 b. pour chaque continent (vecteur `nbrTelCont`)
 
 
-3.3. Quel est le continent qui a le plus / moins de numéros attribués ?
+## Exercice 3.3
 
-3.4. Dans combien de continents y a-t-il plus de : 20 000, 50 000 et 200 000 numéros de téléphone attribués ? 
+Quel est le continent qui a le plus / moins de numéros attribués ?
+
+## Exercice 3.4
+
+Dans combien de continents y a-t-il plus de : 20 000, 50 000 et 200 000 numéros de téléphone attribués ? 
 
 
 **Fonctions à utiliser :** `data(WorldPhones)`, `str()`, `sum()`, `apply()`, `names()`, `which()`, `max()`, `min()` ...
@@ -263,7 +282,7 @@ b. pour chaque continent (vecteur `nbrTelCont`)
 
 ## Exercice 4
 
-Téléchargez le fichier `test.txt` présent sur moodle. Ouvrez-le avec un éditeur de texte ou un calculateur pour identifier sa structure et les cases non remplies.
+Téléchargez le fichier [test.txt](). Ouvrez-le avec un éditeur de texte ou un calculateur pour identifier sa structure et les cases non remplies.
 
 
 - Importez le dans R dans un objet `test.data` et vérifiez sa structure et son contenu.
@@ -300,16 +319,5 @@ Sauvegardez dans une liste `session2_list` tous les objets créés pendant les e
 
 **Fonctions à utiliser :** `list()`, `names()`
 
-
-## Á la maison
-
-
-- Revoyez toutes les fonctions vues en cours attentivement des sessions 1 et 2.
-
-- Les corrections des exercices de la session 2 seront disponibles le vendredi soir.
-
-- Vous devez terminer l’ensemble des exercices avant la prochaine session, lire et comprendre les corrections, puis refaire par vous-même les exercices sans les corrections.
-
-- Une évaluation QCM aura lieu à la prochaine séance
 
 

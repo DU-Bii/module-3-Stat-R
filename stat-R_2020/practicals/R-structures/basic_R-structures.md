@@ -3,7 +3,9 @@ title: "Basic data structures in R -- matrices, data frames and lists"
 author: "Claire Vandiedonck & Jacques van Helden"
 date: "2020-03-04"
 output:
-  html_document:
+  slidy_presentation:
+    font_adjustment: 0   ## set to negative/positive values for smaller/bigger fonts
+    duration: 45
     self_contained: no
     code_folding: hide
     fig_caption: yes
@@ -15,8 +17,6 @@ output:
     smaller: yes
     theme: cerulean
     toc: yes
-    toc_depth: 3
-    toc_float: yes
     widescreen: yes
   beamer_presentation:
     colortheme: dolphin
@@ -41,9 +41,7 @@ output:
     self_contained: no
     code_folding: hide
     css: ../../slides.css
-  slidy_presentation:
-    font_adjustment: 0   ## set to negative/positive values for smaller/bigger fonts
-    duration: 45
+  html_document:
     self_contained: no
     code_folding: hide
     fig_caption: yes
@@ -55,6 +53,8 @@ output:
     smaller: yes
     theme: cerulean
     toc: yes
+    toc_depth: 3
+    toc_float: yes
     widescreen: yes
   ioslides_presentation:
     self_contained: no
@@ -74,12 +74,6 @@ transition: linear
 ---
 
 
-
-## Install knitr package if required
-if (!require(knitr)) {
-  message("Installing missing package: knitr")
-  install.packages("knitr")
-}
 
 
 
@@ -138,16 +132,16 @@ print(round(matAleatoire, digits = 2))
 
 ```
        [,1]  [,2]  [,3]  [,4]  [,5]  [,6]  [,7]  [,8]  [,9] [,10]
- [1,] -2.52 -1.95  6.23  0.86 -0.11  3.23 -2.03  4.21  1.55 -3.34
- [2,]  0.42 -4.13  1.45  0.14 -0.25  1.67  1.39 -5.61 -2.73  1.30
- [3,]  1.66  2.98 -0.09  0.96  2.40 -3.24  1.40 -3.39  0.45  0.83
- [4,] -0.21  1.87  1.44 -0.47 -0.42 -3.38  1.78 -0.51  1.15 -1.34
- [5,] -0.79 -2.41  1.70 -6.49  3.78 -4.52 -1.14 -1.01 -2.20 -0.53
- [6,] -1.44  0.71  0.99  1.71  0.45  1.25 -3.12  0.35 -0.47  1.99
- [7,] -0.29  0.32 -2.38 -0.92 -1.86  1.51 -1.29 -2.73  0.64  0.68
- [8,]  1.64  0.98  3.03 -4.63 -0.30 -0.11  2.57 -1.42 -2.68 -0.69
- [9,] -3.72 -2.59 -0.83  0.00 -3.11 -0.71  1.21 -2.48 -0.87 -2.88
-[10,]  0.39 -1.69  0.57 -2.60  1.86 -0.03  2.35  2.39  0.08 -2.34
+ [1,]  0.87 -0.25 -2.98  0.61  1.45  2.25 -0.06 -2.34 -3.67  1.81
+ [2,] -3.24  1.64  0.06 -0.76  1.74 -2.34  0.80 -0.60  2.74 -1.39
+ [3,]  2.72 -1.07  0.27 -1.81 -1.61 -1.78  1.89 -0.05 -2.21  0.56
+ [4,]  1.30 -1.10  1.54 -0.12 -1.05 -4.50 -2.01  0.93 -1.21  1.34
+ [5,]  4.09  3.02  1.10 -2.15  1.69  0.16  5.31  2.03 -0.32  0.58
+ [6,]  2.96 -2.06 -0.91  2.99 -2.24  0.95  0.37  0.01  1.72  1.87
+ [7,]  1.45  1.98  0.19  2.00 -0.37 -3.24  0.45 -0.67  2.66  0.55
+ [8,]  2.30 -2.67 -2.43 -0.23 -2.16  1.61 -0.61 -1.06 -3.23  1.70
+ [9,]  0.40 -0.96 -0.65 -2.86 -2.01 -0.45 -2.21  0.02 -0.74 -1.19
+[10,]  0.07 -0.88  0.45 -0.45  1.30  6.52  1.52  2.51 -0.42 -2.46
 ```
 
 
@@ -226,7 +220,7 @@ summary(x1)
 
 ```
      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
--4.310823 -0.692132 -0.006301 -0.000454  0.674848  4.429588 
+-3.355711 -0.674173  0.005888  0.009847  0.690854  3.721343 
 ```
 
 ## Exercice 2.2
@@ -252,16 +246,16 @@ print(round(m1, digits = 3))
 
 ```
         [,1]   [,2]
- [1,]  0.683 -1.562
- [2,]  1.822  0.183
- [3,] -0.935 -0.286
- [4,]  2.422  0.658
- [5,] -0.379 -0.443
- [6,]  0.375  0.433
- [7,]  1.193  0.825
- [8,]  1.067  1.127
- [9,] -1.160 -1.461
-[10,]  0.194 -0.931
+ [1,] -0.061  0.632
+ [2,]  0.659  0.997
+ [3,] -0.718 -0.355
+ [4,]  1.540 -1.685
+ [5,]  0.214 -0.595
+ [6,] -0.246  0.047
+ [7,] -1.224 -1.079
+ [8,] -0.854  0.619
+ [9,] -0.241 -0.777
+[10,] -1.393  0.265
 ```
 
 
@@ -274,9 +268,62 @@ Créez une matrice `m2` qui contient
 
 ### Solutions
 
+
+```r
+m2 <- matrix(nrow = 5, ncol = 2)
+
+## Assign values
+m2[, 1] <- x1[c(16, 51, 79, 31, 27)]
+m2[, 2] <- x2[c(30, 70, 12, 49, 45)]
+
+## Print the result
+print(m2)
+```
+
+```
+           [,1]      [,2]
+[1,]  0.5152093 0.8033432
+[2,]  1.5090420 1.5278477
+[3,] -0.3309752 1.2795750
+[4,] -0.2718170 2.7289499
+[5,]  0.1990590 7.8830609
+```
+
 ## Exercice 2.4
 
-Concaténez à la suite (l’une en dessous-de l’autre) les matrices m1 et m2, afin d’obtenir une nouvelle matrice m3. Quelles sont les dimensions (nombre de lignes et de colonnes) de m3?
+Concaténez à la suite (l’une en dessous-de l’autre) les matrices `m1` et `m2`, afin d’obtenir une nouvelle matrice `m3`. Quelles sont les dimensions (nombre de lignes et de colonnes) de `m3` ?
+
+**Fonctions : ** `rbind()`, `cbind()`, `dim()`, `ncol()`, `nrow()`
+
+### Solutions
+
+
+```r
+m3 <- rbind(m1, m2)
+dim(m3)
+```
+
+```
+[1] 15  2
+```
+
+```r
+nrow(m3)
+```
+
+```
+[1] 15
+```
+
+```r
+ncol(m3)
+```
+
+```
+[1] 2
+```
+
+
 
 ## Exercice 3
 
