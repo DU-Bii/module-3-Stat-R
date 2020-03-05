@@ -1,131 +1,433 @@
+---
+title: "A first data analysis with R -- descriptive statistics, statistical tests"
+author: "Claire Vandiedonck & Jacques van Helden"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    self_contained: no
+    code_folding: hide
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    highlight: tango
+    incremental: no
+    keep_md: yes
+    smaller: yes
+    theme: cerulean
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+    widescreen: yes
+  beamer_presentation:
+    colortheme: dolphin
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    fonttheme: structurebold
+    highlight: tango
+    incremental: no
+    keep_tex: no
+    slide_level: 2
+    theme: Montpellier
+    toc: yes
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
+  revealjs::revealjs_presentation:
+    theme: night
+    transition: none
+    self_contained: no
+    code_folding: hide
+    css: ../../slides.css
+  slidy_presentation:
+    font_adjustment: 0   ## set to negative/positive values for smaller/bigger fonts
+    duration: 45
+    self_contained: no
+    code_folding: hide
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    highlight: tango
+    incremental: no
+    keep_md: yes
+    smaller: yes
+    theme: cerulean
+    toc: yes
+    widescreen: yes
+  ioslides_presentation:
+    self_contained: no
+    code_folding: hide
+    css: ../../slides.css
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    highlight: tango
+    smaller: yes
+    toc: yes
+    widescreen: yes
+font-import: http://fonts.googleapis.com/css?family=Risque
+subtitle: DUBii -- Statistics with R
+font-family: Garamond
+transition: linear
+---
 
-#############
-## lecture du tableau des echantillons
-info_samples <- read.table("louis2.csv", header=TRUE, sep=";", dec = ",", stringsAsFactors = FALSE)
+```{r include=FALSE, echo=FALSE, eval=TRUE}
+## Install knitr package if required
+if (!require(knitr)) {
+  message("Installing missing package: knitr")
+  install.packages("knitr")
+}
+library(knitr)
 
+options(width = 300)
+knitr::opts_chunk$set(
+  fig.width = 7, fig.height = 5, 
+  out.width = "80%",
+  fig.align = "center", 
+  fig.path = "figures/data-structures_",
+  size = "tiny", 
+  echo = TRUE, 
+  eval = TRUE, 
+  warning = FALSE, 
+  message = FALSE, 
+  results = TRUE, 
+  comment = "")
+# knitr::asis_output("\\footnotesize")
+```
+
+
+
+# Objectifs
+
+Ce tutoriel doit vous faire voir comment représenter et analyser des variables qualitatives et quantitatives, et effectuer les principaux tests statistiques.
+
+Le jeu de données `diabdata` est extrait d'une cohorte de patients diabétiques de type 2 suivis par le Dr Louis Potier à l'hopital Bichat. Il comporte des informations morphométriques (taille, poids) et biologiques (lipides sériques). Il inclut 1732 patients. 
+
+
+
+#### Solutions
+
+En cas d'urgence poussez sur **Code** pour révéler la solution.
+
+
+## 1. Importation des données
+
+Le fichier a importé s'appelle `diabdata.txt`. Il est présent dans le répertoire `/shared/projects/dubii2020/data/module3/seance2/`
+
+Ouvrez le d'abord dans un éditeur de texte pour voir comment il est structuré.
+Importez-le dans votre session R ouverte dans votre répertoire de travail.
+Attention à la décimale!
+
+**Fonctions : ** `setwd(),read.table(), str(), head(), tail()`
+
+
+```{r solution_1}
+#setwd("~")
+#"/shared/projects/dubii2020/data/module3/seance2/"
+info_samples <- read.table("diabdata.txt", header=TRUE, sep=";", dec = "," , stringsAsFactors = FALSE)
+```
+
+Regardez la structure de l'objet importé pour vérifier son format. Il s'agit d'un dataframe. Affichez également les premières lignes puis les dernières lignes de ce dataframe.
+
+```{r solution_2}
 str(info_samples)
 head(info_samples)
 tail(info_samples)
+```
 
+## 2. Variables qualitatives
 
-## exploration: statistiques descriptives
-########################################
+### 2.1 L'identifiant
 
-## Que pensez-vous de l'identifiant?
+Que pensez-vous de l'identifiant des sujets? S'agit-il d'une variable qualitative ou quantitative?
+Si nécessaire, transformez le type de données de cette variable `ìdentifiant` pour qu'il s'agisse d'une chaîne de caractères et vérifiez le résultat.
+
+**Fonctions : ** `as.character(), str()`
+
+```{r solution_3}
 info_samples$identifiant <- as.character(info_samples$identifiant)
 str(info_samples)
+```
 
-## QUALTATIVES
-## Quelles sont les valeurs possibles des variables qualitatives?
+### 2.2 Description des variables qualititatives
 
+Quelles sont les valeurs possibles des variables qualitatives?
+
+**Fonctions : ** `unique()`
+```{r solution_4}
 unique(info_samples$genre)
 unique(info_samples$origine)
 unique(info_samples$tabac)
+```
 
-#Combien d'occurences observe-t-on pour chaque valeur de ces varaibles?'
+Combien d'occurences observe-t-on pour chaque valeur de ces varaibles?
+
+**Fonctions : ** `table()`
+```{r solution_5}
 table(info_samples$genre)
 table(info_samples$tabac)
 table(info_samples$origine)
+```
 
-# grouper Am du Nord et latine
+Compte-tenu des effectifs moindre pour les sujets d'origine d'Amérique du Nord et d'Amérique latine, regroupez ces deux catégories en une seule que vous appellerez `AMERIQUE`
+
+```{r solution_6}
 info_samples$origine[which(info_samples$origine == "AMERIQUE DU NORD")] <- "AMERIQUE"
 info_samples$origine[which(info_samples$origine == "AMERIQUE LATINE")] <- "AMERIQUE"
+```
 
-# représenter les distributions de ces variables
-pie(table(info_samples$tabac))
+### 2.3 Représentation graphique des distributions des variables qualititatives
+
+Il existe deux principales fonctions graphiques primaires pour représenter les données qualitatives: 
+
+Une première représentation est celle en camembert.
+Faites un camembert des données concernant la consommation de tabac, le genre et l'origine.
+Vous pouvez jouer sur la couleur, l'orientation et modifier l'affichage des valeurs, ajouter un titre.
+
+**Fonctions : ** `pie(), table()`
+
+```{r solution_7}
+pie(table(info_samples$tabac), main="Tabac")
 pie(table(info_samples$genre), col=c("pink", "blue"),
     labels = c("Femmes", "Hommes"), main="Pie chart of the gender variable in the sample")
 pie(table(info_samples$origine), main="Pie chart of the origine variable in the sample", cex=0.5, clockwise = T)
+```
 
-# Les camemberts ne sont pas des bonnes représentations. La représentation de données catégoriques recommandée est le diagramme en bâtons.
-# tableaux de contingences:
+Ceendant, la représentation sous forme de camembert n'est pas recommandée car l'oeil a souvent du mal à interpréter des surfaces différentes.
+
+Une deuxième représentation qui est préférée pour celle des variables qualitatives est celle des diagrammes en bâtons. En ordonnées vous pouvez indiquer l'effectif ou la fréquence dans l'échantillon.
+
+```{r solution_8}
 barplot(table(info_samples$origine)/length(info_samples$origine), main="Distribution of the origine variable", ylab="frequency")
 
-table(info_samples$genre, info_samples$origine)
-barplot(table(info_samples$genre, info_samples$origine), main="Distribution of the origine variable with the variable gender stacked", col = c("pink", "blue") )
+```
 
-barplot(table(info_samples$origine, info_samples$genre), main="Distribution of the origine variable with the variable gender stacked") 
+
+On peut également générer des tableaux de contingence de deux variables qualitatives et les représenter ensemble graphiquement dans des diagrammes en bâtons empilés.
+
+
+```{r solution_9}
+table(info_samples$genre, info_samples$origine)
+barplot(table(info_samples$genre, info_samples$origine), main="Distribution de la variable origine avec la répartition des genres epilée", col = c("pink", "blue") )
+
+barplot(table(info_samples$origine, info_samples$genre), main="Distribution de la variable genre avec la répartition de l'origine empilée") 
 
 table(info_samples$genre, info_samples$tabac)
-barplot(table(info_samples$tabac, info_samples$genre)/dim(info_samples)[1], main="Distribution of the tabac variable with the variable gender stacked", ylim=c(0,1)) 
+barplot(table(info_samples$tabac, info_samples$genre)/dim(info_samples)[1], main="Distribution de la variable tabac avec la variable genre empilée", ylim=c(0,1)) 
 
-## test stat sur variables qualtitaives
+```
+
+### 2.4 Tests statistiques sur variables qualitatives
+
+On peut effectuer des tests de comparaison des proportions ou des distributions avec un test de Chi2 de Pearson.
+
+Testez à présent si la distribution de la variable `tabac` est indépendante de celle du `genre` par un test de Chi2 à 2 degrés de libertés. L'hypothèse nulle est celle de distribution indépendantes, l'hypothèse alsternative de variables liées.
+Extraire la p-value du test.
+
+
+```{r solution_10}
 chisq.test(info_samples$tabac, info_samples$genre)
+str(chisq.test(info_samples$tabac, info_samples$genre))
 chisq.test(info_samples$tabac, info_samples$genre)$p.value
-
-#table(info_samples$genre, info_samples$tabac)[1,]/sum(table(info_samples$genre, info_samples$tabac)[1,])
-#table(info_samples$genre, info_samples$tabac)[2,]/sum(table(info_samples$genre, info_samples$tabac)[2,])
+```
 
 
-## VA QUANTITATIVES
-#variables quantitatives continues:
-summary(info_samples[,c(3,6:13)])
+## 3. Variables quantitatives
+
+### 3.1 Description des variables quantitatives
+
+Le jeu de données comprends 3 variables quantitatives continues: la `taille`, le `poids` et le taux de triglycréides `TG`
+
+Définissez une nouvelle variable `ìmc` correspondant à l'indice de masse corporelle. On rappelle qu'il s'agit du poids en kg divisé par le carré de la taille en m². Arrondissez cette valeur à deux décimales.
+
+```{r solution_11}
+info_samples$imc <- round(info_samples$poids/(info_samples$taille/100)^2,2)
+```
+
+
+### 3.2 Distribution des variables quantitatives
+
+Affichez les valeurs de dispersion de ces variables.
+
+```{r solution_12}
+summary(info_samples[,5:8])
+```
+
+
+Il existe plusieurs représentations possibles de ces distributions:
+
+- un histogramme auquel vous pouvez supperposer la courbe de densité si vous avez affiché l'axe des ordonnées en fréquence plutôt qu'en effectifs.
+
+- une boite à moustaches
+
+- des nuages de points à une dimension (`stripcharts`)
+
+Dessinez un histogramme pour chacune des vraiables taille et poids.
+```{r solution_13}
 hist(info_samples$taille)
 hist(info_samples$poids, freq=F)
 lines(density(info_samples$poids), col="red")
+```
 
-boxplot(info_samples$taille)
-boxplot(info_samples$poids)
+Dessinez ensuite dans une même fenêtre graphique ccôte à côte les boxplots des variables tailles et poids.
 
+```{r solution_14}
+opar <- par() # pour sauvegardez les paramètres graphiques
+par(mfrow=c(1,2)) # pour dessiner les deux boxplots sur une ligne et deux colonnes de la fenêtre graphique
+boxplot(info_samples$taille, main="taille")
+boxplot(info_samples$poids, main="poids")
+par(opar)# pour restaurer les paramètres graphiques
+```
+
+Dans une même fenêtre graphique, dessinez à présent l'un en dessous de l'autre un stripchart horizontal, un histogramme et un boxplot horizontal de la variable `poids`
+
+```{r solution_15}
+opar <- par()
 par(mfrow=c(3,1))
 stripchart(info_samples$poids, vertical = F, axes=F, main="Distribution du poids")
 hist(info_samples$poids, freq=F, xlab="", main="")
 boxplot(info_samples$poids, horizontal = T, frame.plot=F, xlab="Poids")
+par(opar)
+```
 
-## Quelle est l'influence des variables qualitatives sur ces distributions?
-boxplot (info_samples$taille ~ factor(info_samples$origine))
-boxplot (info_samples$taille ~ factor(info_samples$zone, levels=c("Nord", "Centre", "Sud")), xlab="Region", ylab="taille")
 
+__Quelle est l'influence des variables qualitatives sur ces distributions?__
+
+Nous allons explorer l'impact du facteur origine et de celui du genre sur la taille et le poids.
+Une première analyse exploratoire consite à représenter ces distributions selon le facteur considéré.
+
+Dessinez 4 boxplots dans une même fenêtre graphique de ces distributions.
+
+```{r solution_16}
+opar <- par()
 par(mfrow=c(2,2))
 boxplot (info_samples$taille ~ info_samples$origine, xlab="Region", ylab="taille", col = "steelblue3")
 boxplot (info_samples$poids ~ info_samples$origine, xlab="Region", ylab="poids", col = "steelblue3")
 boxplot(info_samples$taille ~ info_samples$genre, xlab="Genre", ylab="taille", col = "steelblue3")
 boxplot(info_samples$poids ~ info_samples$genre, xlab="Genre", ylab="poids", col = "steelblue3")
+par(opar)
+```
 
-## Tests stats:
+### 3.3 Tests statistiques sur des variables quantitatives
 
-## poids selon le sexe:
+#### 3.3.1 Tests de comparaison de 2 moyennes
+En regardant les boxplots ci-dessus, on souhaite tester si le genre a effctivement un impact sur les variables `taille` et `poids`
+
+Une première étape est de calculer les moyennes estimées dans ces échantillons de la moyenne dans la population.
+
+Commençons par la variable `poids`:
+
+```{r solution_17}
 by(info_samples$poids, info_samples$genre, mean)
+```
+Les valeurs entre les échantillons sont différentes: m1≠m2
+Cela ne signifie pas que μ1≠μ2
+
+On doit réaliser un test statistique de comparaison de moyennes.
+
+On vérifie d'abord si l'homoscedascticité, cad l'égalité des variances dans les deux groupes.
+
+```{r solution_18}
 by(info_samples$poids, info_samples$genre, var)
 var.test(info_samples$poids[info_samples$genre=="F"],info_samples$poids[info_samples$genre=="M"])
-t.test(info_samples$poids ~ info_samples$genre, var.equal=T)
+```
+Le test de comapraison des variances ne permet pas de rejetter leur égalité.
 
+Nous pouvons donc réaliser un test de Student.
+
+```{r solution_19}
+t.test(info_samples$poids ~ info_samples$genre, var.equal=T)
+```
+
+Comparez à présent les moyennes de la variable `taille`:
+
+```{r solution_20}
+#estimation des moyennes:
 by(info_samples$taille, info_samples$genre, mean)
+
+# comparaison des varainces
 by(info_samples$taille, info_samples$genre, var)
 var.test(info_samples$taille[info_samples$genre=="F"],info_samples$taille[info_samples$genre=="M"])
-t.test(info_samples$taille ~ info_samples$genre)
-t.test(info_samples$taille ~ info_samples$genre)$p.value
 
-by(info_samples$poids, info_samples$tabac, mean)
-by(info_samples$poids, info_samples$tabac, var)
-bartlett.test(taille~tabac, data=info_samples)
+## l'égalité des variances ne peut être rejetée. On conduit donc un test de Welsh qui est prposé par défaut dans R avec la fonction t.test()
 
-# new variable
+t.test(info_samples$taille ~ info_samples$genre) # le test est significatif avec une p-value < 2.2e-16
+t.test(info_samples$taille ~ info_samples$genre)$p.value # pour extraire la p-value
+
+```
+
+
+#### 3.3.2 Tests de comparaison de plus de 2 moyennes
+
+Générons une nouvelle variable aléatoire en discrétisant la variable `imc` pour définir la variable `ìmc_cat` indiquant si les sujets sont maigres (imc < 18.5), de corpulence normale (entre 18.5 et 25), en surpoids (entre 25 et 30) ou obèses (au delà de 30).
+Transformez cette variable en facteur à 4 niveaux en attribuant le niveau 1 à une corpulence normale.
+
+```{r solution_21}
 info_samples$imc_cat <- NA
 info_samples$imc_cat[info_samples$imc<18.5] <- "maigreur"
 info_samples$imc_cat[info_samples$imc>=18.5 & info_samples$imc<25] <- "normal"
 info_samples$imc_cat[info_samples$imc>=25 & info_samples$imc<30] <- "surpoids"
 info_samples$imc_cat[info_samples$imc>=30] <- "obesite"
+
 info_samples$imc_cat <- factor(info_samples$imc_cat, levels=c("normal", "maigreur", "surpoids", "obesite"))
+```
+
+Testons à présent si le poids moyen est bien différent entre ces 4 niveaux d'imc_cat.
+On procède d'abord à la vérification de l'homoscédascticité.
+
+```{r solution_22}
 by(info_samples$poids, info_samples$imc_cat, mean)
 by(info_samples$poids, info_samples$imc_cat, var)
 bartlett.test(poids~imc_cat, data=info_samples)
+```
 
-# more than 2 levels
+Malheureusement les variances diffèrent significativement entre les groupes.
+On ne peut réaliser une analyse paraméttrique (ANOVA).
+On effectue donc un test non paramétrique de Kruskal-Wallis:
+
+```{r solution_23}
 kruskal.test(log(info_samples$TG) ~ info_samples$imc_cat)
-summary(aov(log(info_samples$TG) ~ info_samples$imc_cat))
-summary(lm(log(info_samples$TG) ~ info_samples$imc_cat))
+```
 
+#### 3.3.3 Tests de corrélation entre deux variables continues
 
-## Correlation - covariance:
-plot(data=info_samples, log(TG)~imc)
-abline(lm(data=info_samples, log(TG)~imc), col="red")
+Les variables `taille` et `poids` sont elles corrélées entre elles?
 
+```{r solution_24}
+cor.test(info_samples$taille, info_samples$poids)
+plot(data=info_samples, taille~poids)
+abline(lm(data=info_samples, taille~poids), col="red")
+```
+
+Les variables `poids` et `imc`  sont elles corrélées entre elles?
+
+```{r solution_25}
+cor.test(info_samples$poids, info_samples$imc)
 plot(data=info_samples, poids~imc)
 abline(lm(data=info_samples, poids~imc), col="red")
+```
 
 
-library(dabestr)
+Le taux de triglycérides exprimé en log est-il également corrélé à l'IMC?
+
+```{r solution_26}
+cor.test(log(info_samples$TG), info_samples$imc)
+plot(data=info_samples, log(TG)~imc)
+abline(lm(data=info_samples, log(TG)~imc), col="red")
+```
+
+Il y a donc aussi une corrélation positive significative, bien que plus modeste en amplitude.
 
 
+#### 3.3.4 Tests de régression linéaire entre deux variables
 
+Testons à présent l'impact des catégorie d'imc (variable explicative) sur le taux de triglycérides en log (variable expliquée):
+
+
+```{r solution_27}
+summary(lm(log(info_samples$TG) ~ info_samples$imc_cat))
+```
+
+On constate un impact significatif du surpoids et de l'obésité sur ce taux de triglycérides!
