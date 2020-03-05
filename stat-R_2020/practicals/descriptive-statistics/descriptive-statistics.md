@@ -174,6 +174,18 @@ puis donnez une couleur différente à chaque point :
 - Récupérez le jeu de données airquality disponible sous R. 
 - Créez les graphes de la figure ci-après avec ce jeu de données. 
  
+ 
+
+```r
+knitr::include_graphics(path = "img/airquality.png")
+```
+
+<div class="figure">
+<img src="img/airquality.png" alt="Examples of graphical representations. " width="80%" />
+<p class="caption">Examples of graphical representations. </p>
+</div>
+
+ 
 ###	Fonctions à utiliser
 - `data()`
 - ` par()` avec les arguments `mfrow` et `mar``
