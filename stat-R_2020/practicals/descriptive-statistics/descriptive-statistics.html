@@ -10,7 +10,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Claire Vandiedonck &amp; Jacques van Helden" />
+<meta name="author" content="Claire Vandiedonck" />
 
 <meta name="date" content="2020-03-05" />
 
@@ -245,13 +245,226 @@ div.tocify {
 
 <h1 class="title toc-ignore">Descriptive statistics</h1>
 <h3 class="subtitle">DUBii – Statistics with R</h3>
-<h4 class="author">Claire Vandiedonck &amp; Jacques van Helden</h4>
+<h4 class="author">Claire Vandiedonck</h4>
 <h4 class="date">2020-03-05</h4>
 
 </div>
 
 
-
+<div id="exercice-1-personnalisation-dun-graphique" class="section level2">
+<h2>Exercice 1 : personnalisation d’un graphique</h2>
+<ol style="list-style-type: decimal">
+<li><p>Représentez trois points en positions (x, y) : (1, 2), (2, 2) et (3, 3).</p>
+<ul>
+<li>Ajoutez le titre “Mon graphique” avec l’argument <code>main</code></li>
+<li>Sauvegardez ce graphique en format .jpeg sous le nom <code>initial_graph.jpeg</code> avec la fonction jpeg() suivie de dev.off()</li>
+</ul></li>
+<li><p>Recommencez ce graphique en personnalisant l’affichage avec les options ou fonctions suivantes pas à pas (faites un nouveau graphique à chaque étape en ajoutant le nouveau paramètre) :</p></li>
+</ol>
+<ul>
+<li><code>xlim</code> et <code>ylim</code> : délimitez l’affichage des échelles des deux axes entre 0 et 4</li>
+<li><code>cex</code> : doublez la taille des points</li>
+<li><code>pch</code> : donnez d’abord une forme de cercle plein à chaque point ;</li>
+</ul>
+<p>Recommencez ensuite en spécifiant une forme différente pour chaque point :</p>
+<ul>
+<li>le 1er sous forme d’une croix (comme un +)</li>
+<li>le 2ème sous forme d’un triangle pointé vers le bas vide</li>
+<li>le 3ème sous forme d’un losange plein</li>
+<li>palette() : trouvez les couleurs de votre session et identifiez l’indice de la couleur grise</li>
+<li><p><code>col</code> : mettez tous les points en gris puis donnez une couleur différente à chaque point :</p>
+<ul>
+<li>rouge pour le 1er</li>
+<li>bleu pour le 2nd</li>
+<li>contour en magenta et fond en cyan pour le 3ème (avec l’option <code>bg</code> en plus)</li>
+</ul></li>
+<li><code>lwd</code> : doublez la largeur des traits tracés (ici des points)</li>
+<li><code>bty</code> : retirez la cadre entourant le graphique pour ne conserver que les axes</li>
+<li><p><code>xlab</code> et <code>ylab</code> = nommez les axes <code>Axe des  abscisses</code> et <code>Axe Y</code>.</p></li>
+</ul>
+<ol start="3" style="list-style-type: decimal">
+<li><p>Ajoutez un 4ème point sous forme d’un cercle plein gris aux coordonnées (1.5, 3) avec la fonction points()</p></li>
+<li><p>Ajoutez une ligne pointillée de couleur verte en position horizontale à l’ordonnée 1 avec la fonction abline() et en particulier l’option <code>lty</code></p></li>
+<li>Ajoutez une légende avec la fonction `legend()à dans le coin en haut à droite et aidez-vous des arguments :</li>
+</ol>
+<ul>
+<li><code>col</code>, <code>pt.bg</code>, <code>pt.lwd</code> et <code>pt.cex</code>: pour respecter les couleurs, formes des points que vous mettrez à la taille 1.5</li>
+<li><code>legend</code> : pour nommer vos points <code>A</code>, <code>B</code>, <code>C</code> et <code>D</code></li>
+<li><code>title</code> : pour donner un nom <code>Mes 4 points</code> à la légende</li>
+<li><code>horiz</code> : pour positionner les points côte à côte plutôt que les uns en dessous des autres</li>
+</ul>
+<ol start="6" style="list-style-type: decimal">
+<li>Donnez le titre <code>Mon graphique personnalisé</code> à votre figure</li>
+<li>Sauvegardez-la en format pdf avec le nom “cutom_graph.pdf”</li>
+</ol>
+<div id="fonctions-à-utiliser" class="section level3">
+<h3>Fonctions à utiliser</h3>
+<ul>
+<li><code>jpeg()</code></li>
+<li><code>pdf()</code></li>
+<li><code>dev.off()</code></li>
+<li><code>plot()</code></li>
+<li><code>palette()</code></li>
+<li><code>grep()</code></li>
+<li><code>points()</code></li>
+<li><code>abline()</code></li>
+<li><code>legend()</code></li>
+<li><code>title()</code></li>
+</ul>
+</div>
+</div>
+<div id="exercice-2-représentations-graphiques-de-données-qualitatives" class="section level2">
+<h2>Exercice 2: représentations graphiques de données qualitatives</h2>
+<ul>
+<li>Importez dans R le fichier <code>motorisation.txt</code> présent sur moodle.</li>
+<li>Générez un camembert de la répartition des différentes motorisations et choisissez vous-mêmes des couleurs.</li>
+<li>Générez également un diagramme en bâtons avec les proportions (fréquences relatives) des différentes motorisations colorées comme dans le camembert.</li>
+<li>Disposez les deux graphes côte à côte sur un même graphique.</li>
+</ul>
+<div id="fonctions-à-utiliser-1" class="section level3">
+<h3>Fonctions à utiliser</h3>
+<ul>
+<li><code>read.table()</code></li>
+<li><code>table()</code></li>
+<li><code>pie()</code></li>
+<li><code>barplot()</code></li>
+<li><code>par()</code>avec l’agument <code>mfrow</code></li>
+</ul>
+</div>
+</div>
+<div id="exercice-3-représentation-graphique-de-la-distribution-dune-variable-quantitative-continue" class="section level2">
+<h2>Exercice 3 représentation graphique de la distribution d’une variable quantitative continue</h2>
+<ul>
+<li>Tirez aléatoirement un ensemble de 100 nombres compatibles avec une distribution normale de moyenne 10 et d’écart type 5.</li>
+<li>Sauvegardez-les dans un objet R.</li>
+<li>Tracez la représentation histogramme des valeurs obtenues.</li>
+<li>Changez le nombre d’intervalles de l’histogramme : 5, 50 et 100.</li>
+<li>Tracez également une boite à moustache horizontale de ces data.</li>
+<li>Affichez les 3 histogrammes et le boxplot les uns en dessous des autres dans une même fenêtre graphique.</li>
+</ul>
+<div id="fonctions-à-utiliser-2" class="section level3">
+<h3>Fonctions à utiliser</h3>
+<ul>
+<li><code>rnorm()</code></li>
+<li><code>hist()</code> avec l’argument <code>breaks</code></li>
+<li><code>boxplot</code></li>
+<li><code>par()</code> avec l’argument <code>mfrow</code></li>
+</ul>
+</div>
+</div>
+<div id="exercice-4-lois-de-probabilité" class="section level2">
+<h2>Exercice 4: lois de probabilité</h2>
+<ul>
+<li><p>Si <span class="math inline">\(X\)</span> suit une loi normale de moyenne 10 et d’écart type 55, quelle est la probabilité <span class="math inline">\(P(7 \le X \le 15)\)</span> ?</p></li>
+<li><p>Si <span class="math inline">\(X\)</span> suit une loi normale de moyenne <span class="math inline">\(\mu=10\)</span> et d’écart type <span class="math inline">\(\sigma=55\)</span>, quelle est la valeur de <span class="math inline">\(k\)</span> telle que <span class="math inline">\(P( X \ld k) = 0.67\)</span> ?</p></li>
+<li><p>Soit un test de Chi2 à 3 degrés de libertés avec une valeur de la statistique de `Chi2=16.26$. Quelle est la p-value de ce test ?</p></li>
+</ul>
+</div>
+<div id="exercice-5-représentations-graphiques-de-données-quantitatives" class="section level2">
+<h2>Exercice 5: représentations graphiques de données quantitatives</h2>
+<ul>
+<li>Récupérez le jeu de données airquality disponible sous R.</li>
+<li>Créez les graphes de la figure ci-après avec ce jeu de données.</li>
+</ul>
+<div id="fonctions-à-utiliser-3" class="section level3">
+<h3>Fonctions à utiliser</h3>
+<ul>
+<li><code>data()</code></li>
+<li><code>par()</code> avec les arguments <code>mfrow</code> et `mar``</li>
+<li><code>plot()</code></li>
+<li><code>hist()</code></li>
+<li><code>lines()</code></li>
+<li><code>boxplot()</code></li>
+<li><code>abline()</code></li>
+<li><code>lm()</code></li>
+<li><code>title()</code></li>
+</ul>
+</div>
+</div>
+<div id="exercice-6-recommandé-pour-le-fil-rouge-analyse-de-données" class="section level2">
+<h2>Exercice 6 (recommandé pour le fil rouge) : analyse de données</h2>
+<p>Importez dans R le fichier <code>TP_poisson.txt</code> présent sur moodle R. Il s’agit d’un jeu de données de l’espèce de poisson “grand corégone” du lac Nathalie dans le territoire de la baie James (province du Québec) (d’après B. Scherrer). En 1977, Dumont a cherché les relations existantes entre le potentiel reproducteur (nombre d’œufs) de cette espèce de poisson (grand Corégone) et plusieurs caractères morphologiques. L’étude a été menée afin de déterminer une éventuelle relation entre le nombre d’œufs, révélant le potentiel reproducteur des poissons, et les variables morphologiques caractérisant ces poissons.</p>
+<ol style="list-style-type: decimal">
+<li><p>Statistiques descriptives</p>
+<ol style="list-style-type: lower-alpha">
+<li>Identifier les variables et le nombre d’observations de l’échantillon.</li>
+</ol>
+<strong>Fonctions à utiliser :</strong>
+<ul>
+<li><code>read.table()</code></li>
+<li><code>head()</code></li>
+<li><code>dim()</code></li>
+<li><code>str()</code></li>
+<li><code>names()</code></li>
+</ul></li>
+</ol>
+<ol start="2" style="list-style-type: lower-alpha">
+<li><p>Calculer la moyenne, la variance et l’écart-type de chaque variable aléatoire.</p>
+<strong>Fonctions à utiliser</strong>
+<ul>
+<li><code>mean()</code></li>
+<li><code>var()</code></li>
+<li><code>sd()</code></li>
+<li><code>apply()</code></li>
+<li><code>summary()</code></li>
+</ul></li>
+<li><p>Réaliser les représentations des distributions de chaque variable aléatoire.</p>
+<strong>Fonctions à utiliser</strong>
+<ul>
+<li><code>hist()</code></li>
+<li><code>par(mfrow = c(-,-))</code></li>
+<li><code>curve()</code></li>
+<li>`dnorm()</li>
+</ul></li>
+<li><p>Ces variables vous semblent-elles distribuées selon une loi Normale ? Pour le vérifier, superposez sur chaque histogramme les courbes de densité des lois normales correspondantes (les moyennes et les variances sont estimées à partir des données de l’échantillon). Vous pouvez tracer par superposition la loi normale de même moyenne et écart type sur chaque histogramme. Vous pouvez également tracer le qqplot pour comparer la distribution de chaque variable à celle d’une loi normale. Enfin, vous pouvez tester l’hypothèse nulle de la normalité par un test de Shapiro.</p>
+<strong>Fonctions à utiliser</strong>
+<ul>
+<li><code>curve()</code></li>
+<li><code>dnorm()</code></li>
+<li><code>qqplot()</code></li>
+<li><code>qqline()</code></li>
+</ul></li>
+</ol>
+<ol start="2" style="list-style-type: decimal">
+<li>Comparaison des potentiels reproducteurs selon l’âge : Existe-t-il une différence du nombre d’œufs produits entre les poissons jeunes (âge inférieur à 10 ans) et âgés (âge supérieur ou égal à 10)?
+<ol style="list-style-type: lower-alpha">
+<li>Créez une nouvelle variable qualitative pour identifier les deux groupes : les individus <code>jeunes</code> et les individus <code>âgés</code></li>
+</ol>
+<strong>Fonction à utiliser</strong>
+<ul>
+<li><code>which()</code></li>
+</ul></li>
+</ol>
+<ol start="2" style="list-style-type: lower-alpha">
+<li><p>Représentez la distribution de la variable <code>œufs</code> en fonction de la variable <code>âge</code>.</p>
+<strong>Fonctions à utiliser</strong>
+<ul>
+<li><code>boxplot()</code></li>
+<li><code>stripchart</code></li>
+</ul></li>
+<li><p>Calculez les moyennes dans chaque groupe du nombre d’œufs</p>
+<strong>Fonctions à utiliser</strong>
+<ul>
+<li><code>apply()</code></li>
+<li><code>mean()</code></li>
+</ul></li>
+<li><p>Existe-t-il une différence entre ces moyennes ?</p>
+<strong>Fonctions à utiliser</strong>
+<ul>
+<li><code>t.test()</code></li>
+<li><code>wilcox.test()</code></li>
+</ul></li>
+<li><p>Existe-t-il une relation linéaire entre le poids des gonades et le nombre d’oeufs produits ?</p>
+<strong>Fonctions à utiliser</strong>
+<ul>
+<li><code>plot()</code></li>
+<li><code>cor()</code></li>
+<li><code>lm()</code></li>
+<li><code>or.test()</code></li>
+</ul>
+<p><strong>Facultatif :</strong> Vous pouvez ensuite tester l’effet d’autres variables sur la variable <code>oeufs</code>.</p></li>
+</ol>
+</div>
 
 
 
