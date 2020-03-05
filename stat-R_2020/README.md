@@ -1,6 +1,23 @@
 # Statistics with R -- 2020 session
 
 
+## Toc
+
+- [Goals](#goals)
+- [Teachers](#teachers)
+- [Links](#links)
+- [Tutorials and good practice](#tutorials-and-good-practice)
+- [Teaching material](#teaching-material)
+
+    - [Session 1. R and Rmd basics](#session-1.-r-and-rmd-basics)
+    - [Session 2. Statistical analysis with R](#session-2.-statistical-analysis-with-r)
+    - [Session 3. Differential analysis](#session-3.-differential-analysis)
+    - [Session 4. Clustering](clustering/)
+    - [Session 5. Data exploration and enrichment analysis](#session-5.-data-exploration-and-enrichment-analysis)
+    - [Session 6. Supervised classificaiton and learning](#session-6.-supervised-classificaiton-and-learning)
+
+## Goals
+
 The aim of this module is to provide you with the bases of R programming and to present you some statistical concepts for high-throuput data.
 
 To follow this course, prior knowledge is expected on: 
@@ -46,9 +63,9 @@ Link to the prerequisites:
 | R style guide | Google’s R Style Guide  | <https://google.github.io/styleguide/Rguide.html> |
 
 
+## Teaching material
 
-
-## Session 1: R and Rmd basics
+### Session 1. R and Rmd basics
 
 
 | Topics |  Duration | Material |
@@ -62,17 +79,22 @@ Link to the prerequisites:
 | R markdown | 45' | Demo |
 
 
-## Session 2
+### Session 2. Statistical analysis with R
 
-## Session 3: differential analysis
+
+| Topics |  Duration | Material |
+|---------------------------------|----------|-------------|
+| | | |
+
+### Session 3. Differential analysis
+
+### Session 4. Clustering
 
 Contents: [clustering/](clustering/)
 
-## Session 4: clustering
+### Session 5. Data exploration and enrichment analysis
 
-## Session 5
-
-## Session 6
+### Session 6. Supervised classificaiton and learning
 
 
 
