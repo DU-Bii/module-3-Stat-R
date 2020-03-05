@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Claire Vandiedonck" />
+
+<meta name="date" content="2020-03-05" />
+
+<title>Descriptive statistics</title>
+
+<script src="descriptive-statistics_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="descriptive-statistics_files/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="descriptive-statistics_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="descriptive-statistics_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="descriptive-statistics_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="descriptive-statistics_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="descriptive-statistics_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="descriptive-statistics_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="descriptive-statistics_files/navigation-1.1/tabsets.js"></script>
+<script src="descriptive-statistics_files/navigation-1.1/codefolding.js"></script>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  { background-color: #f8f8f8; }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #000000; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #000000; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+.sourceCode .row {
+  width: 100%;
+}
+.sourceCode {
+  overflow-x: auto;
+}
+.code-folding-btn {
+  margin-right: -30px;
+}
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Descriptive statistics</h1>
+<h3 class="subtitle">DUBii – Statistics with R</h3>
+<h4 class="author">Claire Vandiedonck</h4>
+<h4 class="date">2020-03-05</h4>
+
+</div>
+
+
+<div id="exercice-1-personnalisation-dun-graphique" class="section level2">
+<h2>Exercice 1 : personnalisation d’un graphique</h2>
+<ol style="list-style-type: decimal">
+<li><p>Représentez trois points en positions (x, y) : (1, 2), (2, 2) et (3, 3).</p>
+<ul>
+<li>Ajoutez le titre “Mon graphique” avec l’argument <code>main</code></li>
+<li>Sauvegardez ce graphique en format .jpeg sous le nom <code>initial_graph.jpeg</code> avec la fonction jpeg() suivie de dev.off()</li>
+</ul></li>
+<li><p>Recommencez ce graphique en personnalisant l’affichage avec les options ou fonctions suivantes pas à pas (faites un nouveau graphique à chaque étape en ajoutant le nouveau paramètre) :</p></li>
+</ol>
+<ul>
+<li><code>xlim</code> et <code>ylim</code> : délimitez l’affichage des échelles des deux axes entre 0 et 4</li>
+<li><code>cex</code> : doublez la taille des points</li>
+<li><code>pch</code> : donnez d’abord une forme de cercle plein à chaque point ;</li>
+</ul>
+<p>Recommencez ensuite en spécifiant une forme différente pour chaque point :</p>
+<ul>
+<li>le 1er sous forme d’une croix (comme un +)</li>
+<li>le 2ème sous forme d’un triangle pointé vers le bas vide</li>
+<li>le 3ème sous forme d’un losange plein</li>
+<li>palette() : trouvez les couleurs de votre session et identifiez l’indice de la couleur grise</li>
+<li><p><code>col</code> : mettez tous les points en gris puis donnez une couleur différente à chaque point :</p>
+<ul>
+<li>rouge pour le 1er</li>
+<li>bleu pour le 2nd</li>
+<li>contour en magenta et fond en cyan pour le 3ème (avec l’option <code>bg</code> en plus)</li>
+</ul></li>
+<li><code>lwd</code> : doublez la largeur des traits tracés (ici des points)</li>
+<li><code>bty</code> : retirez la cadre entourant le graphique pour ne conserver que les axes</li>
+<li><p><code>xlab</code> et <code>ylab</code> = nommez les axes <code>Axe des  abscisses</code> et <code>Axe Y</code>.</p></li>
+</ul>
+<ol start="3" style="list-style-type: decimal">
+<li><p>Ajoutez un 4ème point sous forme d’un cercle plein gris aux coordonnées (1.5, 3) avec la fonction points()</p></li>
+<li><p>Ajoutez une ligne pointillée de couleur verte en position horizontale à l’ordonnée 1 avec la fonction abline() et en particulier l’option <code>lty</code></p></li>
+<li>Ajoutez une légende avec la fonction `legend()à dans le coin en haut à droite et aidez-vous des arguments :</li>
+</ol>
+<ul>
+<li><code>col</code>, <code>pt.bg</code>, <code>pt.lwd</code> et <code>pt.cex</code>: pour respecter les couleurs, formes des points que vous mettrez à la taille 1.5</li>
+<li><code>legend</code> : pour nommer vos points <code>A</code>, <code>B</code>, <code>C</code> et <code>D</code></li>
+<li><code>title</code> : pour donner un nom <code>Mes 4 points</code> à la légende</li>
+<li><code>horiz</code> : pour positionner les points côte à côte plutôt que les uns en dessous des autres</li>
+</ul>
+<ol start="6" style="list-style-type: decimal">
+<li>Donnez le titre <code>Mon graphique personnalisé</code> à votre figure</li>
+<li>Sauvegardez-la en format pdf avec le nom “cutom_graph.pdf”</li>
+</ol>
+<div id="fonctions-à-utiliser" class="section level3">
+<h3>Fonctions à utiliser</h3>
+<ul>
+<li><code>jpeg()</code></li>
+<li><code>pdf()</code></li>
+<li><code>dev.off()</code></li>
+<li><code>plot()</code></li>
+<li><code>palette()</code></li>
+<li><code>grep()</code></li>
+<li><code>points()</code></li>
+<li><code>abline()</code></li>
+<li><code>legend()</code></li>
+<li><code>title()</code></li>
+</ul>
+</div>
+</div>
+<div id="exercice-2-représentations-graphiques-de-données-qualitatives" class="section level2">
+<h2>Exercice 2: représentations graphiques de données qualitatives</h2>
+<ul>
+<li>Importez dans R le fichier <a href="data/motorisation.txt"><code>motorisation.txt</code></a>.</li>
+<li>Générez un camembert de la répartition des différentes motorisations et choisissez vous-mêmes des couleurs.</li>
+<li>Générez également un diagramme en bâtons avec les proportions (fréquences relatives) des différentes motorisations colorées comme dans le camembert.</li>
+<li>Disposez les deux graphes côte à côte sur un même graphique.</li>
+</ul>
+<div id="fonctions-à-utiliser-1" class="section level3">
+<h3>Fonctions à utiliser</h3>
+<ul>
+<li><code>read.table()</code></li>
+<li><code>table()</code></li>
+<li><code>pie()</code></li>
+<li><code>barplot()</code></li>
+<li><code>par()</code>avec l’agument <code>mfrow</code></li>
+</ul>
+</div>
+</div>
+<div id="exercice-3-représentation-graphique-de-la-distribution-dune-variable-quantitative-continue" class="section level2">
+<h2>Exercice 3 représentation graphique de la distribution d’une variable quantitative continue</h2>
+<ul>
+<li>Tirez aléatoirement un ensemble de 100 nombres compatibles avec une distribution normale de moyenne 10 et d’écart type 5.</li>
+<li>Sauvegardez-les dans un objet R.</li>
+<li>Tracez la représentation histogramme des valeurs obtenues.</li>
+<li>Changez le nombre d’intervalles de l’histogramme : 5, 50 et 100.</li>
+<li>Tracez également une boite à moustache horizontale de ces data.</li>
+<li>Affichez les 3 histogrammes et le boxplot les uns en dessous des autres dans une même fenêtre graphique.</li>
+</ul>
+<div id="fonctions-à-utiliser-2" class="section level3">
+<h3>Fonctions à utiliser</h3>
+<ul>
+<li><code>rnorm()</code></li>
+<li><code>hist()</code> avec l’argument <code>breaks</code></li>
+<li><code>boxplot</code></li>
+<li><code>par()</code> avec l’argument <code>mfrow</code></li>
+</ul>
+</div>
+</div>
+<div id="exercice-4-lois-de-probabilité" class="section level2">
+<h2>Exercice 4: lois de probabilité</h2>
+<ul>
+<li><p>Si <span class="math inline">\(X\)</span> suit une loi normale de moyenne 10 et d’écart type 55, quelle est la probabilité <span class="math inline">\(P(7 \le X \le 15)\)</span> ?</p></li>
+<li><p>Si <span class="math inline">\(X\)</span> suit une loi normale de moyenne <span class="math inline">\(\mu=10\)</span> et d’écart type <span class="math inline">\(\sigma=55\)</span>, quelle est la valeur de <span class="math inline">\(k\)</span> telle que <span class="math inline">\(P( X \ld k) = 0.67\)</span> ?</p></li>
+<li><p>Soit un test de Chi2 à 3 degrés de libertés avec une valeur de la statistique de `Chi2=16.26$. Quelle est la p-value de ce test ?</p></li>
+</ul>
+</div>
+<div id="exercice-5-représentations-graphiques-de-données-quantitatives" class="section level2">
+<h2>Exercice 5: représentations graphiques de données quantitatives</h2>
+<ul>
+<li>Récupérez le jeu de données airquality disponible sous R.</li>
+<li>Créez les graphes de la figure ci-après avec ce jeu de données.</li>
+</ul>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&quot;img/airquality.png&quot;</span>)</a></code></pre></div>
+<div class="figure">
+<img src="img/airquality.png" alt="Examples of graphical representations. " width="80%" />
+<p class="caption">
+Examples of graphical representations.
+</p>
+</div>
+<div id="fonctions-à-utiliser-3" class="section level3">
+<h3>Fonctions à utiliser</h3>
+<ul>
+<li><code>data()</code></li>
+<li><code>par()</code> avec les arguments <code>mfrow</code> et `mar``</li>
+<li><code>plot()</code></li>
+<li><code>hist()</code></li>
+<li><code>lines()</code></li>
+<li><code>boxplot()</code></li>
+<li><code>abline()</code></li>
+<li><code>lm()</code></li>
+<li><code>title()</code></li>
+</ul>
+</div>
+</div>
+<div id="exercice-6-analyse-de-données" class="section level2">
+<h2>Exercice 6 : analyse de données</h2>
+<p>Importez dans R le fichier <a href="data/TP_poisson.txt"><code>TP_poisson.txt</code></a> R. Il s’agit d’un jeu de données de l’espèce de poisson “grand corégone” du lac Nathalie dans le territoire de la baie James (province du Québec) (d’après B. Scherrer). En 1977, Dumont a cherché les relations existantes entre le potentiel reproducteur (nombre d’œufs) de cette espèce de poisson (grand Corégone) et plusieurs caractères morphologiques. L’étude a été menée afin de déterminer une éventuelle relation entre le nombre d’œufs, révélant le potentiel reproducteur des poissons, et les variables morphologiques caractérisant ces poissons.</p>
+<ol style="list-style-type: decimal">
+<li><p>Statistiques descriptives</p>
+<ol style="list-style-type: lower-alpha">
+<li>Identifier les variables et le nombre d’observations de l’échantillon.</li>
+</ol>
+<strong>Fonctions à utiliser :</strong>
+<ul>
+<li><code>read.table()</code></li>
+<li><code>head()</code></li>
+<li><code>dim()</code></li>
+<li><code>str()</code></li>
+<li><code>names()</code></li>
+</ul></li>
+</ol>
+<ol start="2" style="list-style-type: lower-alpha">
+<li><p>Calculer la moyenne, la variance et l’écart-type de chaque variable aléatoire.</p>
+<strong>Fonctions à utiliser</strong>
+<ul>
+<li><code>mean()</code></li>
+<li><code>var()</code></li>
+<li><code>sd()</code></li>
+<li><code>apply()</code></li>
+<li><code>summary()</code></li>
+</ul></li>
+<li><p>Réaliser les représentations des distributions de chaque variable aléatoire.</p>
+<strong>Fonctions à utiliser</strong>
+<ul>
+<li><code>hist()</code></li>
+<li><code>par(mfrow = c(-,-))</code></li>
+<li><code>curve()</code></li>
+<li>`dnorm()</li>
+</ul></li>
+<li><p>Ces variables vous semblent-elles distribuées selon une loi Normale ? Pour le vérifier, superposez sur chaque histogramme les courbes de densité des lois normales correspondantes (les moyennes et les variances sont estimées à partir des données de l’échantillon). Vous pouvez tracer par superposition la loi normale de même moyenne et écart type sur chaque histogramme. Vous pouvez également tracer le qqplot pour comparer la distribution de chaque variable à celle d’une loi normale. Enfin, vous pouvez tester l’hypothèse nulle de la normalité par un test de Shapiro.</p>
+<strong>Fonctions à utiliser</strong>
+<ul>
+<li><code>curve()</code></li>
+<li><code>dnorm()</code></li>
+<li><code>qqplot()</code></li>
+<li><code>qqline()</code></li>
+</ul></li>
+</ol>
+<ol start="2" style="list-style-type: decimal">
+<li>Comparaison des potentiels reproducteurs selon l’âge : Existe-t-il une différence du nombre d’œufs produits entre les poissons jeunes (âge inférieur à 10 ans) et âgés (âge supérieur ou égal à 10)?
+<ol style="list-style-type: lower-alpha">
+<li>Créez une nouvelle variable qualitative pour identifier les deux groupes : les individus <code>jeunes</code> et les individus <code>âgés</code></li>
+</ol>
+<strong>Fonction à utiliser</strong>
+<ul>
+<li><code>which()</code></li>
+</ul></li>
+</ol>
+<ol start="2" style="list-style-type: lower-alpha">
+<li><p>Représentez la distribution de la variable <code>œufs</code> en fonction de la variable <code>âge</code>.</p>
+<strong>Fonctions à utiliser</strong>
+<ul>
+<li><code>boxplot()</code></li>
+<li><code>stripchart</code></li>
+</ul></li>
+<li><p>Calculez les moyennes dans chaque groupe du nombre d’œufs</p>
+<strong>Fonctions à utiliser</strong>
+<ul>
+<li><code>apply()</code></li>
+<li><code>mean()</code></li>
+</ul></li>
+<li><p>Existe-t-il une différence entre ces moyennes ?</p>
+<strong>Fonctions à utiliser</strong>
+<ul>
+<li><code>t.test()</code></li>
+<li><code>wilcox.test()</code></li>
+</ul></li>
+<li><p>Existe-t-il une relation linéaire entre le poids des gonades et le nombre d’oeufs produits ?</p>
+<strong>Fonctions à utiliser</strong>
+<ul>
+<li><code>plot()</code></li>
+<li><code>cor()</code></li>
+<li><code>lm()</code></li>
+<li><code>or.test()</code></li>
+</ul>
+<p><strong>Facultatif :</strong> Vous pouvez ensuite tester l’effet d’autres variables sur la variable <code>oeufs</code>.</p></li>
+</ol>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

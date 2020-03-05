@@ -1,30 +1,5 @@
 # [DUBii](https://du-bii.github.io/accueil/) - module 3 - Analyse statistique avec R
 
-The aim of this module is to provide you with the bases of R programming and to present you some statistical concepts for high-throuput data.
-
-To follow this course, prior knowledge is expected on: 
-
-- R environment, 
-- getting help in R,
-- types of variables (particularly on vectors).
-
-Link to the prerequisites: 
-
-<https://du-bii.github.io/accueil/activites_preparatoires/>
-
-
-## Teachers
-
-| Name  | Role(s) |
-|-----------------------------|----------------|
-| [Claire Vandiedonck](https://orcid.org/0000-0002-6669-6923) | Coordinator, teacher |
-| [Jacques van Helden](https://orcid.org/0000-0002-8799-8584) | Coordinator, teacher |
-| Guillaume Achaz | Teacher |
-| Anne Badel | Teacher |
-| Magali Berland | Teacher |
-| Antoine Bridier-Nahmias | Teacher |
-| Olivier Sand | Teacher |
-| Natacha Cerisier | Helper |
 
 ## Supports for the successive editions
 
@@ -38,8 +13,8 @@ Link to the prerequisites:
 
 | Doc | Description |URL |
 |------------|-------------------------------|---------------------------------------|
-| Git pages | Web site of the course | <https://du-bii.github.io/module-3-Stat-R/> | 
-| Git repo | Repository with all the teaching material | <https://github.com/DU-Bii/module-3-Stat-R> |
+| **Git pages** | **Web site of the course**  (to see the supports) | <https://du-bii.github.io/module-3-Stat-R/> | 
+| Git repo | Repository enabling to download or clone the teaching material on your computer | <https://github.com/DU-Bii/module-3-Stat-R> |
 
 
 ## Tutorials and good practice

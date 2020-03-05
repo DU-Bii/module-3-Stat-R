@@ -1,7 +1,7 @@
 ---
 title: "Start R -- First steps with R and RStudio"
 author: "Claire Vandiedonck & Jacques van Helden"
-date: "2020-03-03"
+date: "2020-03-04"
 output:
   slidy_presentation:
     font_adjustment: 0   ## set to negative/positive values for smaller/bigger fonts
@@ -89,25 +89,24 @@ sessionInfo()
 ```
 
 ```
-R version 3.5.1 (2018-07-02)
-Platform: x86_64-redhat-linux-gnu (64-bit)
-Running under: CentOS Linux 7 (Core)
+R version 3.6.2 (2019-12-12)
+Platform: x86_64-apple-darwin13.4.0 (64-bit)
+Running under: macOS Mojave 10.14.6
 
 Matrix products: default
-BLAS/LAPACK: /usr/lib64/R/lib/libRblas.so
+BLAS/LAPACK: /Users/jvanheld/miniconda3/envs/rsat-core-2020.02.29/lib/libopenblasp-r0.3.8.dylib
 
 locale:
- [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C               LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8     LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8    LC_PAPER=en_US.UTF-8       LC_NAME=C                  LC_ADDRESS=C               LC_TELEPHONE=C            
-[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 
 attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] knitr_1.25
+[1] knitr_1.28
 
 loaded via a namespace (and not attached):
- [1] compiler_3.5.1  magrittr_1.5    tools_3.5.1     htmltools_0.4.0 yaml_2.2.0      Rcpp_1.0.3      stringi_1.4.6   rmarkdown_1.16  stringr_1.4.0   xfun_0.10       digest_0.6.25   rlang_0.4.5     evaluate_0.14  
+ [1] compiler_3.6.2  magrittr_1.5    tools_3.6.2     htmltools_0.4.0 yaml_2.2.1      Rcpp_1.0.3      stringi_1.4.6   rmarkdown_2.1   stringr_1.4.0   xfun_0.12       digest_0.6.25   rlang_0.4.4     evaluate_0.14  
 ```
 
 
@@ -141,18 +140,64 @@ setwd("~")  ## An easier way
 - in Unix, `~` denotes your home directory (equivalent to `$HOME`)
 
 
-## Creating a work space for this course
+## Defining a specific directory for this session
 
 We will create specific directory to store the data and results of the practicals for this course.
+For this we use the function `file.path()` to concatenate subfolders. 
 
 
 ```r
 ## Define the directory for this course
 courseDir <- file.path("~", "dubii20", "stat-R", "session1")
 print(courseDir) ## Check the result
+```
 
+
+## Creating a directory for this session
+
+Use the command `dir.create()` to create the directory defined`courseDir` defined in the previous slide. 
+
+
+```r
 ## Create the directory
 dir.create(courseDir) ## THIS WILL LIKELY NOT WORK
+```
+
+The above command returned an error. Do you understand why?
+If not read the help page and find a way to solve the problem. 
+
+
+```r
+help(dir.create )
+```
+
+
+## Creating a directory for this session
+
+**Solution:**
+
+- The command `dir.create()` refused to create a subdirectory (`session1`) because its parent directories (`dubii2020` and `stat-R`) did not exist.
+- We can use the option `recursive= TRUE` to create.
+
+
+```r
+## Create the directory with the recursive option
+dir.create(path = courseDir, recursive = TRUE)
+```
+Now, re-run the same command and checl the result. 
+
+
+
+```r
+## Create the directory with the recursive option
+dir.create(path = courseDir, recursive = TRUE)
+```
+
+## Creating a directory for this session
+
+
+```r
+## Create the directory with the recursive option
 dir.create(path = courseDir, 
            recursive = TRUE, ## Create the parent directories
            showWarnings = FALSE) ## Don't shout it already exists
@@ -162,32 +207,6 @@ setwd(courseDir)
 getwd() ## Check that you are in the right place
 ```
 
-# Exercises: handling R objects: the main R objects
-
-## 1. Creating matrices
-
-1.1. Create an identity matrix named `identityMat` of dimensions $10 \times 10$. 
-1.2. Create a matrix named `randomMat` and fill it up with random values following a normal distribution with mean $\mu=0$ and variance $\sigma^2=5$.
-
-**Tips**
-
-- Identity matrices contain 1 on the diagonal, and 0 everywhere else
-- Functions: `matrix()`, `diag()`, `rnorm()`
-
-## 2. Combining vectors and matrices
-
-2.1 Create two random vectors named `x1` and `x2`, containing 100 random values following respectively: 
-
-    - a standard normal law
-    - a uniform law spreading from 0 to 10
-
-2.2. Create a matrix named `m1` whose first column contains the 10 first values of `x1`and the second one the 10 last values of `x2`. 
-
-## 2. Combining vectors and matrices (continued)
-
-2.3. Create a matrix named `m2` whose first column contains contains the  16th, 51th, 79the, 31the et 27th values of `x2` valeurs de x1, and whose second column contains the 30th, 70th, 12th, 49th et 45th values of `x2`.
-
-2.4. 
 
 
 ## Load the data for this course
