@@ -392,16 +392,16 @@ div.tocify {
 
 <div id="objectifs" class="section level1">
 <h1>Objectifs</h1>
-<p>Ce tutoriel doit vous faire voir comment représenter et analyser des variables qualitatives et quantitatives, et effectuer les principaux tests statistiques.</p>
-<p>Le jeu de données <code>diabdata</code> est extrait d’une cohorte de patients diabétiques de type 2 suivis par le Dr Louis Potier à l’hopital Bichat. Il comporte des informations morphométriques (taille, poids) et biologiques (lipides sériques). Il inclut 1732 patients.</p>
+<p>Ce tutoriel vous montre comment représenter et analyser des variables qualitatives et quantitatives, et effectuer les principaux tests statistiques.</p>
+<p>Le jeu de données <code>diabdata</code> est extrait d’une cohorte de patients diabétiques de type 2 suivis par le Dr Louis Potier à l’hopital Bichat. Il comporte, entre autres, des informations morphométriques (taille, poids) et biologiques (lipides sériques). Il inclut 1732 patients.</p>
 <div id="solutions" class="section level4">
 <h4>Solutions</h4>
 <p>En cas d’urgence poussez sur <strong>Code</strong> pour révéler la solution.</p>
 </div>
 <div id="importation-des-donnees" class="section level2">
 <h2>1. Importation des données</h2>
-<p>Le fichier a importé s’appelle <code>diabdata.txt</code>. Il est présent dans le répertoire <code>/shared/projects/dubii2020/data/module3/seance2/</code></p>
-<p>Ouvrez le d’abord dans un éditeur de texte pour voir comment il est structuré. Importez-le dans votre session R ouverte dans votre répertoire de travail. Attention à la décimale!</p>
+<p>Le fichier à importer s’appelle <code>diabdata.txt</code>. Il est présent dans le répertoire <code>/shared/projects/dubii2020/data/module3/seance2/</code></p>
+<p>Ouvrez-le d’abord dans un éditeur de texte pour voir comment il est structuré. Importez-le dans votre session R ouverte dans votre répertoire de travail. Attention à la décimale!</p>
 <p><strong>Fonctions : </strong> <code>setwd(),read.table(), str(), head(), tail()</code></p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">setwd</span>(<span class="st">&quot;~&quot;</span>)</a>
 <a class="sourceLine" id="cb1-2" data-line-number="2">info_samples &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;/shared/projects/dubii2020/data/module3/seance2/diabdata.txt&quot;</span>, <span class="dt">header=</span><span class="ot">TRUE</span>, <span class="dt">sep=</span><span class="st">&quot;;&quot;</span>, <span class="dt">dec =</span> <span class="st">&quot;,&quot;</span> , <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
@@ -473,7 +473,7 @@ EX +5 ANS       NON       OUI
 <pre><code>
          AFRIQUE AMERIQUE DU NORD  AMERIQUE LATINE             ASIE           EUROPE 
              657                3               23               78              971 </code></pre>
-<p>Compte-tenu des effectifs moindre pour les sujets d’origine d’Amérique du Nord et d’Amérique latine, regroupez ces deux catégories en une seule que vous appellerez <code>AMERIQUE</code></p>
+<p>Compte-tenu des effectifs moindres pour les sujets d’origine d’Amérique du Nord et d’Amérique latine, regroupez ces deux catégories en une seule que vous appellerez <code>AMERIQUE</code></p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1">info_samples<span class="op">$</span>origine[<span class="kw">which</span>(info_samples<span class="op">$</span>origine <span class="op">==</span><span class="st"> &quot;AMERIQUE DU NORD&quot;</span>)] &lt;-<span class="st"> &quot;AMERIQUE&quot;</span></a>
 <a class="sourceLine" id="cb22-2" data-line-number="2">info_samples<span class="op">$</span>origine[<span class="kw">which</span>(info_samples<span class="op">$</span>origine <span class="op">==</span><span class="st"> &quot;AMERIQUE LATINE&quot;</span>)] &lt;-<span class="st"> &quot;AMERIQUE&quot;</span></a></code></pre></div>
 </div>
@@ -489,7 +489,7 @@ EX +5 ANS       NON       OUI
 <p><img src="figures/data-structures_solution_7-2.png" width="80%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="kw">pie</span>(<span class="kw">table</span>(info_samples<span class="op">$</span>origine), <span class="dt">main=</span><span class="st">&quot;Pie chart of the origine variable in the sample&quot;</span>, <span class="dt">cex=</span><span class="fl">0.5</span>, <span class="dt">clockwise =</span> T)</a></code></pre></div>
 <p><img src="figures/data-structures_solution_7-3.png" width="80%" style="display: block; margin: auto;" /></p>
-<p>Ceendant, la représentation sous forme de camembert n’est pas recommandée car l’oeil a souvent du mal à interpréter des surfaces différentes.</p>
+<p>Ceendant, la représentation sous forme de camembert n’est pas recommandée car l’oeil a souvent du mal à comparer des aires différentes.</p>
 <p>Une deuxième représentation qui est préférée pour celle des variables qualitatives est celle des diagrammes en bâtons. En ordonnées vous pouvez indiquer l’effectif ou la fréquence dans l’échantillon.</p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="kw">barplot</span>(<span class="kw">table</span>(info_samples<span class="op">$</span>origine)<span class="op">/</span><span class="kw">length</span>(info_samples<span class="op">$</span>origine), <span class="dt">main=</span><span class="st">&quot;Distribution of the origine variable&quot;</span>, <span class="dt">ylab=</span><span class="st">&quot;frequency&quot;</span>)</a></code></pre></div>
 <p><img src="figures/data-structures_solution_8-1.png" width="80%" style="display: block; margin: auto;" /></p>
@@ -499,7 +499,7 @@ EX +5 ANS       NON       OUI
     AFRIQUE AMERIQUE ASIE EUROPE
   F     293       11   35    373
   M     364       15   43    598</code></pre>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1"><span class="kw">barplot</span>(<span class="kw">table</span>(info_samples<span class="op">$</span>genre, info_samples<span class="op">$</span>origine), <span class="dt">main=</span><span class="st">&quot;Distribution de la variable origine avec la répartition des genres epilée&quot;</span>, <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">&quot;pink&quot;</span>, <span class="st">&quot;blue&quot;</span>) )</a></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1"><span class="kw">barplot</span>(<span class="kw">table</span>(info_samples<span class="op">$</span>genre, info_samples<span class="op">$</span>origine), <span class="dt">main=</span><span class="st">&quot;Distribution de la variable origine avec la répartition des genres empilée&quot;</span>, <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">&quot;pink&quot;</span>, <span class="st">&quot;blue&quot;</span>) )</a></code></pre></div>
 <p><img src="figures/data-structures_solution_9-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1"><span class="kw">barplot</span>(<span class="kw">table</span>(info_samples<span class="op">$</span>origine, info_samples<span class="op">$</span>genre), <span class="dt">main=</span><span class="st">&quot;Distribution de la variable genre avec la répartition de l&#39;origine empilée&quot;</span>) </a></code></pre></div>
 <p><img src="figures/data-structures_solution_9-2.png" width="80%" style="display: block; margin: auto;" /></p>
@@ -514,7 +514,7 @@ EX +5 ANS       NON       OUI
 <div id="tests-statistiques-sur-variables-qualitatives" class="section level3">
 <h3>2.4 Tests statistiques sur variables qualitatives</h3>
 <p>On peut effectuer des tests de comparaison des proportions ou des distributions avec un test de Chi2 de Pearson.</p>
-<p>Testez à présent si la distribution de la variable <code>tabac</code> est indépendante de celle du <code>genre</code> par un test de Chi2 à 2 degrés de libertés. L’hypothèse nulle est celle de distribution indépendantes, l’hypothèse alsternative de variables liées. Extraire la p-value du test.</p>
+<p>Testez à présent si la distribution de la variable <code>tabac</code> est indépendante de celle du <code>genre</code> par un test de Chi2 à 2 degrés de libertés. L’hypothèse nulle est celle de distributions indépendantes, l’hypothèse alternative celle de variables liées. Extraire la p-value du test.</p>
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1"><span class="kw">chisq.test</span>(info_samples<span class="op">$</span>tabac, info_samples<span class="op">$</span>genre)</a></code></pre></div>
 <pre><code>
     Pearson&#39;s Chi-squared test
@@ -555,7 +555,7 @@ X-squared = 93.763, df = 2, p-value &lt; 2.2e-16</code></pre>
 <h2>3. Variables quantitatives</h2>
 <div id="description-des-variables-quantitatives" class="section level3">
 <h3>3.1 Description des variables quantitatives</h3>
-<p>Le jeu de données comprends 3 variables quantitatives continues: la <code>taille</code>, le <code>poids</code> et le taux de triglycréides <code>TG</code></p>
+<p>Le jeu de données comprend 3 variables quantitatives continues: la <code>taille</code>, le <code>poids</code> et le taux de triglycérides sériques <code>TG</code></p>
 <p>Définissez une nouvelle variable <code>ìmc</code> correspondant à l’indice de masse corporelle. On rappelle qu’il s’agit du poids en kg divisé par le carré de la taille en m². Arrondissez cette valeur à deux décimales.</p>
 <div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" data-line-number="1">info_samples<span class="op">$</span>imc &lt;-<span class="st"> </span><span class="kw">round</span>(info_samples<span class="op">$</span>poids<span class="op">/</span>(info_samples<span class="op">$</span>taille<span class="op">/</span><span class="dv">100</span>)<span class="op">^</span><span class="dv">2</span>,<span class="dv">2</span>)</a></code></pre></div>
 </div>
@@ -572,17 +572,17 @@ X-squared = 93.763, df = 2, p-value &lt; 2.2e-16</code></pre>
  Max.   :171.00   Max.   :200.0   Max.   :96.000   Max.   :56.93  </code></pre>
 <p>Il existe plusieurs représentations possibles de ces distributions:</p>
 <ul>
-<li><p>un histogramme auquel vous pouvez supperposer la courbe de densité si vous avez affiché l’axe des ordonnées en fréquence plutôt qu’en effectifs.</p></li>
-<li><p>une boite à moustaches</p></li>
+<li><p>un histogramme auquel vous pouvez superposer la courbe de densité si vous avez affiché l’axe des ordonnées en fréquences plutôt qu’en effectifs.</p></li>
+<li><p>une boîte à moustaches</p></li>
 <li><p>des nuages de points à une dimension (<code>stripcharts</code>)</p></li>
 </ul>
-<p>Dessinez un histogramme pour chacune des vraiables taille et poids.</p>
+<p>Dessinez un histogramme pour chacune des variables taille et poids.</p>
 <div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" data-line-number="1"><span class="kw">hist</span>(info_samples<span class="op">$</span>taille)</a></code></pre></div>
 <p><img src="figures/data-structures_solution_13-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb44-1" data-line-number="1"><span class="kw">hist</span>(info_samples<span class="op">$</span>poids, <span class="dt">freq=</span>F)</a>
 <a class="sourceLine" id="cb44-2" data-line-number="2"><span class="kw">lines</span>(<span class="kw">density</span>(info_samples<span class="op">$</span>poids), <span class="dt">col=</span><span class="st">&quot;red&quot;</span>)</a></code></pre></div>
 <p><img src="figures/data-structures_solution_13-2.png" width="80%" style="display: block; margin: auto;" /></p>
-<p>Dessinez ensuite dans une même fenêtre graphique ccôte à côte les boxplots des variables tailles et poids.</p>
+<p>Dessinez ensuite dans une même fenêtre graphique côte à côte les boxplots des variables tailles et poids.</p>
 <div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" data-line-number="1">opar &lt;-<span class="st"> </span><span class="kw">par</span>() <span class="co"># pour sauvegardez les paramètres graphiques</span></a>
 <a class="sourceLine" id="cb45-2" data-line-number="2"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)) <span class="co"># pour dessiner les deux boxplots sur une ligne et deux colonnes de la fenêtre graphique</span></a>
 <a class="sourceLine" id="cb45-3" data-line-number="3"><span class="kw">boxplot</span>(info_samples<span class="op">$</span>taille, <span class="dt">main=</span><span class="st">&quot;taille&quot;</span>)</a>
@@ -598,8 +598,8 @@ X-squared = 93.763, df = 2, p-value &lt; 2.2e-16</code></pre>
 <p><img src="figures/data-structures_solution_15-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb48-1" data-line-number="1"><span class="kw">par</span>(opar)</a></code></pre></div>
 <p><strong>Quelle est l’influence des variables qualitatives sur ces distributions?</strong></p>
-<p>Nous allons explorer l’impact du facteur origine et de celui du genre sur la taille et le poids. Une première analyse exploratoire consite à représenter ces distributions selon le facteur considéré.</p>
-<p>Dessinez 4 boxplots dans une même fenêtre graphique de ces distributions.</p>
+<p>Nous allons explorer l’impact du facteur origine et de celui du genre sur la taille et le poids. Une première analyse exploratoire consiste à représenter ces distributions selon le facteur considéré.</p>
+<p>Dessinez 4 boxplots de ces distributions dans une même fenêtre graphique.</p>
 <div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb49-1" data-line-number="1">opar &lt;-<span class="st"> </span><span class="kw">par</span>()</a>
 <a class="sourceLine" id="cb49-2" data-line-number="2"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</a>
 <a class="sourceLine" id="cb49-3" data-line-number="3"><span class="kw">boxplot</span> (info_samples<span class="op">$</span>taille <span class="op">~</span><span class="st"> </span>info_samples<span class="op">$</span>origine, <span class="dt">xlab=</span><span class="st">&quot;Region&quot;</span>, <span class="dt">ylab=</span><span class="st">&quot;taille&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;steelblue3&quot;</span>)</a>
@@ -613,8 +613,8 @@ X-squared = 93.763, df = 2, p-value &lt; 2.2e-16</code></pre>
 <h3>3.3 Tests statistiques sur des variables quantitatives</h3>
 <div id="tests-de-comparaison-de-2-moyennes" class="section level4">
 <h4>3.3.1 Tests de comparaison de 2 moyennes</h4>
-<p>En regardant les boxplots ci-dessus, on souhaite tester si le genre a effctivement un impact sur les variables <code>taille</code> et <code>poids</code></p>
-<p>Une première étape est de calculer les moyennes estimées dans ces échantillons de la moyenne dans la population.</p>
+<p>Après avoir regardé les boxplots ci-dessus, on souhaite tester si le genre a effectivement un impact sur les variables <code>taille</code> et <code>poids</code></p>
+<p>Une première étape est de calculer les moyennes dans ces échantillons pour estimer les moyennes dans la population.</p>
 <p>Commençons par la variable <code>poids</code>:</p>
 <div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb51-1" data-line-number="1"><span class="kw">by</span>(info_samples<span class="op">$</span>poids, info_samples<span class="op">$</span>genre, mean)</a></code></pre></div>
 <pre><code>info_samples$genre: F
@@ -624,7 +624,7 @@ info_samples$genre: M
 [1] 85.66723</code></pre>
 <p>Les valeurs entre les échantillons sont différentes: m1≠m2 Cela ne signifie pas que μ1≠μ2</p>
 <p>On doit réaliser un test statistique de comparaison de moyennes.</p>
-<p>On vérifie d’abord si l’homoscedascticité, cad l’égalité des variances dans les deux groupes.</p>
+<p>On teste d’abord l’homoscédasticité, cad l’égalité des variances dans les deux groupes.</p>
 <div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb53-1" data-line-number="1"><span class="kw">by</span>(info_samples<span class="op">$</span>poids, info_samples<span class="op">$</span>genre, var)</a></code></pre></div>
 <pre><code>info_samples$genre: F
 [1] 364.0523
@@ -643,7 +643,7 @@ alternative hypothesis: true ratio of variances is not equal to 1
 sample estimates:
 ratio of variances 
          0.9688158 </code></pre>
-<p>Le test de comapraison des variances ne permet pas de rejetter leur égalité.</p>
+<p>Le test de comparaison des variances ne permet pas de rejeter l’hypothèse nulle de leur égalité.</p>
 <p>Nous pouvons donc réaliser un test de Student.</p>
 <div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" data-line-number="1"><span class="kw">t.test</span>(info_samples<span class="op">$</span>poids <span class="op">~</span><span class="st"> </span>info_samples<span class="op">$</span>genre, <span class="dt">var.equal=</span>T)</a></code></pre></div>
 <pre><code>
@@ -657,7 +657,7 @@ alternative hypothesis: true difference in means is not equal to 0
 sample estimates:
 mean in group F mean in group M 
        78.68933        85.66723 </code></pre>
-<p>Comparez à présent les moyennes de la variable <code>taille</code>:</p>
+<p>Comparez à présent les moyennes et les variances de la variable <code>taille</code> en fonction du genre:</p>
 <div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb59-1" data-line-number="1"><span class="co">#estimation des moyennes:</span></a>
 <a class="sourceLine" id="cb59-2" data-line-number="2"><span class="kw">by</span>(info_samples<span class="op">$</span>taille, info_samples<span class="op">$</span>genre, mean)</a></code></pre></div>
 <pre><code>info_samples$genre: F
@@ -665,7 +665,7 @@ mean in group F mean in group M
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
 info_samples$genre: M
 [1] 173.9716</code></pre>
-<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb61-1" data-line-number="1"><span class="co"># comparaison des varainces</span></a>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb61-1" data-line-number="1"><span class="co"># comparaison des variances</span></a>
 <a class="sourceLine" id="cb61-2" data-line-number="2"><span class="kw">by</span>(info_samples<span class="op">$</span>taille, info_samples<span class="op">$</span>genre, var)</a></code></pre></div>
 <pre><code>info_samples$genre: F
 [1] 49.37992
@@ -684,7 +684,7 @@ alternative hypothesis: true ratio of variances is not equal to 1
 sample estimates:
 ratio of variances 
          0.8294539 </code></pre>
-<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb65-1" data-line-number="1"><span class="co">## l&#39;égalité des variances ne peut être rejetée. On conduit donc un test de Welsh qui est prposé par défaut dans R avec la fonction t.test()</span></a>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb65-1" data-line-number="1"><span class="co">## l&#39;égalité des variances ne peut être rejetée. On conduit donc un test de Welsh qui est proposé par défaut dans R avec la fonction t.test()</span></a>
 <a class="sourceLine" id="cb65-2" data-line-number="2"></a>
 <a class="sourceLine" id="cb65-3" data-line-number="3"><span class="kw">t.test</span>(info_samples<span class="op">$</span>taille <span class="op">~</span><span class="st"> </span>info_samples<span class="op">$</span>genre) <span class="co"># le test est significatif avec une p-value &lt; 2.2e-16</span></a></code></pre></div>
 <pre><code>
@@ -711,7 +711,7 @@ mean in group F mean in group M
 <a class="sourceLine" id="cb69-5" data-line-number="5">info_samples<span class="op">$</span>imc_cat[info_samples<span class="op">$</span>imc<span class="op">&gt;=</span><span class="dv">30</span>] &lt;-<span class="st"> &quot;obesite&quot;</span></a>
 <a class="sourceLine" id="cb69-6" data-line-number="6"></a>
 <a class="sourceLine" id="cb69-7" data-line-number="7">info_samples<span class="op">$</span>imc_cat &lt;-<span class="st"> </span><span class="kw">factor</span>(info_samples<span class="op">$</span>imc_cat, <span class="dt">levels=</span><span class="kw">c</span>(<span class="st">&quot;normal&quot;</span>, <span class="st">&quot;maigreur&quot;</span>, <span class="st">&quot;surpoids&quot;</span>, <span class="st">&quot;obesite&quot;</span>))</a></code></pre></div>
-<p>Testons à présent si le poids moyen est bien différent entre ces 4 niveaux d’imc_cat. On procède d’abord à la vérification de l’homoscédascticité.</p>
+<p>Testons à présent si le poids moyen est bien différent entre ces 4 niveaux d’imc_cat. On procède d’abord à la vérification de l’homoscédasticité.</p>
 <div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb70-1" data-line-number="1"><span class="kw">by</span>(info_samples<span class="op">$</span>poids, info_samples<span class="op">$</span>imc_cat, mean)</a></code></pre></div>
 <pre><code>info_samples$imc_cat: normal
 [1] 65.2202
@@ -742,7 +742,7 @@ info_samples$imc_cat: obesite
 
 data:  poids by imc_cat
 Bartlett&#39;s K-squared = 283.58, df = 3, p-value &lt; 2.2e-16</code></pre>
-<p>Malheureusement les variances diffèrent significativement entre les groupes. On ne peut réaliser une analyse paraméttrique (ANOVA). On effectue donc un test non paramétrique de Kruskal-Wallis:</p>
+<p>Les variances diffèrent significativement entre les groupes. On ne peut pas effectuer une analyse paramétrique (ANOVA). On effectue donc un test non paramétrique de Kruskal-Wallis:</p>
 <div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb76-1" data-line-number="1"><span class="kw">kruskal.test</span>(<span class="kw">log</span>(info_samples<span class="op">$</span>TG) <span class="op">~</span><span class="st"> </span>info_samples<span class="op">$</span>imc_cat)</a></code></pre></div>
 <pre><code>
     Kruskal-Wallis rank sum test
@@ -752,7 +752,7 @@ Kruskal-Wallis chi-squared = 92.929, df = 3, p-value &lt; 2.2e-16</code></pre>
 </div>
 <div id="tests-de-correlation-entre-deux-variables-continues" class="section level4">
 <h4>3.3.3 Tests de corrélation entre deux variables continues</h4>
-<p>Les variables <code>taille</code> et <code>poids</code> sont elles corrélées entre elles?</p>
+<p>Les variables <code>taille</code> et <code>poids</code> sont-elles corrélées ?</p>
 <div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb78-1" data-line-number="1"><span class="kw">cor.test</span>(info_samples<span class="op">$</span>taille, info_samples<span class="op">$</span>poids)</a></code></pre></div>
 <pre><code>
     Pearson&#39;s product-moment correlation
@@ -768,7 +768,7 @@ sample estimates:
 <div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb80-1" data-line-number="1"><span class="kw">plot</span>(<span class="dt">data=</span>info_samples, taille<span class="op">~</span>poids)</a>
 <a class="sourceLine" id="cb80-2" data-line-number="2"><span class="kw">abline</span>(<span class="kw">lm</span>(<span class="dt">data=</span>info_samples, taille<span class="op">~</span>poids), <span class="dt">col=</span><span class="st">&quot;red&quot;</span>)</a></code></pre></div>
 <p><img src="figures/data-structures_solution_24-1.png" width="80%" style="display: block; margin: auto;" /></p>
-<p>Les variables <code>poids</code> et <code>imc</code> sont elles corrélées entre elles?</p>
+<p>Les variables <code>poids</code> et <code>imc</code> sont-elles corrélées ?</p>
 <div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb81-1" data-line-number="1"><span class="kw">cor.test</span>(info_samples<span class="op">$</span>poids, info_samples<span class="op">$</span>imc)</a></code></pre></div>
 <pre><code>
     Pearson&#39;s product-moment correlation
@@ -784,7 +784,7 @@ sample estimates:
 <div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb83-1" data-line-number="1"><span class="kw">plot</span>(<span class="dt">data=</span>info_samples, poids<span class="op">~</span>imc)</a>
 <a class="sourceLine" id="cb83-2" data-line-number="2"><span class="kw">abline</span>(<span class="kw">lm</span>(<span class="dt">data=</span>info_samples, poids<span class="op">~</span>imc), <span class="dt">col=</span><span class="st">&quot;red&quot;</span>)</a></code></pre></div>
 <p><img src="figures/data-structures_solution_25-1.png" width="80%" style="display: block; margin: auto;" /></p>
-<p>Le taux de triglycérides exprimé en log est-il également corrélé à l’IMC?</p>
+<p>Le taux de triglycérides après transformation logarithmique est-il également corrélé à l’IMC?</p>
 <div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb84-1" data-line-number="1"><span class="kw">cor.test</span>(<span class="kw">log</span>(info_samples<span class="op">$</span>TG), info_samples<span class="op">$</span>imc)</a></code></pre></div>
 <pre><code>
     Pearson&#39;s product-moment correlation
@@ -804,7 +804,7 @@ sample estimates:
 </div>
 <div id="tests-de-regression-lineaire-entre-deux-variables" class="section level4">
 <h4>3.3.4 Tests de régression linéaire entre deux variables</h4>
-<p>Testons à présent l’impact des catégorie d’imc (variable explicative) sur le taux de triglycérides en log (variable expliquée):</p>
+<p>Testons à présent l’impact des modalités d’imc (variable explicative) sur le taux de triglycérides en log (variable expliquée):</p>
 <div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb87-1" data-line-number="1"><span class="kw">summary</span>(<span class="kw">lm</span>(<span class="kw">log</span>(info_samples<span class="op">$</span>TG) <span class="op">~</span><span class="st"> </span>info_samples<span class="op">$</span>imc_cat))</a></code></pre></div>
 <pre><code>
 Call:
