@@ -64,14 +64,10 @@ packages <- c("knitr", "kableExtra", "FactoMineR", "clues", "RColorBrewer")
 for (pkg in packages) {
   if (!require(pkg, character.only = TRUE)) {
     install.packages(pkg)
+    
   }
 }
 
-library(knitr)
-library(kableExtra)
-library(FactoMineR)
-library(clues)
-library(RColorBrewer)
 # library(formattable)
 
 options(width = 300)
@@ -741,7 +737,10 @@ table(iris.scale.kmeans5$cluster)
 ## Visualisation des clusters
 
 ```{r cluster_viz}
-plot(iris.scaled.acp, col.ind = iris.scale.kmeans5$cluster, choix = "ind", cex = 0.5)
+plot(iris.scaled.acp, 
+     col.ind = iris.scale.kmeans5$cluster,
+     choix = "ind", 
+     cex = 0.5)
 
 ```
 
