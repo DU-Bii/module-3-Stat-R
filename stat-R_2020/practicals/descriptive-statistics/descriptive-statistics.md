@@ -132,7 +132,7 @@ puis donnez une couleur différente à chaque point :
 
 ## Exercice 2: représentations graphiques de données qualitatives
 
-- Importez dans R le fichier `motorisation.txt` présent sur moodle.
+- Importez dans R le fichier [`motorisation.txt`](data/motorisation.txt).
 - Générez un camembert de la répartition des différentes motorisations et choisissez vous-mêmes des couleurs.
 - Générez également un diagramme en bâtons avec les proportions (fréquences relatives) des différentes motorisations colorées comme dans le camembert.
 - Disposez les deux graphes côte à côte sur un même graphique.
@@ -197,9 +197,9 @@ knitr::include_graphics(path = "img/airquality.png")
 - `lm()`
 - `title()`
 
-##	Exercice 6 (recommandé pour le fil rouge) : analyse de données
+##	Exercice 6 : analyse de données
 
-Importez dans R le fichier `TP_poisson.txt` présent sur moodle R. Il s’agit d’un jeu de données de l’espèce de poisson "grand corégone" du lac Nathalie dans le territoire de la baie James (province du Québec) (d'après B. Scherrer). En 1977, Dumont a cherché les relations existantes entre le potentiel reproducteur (nombre d'œufs) de cette espèce de poisson (grand Corégone) et plusieurs caractères morphologiques. L'étude a été menée afin de déterminer une éventuelle relation entre le nombre d'œufs, révélant le potentiel reproducteur des poissons, et les variables morphologiques caractérisant ces poissons.
+Importez dans R le fichier [`TP_poisson.txt`](data/TP_poisson.txt)  R. Il s’agit d’un jeu de données de l’espèce de poisson "grand corégone" du lac Nathalie dans le territoire de la baie James (province du Québec) (d'après B. Scherrer). En 1977, Dumont a cherché les relations existantes entre le potentiel reproducteur (nombre d'œufs) de cette espèce de poisson (grand Corégone) et plusieurs caractères morphologiques. L'étude a été menée afin de déterminer une éventuelle relation entre le nombre d'œufs, révélant le potentiel reproducteur des poissons, et les variables morphologiques caractérisant ces poissons.
 
 
 1.	Statistiques descriptives
