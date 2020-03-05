@@ -151,23 +151,71 @@ info_samples$identifiant <- as.character(info_samples$identifiant)
 str(info_samples)
 ```
 
-## 2.2 Description des variables qualtitatives
+## 2.2 Description des variables qualititatives
 
 Quelles sont les valeurs possibles des variables qualitatives?
 
+**Fonctions : ** `unique()`
 ```{r solution_4}
 unique(info_samples$genre)
 unique(info_samples$origine)
 unique(info_samples$tabac)
 ```
 
+Combien d'occurences observe-t-on pour chaque valeur de ces varaibles?
 
-#Combien d'occurences observe-t-on pour chaque valeur de ces varaibles?'
+**Fonctions : ** `table()`
 ```{r solution_5}
 table(info_samples$genre)
 table(info_samples$tabac)
 table(info_samples$origine)
 ```
 
+Compte-tenu des effectifs moindre pour les sujets d'origine d'Amérique du Nord et d'Amérique latine, regroupez ces deux catégories en une seule que vous appellerez `AMERIQUE`
 
+```{r solution_6}
+info_samples$origine[which(info_samples$origine == "AMERIQUE DU NORD")] <- "AMERIQUE"
+info_samples$origine[which(info_samples$origine == "AMERIQUE LATINE")] <- "AMERIQUE"
+```
+
+## 2.3 Représentation graphique des distributions des variables qualititatives
+
+Il existe deux principales fonctions graphiques primaires pour représenter les données qualitatives: 
+
+Une première représentation est celle en camembert.
+Faites un camembert des données concernant la consommation de tabac, le genre et l'origine.
+Vous pouvez jouer sur la couleur, l'orientation et modifier l'affichage des valeurs, ajouter un titre.
+
+**Fonctions : ** `pie(), table()`
+
+```{r solution_7}
+pie(table(info_samples$tabac), main="Tabac")
+pie(table(info_samples$genre), col=c("pink", "blue"),
+    labels = c("Femmes", "Hommes"), main="Pie chart of the gender variable in the sample")
+pie(table(info_samples$origine), main="Pie chart of the origine variable in the sample", cex=0.5, clockwise = T)
+```
+
+Ceendant, la représentation sous forme de camembert n'est pas recommandée car l'oeil a souvent du mal à interpréter des surfaces différentes.
+
+Une deuxième représentation qui est préférée pour celle des variables qualitatives est celle des diagrammes en bâtons. En ordonnées vous pouvez indiquer l'effectif ou la fréquence dans l'échantillon.
+
+```{r solution_8}
+barplot(table(info_samples$origine)/length(info_samples$origine), main="Distribution of the origine variable", ylab="frequency")
+
+```
+
+
+On peut également générer des tableaux de contingence de deux variables qualitatives et les représenter ensemble graphiquement dans des diagrammes en bâtons empilés.
+
+
+```{r solution_9}
+table(info_samples$genre, info_samples$origine)
+barplot(table(info_samples$genre, info_samples$origine), main="Distribution de la variable origine avec la répartition des genres epilée", col = c("pink", "blue") )
+
+barplot(table(info_samples$origine, info_samples$genre), main="Distribution de la vraiable origine with the variable gender stacked") 
+
+table(info_samples$genre, info_samples$tabac)
+barplot(table(info_samples$tabac, info_samples$genre)/dim(info_samples)[1], main="Distribution of the tabac variable with the variable gender stacked", ylim=c(0,1)) 
+
+```
 
