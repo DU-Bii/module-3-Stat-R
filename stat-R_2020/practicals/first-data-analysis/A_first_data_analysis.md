@@ -79,9 +79,9 @@ transition: linear
 
 # Objectifs
 
-Ce tutoriel doit vous faire voir comment représenter et analyser des variables qualitatives et quantitatives, et effectuer les principaux tests statistiques.
+Ce tutoriel vous montre comment représenter et analyser des variables qualitatives et quantitatives, et effectuer les principaux tests statistiques.
 
-Le jeu de données `diabdata` est extrait d'une cohorte de patients diabétiques de type 2 suivis par le Dr Louis Potier à l'hopital Bichat. Il comporte des informations morphométriques (taille, poids) et biologiques (lipides sériques). Il inclut 1732 patients. 
+Le jeu de données `diabdata` est extrait d'une cohorte de patients diabétiques de type 2 suivis par le Dr Louis Potier à l'hopital Bichat. Il comporte, entre autres, des informations morphométriques (taille, poids) et biologiques (lipides sériques). Il inclut 1732 patients. 
 
 
 
@@ -92,9 +92,9 @@ En cas d'urgence poussez sur **Code** pour révéler la solution.
 
 ## 1. Importation des données
 
-Le fichier a importé s'appelle `diabdata.txt`. Il est présent dans le répertoire `/shared/projects/dubii2020/data/module3/seance2/`
+Le fichier à importer s'appelle `diabdata.txt`. Il est présent dans le répertoire `/shared/projects/dubii2020/data/module3/seance2/`
 
-Ouvrez le d'abord dans un éditeur de texte pour voir comment il est structuré.
+Ouvrez-le d'abord dans un éditeur de texte pour voir comment il est structuré.
 Importez-le dans votre session R ouverte dans votre répertoire de travail.
 Attention à la décimale!
 
@@ -243,7 +243,7 @@ table(info_samples$origine)
              657                3               23               78              971 
 ```
 
-Compte-tenu des effectifs moindre pour les sujets d'origine d'Amérique du Nord et d'Amérique latine, regroupez ces deux catégories en une seule que vous appellerez `AMERIQUE`
+Compte-tenu des effectifs moindres pour les sujets d'origine d'Amérique du Nord et d'Amérique latine, regroupez ces deux catégories en une seule que vous appellerez `AMERIQUE`
 
 
 ```r
@@ -281,7 +281,7 @@ pie(table(info_samples$origine), main="Pie chart of the origine variable in the 
 
 <img src="figures/data-structures_solution_7-3.png" width="80%" style="display: block; margin: auto;" />
 
-Ceendant, la représentation sous forme de camembert n'est pas recommandée car l'oeil a souvent du mal à interpréter des surfaces différentes.
+Ceendant, la représentation sous forme de camembert n'est pas recommandée car l'oeil a souvent du mal à comparer des aires différentes.
 
 Une deuxième représentation qui est préférée pour celle des variables qualitatives est celle des diagrammes en bâtons. En ordonnées vous pouvez indiquer l'effectif ou la fréquence dans l'échantillon.
 
@@ -309,7 +309,7 @@ table(info_samples$genre, info_samples$origine)
 ```
 
 ```r
-barplot(table(info_samples$genre, info_samples$origine), main="Distribution de la variable origine avec la répartition des genres epilée", col = c("pink", "blue") )
+barplot(table(info_samples$genre, info_samples$origine), main="Distribution de la variable origine avec la répartition des genres empilée", col = c("pink", "blue") )
 ```
 
 <img src="figures/data-structures_solution_9-1.png" width="80%" style="display: block; margin: auto;" />
@@ -341,7 +341,7 @@ barplot(table(info_samples$tabac, info_samples$genre)/dim(info_samples)[1], main
 
 On peut effectuer des tests de comparaison des proportions ou des distributions avec un test de Chi2 de Pearson.
 
-Testez à présent si la distribution de la variable `tabac` est indépendante de celle du `genre` par un test de Chi2 à 2 degrés de libertés. L'hypothèse nulle est celle de distribution indépendantes, l'hypothèse alsternative de variables liées.
+Testez à présent si la distribution de la variable `tabac` est indépendante de celle du `genre` par un test de Chi2 à 2 degrés de libertés. L'hypothèse nulle est celle de distributions indépendantes, l'hypothèse alternative celle de variables liées.
 Extraire la p-value du test.
 
 
@@ -403,7 +403,7 @@ chisq.test(info_samples$tabac, info_samples$genre)$p.value
 
 ### 3.1 Description des variables quantitatives
 
-Le jeu de données comprends 3 variables quantitatives continues: la `taille`, le `poids` et le taux de triglycréides `TG`
+Le jeu de données comprend 3 variables quantitatives continues: la `taille`, le `poids` et le taux de triglycérides sériques `TG`
 
 Définissez une nouvelle variable `ìmc` correspondant à l'indice de masse corporelle. On rappelle qu'il s'agit du poids en kg divisé par le carré de la taille en m². Arrondissez cette valeur à deux décimales.
 
@@ -435,13 +435,13 @@ summary(info_samples[,5:8])
 
 Il existe plusieurs représentations possibles de ces distributions:
 
-- un histogramme auquel vous pouvez supperposer la courbe de densité si vous avez affiché l'axe des ordonnées en fréquence plutôt qu'en effectifs.
+- un histogramme auquel vous pouvez superposer la courbe de densité si vous avez affiché l'axe des ordonnées en fréquences plutôt qu'en effectifs.
 
-- une boite à moustaches
+- une boîte à moustaches
 
 - des nuages de points à une dimension (`stripcharts`)
 
-Dessinez un histogramme pour chacune des vraiables taille et poids.
+Dessinez un histogramme pour chacune des variables taille et poids.
 
 ```r
 hist(info_samples$taille)
@@ -456,7 +456,7 @@ lines(density(info_samples$poids), col="red")
 
 <img src="figures/data-structures_solution_13-2.png" width="80%" style="display: block; margin: auto;" />
 
-Dessinez ensuite dans une même fenêtre graphique ccôte à côte les boxplots des variables tailles et poids.
+Dessinez ensuite dans une même fenêtre graphique côte à côte les boxplots des variables tailles et poids.
 
 
 ```r
@@ -493,9 +493,9 @@ par(opar)
 __Quelle est l'influence des variables qualitatives sur ces distributions?__
 
 Nous allons explorer l'impact du facteur origine et de celui du genre sur la taille et le poids.
-Une première analyse exploratoire consite à représenter ces distributions selon le facteur considéré.
+Une première analyse exploratoire consiste à représenter ces distributions selon le facteur considéré.
 
-Dessinez 4 boxplots dans une même fenêtre graphique de ces distributions.
+Dessinez 4 boxplots de ces distributions dans une même fenêtre graphique.
 
 
 ```r
@@ -516,9 +516,9 @@ par(opar)
 ### 3.3 Tests statistiques sur des variables quantitatives
 
 #### 3.3.1 Tests de comparaison de 2 moyennes
-En regardant les boxplots ci-dessus, on souhaite tester si le genre a effctivement un impact sur les variables `taille` et `poids`
+Après avoir regardé les boxplots ci-dessus, on souhaite tester si le genre a effectivement un impact sur les variables `taille` et `poids`
 
-Une première étape est de calculer les moyennes estimées dans ces échantillons de la moyenne dans la population.
+Une première étape est de calculer les moyennes dans ces échantillons pour estimer les moyennes dans la population.
 
 Commençons par la variable `poids`:
 
@@ -539,7 +539,7 @@ Cela ne signifie pas que μ1≠μ2
 
 On doit réaliser un test statistique de comparaison de moyennes.
 
-On vérifie d'abord si l'homoscedascticité, cad l'égalité des variances dans les deux groupes.
+On teste d'abord l'homoscédasticité, cad l'égalité des variances dans les deux groupes.
 
 
 ```r
@@ -571,7 +571,7 @@ sample estimates:
 ratio of variances 
          0.9688158 
 ```
-Le test de comapraison des variances ne permet pas de rejetter leur égalité.
+Le test de comparaison des variances ne permet pas de rejeter l'hypothèse nulle de leur égalité.
 
 Nous pouvons donc réaliser un test de Student.
 
@@ -594,7 +594,7 @@ mean in group F mean in group M
        78.68933        85.66723 
 ```
 
-Comparez à présent les moyennes de la variable `taille`:
+Comparez à présent les moyennes et les variances de la variable `taille` en fonction du genre:
 
 
 ```r
@@ -611,7 +611,7 @@ info_samples$genre: M
 ```
 
 ```r
-# comparaison des varainces
+# comparaison des variances
 by(info_samples$taille, info_samples$genre, var)
 ```
 
@@ -642,7 +642,7 @@ ratio of variances
 ```
 
 ```r
-## l'égalité des variances ne peut être rejetée. On conduit donc un test de Welsh qui est prposé par défaut dans R avec la fonction t.test()
+## l'égalité des variances ne peut être rejetée. On conduit donc un test de Welsh qui est proposé par défaut dans R avec la fonction t.test()
 
 t.test(info_samples$taille ~ info_samples$genre) # le test est significatif avec une p-value < 2.2e-16
 ```
@@ -687,7 +687,7 @@ info_samples$imc_cat <- factor(info_samples$imc_cat, levels=c("normal", "maigreu
 ```
 
 Testons à présent si le poids moyen est bien différent entre ces 4 niveaux d'imc_cat.
-On procède d'abord à la vérification de l'homoscédascticité.
+On procède d'abord à la vérification de l'homoscédasticité.
 
 
 ```r
@@ -738,8 +738,8 @@ data:  poids by imc_cat
 Bartlett's K-squared = 283.58, df = 3, p-value < 2.2e-16
 ```
 
-Malheureusement les variances diffèrent significativement entre les groupes.
-On ne peut réaliser une analyse paraméttrique (ANOVA).
+Les variances diffèrent significativement entre les groupes.
+On ne peut pas effectuer une analyse paramétrique (ANOVA).
 On effectue donc un test non paramétrique de Kruskal-Wallis:
 
 
@@ -757,7 +757,7 @@ Kruskal-Wallis chi-squared = 92.929, df = 3, p-value < 2.2e-16
 
 #### 3.3.3 Tests de corrélation entre deux variables continues
 
-Les variables `taille` et `poids` sont elles corrélées entre elles?
+Les variables `taille` et `poids` sont-elles corrélées ?
 
 
 ```r
@@ -785,7 +785,7 @@ abline(lm(data=info_samples, taille~poids), col="red")
 
 <img src="figures/data-structures_solution_24-1.png" width="80%" style="display: block; margin: auto;" />
 
-Les variables `poids` et `imc`  sont elles corrélées entre elles?
+Les variables `poids` et `imc` sont-elles corrélées ?
 
 
 ```r
@@ -814,7 +814,7 @@ abline(lm(data=info_samples, poids~imc), col="red")
 <img src="figures/data-structures_solution_25-1.png" width="80%" style="display: block; margin: auto;" />
 
 
-Le taux de triglycérides exprimé en log est-il également corrélé à l'IMC?
+Le taux de triglycérides après transformation logarithmique est-il également corrélé à l'IMC?
 
 
 ```r
@@ -847,7 +847,7 @@ Il y a donc aussi une corrélation positive significative, bien que plus modeste
 
 #### 3.3.4 Tests de régression linéaire entre deux variables
 
-Testons à présent l'impact des catégorie d'imc (variable explicative) sur le taux de triglycérides en log (variable expliquée):
+Testons à présent l'impact des modalités d'imc (variable explicative) sur le taux de triglycérides en log (variable expliquée):
 
 
 
