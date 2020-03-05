@@ -82,13 +82,13 @@ Link to the prerequisites:
 ### Session 2. Statistical analysis with R
 
 
-| Type |  Topics | Formats |
-|-----------|------------------------------|-------------|
+| Type |  Description | Links |
+|-----------|------------------------------|-----------------------------|
 | Slides | Slides for the whole session | [[pdf](slides/DUBii_R_Session_2.pdf)] |
 | R Scripts | Scripts used for the slides | [[R](scripts/DUBii_R_Session_2.R)] |
-| Shiny app | Sampling variation with a Shiny application | <http://shiny.calpoly.sh/Sampling_Distribution/> |
+| Shiny app | Shiny app to explore sampling fluctuation | <http://shiny.calpoly.sh/Sampling_Distribution/> |
 | Practical | Descriptive statistics | [[html](practicals/descriptive-statistics/descriptive-statistics.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/descriptive-statistics/descriptive-statistics.Rmd)] |
-| Practical | R packages | <https://github.com/ACCLAB/dabestr> |
+| R package | Package to visualise effect sizes | <https://github.com/ACCLAB/dabestr> |
 | Document | Memo on correlation and regression | [[pdf]](documents/CovCorReg.pdf)] |
 | Practical | A first data analysis with R | [[html](practicals/first-data-analysis/A_first_data_analysis.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/first-data-analysis/A_first_data_analysis.Rmd)] |
 
