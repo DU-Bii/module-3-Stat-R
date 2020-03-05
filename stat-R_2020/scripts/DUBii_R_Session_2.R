@@ -107,7 +107,7 @@ dev.off()
 ##------------------------------PACKAGES----------------------------------------
 ################################################################################
 
-#----slide 33
+#----slide 34
 #data from R packages
 try(data(package = "rpart"))
 data(stagec, package = "rpart")
@@ -116,19 +116,19 @@ head(stagec)
 help(stagec,package = "rpart")
 
 
-#----slides 34-35
+#----slides 35-36
 #installed R packages
 .libPaths()
 list.files(.libPaths()[2])
 colnames(installed.packages())
 head(installed.packages()[,c(1,2,3)])
 
-#----slides 36
+#----slides 37
 #loading installed R packages:
 library(MASS)
 sessionInfo()
 
-#----slides 37
+#----slides 38
 # what happens if I try to load an uninstalled package?
 library(tutu)
 require(tutu)
@@ -145,11 +145,11 @@ install.packages("qqman")
 #install.packages(c("qqman", "MASS"))
 dim(available.packages())[1]
 
-#----slides 42
+#----slides 43
 # example to install a package from the zip source file:
 #install.packages("/mypath/qqman/qqman_0.1.2.tar.gz", repos = NULL, lib = "mylibrarypath")
 
-#----slides 45
+#----slides 46
 # using installed R packages
 gwasResults <- qqman::gwasResults
 qqman::qq(gwasResults$P)
@@ -159,14 +159,14 @@ library(qqman)
 qq(gwasResults$P)
 manhattan(gwasResults)
 
-#----slides 46-49
+#----slides 47-50
 #help on R packages
 vignette("qqman")
 browseVignettes("qqman")
 help.start() ## click on Packages and select the one you are interested in
 demo(lm.glm, package = "stats", ask = TRUE)
 
-##----slide 53
+##----slide 54
 #!!!!!!! BioConductor installer for R versions < 3.5 !!!!!!!!!!
 # source("https://bioconductor.org/biocLite.R")
 # biocLite() # to install the minimum set of bioconductor packages
@@ -188,7 +188,7 @@ sessionInfo()
 ##------------------------------STATS WITH R------------------------------------
 ################################################################################
 
-#----slide 69
+#----slide 72
 table(myDataf$sex)
 table(myDataf$sex, row.names(myDataf))
 pie(table(myDataf$sex))
@@ -198,7 +198,7 @@ tail(WorldPhones)
 pie(WorldPhones["1961",])
 barplot(WorldPhones["1961",])
 
-#----slide 71
+#----slide 74
 data(faithful)
 str(faithful)
 ?faithful
@@ -211,7 +211,7 @@ rug(faithful$waiting, side = 3)
 hist(faithful$waiting,freq = F)
 lines(density(faithful$waiting),col = "red")
 
-#----slide 72
+#----slide 75
 range(faithful)
 mean(faithful$waiting)
 sd(faithful$waiting)
@@ -222,7 +222,7 @@ quantile(faithful$waiting,0.1)
 quantile(faithful$waiting, c(0.1,0.9))
 quantile(faithful$waiting, seq(0,1,0.1))
 
-#----slide 77
+#----slide 80
 rbinom(n = 10, size = 3, prob = 0.5)
 rpois(10, 0.2)
 dbinom(2,3,0.5)
@@ -231,7 +231,7 @@ pbinom(2,3,0.5)
 ppois(3,0.2)
 
 
-#----slide 78
+#----slide 81
 a <- rnorm(100)
 hist(a,freq = F)
 lines(density(a), col = "red")
@@ -239,23 +239,23 @@ curve(dnorm(x), add = T, col = "cyan")
 qnorm(p = c(0.025,0.5), mean = 0, sd = 1,lower.tail = T)
 pnorm(c(1.96,0), mean = 0, sd = 1, lower.tail = F)
 
-#----slide 79
+#----slide 82
 faithful$category <- faithful$waiting >= median(faithful$waiting)
 boxplot(faithful$waiting ~ faithful$category)
 t.test(faithful$waiting ~ faithful$category)
 2*pt(-25.605, 189.77,lower.tail = T) 
 wilcox.test(faithful$waiting ~ faithful$category)
 
-#----slide 80
+#----slide 83
 plot(faithful$eruptions, faithful$waiting, xlab = "duration of eruption", ylab = "time between eruptions", cex.lab = 1.5)
 abline(lm(faithful$waiting~faithful$eruptions), col = "red")
 summary(lm(faithful$waiting~faithful$eruptions))
 
-#----slide 81
+#----slide 84
 cor.test(faithful$eruptions, faithful$waiting)
 str(cor.test(faithful$eruptions, faithful$waiting))
 cor.test(faithful$eruptions, faithful$waiting)$estimate^2 
 
-#----slide 82
+#----slide 85
 cor.test(faithful$eruptions, faithful$waiting, method = "s")
 
