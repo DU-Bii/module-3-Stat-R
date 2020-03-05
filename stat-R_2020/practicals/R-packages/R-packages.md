@@ -101,7 +101,7 @@ L’objectif de ce petit exercice est d’utiliser le package `GenomicRanges` de
 -	Installer Bioconductor si ce n’est déjà fait
 -	Installer le package `GenomicRanges` de Bioconductor
 -	Recherchez la documentation sur ce package
--	Importez les données de SNPs et de sites d’acétylation (fichiers sur moodle)
+-	Importez les données de [SNPs](data/hgTables_SNPs.txt) et de [sites d’acétylation](data/hgTables_H3K27Ac.txt) 
 -	Donnez un nom de colonnes au dataframe des sites d’acétylation (`chrom`, `start`, `end`, `id`
 -	Générez des objets de type `GRanges` pour chacun des deux dataframes en ne gardant que les colonnes 2 à 5 pour les SNPs.
 -	Identifiez les chevauchements entre les deux datasets.
