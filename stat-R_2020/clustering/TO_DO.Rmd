@@ -1,0 +1,51 @@
+---
+title: "To do"
+author: "Anne Badel & Jacques van Helden"
+date: "3/4/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# TO DO
+
+| Qui | Quoi | Statut | 
+|----|-----------------------|----|
+| Anne | Régler problèem compilation diapos | |
+| Anne | Notion de dimensions multiples, et mentionner déjà la surdimensionnalité (beaucoup plus de variables que d'individus) | |
+| Jacques | Trouver un jeu de données de protéomique | |
+| Jacques | Ajouter exemples illustratifs pour illustrer les métriques | |
+| Jacques | Adapter le TP en utilisant les protéines | 
+| Anne et Jacques | Trouver un travail du vendredi qui pousse les apprenants de reprendre le code à leur aise|
+
+# Done
+
+- A lot
+
+
+# DMP
+
+Jacques
+
+- créer un dépôt gihtgithub pour le projet tutoré
+- ajouter une page pour le DMP
+- créer une équipe DMP sur github
+- inviter Paulette sur github (froggypaule)
+
+- page DMP de github
+
+    - liens vers OPIDoR
+    - supports de cours (diapos)
+
+- Mail aux apprenants
+
+    - demander de tester leur accès à OPIDoR via leur accès institutionnel, et sinon demander d'ouvrir un compte
+
+- Définir un modèle DMP sur OPIDoR
+
+    - modèle DUBii
+
+
+
