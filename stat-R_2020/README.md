@@ -70,7 +70,7 @@ Link to the prerequisites:
 
 | Topics |  Duration | Material |
 |---------------------------------|----------|-------------|
-| Slides for the whole session | 1/2 day | [[pdf](slides/DUBii_R_Session1.pdf)] |   
+| Slides for the whole session | 1/2 day | [[pdf](slides/DUBii_R_Session_1.pdf)] |   
 | Start R | 20'  | [[html](practicals/1.01_start-R/start-R.html)] [[Rmd](practicals/1.01_start-R/start-R.Rmd)]  |
 | Validation of the prerequisites: quizz on Moodle | 15' + 20' | [[on your account](https://moodlesupd.script.univ-paris-diderot.fr/course/view.php?id=10629)] [[with password: dubii2020](https://moodlesupd.script.univ-paris-diderot.fr/course/view.php?id=13420)] |
 | Basic R structures (matrices, data frames and lists) | 45'  | [[html](practicals/R-structures/basic_R-structures.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/R-structures/basic_R-structures.Rmd)] |  
@@ -84,8 +84,8 @@ Link to the prerequisites:
 
 | Type |  Topics | Formats |
 |-----------|------------------------------|-------------|
-| Slides | Slides for the whole session | [[pdf](slides/DUBii_R_Session2.pdf)] |
-| R Scripts | Scripts used for the slides | [[R](scripts/DUBii_R_Session2.R)] |
+| Slides | Slides for the whole session | [[pdf](slides/DUBii_R_Session_2.pdf)] |
+| R Scripts | Scripts used for the slides | [[R](scripts/DUBii_R_Session_2.R)] |
 | Shiny app | Sampling variation with a Shiny application | <http://shiny.calpoly.sh/Sampling_Distribution/> |
 | Practical | Descriptive statistics | [[html](practicals/descriptive-statistics/descriptive-statistics.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/descriptive-statistics/descriptive-statistics.Rmd)] |
 | Practical | R packages | <https://github.com/ACCLAB/dabestr> |
