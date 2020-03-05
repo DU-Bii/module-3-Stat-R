@@ -48,9 +48,9 @@ Link to the prerequisites:
 ## Links
 
 | Doc | Description |URL |
-|------------|-------------------------------|---------------------------------------|
-| Git pages | Web site of the course | <https://du-bii.github.io/module-3-Stat-R/> | 
-| Git repo | Repository with all the teaching material | <https://github.com/DU-Bii/module-3-Stat-R/> |
+|---------|-------------------|---------------------------------------|
+| **Git pages** | **Web site of the course**  (to see the supports) | <https://du-bii.github.io/module-3-Stat-R/> | 
+| Git repo | Repository enabling to download or clone the teaching material on your computer | <https://github.com/DU-Bii/module-3-Stat-R> |
 
 
 ## Tutorials and good practice
