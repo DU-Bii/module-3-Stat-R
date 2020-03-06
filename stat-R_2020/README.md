@@ -10,11 +10,11 @@
 - [Teaching material](#teaching-material)
 
     - [Session 1. R and Rmd basics](#session-1-r-and-rmd-basics)
-    - [Session 2. Statistical analysis with R](#session-2.-statistical-analysis-with-r)
-    - [Session 3. Differential analysis](#session-3.-differential-analysis)
+    - [Session 2. Statistical analysis with R](#session-2-statistical-analysis-with-r)
+    - [Session 3. Differential analysis](#session-3-differential-analysis)
     - [Session 4. Clustering](clustering/)
-    - [Session 5. Data exploration and enrichment analysis](#session-5.-data-exploration-and-enrichment-analysis)
-    - [Session 6. Supervised classificaiton and learning](#session-6.-supervised-classificaiton-and-learning)
+    - [Session 5. Data exploration and enrichment analysis](#session-5-data-exploration-and-enrichment-analysis)
+    - [Session 6. Supervised classificaiton and learning](#session-6-supervised-classificaiton-and-learning)
 
 ## Goals
 
