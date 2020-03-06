@@ -65,7 +65,7 @@ Link to the prerequisites:
 
 ## Teaching material
 
-### Session 1 R and Rmd basics
+### Session 1. R and Rmd basics
 
 
 | Topics |  Duration | Material |
