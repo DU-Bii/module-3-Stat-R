@@ -14,7 +14,7 @@
     - [Session 3. Differential analysis](#session-3-differential-analysis)
     - [Session 4. Clustering](clustering/)
     - [Session 5. Data exploration and enrichment analysis](#session-5-data-exploration-and-enrichment-analysis)
-    - [Session 6. Supervised classificaiton and learning](#session-6-supervised-classificaiton-and-learning)
+    - [Session 6. Supervised classification and learning](#session-6-supervised-classification-and-learning)
 
 ## Goals
 
@@ -102,7 +102,7 @@ Contents: [clustering/](clustering/)
 
 ### Session 5. Data exploration and enrichment analysis
 
-### Session 6. Supervised classificaiton and learning
+### Session 6. Supervised classification and learning
 
 
 
