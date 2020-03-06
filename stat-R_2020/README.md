@@ -77,7 +77,7 @@ Link to the prerequisites:
 | *Coffee break* | 15' | |
 | Programming with R | 35' |  [[html](practicals/R-programming_intro/R-programming_intro.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/R-programming_intro/R-programming_intro.Rmd)] |
 | R markdown | 45' | Demo |
-
+| Script | Live demo | [[R](scripts/live_demo_session_1.R)] |
 
 ### Session 2. Statistical analysis with R
 
