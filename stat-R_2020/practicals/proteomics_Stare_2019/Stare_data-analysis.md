@@ -277,7 +277,6 @@ par(initialParameters)
 
 ```r
 ## Store initial parameter values
-initialParameters <- par(no.readonly = TRUE)
 # par("mar")
 
 ## Modify the parameters
@@ -306,9 +305,181 @@ vioplot(log2(proteinQuant),
 par(initialParameters)
 ```
 
+## Normalisation
+
+### Mean-based normalisation
+
+### Median-based normalisation
+
+
+```r
+## Compute the median per pool
+medianPerPool <- apply(X = proteinQuant, 2, median, na.rm = TRUE)
+median <- median(unlist(proteinQuant), na.rm = TRUE)
+
+proteinQuantMedianNorm <- data.frame(t(t(proteinQuant) * median / medianPerPool))
+# dim(proteinQuantMedianNorm)
+# summary(proteinQuantMedianNorm)
+# apply(proteinQuantMedianNorm, 2, median, na.rm = TRUE)
+
+## Modify the parameters
+par(mar = c(4.1, 7, 4.1, 1))
+par(mfrow = c(1, 2))
+class(proteinQuant)
+```
+
+```
+[1] "data.frame"
+```
+
+```r
+dim(proteinQuant)
+```
+
+```
+[1] 338  18
+```
+
+```r
+vioplot(proteinQuantMedianNorm, 
+        main = "Median-based scaling",
+        col = poolDescriptions$color,
+        xlab = "Raw counts",
+        horizontal = TRUE, 
+        cex.axis = 0.8,
+        las = TRUE)
+vioplot(log2(proteinQuantMedianNorm), 
+        main = "Median-based scaling",
+        col = poolDescriptions$color,
+        xlab = "log2(counts)",
+        horizontal = TRUE, 
+        cex.axis = 0.8,
+        las = TRUE)
+```
+
+<img src="figures/data-structures_median_norm-1.png" width="80%" style="display: block; margin: auto;" />
+
+```r
+par(initialParameters)
+```
+
+## Log2 transformation and Filtering
+
+
+
+```r
+## log2 transformation
+proteinQuantMedianNormLog2 <- log2(proteinQuantMedianNorm)
+
+## Replace NA values by zero values
+na2zero <- proteinQuantMedianNormLog2[]
+na2zero[is.na(na2zero)] <- 0
+
+## Filter out proteins with NA values
+nona <- na.omit(proteinQuantMedianNormLog2)
+dim(nona)
+```
+
+```
+[1] 50 18
+```
+
+
 
 ## Multidimensional scaling with PCA
 
 A first exploratory approach is to project the samples on a 2-dimensional plane, where the distance between samples approximately corresponds to the differences between their proteomics profiles. 
 
+
+```r
+pc <- prcomp(x = t(nona), center = FALSE, scale. = FALSE)
+par(mfrow = c(2,2))
+plot(pc, col = "#BBFFDD", xlab = "Components")
+# dim(pc$x)
+# rownames(pc$x)
+# View(pc$x)
+for (i in c(1, 3, 5)) {
+  plot(pc$x[, c(i, i + 1)], 
+       col = poolDescriptions[rownames(pc$x), "color"], 
+       panel.first = grid(), pch = 19)
+  if (i == 1) {
+    legend("bottomright", legend = names(conditionColors), col = conditionColors, pch = 19, cex = 0.65)
+  }
+}  
+```
+
+<img src="figures/data-structures_pc_plots-1.png" width="80%" style="display: block; margin: auto;" />
+
+```r
+par(initialParameters)
+```
+
+
+## Clustering
+
+### Clustering of the proteins
+
+
+```r
+## Clustering of the proteins
+protDist <- as.dist(1 - cor(t(nona)))
+# dim(protDist)
+protTree <- hclust(d = protDist, method = "complete")
+plot(protTree, cex = 0.7, main = "Clustering between proteins\n(correlation, complete)")
+```
+
+<div class="figure" style="text-align: center">
+<img src="figures/data-structures_protein_tree-1.png" alt="Clustering of the proteins based on their profiles across sample pools. Similarity measure: correlation. Aggregation rule: complete linkage. " width="100%" />
+<p class="caption">Clustering of the proteins based on their profiles across sample pools. Similarity measure: correlation. Aggregation rule: complete linkage. </p>
+</div>
+
+### Clustering of the sample pools
+
+
+```r
+## Clustering of the proteins
+poolDist <- as.dist(1 - cor(nona))
+protTree <- hclust(d = poolDist, method = "complete")
+plot(poolDist, cex = 0.7, 
+     main = "Clustering between sample pools\n(correlation, complete)")
+```
+
+<div class="figure" style="text-align: center">
+<img src="figures/data-structures_sample_tree-1.png" alt="Clustering of the sample pools based on their profiles across proteins. Similarity measure: correlation. Aggregation rule: complete linkage. " width="100%" />
+<p class="caption">Clustering of the sample pools based on their profiles across proteins. Similarity measure: correlation. Aggregation rule: complete linkage. </p>
+</div>
+
+## Heatmap
+
+
+
+```r
+heatmap(x = as.matrix(nona), 
+        Colv = NA, 
+        scale = "none", cexRow = 0.7)
+```
+
+<div class="figure" style="text-align: center">
+<img src="figures/data-structures_heatmap-1.png" alt="Heatmap of log2-transformed values (NA filtered). " width="100%" />
+<p class="caption">Heatmap of log2-transformed values (NA filtered). </p>
+</div>
+
+
+## Differential analysis
+
+
+```r
+my.test <- function(x, y, test = "t.test", ...) {
+  if (test == "t.test") {
+    test.result <- t.test(x, y, ...)
+    
+  }
+}
+
+poolDescriptions$condition
+```
+
+```
+ [1] "COI_MOCK"  "COI_MOCK"  "COI_MOCK"  "COI_PVY"   "COI_PVY"   "COI_PVY"   "NAHG_MOCK" "NAHG_MOCK" "NAHG_MOCK" "NAHG_PVY"  "NAHG_PVY"  "NAHG_PVY"  "WT_MOCK"   "WT_MOCK"   "WT_MOCK"   "WT_PVY"    "WT_PVY"    "WT_PVY"   
+```
 

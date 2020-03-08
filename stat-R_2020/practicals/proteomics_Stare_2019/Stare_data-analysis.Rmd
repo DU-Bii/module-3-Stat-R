@@ -317,10 +317,119 @@ par(initialParameters)
 
 ```
 
+## Log2 transformation and Filtering
+
+
+```{r}
+
+## log2 transformation
+proteinQuantMedianNormLog2 <- log2(proteinQuantMedianNorm)
+
+## Replace NA values by zero values
+na2zero <- proteinQuantMedianNormLog2[]
+na2zero[is.na(na2zero)] <- 0
+
+## Filter out proteins with NA values
+nona <- na.omit(proteinQuantMedianNormLog2)
+dim(nona)
+```
+
 
 
 ## Multidimensional scaling with PCA
 
 A first exploratory approach is to project the samples on a 2-dimensional plane, where the distance between samples approximately corresponds to the differences between their proteomics profiles. 
 
+```{r pc_plots, fig.width=8, fig.height=8, out.width="80%"}
+pc <- prcomp(x = t(nona), center = FALSE, scale. = FALSE)
+par(mfrow = c(2,2))
+plot(pc, col = "#BBFFDD", xlab = "Components")
+# dim(pc$x)
+# rownames(pc$x)
+# View(pc$x)
+for (i in c(1, 3, 5)) {
+  plot(pc$x[, c(i, i + 1)], 
+       col = poolDescriptions[rownames(pc$x), "color"], 
+       panel.first = grid(), pch = 19)
+  if (i == 1) {
+    legend("bottomright", legend = names(conditionColors), col = conditionColors, pch = 19, cex = 0.65)
+  }
+}  
+par(initialParameters)
+```
+
+
+## Clustering
+
+### Clustering of the proteins
+
+```{r protein_tree, fig.width=12, fig.height=7, out.width="100%", fig.cap="Clustering of the proteins based on their profiles across sample pools. Similarity measure: correlation. Aggregation rule: complete linkage. "}
+
+## Clustering of the proteins
+protDist <- as.dist(1 - cor(t(nona)))
+# dim(protDist)
+protTree <- hclust(d = protDist, method = "complete")
+plot(protTree, cex = 0.7, main = "Clustering between proteins\n(correlation, complete)")
+```
+
+### Clustering of the sample pools
+
+```{r sample_tree, fig.width=12, fig.height=7, out.width="100%", fig.cap="Clustering of the sample pools based on their profiles across proteins. Similarity measure: correlation. Aggregation rule: complete linkage. "}
+
+## Clustering of the proteins
+poolDist <- as.dist(1 - cor(nona))
+protTree <- hclust(d = poolDist, method = "complete")
+plot(protTree, cex = 0.7, 
+     main = "Clustering between sample pools\n(correlation, complete)")
+```
+
+## Heatmap
+
+
+```{r heatmap, fig.width=12, fig.height=12, out.width="100%", fig.cap="Heatmap of log2-transformed values (NA filtered). " }
+
+heatmap(x = as.matrix(nona), 
+        Colv = NA, 
+        scale = "none", cexRow = 0.7)
+
+```
+
+
+## Differential analysis
+
+```{r}
+# Define the two conditions to compare
+testCondition <- "NAHG_PVY"
+ctrlCondition <- "WT_PVY"
+
+## Compute statistics per protein
+statPerProt <- data.frame(
+  mean = apply(nona, 1, mean),
+  sd = apply(nona, 1, sd),
+  mean1 = apply(nona[, poolDescriptions$condition == testCondition], 1, mean),
+  mean2 = apply(nona[, poolDescriptions$condition == ctrlCondition], 1, mean),
+  s1 = apply(nona[, poolDescriptions$condition == testCondition], 1, sd),
+  s2 = apply(nona[, poolDescriptions$condition == ctrlCondition], 1, sd)
+)
+statPerProt$diff = statPerProt$mean2 - statPerProt$mean1
+# View(statPerProt)
+
+## Run t.test on each protein
+for (i in 1:nrow(nona)) {
+  test.result <- t.test(
+    x = nona[i, poolDescriptions$condition == testCondition],
+    y = nona[i, poolDescriptions$condition == ctrlCondition],
+    var.equal = TRUE)
+  statPerProt[i, "tStat"] <- test.result$statistic
+  statPerProt[i, "df"] <- test.result$parameter
+  statPerProt[i, "p.value"] <- test.result$p.value
+}
+# View(statPerProt)
+```
+
+
+```{r pval_histo, fig.width=7, fig.height=5, out.width="60%}
+hist(statPerProt$p.value, 
+     breaks = seq(from = 0, to = 1, by = 0.05))
+```
 
