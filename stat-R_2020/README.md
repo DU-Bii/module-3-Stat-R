@@ -40,7 +40,7 @@ Link to the prerequisites:
 | Guillaume Achaz | Teacher |
 | Anne Badel | Teacher |
 | Magali Berland | Teacher |
-| Antoine Bridier-Nahmias | Teacher |
+| [Antoine Bridier-Nahmias](https://orcid.org/0000-0002-0376-6840) | Teacher |
 | Olivier Sand | Teacher |
 | Natacha Cerisier | Helper |
 
