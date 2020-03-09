@@ -495,7 +495,17 @@ for (i in 1:nrow(nona)) {
   statPerProt[i, "df"] <- test.result$parameter
   statPerProt[i, "p.value"] <- test.result$p.value
 }
+
 # View(statPerProt)
+```
+
+### Multiple testing corrections
+
+
+```r
+statPerProt$e.value <- statPerProt$p.value * nrow(nona)
+statPerProt$q.value <- qvalue::qvalue(statPerProt$p.value)$qvalues
+statPerProt$padj <- p.adjust(statPerProt$p.value, method = "BY")
 ```
 
 
@@ -520,8 +530,11 @@ plot(statPerProt$diff,
      -log10(statPerProt$p.value), 
      main = "Volcano plot", 
      xlab = "Diff",
-     ylab = "-log10(p-value)", las = 2, col = "#DDEEFF",
-     breaks = seq(from = 0, to = 1, by = 0.05))
+     ylab = "-log10(p-value)", las = 2)
+abline(v = 0)
+
+alpha <- 0.05/nrow(nona)
+abline(h = -log10(alpha))
 ```
 
 <img src="figures/data-structures_volcano-1.png" width="60%" style="display: block; margin: auto;" />
