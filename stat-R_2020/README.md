@@ -9,12 +9,12 @@
 - [Tutorials and good practice](#tutorials-and-good-practice)
 - [Teaching material](#teaching-material)
 
-    - [Session 1. R and Rmd basics](#session-1.-r-and-rmd-basics)
-    - [Session 2. Statistical analysis with R](#session-2.-statistical-analysis-with-r)
-    - [Session 3. Differential analysis](#session-3.-differential-analysis)
+    - [Session 1. R and Rmd basics](#session-1-r-and-rmd-basics)
+    - [Session 2. Statistical analysis with R](#session-2-statistical-analysis-with-r)
+    - [Session 3. Differential analysis](#session-3-differential-analysis)
     - [Session 4. Clustering](clustering/)
-    - [Session 5. Data exploration and enrichment analysis](#session-5.-data-exploration-and-enrichment-analysis)
-    - [Session 6. Supervised classificaiton and learning](#session-6.-supervised-classificaiton-and-learning)
+    - [Session 5. Data exploration and enrichment analysis](#session-5-data-exploration-and-enrichment-analysis)
+    - [Session 6. Supervised classification and learning](#session-6-supervised-classification-and-learning)
 
 ## Goals
 
@@ -40,7 +40,7 @@ Link to the prerequisites:
 | Guillaume Achaz | Teacher |
 | Anne Badel | Teacher |
 | Magali Berland | Teacher |
-| Antoine Bridier-Nahmias | Teacher |
+| [Antoine Bridier-Nahmias](https://orcid.org/0000-0002-0376-6840) | Teacher |
 | Olivier Sand | Teacher |
 | Natacha Cerisier | Helper |
 
@@ -102,7 +102,7 @@ Contents: [clustering/](clustering/)
 
 ### Session 5. Data exploration and enrichment analysis
 
-### Session 6. Supervised classificaiton and learning
+### Session 6. Supervised classification and learning
 
 
 

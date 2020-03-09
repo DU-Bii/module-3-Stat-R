@@ -1,4 +1,4 @@
-# [DUBii](https://du-bii.github.io/accueil/) - module 3 - Analyse statistique avec R
+# [DUBii](https://du-bii.github.io/accueil/) - module 3 - Analyse statistique avec R - Session 2019
 
 
 c'est du 2019
