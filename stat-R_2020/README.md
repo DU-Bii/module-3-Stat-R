@@ -50,7 +50,8 @@ Link to the prerequisites:
 | Doc | Description |URL |
 |---------|---------------------------|---------------------------------------|
 | **Git pages** | **Web site of the course**  (to see the supports) | <https://du-bii.github.io/module-3-Stat-R/> | 
-| Git repo | Repository enabling to download or clone the teaching material on your computer | <https://github.com/DU-Bii/module-3-Stat-R> |
+| Git repo | Repository enabling to download or clone the teaching material on your computer | <https://github.com/DU-Bii/module-3-Stat-R> | RStudio at IFB cluster | link to RStudio on th IFB cluster] | <https://rstudio.cluster.france-bioinformatique.fr/)> |
+| MOODLE | link to the Moddle web page of the DUBii with your ENT account] | <https://moodlesupd.script.univ-paris-diderot.fr/course/view.php?id=10629> |
 
 
 ## R tutorials and good practice
@@ -93,6 +94,16 @@ Link to the prerequisites:
 | R package | Package to visualise effect sizes | <https://github.com/ACCLAB/dabestr> |
 | Document | Memo on correlation and regression | [[pdf]](documents/CovCorReg.pdf)] |
 | Practical | A first data analysis with R | [[html](practicals/first-data-analysis/A_first_data_analysis.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/first-data-analysis/A_first_data_analysis.Rmd)] |
+
+
+*Links mentionned during the session:*
+
+|  Topic | Title | Description | Link|
+|------------------------------------------|----------|----------|------------------------------------------------------------------------------------|
+| Basic stats explained to biologists | Points of Significance |Nature Methods collection  |<https://www.nature.com/collections/qghhqm/pointsofsignificance> |
+| How to represent data | Points of View | Nature Methods collection |<http://blogs.nature.com/methagora/2013/07/data-visualization-points-of-view.html> |
+| How to represent data | DEFAKATOR | Détecter des graphiques trompeurs  |<https://www.youtube.com/watch?v=crTt-QIyS-o> |
+
 
 
 
