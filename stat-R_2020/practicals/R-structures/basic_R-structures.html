@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
 
 <meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 <meta name="author" content="Claire Vandiedonck &amp; Jacques van Helden" />
 
-<meta name="date" content="2020-03-04" />
+<meta name="date" content="2020-03-09" />
 
 <title>Basic data structures in R – matrices, data frames and lists</title>
 
-<script src="basic_R-structures_files/header-attrs-2.1/header-attrs.js"></script>
 <script src="basic_R-structures_files/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="basic_R-structures_files/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
@@ -31,27 +31,26 @@
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
 }
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
+    border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -60,9 +59,9 @@ pre.numberSource code > span > a:first-child::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  background-color: #f8f8f8; }
+  { background-color: #f8f8f8; }
 @media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+a.sourceLine::before { text-decoration: underline; }
 }
 code span.al { color: #ef2929; } /* Alert */
 code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
@@ -234,7 +233,6 @@ summary {
   border: none;
   display: inline-block;
   border-radius: 4px;
-  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -266,12 +264,6 @@ summary {
 }
 }
 
-@media print {
-.toc-content {
-  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
-  float: right;
-}
-}
 
 .toc-content {
   padding-left: 30px;
@@ -353,7 +345,7 @@ div.tocify {
 <h1 class="title toc-ignore">Basic data structures in R – matrices, data frames and lists</h1>
 <h3 class="subtitle">DUBii – Statistics with R</h3>
 <h4 class="author">Claire Vandiedonck &amp; Jacques van Helden</h4>
-<h4 class="date">2020-03-04</h4>
+<h4 class="date">2020-03-09</h4>
 
 </div>
 
@@ -373,9 +365,9 @@ div.tocify {
 <div id="solutions" class="section level3">
 <h3>Solutions</h3>
 <p>En cas d’urgence poussez sur <strong>Code</strong> pour révéler la solution.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>matIdentite &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dt">ncol =</span> <span class="dv">10</span>, <span class="dt">nrow =</span> <span class="dv">10</span>, <span class="dt">data =</span> <span class="dv">0</span>)</span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">diag</span>(matIdentite) &lt;-<span class="st"> </span><span class="dv">1</span></span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">print</span>(matIdentite)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">matIdentite &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dt">ncol =</span> <span class="dv">10</span>, <span class="dt">nrow =</span> <span class="dv">10</span>, <span class="dt">data =</span> <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">diag</span>(matIdentite) &lt;-<span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw">print</span>(matIdentite)</a></code></pre></div>
 <pre><code>      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
  [1,]    1    0    0    0    0    0    0    0    0     0
  [2,]    0    1    0    0    0    0    0    0    0     0
@@ -389,27 +381,27 @@ div.tocify {
 [10,]    0    0    0    0    0    0    0    0    0     1</code></pre>
 <div id="matrice-de-nombres-aléatoires" class="section level4">
 <h4>Matrice de nombres aléatoires</h4>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co">## Generatre a 10x10 matrix with random normal numbers</span></span>
-<span id="cb3-2"><a href="#cb3-2"></a>matAleatoire &lt;-<span class="st"> </span><span class="kw">matrix</span>(</span>
-<span id="cb3-3"><a href="#cb3-3"></a>  <span class="dt">nrow =</span> <span class="dv">10</span>, </span>
-<span id="cb3-4"><a href="#cb3-4"></a>  <span class="dt">ncol =</span> <span class="dv">10</span>, </span>
-<span id="cb3-5"><a href="#cb3-5"></a>  <span class="dt">data =</span> <span class="kw">rnorm</span>(<span class="dt">n =</span> <span class="dv">100</span>, </span>
-<span id="cb3-6"><a href="#cb3-6"></a>               <span class="dt">mean =</span> <span class="dv">0</span>, </span>
-<span id="cb3-7"><a href="#cb3-7"></a>               <span class="dt">sd =</span> <span class="kw">sqrt</span>(<span class="dv">5</span>)))</span>
-<span id="cb3-8"><a href="#cb3-8"></a></span>
-<span id="cb3-9"><a href="#cb3-9"></a><span class="co">## Print the results rounded at 2 decimals</span></span>
-<span id="cb3-10"><a href="#cb3-10"></a><span class="kw">print</span>(<span class="kw">round</span>(matAleatoire, <span class="dt">digits =</span> <span class="dv">2</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="co">## Generatre a 10x10 matrix with random normal numbers</span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">matAleatoire &lt;-<span class="st"> </span><span class="kw">matrix</span>(</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">  <span class="dt">nrow =</span> <span class="dv">10</span>, </a>
+<a class="sourceLine" id="cb3-4" data-line-number="4">  <span class="dt">ncol =</span> <span class="dv">10</span>, </a>
+<a class="sourceLine" id="cb3-5" data-line-number="5">  <span class="dt">data =</span> <span class="kw">rnorm</span>(<span class="dt">n =</span> <span class="dv">100</span>, </a>
+<a class="sourceLine" id="cb3-6" data-line-number="6">               <span class="dt">mean =</span> <span class="dv">0</span>, </a>
+<a class="sourceLine" id="cb3-7" data-line-number="7">               <span class="dt">sd =</span> <span class="kw">sqrt</span>(<span class="dv">5</span>)))</a>
+<a class="sourceLine" id="cb3-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb3-9" data-line-number="9"><span class="co">## Print the results rounded at 2 decimals</span></a>
+<a class="sourceLine" id="cb3-10" data-line-number="10"><span class="kw">print</span>(<span class="kw">round</span>(matAleatoire, <span class="dt">digits =</span> <span class="dv">2</span>))</a></code></pre></div>
 <pre><code>       [,1]  [,2]  [,3]  [,4]  [,5]  [,6]  [,7]  [,8]  [,9] [,10]
- [1,]  2.15 -1.40  0.47 -2.01  1.74 -4.17  1.02 -0.78  4.08  4.15
- [2,]  1.34  0.16 -0.20  1.21  0.92 -0.34 -0.01  0.55 -4.24 -2.79
- [3,]  5.52  2.47 -1.49 -4.23 -2.44 -1.85  1.80  0.41  1.50  1.64
- [4,]  1.64 -2.67 -2.73 -6.40 -1.23 -2.83  1.63  0.72  0.41 -2.67
- [5,]  1.74  4.83 -2.23 -5.41  0.62  0.08 -0.71  5.75 -1.20 -0.86
- [6,]  1.86 -1.00  0.91  1.07  0.33 -1.07 -0.76  2.87 -0.82 -2.53
- [7,] -0.53 -2.23 -1.21  3.15 -4.40  1.48 -0.51  1.27 -2.50 -3.89
- [8,]  2.24  0.36  1.72 -1.22 -2.55 -3.23 -1.09 -0.86  1.28  5.51
- [9,] -1.87  1.30  0.59 -2.96  1.76 -0.75 -0.43 -0.40 -2.47 -5.50
-[10,] -0.92 -3.18  1.03  0.91 -2.06  1.23  0.92  3.66 -0.79 -3.42</code></pre>
+ [1,]  0.83 -5.25 -0.55 -3.23 -0.06  1.72  2.60 -1.60  1.56 -1.68
+ [2,] -4.48 -0.52  2.81  0.81 -2.74 -1.28  5.41  1.30  2.03 -3.59
+ [3,]  0.30 -2.77  3.83 -2.02  2.64 -2.40 -0.07  3.04  4.96  0.48
+ [4,] -3.25 -2.66  0.13  1.50  3.15  0.63  0.57 -3.77 -0.99  2.33
+ [5,]  1.28  7.32 -1.17  0.26  2.28  0.32  4.37  0.35 -0.03 -0.30
+ [6,] -1.91  0.14 -2.48 -1.42  0.25  1.17 -1.61 -1.39  0.34  0.58
+ [7,] -2.09  3.13 -2.64  0.61  2.61 -1.77 -2.05  4.24 -0.05  3.21
+ [8,]  0.20 -0.54 -2.18  1.67  0.99 -1.65 -2.78  4.15 -1.22  0.76
+ [9,]  4.08  2.11 -3.39  0.53 -3.95 -3.03  1.50  1.67  1.79  2.61
+[10,] -1.11 -0.77 -0.61  1.99  1.77  2.89  1.21 -1.14  3.10 -5.39</code></pre>
 </div>
 </div>
 </div>
@@ -425,43 +417,43 @@ div.tocify {
 <p><strong>Fonctions à utiliser :</strong> <code>rnorm()</code>, <code>runif()</code>, <code>cbind()</code>, <code>rbind()</code>, <code>dim()</code>, <code>mean()</code>, <code>var()</code>, <code>min()</code>, <code>max()</code>, <code>summary()</code>, …</p>
 <div id="solutions-1" class="section level3">
 <h3>Solutions</h3>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>n &lt;-<span class="st"> </span><span class="dv">10000</span> <span class="co">## define vector sizes</span></span>
-<span id="cb5-2"><a href="#cb5-2"></a>x1 &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dt">n =</span> n, <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> <span class="dv">1</span>) <span class="co">## normal random</span></span>
-<span id="cb5-3"><a href="#cb5-3"></a>x2 &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dt">n =</span> n, <span class="dt">min =</span> <span class="dv">0</span>, <span class="dt">max =</span> <span class="dv">10</span>) <span class="co">## uniform random </span></span></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">hist</span>(<span class="dt">x =</span> x1, <span class="dt">breaks =</span> <span class="dv">100</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">n &lt;-<span class="st"> </span><span class="dv">10000</span> <span class="co">## define vector sizes</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">x1 &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dt">n =</span> n, <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> <span class="dv">1</span>) <span class="co">## normal random</span></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">x2 &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dt">n =</span> n, <span class="dt">min =</span> <span class="dv">0</span>, <span class="dt">max =</span> <span class="dv">10</span>) <span class="co">## uniform random </span></a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">hist</span>(<span class="dt">x =</span> x1, <span class="dt">breaks =</span> <span class="dv">100</span>)</a></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figures/data-structures_rnorm_hist_simple-1.png" alt="(too) simple istogram of normally distributed random numbers." width="60%" />
 <p class="caption">
 (too) simple istogram of normally distributed random numbers.
 </p>
 </div>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">hist</span>(<span class="dt">x =</span> x1, <span class="dt">breaks =</span> <span class="dv">100</span>, </span>
-<span id="cb7-2"><a href="#cb7-2"></a>     <span class="dt">las =</span> <span class="dv">1</span>, </span>
-<span id="cb7-3"><a href="#cb7-3"></a>     <span class="dt">col =</span> <span class="st">&quot;palegreen&quot;</span>,</span>
-<span id="cb7-4"><a href="#cb7-4"></a>     <span class="dt">main =</span> <span class="st">&quot;Random normal numbers&quot;</span>,</span>
-<span id="cb7-5"><a href="#cb7-5"></a>     <span class="dt">xlab =</span> <span class="st">&quot;Value&quot;</span></span>
-<span id="cb7-6"><a href="#cb7-6"></a>     )</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">hist</span>(<span class="dt">x =</span> x1, <span class="dt">breaks =</span> <span class="dv">100</span>, </a>
+<a class="sourceLine" id="cb7-2" data-line-number="2">     <span class="dt">las =</span> <span class="dv">1</span>, </a>
+<a class="sourceLine" id="cb7-3" data-line-number="3">     <span class="dt">col =</span> <span class="st">&quot;palegreen&quot;</span>,</a>
+<a class="sourceLine" id="cb7-4" data-line-number="4">     <span class="dt">main =</span> <span class="st">&quot;Random normal numbers&quot;</span>,</a>
+<a class="sourceLine" id="cb7-5" data-line-number="5">     <span class="dt">xlab =</span> <span class="st">&quot;Value&quot;</span></a>
+<a class="sourceLine" id="cb7-6" data-line-number="6">     )</a></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figures/data-structures_rnorm_hist-1.png" alt="Histogram of normally distributed random numbers. " width="60%" />
 <p class="caption">
 Histogram of normally distributed random numbers.
 </p>
 </div>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">hist</span>(<span class="dt">x =</span> x2, <span class="dt">breaks =</span> <span class="dv">10</span>, </span>
-<span id="cb8-2"><a href="#cb8-2"></a>     <span class="dt">las =</span> <span class="dv">1</span>, </span>
-<span id="cb8-3"><a href="#cb8-3"></a>     <span class="dt">col =</span> <span class="st">&quot;cyan&quot;</span>,</span>
-<span id="cb8-4"><a href="#cb8-4"></a>     <span class="dt">main =</span> <span class="st">&quot;Uniformly distributed random numbers&quot;</span>,</span>
-<span id="cb8-5"><a href="#cb8-5"></a>     <span class="dt">xlab =</span> <span class="st">&quot;Value&quot;</span></span>
-<span id="cb8-6"><a href="#cb8-6"></a>     )</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">hist</span>(<span class="dt">x =</span> x2, <span class="dt">breaks =</span> <span class="dv">10</span>, </a>
+<a class="sourceLine" id="cb8-2" data-line-number="2">     <span class="dt">las =</span> <span class="dv">1</span>, </a>
+<a class="sourceLine" id="cb8-3" data-line-number="3">     <span class="dt">col =</span> <span class="st">&quot;cyan&quot;</span>,</a>
+<a class="sourceLine" id="cb8-4" data-line-number="4">     <span class="dt">main =</span> <span class="st">&quot;Uniformly distributed random numbers&quot;</span>,</a>
+<a class="sourceLine" id="cb8-5" data-line-number="5">     <span class="dt">xlab =</span> <span class="st">&quot;Value&quot;</span></a>
+<a class="sourceLine" id="cb8-6" data-line-number="6">     )</a></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figures/data-structures_runif_hist-1.png" alt="Histogram of uniformly distributed random numbers. " width="60%" />
 <p class="caption">
 Histogram of uniformly distributed random numbers.
 </p>
 </div>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">summary</span>(x1)</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">summary</span>(x1)</a></code></pre></div>
 <pre><code>     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
--3.926108 -0.681550 -0.007686 -0.006920  0.675514  3.781480 </code></pre>
+-3.845412 -0.666820  0.004857 -0.001476  0.671639  3.478654 </code></pre>
 </div>
 </div>
 <div id="exercice-2.2" class="section level2">
@@ -469,28 +461,28 @@ Histogram of uniformly distributed random numbers.
 <p>Créez une matrice <code>m1</code> qui contient les 10 premières valeurs de <code>x1</code> (colonne 1 de <code>m1</code>) et les 10 dernières valeurs de <code>x2</code> (colonne 2 de <code>m1</code>).</p>
 <div id="solution" class="section level3">
 <h3>Solution</h3>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="co">## Prepare an empty matrix</span></span>
-<span id="cb11-2"><a href="#cb11-2"></a>m1 &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dt">nrow =</span> <span class="dv">10</span>, <span class="dt">ncol =</span> <span class="dv">2</span>)</span>
-<span id="cb11-3"><a href="#cb11-3"></a></span>
-<span id="cb11-4"><a href="#cb11-4"></a><span class="co">## Assign values to the first column</span></span>
-<span id="cb11-5"><a href="#cb11-5"></a>m1[, <span class="dv">1</span>] &lt;-<span class="st"> </span><span class="kw">head</span>(<span class="dt">x =</span> x1, <span class="dt">n =</span> <span class="dv">10</span>)</span>
-<span id="cb11-6"><a href="#cb11-6"></a></span>
-<span id="cb11-7"><a href="#cb11-7"></a><span class="co">## Assign values to the second column</span></span>
-<span id="cb11-8"><a href="#cb11-8"></a>m1[, <span class="dv">2</span>] &lt;-<span class="st"> </span><span class="kw">tail</span>(<span class="dt">x =</span> x1, <span class="dt">n =</span> <span class="dv">10</span>)</span>
-<span id="cb11-9"><a href="#cb11-9"></a></span>
-<span id="cb11-10"><a href="#cb11-10"></a><span class="co">## Print the result rounded to 3 decimals</span></span>
-<span id="cb11-11"><a href="#cb11-11"></a><span class="kw">print</span>(<span class="kw">round</span>(m1, <span class="dt">digits =</span> <span class="dv">3</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="co">## Prepare an empty matrix</span></a>
+<a class="sourceLine" id="cb11-2" data-line-number="2">m1 &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dt">nrow =</span> <span class="dv">10</span>, <span class="dt">ncol =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb11-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb11-4" data-line-number="4"><span class="co">## Assign values to the first column</span></a>
+<a class="sourceLine" id="cb11-5" data-line-number="5">m1[, <span class="dv">1</span>] &lt;-<span class="st"> </span><span class="kw">head</span>(<span class="dt">x =</span> x1, <span class="dt">n =</span> <span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb11-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb11-7" data-line-number="7"><span class="co">## Assign values to the second column</span></a>
+<a class="sourceLine" id="cb11-8" data-line-number="8">m1[, <span class="dv">2</span>] &lt;-<span class="st"> </span><span class="kw">tail</span>(<span class="dt">x =</span> x1, <span class="dt">n =</span> <span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb11-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb11-10" data-line-number="10"><span class="co">## Print the result rounded to 3 decimals</span></a>
+<a class="sourceLine" id="cb11-11" data-line-number="11"><span class="kw">print</span>(<span class="kw">round</span>(m1, <span class="dt">digits =</span> <span class="dv">3</span>))</a></code></pre></div>
 <pre><code>        [,1]   [,2]
- [1,] -1.027 -0.489
- [2,] -0.210  0.286
- [3,]  0.887 -1.740
- [4,] -0.765  0.594
- [5,]  1.572  1.031
- [6,] -0.281  0.362
- [7,]  0.839  0.991
- [8,]  0.375  0.054
- [9,] -0.210  1.361
-[10,] -1.869 -0.761</code></pre>
+ [1,]  0.339 -0.164
+ [2,] -0.315 -0.832
+ [3,]  0.190  0.116
+ [4,]  0.534 -0.460
+ [5,] -0.152 -2.756
+ [6,] -0.037  0.209
+ [7,]  0.394 -0.484
+ [8,]  0.987 -0.724
+ [9,]  0.594 -1.299
+[10,]  0.067  0.588</code></pre>
 </div>
 </div>
 <div id="exercice-2.3" class="section level2">
@@ -502,20 +494,20 @@ Histogram of uniformly distributed random numbers.
 </ul>
 <div id="solutions-2" class="section level3">
 <h3>Solutions</h3>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>m2 &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dt">nrow =</span> <span class="dv">5</span>, <span class="dt">ncol =</span> <span class="dv">2</span>)</span>
-<span id="cb13-2"><a href="#cb13-2"></a></span>
-<span id="cb13-3"><a href="#cb13-3"></a><span class="co">## Assign values</span></span>
-<span id="cb13-4"><a href="#cb13-4"></a>m2[, <span class="dv">1</span>] &lt;-<span class="st"> </span>x1[<span class="kw">c</span>(<span class="dv">16</span>, <span class="dv">51</span>, <span class="dv">79</span>, <span class="dv">31</span>, <span class="dv">27</span>)]</span>
-<span id="cb13-5"><a href="#cb13-5"></a>m2[, <span class="dv">2</span>] &lt;-<span class="st"> </span>x2[<span class="kw">c</span>(<span class="dv">30</span>, <span class="dv">70</span>, <span class="dv">12</span>, <span class="dv">49</span>, <span class="dv">45</span>)]</span>
-<span id="cb13-6"><a href="#cb13-6"></a></span>
-<span id="cb13-7"><a href="#cb13-7"></a><span class="co">## Print the result</span></span>
-<span id="cb13-8"><a href="#cb13-8"></a><span class="kw">print</span>(m2)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">m2 &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dt">nrow =</span> <span class="dv">5</span>, <span class="dt">ncol =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb13-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb13-3" data-line-number="3"><span class="co">## Assign values</span></a>
+<a class="sourceLine" id="cb13-4" data-line-number="4">m2[, <span class="dv">1</span>] &lt;-<span class="st"> </span>x1[<span class="kw">c</span>(<span class="dv">16</span>, <span class="dv">51</span>, <span class="dv">79</span>, <span class="dv">31</span>, <span class="dv">27</span>)]</a>
+<a class="sourceLine" id="cb13-5" data-line-number="5">m2[, <span class="dv">2</span>] &lt;-<span class="st"> </span>x2[<span class="kw">c</span>(<span class="dv">30</span>, <span class="dv">70</span>, <span class="dv">12</span>, <span class="dv">49</span>, <span class="dv">45</span>)]</a>
+<a class="sourceLine" id="cb13-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb13-7" data-line-number="7"><span class="co">## Print the result</span></a>
+<a class="sourceLine" id="cb13-8" data-line-number="8"><span class="kw">print</span>(m2)</a></code></pre></div>
 <pre><code>           [,1]     [,2]
-[1,]  0.3257754 5.916157
-[2,] -0.4303759 9.748914
-[3,] -0.5627509 2.911025
-[4,]  0.4613393 3.611581
-[5,]  0.4460625 6.276195</code></pre>
+[1,] -1.0318838 9.856172
+[2,] -0.7474851 3.025618
+[3,] -1.3456105 9.253435
+[4,]  1.5142957 8.664710
+[5,]  0.2124352 3.031858</code></pre>
 </div>
 </div>
 <div id="exercice-2.4" class="section level2">
@@ -524,12 +516,12 @@ Histogram of uniformly distributed random numbers.
 <p><strong>Fonctions : </strong> <code>rbind()</code>, <code>cbind()</code>, <code>dim()</code>, <code>ncol()</code>, <code>nrow()</code></p>
 <div id="solutions-3" class="section level3">
 <h3>Solutions</h3>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>m3 &lt;-<span class="st"> </span><span class="kw">rbind</span>(m1, m2)</span>
-<span id="cb15-2"><a href="#cb15-2"></a><span class="kw">dim</span>(m3)</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1">m3 &lt;-<span class="st"> </span><span class="kw">rbind</span>(m1, m2)</a>
+<a class="sourceLine" id="cb15-2" data-line-number="2"><span class="kw">dim</span>(m3)</a></code></pre></div>
 <pre><code>[1] 15  2</code></pre>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="kw">nrow</span>(m3)</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="kw">nrow</span>(m3)</a></code></pre></div>
 <pre><code>[1] 15</code></pre>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="kw">ncol</span>(m3)</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="kw">ncol</span>(m3)</a></code></pre></div>
 <pre><code>[1] 2</code></pre>
 </div>
 </div>
@@ -557,8 +549,8 @@ Histogram of uniformly distributed random numbers.
 </div>
 <div id="solutions-exercice-3" class="section level2">
 <h2>Solutions exercice 3</h2>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="kw">data</span>(<span class="st">&quot;WorldPhones&quot;</span>)</span>
-<span id="cb21-2"><a href="#cb21-2"></a><span class="kw">print</span>(WorldPhones)</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="kw">data</span>(<span class="st">&quot;WorldPhones&quot;</span>)</a>
+<a class="sourceLine" id="cb21-2" data-line-number="2"><span class="kw">print</span>(WorldPhones)</a></code></pre></div>
 <pre><code>     N.Amer Europe Asia S.Amer Oceania Africa Mid.Amer
 1951  45939  21574 2876   1815    1646     89      555
 1956  60423  29990 4708   2568    2366   1411      733
@@ -567,46 +559,46 @@ Histogram of uniformly distributed random numbers.
 1959  71799  37598 6856   3000    2868   1769      911
 1960  76036  40341 8220   3145    3054   1905     1008
 1961  79831  43173 9053   3338    3224   2005     1076</code></pre>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="kw">class</span>(WorldPhones)</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="kw">class</span>(WorldPhones)</a></code></pre></div>
 <pre><code>[1] &quot;matrix&quot;</code></pre>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="kw">dim</span>(WorldPhones)</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="kw">dim</span>(WorldPhones)</a></code></pre></div>
 <pre><code>[1] 7 7</code></pre>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="kw">rownames</span>(WorldPhones)</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="kw">rownames</span>(WorldPhones)</a></code></pre></div>
 <pre><code>[1] &quot;1951&quot; &quot;1956&quot; &quot;1957&quot; &quot;1958&quot; &quot;1959&quot; &quot;1960&quot; &quot;1961&quot;</code></pre>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="kw">colnames</span>(WorldPhones)</span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1"><span class="kw">colnames</span>(WorldPhones)</a></code></pre></div>
 <pre><code>[1] &quot;N.Amer&quot;   &quot;Europe&quot;   &quot;Asia&quot;     &quot;S.Amer&quot;   &quot;Oceania&quot;  &quot;Africa&quot;   &quot;Mid.Amer&quot;</code></pre>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="co">## Marginal sums per year</span></span>
-<span id="cb31-2"><a href="#cb31-2"></a>nbrTelAn &lt;-<span class="st"> </span><span class="kw">apply</span>(WorldPhones, <span class="dv">1</span>, sum)</span>
-<span id="cb31-3"><a href="#cb31-3"></a><span class="kw">print</span>(nbrTelAn)</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" data-line-number="1"><span class="co">## Marginal sums per year</span></a>
+<a class="sourceLine" id="cb31-2" data-line-number="2">nbrTelAn &lt;-<span class="st"> </span><span class="kw">apply</span>(WorldPhones, <span class="dv">1</span>, sum)</a>
+<a class="sourceLine" id="cb31-3" data-line-number="3"><span class="kw">print</span>(nbrTelAn)</a></code></pre></div>
 <pre><code>  1951   1956   1957   1958   1959   1960   1961 
  74494 102199 110001 118399 124801 133709 141700 </code></pre>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a><span class="co">## Marginal sums per continent</span></span>
-<span id="cb33-2"><a href="#cb33-2"></a>nbrTelCont &lt;-<span class="st"> </span><span class="kw">apply</span>(WorldPhones, <span class="dv">2</span>, sum)</span>
-<span id="cb33-3"><a href="#cb33-3"></a><span class="kw">print</span>(nbrTelCont)</span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" data-line-number="1"><span class="co">## Marginal sums per continent</span></a>
+<a class="sourceLine" id="cb33-2" data-line-number="2">nbrTelCont &lt;-<span class="st"> </span><span class="kw">apply</span>(WorldPhones, <span class="dv">2</span>, sum)</a>
+<a class="sourceLine" id="cb33-3" data-line-number="3"><span class="kw">print</span>(nbrTelCont)</a></code></pre></div>
 <pre><code>  N.Amer   Europe     Asia   S.Amer  Oceania   Africa Mid.Amer 
   467233   240404    43605    19406    18375    10388     5892 </code></pre>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a><span class="kw">names</span>(<span class="kw">which.max</span>(nbrTelCont))</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" data-line-number="1"><span class="kw">names</span>(<span class="kw">which.max</span>(nbrTelCont))</a></code></pre></div>
 <pre><code>[1] &quot;N.Amer&quot;</code></pre>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a><span class="kw">names</span>(<span class="kw">which.min</span>(nbrTelCont))</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" data-line-number="1"><span class="kw">names</span>(<span class="kw">which.min</span>(nbrTelCont))</a></code></pre></div>
 <pre><code>[1] &quot;Mid.Amer&quot;</code></pre>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1"></a><span class="co">## Another way: with head and tail</span></span>
-<span id="cb39-2"><a href="#cb39-2"></a><span class="kw">tail</span>(<span class="kw">sort</span>(nbrTelCont), <span class="dt">n =</span> <span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" data-line-number="1"><span class="co">## Another way: with head and tail</span></a>
+<a class="sourceLine" id="cb39-2" data-line-number="2"><span class="kw">tail</span>(<span class="kw">sort</span>(nbrTelCont), <span class="dt">n =</span> <span class="dv">1</span>)</a></code></pre></div>
 <pre><code>N.Amer 
 467233 </code></pre>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1"></a><span class="kw">head</span>(<span class="kw">sort</span>(nbrTelCont), <span class="dt">n =</span> <span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" data-line-number="1"><span class="kw">head</span>(<span class="kw">sort</span>(nbrTelCont), <span class="dt">n =</span> <span class="dv">1</span>)</a></code></pre></div>
 <pre><code>Mid.Amer 
     5892 </code></pre>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1"></a><span class="kw">sum</span>(nbrTelCont <span class="op">&gt;</span><span class="st"> </span><span class="dv">20000</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" data-line-number="1"><span class="kw">sum</span>(nbrTelCont <span class="op">&gt;</span><span class="st"> </span><span class="dv">20000</span>)</a></code></pre></div>
 <pre><code>[1] 3</code></pre>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1"></a><span class="kw">sum</span>(nbrTelCont <span class="op">&gt;</span><span class="st"> </span><span class="dv">50000</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" data-line-number="1"><span class="kw">sum</span>(nbrTelCont <span class="op">&gt;</span><span class="st"> </span><span class="dv">50000</span>)</a></code></pre></div>
 <pre><code>[1] 2</code></pre>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1"></a><span class="kw">sum</span>(nbrTelCont <span class="op">&gt;</span><span class="st"> </span><span class="dv">200000</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb47-1" data-line-number="1"><span class="kw">sum</span>(nbrTelCont <span class="op">&gt;</span><span class="st"> </span><span class="dv">200000</span>)</a></code></pre></div>
 <pre><code>[1] 2</code></pre>
 </div>
 <div id="exercice-4" class="section level2">
 <h2>Exercice 4</h2>
 <ul>
-<li><p>Téléchargez le fichier <a href="data/minitable1.txt">minitable1.tsv</a>.</p></li>
+<li><p>Téléchargez le fichier <a href="https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/data/minitable1.txt">minitable1.txt</a>.</p></li>
 <li><p>Ouvrez-le avec un éditeur de texte ou un calculateur pour identifier sa structure et les cases non remplies.</p></li>
 <li><p>Importez le dans R dans un objet <code>test.data</code> et vérifiez sa structure et son contenu.</p></li>
 <li><p>Comment les données manquantes ont-elles été lues ? Remplacez-les par NA si elles n’ont pas été lues comme une donnée manquante.</p></li>

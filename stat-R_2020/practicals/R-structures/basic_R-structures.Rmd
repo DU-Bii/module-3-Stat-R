@@ -330,7 +330,7 @@ sum(nbrTelCont > 200000)
 
 ## Exercice 4
 
-- Téléchargez le fichier [minitable1.tsv](data/minitable1.txt). 
+- Téléchargez le fichier [minitable1.txt](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/data/minitable1.txt). 
 
 - Ouvrez-le avec un éditeur de texte ou un calculateur pour identifier sa structure et les cases non remplies.
 
