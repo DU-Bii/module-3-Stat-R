@@ -1,32 +1,31 @@
 <!DOCTYPE html>
 
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
 
 <meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
-<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 <meta name="author" content="Claire Vandiedonck &amp; Jacques van Helden" />
 
-<meta name="date" content="2020-03-04" />
+<meta name="date" content="2020-03-09" />
 
 <title>Programming with R</title>
 
-<script src="R-programming_intro_files/header-attrs-2.1/header-attrs.js"></script>
-<script src="R-programming_intro_files/jquery-1.11.3/jquery.min.js"></script>
+<script src="R-programing_intro_files/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="R-programming_intro_files/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
-<script src="R-programming_intro_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
-<script src="R-programming_intro_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
-<script src="R-programming_intro_files/bootstrap-3.3.5/shim/respond.min.js"></script>
-<script src="R-programming_intro_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
-<link href="R-programming_intro_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="R-programming_intro_files/tocify-1.9.1/jquery.tocify.js"></script>
-<script src="R-programming_intro_files/navigation-1.1/tabsets.js"></script>
-<script src="R-programming_intro_files/navigation-1.1/codefolding.js"></script>
+<link href="R-programing_intro_files/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="R-programing_intro_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="R-programing_intro_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="R-programing_intro_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="R-programing_intro_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="R-programing_intro_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="R-programing_intro_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="R-programing_intro_files/navigation-1.1/tabsets.js"></script>
+<script src="R-programing_intro_files/navigation-1.1/codefolding.js"></script>
 
 
 
@@ -59,7 +58,9 @@ h6 {
 </style>
 
 
+</head>
 
+<body>
 
 <style type = "text/css">
 .main-container {
@@ -73,6 +74,7 @@ code {
 }
 img {
   max-width:100%;
+  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -89,6 +91,8 @@ summary {
 </style>
 
 
+
+<div class="container-fluid main-container">
 
 <!-- tabsets -->
 
@@ -134,7 +138,6 @@ summary {
   border: none;
   display: inline-block;
   border-radius: 4px;
-  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -147,12 +150,56 @@ summary {
 }
 </style>
 
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
 <!-- code folding -->
 <style type="text/css">
 .code-folding-btn { margin-bottom: 4px; }
 </style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
 
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <style type="text/css">
 
@@ -166,12 +213,6 @@ summary {
 }
 }
 
-@media print {
-.toc-content {
-  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
-  float: right;
-}
-}
 
 .toc-content {
   padding-left: 30px;
@@ -207,6 +248,8 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -215,16 +258,6 @@ div.tocify {
 
 
 </style>
-
-
-
-</head>
-
-<body>
-
-
-<div class="container-fluid main-container">
-
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
 <div class="row-fluid">
@@ -251,9 +284,9 @@ div.tocify {
 
 
 <h1 class="title toc-ignore">Programming with R</h1>
-<h3 class="subtitle">DUBii – Statistics with R</h3>
-<h4 class="author">Claire Vandiedonck &amp; Jacques van Helden</h4>
-<h4 class="date">2020-03-04</h4>
+<h3 class="subtitle"><em>DUBii – Statistics with R</em></h3>
+<h4 class="author"><em>Claire Vandiedonck &amp; Jacques van Helden</em></h4>
+<h4 class="date"><em>2020-03-09</em></h4>
 
 </div>
 
@@ -267,7 +300,7 @@ div.tocify {
 </ul>
 <p><strong>Fonctions à utiliser :</strong> rnorm(), which(),sum(), if(),else if(),else(), cat() ou print()</p>
 </div>
-<div id="exercice-2-création-dune-boucle-simple" class="section level2">
+<div id="exercice-2-creation-dune-boucle-simple" class="section level2">
 <h2>Exercice 2 : création d’une boucle simple</h2>
 <ul>
 <li>Créez une boucle de 10 itérations <code>i</code> qui affiche à chaque itération l’indice <code>i</code>.</li>
@@ -276,7 +309,7 @@ div.tocify {
 </ul>
 <p><strong>Fonctions à utiliser :</strong> for(), cat() ou print()</p>
 </div>
-<div id="exercice-3-création-dune-fonction" class="section level2">
+<div id="exercice-3-creation-dune-fonction" class="section level2">
 <h2>Exercice 3 : création d’une fonction</h2>
 <ul>
 <li>Créez une fonction <code>calculSomme</code> qui calcule la somme de deux variables x et y passées en argument.</li>
@@ -284,7 +317,7 @@ div.tocify {
 </ul>
 <p><strong>Fonctions à utiliser :</strong> function(), return()</p>
 </div>
-<div id="exercice-4-création-dune-fonction-avec-des-tests-utilisation-de-cette-fonction-de-manière-itérative" class="section level2">
+<div id="exercice-4-creation-dune-fonction-avec-des-tests-utilisation-de-cette-fonction-de-maniere-iterative" class="section level2">
 <h2>Exercice 4: création d’une fonction avec des tests, utilisation de cette fonction de manière itérative</h2>
 <ul>
 <li>Ecrivez une fonction <code>calculTarif</code> qui prend pour argument un âge et affiche “demi-tarif” si l’âge est inférieur à 12 ans, “tarif sénior” si l’âge est supérieur ou égal à 60 ans et “plein tarif” sinon.</li>
@@ -299,7 +332,7 @@ div.tocify {
 </ul>
 <p><strong>Instructions conditionnelles: </strong> - <code>if</code> - <code>else</code> - <code>else if</code> - <code>for</code></p>
 </div>
-<div id="exercice-5-création-dune-fonction-avec-compteur-de-boucle" class="section level2">
+<div id="exercice-5-creation-dune-fonction-avec-compteur-de-boucle" class="section level2">
 <h2>Exercice 5: création d’une fonction avec compteur de boucle</h2>
 <ul>
 <li><p>Ecrivez une fonction <code>sumCumul</code> qui calcule la somme cumulée des nombres entiers compris entre deux bornes <span class="math inline">\(a\)</span> et <span class="math inline">\(b\)</span> que vous mettrez en arguments <code>start</code> et <code>end</code>.</p></li>
@@ -334,54 +367,6 @@ $(document).ready(function () {
 });
 
 
-</script>
-
-<!-- tabsets -->
-
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
-<!-- code folding -->
-<script>
-$(document).ready(function () {
-  window.initializeCodeFolding("hide" === "show");
-});
-</script>
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
