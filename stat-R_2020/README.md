@@ -78,7 +78,7 @@ Link to the prerequisites:
 | Basic R structures (matrices, data frames, factors and lists) | 45'  | [[basic_R-structures.html](practicals/R-structures/basic_R-structures.html)] [[basic_R-structures.Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/R-structures/basic_R-structures.Rmd)]  [[Factors_in_R.html](practicals/factors/Factors_in_R.html)]|
 | *Coffee break* | 15' | |
 | Programming with R | 35' |  [[R-programing_intro.html](practicals/R-programing_intro/R-programing_intro.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/R-programing_intro/R-programing_intro.Rmd)] |
-| R markdown | 45' | Demo and [COVID-19_HK.nb.html](practicals/R-markdown_demo/COVID-19_HK.nb.html)] |
+| R markdown | 45' | Demo and [[COVID-19_HK.nb.html](practicals/R-markdown_demo/COVID-19_HK.nb.html)] |
 
 
 ### Session 2. Statistical analysis with R

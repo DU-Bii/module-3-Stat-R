@@ -1,10 +1,11 @@
 #!/usr/bin/env Rscript
 
 ################################################################################
-## M1 MEG option bioiformatique-genomique
-## R Session 22/10/2019 - commandes vues pendant le cours RSession3
+## DU Bii - module 3 "R et statistiques"
+## commandes du diaporama de la Session 2
 ## Claire Vandiedonck
 ################################################################################
+
 
 ################################################################################
 ##------------------------------FIGURES----------------------------------------
