@@ -11,7 +11,7 @@
 
     - [Session 1. R and Rmd basics](#session-1-r-and-rmd-basics)
     - [Session 2. Statistical analysis with R](#session-2-statistical-analysis-with-r)
-    - [Session 3. Differential analysis](#session-3-differential-analysis)
+    - [Session 3. Statistics for omics data](#session-3-statistics-omics)
     - [Session 4. Clustering](clustering/)
     - [Session 5. Data exploration and enrichment analysis](#session-5-data-exploration-and-enrichment-analysis)
     - [Session 6. Supervised classification and learning](#session-6-supervised-classification-and-learning)
@@ -108,7 +108,20 @@ Link to the prerequisites:
 
 
 
-### Session 3. Differential analysis
+### Session 3. Statistics for omics data
+
+| Topics | Description | Duration | Material |
+|------------------------------------------|------------------------|----------|------------------------------------------------------------------------------------|
+| Debrief session 1 & 2 - part I | R code: data structures, function usage, plots | 20' | live |
+| Practical part I | simulated data | 30' | [[html]()]  [[Rmd]()]|
+| Debrief session 1 & 2 - part II| basic statistics | 20' | [[pdf](slides/DUBii_R_Session_2.pdf)] |
+| *Coffee break* | 15' | |
+| Practical part II | industrialization of hypotheses tests | 45' | [[html]()]  [[Rmd]()]|
+| Statistics on omics data - part I | multiple testing issue | 20' | [[pdf](slides/DUBii_R_Session_3.pdf)] |
+| Practical part III | correction for multiple testing | 15' | [[html]()]  [[Rmd]()]|
+| Statistics on omics data - part II | parameters estimation issue | 15' | [[pdf](slides/DUBii_R_Session_3.pdf)] |
+
+
 
 ### Session 4. Clustering
 
