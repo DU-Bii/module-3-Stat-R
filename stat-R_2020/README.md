@@ -5,8 +5,8 @@
 
 - [Goals](#goals)
 - [Teachers](#teachers)
-- [Links](#links)
-- [Tutorials and good practice](#tutorials-and-good-practice)
+- [Course links](#links)
+- [R tutorials and good practice](#tutorials-and-good-practice)
 - [Teaching material](#teaching-material)
 
     - [Session 1. R and Rmd basics](#session-1-r-and-rmd-basics)
@@ -45,7 +45,7 @@ Link to the prerequisites:
 | Natacha Cerisier | Helper |
 
 
-## Links
+## Course links
 
 | Doc | Description |URL |
 |---------|---------------------------|---------------------------------------|
@@ -53,7 +53,7 @@ Link to the prerequisites:
 | Git repo | Repository enabling to download or clone the teaching material on your computer | <https://github.com/DU-Bii/module-3-Stat-R> |
 
 
-## Tutorials and good practice
+## R tutorials and good practice
 
 | Doc | Description |URL |
 |------------|-------------------------------|---------------------------------------|
@@ -70,14 +70,16 @@ Link to the prerequisites:
 
 | Topics |  Duration | Material |
 |---------------------------------|----------|-------------|
-| Slides for the whole session | 1/2 day | [[pdf](slides/DUBii_R_Session_1.pdf)] |   
-| Start R | 20'  | [[html](practicals/1.01_start-R/start-R.html)] [[Rmd](practicals/1.01_start-R/start-R.Rmd)]  |
-| Validation of the prerequisites: quizz on Moodle | 15' + 20' | [[on your account](https://moodlesupd.script.univ-paris-diderot.fr/course/view.php?id=10629)] [[with password: dubii2020](https://moodlesupd.script.univ-paris-diderot.fr/course/view.php?id=13420)] |
-| Basic R structures (matrices, data frames and lists) | 45'  | [[html](practicals/R-structures/basic_R-structures.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/R-structures/basic_R-structures.Rmd)] |  
+| Slides for the whole session | 1/2 day | [[pdf](slides/DUBii_R_Session_1.pdf)] | 
+| wooclap Poll | 5' | [[html](www.wooclap.com/EGIDTQ)] | 
+| Start R | 20'  | [[link to RStudio on th IFB cluster](https://rstudio.cluster.france-bioinformatique.fr/)] [[start-R.html](practicals/1.01_start-R/start-R.html)] [[start-R.Rmd](practicals/1.01_start-R/start-R.Rmd)]  |
+| Validation of the prerequisites: quizz on Moodle | 15' + 20' | [[with your ENT account](https://moodlesupd.script.univ-paris-diderot.fr/course/view.php?id=10629)] [[with password: dubii2020](https://moodlesupd.script.univ-paris-diderot.fr/course/view.php?id=13420)] |
+| Script | Live demo on the board | [[R](scripts/live_demo_session_1.R)] |
+| Basic R structures (matrices, data frames, factors and lists) | 45'  | [[basic_R-structures.html](practicals/R-structures/basic_R-structures.html)] [[basic_R-structures.Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/R-structures/basic_R-structures.Rmd)]  [[Factors_in_R.html](practicals/factors/Factors_in_R.html)]|
 | *Coffee break* | 15' | |
-| Programming with R | 35' |  [[html](practicals/R-programming_intro/R-programming_intro.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/R-programming_intro/R-programming_intro.Rmd)] |
-| R markdown | 45' | Demo |
-| Script | Live demo | [[R](scripts/live_demo_session_1.R)] |
+| Programming with R | 35' |  [[R-programing_intro.html](practicals/R-programing_intro/R-programing_intro.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/R-programing_intro/R-programing_intro.Rmd)] |
+| R markdown | 45' | Demo and [COVID-19_HK.nb.html](practicals/R-markdown_demo/COVID-19_HK.nb.html)] |
+
 
 ### Session 2. Statistical analysis with R
 

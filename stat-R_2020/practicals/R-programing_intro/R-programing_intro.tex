@@ -1,0 +1,202 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Programming with R},
+  pdfauthor={Claire Vandiedonck \& Jacques van Helden},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+
+\title{Programming with R}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{DUBii -- Statistics with R}
+\author{Claire Vandiedonck \& Jacques van Helden}
+\date{2020-03-04}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{3}
+\tableofcontents
+}
+\hypertarget{exercice-1-test}{%
+\subsection{Exercice 1~: test}\label{exercice-1-test}}
+
+\begin{itemize}
+\item
+  Créez un vecteur de 100 valeurs tirées aléatoirement selon une loi
+  normale de moyenne 4 et d'écart type 5.
+\item
+  Identifiez les indices des valeurs strictement supérieures à 3 et
+  récupérez les valeurs correspondantes.
+\item
+  Testez si la somme de ces valeurs est supérieure à 40, à 30 ou à 20 et
+  affichez un message adéquat selon chaque éventualité.
+\end{itemize}
+
+\textbf{Fonctions à utiliser :} rnorm(), which(),sum(), if(),else
+if(),else(), cat() ou print()
+
+\hypertarget{exercice-2-cruxe9ation-dune-boucle-simple}{%
+\subsection{Exercice 2~: création d'une boucle
+simple}\label{exercice-2-cruxe9ation-dune-boucle-simple}}
+
+\begin{itemize}
+\tightlist
+\item
+  Créez une boucle de 10 itérations \texttt{i} qui affiche à chaque
+  itération l'indice \texttt{i}.
+\item
+  Calculez au fur et à mesure la somme cumulée des indices dans un
+  vecteur.
+\item
+  Affichez la somme cumulée finale.
+\end{itemize}
+
+\textbf{Fonctions à utiliser~:} for(), cat() ou print()
+
+\hypertarget{exercice-3-cruxe9ation-dune-fonction}{%
+\subsection{Exercice 3~: création d'une
+fonction}\label{exercice-3-cruxe9ation-dune-fonction}}
+
+\begin{itemize}
+\tightlist
+\item
+  Créez une fonction \texttt{calculSomme} qui calcule la somme de deux
+  variables x et y passées en argument.
+\item
+  Testez la fonction.
+\end{itemize}
+
+\textbf{Fonctions à utiliser~:} function(), return()
+
+\hypertarget{exercice-4-cruxe9ation-dune-fonction-avec-des-tests-utilisation-de-cette-fonction-de-maniuxe8re-ituxe9rative}{%
+\subsection{Exercice 4: création d'une fonction avec des tests,
+utilisation de cette fonction de manière
+itérative}\label{exercice-4-cruxe9ation-dune-fonction-avec-des-tests-utilisation-de-cette-fonction-de-maniuxe8re-ituxe9rative}}
+
+\begin{itemize}
+\tightlist
+\item
+  Ecrivez une fonction \texttt{calculTarif} qui prend pour argument un
+  âge et affiche ``demi-tarif'' si l'âge est inférieur à 12 ans, ``tarif
+  sénior'' si l'âge est supérieur ou égal à 60 ans et ``plein tarif''
+  sinon.
+\item
+  Testez votre fonction pour des personnes de 5, 65, 85, 41, 23 et 47
+  ans.
+\end{itemize}
+
+\textbf{Fonctions à utiliser~:}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{function()},
+\item
+  \texttt{return()},
+\item
+  \texttt{print()},
+\item
+  \texttt{c()}
+\end{itemize}
+
+\textbf{Instructions conditionnelles: } - \texttt{if} - \texttt{else} -
+\texttt{else\ if} - \texttt{for}
+
+\hypertarget{exercice-5-cruxe9ation-dune-fonction-avec-compteur-de-boucle}{%
+\subsection{Exercice 5: création d'une fonction avec compteur de
+boucle}\label{exercice-5-cruxe9ation-dune-fonction-avec-compteur-de-boucle}}
+
+\begin{itemize}
+\item
+  Ecrivez une fonction \texttt{sumCumul} qui calcule la somme cumulée
+  des nombres entiers compris entre deux bornes \(a\) et \(b\) que vous
+  mettrez en arguments \texttt{start} et \texttt{end}.
+\item
+  De plus, toutes les 10 boucles, vous affichez la valeur de l'entier
+  ajouté, sinon vous affichez un point \texttt{.}.
+\item
+  Testez la fonction avec les entiers entre 3 et 55 par exemple.
+\item
+  Améliorez la fonction en ajoutant un paramètre \texttt{interval}
+  correspondant à l'incrément de boucles entre les affichages des
+  entiers (dans la fonction précédente, cet incrément était de 10)
+  Testez la fonction avec les entiers entre 3 et 55 et un intervalle de
+  15 par exemple.
+\end{itemize}
+
+\textbf{Fonctions à utiliser~:}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{function()},
+\item
+  \texttt{return()},
+\item
+  \texttt{cat()},
+\item
+  \texttt{seq()}
+\end{itemize}
+
+\end{document}
