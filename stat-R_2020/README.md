@@ -111,14 +111,14 @@ Link to the prerequisites:
 ### Session 3. Statistics for omics data
 
 | Topics | Description | Duration | Material |
-|--------------------------|----------------------------|----------|-------------|
+|--------------------------|----------------------------|----------|-------------------------------------|
 | Debrief session 1 & 2 - part I | R code: data structures, function usage, plots | 20' | live |
-| Practical part I | simulated data | 30' | [[html](practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.html)] [[pdf](practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.pdf)]  [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.Rmd)] |
+| Practical part I | simulated data | 30' | [[mean-comparison-test_random-numbers.html](practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.html)] [[mean-comparison-test_random-numbers.pdf](practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.pdf)]  [[mean-comparison-test_random-numbers.Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.Rmd)] |
 | Debrief session 1 & 2 - part II| basic statistics | 20' | [[pdf](slides/DUBii_R_Session_2.pdf)] |
 | *Coffee break* | 15' | |
-| Practical part II | industrialization of hypotheses tests | 45' |  [[html](practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.html)] [[pdf](practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.pdf)]  [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.Rmd)] |
+| Practical part II | industrialization of hypotheses tests | 45' | same as above|
 | Statistics on omics data - part I | multiple testing issue | 20' | [[pdf](slides/DUBii_R_Session_3.pdf)] |
-| Practical part III | correction for multiple testing | 15' |   [[html](practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.html)] [[pdf](practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.pdf)]  [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.Rmd)]|
+| Practical part III | correction for multiple testing | 15' |   same as above|
 | Statistics on omics data - part II | parameters estimation issue | 15' | [[pdf](slides/DUBii_R_Session_3.pdf)] |
 
 
