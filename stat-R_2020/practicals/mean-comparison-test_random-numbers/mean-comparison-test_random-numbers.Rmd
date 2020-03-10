@@ -61,6 +61,7 @@ transition: linear
 
 ```{r include=FALSE, echo=FALSE, eval=TRUE}
 library(knitr)
+
 options(width = 300)
 knitr::opts_chunk$set(
   fig.width = 7, fig.height = 5, 
@@ -72,6 +73,15 @@ knitr::opts_chunk$set(
   results = TRUE, comment = "")
 # knitr::asis_output("\\footnotesize")
 
+```
+
+
+## Required libraries
+
+Load the following libraries or install them if required. 
+
+```{r}
+require(knitr)
 ```
 
 
@@ -112,35 +122,31 @@ The tutorial will proceed progressively:
 
 8. Compare the performances of the test depending on the chosen multiple testing correction. 
 
-## Parameters of the analysis
+## Experimental setting
 
-Let us define the parameters of our analysis. We will generate two tables of artificial data following normal distributions. 
+Well, by "experimental" we mean here that we will perform *in silico* experiments. 
 
+Let us define the parameters of our analysis. We will generate data tables of artificial data following normal distributions, with either different means (tests under $H_1$) or equal means (tests under $H_0$). 
 
-1. Sampling from two populations with equal means (the tests will thus run under $H_0$). 
+We will do this for a number of features  $m_0=10,000$ (number of rows in the "$H_0$" data table), which could be considered as replicates to study the impact of sampling fluctuations. 
 
-| Parameter | Value | Description | Value |
-|---------|-------------|---------|
-| $n_1$  |  individual choice | size of the sample from the first population |
-| $n_2$  |  individual choice | size of the sample from the second population |
-| $\mu_1$ | 10 | mean of the first population |
-| $\mu_2$ | 10 | mean of the second population |
-| $\sigma_1$ | 2 | Standard deviation of the first population |
-| $\sigma_2$ | 3 | Standard deviation of the second population |
-| $m0$$ | $10,000$ | number of features under null hypothesis |
+In a second time (not seen here) we could refine the script by running a sampling with a different mean for each feature, in order to mimic the behaviour of omics datasets (where genes have different levels of expression, proteins and metabolite different concentrations). 
 
 
-2. Sampling from two populations with different means (tests under $H_1$)
+### Parameters
 
 | Parameter | Value | Description | Value |
 |---------|-------------|---------|
-| $n_1$  | same as above  | size of the sample from the first population |
-| $n_2$  |  same as above | size of the sample from the second population |
-| $\mu_1$ | 7 | mean of the first population |
+| $n_1$  |  ${2, 3, 4, 8, 16, 32, 64}$ | size of the sample from the first population. individual choice. Each participant will choose a given sample size |
+| $n_2$  |  $= n_1$ | size of the sample from the second population |
+| $\mu_1$ | 10 or 7 | mean of the first population. each participant will chose one value |
 | $\mu_2$ | 10 | mean of the second population |
 | $\sigma_1$ | 2 | Standard deviation of the first population |
 | $\sigma_2$ | 3 | Standard deviation of the second population |
-| $m1$$ | $10,000$ | number of features under alternate hypothesis |
+| $m_0$$ | $10,000$ | number of features under null hypothesis |
+
+
+
 
 ### Sample sizes
 
@@ -162,105 +168,17 @@ $$FDR = \frac{FP}{\text{Positive}} = \frac{FP}{FP + TP} $$
 $$Sn = \frac{TP}{m_1} = \frac{TP}{TP + FN} $$
 $$PPV = \frac{TP}{\text{Positive}} = \frac{TP}{TP + FP}$$
 
-
-## Questions
-
-### 1. Impact of the difference between the means
-
-We test the impact of the actual difference between population means on the performances of the Student test. For this, generate random datasets compliant with the assumptions (normality, homoscedasticity) but with a set of increasing differences between sample means. 
-
-In all cases, we will set the standard deviation to $\sigma = 1$.
-
- | $\mu_1$ | $\mu_2$ | $\delta$ | Comment |
- |---------|---------|---------|---------|
- | 0 | 0 | 0 | $H_0$ |
- | -0.05 | 0.05 | 0.1| $H_1$ |
- | -0.1 | 0.1 | 0.2 | $H_1$ |
- | -0.25 | 0.25 | 0.5 | $H_1$ |
- | -0.5 | 0.5 | 1 | $H_1$ |
- | -1 | 1 | 2 | $H_1$ |
- 
- Maybe other values if you have time and if it brings additional insight. 
- 
-### 2. Impact of sample size
-
-Generate random numbers following a normal distribution, with equal variances, but with a series of different sample sizes ($n = {2, 4, 16, 64}$). 
-
-Run Student test and evaluate the impact of sample size on the rate of false positive and power of the test. 
-
-### 3. Impact of variance
-
-Generate random numbers following a normal distribution, with equal sample sizes ($n_1 = n_2 = 10$), but with a series of different standard deviations ($\sigma = {0.1, 1, 10, 100}$). 
-
-Run Student test and evaluate the impact of dispersion standard deviation on the rate of false positive and power of the test. 
-
-### 4. Impact of non-normality on Student test
-
-Generate random numbers following either a normal or a Poisson distribution. 
-
-1a. Small samples: $n_1 = n_2 = 4$
-1b. Large samples: $n_1 = n_2 = 50$
-
-### 5. Impact of heteroscedasticity on Student test
-
-Generate random numbers following a normal distribution with either equal or unequal variances (test different values). Run Student test on both data types, and measure the sensitivity and power of the respective tests. 
-
-### 6. Impact of homoscedasticity on Welch test
-
-Generate random numbers following a normal distribution with either equal or unequal variances (test different values). Run Welch test on both data types, and measure the sensitivity and power of the respective tests. 
-
-
-### 7. Parametric versus non-parametric tests
-
-Generate random numbers following a normal and some non-normal distribution of your choice (e.g. uniform). Run a parametric and a non-parametric test and compare the performances in terms fo power and false positive rate. 
-
-
-## Assignment of the tasks
-
-Each student will develop an analysis to test one particular question. 
-
-| Student | Question |
-|---------|-----------------------------|
-| JvH  + you | 1. Impact of the difference between the means  |
-|    |   |
-
-
-## Expected results
-
-- Descriptive statistics (explor your data): 
-
-    - graphical representations of the data (use whatever you like: histograms, boxplots, violin plots, dot plots, ...)
-    - descriptive parameters of your samples (distribution of sample means, sample sd, ...)
-
-- Histogram of the p-values (20 bins) for all the cases under $H_0$, and under $H_1$, resp.
-- Volcano plot for all the cases under $H_0$, and under $H_1$, resp.
-
-- Indicators: $FPR$, $FDR$, $Sn$, $E-value$ for threshold values $alpha = 0.05$,  $alpha = 0.01$, ,  $alpha = 0.001$
-
-
-## Report format
-
-- R markdown (must be able to run on my machine)
-- either a pdf or a self-contained HTML (preferred because easier to browse tables are better formatted)
-
-## Structure of the report
-
-- Introduction: explain the question addressed in your specific report, and the expected outcome of what you are testing (do you expect an increase of FP ? a loss in sensitivity ? ...).
-
-- Setting of the experiment: write explicitly the configuration of your tests (distributions, parameters)
-
-- Results and interpretation: summarize your results with figures and tables, document the figures and tables with detailed legends, and add an interpretation of what we see in the results section. 
-
-- Summary and conclusion: summarize the results in 2-3 sentences and conclude about the effect you wanted to test. 
-
 ## Recommendations
 
 
 ### Coding recommendations
 
-1. Choose a consistent coding style, consistent with a reference  style guide (e.g. [Google R Syle Guide](https://google.github.io/styleguide/Rguide.html))
-1. Name each chunk of R code
-2. Define your variables with explicit names (sigma, mu rather than a, b, c, ...)
+1. Choose a consistent coding style, consistent with a reference  style guide (e.g. [Google R Syle Guide](https://google.github.io/styleguide/Rguide.html)). In particular: 
+
+    - For variable names, use the camel back notation with a leading lowercase (e.g. `myDataTable`) rather than the dot separator (`my.data.table`)
+    - For variable names, use the camel back notation with a leading uppercase (e.g. `MyMeanCompaTest`). 
+
+2. Define your variables with explicit names (sigma, mu rather than a, b, c, ...).
 
 3. Comment your code
 
@@ -272,36 +190,48 @@ Each student will develop an analysis to test one particular question.
 ### Scientific recommendations
 
 1. Explicitly formulate the statistical hypotheses before running a test.
-2. Discuss the assumptions underlying the test: are they all fulfilled? If not explain why (e.g. because we want to test the impact of this parameter, ...) 
+
+2. Discuss the assumptions underlying the test: are they all fulfilled? If not explain why (e.g. because we want to test the impact of this parameter, ...) .
+
+
 
 ## Tutorial
 
 
-### Define your parameters
 
-We draw samples from random data generated following normal distributions with the following parameters. For this we use R `rnorm()` function. 
+### Part 1: generating random datasets
 
+#### Define your parameters
+
+Write a block of code to define the parameters specified aboce. 
+
+Note that each participant will have a different value for the sample sizes ($n_1, n_2$). 
 
 ```{r parameters}
-## Define parameters
-mu1 <- 0 # mean of the first population
-mu2 <- 0 # mean of the second population
-sigma1 <- 1 # standard deviation of the first population
-sigma2 <- 1 # standard deviation of the second population
-n1 <- 10 # sample size for the first group
-n2 <- 10 # ssample size for second group
+#### Defining the parameters ####
 
-alpha <- 0.05 # Probability of the first kind error, used as threshold on p-value
+## Sample sizes. 
+## This parameter should be defined individually for each participant
+n1 <- 8 # sample size for the first group
+n2 <- 8 # ssample size for second group
 
-r <- 10000 # Number of replicates of the test
+## First data table
+m0 <- 10000
+mu1 <- 10 # mean of the first population
+mu2 <- 10 # mean of the second population
 
-## A trick for this report: let us set an arbitrary seed in order to ensure consistency between the interpretations across subsequent runs of the markdown
-## 
-## I take 42, Deep Thought's Answer to the Ultimate Question of Life, the Universe, and Everything (42)
-set.seed(seed = 42)
+## Standard deviations
+sigma1 <- 2 # standard deviation of the first population
+sigma2 <- 3 # standard deviation of the second population
+
+## Significance threshold. 
+## Note: will be applied successively on the different p-values
+## (nominal, corrected) to evaluate the impact
+alpha <- 0.05
 
 ```
 
+The table below lists the actual values for my parameters (your values for $n_i$ will be different). 
 
 | Parameter | Value | Description | 
 |-----------|-------|-------------------|
@@ -313,25 +243,135 @@ set.seed(seed = 42)
 | $n_2$ | `r n2` | Sample size for the second group | 
 
 
-### Generate one test set (1 sample from each population)
+#### Generate random data sets
+
+Exercise: 
+
+- Generate an data frame named `h0group1` which with $m_0$ rows (the number of features under $H_0$, defined above) and $n_1$ columns (sample size for the first population), filled with random numbers drawn from the first population. 
+
+- Name the columns with labels indicating the group and sample number: `grp1s1`, , `grp1s2` ... with indices from 1 $n_1$.
+
+- Name the rows to denote the feature numbers: `h0ft1`, `h0ft2`, ... with indices from 1 to $m_0$. 
+
+- Check the dimensions of `h0group1`.
+
+- Print its first and last rows to check its content and the row and column names.
+
+- Generate a second data frame named `h0group2` for the samples drawn from the second population with the appropriate size, and name the columns and rows consistently. 
 
 
-The table below shows the values of the two samples (rounded to two decimals for the sake of readability). 
+**Useful functions**
 
-```{r random_data_for_one_test}
-## Generate two vectors containing the values for sample 1 and sample 2, resp.
-x1 <- rnorm(n = n1, mean = mu1, sd = sigma1) ## sample 1 values
-x2 <- rnorm(n = n2, mean = mu2, sd = sigma2) ## sample 2 values
+- `rnorm()`
+- `matrix()`
+- `data.frame()`
+- `paste()`
+- `paste0()`
+- `colnames()`
+- `rownames()`
+- `dim()`
 
-kable(t(data.frame(x1 = round(digits = 2, x1), 
-                   x2 = round(digits = 2, x2))),
-      col.names = 1:n1
-      )
+**Trick**: 
+
+- the funciton `matrix()` enablesus to define the number of columns and the number of rows, 
+- the function `data.frames()` does not enable this, but it can take as input a matrix, from which it will inherit the dimensions
+
+**Solution** (click on the "code" button to check the solution). 
+
+```{r}
+#### Generating a random data frame of the appropriate size ####
+
+## Dataset under H0
+h0group1 <- data.frame(
+  matrix(data = rnorm(n = m0 * n1, mean = mu1, sd = sigma1),
+         nrow = m0, 
+         ncol = n1))
+colnames(h0group1) <- paste(sep = "", "grp1s", 1:n1)
+rownames(h0group1) <- paste(sep = "", "h0ft", 1:m0)
+
+## Dataset under h1
+h0group2 <- data.frame(
+  matrix(data = rnorm(n = m0 * n2, mean = mu2, sd = sigma2),
+         nrow = m0, 
+         ncol = n2))
+colnames(h0group2) <- paste(sep = "", "grp2s", 1:n2)
+rownames(h0group2) <- paste(sep = "", "h0ft", 1:m0)
 
 ```
 
+Check the content of the data table from the first group. 
 
-### Run Student test
+```{r}
+dim(h0group1)
+kable(head(h0group1))
+kable(tail(h0group1))
+```
+
+Check the content of the data table from the second group. 
+
+```{r}
+dim(h0group2)
+kable(head(h0group2))
+kable(tail(h0group2))
+
+
+```
+
+### Checking the properties of the result table
+
+Check the properties of the columns (individuals, e.g. biological samples) and rows (features, e.g. genes or proteins or metabolites) of the data tables. 
+
+- Use the `summary()` funciton to quickly inspect the column-wise properties (statistics per individual).
+
+- Use `apply()`,  `mean()` and `sd()` to generate a data frame that collects
+
+    - the column-wise parameters (statistics per feature)
+    - the row-wise  parameters (statistics per feature).  
+
+```{r}
+## Columns-wise statistics
+colStatsH0 <- data.frame(
+    m1 = apply(h0group1, MARGIN = 2, mean),
+    m2 = apply(h0group2, MARGIN = 2, mean),
+    s1 = apply(h0group1, MARGIN = 2, sd),
+    s2 = apply(h0group2, MARGIN = 2, sd)
+  )
+
+## Row-wise statistics
+rowStatsH0 <- data.frame(
+    m1 = apply(h0group1, MARGIN = 1, mean),
+    m2 = apply(h0group2, MARGIN = 1, mean),
+    s1 = apply(h0group1, MARGIN = 1, sd),
+    s2 = apply(h0group2, MARGIN = 1, sd)
+  )
+
+```
+
+#### Add a coliumn with the difference between sample means for each feature.
+
+
+**Tips: ** this can be done in a single operation. 
+
+
+```{r}
+rowStatsH0$diff <- rowStatsH0$m2 - rowStatsH0$m1
+```
+
+#### Visualisation of the data
+
+- Draw two histograms with all the values group 1 and group2, respectively. 
+
+**Tip: ** use `mfrow()` to display the histogram above each other, and set the limits of the abcsisa to the same value. 
+
+- Draw histogram with the sampling distribution of the means in the respective groups. 
+
+- Compare the standard deviations measures in the sampled values, and in the feature means. Do they differ ? Explain why. 
+
+
+
+## Part 2: hypothesis testing
+
+### Run Student test on a given feature
 
 Since we are interested by differences in either directions, we run a two-tailed test. 
 
@@ -340,14 +380,25 @@ Hypotheses:
 $$H_0: \mu_1 = \mu2$$
 
 $$H_1: \mu_1 \ne \mu2$$
+**Exercise:** pick up a given feature (e.g. the $267^{th}$) and run a mean comparison test. Choose the parameters according to your experimental setting. 
 
+**Tips:**
+
+- `t.test()`
+- you need to choose the test depending on whether the two populations have equal variance (Student) or not (Welch). Since we defined different values for the populations standard deviations ($\sigma_1$, $\sigma_2$), the choise is obvious. 
 
 ```{r one_t_test}
+i <- 267 ## Pick up a given feature, arbitrarily
+
+## Select the values for this feature in the group 1 and group 2, resp. 
+## Tip: I use unlist() to convert a single-row data.frame into a vector
+x1 <- unlist(h0group1[i, ]) 
+x2 <- unlist(h0group2[i, ])
 
 ## Run Sudent t test on one pair of samples
 t.result <- t.test(
   x = x1, y = x2, 
-  alternative = "two.sided", var.equal = TRUE)
+  alternative = "two.sided", var.equal = FALSE)
 
 ## Print the result of the t test
 print(t.result)
@@ -368,14 +419,14 @@ The difference between sample means was $d = `r round(digits = 2, d)`$.
 
 The $t$ test computed the $t$ statistics, which standardizes this observed distance between sample means relative to the estimated variance of the population, and to the sample sizes. With the random numbers generated above, the value is $t_{obs} = `r round(digits = 4, t.result$statistic)`$. 
 
-The corresponding p-value is computed as the sum of the area of the left and right tails of the Student distribution, with $\nu = n_1 + n_2 - 2 = `r t.result$parameter`$ degrees of freedom. It  indicates the probability of obtaining by chance -- under th null hypothesis -- a result at least as extreme as the one we observed.
+The corresponding p-value is computed as the sum of the area of the left and right tails of the Student distribution, with $\nu = n_1 + n_2 - 2 = `r t.result$parameter`$ degrees of freedom. It  indicates the probability of obtaining by chance -- ***under the null hypothesis*** -- a result at least as extreme as the one we observed.
 
 
 In our case, we obtain $p = P(T > |t_{obs}| = P(T > `r round(digits=4, abs(t.result$statistic))`) = `r signif(digits = 3, t.result$p.value)`$. This is higher than our threshold $alpha = `r alpha`$. We thus accept the null hypothesis. 
 
 
 
-### Replicating the test 10,000 times with a loop
+### Replicating the test for each feature
 
 In R, loops are quite inefficient, and it is generally recommended to directly run the computations on whole vectors (R has been designed to be efficient for this), or to use specific functions in order to apply a given function each row / column of a table, or to each element of a list. 
 
@@ -388,7 +439,7 @@ For the sake of simplicity, we will first show how to implement a simple but ine
 result.columns <- c("i", "m1", "m2", "diff", "statistic", "p.value")
 
 ## Instantiate a result table to store the results
-result.table <- data.frame(matrix(nrow = r, ncol = length(result.columns)))
+result.table <- data.frame(matrix(nrow = m0, ncol = length(result.columns)))
 colnames(result.table) <- result.columns # set the column names
 # View(result.table) ## Check the table: it contians NA values
   
