@@ -273,7 +273,7 @@ Exercise:
 
 **Trick**: 
 
-- the funciton `matrix()` enablesus to define the number of columns and the number of rows, 
+- the funciton `matrix()` enables us to define the number of columns and the number of rows, 
 - the function `data.frames()` does not enable this, but it can take as input a matrix, from which it will inherit the dimensions
 
 **Solution** (click on the "code" button to check the solution). 
@@ -313,8 +313,6 @@ Check the content of the data table from the second group.
 dim(group2)
 kable(head(group2))
 kable(tail(group2))
-
-
 ```
 
 ### Checking the properties of the result table
@@ -347,7 +345,7 @@ rowStatsH0 <- data.frame(
 
 ```
 
-#### Add a coliumn with the difference between sample means for each feature.
+#### Add a column with the difference between sample means for each feature.
 
 
 **Tips: ** this can be done in a single operation. 
@@ -361,7 +359,7 @@ rowStatsH0$diff <- rowStatsH0$m2 - rowStatsH0$m1
 
 - Draw two histograms with all the values group 1 and group2, respectively. 
 
-**Tip: ** use `mfrow()` to display the histogram above each other, and set the limits of the abcsisa to the same value. 
+**Tip: ** use `mfrow()` to display the histogram above each other, and set the limits of the abscissa (x axis) to the same value. 
 
 - Draw histogram with the sampling distribution of the means in the respective groups. 
 
@@ -621,14 +619,14 @@ pvalHistogram <- function(
        ylab = "Number of tests", ...)
   
   ## Draw a horizontal line indicating the number of tests per bin that would be expected under null hypothesis
-  abline(h = r / 20, col = "darkgreen", lwd = 2)
+  abline(h = m / 20, col = "darkgreen", lwd = 2)
   abline(v = alpha, col = "red", lwd = 2)
   
   ## Compute the percent of positive and negative results``
   nb.pos <- sum(result.table$p.value < alpha)
-  nb.neg <- r - nb.pos
-  percent.pos <- 100 * nb.pos / r
-  percent.neg <- 100 * nb.neg / r
+  nb.neg <- m - nb.pos
+  percent.pos <- 100 * nb.pos / m
+  percent.neg <- 100 * nb.neg / m
   
   ## Add a legend indicating the percent of iterations declaed positive and negative, resp. 
   legend("topright", bty = "o", bg = "white",
