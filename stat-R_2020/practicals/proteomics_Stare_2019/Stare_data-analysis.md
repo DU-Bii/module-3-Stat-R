@@ -1,7 +1,7 @@
 ---
 title: "Differential analysis of proteomics data"
 author: "Jacques van Helden"
-date: "2020-03-08"
+date: "2020-03-09"
 output:
   html_document:
     self_contained: no
@@ -440,7 +440,7 @@ plot(protTree, cex = 0.7, main = "Clustering between proteins\n(correlation, com
 ## Clustering of the proteins
 poolDist <- as.dist(1 - cor(nona))
 protTree <- hclust(d = poolDist, method = "complete")
-plot(poolDist, cex = 0.7, 
+plot(protTree, cex = 0.7, 
      main = "Clustering between sample pools\n(correlation, complete)")
 ```
 
@@ -469,17 +469,73 @@ heatmap(x = as.matrix(nona),
 
 
 ```r
-my.test <- function(x, y, test = "t.test", ...) {
-  if (test == "t.test") {
-    test.result <- t.test(x, y, ...)
-    
-  }
+# Define the two conditions to compare
+testCondition <- "NAHG_PVY"
+ctrlCondition <- "WT_PVY"
+
+## Compute statistics per protein
+statPerProt <- data.frame(
+  mean = apply(nona, 1, mean),
+  sd = apply(nona, 1, sd),
+  mean1 = apply(nona[, poolDescriptions$condition == testCondition], 1, mean),
+  mean2 = apply(nona[, poolDescriptions$condition == ctrlCondition], 1, mean),
+  s1 = apply(nona[, poolDescriptions$condition == testCondition], 1, sd),
+  s2 = apply(nona[, poolDescriptions$condition == ctrlCondition], 1, sd)
+)
+statPerProt$diff = statPerProt$mean2 - statPerProt$mean1
+# View(statPerProt)
+
+## Run t.test on each protein
+for (i in 1:nrow(nona)) {
+  test.result <- t.test(
+    x = nona[i, poolDescriptions$condition == testCondition],
+    y = nona[i, poolDescriptions$condition == ctrlCondition],
+    var.equal = TRUE)
+  statPerProt[i, "tStat"] <- test.result$statistic
+  statPerProt[i, "df"] <- test.result$parameter
+  statPerProt[i, "p.value"] <- test.result$p.value
 }
 
-poolDescriptions$condition
+# View(statPerProt)
 ```
 
+### Multiple testing corrections
+
+
+```r
+statPerProt$e.value <- statPerProt$p.value * nrow(nona)
+statPerProt$q.value <- qvalue::qvalue(statPerProt$p.value)$qvalues
+statPerProt$padj <- p.adjust(statPerProt$p.value, method = "BY")
 ```
- [1] "COI_MOCK"  "COI_MOCK"  "COI_MOCK"  "COI_PVY"   "COI_PVY"   "COI_PVY"   "NAHG_MOCK" "NAHG_MOCK" "NAHG_MOCK" "NAHG_PVY"  "NAHG_PVY"  "NAHG_PVY"  "WT_MOCK"   "WT_MOCK"   "WT_MOCK"   "WT_PVY"    "WT_PVY"    "WT_PVY"   
+
+
+### Histogram of the p-values
+
+
+```r
+hist(statPerProt$p.value, 
+     main = "P-value histogram", 
+     xlab = "p-value",
+     ylab = "number of proteins", las = 2, col = "#DDEEFF",
+     breaks = seq(from = 0, to = 1, by = 0.05))
 ```
+
+<img src="figures/data-structures_pval_histo-1.png" width="60%" style="display: block; margin: auto;" />
+
+### Volcano plot
+
+
+```r
+plot(statPerProt$diff, 
+     -log10(statPerProt$p.value), 
+     main = "Volcano plot", 
+     xlab = "Diff",
+     ylab = "-log10(p-value)", las = 2)
+abline(v = 0)
+
+alpha <- 0.05/nrow(nona)
+abline(h = -log10(alpha))
+```
+
+<img src="figures/data-structures_volcano-1.png" width="60%" style="display: block; margin: auto;" />
 

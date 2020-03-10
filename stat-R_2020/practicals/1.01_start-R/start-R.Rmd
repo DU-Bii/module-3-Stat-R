@@ -111,10 +111,10 @@ sessionInfo()
 
 
 
-# Navigating in your folders
+## Navigating in your folders
 
 
-## Where am I?
+### Where am I?
 
 ```{r eval=FALSE}
 ## Where am I now?
@@ -142,7 +142,7 @@ setwd("~")  ## An easier way
 
 ## Defining a specific directory for this session
 
-We will create specific directory to store the data and results of the practicals for this course.
+We will create a specific directory to store the data and results of the practicals for this course.
 For this we use the function `file.path()` to concatenate subfolders. 
 
 ```{r eval=FALSE}
@@ -181,7 +181,7 @@ help(dir.create )
 ## Create the directory with the recursive option
 dir.create(path = courseDir, recursive = TRUE)
 ```
-Now, re-run the same command and checl the result. 
+Now, re-run the same command and check the result. 
 
 
 ```{r eval=FALSE}
@@ -221,7 +221,7 @@ load(paste(data_path, "Prerequis.RData", sep=""))
 ## List the data you have dowloaded, check their struture and keep in your session only the three vectors called size, weight and bmi as well as the matrix called myData2
 ls()
 
-## to complete...
+## to complete on your own with `rm()`
 
 ```
 

@@ -12,7 +12,7 @@
 
 <meta name="author" content="Jacques van Helden" />
 
-<meta name="date" content="2020-03-08" />
+<meta name="date" content="2020-03-09" />
 
 <title>Differential analysis of proteomics data</title>
 
@@ -345,7 +345,7 @@ div.tocify {
 <h1 class="title toc-ignore">Differential analysis of proteomics data</h1>
 <h3 class="subtitle">DUBii – Statistics with R</h3>
 <h4 class="author">Jacques van Helden</h4>
-<h4 class="date">2020-03-08</h4>
+<h4 class="date">2020-03-09</h4>
 
 </div>
 
@@ -805,7 +805,7 @@ Clustering of the proteins based on their profiles across sample pools. Similari
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="co">## Clustering of the proteins</span></a>
 <a class="sourceLine" id="cb22-2" data-line-number="2">poolDist &lt;-<span class="st"> </span><span class="kw">as.dist</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">cor</span>(nona))</a>
 <a class="sourceLine" id="cb22-3" data-line-number="3">protTree &lt;-<span class="st"> </span><span class="kw">hclust</span>(<span class="dt">d =</span> poolDist, <span class="dt">method =</span> <span class="st">&quot;complete&quot;</span>)</a>
-<a class="sourceLine" id="cb22-4" data-line-number="4"><span class="kw">plot</span>(poolDist, <span class="dt">cex =</span> <span class="fl">0.7</span>, </a>
+<a class="sourceLine" id="cb22-4" data-line-number="4"><span class="kw">plot</span>(protTree, <span class="dt">cex =</span> <span class="fl">0.7</span>, </a>
 <a class="sourceLine" id="cb22-5" data-line-number="5">     <span class="dt">main =</span> <span class="st">&quot;Clustering between sample pools</span><span class="ch">\n</span><span class="st">(correlation, complete)&quot;</span>)</a></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figures/data-structures_sample_tree-1.png" alt="Clustering of the sample pools based on their profiles across proteins. Similarity measure: correlation. Aggregation rule: complete linkage. " width="100%" />
@@ -829,15 +829,62 @@ Heatmap of log2-transformed values (NA filtered).
 </div>
 <div id="differential-analysis" class="section level2">
 <h2>Differential analysis</h2>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1">my.test &lt;-<span class="st"> </span><span class="cf">function</span>(x, y, <span class="dt">test =</span> <span class="st">&quot;t.test&quot;</span>, ...) {</a>
-<a class="sourceLine" id="cb24-2" data-line-number="2">  <span class="cf">if</span> (test <span class="op">==</span><span class="st"> &quot;t.test&quot;</span>) {</a>
-<a class="sourceLine" id="cb24-3" data-line-number="3">    test.result &lt;-<span class="st"> </span><span class="kw">t.test</span>(x, y, ...)</a>
-<a class="sourceLine" id="cb24-4" data-line-number="4">    </a>
-<a class="sourceLine" id="cb24-5" data-line-number="5">  }</a>
-<a class="sourceLine" id="cb24-6" data-line-number="6">}</a>
-<a class="sourceLine" id="cb24-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb24-8" data-line-number="8">poolDescriptions<span class="op">$</span>condition</a></code></pre></div>
-<pre><code> [1] &quot;COI_MOCK&quot;  &quot;COI_MOCK&quot;  &quot;COI_MOCK&quot;  &quot;COI_PVY&quot;   &quot;COI_PVY&quot;   &quot;COI_PVY&quot;   &quot;NAHG_MOCK&quot; &quot;NAHG_MOCK&quot; &quot;NAHG_MOCK&quot; &quot;NAHG_PVY&quot;  &quot;NAHG_PVY&quot;  &quot;NAHG_PVY&quot;  &quot;WT_MOCK&quot;   &quot;WT_MOCK&quot;   &quot;WT_MOCK&quot;   &quot;WT_PVY&quot;    &quot;WT_PVY&quot;    &quot;WT_PVY&quot;   </code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="co"># Define the two conditions to compare</span></a>
+<a class="sourceLine" id="cb24-2" data-line-number="2">testCondition &lt;-<span class="st"> &quot;NAHG_PVY&quot;</span></a>
+<a class="sourceLine" id="cb24-3" data-line-number="3">ctrlCondition &lt;-<span class="st"> &quot;WT_PVY&quot;</span></a>
+<a class="sourceLine" id="cb24-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb24-5" data-line-number="5"><span class="co">## Compute statistics per protein</span></a>
+<a class="sourceLine" id="cb24-6" data-line-number="6">statPerProt &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</a>
+<a class="sourceLine" id="cb24-7" data-line-number="7">  <span class="dt">mean =</span> <span class="kw">apply</span>(nona, <span class="dv">1</span>, mean),</a>
+<a class="sourceLine" id="cb24-8" data-line-number="8">  <span class="dt">sd =</span> <span class="kw">apply</span>(nona, <span class="dv">1</span>, sd),</a>
+<a class="sourceLine" id="cb24-9" data-line-number="9">  <span class="dt">mean1 =</span> <span class="kw">apply</span>(nona[, poolDescriptions<span class="op">$</span>condition <span class="op">==</span><span class="st"> </span>testCondition], <span class="dv">1</span>, mean),</a>
+<a class="sourceLine" id="cb24-10" data-line-number="10">  <span class="dt">mean2 =</span> <span class="kw">apply</span>(nona[, poolDescriptions<span class="op">$</span>condition <span class="op">==</span><span class="st"> </span>ctrlCondition], <span class="dv">1</span>, mean),</a>
+<a class="sourceLine" id="cb24-11" data-line-number="11">  <span class="dt">s1 =</span> <span class="kw">apply</span>(nona[, poolDescriptions<span class="op">$</span>condition <span class="op">==</span><span class="st"> </span>testCondition], <span class="dv">1</span>, sd),</a>
+<a class="sourceLine" id="cb24-12" data-line-number="12">  <span class="dt">s2 =</span> <span class="kw">apply</span>(nona[, poolDescriptions<span class="op">$</span>condition <span class="op">==</span><span class="st"> </span>ctrlCondition], <span class="dv">1</span>, sd)</a>
+<a class="sourceLine" id="cb24-13" data-line-number="13">)</a>
+<a class="sourceLine" id="cb24-14" data-line-number="14">statPerProt<span class="op">$</span>diff =<span class="st"> </span>statPerProt<span class="op">$</span>mean2 <span class="op">-</span><span class="st"> </span>statPerProt<span class="op">$</span>mean1</a>
+<a class="sourceLine" id="cb24-15" data-line-number="15"><span class="co"># View(statPerProt)</span></a>
+<a class="sourceLine" id="cb24-16" data-line-number="16"></a>
+<a class="sourceLine" id="cb24-17" data-line-number="17"><span class="co">## Run t.test on each protein</span></a>
+<a class="sourceLine" id="cb24-18" data-line-number="18"><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(nona)) {</a>
+<a class="sourceLine" id="cb24-19" data-line-number="19">  test.result &lt;-<span class="st"> </span><span class="kw">t.test</span>(</a>
+<a class="sourceLine" id="cb24-20" data-line-number="20">    <span class="dt">x =</span> nona[i, poolDescriptions<span class="op">$</span>condition <span class="op">==</span><span class="st"> </span>testCondition],</a>
+<a class="sourceLine" id="cb24-21" data-line-number="21">    <span class="dt">y =</span> nona[i, poolDescriptions<span class="op">$</span>condition <span class="op">==</span><span class="st"> </span>ctrlCondition],</a>
+<a class="sourceLine" id="cb24-22" data-line-number="22">    <span class="dt">var.equal =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb24-23" data-line-number="23">  statPerProt[i, <span class="st">&quot;tStat&quot;</span>] &lt;-<span class="st"> </span>test.result<span class="op">$</span>statistic</a>
+<a class="sourceLine" id="cb24-24" data-line-number="24">  statPerProt[i, <span class="st">&quot;df&quot;</span>] &lt;-<span class="st"> </span>test.result<span class="op">$</span>parameter</a>
+<a class="sourceLine" id="cb24-25" data-line-number="25">  statPerProt[i, <span class="st">&quot;p.value&quot;</span>] &lt;-<span class="st"> </span>test.result<span class="op">$</span>p.value</a>
+<a class="sourceLine" id="cb24-26" data-line-number="26">}</a>
+<a class="sourceLine" id="cb24-27" data-line-number="27"></a>
+<a class="sourceLine" id="cb24-28" data-line-number="28"><span class="co"># View(statPerProt)</span></a></code></pre></div>
+<div id="multiple-testing-corrections" class="section level3">
+<h3>Multiple testing corrections</h3>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1">statPerProt<span class="op">$</span>e.value &lt;-<span class="st"> </span>statPerProt<span class="op">$</span>p.value <span class="op">*</span><span class="st"> </span><span class="kw">nrow</span>(nona)</a>
+<a class="sourceLine" id="cb25-2" data-line-number="2">statPerProt<span class="op">$</span>q.value &lt;-<span class="st"> </span>qvalue<span class="op">::</span><span class="kw">qvalue</span>(statPerProt<span class="op">$</span>p.value)<span class="op">$</span>qvalues</a>
+<a class="sourceLine" id="cb25-3" data-line-number="3">statPerProt<span class="op">$</span>padj &lt;-<span class="st"> </span><span class="kw">p.adjust</span>(statPerProt<span class="op">$</span>p.value, <span class="dt">method =</span> <span class="st">&quot;BY&quot;</span>)</a></code></pre></div>
+</div>
+<div id="histogram-of-the-p-values" class="section level3">
+<h3>Histogram of the p-values</h3>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="kw">hist</span>(statPerProt<span class="op">$</span>p.value, </a>
+<a class="sourceLine" id="cb26-2" data-line-number="2">     <span class="dt">main =</span> <span class="st">&quot;P-value histogram&quot;</span>, </a>
+<a class="sourceLine" id="cb26-3" data-line-number="3">     <span class="dt">xlab =</span> <span class="st">&quot;p-value&quot;</span>,</a>
+<a class="sourceLine" id="cb26-4" data-line-number="4">     <span class="dt">ylab =</span> <span class="st">&quot;number of proteins&quot;</span>, <span class="dt">las =</span> <span class="dv">2</span>, <span class="dt">col =</span> <span class="st">&quot;#DDEEFF&quot;</span>,</a>
+<a class="sourceLine" id="cb26-5" data-line-number="5">     <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">by =</span> <span class="fl">0.05</span>))</a></code></pre></div>
+<p><img src="figures/data-structures_pval_histo-1.png" width="60%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="volcano-plot" class="section level3">
+<h3>Volcano plot</h3>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="kw">plot</span>(statPerProt<span class="op">$</span>diff, </a>
+<a class="sourceLine" id="cb27-2" data-line-number="2">     <span class="op">-</span><span class="kw">log10</span>(statPerProt<span class="op">$</span>p.value), </a>
+<a class="sourceLine" id="cb27-3" data-line-number="3">     <span class="dt">main =</span> <span class="st">&quot;Volcano plot&quot;</span>, </a>
+<a class="sourceLine" id="cb27-4" data-line-number="4">     <span class="dt">xlab =</span> <span class="st">&quot;Diff&quot;</span>,</a>
+<a class="sourceLine" id="cb27-5" data-line-number="5">     <span class="dt">ylab =</span> <span class="st">&quot;-log10(p-value)&quot;</span>, <span class="dt">las =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb27-6" data-line-number="6"><span class="kw">abline</span>(<span class="dt">v =</span> <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb27-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb27-8" data-line-number="8">alpha &lt;-<span class="st"> </span><span class="fl">0.05</span><span class="op">/</span><span class="kw">nrow</span>(nona)</a>
+<a class="sourceLine" id="cb27-9" data-line-number="9"><span class="kw">abline</span>(<span class="dt">h =</span> <span class="op">-</span><span class="kw">log10</span>(alpha))</a></code></pre></div>
+<p><img src="figures/data-structures_volcano-1.png" width="60%" style="display: block; margin: auto;" /></p>
+</div>
 </div>
 
 

@@ -5,13 +5,13 @@
 
 - [Goals](#goals)
 - [Teachers](#teachers)
-- [Links](#links)
-- [Tutorials and good practice](#tutorials-and-good-practice)
+- [Course links](#course-links)
+- [R tutorials and good practice](#r-tutorials-and-good-practice)
 - [Teaching material](#teaching-material)
 
     - [Session 1. R and Rmd basics](#session-1-r-and-rmd-basics)
     - [Session 2. Statistical analysis with R](#session-2-statistical-analysis-with-r)
-    - [Session 3. Differential analysis](#session-3-differential-analysis)
+    - [Session 3. Statistics for omics data](#session-3-statistics-for-omics-data)
     - [Session 4. Clustering](clustering/)
     - [Session 5. Data exploration and enrichment analysis](#session-5-data-exploration-and-enrichment-analysis)
     - [Session 6. Supervised classification and learning](#session-6-supervised-classification-and-learning)
@@ -45,15 +45,17 @@ Link to the prerequisites:
 | Natacha Cerisier | Helper |
 
 
-## Links
+## Course links
 
 | Doc | Description |URL |
 |---------|---------------------------|---------------------------------------|
 | **Git pages** | **Web site of the course**  (to see the supports) | <https://du-bii.github.io/module-3-Stat-R/> | 
 | Git repo | Repository enabling to download or clone the teaching material on your computer | <https://github.com/DU-Bii/module-3-Stat-R> |
+| RStudio at IFB cluster | link to RStudio on th IFB cluster | <https://rstudio.cluster.france-bioinformatique.fr/> |
+| Moodle | link to the Moddle web page of the DUBii with your ENT account] | <https://moodlesupd.script.univ-paris-diderot.fr/course/view.php?id=10629> |
 
 
-## Tutorials and good practice
+## R tutorials and good practice
 
 | Doc | Description |URL |
 |------------|-------------------------------|---------------------------------------|
@@ -69,15 +71,17 @@ Link to the prerequisites:
 
 
 | Topics |  Duration | Material |
-|---------------------------------|----------|-------------|
-| Slides for the whole session | 1/2 day | [[pdf](slides/DUBii_R_Session_1.pdf)] |   
-| Start R | 20'  | [[html](practicals/1.01_start-R/start-R.html)] [[Rmd](practicals/1.01_start-R/start-R.Rmd)]  |
-| Validation of the prerequisites: quizz on Moodle | 15' + 20' | [[on your account](https://moodlesupd.script.univ-paris-diderot.fr/course/view.php?id=10629)] [[with password: dubii2020](https://moodlesupd.script.univ-paris-diderot.fr/course/view.php?id=13420)] |
-| Basic R structures (matrices, data frames and lists) | 45'  | [[html](practicals/R-structures/basic_R-structures.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/R-structures/basic_R-structures.Rmd)] |  
+|------------------------------------------|----------|------------------------------------------------------------------------------------|
+| Slides for the whole session | 1/2 day | [[pdf](slides/DUBii_R_Session_1.pdf)] | 
+| wooclap Poll | 5' | [[html](https://app.wooclap.com/EGIDTQ))] | 
+| Start R | 20'  | [[link to RStudio on th IFB cluster](https://rstudio.cluster.france-bioinformatique.fr/)] [[start-R.html](practicals/1.01_start-R/start-R.html)] [[start-R.Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/1.01_start-R/start-R.Rmd)]  |
+| Validation of the prerequisites: quizz on Moodle | 15' + 20' | [[with your ENT account](https://moodlesupd.script.univ-paris-diderot.fr/course/view.php?id=10629)] [[with password: dubii2020](https://moodlesupd.script.univ-paris-diderot.fr/course/view.php?id=13420)] |
+| Script | Live demo on the board | [[R](scripts/live_demo_session_1.R)] |
+| Basic R structures (matrices, data frames, factors and lists) | 45'  | [[basic_R-structures.html](practicals/R-structures/basic_R-structures.html)] [[basic_R-structures.Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/R-structures/basic_R-structures.Rmd)]  [[Factors_in_R.html](practicals/factors/Factors_in_R.html)] | [[Factors_in_R.Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/factors/Factors_in_R.Rmd)]|
 | *Coffee break* | 15' | |
-| Programming with R | 35' |  [[html](practicals/R-programming_intro/R-programming_intro.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/R-programming_intro/R-programming_intro.Rmd)] |
-| R markdown | 45' | Demo |
-| Script | Live demo | [[R](scripts/live_demo_session_1.R)] |
+| Intro to programming with R | 35' |  [[html](practicals/R-programing_intro/R-programing_intro.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/R-programing_intro/R-programing_intro.Rmd)] |
+| R markdown | 45' | Demo and [[COVID-19_HK.nb.html](practicals/Rmarkdown_demo/COVID-19_HK.nb.html)] |
+
 
 ### Session 2. Statistical analysis with R
 
@@ -93,8 +97,31 @@ Link to the prerequisites:
 | Practical | A first data analysis with R | [[html](practicals/first-data-analysis/A_first_data_analysis.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/first-data-analysis/A_first_data_analysis.Rmd)] |
 
 
+*Links mentionned during the session:*
 
-### Session 3. Differential analysis
+|  Topic | Title | Description | Link|
+|------------------------------------------|----------|----------|------------------------------------------------------------------------------------|
+| Basic stats explained to biologists | Points of Significance |Nature Methods collection  |<https://www.nature.com/collections/qghhqm/pointsofsignificance> |
+| How to represent data | Points of View | Nature Methods collection |<http://blogs.nature.com/methagora/2013/07/data-visualization-points-of-view.html> |
+| How to represent data | DEFAKATOR | Détecter des graphiques trompeurs  |<https://www.youtube.com/watch?v=crTt-QIyS-o> |
+
+
+
+
+### Session 3. Statistics for omics data
+
+| Topics | Description | Duration | Material |
+|--------------------------|----------------------------|----------|-------------|
+| Debrief session 1 & 2 - part I | R code: data structures, function usage, plots | 20' | live |
+| Practical part I | simulated data | 30' | [[html](practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.html)] [[pdf](practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.pdf)]  [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.Rmd)] |
+| Debrief session 1 & 2 - part II| basic statistics | 20' | [[pdf](slides/DUBii_R_Session_2.pdf)] |
+| *Coffee break* | 15' | |
+| Practical part II | industrialization of hypotheses tests | 45' |  [[html](practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.html)] [[pdf](practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.pdf)]  [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.Rmd)] |
+| Statistics on omics data - part I | multiple testing issue | 20' | [[pdf](slides/DUBii_R_Session_3.pdf)] |
+| Practical part III | correction for multiple testing | 15' |   [[html](practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.html)] [[pdf](practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.pdf)]  [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.Rmd)]|
+| Statistics on omics data - part II | parameters estimation issue | 15' | [[pdf](slides/DUBii_R_Session_3.pdf)] |
+
+
 
 ### Session 4. Clustering
 

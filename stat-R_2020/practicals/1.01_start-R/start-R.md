@@ -1,7 +1,7 @@
 ---
 title: "Start R -- First steps with R and RStudio"
 author: "Claire Vandiedonck & Jacques van Helden"
-date: "2020-03-04"
+date: "2020-03-10"
 output:
   slidy_presentation:
     font_adjustment: 0   ## set to negative/positive values for smaller/bigger fonts
@@ -89,32 +89,33 @@ sessionInfo()
 ```
 
 ```
-R version 3.6.2 (2019-12-12)
-Platform: x86_64-apple-darwin13.4.0 (64-bit)
-Running under: macOS Mojave 10.14.6
+R version 3.5.1 (2018-07-02)
+Platform: x86_64-redhat-linux-gnu (64-bit)
+Running under: CentOS Linux 7 (Core)
 
 Matrix products: default
-BLAS/LAPACK: /Users/jvanheld/miniconda3/envs/rsat-core-2020.02.29/lib/libopenblasp-r0.3.8.dylib
+BLAS/LAPACK: /usr/lib64/R/lib/libRblas.so
 
 locale:
-[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C               LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8     LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8    LC_PAPER=en_US.UTF-8       LC_NAME=C                  LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
 
 attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] knitr_1.28
+[1] knitr_1.21
 
 loaded via a namespace (and not attached):
- [1] compiler_3.6.2  magrittr_1.5    tools_3.6.2     htmltools_0.4.0 yaml_2.2.1      Rcpp_1.0.3      stringi_1.4.6   rmarkdown_2.1   stringr_1.4.0   xfun_0.12       digest_0.6.25   rlang_0.4.4     evaluate_0.14  
+ [1] compiler_3.5.1  magrittr_1.5    tools_3.5.1     htmltools_0.4.0 yaml_2.2.0      Rcpp_1.0.3      stringi_1.4.6   rmarkdown_1.11  stringr_1.4.0   xfun_0.4        digest_0.6.25   rlang_0.4.5     evaluate_0.12  
 ```
 
 
 
-# Navigating in your folders
+## Navigating in your folders
 
 
-## Where am I?
+### Where am I?
 
 
 ```r
@@ -142,7 +143,7 @@ setwd("~")  ## An easier way
 
 ## Defining a specific directory for this session
 
-We will create specific directory to store the data and results of the practicals for this course.
+We will create a specific directory to store the data and results of the practicals for this course.
 For this we use the function `file.path()` to concatenate subfolders. 
 
 
@@ -184,7 +185,7 @@ help(dir.create )
 ## Create the directory with the recursive option
 dir.create(path = courseDir, recursive = TRUE)
 ```
-Now, re-run the same command and checl the result. 
+Now, re-run the same command and check the result. 
 
 
 
@@ -227,7 +228,7 @@ load(paste(data_path, "Prerequis.RData", sep=""))
 ## List the data you have dowloaded, check their struture and keep in your session only the three vectors called size, weight and bmi as well as the matrix called myData2
 ls()
 
-## to complete...
+## to complete on your own with `rm()`
 ```
 
 Finally, open the script `DUBii_R_Session1.R` stored in the same directory as the data.
