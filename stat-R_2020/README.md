@@ -5,13 +5,13 @@
 
 - [Goals](#goals)
 - [Teachers](#teachers)
-- [Course links](#links)
-- [R tutorials and good practice](#tutorials-and-good-practice)
+- [Course links](#course-links)
+- [R tutorials and good practice](#r-tutorials-and-good-practice)
 - [Teaching material](#teaching-material)
 
     - [Session 1. R and Rmd basics](#session-1-r-and-rmd-basics)
     - [Session 2. Statistical analysis with R](#session-2-statistical-analysis-with-r)
-    - [Session 3. Statistics for omics data](#session-3-statistics-omics)
+    - [Session 3. Statistics for omics data](#session-3-statistics-for-omics-data)
     - [Session 4. Clustering](clustering/)
     - [Session 5. Data exploration and enrichment analysis](#session-5-data-exploration-and-enrichment-analysis)
     - [Session 6. Supervised classification and learning](#session-6-supervised-classification-and-learning)
