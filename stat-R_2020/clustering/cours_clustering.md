@@ -1,8 +1,8 @@
 ---
-title: "Méthodes de Partionnement et d'apprentissage non supervisé"
-subtitle: Classification Hiérarchique et Kmeans
+title: "Clustering (anglais)"
+subtitle: "Hierarchical clustering et Kmeans"
 author: "Anne Badel, Frédéric Guyon & Jacques van Helden"
-date: "2019-02-20"
+date: "2020-03-09"
 output:
   slidy_presentation:
     highlight: default
@@ -19,16 +19,16 @@ output:
     toc: yes
     widescreen: yes
   beamer_presentation:
-    colortheme: dolphin
+    theme: Hannover #Montpellier
+    colortheme: beaver
+    fonttheme: professionalfonts #structurebold
+    highlight: pygments #default
     fig_caption: no
-    fig_height: 5
+    fig_height: 4
     fig_width: 5
-    fonttheme: structurebold
-    highlight: default
     incremental: no
     keep_tex: no
     slide_level: 1
-    theme: Montpellier
     toc: yes
   html_document:
     fig_caption: yes
@@ -62,83 +62,20 @@ transition: linear
 
 
 
-
-# Partitionnement et apprentissage
-
-- On a une **représentation** des données
-
-    + sous forme de valeurs réelles=vecteur de 
-    + sous forme de catégories
-
-- **Clustering**: on cherche a priori des groupes dans les données
-
-- **Apprentissage**:
-
-    + on connaît le partitionnement sur un jeu de données
-    + on cherche le groupe (la classe) de nouvelles données
-
-# Partionnement = Clustering
-
-<div class="figure" style="text-align: center">
-<img src="img/figure1.png" alt="Y a-t-il des groupes ?" width="50%" />
-<p class="caption">Y a-t-il des groupes ?</p>
-</div>
-
-
-# Partionnement = Clustering
-
-<div class="figure" style="text-align: center">
-<img src="img/figure2.png" alt="Oui, 4 groupes. " width="50%" />
-<p class="caption">Oui, 4 groupes. </p>
-</div>
-
-# Apprentissage
-
-<div class="figure" style="text-align: center">
-<img src="img/figure3.png" alt="2 groupes. " width="50%" />
-<p class="caption">2 groupes. </p>
-</div>
-
-# Apprentissage: Séparation linéaire
-
-<div class="figure" style="text-align: center">
-<img src="img/figure4.png" alt="2 groupes. " width="50%" />
-<p class="caption">2 groupes. </p>
-</div>
-
-
-# Méthodes
-Trois grands principes de méthodes basées sur:
-
-- La géométrie
-- Les probabilités (statistique)
-- Les graphes
-
-En fait, trois façons de voir les mêmes algorithmes
-
-# Géométrie et distances
-
-<div class="columns-2">
-
-On considère les données comme des points de $R^n$ (*)
-
-
-- géométrie donnée par distances
-- distances = dissimilaritées imposées par le problème
-- dissimilarités $\longrightarrow$ permettent visualisation de l'ensemble des points
-- Détermination visuelle des groupes
-
-(*) Espace Euclidien à $n$ dimensions, où 
-
-- chaque dimension représente une des variables observées;
-- un individu est décrit comme un vecteur à $n$ valeurs, qui correspond à un point dans cet espace. 
-
-</div>
-
-
 # Les données
 
+- Comment sont représentées les données dans l'ordinateur ?
+- Comment représenter les données ?
+- Comment découvrir des "clusters" dans les données ?
+
+# Les données dans l'ordinateur (1)
+
+## Les iris de Fisher 
 [Ces données sont un classique des méthodes d'apprentissage](https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1469-1809.1936.tb02137.x)
+
+<img src="img/iris_petal_sepal.png" width="60%" style="display: block; margin: auto;" />
+
+# Les données dans l'ordinateur (2)
 
 Dans un premier temps, regardons les données.
 
@@ -165,63 +102,184 @@ head(mes.iris)
 6          5.4         3.9          1.7         0.4
 ```
 
-# Les variables
+# Les données dans l'ordinateur (3)
 
 
 ```r
-summary(mes.iris)
+head(mes.iris)
 ```
 
 ```
-  Sepal.Length    Sepal.Width     Petal.Length    Petal.Width   
- Min.   :4.300   Min.   :2.000   Min.   :1.000   Min.   :0.100  
- 1st Qu.:5.100   1st Qu.:2.800   1st Qu.:1.600   1st Qu.:0.300  
- Median :5.800   Median :3.000   Median :4.350   Median :1.300  
- Mean   :5.843   Mean   :3.057   Mean   :3.758   Mean   :1.199  
- 3rd Qu.:6.400   3rd Qu.:3.300   3rd Qu.:5.100   3rd Qu.:1.800  
- Max.   :7.900   Max.   :4.400   Max.   :6.900   Max.   :2.500  
+  Sepal.Length Sepal.Width Petal.Length Petal.Width
+1          5.1         3.5          1.4         0.2
+2          4.9         3.0          1.4         0.2
+3          4.7         3.2          1.3         0.2
+4          4.6         3.1          1.5         0.2
+5          5.0         3.6          1.4         0.2
+6          5.4         3.9          1.7         0.4
 ```
 
+- 1 ligne = 1 fleur = 1 vecteur
 
-# Visualisation des données
+- 1 colonne = 1 variable = 1 vecteur
 
-On peut ensuite essayer de visualiser les données
-  
+- l'ensemble des données = 1 échantillon = 1 data.frame
+
+# Représentons ces données : une fleur (1)
+
 
 ```r
-plot(mes.iris)
+mes.iris[1,]
 ```
 
-<img src="figures/irisDeFisher_plot_iris-1.png" width="60%" style="display: block; margin: auto;" />
+```
+  Sepal.Length Sepal.Width Petal.Length Petal.Width
+1          5.1         3.5          1.4         0.2
+```
 
-*****
+<img src="img/440px-Iris_versicolor_3.jpg" width="30%" style="display: block; margin: auto;" />
 
-# Cas d'étude : TCGA Breast Invasive Cancer (BIC)
+Comment représenter cette fleur ?
 
-- Présentation du cas d'étude (Jacques van Helden A COMPLETER)
+Par un point !
 
-# TP : analyse de données d'expression
+Dans quel espace de réprésentation ?
 
-- TP clustering : 
-[[html](TP_clustering.html)]
-[[pdf](TP_clustering.pdf)]
-[[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/seance_4/TP_clustering.Rmd)]
+# Représentons ces données : une fleur (2)
 
-- Première partie : chargement des données
 
-# Géométrie et distances
+```r
+plot(mes.iris[1,1:2])
+```
+
+<img src="figures/irisDeFisher_unnamed-chunk-4-1.png" width="30%" style="display: block; margin: auto;" />
+
+Dans le plan, un point de coordonnées :
+
+- x = 5.1
+- y = 3.5
+
+représenté par un vecteur $v2 = ($ 5.1 $,$ 3.5$)$ dans $\mathbb{R}^2$
+
+# Représentons ces données : une fleur (3) 
+
+
+
+Dans l'espace, un point de coordonnées :
+
+- x = 5.1
+- y = 3.5
+- z = 1.4
+
+<img src="img/fleur3D.png" width="30%" style="display: block; margin: auto;" />
+
+représenté par un vecteur $v3 = ($ 5.1 $,$ 3.5 $,$ 1.4$)$ dans $\mathbb{R}^3$
+
+# Représentons ces données : toutes les fleurs (4)
+
+= un nuage de points dans un espace à 4 dimensions
+
+  - chaque point est représenté par un vecteur dans $\mathbb{R}^4$
+  - le nuage de points est représenté par une matrice à n et p = 4 dimensions
+    + n = nombre de lignes = nombre de d'individus = taille de l'échantillon
+    + p = nombre de colonnes = nombre de variables décrivant l'chantillon
+
+= PAS de représentation possible (pour l'instant)
+
+
+# Représentons ces données : une variable à la fois (1)
+
+<img src="figures/irisDeFisher_unnamed-chunk-7-1.png" width="60%" style="display: block; margin: auto;" />
+
+# Représentons ces données : deux variables à la fois (2)
+
+<img src="figures/irisDeFisher_unnamed-chunk-8-1.png" width="60%" style="display: block; margin: auto;" />
+
+# Il faut tenir compte de toutes les dimensions
+
+c'est à dire de toutes les variables à notre disposition
+
+# Clustering et classification (termes anglais)
+
+On a une **information** sur nos données
+
+- variables quantitatives = vecteur de réels
+ 
+**Clustering** : on cherche à mettre en évidence des groupes dans les données
+
+- le clustering appartient aux méthodes dites **non supervisées**, ou descriptives
+
+# Clustering et classification (termes anglais)
+
+On a une **information** sur nos données
+
+**Clustering** : on cherche à mettre en évidence des groupes dans les données
+
+**Classification** :
+
+- on connaît le partitionnement de notre jeu de données
+    
+  + variables quantitatives = vecteur de réels
+  + ET
+  + variable qualitative = groupe (cluster) d'appartenance = vecteurs de entiers / niveau d'un facteur
+  + on cherche à prédire le groupe (la classe) de nouvelles données
+
+- la classification appartient aux méthodes dites **supervisées**, ou prédictives
+
+# Clustering
+
+<div class="figure" style="text-align: center">
+<img src="img/figure1.png" alt="Y a-t-il des groupes ?" width="60%" />
+<p class="caption">Y a-t-il des groupes ?</p>
+</div>
+
+
+# Clustering
+
+<div class="figure" style="text-align: center">
+<img src="img/figure2.png" alt="Oui, 4 groupes. " width="60%" />
+<p class="caption">Oui, 4 groupes. </p>
+</div>
+
+
+# Méthodes
+Trois grands principes de méthodes basées sur:
+
+- La géométrie
+- Les probabilités (statistique)
+- Les graphes
+
+En fait, trois façons de voir les mêmes algorithmes
+
+# Géométrie et distances (1)
+
+On considère les données comme des points de $\mathbb{R}^n$ 
+
+<img src="figures/irisDeFisher_unnamed-chunk-9-1.png" width="30%" style="display: block; margin: auto;" />
+
+$\mathbb{R}^n$ : espace Euclidien à $n$ dimensions, où 
+
+- chaque dimension représente une des variables observées;
+- un individu est décrit comme un vecteur à $n$ valeurs, qui correspond à un point dans cet espace. 
+
+# Géométrie et distances (2)
+
+On considère les données comme des points de $R^n$ (*)
+
+- géométrie donnée par distances
+- distances = dissimilarités imposées par le problème
+- dissimilarités $\longrightarrow$ permettent visualisation de l'ensemble des points
+
+<img src="figures/irisDeFisher_unnamed-chunk-10-1.png" width="30%" style="display: block; margin: auto;" />
+
+# Géométrie et distances (3)
 
 Sur la base d'une distance (souvent euclidienne)
 
-- Partionnement:
+- Clustering :
 
     + Moyennes mobiles ou K-means : séparation optimale des groupes connaissant le nombre de groupes
-    + Méthode agglomérative ouhierarchical clustering
-
-- Classification:
-
-    + attribution K plus proches voisins (K Nearest Neighbor)
-    + séparation linéaire ou non linéaire
+    + Méthode agglomérative ou hierarchical clustering
 
 # Distances
 
@@ -234,7 +292,7 @@ Définition d'une distance : fonction positive de deux variables
 
 Si 1,2,3 : dissimilarité
 
-# Distances utilisées dans R
+# Distances utilisées dans R (1)
 
 - distance euclidienne ou distance $L_2$:
   $d(x,y)=\sqrt{\sum_i (x_i-y_i)^2}$
@@ -245,10 +303,10 @@ Si 1,2,3 : dissimilarité
 - distance du maximum ou L-infinis, $L_\infty$:
   $d(x,y)=\max_i |x_i-y_i|$
     
-<img src="img/distance.png" width="70%" style="display: block; margin: auto;" />
+<img src="img/distance.png" width="50%" style="display: block; margin: auto;" />
 
 
-# Distances utilisées dans R
+# Distances utilisées dans R (2)
 
 - distance de Minkowski $l_p$:
 $$d(x,y)=\sqrt[p]{\sum_i (|x_i-y_i|^p}$$
@@ -276,7 +334,7 @@ $$d("BONJOUR", "BONSOIR")=2$$
 
 # Distances plus classiques en génomique
 
-Comme vu lors de la séance 3, il existe d'autres mesures de distances :
+Il existe d'autres mesures de distances, plus ou moins adaptées à chaque problématique :
 
 - **Jaccard** (comparaison d'ensembles): $J_D = \frac{A \cap B}{A \cup B}$
 
@@ -287,9 +345,85 @@ Ne sont pas des distances, mais indices de dissimilarité :
 - **Bray-Curtis** (en écologie, comparaison d'abondance d'espèces)
 - **Jensen-Shannon** (comparaison de distributions)
   
-**Remarque** : lors du TP, sur les données d'expression RNA-seq, nous utiliserons le **coefficient de corrélation de Spearman** et la distance dérivée, $d_c = 1-r$
+**Remarque** : lors du TP, sur les données d'expression RNA-seq, nous utiliserons le **coefficient de corrélation de Spearman** et la distance dérivée, $d_c = 1-r$ ou $d_c = \sqrt{2 \times (1 - r)}$
 
-# Distances entre groupes
+# Avec R (1)
+
+- on utilise la fonction `dist()` avec l'option `method = ` 
+
+<table>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 3.19 </td>
+   <td style="text-align:right;"> 2.87 </td>
+   <td style="text-align:right;"> 1.08 </td>
+   <td style="text-align:right;"> 3.69 </td>
+   <td style="text-align:right;"> 4.21 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2.26 </td>
+   <td style="text-align:right;"> 2.70 </td>
+   <td style="text-align:right;"> 3.28 </td>
+   <td style="text-align:right;"> 2.32 </td>
+   <td style="text-align:right;"> 3.28 </td>
+  </tr>
+</tbody>
+</table>
+
+distance euclidienne : 3.75
+
+distance de manhattan = 10.57
+
+
+# Avec R (2)
+
+- ou pour des distances particulières, par exemple l'indice de Jaccard :
+<table>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> v.a </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> v.b </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> v.c </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0 </td>
+  </tr>
+</tbody>
+</table>
+
+```
+          v.a       v.b
+v.b 0.3333333          
+v.c 0.0000000 0.3333333
+```
+
+# Distances entre groupes (1)
+
+<img src="figures/irisDeFisher_unnamed-chunk-13-1.png" width="70%" style="display: block; margin: auto;" />
+
+# Distances entre groupes (2)
 
 - **Single linkage** : élements les plus proches des 2 groupes
 
@@ -298,6 +432,8 @@ $$D(C_1,C_2) = \min_{i \in C_1, j \in C_2} D(x_i, x_j)$$
 - **Complete linkage** : éléments les plus éloignés des 2 groupes
 
 $$D(C_1,C_2) = \max_{i \in C_1, j \in C_2} D(x_i, x_j)$$
+
+# Distances entre groupes (3)
   
 - **Group average** : distance moyenne
 
@@ -309,10 +445,11 @@ $d^2(C_i,C_j) = I_{intra}(C_i \cup C_j)-I_{intra}(C_i)-I_{intra}(C_j)$
 
 $D(C_1,C_2) = \sqrt{\frac{N_1N_2}{N_1 + N_2}} \| m_1 -m_2 \|$
 
-# Distances entre groupes
+# Distances entre groupes (4)
 
 <img src="img/groupes.png" width="90%" style="display: block; margin: auto;" />
 
+# Après ce préambule,
 
 # Les données
 
@@ -409,7 +546,7 @@ image(1:nb.var, 1:nb.iris ,t(as.matrix(mes.iris)), xlab = "variables", ylab = "O
 
 <img src="figures/irisDeFisher_var_image-1.png" width="60%" style="display: block; margin: auto;" />
 
-# Nettoyage des données (1): données manquantes
+# Nettoyage des données (1) : données manquantes
 
 Avant de commencer à travailler, il est nécessaire de commencer par vérifier que :
 
@@ -539,56 +676,24 @@ image(1:nb.var, 1:nb.iris, t(as.matrix(mes.iris.scaled)), main="Scaled data")
 
 <img src="figures/irisDeFisher_image_raw_vs_norm-1.png" width="80%" style="display: block; margin: auto;" />
 
-
-----
-
-## ... par une projection sur une ACP
-
-
-```r
-par(mfrow = c(1,2))
-biplot(prcomp(mes.iris), las = 1, cex = 0.7,
-       main = "Données non normalisées")
-biplot(prcomp(mes.iris, scale = TRUE), las = 1, cex = 0.7,
-       main = "Données normalisées")
-```
-
-<img src="figures/irisDeFisher_unnamed-chunk-9-1.png" width="90%" style="display: block; margin: auto;" />
-
 # La matrice de distances
 
-Nous utilisons ici la distance euclidienne. 
+Nous utilisons ici la distance euclidienne sur données **normalisées**. 
 
 
 
 
-```r
-iris.euc <- dist(mes.iris)
-iris.scale.euc <- dist(mes.iris.scaled)
-```
 
-
-```r
-par(mfrow = c(1,2))
-image(t(as.matrix(iris.euc)), main = "Données brutes", las = 1)
-image(t(as.matrix(iris.scale.euc)), main = "Données normalisées", las = 1)
-```
-
-<img src="figures/irisDeFisher_heatmap_euclidian_dist-1.png" width="80%" style="display: block; margin: auto;" />
-
-```r
-par(mfrow = c(1,1))
-```
+<img src="figures/irisDeFisher_unnamed-chunk-22-1.png" width="70%" style="display: block; margin: auto;" />
 
 # La classification hiérarchique
 
 ## Principe
 
-- **classification hiérarchique** : mettre en évidence des liens hiérachiques entre les individus
+**classification hiérarchique** : mettre en évidence des liens hiérachiques entre les individus
 
-    - classification hiérarchique **ascendante** : partir des individus pour arriver à des classes / cluster
-    
-    - classification hiérarchique **descendante** : partir d'un groupe qu'on subdivise en sous-groupes /clusters jusqu'à arriver à des individus.
+- classification hiérarchique **ascendante** : partir des individus pour arriver à des classes / cluster
+- classification hiérarchique **descendante** : partir d'un groupe qu'on subdivise en sous-groupes /clusters jusqu'à arriver à des individus.
 
 ---
 
@@ -597,10 +702,10 @@ par(mfrow = c(1,1))
 - ressemblance entre individus = distance
 - ressemblance entre groupes d'invidus = critère d'aggrégation
 
-    - lien simple
-    - lien complet
-    - lien moyen
-    - critère de Ward
+  - lien simple
+  - lien complet
+  - lien moyen
+  - critère de Ward
 
 ---
 
@@ -611,7 +716,7 @@ par(mfrow = c(1,1))
 - départ : n individus = n clusters distincts
 - calcul des distances entre tous les individus
 
-    - choix de la métrique à utiliser en fonction du type de données
+  +  choix de la métrique à utiliser en fonction du type de données
 
 - regroupement des 2 individus les plus proches => (n-1) clusters
 
@@ -692,7 +797,7 @@ iris.hclust <- hclust(iris.euc)
 plot(iris.hclust, hang = -1, cex = 0.5)
 ```
 
-<img src="figures/irisDeFisher_dont_care-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_dont_care-1.png" width="60%" style="display: block; margin: auto;" />
 
 ... c'est à dire aux options des fonctions `dist()` et `hclust()`
 
@@ -706,7 +811,7 @@ iris.scale.hclust <- hclust(iris.scale.euc)
 plot(iris.scale.hclust, hang = -1, cex = 0.5)
 ```
 
-<img src="figures/irisDeFisher_dont_care_norm-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_dont_care_norm-1.png" width="60%" style="display: block; margin: auto;" />
 
 ---
 
@@ -723,35 +828,25 @@ plot(iris.scale.hclust, hang = -1, cex = 0.5, main = "Normalisées")
 
 ## En utilisant une autre métrique
 
-
-```r
-iris.scale.max <- dist(mes.iris.scaled, method = "manhattan")
-iris.scale.hclust.max <- hclust(iris.scale.max)
-par(mfrow=c(2,1))
-plot(iris.scale.hclust, hang=-1, cex=0.5, main = "Euclidian dist")
-plot(iris.scale.hclust.max, hang=-1, cex=0.5, main = "Manhattan dist")
-```
-
 <img src="figures/irisDeFisher_hclust_euclidian_vs_manhattan-1.png" width="80%" style="display: block; margin: auto;" />
 
 ---
 
 ## En utilisant un autre critère d'aggrégation
 
-
-```r
-iris.scale.hclust.single <- hclust(iris.scale.euc, method="single")
-iris.scale.hclust.ward <- hclust(iris.scale.euc, method="ward.D2")
-par(mfrow=c(2,1))
-plot(iris.scale.hclust.single, hang=-1, cex=0.5, main = "Single linkage")
-plot(iris.scale.hclust.ward, hang=-1, cex=0.5, main = "Ward linkage")
-```
-
 <img src="figures/irisDeFisher_linkage_rule-1.png" width="80%" style="display: block; margin: auto;" />
 
-```r
-par(mfrow=c(1,1))
-```
+---
+
+## En conclusion
+
+- Faire attention au données
+
+  + données manquantes
+  + données invariantes
+  + données normalisées
+  
+- Choisir la distance et le critère d'aggrégation adaptés à nos données
 
 # Les k-means
 
@@ -759,6 +854,7 @@ Les individus dans le plan
 
 <img src="img/kmeans0.png" width="80%" style="display: block; margin: auto;" />
 
+=> faire apparaitres des classes / des clusters
 
 # L'algorithme
 
@@ -824,23 +920,23 @@ iris.scale.kmeans5
 ```
 
 ```
-K-means clustering with 5 clusters of sizes 23, 11, 38, 62, 16
+K-means clustering with 5 clusters of sizes 47, 12, 17, 53, 21
 
 Cluster means:
   Sepal.Length Sepal.Width Petal.Length Petal.Width
-1  -0.89550725  0.30788406   -2.2797391  -0.9558551
-2  -1.26151515 -0.06642424   -2.4125455  -0.9993333
-3   1.00666667  0.01635088    1.9841053   0.8717193
-4   0.05827957 -0.30894624    0.6355484   0.2345376
-5  -0.46208333  0.76141667   -2.2392500  -0.9180833
+1   1.13217737  0.08812645    0.9928284   1.0141287
+2  -0.54544758  1.99067167   -1.2649421  -1.2126576
+3  -1.39493454 -0.05056417   -1.3357516  -1.3187694
+4  -0.05005221 -0.88042696    0.3465767   0.2805873
+5  -0.96668148  0.92820079   -1.2925915  -1.2173431
 
 Clustering vector:
-  [1] 1 2 2 2 1 5 1 1 2 1 5 1 2 2 5 5 5 1 5 5 5 5 1 1 1 1 1 1 1 1 1 5 5 5 1 1 5 1 2 1 1 2 2 1 5 2 5 2 5 1 4 4 3 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 3 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 3 4 3 3 3 3 4 3 3 3 3 3 3 4 4 3 3 3 3 4 3 4 3 4 3 3 4 4 3 3 3 3 3 4 3 3 3 3 4 3 3 3 4 3 3 3 4
-[148] 3 3 4
+  [1] 5 3 3 3 5 2 5 5 3 3 2 5 3 3 2 2 2 5 2 2 5 5 5 5 5 3 5 5 5 3 3 5 2 2 3 3 5 5 3 5 5 3 3 5 2 3 2 3 2 5 1 1 1 4 4 4 1 4 4 4 4 4 4 4 4 1 4 4 4 4 1 4 4 4 4 1 1 1 4 4 4 4 4 4 4 1 1 4 4 4 4 4 4 4 4 4 4 4 4 4 1 4 1 1 1 1 4 1 1 1 1 1 1 4 4 1 1 1 1 4 1 4 1 4 1 1 4 1 1 1 1 1 1 4 4 1 1 1 4 1 1 1 4 1 1 1 4
+[148] 1 1 4
 
 Within cluster sum of squares by cluster:
-[1]  2.285217  1.172727 23.879474 39.820968  2.497500
- (between_SS / total_SS =  89.8 %)
+[1] 47.450194  3.954505  5.163861 44.087545  3.397867
+ (between_SS / total_SS =  82.5 %)
 
 Available components:
 
@@ -851,563 +947,68 @@ Available components:
 
 
 ```r
-iris.scale.kmeans5$cluster
+## Print the complete list of libraries + versions used in this session
+sessionInfo()
 ```
 
 ```
-  [1] 1 2 2 2 1 5 1 1 2 1 5 1 2 2 5 5 5 1 5 5 5 5 1 1 1 1 1 1 1 1 1 5 5 5 1 1 5 1 2 1 1 2 2 1 5 2 5 2 5 1 4 4 3 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 3 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 3 4 3 3 3 3 4 3 3 3 3 3 3 4 4 3 3 3 3 4 3 4 3 4 3 3 4 4 3 3 3 3 3 4 3 3 3 3 4 3 3 3 4 3 3 3 4
-[148] 3 3 4
+R version 3.6.1 (2019-07-05)
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+Running under: macOS Catalina 10.15.3
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib
+
+locale:
+[1] fr_FR.UTF-8/fr_FR.UTF-8/fr_FR.UTF-8/C/fr_FR.UTF-8/fr_FR.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] vegan_2.5-6        lattice_0.20-38    permute_0.9-5      rgl_0.100.30       RColorBrewer_1.1-2 clues_0.6.1        FactoMineR_2.0     kableExtra_1.1.0   knitr_1.28        
+
+loaded via a namespace (and not attached):
+ [1] ggrepel_0.8.1           Rcpp_1.0.3              assertthat_0.2.1        zeallot_0.1.0           digest_0.6.24           mime_0.9                R6_2.4.1                backports_1.1.5         evaluate_0.14           highr_0.8               httr_1.4.1              ggplot2_3.2.1          
+[13] pillar_1.4.2            rlang_0.4.4             lazyeval_0.2.2          rstudioapi_0.10         miniUI_0.1.1.1          Matrix_1.2-17           rmarkdown_2.1           splines_3.6.1           webshot_0.5.2           readr_1.3.1             stringr_1.4.0           htmlwidgets_1.5.1      
+[25] munsell_0.5.0           shiny_1.4.0             compiler_3.6.1          httpuv_1.5.2            xfun_0.12               pkgconfig_2.0.3         mgcv_1.8-31             htmltools_0.4.0         flashClust_1.01-2       tidyselect_0.2.5        tibble_2.1.3            viridisLite_0.3.0      
+[37] crayon_1.3.4            dplyr_0.8.3             later_1.0.0             MASS_7.3-51.4           leaps_3.0               grid_3.6.1              nlme_3.1-142            jsonlite_1.6.1          xtable_1.8-4            gtable_0.3.0            lifecycle_0.1.0         magrittr_1.5           
+[49] scales_1.1.0            stringi_1.4.6           promises_1.1.0          scatterplot3d_0.3-41    xml2_1.2.2              vctrs_0.2.0             tools_3.6.1             manipulateWidget_0.10.0 glue_1.3.1              purrr_0.3.3             hms_0.5.2               crosstalk_1.0.0        
+[61] parallel_3.6.1          fastmap_1.0.1           yaml_2.2.1              colorspace_1.4-1        cluster_2.1.0           rvest_0.3.5            
 ```
+
+
+----
+
+## ... par une projection sur une ACP
+
 
 ```r
-table(iris.scale.kmeans5$cluster)
+par(mfrow = c(1,2))
+biplot(prcomp(mes.iris), las = 1, cex = 0.7,
+       main = "Données non normalisées")
+biplot(prcomp(mes.iris, scale = TRUE), las = 1, cex = 0.7,
+       main = "Données normalisées")
 ```
 
-```
+<img src="figures/irisDeFisher_unnamed-chunk-23-1.png" width="90%" style="display: block; margin: auto;" />
 
- 1  2  3  4  5 
-23 11 38 62 16 
-```
+*****
+
+# Cas d'étude : TCGA Breast Invasive Cancer (BIC)
+
+- Présentation du cas d'étude (Jacques van Helden A COMPLETER)
+
+# TP : analyse de données d'expression
+
+- TP clustering : 
+[[html](TP_clustering.html)]
+[[pdf](TP_clustering.pdf)]
+[[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/seance_4/TP_clustering.Rmd)]
+
+- Première partie : chargement des données
 
 ---
-
-## Visualisation des clusters
-
-
-```r
-plot(iris.scaled.acp, col.ind = iris.scale.kmeans5$cluster, choix = "ind", cex = 0.5)
-```
-
-<img src="figures/irisDeFisher_cluster_viz-1.png" style="display: block; margin: auto;" />
-
----
-
-## Combien de clusters ?
-
-Quand une partition est-elle bonne ?
-  
-- si les individus d’un même cluster sont proches
-
-    - homogénéité maximale à l’intérieur de chaque cluster
-
-- si les individus de 2 clusters différents sont éloignés
-
-    - hétérogénéité maximale entre chaque cluster
-
----
-
-## Classification hiérarchique
-
-La coupure de l’arbre à un niveau donné construit une partition. la coupure doit se faire :
-
-- après les agrégations correspondant à des valeurs peu élevées de l’indice
-
-- avant les agrégations correspondant à des niveaux élevés de l’indice, qui dissocient les groupes bien distincts dans la population.
-
-#
-
-
-```r
-plot(iris.scale.hclust.ward, hang=-1, cex=0.5)
-```
-
-<img src="figures/irisDeFisher_plot_iris_ward-1.png" width="95%" style="display: block; margin: auto;" />
-
----
-
-## K-means
-
-```r
-I.intra = numeric(length=10)
-I.intra[1] = kmeans(mes.iris.scaled, centers=2)$totss
-for (i in 2:10) {
-  kmi <- kmeans(mes.iris.scaled, centers=i)
-  I.intra[i] <- kmi$tot.withinss
-}
-```
-
-# 
-
-
-```r
-plot(1:10, I.intra, type="l")
-```
-
-<img src="figures/irisDeFisher_unnamed-chunk-13-1.png" style="display: block; margin: auto;" />
-
-#
-
-
-```r
-iris.scale.kmeans3 <- kmeans(mes.iris.scaled, center=3)
-plot(iris.scaled.acp, col.ind=iris.scale.kmeans3$cluster, choix="ind")
-```
-
-<img src="figures/irisDeFisher_unnamed-chunk-14-1.png" style="display: block; margin: auto;" />
-
-# Heatmap
-
-
-```r
-heatmap(mes.iris.scaled, margins = c(7,4), cexCol = 1.4, cexRow = 0.5)
-```
-
-<img src="figures/irisDeFisher_headmapt-1.png" width="65%" style="display: block; margin: auto;" />
-
----
-
-
-
-
-```r
-my_group <- as.numeric(as.factor(substr(variete, 1 , 2)))
-my_col <- brewer.pal(3, "Set1")[my_group]
-heatmap(mes.iris.scaled, RowSideColors = my_col, 
-        margins = c(7,4), cexCol = 1.4, cexRow = 0.5)
-```
-
-<img src="figures/irisDeFisher_heatmap_rowsidecol-1.png" width="65%" style="display: block; margin: auto;" />
-
-# Comparaison de clustering: Rand Index
-
-Mesure de similarité entre deux clustering
-
-à partir du nombre de fois que les classifications sont d'accord
-
-$$R=\frac{m+s}{t}$$
-
-- m=nombre de paires dans la même classe dans les deux classifications
-- s=nombre de paires séparées dans les deux classifications
-- t=nombre de paires totales
-
-# Comparaison de clustering: Adjusted Rand Index
-
-$$ ARI=\frac{RI-Expected RI}{Max RI -Expected RI}$$
-
-- ARI=RI normalisé
-- Prend en compte la taille des classes
-- ARI=1 pour classification identique
-- ARI $\simeq$ 0 pour classification aléatoire (peut être <0)
-- Adapté pour nombre de classe différent entre les deux classifications
-et taille de classe différente
-
-# Comparaison des résultats des deux classifications
-
-- par une table de confusion
-
-
-```r
-cluster.kmeans3 <- iris.scale.kmeans3$cluster
-cluster.hclust5 <- cutree(iris.scale.hclust.ward, k=5)
-table(cluster.hclust5, cluster.kmeans3)
-```
-
-```
-               cluster.kmeans3
-cluster.hclust5  1  2  3
-              1  0 17 33
-              2 38  0  0
-              3 22  4  0
-              4 24  0  0
-              5 12  0  0
-```
-
----
-
-- par une visualisation
-
-
-```r
-par(mfrow=c(1,2))
-plot(iris.scaled.acp, col.ind=cluster.kmeans3, choix="ind", title="kmeans en 3 groupes", cex=0.6)
-plot(iris.scaled.acp, col.ind=cluster.hclust5, choix="ind", title="hclust en 5 groupes", cex=0.6)
-```
-
-<img src="figures/irisDeFisher_unnamed-chunk-17-1.png" width="95%" style="display: block; margin: auto;" />
-
-```r
-par(mfrow=c(1,1))
-```
-
-
-# Comparaison avec la réalité
-
-## La réalité
-
-
-```r
-variete <- iris[,5]
-table(variete)
-```
-
-```
-variete
-    setosa versicolor  virginica 
-        50         50         50 
-```
-
-#
-
-
-```r
-plot(iris.scaled.acp, col.ind=variete, choix="ind", cex=0.8)
-```
-
-<img src="figures/irisDeFisher_unnamed-chunk-19-1.png" width="65%" style="display: block; margin: auto;" />
-
----
-
-# Comparer k-means avec la réalité
-
-
-```r
-conf.kmeans <- table(variete, cluster.kmeans3)
-kable(conf.kmeans, caption = "Confusion table: 3-clusters k-means versus actual class")
-```
-
-<table>
-<caption>Confusion table: 3-clusters k-means versus actual class</caption>
- <thead>
-  <tr>
-   <th style="text-align:left;">   </th>
-   <th style="text-align:right;"> 1 </th>
-   <th style="text-align:right;"> 2 </th>
-   <th style="text-align:right;"> 3 </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> setosa </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 17 </td>
-   <td style="text-align:right;"> 33 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> versicolor </td>
-   <td style="text-align:right;"> 46 </td>
-   <td style="text-align:right;"> 4 </td>
-   <td style="text-align:right;"> 0 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> virginica </td>
-   <td style="text-align:right;"> 50 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 0 </td>
-  </tr>
-</tbody>
-</table>
-
----
-
-## Setosa vs others
-
-### Visualisation
-
-
-```r
-variete2 <- rep("notSetosa", 150)
-variete2[variete=="setosa"] <- "setosa"
-variete2 = factor(variete2)
-table(variete2)
-```
-
-```
-variete2
-notSetosa    setosa 
-      100        50 
-```
-
----
-
-
-```r
-par(mfrow=c(1,2))
-plot(iris.scaled.acp, col.ind=variete2, title="Actual species", cex=0.6)
-cluster.kmeans2 <- kmeans(mes.iris.scaled, center=2)$cluster
-plot(iris.scaled.acp, col.ind=cluster.kmeans2, title="2-group k-means", cex=0.6)
-```
-
-<img src="figures/irisDeFisher_unnamed-chunk-21-1.png" width="95%" style="display: block; margin: auto;" />
-
-```r
-par(mfrow=c(1,1))
-```
-
-
----
-
-### Table de confusion et calcul de performances
-
-
-```r
-conf.kmeans <- table(variete2, cluster.kmeans2)
-kable(conf.kmeans)
-```
-
-<table>
- <thead>
-  <tr>
-   <th style="text-align:left;">   </th>
-   <th style="text-align:right;"> 1 </th>
-   <th style="text-align:right;"> 2 </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> notSetosa </td>
-   <td style="text-align:right;"> 3 </td>
-   <td style="text-align:right;"> 97 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> setosa </td>
-   <td style="text-align:right;"> 50 </td>
-   <td style="text-align:right;"> 0 </td>
-  </tr>
-</tbody>
-</table>
-
----
-
-  - table de confusion, taux de bien prédits, spécificité, sensibilité, ...
-
-```r
-TP <- conf.kmeans[1,1]
-FP <- conf.kmeans[1,2]
-FN <- conf.kmeans[2,1]
-TN <- conf.kmeans[2,2]
-P <- TP + FN          # nb positif dans la réalité
-N <- TN + FP          # nb négatif dans la réalité
-FPrate <- FP / N      # = false alarm rate
-Spe <- TN / N      # = spécificité 
-Sens <- recall <- TPrate <- TP / P      # = hit rate ou recall ou sensibilité ou coverage
-PPV <- precision <- TP / (TP + FP)
-accuracy <- (TP + TN) / (P + N)
-F.measure <- 2 / (1/precision + 1/recall)
-performance <- c(FPrate, TPrate, precision, recall, accuracy, F.measure, Spe, PPV)
-names(performance) <- c("FPrate", "TPrate", "precision", "recall", "accuracy", "F.measure", "Spe", "PPV")
-```
-
----
-
-
-```r
-kable(performance, digits=3)
-```
-
-<table>
- <thead>
-  <tr>
-   <th style="text-align:left;">   </th>
-   <th style="text-align:right;"> x </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> FPrate </td>
-   <td style="text-align:right;"> 1.000 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> TPrate </td>
-   <td style="text-align:right;"> 0.057 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> precision </td>
-   <td style="text-align:right;"> 0.030 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> recall </td>
-   <td style="text-align:right;"> 0.057 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> accuracy </td>
-   <td style="text-align:right;"> 0.020 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> F.measure </td>
-   <td style="text-align:right;"> 0.039 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Spe </td>
-   <td style="text-align:right;"> 0.000 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> PPV </td>
-   <td style="text-align:right;"> 0.030 </td>
-  </tr>
-</tbody>
-</table>
-
----
-
-  - rand index et adjusted rand index
-
-```r
-clues::adjustedRand(as.numeric(variete2), cluster.kmeans2)
-```
-
-```
-     Rand        HA        MA        FM   Jaccard 
-0.9605369 0.9204051 0.9208432 0.9639434 0.9302767 
-```
-
----
-
-## Versicolor vs !Versicolor
-
-### Visualisation
-
-
-```r
-variete2 <- rep("notVersicolor", 150)
-variete2[variete=="versicolor"] <- "versicolor"
-variete2 = factor(variete2)
-table(variete2)
-```
-
-```
-variete2
-notVersicolor    versicolor 
-          100            50 
-```
-
----
-
-
-
-```r
-par(mfrow=c(1,2))
-plot(iris.scaled.acp, col.ind = variete2, cex  =0.7)
-cluster.kmeans2 <- kmeans(mes.iris.scaled, center=2)$cluster
-plot(iris.scaled.acp, col.ind = cluster.kmeans2, cex = 0.7)
-```
-
-<img src="figures/irisDeFisher_unnamed-chunk-27-1.png" width="90%" style="display: block; margin: auto;" />
-
-```r
-par(mfrow=c(1,1))
-```
-
----
-
-## Table de confusion et calcul de performances
-
-
-```r
-conf.kmeans <- table(variete2, cluster.kmeans2)
-kable(conf.kmeans)
-```
-
-<table>
- <thead>
-  <tr>
-   <th style="text-align:left;">   </th>
-   <th style="text-align:right;"> 1 </th>
-   <th style="text-align:right;"> 2 </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> notVersicolor </td>
-   <td style="text-align:right;"> 50 </td>
-   <td style="text-align:right;"> 50 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> versicolor </td>
-   <td style="text-align:right;"> 47 </td>
-   <td style="text-align:right;"> 3 </td>
-  </tr>
-</tbody>
-</table>
-
-```r
-TP <- conf.kmeans[1,1]
-FP <- conf.kmeans[1,2]
-FN <- conf.kmeans[2,1]
-TN <- conf.kmeans[2,2]
-P <- TP + FN          # nb positif dans la réalité
-N <- TN + FP          # nb négatif dans la réalité
-FPrate <- FP / N      # = false alarm rate
-Spe <- TN / N      # = spécificité 
-Sens <- recall <- TPrate <- TP / P      # = hit rate ou recall ou sensibilité ou coverage
-PPV <- precision <- TP / (TP + FP)
-accuracy <- (TP + TN) / (P + N)
-F.measure <- 2 / (1/precision + 1/recall)
-performance <- c(FPrate, TPrate, precision, recall, accuracy, F.measure, Spe, PPV)
-names(performance) <- c("FPrate", "TPrate", "precision", "recall", "accuracy", "F.measure", "Spe", "PPV")
-```
-
----
-
-
-```r
-kable(performance, digits=3)
-```
-
-<table>
- <thead>
-  <tr>
-   <th style="text-align:left;">   </th>
-   <th style="text-align:right;"> x </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> FPrate </td>
-   <td style="text-align:right;"> 0.943 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> TPrate </td>
-   <td style="text-align:right;"> 0.515 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> precision </td>
-   <td style="text-align:right;"> 0.500 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> recall </td>
-   <td style="text-align:right;"> 0.515 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> accuracy </td>
-   <td style="text-align:right;"> 0.353 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> F.measure </td>
-   <td style="text-align:right;"> 0.508 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Spe </td>
-   <td style="text-align:right;"> 0.057 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> PPV </td>
-   <td style="text-align:right;"> 0.500 </td>
-  </tr>
-</tbody>
-</table>
-
-```r
-clues::adjustedRand(as.numeric(variete2), cluster.kmeans2)
-```
-
-```
-      Rand         HA         MA         FM    Jaccard 
-0.53995526 0.07211421 0.07722223 0.57895580 0.40737752 
-```
-
-# Pros et cons des différents algorithmes
-
-| Algorithme | Pros | Cons |
-|-------------|------------------------------|------------------------|
-| **Hiérarchique** | L'arbre reflète la nature imbriquée de tous les sous-clusters | Complexité quadratique (mémoire et temps de calcul) $\rightarrow$ quadruple chaque fois qu'on double le nombre d'individus  |
-| | Permet une visualisation couplée dendrogramme (groupes) + heatmap (profils individuels) | |
-| | Choix a posteriori du nombre de clusters (élagage) | |
-|  |  |  |
-|  |  |  |
-| **K-means** | Rapide (linéaire en temps), peut traiter des jeux de données énormes (centaines de milliers de pics ChIP-seq) | Positions initiales des centres est aléatoire $\rightarrow$ résultats changent d'une exécution à l'autre |
-| | | Distance euclidienne (pas appropriée pour transcriptome par exemple) |
-
-
-#
 
 Contact: <anne.badel@univ-paris-diderot.fr>
