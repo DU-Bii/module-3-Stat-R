@@ -456,7 +456,7 @@ write.table(test.data2,file = "test2.txt", sep = ";", col.names = T,quote = F)
 
 ## Exercice 5
 
-Sauvegardez dans une liste `session2_list` tous les objets créés pendant les exercices 1 à 4 en les mettant dans des sous-listes correspondant à chaque exercice que vous nommerez `exo1`, `exo2`, `exo3` et `exo4`.
+Sauvegardez dans une liste `session1_list` tous les objets créés pendant les exercices 1 à 4 en les mettant dans des sous-listes correspondant à chaque exercice que vous nommerez `exo1`, `exo2`, `exo3` et `exo4`.
 
 **Fonctions recommandées :** `list()`, `names()`
 
@@ -464,18 +464,18 @@ Sauvegardez dans une liste `session2_list` tous les objets créés pendant les e
 ```{r}
 ls()# check what is in your environment
 
-session2_list <- list()
+session1_list <- list()
 #stepwise for exo1:
 exo1 <- list("matIdentite" = matIdentite, "matAleatoire" = matAleatoire)
-session2_list[["exo1"]] <- exo1
+session1_list[["exo1"]] <- exo1
 # or in one command for exo2:
-session2_list[["exo2"]] <- list("x1" = x1, "x2" = x2, "m1" = m1, "m2" = m2, "m3" = m3, "m4" = m4, "m5" = m5, "m6" = m6)
+session1_list[["exo2"]] <- list("x1" = x1, "x2" = x2, "m1" = m1, "m2" = m2, "m3" = m3, "m4" = m4, "m5" = m5, "m6" = m6)
 # you may also add elements to the list one by one, either or not giveing the name directly with different ways:
-session2_list[["exo3"]] <- list("WorlPhones" = WorldPhones)
-session2_list[[3]][["nbrTelAn"]] <- list(nbrTelAn)
-session2_list[[3]][3] <- list(nbrTelCont)
-names(session2_list[[3]])[3] <- "nbrTelCont"
+session1_list[["exo3"]] <- list("WorlPhones" = WorldPhones)
+session1_list[[3]][["nbrTelAn"]] <- list(nbrTelAn)
+session1_list[[3]][3] <- list(nbrTelCont)
+names(session1_list[[3]])[3] <- "nbrTelCont"
 # or all elements for exo4 and naming it after:
-session2_list[[4]] <- list("test.data" = test.data, "sumcolA" = sumcolA, "test.data2" = test.data2)
-names(session2_list)[4] <- "exo4"
+session1_list[[4]] <- list("test.data" = test.data, "sumcolA" = sumcolA, "test.data2" = test.data2)
+names(session1_list)[4] <- "exo4"
 ```
