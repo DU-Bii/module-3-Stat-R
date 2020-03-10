@@ -48,5 +48,5 @@ str(myDataf)
 myDataf <- data.frame(myMatrix,c("one","two","three"), stringsAsFactors=F)
 str(myDataf)
 
-# renommeer les colonnes
+# renommer les colonnes
 colnames(myDataf) <- LETTERS[1:5]
