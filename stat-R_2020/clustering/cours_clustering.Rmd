@@ -77,6 +77,7 @@ options(width = 300)
 knitr::opts_chunk$set(
   fig.width = 5, fig.height = 5, 
   fig.path = 'figures/irisDeFisher_',
+  img.path ='img/',
   fig.align = "center", 
   size = "tiny", 
   echo = TRUE, eval = TRUE, 
@@ -93,6 +94,32 @@ nb.iris=nrow(mes.iris)
 nb.var=ncol(mes.iris)
 ```
 
+# Les données
+
+- Comment sont représentées les données dans l'ordinateur ?
+- Comment représenter les données ?
+- Comment découvrir des "motifs" dans les données ?
+
+![Iris de Fisher](img.path/iris_petal_sepal.png)
+
+# Les données dans l'ordinateur (1)
+
+[Ces données sont un classique des méthodes d'apprentissage](https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1469-1809.1936.tb02137.x)
+
+Dans un premier temps, regardons les données.
+
+```{r iris_data}
+dim(mes.iris)
+head(mes.iris)
+```
+
+# Les données dans l'ordinateur (2)
+
+- 1 ligne = 1 fleur = 1 vecteur
+
+- 1 colonne = 1 variable = 1 vecteur
+
+- l'ensemble des données = 1 data.frame
 
 # Partitionnement et apprentissage
 
@@ -161,18 +188,6 @@ On considère les données comme des points de $R^n$ (*)
 - un individu est décrit comme un vecteur à $n$ valeurs, qui correspond à un point dans cet espace. 
 
 </div>
-
-
-# Les données
-
-[Ces données sont un classique des méthodes d'apprentissage](https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1469-1809.1936.tb02137.x)
-
-Dans un premier temps, regardons les données.
-
-```{r iris_data}
-dim(mes.iris)
-head(mes.iris)
-```
 
 # Les variables
 
@@ -726,6 +741,7 @@ iris.scale.kmeans5
 ```
 
 ---
+<!---
 
 ```{r cluster_sizes}
 iris.scale.kmeans5$cluster
@@ -1021,5 +1037,14 @@ clues::adjustedRand(as.numeric(variete2), cluster.kmeans2)
 
 
 #
+-->
+---
+
+```{r session_info}
+## Print the complete list of libraries + versions used in this session
+sessionInfo()
+```
+
+---
 
 Contact: <anne.badel@univ-paris-diderot.fr>
