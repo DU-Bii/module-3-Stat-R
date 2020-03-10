@@ -216,7 +216,7 @@ n1 <- 8 # sample size for the first group
 n2 <- 8 # ssample size for second group
 
 ## First data table
-m0 <- 10000
+m <- 10000 # Number of features
 mu1 <- 10 # mean of the first population
 mu2 <- 10 # mean of the second population
 
@@ -247,17 +247,17 @@ The table below lists the actual values for my parameters (your values for $n_i$
 
 Exercise: 
 
-- Generate an data frame named `h0group1` which with $m_0$ rows (the number of features under $H_0$, defined above) and $n_1$ columns (sample size for the first population), filled with random numbers drawn from the first population. 
+- Generate an data frame named `group1` which with $m_0$ rows (the number of features under $H_0$, defined above) and $n_1$ columns (sample size for the first population), filled with random numbers drawn from the first population. 
 
 - Name the columns with labels indicating the group and sample number: `grp1s1`, , `grp1s2` ... with indices from 1 $n_1$.
 
 - Name the rows to denote the feature numbers: `h0ft1`, `h0ft2`, ... with indices from 1 to $m_0$. 
 
-- Check the dimensions of `h0group1`.
+- Check the dimensions of `group1`.
 
 - Print its first and last rows to check its content and the row and column names.
 
-- Generate a second data frame named `h0group2` for the samples drawn from the second population with the appropriate size, and name the columns and rows consistently. 
+- Generate a second data frame named `group2` for the samples drawn from the second population with the appropriate size, and name the columns and rows consistently. 
 
 
 **Useful functions**
@@ -282,37 +282,37 @@ Exercise:
 #### Generating a random data frame of the appropriate size ####
 
 ## Dataset under H0
-h0group1 <- data.frame(
-  matrix(data = rnorm(n = m0 * n1, mean = mu1, sd = sigma1),
-         nrow = m0, 
+group1 <- data.frame(
+  matrix(data = rnorm(n = m * n1, mean = mu1, sd = sigma1),
+         nrow = m, 
          ncol = n1))
-colnames(h0group1) <- paste(sep = "", "grp1s", 1:n1)
-rownames(h0group1) <- paste(sep = "", "h0ft", 1:m0)
+colnames(group1) <- paste(sep = "", "grp1s", 1:n1)
+rownames(group1) <- paste(sep = "", "h0ft", 1:m)
 
 ## Dataset under h1
-h0group2 <- data.frame(
-  matrix(data = rnorm(n = m0 * n2, mean = mu2, sd = sigma2),
-         nrow = m0, 
+group2 <- data.frame(
+  matrix(data = rnorm(n = m * n2, mean = mu2, sd = sigma2),
+         nrow = m, 
          ncol = n2))
-colnames(h0group2) <- paste(sep = "", "grp2s", 1:n2)
-rownames(h0group2) <- paste(sep = "", "h0ft", 1:m0)
+colnames(group2) <- paste(sep = "", "grp2s", 1:n2)
+rownames(group2) <- paste(sep = "", "h0ft", 1:m)
 
 ```
 
 Check the content of the data table from the first group. 
 
 ```{r}
-dim(h0group1)
-kable(head(h0group1))
-kable(tail(h0group1))
+dim(group1)
+kable(head(group1))
+kable(tail(group1))
 ```
 
 Check the content of the data table from the second group. 
 
 ```{r}
-dim(h0group2)
-kable(head(h0group2))
-kable(tail(h0group2))
+dim(group2)
+kable(head(group2))
+kable(tail(group2))
 
 
 ```
@@ -331,18 +331,18 @@ Check the properties of the columns (individuals, e.g. biological samples) and r
 ```{r}
 ## Columns-wise statistics
 colStatsH0 <- data.frame(
-    m1 = apply(h0group1, MARGIN = 2, mean),
-    m2 = apply(h0group2, MARGIN = 2, mean),
-    s1 = apply(h0group1, MARGIN = 2, sd),
-    s2 = apply(h0group2, MARGIN = 2, sd)
+    m1 = apply(group1, MARGIN = 2, mean),
+    m2 = apply(group2, MARGIN = 2, mean),
+    s1 = apply(group1, MARGIN = 2, sd),
+    s2 = apply(group2, MARGIN = 2, sd)
   )
 
 ## Row-wise statistics
 rowStatsH0 <- data.frame(
-    m1 = apply(h0group1, MARGIN = 1, mean),
-    m2 = apply(h0group2, MARGIN = 1, mean),
-    s1 = apply(h0group1, MARGIN = 1, sd),
-    s2 = apply(h0group2, MARGIN = 1, sd)
+    m1 = apply(group1, MARGIN = 1, mean),
+    m2 = apply(group2, MARGIN = 1, mean),
+    s1 = apply(group1, MARGIN = 1, sd),
+    s2 = apply(group2, MARGIN = 1, sd)
   )
 
 ```
@@ -392,8 +392,8 @@ i <- 267 ## Pick up a given feature, arbitrarily
 
 ## Select the values for this feature in the group 1 and group 2, resp. 
 ## Tip: I use unlist() to convert a single-row data.frame into a vector
-x1 <- unlist(h0group1[i, ]) 
-x2 <- unlist(h0group2[i, ])
+x1 <- unlist(group1[i, ]) 
+x2 <- unlist(group2[i, ])
 
 ## Run Sudent t test on one pair of samples
 t.result <- t.test(
@@ -439,20 +439,20 @@ For the sake of simplicity, we will first show how to implement a simple but ine
 result.columns <- c("i", "m1", "m2", "diff", "statistic", "p.value")
 
 ## Instantiate a result table to store the results
-result.table <- data.frame(matrix(nrow = m0, ncol = length(result.columns)))
+result.table <- data.frame(matrix(nrow = m, ncol = length(result.columns)))
 colnames(result.table) <- result.columns # set the column names
 # View(result.table) ## Check the table: it contians NA values
   
 ## Iterate random number sampling followed by t-tests
-for (i in 1:r) {
+for (i in 1:m) {
   ## Generate two vectors containing the values for sample 1 and sample 2, resp.
-  x1 <- rnorm(n = n1, mean = mu1, sd = sigma1) ## sample 1 values
-  x2 <- rnorm(n = n2, mean = mu2, sd = sigma2) ## sample 2 values
-  
+  x1 <- unlist(group1[i, ]) ## sample 1 values
+  x2 <- unlist(group2[i, ]) ## sample 2 values
+
   ## Run the t test
   t.result <- t.test(
     x = x1, y = x2, 
-    alternative = "two.sided", var.equal = TRUE)
+    alternative = "two.sided", var.equal = FALSE)
   # names(t.result)
   
   ## Collect the selected statistics in the result table
@@ -471,12 +471,12 @@ for (i in 1:r) {
 
 ```
 
-### Distribution of the observed differences for the $`r r`$ iterations of the test
+### Distribution of the observed differences for the $`r m`$ iterations of the test
 
 ```{r diff_histo, fig.width=6, fig.height=8, out.width="50%"}
 par(mfrow = c(2, 1))
+#head(result.table)
 ## Draw an histogram of the observed differences
-
 max.diff <- max(abs(result.table$diff))
 hist(result.table$diff, breaks = 100, 
      col = "#BBFFDD", las = 1, 
@@ -510,7 +510,7 @@ hist(result.table$p.value, breaks = 20,
      ylab = "Number of tests")
 
 ## Draw a horizontal line indicating the number of tests per bin that would be expected under null hypothesis
-abline(h = r / 20, col = "darkgreen", lwd = 2)
+abline(h = m / 20, col = "darkgreen", lwd = 2)
 ```
 
 ## Creating a function to reuse the same code with different parameters
