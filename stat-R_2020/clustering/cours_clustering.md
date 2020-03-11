@@ -299,25 +299,25 @@ $$d(x,y)=\sum_i \frac{x_i-y_i}{x_i+y_i}$$
 <table>
 <tbody>
   <tr>
-   <td style="text-align:right;"> 2.87 </td>
-   <td style="text-align:right;"> 2.89 </td>
-   <td style="text-align:right;"> 1.31 </td>
-   <td style="text-align:right;"> 3.72 </td>
-   <td style="text-align:right;"> 3.17 </td>
+   <td style="text-align:right;"> 4.85 </td>
+   <td style="text-align:right;"> 3.70 </td>
+   <td style="text-align:right;"> 4.82 </td>
+   <td style="text-align:right;"> 1.57 </td>
+   <td style="text-align:right;"> 3.43 </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 3.49 </td>
-   <td style="text-align:right;"> 2.56 </td>
-   <td style="text-align:right;"> 3.04 </td>
-   <td style="text-align:right;"> 3.72 </td>
-   <td style="text-align:right;"> 2.87 </td>
+   <td style="text-align:right;"> 2.46 </td>
+   <td style="text-align:right;"> 2.11 </td>
+   <td style="text-align:right;"> 2.31 </td>
+   <td style="text-align:right;"> 3.90 </td>
+   <td style="text-align:right;"> 3.12 </td>
   </tr>
 </tbody>
 </table>
 
-distance euclidienne : 2.93
+distance euclidienne : 5.69
 
-distance de manhattan = 7.51
+distance de manhattan = 16.19
 
 # Avec R (2) : distance entre individus d'un nuage de points 
 
@@ -329,11 +329,11 @@ print(dist(mat.iris), digits = 2)
 ```
 
 ```
-      93   13  134    7
-13  3.02               
-134 1.26 4.24          
-7   3.11 0.49 4.29     
-76  1.00 3.73 0.79 3.79
+      24  131   25   10
+131 5.18               
+25  0.48 5.26          
+10  0.53 5.54 0.52     
+40  0.37 5.45 0.50 0.37
 ```
 
 - distance de corrélation : $d = 1-r$
@@ -344,11 +344,11 @@ print(as.dist(1 - cor.mat.iris), digits = 2)
 ```
 
 ```
-         93      13     134       7
-13  0.18747                        
-134 0.01401 0.28836                
-7   0.25585 0.00731 0.36487        
-76  0.00072 0.16876 0.02102 0.23537
+         24     131      25      10
+131 0.35834                        
+25  0.00872 0.34746                
+10  0.00057 0.34840 0.00498        
+40  0.00116 0.38563 0.00625 0.00116
 ```
 
 # Avec R (3) : distance entre variables décrivant le nuage de points 
@@ -361,9 +361,9 @@ print(as.dist(1 - cor.mat.iris), digits = 2)
 
 ```
              Sepal.Length Sepal.Width Petal.Length
-Sepal.Width        1.5833                         
-Petal.Length       0.0452      1.6808             
-Petal.Width        0.0434      1.6205       0.0099
+Sepal.Width         1.862                         
+Petal.Length        0.016       1.854             
+Petal.Width         0.013       1.833        0.018
 ```
 
 # Distances entre groupes (1)
@@ -779,23 +779,23 @@ iris.scale.kmeans5
 ```
 
 ```
-K-means clustering with 5 clusters of sizes 13, 43, 49, 23, 22
+K-means clustering with 5 clusters of sizes 53, 7, 47, 17, 26
 
 Cluster means:
   Sepal.Length Sepal.Width Petal.Length Petal.Width
-1    1.1460128   0.7155805   1.14803003  1.43390232
-2    0.2818747  -0.3929802   0.52308178  0.48293143
-3   -0.9987207   0.9032290  -1.29875725 -1.25214931
-4    1.3548242  -0.2312902   1.10256034  1.00478380
-5   -0.4201099  -1.4246794   0.03924137 -0.05279511
+1  -0.05005221 -0.88042696    0.3465767   0.2805873
+2  -0.38011687  2.26106915   -1.2952890  -1.1986013
+3   1.13217737  0.08812645    0.9928284   1.0141287
+4  -1.39493454 -0.05056417   -1.3357516  -1.3187694
+5  -0.93018708  1.05972279   -1.2791040  -1.2202264
 
 Clustering vector:
-  [1] 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 5 3 3 3 3 3 3 3 3 4 2 4 5 2 2 2 5 2 5 5 2 5 2 2 2 2 5 5 5 2 2 2 2 2 2 2 4 2 5 5 5 5 2 2 2 2 5 2 5 5 2 5 5 5 2 2 2 5 2 1 2 4 2 4 4 5 4 4 1 1 2 4 2 2 1 4 1 4 5 1 2 4 2 1 4 2 2 4 4 4 1 4 2 2 4 1 4 2 4 1 4 2 1 1 4 2
-[148] 4 1 2
+  [1] 5 4 4 4 5 2 5 5 4 4 5 5 4 4 2 2 2 5 2 5 5 5 5 5 5 4 5 5 5 4 4 5 2 2 4 4 5 5 4 5 5 4 4 5 5 4 5 4 5 5 3 3 3 1 1 1 3 1 1 1 1 1 1 1 1 3 1 1 1 1 3 1 1 1 1 3 3 3 1 1 1 1 1 1 1 3 3 1 1 1 1 1 1 1 1 1 1 1 1 1 3 1 3 3 3 3 1 3 3 3 3 3 3 1 1 3 3 3 3 1 3 1 3 1 3 3 1 3 3 3 3 3 3 1 1 3 3 3 1 3 3 3 1 3 3 3 1
+[148] 3 3 1
 
 Within cluster sum of squares by cluster:
-[1]  9.53827 23.53462 40.12172 14.72724 17.04641
- (between_SS / total_SS =  82.4 %)
+[1] 44.087545  1.974750 47.450194  5.163861  5.726442
+ (between_SS / total_SS =  82.5 %)
 
 Available components:
 
@@ -850,29 +850,29 @@ plot(iris.scale.hclust.ward, hang = -1, cex = 0.5)
 <table>
 <tbody>
   <tr>
-   <td style="text-align:center;"> 0 </td>
    <td style="text-align:center;"> 29 </td>
    <td style="text-align:center;"> 0 </td>
-  </tr>
-  <tr>
-   <td style="text-align:center;"> 15 </td>
-   <td style="text-align:center;"> 5 </td>
    <td style="text-align:center;"> 0 </td>
   </tr>
   <tr>
-   <td style="text-align:center;"> 8 </td>
+   <td style="text-align:center;"> 20 </td>
    <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 22 </td>
+   <td style="text-align:center;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 29 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 45 </td>
+   <td style="text-align:center;"> 21 </td>
+   <td style="text-align:center;"> 24 </td>
   </tr>
   <tr>
-   <td style="text-align:center;"> 0 </td>
    <td style="text-align:center;"> 0 </td>
    <td style="text-align:center;"> 26 </td>
+   <td style="text-align:center;"> 0 </td>
   </tr>
 </tbody>
 </table>
@@ -1036,7 +1036,7 @@ clues::adjustedRand(cluster.hclust5, cluster.kmeans3)
 
 ```
      Rand        HA        MA        FM   Jaccard 
-0.7093512 0.3871748 0.3944956 0.6061440 0.3921018 
+0.7848770 0.4637776 0.4730527 0.6167001 0.4299265 
 ```
 
 

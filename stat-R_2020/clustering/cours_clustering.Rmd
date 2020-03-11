@@ -4,20 +4,18 @@ subtitle: "Hierarchical clustering et Kmeans"
 author: "Anne Badel, Frédéric Guyon & Jacques van Helden"
 date: "`r Sys.Date()`"
 output:
-  slidy_presentation:
-    highlight: default
-    incremental: no
-    smart: no
-    slide_level: 1
-    self_contained: no
+  beamer_presentation:
+    theme: Hannover #Montpellier
+    colortheme: beaver
+    fonttheme: professionalfonts #structurebold
+    highlight: pygments #default
     fig_caption: no
-    fig_height: 5
+    fig_height: 4
     fig_width: 5
-    keep_md: yes
-    smaller: yes
-    theme: cerulean
+    incremental: no
+    keep_tex: no
+    slide_level: 1
     toc: yes
-    widescreen: yes
   revealjs::revealjs_presentation:
     theme: night
     transition: none
@@ -40,18 +38,20 @@ output:
     toc: yes
     toc_depth: 3
     toc_float: yes
-  beamer_presentation:
-    theme: Hannover #Montpellier
-    colortheme: beaver
-    fonttheme: professionalfonts #structurebold
-    highlight: pygments #default
-    fig_caption: no
-    fig_height: 4
-    fig_width: 5
+  slidy_presentation:
+    highlight: default
     incremental: no
-    keep_tex: no
+    smart: no
     slide_level: 1
+    self_contained: no
+    fig_caption: no
+    fig_height: 5
+    fig_width: 5
+    keep_md: yes
+    smaller: yes
+    theme: cerulean
     toc: yes
+    widescreen: yes
 font-import: http://fonts.googleapis.com/css?family=Risque
 font-family: Garamond
 transition: linear
@@ -212,7 +212,7 @@ par(mfrow = c(1,1))
 
 ```{r echo = FALSE, out.width = "60%"}
 plot(mes.iris[,"Sepal.Length"], mes.iris[,"Petal.Length"],
-     xlab = "longueur des sépals", ylab = "longueur des pétales")
+     xlab = "longueur des sépales", ylab = "longueur des pétales")
 ```
 
 # Il faut tenir compte de toutes les dimensions
@@ -490,14 +490,16 @@ par(mfrow = c(1,1))
 # standardisation par écart-type ou intervalle interquartile
 
 ```{r normalisation.par.IQR, echo = FALSE, out.width="70%", fig.width=8, fig.height=6}
-mes.iris.reduc <- scale(mes.iris, center = FALSE, scale = TRUE)
+iris.sd <- apply(mes.iris, 2, sd)
+mat.iris.sd <- matrix(rep(iris.sd, each = nrow(mes.iris)), ncol = 4)
+mes.iris.scaled.sd <- mes.iris / mat.iris.sd
 iris.iqr <- apply(mes.iris, 2, IQR)
 mat.iris.iqr <- matrix(rep(iris.iqr, each = nrow(mes.iris)), ncol = 4)
 mes.iris.scaled.iqr <- mes.iris / mat.iris.iqr
 par(mfrow = c(1,3))
 par(mar = c(7, 4.1, 4.1, 1.1)) # adapt margin sizes for the labels
 boxplot(mes.iris, main = "raw data", las = 2)
-boxplot(mes.iris.reduc, main = "scaled, standard deviation", las = 2)
+boxplot(mes.iris.scaled.sd, main = "scaled, standard deviation", las = 2)
 boxplot(mes.iris.scaled.iqr, main = "scaled, IQR", las = 2)
 par(mar = c(5.1, 4.1, 4.1, 2.1)) # Restore original margin sizes
 par(mfrow = c(1,1))
