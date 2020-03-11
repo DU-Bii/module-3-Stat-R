@@ -299,25 +299,25 @@ $$d(x,y)=\sum_i \frac{x_i-y_i}{x_i+y_i}$$
 <table>
 <tbody>
   <tr>
-   <td style="text-align:right;"> 2.41 </td>
-   <td style="text-align:right;"> 4.06 </td>
-   <td style="text-align:right;"> 4.73 </td>
-   <td style="text-align:right;"> 1.97 </td>
-   <td style="text-align:right;"> 3.27 </td>
+   <td style="text-align:right;"> 2.87 </td>
+   <td style="text-align:right;"> 2.89 </td>
+   <td style="text-align:right;"> 1.31 </td>
+   <td style="text-align:right;"> 3.72 </td>
+   <td style="text-align:right;"> 3.17 </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 3.77 </td>
-   <td style="text-align:right;"> 3.37 </td>
-   <td style="text-align:right;"> 3.64 </td>
-   <td style="text-align:right;"> 3.66 </td>
-   <td style="text-align:right;"> 2.79 </td>
+   <td style="text-align:right;"> 3.49 </td>
+   <td style="text-align:right;"> 2.56 </td>
+   <td style="text-align:right;"> 3.04 </td>
+   <td style="text-align:right;"> 3.72 </td>
+   <td style="text-align:right;"> 2.87 </td>
   </tr>
 </tbody>
 </table>
 
-distance euclidienne : 3.52
+distance euclidienne : 2.93
 
-distance de manhattan = 9.54
+distance de manhattan = 7.51
 
 # Avec R (2) : distance entre individus d'un nuage de points 
 
@@ -329,11 +329,11 @@ print(dist(mat.iris), digits = 2)
 ```
 
 ```
-      62   98  140   59
-98  0.39               
-140 1.68 1.54          
-59  0.84 0.50 1.19     
-42  3.51 3.64 5.14 4.08
+      93   13  134    7
+13  3.02               
+134 1.26 4.24          
+7   3.11 0.49 4.29     
+76  1.00 3.73 0.79 3.79
 ```
 
 - distance de corrélation : $d = 1-r$
@@ -344,11 +344,11 @@ print(as.dist(1 - cor.mat.iris), digits = 2)
 ```
 
 ```
-         62      98     140      59
-98  0.00013                        
-140 0.01684 0.01443                
-59  0.00117 0.00056 0.00938        
-42  0.13333 0.13734 0.22628 0.15178
+         93      13     134       7
+13  0.18747                        
+134 0.01401 0.28836                
+7   0.25585 0.00731 0.36487        
+76  0.00072 0.16876 0.02102 0.23537
 ```
 
 # Avec R (3) : distance entre variables décrivant le nuage de points 
@@ -361,9 +361,9 @@ print(as.dist(1 - cor.mat.iris), digits = 2)
 
 ```
              Sepal.Length Sepal.Width Petal.Length
-Sepal.Width         0.077                         
-Petal.Length        0.016       0.023             
-Petal.Width         0.089       0.039        0.045
+Sepal.Width        1.5833                         
+Petal.Length       0.0452      1.6808             
+Petal.Width        0.0434      1.6205       0.0099
 ```
 
 # Distances entre groupes (1)
@@ -539,63 +539,19 @@ mes.iris.scaled <- scale(mes.iris, center = TRUE, scale = TRUE)
 
 # On peut visuellement regarder l'effet de la standardisation :
 
-- par une boîte à moustaches (boxplot)
+- par des boîtes à moustaches (boxplot)
 
-# standardisation par la moyenne et la variance
-
-
-```r
-par(mfrow = c(1,2))
-par(mar = c(7, 4.1, 4.1, 1.1)) # adapt margin sizes for the labels
-boxplot(mes.iris, main = "Raw data", las = 2)
-boxplot(mes.iris.scaled, main = "scaled", las = 2)
-```
-
-<img src="figures/irisDeFisher_boxplots_raw_vs_norm-1.png" width="70%" style="display: block; margin: auto;" />
-
-```r
-par(mar = c(5.1, 4.1, 4.1, 2.1)) # Restore original margin sizes
-par(mfrow = c(1,1))
-```
-
-# standardisation par la médiane
-
-
-```r
-iris.mediane <- apply(mes.iris, 2, median)
-mes.iris.scaled.mediane <- sweep(mes.iris, 2, iris.mediane)
-par(mfrow = c(1,2))
-par(mar = c(7, 4.1, 4.1, 1.1)) # adapt margin sizes for the labels
-boxplot(mes.iris.centre, main = "scaled, moyenne", las = 2)
-boxplot(mes.iris.scaled.mediane, main = "scaled, médiane", las = 2)
-```
+# standardisation par la moyenne ou la médiane
 
 <img src="figures/irisDeFisher_normalisation.par.la.mediane-1.png" width="70%" style="display: block; margin: auto;" />
 
-```r
-par(mar = c(5.1, 4.1, 4.1, 2.1)) # Restore original margin sizes
-par(mfrow = c(1,1))
-```
-
-# par l'intervalle inter-quartile (IQR)
-
-
-```r
-iris.iqr <- apply(mes.iris, 2, IQR)
-mat.iris.iqr <- matrix(rep(iris.iqr, each = nrow(mes.iris)), ncol = 4)
-mes.iris.scaled.iqr <- mes.iris / mat.iris.iqr
-par(mfrow = c(1,2))
-par(mar = c(7, 4.1, 4.1, 1.1)) # adapt margin sizes for the labels
-boxplot(mes.iris, main = "raw data", las = 2)
-boxplot(mes.iris.scaled.iqr, main = "scaled, IQR", las = 2)
-```
+# standardisation par écart-type ou intervalle interquartile
 
 <img src="figures/irisDeFisher_normalisation.par.IQR-1.png" width="70%" style="display: block; margin: auto;" />
 
-```r
-par(mar = c(5.1, 4.1, 4.1, 2.1)) # Restore original margin sizes
-par(mfrow = c(1,1))
-```
+# standardisation
+
+<img src="figures/irisDeFisher_boxplots_raw_vs_norm-1.png" width="70%" style="display: block; margin: auto;" />
 
 # La matrice de distance euclidienne
 
@@ -823,23 +779,23 @@ iris.scale.kmeans5
 ```
 
 ```
-K-means clustering with 5 clusters of sizes 29, 28, 48, 23, 22
+K-means clustering with 5 clusters of sizes 13, 43, 49, 23, 22
 
 Cluster means:
   Sepal.Length Sepal.Width Petal.Length Petal.Width
-1    1.3926646   0.2323817    1.1567451  1.21327591
-2   -0.7467198   1.4252951   -1.2932659 -1.21734309
-3    0.3804044  -0.3896455    0.6067908  0.56390985
-4   -0.3516137  -1.3285553    0.1026061  0.01228268
-5   -1.3477916   0.1187465   -1.3100027 -1.29316224
+1    1.1460128   0.7155805   1.14803003  1.43390232
+2    0.2818747  -0.3929802   0.52308178  0.48293143
+3   -0.9987207   0.9032290  -1.29875725 -1.25214931
+4    1.3548242  -0.2312902   1.10256034  1.00478380
+5   -0.4201099  -1.4246794   0.03924137 -0.05279511
 
 Clustering vector:
-  [1] 2 5 5 5 2 2 5 2 5 5 2 5 5 5 2 2 2 2 2 2 2 2 2 5 5 5 2 2 2 5 5 2 2 2 5 5 2 2 5 2 2 5 5 2 2 5 2 5 2 5 1 3 1 4 3 3 3 4 3 4 4 3 4 3 4 3 3 4 4 4 3 3 3 3 3 3 3 3 3 4 4 4 4 3 3 3 3 4 3 4 4 3 4 4 4 3 3 3 4 4 1 3 1 3 1 1 4 1 3 1 1 3 1 3 3 1 3 1 1 4 1 3 1 3 1 1 3 3 3 1 1 1 3 3 3 1 1 3 3 1 1 1 3 1 1 1 3
-[148] 3 1 3
+  [1] 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 5 3 3 3 3 3 3 3 3 4 2 4 5 2 2 2 5 2 5 5 2 5 2 2 2 2 5 5 5 2 2 2 2 2 2 2 4 2 5 5 5 5 2 2 2 2 5 2 5 5 2 5 5 5 2 2 2 5 2 1 2 4 2 4 4 5 4 4 1 1 2 4 2 2 1 4 1 4 5 1 2 4 2 1 4 2 2 4 4 4 1 4 2 2 4 1 4 2 4 1 4 2 1 1 4 2
+[148] 4 1 2
 
 Within cluster sum of squares by cluster:
-[1] 26.891293 13.761588 27.830133 13.686590  8.032603
- (between_SS / total_SS =  84.9 %)
+[1]  9.53827 23.53462 40.12172 14.72724 17.04641
+ (between_SS / total_SS =  82.4 %)
 
 Available components:
 
@@ -899,19 +855,19 @@ plot(iris.scale.hclust.ward, hang = -1, cex = 0.5)
    <td style="text-align:center;"> 0 </td>
   </tr>
   <tr>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 20 </td>
-   <td style="text-align:center;"> 0 </td>
-  </tr>
-  <tr>
-   <td style="text-align:center;"> 29 </td>
-   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 15 </td>
+   <td style="text-align:center;"> 5 </td>
    <td style="text-align:center;"> 0 </td>
   </tr>
   <tr>
-   <td style="text-align:center;"> 24 </td>
+   <td style="text-align:center;"> 8 </td>
    <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 21 </td>
+   <td style="text-align:center;"> 22 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 45 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 0 </td>
@@ -1080,7 +1036,7 @@ clues::adjustedRand(cluster.hclust5, cluster.kmeans3)
 
 ```
      Rand        HA        MA        FM   Jaccard 
-0.7848770 0.4637776 0.4730527 0.6167001 0.4299265 
+0.7093512 0.3871748 0.3944956 0.6061440 0.3921018 
 ```
 
 
