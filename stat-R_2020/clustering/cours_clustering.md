@@ -9,7 +9,7 @@ output:
     incremental: no
     smart: no
     slide_level: 1
-    self_contained: yes
+    self_contained: no
     fig_caption: no
     fig_height: 5
     fig_width: 5
@@ -288,35 +288,7 @@ $$d(x,y)=\sum_i \frac{x_i-y_i}{x_i+y_i}$$
 - distance binaire ou distance de Jaccard ou Tanimoto: proportion de propriétés communes
 
 
-# Autres distances non géométriques (pour information)
 
-Utilisées en bio-informatique:
-
-- Distance de **Hamming**: nombre de remplacements de caractères (substitutions)
-
-- Distance de **Levenshtein**: nombre de substitutions, insertions, deletions entre deux chaînes de caractères
-
-$$d("BONJOUR", "BONSOIR")=2$$
-
-- Distance d'**alignements**: distances de Levenshtein avec poids (par ex. matrices BLOSSUM)
-
-- Distances d'**arbre** (Neighbor Joining)
-
-- Distances **ultra-métriques** (phylogénie UPGMA)
-
-
-# Distances plus classiques en génomique
-
-Il existe d'autres mesures de distances, plus ou moins adaptées à chaque problématique :
-
-- **Jaccard** (comparaison d'ensembles): $J_D = \frac{A \cap B}{A \cup B}$
-
-- Distance du $\chi^2$ (comparaison de tableau d'effectifs)
-
-Ne sont pas des distances, mais indices de dissimilarité :
-
-- **Bray-Curtis** (en écologie, comparaison d'abondance d'espèces)
-- **Jensen-Shannon** (comparaison de distributions)
   
 **Note** : lors du TP, sur les données d'expression RNA-seq, nous utiliserons le **coefficient de corrélation de Spearman** et la distance dérivée, $d_c = 1-r$
 
@@ -327,25 +299,25 @@ Ne sont pas des distances, mais indices de dissimilarité :
 <table>
 <tbody>
   <tr>
-   <td style="text-align:right;"> 1.04 </td>
-   <td style="text-align:right;"> 2.34 </td>
-   <td style="text-align:right;"> 1.59 </td>
-   <td style="text-align:right;"> 4.12 </td>
-   <td style="text-align:right;"> 3.69 </td>
+   <td style="text-align:right;"> 2.78 </td>
+   <td style="text-align:right;"> 4.88 </td>
+   <td style="text-align:right;"> 4.48 </td>
+   <td style="text-align:right;"> 2.68 </td>
+   <td style="text-align:right;"> 2.85 </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 2.13 </td>
-   <td style="text-align:right;"> 2.68 </td>
-   <td style="text-align:right;"> 3.18 </td>
-   <td style="text-align:right;"> 2.84 </td>
-   <td style="text-align:right;"> 3.68 </td>
+   <td style="text-align:right;"> 3.61 </td>
+   <td style="text-align:right;"> 3.74 </td>
+   <td style="text-align:right;"> 2.05 </td>
+   <td style="text-align:right;"> 3.96 </td>
+   <td style="text-align:right;"> 3.43 </td>
   </tr>
 </tbody>
 </table>
 
-distance euclidienne : 4.98
+distance euclidienne : 3.39
 
-distance de manhattan = 13.48
+distance de manhattan = 8.53
 
 # Avec R (2) : distance entre individus d'un nuage de points 
 
@@ -357,11 +329,11 @@ print(dist(mat.iris), digits = 2)
 ```
 
 ```
-      5   33   43   72
-33 0.56               
-43 0.73 1.22          
-72 3.13 3.19 3.40     
-49 0.33 0.42 1.05 2.98
+      20  149   82   85
+149 4.54               
+82  2.73 2.46          
+85  3.34 1.50 1.12     
+141 4.93 0.62 2.74 1.93
 ```
 
 - distance de corrélation : $d = 1-r$
@@ -372,11 +344,11 @@ print(as.dist(1 - cor.mat.iris), digits = 2)
 ```
 
 ```
-          5       33       43       72
-33 0.002904                           
-43 0.000078 0.002457                  
-72 0.219978 0.252287 0.217709         
-49 0.000318 0.004885 0.000415 0.205493
+        20    149     82     85
+149 0.3961                     
+82  0.2542 0.0243              
+85  0.3183 0.0070 0.0167       
+141 0.4378 0.0069 0.0299 0.0251
 ```
 
 # Avec R (3) : distance entre variables décrivant le nuage de points 
@@ -389,9 +361,9 @@ print(as.dist(1 - cor.mat.iris), digits = 2)
 
 ```
              Sepal.Length Sepal.Width Petal.Length
-Sepal.Width        1.3204                         
-Petal.Length       0.1408      1.7215             
-Petal.Width        0.1996      1.8069       0.0095
+Sepal.Width         1.086                         
+Petal.Length        0.157       1.349             
+Petal.Width         0.085       1.136        0.029
 ```
 
 # Distances entre groupes (1)
@@ -625,7 +597,7 @@ par(mar = c(5.1, 4.1, 4.1, 2.1)) # Restore original margin sizes
 par(mfrow = c(1,1))
 ```
 
-# La matrice de distances
+# La matrice de distance euclidienne
 
 Nous utilisons ici la distance euclidienne sur données **normalisées**. 
 
@@ -751,22 +723,28 @@ plot(iris.scale.hclust, hang = -1, cex = 0.5, main = "Normalisées")
 
 
 ```r
-pheatmap::pheatmap(mes.iris)
+pheatmap::pheatmap(mes.iris, clustering.method = "ward.D2")
 ```
 
 <img src="figures/irisDeFisher_unnamed-chunk-25-1.png" width="60%" style="display: block; margin: auto;" />
 
 ```r
-pheatmap::pheatmap(mes.iris, scale = "column")
+pheatmap::pheatmap(mes.iris.scaled, clustering.method = "ward.D2")
 ```
 
 <img src="figures/irisDeFisher_unnamed-chunk-25-2.png" width="60%" style="display: block; margin: auto;" />
 
 ```r
-pheatmap::pheatmap(mes.iris, scale = "row")
+pheatmap::pheatmap(mes.iris, scale = "column", clustering.method = "ward.D2")
 ```
 
 <img src="figures/irisDeFisher_unnamed-chunk-25-3.png" width="60%" style="display: block; margin: auto;" />
+
+```r
+pheatmap::pheatmap(mes.iris, scale = "row", clustering.method = "ward.D2")
+```
+
+<img src="figures/irisDeFisher_unnamed-chunk-25-4.png" width="60%" style="display: block; margin: auto;" />
 
 # Les k-means
 
@@ -840,23 +818,23 @@ iris.scale.kmeans5
 ```
 
 ```
-K-means clustering with 5 clusters of sizes 53, 17, 47, 26, 7
+K-means clustering with 5 clusters of sizes 50, 21, 25, 29, 25
 
 Cluster means:
-  Sepal.Length Sepal.Width Petal.Length Petal.Width
-1  -0.05005221 -0.88042696    0.3465767   0.2805873
-2  -1.39493454 -0.05056417   -1.3357516  -1.3187694
-3   1.13217737  0.08812645    0.9928284   1.0141287
-4  -0.93018708  1.05972279   -1.2791040  -1.2202264
-5  -0.38011687  2.26106915   -1.2952890  -1.1986013
+  Sepal.Length Sepal.Width Petal.Length   Petal.Width
+1    0.3558492  -0.3930869    0.5846038  0.5466361525
+2   -0.3628650  -1.4097814    0.1074147  0.0008746178
+3   -0.7189442   1.5019897   -1.2972312 -1.2165934210
+4    1.3926646   0.2323817    1.1567451  1.2132759051
+5   -1.3034386   0.1988377   -1.3040289 -1.2848136129
 
 Clustering vector:
-  [1] 4 2 2 2 4 5 4 4 2 2 4 4 2 2 5 5 5 4 5 4 4 4 4 4 4 2 4 4 4 2 2 4 5 5 2 2 4 4 2 4 4 2 2 4 4 2 4 2 4 4 3 3 3 1 1 1 3 1 1 1 1 1 1 1 1 3 1 1 1 1 3 1 1 1 1 3 3 3 1 1 1 1 1 1 1 3 3 1 1 1 1 1 1 1 1 1 1 1 1 1 3 1 3 3 3 3 1 3 3 3 3 3 3 1 1 3 3 3 3 1 3 1 3 1 3 3 1 3 3 3 3 3 3 1 1 3 3 3 1 3 3 3 1 3 3 3 1
-[148] 3 3 1
+  [1] 3 5 5 5 3 3 5 5 5 5 3 5 5 5 3 3 3 3 3 3 3 3 3 5 5 5 5 3 3 5 5 3 3 3 5 5 3 3 5 5 3 5 5 3 3 5 3 5 3 5 4 1 4 2 1 1 1 2 1 2 2 1 2 1 1 1 1 2 2 2 1 1 1 1 1 1 1 1 1 2 2 2 2 1 1 1 1 2 1 2 2 1 2 2 2 1 1 1 2 1 4 1 4 1 4 4 2 4 1 4 4 1 4 1 1 4 1 4 4 2 4 1 4 1 4 4 1 1 1 4 4 4 1 1 1 4 4 1 1 4 4 4 1 4 4 4 1
+[148] 1 4 1
 
 Within cluster sum of squares by cluster:
-[1] 44.087545  5.163861 47.450194  5.726442  1.974750
- (between_SS / total_SS =  82.5 %)
+[1] 29.590390 11.951942 12.147537 26.891293  9.646348
+ (between_SS / total_SS =  84.9 %)
 
 Available components:
 
@@ -911,29 +889,29 @@ plot(iris.scale.hclust.ward, hang = -1, cex = 0.5)
 <table>
 <tbody>
   <tr>
-   <td style="text-align:center;"> 29 </td>
    <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 16 </td>
+   <td style="text-align:center;"> 13 </td>
   </tr>
   <tr>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0 </td>
    <td style="text-align:center;"> 20 </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0 </td>
   </tr>
   <tr>
-   <td style="text-align:center;"> 1 </td>
    <td style="text-align:center;"> 29 </td>
    <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 1 </td>
   </tr>
   <tr>
+   <td style="text-align:center;"> 45 </td>
    <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 24 </td>
-   <td style="text-align:center;"> 21 </td>
+   <td style="text-align:center;"> 0 </td>
   </tr>
   <tr>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0 </td>
    <td style="text-align:center;"> 26 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0 </td>
   </tr>
 </tbody>
 </table>
@@ -962,9 +940,40 @@ plot(mes.iris, col = species.colors[iris$Species], cex = 0.7)
 ```
 
 <img src="figures/irisDeFisher_plot_4variables_variety-1.png" width="60%" style="display: block; margin: auto;" />
-***
+
 # Supplementary materials
 
+POUR ALLER PLUS LOIN
+
+# Autres distances non géométriques (pour information)
+
+Utilisées en bio-informatique:
+
+- Distance de **Hamming**: nombre de remplacements de caractères (substitutions)
+
+- Distance de **Levenshtein**: nombre de substitutions, insertions, deletions entre deux chaînes de caractères
+
+$$d("BONJOUR", "BONSOIR")=2$$
+
+- Distance d'**alignements**: distances de Levenshtein avec poids (par ex. matrices BLOSSUM)
+
+- Distances d'**arbre** (Neighbor Joining)
+
+- Distances **ultra-métriques** (phylogénie UPGMA)
+
+
+# Distances plus classiques en génomique
+
+Il existe d'autres mesures de distances, plus ou moins adaptées à chaque problématique :
+
+- **Jaccard** (comparaison d'ensembles): $J_D = \frac{A \cap B}{A \cup B}$
+
+- Distance du $\chi^2$ (comparaison de tableau d'effectifs)
+
+Ne sont pas des distances, mais indices de dissimilarité :
+
+- **Bray-Curtis** (en écologie, comparaison d'abondance d'espèces)
+- **Jensen-Shannon** (comparaison de distributions)
 # Distance avec R : indice de Jaccard
 
 - ou pour des distances particulières, par exemple l'indice de Jaccard :
@@ -1066,7 +1075,7 @@ clues::adjustedRand(cluster.hclust5, cluster.kmeans3)
 
 ```
      Rand        HA        MA        FM   Jaccard 
-0.7848770 0.4637776 0.4730527 0.6167001 0.4299265 
+0.6636242 0.3302731 0.3371700 0.5802562 0.3594070 
 ```
 
 

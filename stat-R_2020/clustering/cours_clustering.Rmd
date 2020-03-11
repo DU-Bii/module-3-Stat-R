@@ -9,7 +9,7 @@ output:
     incremental: no
     smart: no
     slide_level: 1
-    self_contained: yes
+    self_contained: no
     fig_caption: no
     fig_height: 5
     fig_width: 5
@@ -328,35 +328,7 @@ $$d(x,y)=\sum_i \frac{x_i-y_i}{x_i+y_i}$$
 - distance binaire ou distance de Jaccard ou Tanimoto: proportion de propriétés communes
 
 
-# Autres distances non géométriques (pour information)
 
-Utilisées en bio-informatique:
-
-- Distance de **Hamming**: nombre de remplacements de caractères (substitutions)
-
-- Distance de **Levenshtein**: nombre de substitutions, insertions, deletions entre deux chaînes de caractères
-
-$$d("BONJOUR", "BONSOIR")=2$$
-
-- Distance d'**alignements**: distances de Levenshtein avec poids (par ex. matrices BLOSSUM)
-
-- Distances d'**arbre** (Neighbor Joining)
-
-- Distances **ultra-métriques** (phylogénie UPGMA)
-
-
-# Distances plus classiques en génomique
-
-Il existe d'autres mesures de distances, plus ou moins adaptées à chaque problématique :
-
-- **Jaccard** (comparaison d'ensembles): $J_D = \frac{A \cap B}{A \cup B}$
-
-- Distance du $\chi^2$ (comparaison de tableau d'effectifs)
-
-Ne sont pas des distances, mais indices de dissimilarité :
-
-- **Bray-Curtis** (en écologie, comparaison d'abondance d'espèces)
-- **Jensen-Shannon** (comparaison de distributions)
   
 **Note** : lors du TP, sur les données d'expression RNA-seq, nous utiliserons le **coefficient de corrélation de Spearman** et la distance dérivée, $d_c = 1-r$
 
@@ -539,7 +511,7 @@ par(mar = c(5.1, 4.1, 4.1, 2.1)) # Restore original margin sizes
 par(mfrow = c(1,1))
 ```
 
-# La matrice de distances
+# La matrice de distance euclidienne
 
 Nous utilisons ici la distance euclidienne sur données **normalisées**. 
 
@@ -872,9 +844,40 @@ knitr::kable(ma.table, align = "c", col.names = NULL)
 species.colors <- c(setosa = "#BB44DD", virginica = "#AA0044", versicolor = "#4400FF")
 plot(mes.iris, col = species.colors[iris$Species], cex = 0.7)
 ```
-***
+
 # Supplementary materials
 
+POUR ALLER PLUS LOIN
+
+# Autres distances non géométriques (pour information)
+
+Utilisées en bio-informatique:
+
+- Distance de **Hamming**: nombre de remplacements de caractères (substitutions)
+
+- Distance de **Levenshtein**: nombre de substitutions, insertions, deletions entre deux chaînes de caractères
+
+$$d("BONJOUR", "BONSOIR")=2$$
+
+- Distance d'**alignements**: distances de Levenshtein avec poids (par ex. matrices BLOSSUM)
+
+- Distances d'**arbre** (Neighbor Joining)
+
+- Distances **ultra-métriques** (phylogénie UPGMA)
+
+
+# Distances plus classiques en génomique
+
+Il existe d'autres mesures de distances, plus ou moins adaptées à chaque problématique :
+
+- **Jaccard** (comparaison d'ensembles): $J_D = \frac{A \cap B}{A \cup B}$
+
+- Distance du $\chi^2$ (comparaison de tableau d'effectifs)
+
+Ne sont pas des distances, mais indices de dissimilarité :
+
+- **Bray-Curtis** (en écologie, comparaison d'abondance d'espèces)
+- **Jensen-Shannon** (comparaison de distributions)
 # Distance avec R : indice de Jaccard
 
 - ou pour des distances particulières, par exemple l'indice de Jaccard :
