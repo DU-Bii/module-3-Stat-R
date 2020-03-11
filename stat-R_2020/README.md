@@ -93,7 +93,7 @@ Link to the prerequisites:
 | Shiny app | Shiny app to explore sampling fluctuation | <http://shiny.calpoly.sh/Sampling_Distribution/> |
 | Practical | Descriptive statistics | [[html](practicals/descriptive-statistics/descriptive-statistics.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/descriptive-statistics/descriptive-statistics.Rmd)] |
 | R package | Package to visualise effect sizes | <https://github.com/ACCLAB/dabestr> |
-| Document | Memo on correlation and regression | [[pdf]](documents/CovCorReg.pdf)] |
+| Document | Memo on correlation and regression | [[pdf](documents/CovCorReg.pdf)] |
 | Practical | A first data analysis with R | [[html](practicals/first-data-analysis/A_first_data_analysis.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/first-data-analysis/A_first_data_analysis.Rmd)] |
 
 
@@ -116,7 +116,7 @@ Link to the prerequisites:
 | Practical part I | simulated data | 30' | [[mean-comparison-test_random-numbers.html](practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.html)] [[mean-comparison-test_random-numbers.pdf](practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.pdf)]  [[mean-comparison-test_random-numbers.Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.Rmd)] |
 | Debrief session 1 & 2 - part II| basic statistics | 20' | [[pdf](slides/DUBii_R_Session_2.pdf)] |
 | *Coffee break* | 15' | |
-| Practical part II | industrialization of hypotheses tests | 45' | same as above|
+| Practical part II | industrialization of hypotheses tests | 45' | [[randnum.R](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/mean-comparison-test_random-numbers/R/randnum.R)] |
 | Statistics on omics data - part I | multiple testing issue | 20' | [[pdf](slides/DUBii_R_Session_3.pdf)] |
 | Practical part III | correction for multiple testing | 15' |   same as above|
 | Statistics on omics data - part II | parameters estimation issue | 15' | [[pdf](slides/DUBii_R_Session_3.pdf)] |
