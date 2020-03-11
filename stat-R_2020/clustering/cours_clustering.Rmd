@@ -513,19 +513,22 @@ par(mfrow = c(1,1))
 
 # La matrice de distance euclidienne
 
-Nous utilisons ici la distance euclidienne sur données **normalisées**. 
-
 ```{r echo = FALSE}
 iris.euc <- dist(mes.iris)
 iris.scale.euc <- dist(mes.iris.scaled)
+mes.iris.cor <- cor(t(mes.iris))
+mes.iris.cor.dist <- 1 - mes.iris.cor
+mes.couleur <- colorspace::diverge_hsv(30)
 ```
 
 ```{r, out.width="70%", fig.width=6, fig.height=6, echo = FALSE}
-par(mfrow = c(1,1))
-# image(t(as.matrix(iris.euc)), main = "Données brutes", las = 1)
-image(t(as.matrix(iris.scale.euc)), main = "Données normalisées", las = 1,
-      xlab = "", ylab = "")
-par(mfrow = c(1,1))
+levelplot(as.matrix(iris.scale.euc))
+```
+
+# La matrice de distance de corrélation
+
+```{r, out.width="70%", fig.width=6, fig.height=6, echo = FALSE}
+levelplot(mes.iris.cor.dist)
 ```
 
 # La classification hiérarchique : principe
@@ -538,6 +541,9 @@ par(mfrow = c(1,1))
 # Notion importante, cf distances
 
 - ressemblance entre individus = distance
+
+  - euclidienne
+  - corrélation
 - ressemblance entre groupes d'invidus = critère d'aggrégation
 
   - lien simple

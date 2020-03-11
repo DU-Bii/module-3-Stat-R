@@ -299,25 +299,25 @@ $$d(x,y)=\sum_i \frac{x_i-y_i}{x_i+y_i}$$
 <table>
 <tbody>
   <tr>
-   <td style="text-align:right;"> 2.78 </td>
-   <td style="text-align:right;"> 4.88 </td>
-   <td style="text-align:right;"> 4.48 </td>
-   <td style="text-align:right;"> 2.68 </td>
-   <td style="text-align:right;"> 2.85 </td>
+   <td style="text-align:right;"> 2.41 </td>
+   <td style="text-align:right;"> 4.06 </td>
+   <td style="text-align:right;"> 4.73 </td>
+   <td style="text-align:right;"> 1.97 </td>
+   <td style="text-align:right;"> 3.27 </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 3.61 </td>
-   <td style="text-align:right;"> 3.74 </td>
-   <td style="text-align:right;"> 2.05 </td>
-   <td style="text-align:right;"> 3.96 </td>
-   <td style="text-align:right;"> 3.43 </td>
+   <td style="text-align:right;"> 3.77 </td>
+   <td style="text-align:right;"> 3.37 </td>
+   <td style="text-align:right;"> 3.64 </td>
+   <td style="text-align:right;"> 3.66 </td>
+   <td style="text-align:right;"> 2.79 </td>
   </tr>
 </tbody>
 </table>
 
-distance euclidienne : 3.39
+distance euclidienne : 3.52
 
-distance de manhattan = 8.53
+distance de manhattan = 9.54
 
 # Avec R (2) : distance entre individus d'un nuage de points 
 
@@ -329,11 +329,11 @@ print(dist(mat.iris), digits = 2)
 ```
 
 ```
-      20  149   82   85
-149 4.54               
-82  2.73 2.46          
-85  3.34 1.50 1.12     
-141 4.93 0.62 2.74 1.93
+      62   98  140   59
+98  0.39               
+140 1.68 1.54          
+59  0.84 0.50 1.19     
+42  3.51 3.64 5.14 4.08
 ```
 
 - distance de corrélation : $d = 1-r$
@@ -344,11 +344,11 @@ print(as.dist(1 - cor.mat.iris), digits = 2)
 ```
 
 ```
-        20    149     82     85
-149 0.3961                     
-82  0.2542 0.0243              
-85  0.3183 0.0070 0.0167       
-141 0.4378 0.0069 0.0299 0.0251
+         62      98     140      59
+98  0.00013                        
+140 0.01684 0.01443                
+59  0.00117 0.00056 0.00938        
+42  0.13333 0.13734 0.22628 0.15178
 ```
 
 # Avec R (3) : distance entre variables décrivant le nuage de points 
@@ -361,9 +361,9 @@ print(as.dist(1 - cor.mat.iris), digits = 2)
 
 ```
              Sepal.Length Sepal.Width Petal.Length
-Sepal.Width         1.086                         
-Petal.Length        0.157       1.349             
-Petal.Width         0.085       1.136        0.029
+Sepal.Width         0.077                         
+Petal.Length        0.016       0.023             
+Petal.Width         0.089       0.039        0.045
 ```
 
 # Distances entre groupes (1)
@@ -599,11 +599,13 @@ par(mfrow = c(1,1))
 
 # La matrice de distance euclidienne
 
-Nous utilisons ici la distance euclidienne sur données **normalisées**. 
-
 
 
 <img src="figures/irisDeFisher_unnamed-chunk-24-1.png" width="70%" style="display: block; margin: auto;" />
+
+# La matrice de distance de corrélation
+
+<img src="figures/irisDeFisher_unnamed-chunk-25-1.png" width="70%" style="display: block; margin: auto;" />
 
 # La classification hiérarchique : principe
 
@@ -615,6 +617,9 @@ Nous utilisons ici la distance euclidienne sur données **normalisées**.
 # Notion importante, cf distances
 
 - ressemblance entre individus = distance
+
+  - euclidienne
+  - corrélation
 - ressemblance entre groupes d'invidus = critère d'aggrégation
 
   - lien simple
@@ -726,25 +731,25 @@ plot(iris.scale.hclust, hang = -1, cex = 0.5, main = "Normalisées")
 pheatmap::pheatmap(mes.iris, clustering.method = "ward.D2")
 ```
 
-<img src="figures/irisDeFisher_unnamed-chunk-25-1.png" width="60%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_unnamed-chunk-26-1.png" width="60%" style="display: block; margin: auto;" />
 
 ```r
 pheatmap::pheatmap(mes.iris.scaled, clustering.method = "ward.D2")
 ```
 
-<img src="figures/irisDeFisher_unnamed-chunk-25-2.png" width="60%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_unnamed-chunk-26-2.png" width="60%" style="display: block; margin: auto;" />
 
 ```r
 pheatmap::pheatmap(mes.iris, scale = "column", clustering.method = "ward.D2")
 ```
 
-<img src="figures/irisDeFisher_unnamed-chunk-25-3.png" width="60%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_unnamed-chunk-26-3.png" width="60%" style="display: block; margin: auto;" />
 
 ```r
 pheatmap::pheatmap(mes.iris, scale = "row", clustering.method = "ward.D2")
 ```
 
-<img src="figures/irisDeFisher_unnamed-chunk-25-4.png" width="60%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_unnamed-chunk-26-4.png" width="60%" style="display: block; margin: auto;" />
 
 # Les k-means
 
@@ -818,22 +823,22 @@ iris.scale.kmeans5
 ```
 
 ```
-K-means clustering with 5 clusters of sizes 50, 21, 25, 29, 25
+K-means clustering with 5 clusters of sizes 29, 28, 48, 23, 22
 
 Cluster means:
-  Sepal.Length Sepal.Width Petal.Length   Petal.Width
-1    0.3558492  -0.3930869    0.5846038  0.5466361525
-2   -0.3628650  -1.4097814    0.1074147  0.0008746178
-3   -0.7189442   1.5019897   -1.2972312 -1.2165934210
-4    1.3926646   0.2323817    1.1567451  1.2132759051
-5   -1.3034386   0.1988377   -1.3040289 -1.2848136129
+  Sepal.Length Sepal.Width Petal.Length Petal.Width
+1    1.3926646   0.2323817    1.1567451  1.21327591
+2   -0.7467198   1.4252951   -1.2932659 -1.21734309
+3    0.3804044  -0.3896455    0.6067908  0.56390985
+4   -0.3516137  -1.3285553    0.1026061  0.01228268
+5   -1.3477916   0.1187465   -1.3100027 -1.29316224
 
 Clustering vector:
-  [1] 3 5 5 5 3 3 5 5 5 5 3 5 5 5 3 3 3 3 3 3 3 3 3 5 5 5 5 3 3 5 5 3 3 3 5 5 3 3 5 5 3 5 5 3 3 5 3 5 3 5 4 1 4 2 1 1 1 2 1 2 2 1 2 1 1 1 1 2 2 2 1 1 1 1 1 1 1 1 1 2 2 2 2 1 1 1 1 2 1 2 2 1 2 2 2 1 1 1 2 1 4 1 4 1 4 4 2 4 1 4 4 1 4 1 1 4 1 4 4 2 4 1 4 1 4 4 1 1 1 4 4 4 1 1 1 4 4 1 1 4 4 4 1 4 4 4 1
-[148] 1 4 1
+  [1] 2 5 5 5 2 2 5 2 5 5 2 5 5 5 2 2 2 2 2 2 2 2 2 5 5 5 2 2 2 5 5 2 2 2 5 5 2 2 5 2 2 5 5 2 2 5 2 5 2 5 1 3 1 4 3 3 3 4 3 4 4 3 4 3 4 3 3 4 4 4 3 3 3 3 3 3 3 3 3 4 4 4 4 3 3 3 3 4 3 4 4 3 4 4 4 3 3 3 4 4 1 3 1 3 1 1 4 1 3 1 1 3 1 3 3 1 3 1 1 4 1 3 1 3 1 1 3 3 3 1 1 1 3 3 3 1 1 3 3 1 1 1 3 1 1 1 3
+[148] 3 1 3
 
 Within cluster sum of squares by cluster:
-[1] 29.590390 11.951942 12.147537 26.891293  9.646348
+[1] 26.891293 13.761588 27.830133 13.686590  8.032603
  (between_SS / total_SS =  84.9 %)
 
 Available components:
@@ -880,7 +885,7 @@ plot(iris.scale.hclust.ward, hang = -1, cex = 0.5)
 
 # Comment déterminer le nombre de clusters ? avec les kmeans
 
-<img src="figures/irisDeFisher_unnamed-chunk-26-1.png" width="60%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_unnamed-chunk-27-1.png" width="60%" style="display: block; margin: auto;" />
 
 # Comparaison des résultats des deux clustering
 
@@ -890,28 +895,28 @@ plot(iris.scale.hclust.ward, hang = -1, cex = 0.5)
 <tbody>
   <tr>
    <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 16 </td>
-   <td style="text-align:center;"> 13 </td>
+   <td style="text-align:center;"> 29 </td>
+   <td style="text-align:center;"> 0 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0 </td>
    <td style="text-align:center;"> 20 </td>
+   <td style="text-align:center;"> 0 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 29 </td>
-   <td style="text-align:center;"> 0 </td>
    <td style="text-align:center;"> 1 </td>
-  </tr>
-  <tr>
-   <td style="text-align:center;"> 45 </td>
-   <td style="text-align:center;"> 0 </td>
    <td style="text-align:center;"> 0 </td>
   </tr>
   <tr>
+   <td style="text-align:center;"> 24 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 21 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0 </td>
    <td style="text-align:center;"> 26 </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0 </td>
   </tr>
 </tbody>
 </table>
@@ -1075,7 +1080,7 @@ clues::adjustedRand(cluster.hclust5, cluster.kmeans3)
 
 ```
      Rand        HA        MA        FM   Jaccard 
-0.6636242 0.3302731 0.3371700 0.5802562 0.3594070 
+0.7848770 0.4637776 0.4730527 0.6167001 0.4299265 
 ```
 
 
@@ -1128,7 +1133,7 @@ biplot(prcomp(mes.iris, scale = TRUE), las = 1, cex = 0.7,
        main = "Données normalisées")
 ```
 
-<img src="figures/irisDeFisher_unnamed-chunk-30-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_unnamed-chunk-31-1.png" width="90%" style="display: block; margin: auto;" />
 
 *****
 
