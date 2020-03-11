@@ -311,46 +311,46 @@ Si 1,2,3 : dissimilarité
 <table>
 <tbody>
   <tr>
-   <td style="text-align:right;"> 4.27 </td>
-   <td style="text-align:right;"> 2.98 </td>
-   <td style="text-align:right;"> 2.82 </td>
-   <td style="text-align:right;"> 4.58 </td>
-   <td style="text-align:right;"> 3.04 </td>
+   <td style="text-align:right;"> 4.29 </td>
+   <td style="text-align:right;"> 2.8 </td>
+   <td style="text-align:right;"> 1.17 </td>
+   <td style="text-align:right;"> 3.32 </td>
+   <td style="text-align:right;"> 3.05 </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 2.54 </td>
-   <td style="text-align:right;"> 3.97 </td>
-   <td style="text-align:right;"> 2.90 </td>
-   <td style="text-align:right;"> 3.45 </td>
-   <td style="text-align:right;"> 2.18 </td>
+   <td style="text-align:right;"> 2.93 </td>
+   <td style="text-align:right;"> 2.9 </td>
+   <td style="text-align:right;"> 2.89 </td>
+   <td style="text-align:right;"> 2.80 </td>
+   <td style="text-align:right;"> 2.68 </td>
   </tr>
 </tbody>
 </table>
 
-distance euclidienne : 4.33
+distance euclidienne : 3.2
 
-distance de manhattan = 12.17
+distance de manhattan = 8.05
 
 # Avec R (2) : distance entre individus d'un nuage de points 
 
 - distance euclidienne
 
 ```
-      73  100   86   12
-100 1.06               
-86  1.03 0.84          
-12  3.95 2.94 3.44     
-137 1.45 2.04 1.39 4.81
+      80   50  137  140
+50  2.46               
+137 2.71 4.92          
+140 2.55 4.82 0.76     
+57  1.63 3.81 1.21 1.07
 ```
 
 - distance de corrélation : $d = 1-r$
 
 ```
-        73    100     86     12
-100 0.0162                     
-86  0.0287 0.0028              
-12  0.3310 0.2103 0.1858       
-137 0.0062 0.0274 0.0358 0.3687
+        80     50    137    140
+50  0.1552                     
+137 0.0611 0.3764              
+140 0.0330 0.3191 0.0087       
+57  0.0103 0.2169 0.0255 0.0156
 ```
 
 # Avec R (3) : distance entre variables décrivant le nuage de points 
@@ -358,9 +358,9 @@ distance de manhattan = 12.17
 
 ```
              Sepal.Length Sepal.Width Petal.Length
-Sepal.Width         1.341                         
-Petal.Length        0.018       1.255             
-Petal.Width         0.085       1.022        0.033
+Sepal.Width         0.900                         
+Petal.Length        0.060       0.853             
+Petal.Width         0.095       0.746        0.015
 ```
 
 # Distances entre groupes (1)
@@ -720,23 +720,23 @@ iris.scale.kmeans5
 ```
 
 ```
-K-means clustering with 5 clusters of sizes 10, 50, 43, 44, 3
+K-means clustering with 5 clusters of sizes 27, 23, 22, 29, 49
 
 Cluster means:
   Sepal.Length Sepal.Width Petal.Length Petal.Width
-1    1.8315767 -0.40685260    1.3946652   1.0110582
-2   -1.0111914  0.85041372   -1.3006301  -1.2507035
-3   -0.1646687 -0.98522499    0.2912216   0.2052911
-4    0.7490984 -0.01682473    0.7743734   0.8983518
-5    2.1214087  1.55093437    1.4966310   1.3565323
+1    0.2383957  -0.1485335   0.39724690  0.32642682
+2    0.4937294  -0.6801714   0.80454443  0.80514277
+3   -0.4201099  -1.4246794   0.03924137 -0.05279511
+4    1.3926646   0.2323817   1.15674505  1.21327591
+5   -0.9987207   0.9032290  -1.29875725 -1.25214931
 
 Clustering vector:
-  [1] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 4 4 4 3 4 3 4 3 4 3 3 3 3 3 3 4 3 3 3 3 4 3 3 3 4 4 4 4 3 3 3 3 3 3 3 4 4 3 3 3 3 4 3 3 3 3 3 3 3 3 4 3 1 4 4 1 3 1 1 5 4 4 4 3 4 4 4 5 1 3 4 3 1 4 4 1 4 4 4 1 1 5 4 4 3 1 4 4 4 4 4 4 3 4 4 4 3
-[148] 4 4 4
+  [1] 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 3 5 5 5 5 5 5 5 5 4 1 4 3 2 1 1 3 1 3 3 1 3 1 1 1 1 3 3 3 1 1 2 1 1 1 2 2 1 3 3 3 3 2 1 1 1 3 1 3 3 1 3 3 3 1 1 1 3 1 4 2 4 2 4 4 3 4 2 4 4 2 4 2 2 4 2 4 4 3 4 2 4 2 4 4 2 1 2 4 4 4 2 2 2 4 4 2 1 4 4 4 2 4 4 4 2
+[148] 2 4 1
 
 Within cluster sum of squares by cluster:
-[1]  4.759739 47.350621 33.244196 26.975655  0.795318
- (between_SS / total_SS =  81.0 %)
+[1] 10.33898 10.02466 17.04641 26.89129 40.12172
+ (between_SS / total_SS =  82.5 %)
 
 Available components:
 
@@ -791,28 +791,28 @@ plot(iris.scale.hclust.ward, hang = -1, cex = 0.5)
 <table>
 <tbody>
   <tr>
-   <td style="text-align:center;"> 0 </td>
    <td style="text-align:center;"> 29 </td>
    <td style="text-align:center;"> 0 </td>
-  </tr>
-  <tr>
    <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 4 </td>
-   <td style="text-align:center;"> 16 </td>
   </tr>
   <tr>
-   <td style="text-align:center;"> 25 </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 5 </td>
-  </tr>
-  <tr>
-   <td style="text-align:center;"> 45 </td>
+   <td style="text-align:center;"> 20 </td>
    <td style="text-align:center;"> 0 </td>
    <td style="text-align:center;"> 0 </td>
   </tr>
   <tr>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 29 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 21 </td>
+   <td style="text-align:center;"> 24 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 0 </td>
    <td style="text-align:center;"> 26 </td>
-   <td style="text-align:center;"> 0 </td>
    <td style="text-align:center;"> 0 </td>
   </tr>
 </tbody>
@@ -1006,7 +1006,7 @@ clues::adjustedRand(cluster.hclust5, cluster.kmeans3)
 
 ```
      Rand        HA        MA        FM   Jaccard 
-0.7020134 0.3855580 0.3924977 0.6118291 0.3931110 
+0.7848770 0.4637776 0.4730527 0.6167001 0.4299265 
 ```
 
 
@@ -1021,28 +1021,28 @@ sessionInfo()
 ```
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-apple-darwin15.6.0 (64-bit)
-Running under: macOS Catalina 10.15.3
+Running under: macOS Mojave 10.14.6
 
 Matrix products: default
 BLAS:   /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
 LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib
 
 locale:
-[1] fr_FR.UTF-8/fr_FR.UTF-8/fr_FR.UTF-8/C/fr_FR.UTF-8/fr_FR.UTF-8
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 
 attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] pheatmap_1.0.12    vegan_2.5-6        lattice_0.20-38    permute_0.9-5      rgl_0.100.30       RColorBrewer_1.1-2 clues_0.6.1        FactoMineR_2.0     kableExtra_1.1.0   knitr_1.28        
+ [1] pheatmap_1.0.12    vegan_2.5-6        lattice_0.20-38    permute_0.9-5      rgl_0.100.30       RColorBrewer_1.1-2 clues_0.6.2.2      FactoMineR_2.3     kableExtra_1.1.0   knitr_1.28        
 
 loaded via a namespace (and not attached):
- [1] ggrepel_0.8.1           Rcpp_1.0.3              assertthat_0.2.1        zeallot_0.1.0           digest_0.6.24           mime_0.9                R6_2.4.1                backports_1.1.5         evaluate_0.14           highr_0.8               httr_1.4.1              ggplot2_3.2.1          
-[13] pillar_1.4.2            rlang_0.4.4             lazyeval_0.2.2          rstudioapi_0.10         miniUI_0.1.1.1          Matrix_1.2-17           rmarkdown_2.1           splines_3.6.1           webshot_0.5.2           readr_1.3.1             stringr_1.4.0           htmlwidgets_1.5.1      
-[25] munsell_0.5.0           shiny_1.4.0             compiler_3.6.1          httpuv_1.5.2            xfun_0.12               pkgconfig_2.0.3         mgcv_1.8-31             htmltools_0.4.0         flashClust_1.01-2       tidyselect_0.2.5        tibble_2.1.3            viridisLite_0.3.0      
-[37] crayon_1.3.4            dplyr_0.8.3             later_1.0.0             MASS_7.3-51.4           leaps_3.0               grid_3.6.1              nlme_3.1-142            jsonlite_1.6.1          xtable_1.8-4            gtable_0.3.0            lifecycle_0.1.0         magrittr_1.5           
-[49] scales_1.1.0            stringi_1.4.6           promises_1.1.0          scatterplot3d_0.3-41    xml2_1.2.2              vctrs_0.2.0             tools_3.6.1             manipulateWidget_0.10.0 glue_1.3.1              purrr_0.3.3             hms_0.5.2               crosstalk_1.0.0        
-[61] parallel_3.6.1          fastmap_1.0.1           yaml_2.2.1              colorspace_1.4-1        cluster_2.1.0           rvest_0.3.5            
+ [1] ggrepel_0.8.1           Rcpp_1.0.2              assertthat_0.2.1        zeallot_0.1.0           digest_0.6.21           mime_0.7                R6_2.4.0                backports_1.1.5         evaluate_0.14           highr_0.8               httr_1.4.1              ggplot2_3.2.1          
+[13] pillar_1.4.2            rlang_0.4.0             lazyeval_0.2.2          rstudioapi_0.10         miniUI_0.1.1.1          Matrix_1.2-17           rmarkdown_1.16          splines_3.6.1           webshot_0.5.1           readr_1.3.1             stringr_1.4.0           htmlwidgets_1.5.1      
+[25] munsell_0.5.0           shiny_1.4.0             compiler_3.6.1          httpuv_1.5.2            xfun_0.10               pkgconfig_2.0.3         mgcv_1.8-29             htmltools_0.4.0         flashClust_1.01-2       tidyselect_0.2.5        tibble_2.1.3            viridisLite_0.3.0      
+[37] crayon_1.3.4            dplyr_0.8.3             later_1.0.0             MASS_7.3-51.4           leaps_3.1               grid_3.6.1              nlme_3.1-141            jsonlite_1.6            xtable_1.8-4            gtable_0.3.0            magrittr_1.5            scales_1.0.0           
+[49] stringi_1.4.3           promises_1.1.0          scatterplot3d_0.3-41    xml2_1.2.2              vctrs_0.2.0             tools_3.6.1             manipulateWidget_0.10.0 glue_1.3.1              purrr_0.3.2             hms_0.5.1               crosstalk_1.0.0         parallel_3.6.1         
+[61] fastmap_1.0.1           yaml_2.2.0              colorspace_1.4-1        cluster_2.1.0           rvest_0.3.4            
 ```
 
 
