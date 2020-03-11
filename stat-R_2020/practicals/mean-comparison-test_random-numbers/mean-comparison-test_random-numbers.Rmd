@@ -3,15 +3,11 @@ title: "Tutorial -- Comparing means under controlled conditions"
 author: "Jacques van Helden"
 date: "`r Sys.Date()`"
 output:
-  html_document:
-    code_folding: hide
+  pdf_document:
     fig_caption: yes
     highlight: zenburn
-    self_contained: no
-    theme: cerulean
     toc: yes
     toc_depth: 3
-    toc_float: yes
   beamer_presentation:
     colortheme: dolphin
     fig_caption: yes
@@ -37,11 +33,15 @@ output:
   word_document:
     toc: yes
     toc_depth: '3'
-  pdf_document:
+  html_document:
+    code_folding: hide
     fig_caption: yes
     highlight: zenburn
+    self_contained: no
+    theme: cerulean
     toc: yes
     toc_depth: 3
+    toc_float: yes
   slidy_presentation:
     fig_caption: yes
     fig_height: 6
@@ -80,7 +80,7 @@ knitr::opts_chunk$set(
 
 Load the following libraries or install them if required. 
 
-```{r}
+```{r load_libraries}
 require(knitr)
 ```
 
@@ -216,7 +216,7 @@ n1 <- 8 # sample size for the first group
 n2 <- 8 # ssample size for second group
 
 ## First data table
-m <- 10000 # Number of features
+m <- 100 # Number of features
 mu1 <- 7 # mean of the first population
 mu2 <- 10 # mean of the second population
 
@@ -249,9 +249,9 @@ Exercise:
 
 - Generate an data frame named `group1` which with $m_0$ rows (the number of features under $H_0$, defined above) and $n_1$ columns (sample size for the first population), filled with random numbers drawn from the first population. 
 
-- Name the columns with labels indicating the group and sample number: `grp1s1`, , `grp1s2` ... with indices from 1 $n_1$.
+- Name the columns with labels indicating the group and sample number: `g1s1`, , `g1s2` ... with indices from 1 $n_1$.
 
-- Name the rows to denote the feature numbers: `h0ft1`, `h0ft2`, ... with indices from 1 to $m_0$. 
+- Name the rows to denote the feature numbers: `ft1`, `ft2`, ... with indices from 1 to $m_0$. 
 
 - Check the dimensions of `group1`.
 
@@ -278,24 +278,38 @@ Exercise:
 
 **Solution** (click on the "code" button to check the solution). 
 
-```{r}
-#### Generating a random data frame of the appropriate size ####
+```{r random_sampling}
+#### Generate two tables (one per population) with the random samples ####
 
-## Dataset under H0
-group1 <- data.frame(
-  matrix(data = rnorm(n = m * n1, mean = mu1, sd = sigma1),
-         nrow = m, 
-         ncol = n1))
-colnames(group1) <- paste(sep = "", "grp1s", 1:n1)
-rownames(group1) <- paste(sep = "", "h0ft", 1:m)
+## Info: for didactiv purpose we will use a progressive approach to generate 
+## the data the first group,  and a more compact formulation (in one command) 
+## for the second group.
 
-## Dataset under h1
+## Dataset under H0, with a progressive approach
+
+## Generate a vector of size m*n1 with all the random values 
+## for each feature and each infividual
+normVector <- rnorm(n = m * n1, mean = mu1, sd = sigma1)
+
+## Wrap the vector in an m x n1 matrix
+normMatrix <- matrix(data = normVector,
+                     nrow = m, 
+                     ncol = n1)
+
+## Create a data frame with the content of this matrix
+group1 <- data.frame(normMatrix)
+
+## Set the column and row names
+colnames(group1) <- paste(sep = "", "g1s", 1:n1)
+rownames(group1) <- paste(sep = "", "ft", 1:m)
+
+## Dataset under H1: use a more direct approach, compact the 3 steps in a single command
 group2 <- data.frame(
   matrix(data = rnorm(n = m * n2, mean = mu2, sd = sigma2),
          nrow = m, 
          ncol = n2))
-colnames(group2) <- paste(sep = "", "grp2s", 1:n2)
-rownames(group2) <- paste(sep = "", "h0ft", 1:m)
+colnames(group2) <- paste(sep = "", "g2s", 1:n2)
+rownames(group2) <- paste(sep = "", "ft", 1:m)
 
 ```
 
@@ -315,7 +329,8 @@ kable(head(group2))
 kable(tail(group2))
 ```
 
-### Checking the properties of the result table
+
+### Checking the properties of the data tables
 
 Check the properties of the columns (individuals, e.g. biological samples) and rows (features, e.g. genes or proteins or metabolites) of the data tables. 
 
@@ -327,6 +342,11 @@ Check the properties of the columns (individuals, e.g. biological samples) and r
     - the row-wise  parameters (statistics per feature).  
 
 ```{r}
+
+## Column-wise summaries
+summary(group1)
+summary(group2)
+
 ## Columns-wise statistics
 colStatsH0 <- data.frame(
     m1 = apply(group1, MARGIN = 2, mean),
@@ -355,11 +375,48 @@ rowStatsH0 <- data.frame(
 rowStatsH0$diff <- rowStatsH0$m2 - rowStatsH0$m1
 ```
 
+## Merge the two groups in a single data frame
+
+In omics data analysis, we typically obtain 
+
+- a single data table with all the individuals (biological samples) of all the groups
+- a table containing the metadata, i.e. the information about each individual (biological sample)
+
+Two methods could be envisaged a priori:
+
+- `cbind()`, which simply binds the columns of two input tables. This can however be somewhat dangerous, because it assumes that these two tables have the same number of rows (features) and that these rows contain information about the same features *in the same order*. However, in some cases we dispose of data tables coming from different sources (or software tools), where the features (genes, proteins, metabolites) might have a partial overlap rather than an exact 1-to-1 correspondence, and, even when the feature sets are the same, they might be presented in different orderes.
+
+- A much safer approach is thus to use `merge()`, and to explicitly indicate one or several colummns on which the features from the two table will be unified 
+
+In our case, the two data tables only contain numeric data, and the identification will be done on the row names (which contain the feature identifiers ft1, ft2, ... that we defined above). In some cases, we will have to merge data table containing different informations, including a column with identifiers (or maybe additional columns e.g. the genotype, conditions, ...) and we will use internal columns of the table to unify their rows.  
+
+We will create such a structure for further analysis/
+
+```{r merge_groups}
+
+## Read the help of the merge() function
+# ?merge
+
+## Create a data frame with the merged values
+dataTable <- merge(x = group1, y = group2, by = "row.names")
+# dim(dataTable) # NOTE: the merged table contains n1 + n2 columns + one additional column Row.names
+
+## Use the Row.names column as names for the merged table
+row.names(dataTable) <- dataTable$Row.names
+dataTable <- dataTable[, -1] ## Suppress the first column which contained the row names
+# dim(dataTable)
+
+```
+
 #### Visualisation of the data
 
 - Draw two histograms with all the values group 1 and group2, respectively. 
 
 **Tip: ** use `mfrow()` to display the histogram above each other, and set the limits of the abscissa (x axis) to the same value. 
+
+
+
+
 
 - Draw histogram with the sampling distribution of the means in the respective groups. 
 
