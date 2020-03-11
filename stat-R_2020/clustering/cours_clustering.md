@@ -2,7 +2,7 @@
 title: "Clustering"
 subtitle: "Hierarchical clustering et Kmeans"
 author: "Anne Badel, Frédéric Guyon & Jacques van Helden"
-date: "2020-03-10"
+date: "2020-03-11"
 output:
   slidy_presentation:
     highlight: default
@@ -75,7 +75,7 @@ transition: linear
 # Les données dans l'ordinateur (1)
 
 ## Les iris de Fisher 
-[Ces données sont un classique des méthodes d'apprentissage](https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1469-1809.1936.tb02137.x)
+Ces données sont un classique des méthodes d'apprentissage [Fisher](https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1469-1809.1936.tb02137.x)
 
 <img src="img/iris_petal_sepal.png" width="60%" style="display: block; margin: auto;" />
 
@@ -105,11 +105,13 @@ transition: linear
 6          5.4         3.9          1.7         0.4
 ```
 
-- 1 ligne = 1 fleur = 1 vecteur
+- 1 ligne = 1 fleur = 1 individu = 1 vecteur
 
-- 1 colonne = 1 variable = 1 vecteur
+- 1 colonne = 1 variable = 1 feature = 1 vecteur
 
 - l'ensemble des données = 1 échantillon = 1 data.frame
+
+**!** : convention différente en RNA-seq
 
 # Représentons ces données : une fleur (1)
 
@@ -215,8 +217,8 @@ On a une **information** sur nos données
 # Clustering
 
 <div class="figure" style="text-align: center">
-<img src="img/figure1.png" alt="Y a-t-il des groupes ?" width="60%" />
-<p class="caption">Y a-t-il des groupes ?</p>
+<img src="img/figure1.png" alt="données simulées : y a-t-il des groupes ?" width="60%" />
+<p class="caption">données simulées : y a-t-il des groupes ?</p>
 </div>
 
 
@@ -316,83 +318,85 @@ Ne sont pas des distances, mais indices de dissimilarité :
 - **Bray-Curtis** (en écologie, comparaison d'abondance d'espèces)
 - **Jensen-Shannon** (comparaison de distributions)
   
-**Note** : lors du TP, sur les données d'expression RNA-seq, nous utiliserons le **coefficient de corrélation de Spearman** et la distance dérivée, $d_c = 1-r$ ou $d_c = \sqrt{2 \times (1 - r)}$
+**Note** : lors du TP, sur les données d'expression RNA-seq, nous utiliserons le **coefficient de corrélation de Spearman** et la distance dérivée, $d_c = 1-r$
 
-# Avec R (1)
+# Avec R (1) : distance entre deux individus 
 
 - on utilise la fonction `dist()` avec l'option `method = "euclidean", "manhattan", ...` 
 
 <table>
 <tbody>
   <tr>
-   <td style="text-align:right;"> 3.61 </td>
-   <td style="text-align:right;"> 2.56 </td>
-   <td style="text-align:right;"> 3.91 </td>
-   <td style="text-align:right;"> 4.74 </td>
-   <td style="text-align:right;"> 4.11 </td>
+   <td style="text-align:right;"> 1.04 </td>
+   <td style="text-align:right;"> 2.34 </td>
+   <td style="text-align:right;"> 1.59 </td>
+   <td style="text-align:right;"> 4.12 </td>
+   <td style="text-align:right;"> 3.69 </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 2.04 </td>
-   <td style="text-align:right;"> 2.39 </td>
-   <td style="text-align:right;"> 3.42 </td>
-   <td style="text-align:right;"> 2.83 </td>
-   <td style="text-align:right;"> 2.40 </td>
+   <td style="text-align:right;"> 2.13 </td>
+   <td style="text-align:right;"> 2.68 </td>
+   <td style="text-align:right;"> 3.18 </td>
+   <td style="text-align:right;"> 2.84 </td>
+   <td style="text-align:right;"> 3.68 </td>
   </tr>
 </tbody>
 </table>
 
-distance euclidienne : 4.33
+distance euclidienne : 4.98
 
-distance de manhattan = 12.14
+distance de manhattan = 13.48
 
+# Avec R (2) : distance entre individus d'un nuage de points 
 
-# Avec R (2)
+- distance euclidienne
 
-- ou pour des distances particulières, par exemple l'indice de Jaccard :
-<table>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> v.a </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 1 </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> v.b </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 1 </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 1 </td>
-   <td style="text-align:center;"> 0 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> v.c </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 1 </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0 </td>
-  </tr>
-</tbody>
-</table>
+```r
+mat.iris <- mes.iris[sample(1:150, 5),]
+print(dist(mat.iris), digits = 2)
+```
 
 ```
-          v.a       v.b
-v.b 0.3333333          
-v.c 0.0000000 0.3333333
+      5   33   43   72
+33 0.56               
+43 0.73 1.22          
+72 3.13 3.19 3.40     
+49 0.33 0.42 1.05 2.98
+```
+
+- distance de corrélation : $d = 1-r$
+
+```r
+cor.mat.iris <- cor(t(mat.iris))
+print(as.dist(1 - cor.mat.iris), digits = 2)
+```
+
+```
+          5       33       43       72
+33 0.002904                           
+43 0.000078 0.002457                  
+72 0.219978 0.252287 0.217709         
+49 0.000318 0.004885 0.000415 0.205493
+```
+
+# Avec R (3) : distance entre variables décrivant le nuage de points 
+
+
+```r
+cor.mat.iris <- cor(mat.iris)
+print(as.dist(1 - cor.mat.iris), digits = 2)
+```
+
+```
+             Sepal.Length Sepal.Width Petal.Length
+Sepal.Width        1.3204                         
+Petal.Length       0.1408      1.7215             
+Petal.Width        0.1996      1.8069       0.0095
 ```
 
 # Distances entre groupes (1)
 
-<img src="figures/irisDeFisher_unnamed-chunk-15-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_unnamed-chunk-17-1.png" width="70%" style="display: block; margin: auto;" />
 
 # Distances entre groupes (2)
 
@@ -483,7 +487,7 @@ summary(mes.iris)
 
 On peut ensuite essayer de visualiser les données
 
-  - par un `plot`
+  - par un `plot` (**!** ne pas faire si "grosses" données)
   
 
 ```r
@@ -492,48 +496,9 @@ plot(mes.iris)
 
 <img src="figures/irisDeFisher_plot_4variables-1.png" width="60%" style="display: block; margin: auto;" />
 
-# Visualisation des données - coloration par espèces
 
+# Préparation des données (1) : variables de variance nulle
 
-
-```r
-species.colors <- c(setosa = "#BB44DD", virginica = "#AA0044", versicolor = "#4400FF")
-plot(mes.iris, col = species.colors[iris$Species], cex = 0.7)
-```
-
-<img src="figures/irisDeFisher_plot_4variables_variety-1.png" width="60%" style="display: block; margin: auto;" />
-
-
-# Visualisation des données
-
-- par la fonction `image()`
-  
-
-```r
-image(1:nb.var, 1:nb.iris ,t(as.matrix(mes.iris)), xlab = "variables", ylab = "Observation nb", las = 1)
-```
-
-<img src="figures/irisDeFisher_var_image-1.png" width="60%" style="display: block; margin: auto;" />
-
-# Nettoyage des données (1) : données manquantes
-
-Avant de commencer à travailler, il est nécessaire de commencer par vérifier que :
-
-- il n'y a pas de données manquantes
-
-
-```r
-sum(is.na(mes.iris))
-```
-
-```
-[1] 0
-```
-
-# Nettoyage des données (2) : variables constantes
-
-- aucune  variable n'est constante (aucune variable n'a une variance nulle)
-  
 
 ```r
 iris.var <- apply(mes.iris, 2, var)
@@ -575,46 +540,36 @@ sum(apply(mes.iris, 2, var) == 0)
 [1] 0
 ```
 
+# Préparation des données (2) : "Normalisation"
 
-# Normalisation
-
-Afin de pouvoir considérer que toutes les variables sont à la même échelle, il est parfois nécessaire de normaliser les données.
+Afin de pouvoir considérer que toutes les variables sont à la même échelle, il est parfois nécessaire de standardiser les données.
 
 - soit 
 
-    - en centrant (ramener la moyenne de chaque variable à $0$)
+  - en centrant (ramener la moyenne de chaque variable à $0$)
   
 
 ```r
-mes.iris.centre <- scale(mes.iris, center=TRUE, scale=FALSE)
+mes.iris.centre <- scale(mes.iris, center = TRUE, scale = FALSE)
 ```
 
 - soit 
 
-    - en centrant (ramener la moyenne de chaque variable $0$)
-    - et mettant à l'échelle (ramener la variance de chaque variable à $1$)
+  - en centrant (ramener la moyenne de chaque variable $0$)
+  - et mettant à l'échelle (ramener la variance de chaque variable à $1$)
 
 
 ```r
-mes.iris.scaled <- scale(mes.iris, center=TRUE, scale=TRUE)
+mes.iris.scaled <- scale(mes.iris, center = TRUE, scale = TRUE)
 ```
 
+- soit en effectuant une transformation des variables, par exemple transformation logarithmique
 
-# On peut visuellement regarder l'effet de la normalisation :
+# On peut visuellement regarder l'effet de la standardisation :
 
-## par un plot des données 
+- par une boîte à moustaches (boxplot)
 
-
-```r
-plot(mes.iris, main = "Raw variables")
-```
-
-<img src="figures/irisDeFisher_plot_raw_vs_scaled-1.png" width="60%" style="display: block; margin: auto;" />
-
-**!** ne pas faire si "grosses" données
-
-
-# ... par une boîte à moustaches (boxplot)
+# standardisation par la moyenne et la variance
 
 
 ```r
@@ -628,24 +583,51 @@ boxplot(mes.iris.scaled, main = "scaled", las = 2)
 
 ```r
 par(mar = c(5.1, 4.1, 4.1, 2.1)) # Restore original margin sizes
+par(mfrow = c(1,1))
 ```
 
-# ... par une image
+# standardisation par la médiane
 
 
 ```r
-par(mfrow=c(1,2))
-image(1:nb.var, 1:nb.iris, t(as.matrix(mes.iris)), main="Raw data")
-image(1:nb.var, 1:nb.iris, t(as.matrix(mes.iris.scaled)), main="Scaled data")
+iris.mediane <- apply(mes.iris, 2, median)
+mes.iris.scaled.mediane <- sweep(mes.iris, 2, iris.mediane)
+par(mfrow = c(1,2))
+par(mar = c(7, 4.1, 4.1, 1.1)) # adapt margin sizes for the labels
+boxplot(mes.iris.centre, main = "scaled, moyenne", las = 2)
+boxplot(mes.iris.scaled.mediane, main = "scaled, médiane", las = 2)
 ```
 
-<img src="figures/irisDeFisher_image_raw_vs_norm-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_normalisation.par.la.mediane-1.png" width="70%" style="display: block; margin: auto;" />
+
+```r
+par(mar = c(5.1, 4.1, 4.1, 2.1)) # Restore original margin sizes
+par(mfrow = c(1,1))
+```
+
+# par l'intervalle inter-quartile (IQR)
+
+
+```r
+iris.iqr <- apply(mes.iris, 2, IQR)
+mat.iris.iqr <- matrix(rep(iris.iqr, each = nrow(mes.iris)), ncol = 4)
+mes.iris.scaled.iqr <- mes.iris / mat.iris.iqr
+par(mfrow = c(1,2))
+par(mar = c(7, 4.1, 4.1, 1.1)) # adapt margin sizes for the labels
+boxplot(mes.iris, main = "raw data", las = 2)
+boxplot(mes.iris.scaled.iqr, main = "scaled, IQR", las = 2)
+```
+
+<img src="figures/irisDeFisher_normalisation.par.IQR-1.png" width="70%" style="display: block; margin: auto;" />
+
+```r
+par(mar = c(5.1, 4.1, 4.1, 2.1)) # Restore original margin sizes
+par(mfrow = c(1,1))
+```
 
 # La matrice de distances
 
 Nous utilisons ici la distance euclidienne sur données **normalisées**. 
-
-
 
 
 
@@ -769,10 +751,22 @@ plot(iris.scale.hclust, hang = -1, cex = 0.5, main = "Normalisées")
 
 
 ```r
-pheatmap::pheatmap(mes.iris.scaled)
+pheatmap::pheatmap(mes.iris)
 ```
 
 <img src="figures/irisDeFisher_unnamed-chunk-25-1.png" width="60%" style="display: block; margin: auto;" />
+
+```r
+pheatmap::pheatmap(mes.iris, scale = "column")
+```
+
+<img src="figures/irisDeFisher_unnamed-chunk-25-2.png" width="60%" style="display: block; margin: auto;" />
+
+```r
+pheatmap::pheatmap(mes.iris, scale = "row")
+```
+
+<img src="figures/irisDeFisher_unnamed-chunk-25-3.png" width="60%" style="display: block; margin: auto;" />
 
 # Les k-means
 
@@ -846,23 +840,23 @@ iris.scale.kmeans5
 ```
 
 ```
-K-means clustering with 5 clusters of sizes 20, 50, 22, 9, 49
+K-means clustering with 5 clusters of sizes 53, 17, 47, 26, 7
 
 Cluster means:
   Sepal.Length Sepal.Width Petal.Length Petal.Width
-1    1.1734168   0.4879172   1.06894119  1.31280138
-2    0.3606797  -0.3655555   0.57440719  0.53876459
-3   -0.4201099  -1.4246794   0.03924137 -0.05279511
-4    1.8530458  -0.4884271   1.40851240  1.03583907
-5   -0.9987207   0.9032290  -1.29875725 -1.25214931
+1  -0.05005221 -0.88042696    0.3465767   0.2805873
+2  -1.39493454 -0.05056417   -1.3357516  -1.3187694
+3   1.13217737  0.08812645    0.9928284   1.0141287
+4  -0.93018708  1.05972279   -1.2791040  -1.2202264
+5  -0.38011687  2.26106915   -1.2952890  -1.1986013
 
 Clustering vector:
-  [1] 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 3 5 5 5 5 5 5 5 5 1 2 2 3 2 2 2 3 2 3 3 2 3 2 2 2 2 3 3 3 2 2 2 2 2 2 2 2 2 3 3 3 3 2 2 2 2 3 2 3 3 2 3 3 3 2 2 2 3 2 1 2 4 2 1 4 3 4 4 1 1 2 1 2 2 1 2 1 4 3 1 2 4 2 1 1 2 2 2 4 4 1 2 2 2 4 1 2 2 1 1 1 2 1 1 1 2
-[148] 2 1 2
+  [1] 4 2 2 2 4 5 4 4 2 2 4 4 2 2 5 5 5 4 5 4 4 4 4 4 4 2 4 4 4 2 2 4 5 5 2 2 4 4 2 4 4 2 2 4 4 2 4 2 4 4 3 3 3 1 1 1 3 1 1 1 1 1 1 1 1 3 1 1 1 1 3 1 1 1 1 3 3 3 1 1 1 1 1 1 1 3 3 1 1 1 1 1 1 1 1 1 1 1 1 1 3 1 3 3 3 3 1 3 3 3 3 3 3 1 1 3 3 3 3 1 3 1 3 1 3 3 1 3 3 3 3 3 3 1 1 3 3 3 1 3 3 3 1 3 3 3 1
+[148] 3 3 1
 
 Within cluster sum of squares by cluster:
-[1] 14.417633 29.027415 17.046407  4.046836 40.121722
- (between_SS / total_SS =  82.4 %)
+[1] 44.087545  5.163861 47.450194  5.726442  1.974750
+ (between_SS / total_SS =  82.5 %)
 
 Available components:
 
@@ -901,7 +895,7 @@ La coupure de l’arbre à un niveau donné construit une partition. la coupure 
 
 
 ```r
-plot(iris.scale.hclust.ward, hang=-1, cex=0.5)
+plot(iris.scale.hclust.ward, hang = -1, cex = 0.5)
 ```
 
 <img src="figures/irisDeFisher_plot_iris_ward-1.png" width="95%" style="display: block; margin: auto;" />
@@ -909,6 +903,111 @@ plot(iris.scale.hclust.ward, hang=-1, cex=0.5)
 # Comment déterminer le nombre de clusters ? avec les kmeans
 
 <img src="figures/irisDeFisher_unnamed-chunk-26-1.png" width="60%" style="display: block; margin: auto;" />
+
+# Comparaison des résultats des deux clustering
+
+- par une table
+
+<table>
+<tbody>
+  <tr>
+   <td style="text-align:center;"> 29 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 20 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 29 </td>
+   <td style="text-align:center;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 24 </td>
+   <td style="text-align:center;"> 21 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 26 </td>
+  </tr>
+</tbody>
+</table>
+
+# Pros et cons des différents algorithmes
+
+| Algorithme | Pros | Cons |
+|-------------|------------------------------|------------------------|
+| **Hiérarchique** | L'arbre reflète la nature imbriquée de tous les sous-clusters | Complexité quadratique (mémoire et temps de calcul) $\rightarrow$ quadruple chaque fois qu'on double le nombre d'individus  |
+| | Permet une visualisation couplée dendrogramme (groupes) + heatmap (profils individuels) | |
+| | Choix a posteriori du nombre de clusters | |
+
+---
+
+| Algorithme | Pros | Cons |
+|-------------|------------------------------|------------------------|
+| **K-means** | Rapide (linéaire en temps), peut traiter des jeux de données énormes (centaines de milliers de pics ChIP-seq) | Positions initiales des centres est aléatoire $\rightarrow$ résultats changent d'une exécution à l'autre |
+| | | Distance euclidienne (pas appropriée pour transcriptome par exemple) |
+
+# Visualisation des données - coloration par espèces
+
+
+```r
+species.colors <- c(setosa = "#BB44DD", virginica = "#AA0044", versicolor = "#4400FF")
+plot(mes.iris, col = species.colors[iris$Species], cex = 0.7)
+```
+
+<img src="figures/irisDeFisher_plot_4variables_variety-1.png" width="60%" style="display: block; margin: auto;" />
+***
+# Supplementary materials
+
+# Distance avec R : indice de Jaccard
+
+- ou pour des distances particulières, par exemple l'indice de Jaccard :
+<table>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> v.a </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> v.b </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> v.c </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0 </td>
+  </tr>
+</tbody>
+</table>
+
+```
+          v.a       v.b
+v.b 0.3333333          
+v.c 0.0000000 0.3333333
+```
 
 # Comparaison de clustering: Rand Index
 
@@ -933,39 +1032,6 @@ $$ ARI=\frac{RI-Expected RI}{Max RI -Expected RI}$$
 - Adapté pour nombre de classe différent entre les deux classifications
 et taille de classe différente
 
-# Comparaison des résultats des deux clustering
-
-- par une table de confusion
-
-<table>
-<tbody>
-  <tr>
-   <td style="text-align:center;"> 29 </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0 </td>
-  </tr>
-  <tr>
-   <td style="text-align:center;"> 20 </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0 </td>
-  </tr>
-  <tr>
-   <td style="text-align:center;"> 1 </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 29 </td>
-  </tr>
-  <tr>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 21 </td>
-   <td style="text-align:center;"> 24 </td>
-  </tr>
-  <tr>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 26 </td>
-   <td style="text-align:center;"> 0 </td>
-  </tr>
-</tbody>
-</table>
 
 # Comparaison de clustering: Rand Index
 
@@ -1003,20 +1069,6 @@ clues::adjustedRand(cluster.hclust5, cluster.kmeans3)
 0.7848770 0.4637776 0.4730527 0.6167001 0.4299265 
 ```
 
-# Pros et cons des différents algorithmes
-
-| Algorithme | Pros | Cons |
-|-------------|------------------------------|------------------------|
-| **Hiérarchique** | L'arbre reflète la nature imbriquée de tous les sous-clusters | Complexité quadratique (mémoire et temps de calcul) $\rightarrow$ quadruple chaque fois qu'on double le nombre d'individus  |
-| | Permet une visualisation couplée dendrogramme (groupes) + heatmap (profils individuels) | |
-| | Choix a posteriori du nombre de clusters | |
-
----
-
-| Algorithme | Pros | Cons |
-|-------------|------------------------------|------------------------|
-| **K-means** | Rapide (linéaire en temps), peut traiter des jeux de données énormes (centaines de milliers de pics ChIP-seq) | Positions initiales des centres est aléatoire $\rightarrow$ résultats changent d'une exécution à l'autre |
-| | | Distance euclidienne (pas appropriée pour transcriptome par exemple) |
 
 ---
 
@@ -1029,28 +1081,28 @@ sessionInfo()
 ```
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-apple-darwin15.6.0 (64-bit)
-Running under: macOS Mojave 10.14.6
+Running under: macOS Catalina 10.15.3
 
 Matrix products: default
 BLAS:   /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
 LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib
 
 locale:
-[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+[1] fr_FR.UTF-8/fr_FR.UTF-8/fr_FR.UTF-8/C/fr_FR.UTF-8/fr_FR.UTF-8
 
 attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] pheatmap_1.0.12    vegan_2.5-6        lattice_0.20-38    permute_0.9-5      rgl_0.100.30       RColorBrewer_1.1-2 clues_0.6.2.2      FactoMineR_2.3     kableExtra_1.1.0   knitr_1.28        
+ [1] pheatmap_1.0.12    vegan_2.5-6        lattice_0.20-38    permute_0.9-5      rgl_0.100.30       RColorBrewer_1.1-2 clues_0.6.1        FactoMineR_2.0     kableExtra_1.1.0   knitr_1.28        
 
 loaded via a namespace (and not attached):
- [1] ggrepel_0.8.1           Rcpp_1.0.2              assertthat_0.2.1        zeallot_0.1.0           digest_0.6.21           mime_0.7                R6_2.4.0                backports_1.1.5         evaluate_0.14           highr_0.8               httr_1.4.1              ggplot2_3.2.1          
-[13] pillar_1.4.2            rlang_0.4.0             lazyeval_0.2.2          rstudioapi_0.10         miniUI_0.1.1.1          Matrix_1.2-17           rmarkdown_1.16          splines_3.6.1           webshot_0.5.1           readr_1.3.1             stringr_1.4.0           htmlwidgets_1.5.1      
-[25] munsell_0.5.0           shiny_1.4.0             compiler_3.6.1          httpuv_1.5.2            xfun_0.10               pkgconfig_2.0.3         mgcv_1.8-29             htmltools_0.4.0         flashClust_1.01-2       tidyselect_0.2.5        tibble_2.1.3            viridisLite_0.3.0      
-[37] crayon_1.3.4            dplyr_0.8.3             later_1.0.0             MASS_7.3-51.4           leaps_3.1               grid_3.6.1              nlme_3.1-141            jsonlite_1.6            xtable_1.8-4            gtable_0.3.0            magrittr_1.5            scales_1.0.0           
-[49] stringi_1.4.3           promises_1.1.0          scatterplot3d_0.3-41    xml2_1.2.2              vctrs_0.2.0             tools_3.6.1             manipulateWidget_0.10.0 glue_1.3.1              purrr_0.3.2             hms_0.5.1               crosstalk_1.0.0         parallel_3.6.1         
-[61] fastmap_1.0.1           yaml_2.2.0              colorspace_1.4-1        cluster_2.1.0           rvest_0.3.4            
+ [1] ggrepel_0.8.1           Rcpp_1.0.3              assertthat_0.2.1        zeallot_0.1.0           digest_0.6.24           mime_0.9                R6_2.4.1                backports_1.1.5         evaluate_0.14           highr_0.8               httr_1.4.1              ggplot2_3.2.1          
+[13] pillar_1.4.2            rlang_0.4.4             lazyeval_0.2.2          rstudioapi_0.10         miniUI_0.1.1.1          Matrix_1.2-17           rmarkdown_2.1           splines_3.6.1           webshot_0.5.2           readr_1.3.1             stringr_1.4.0           htmlwidgets_1.5.1      
+[25] munsell_0.5.0           shiny_1.4.0             compiler_3.6.1          httpuv_1.5.2            xfun_0.12               pkgconfig_2.0.3         mgcv_1.8-31             htmltools_0.4.0         flashClust_1.01-2       tidyselect_0.2.5        tibble_2.1.3            viridisLite_0.3.0      
+[37] crayon_1.3.4            dplyr_0.8.3             later_1.0.0             MASS_7.3-51.4           leaps_3.0               grid_3.6.1              nlme_3.1-142            jsonlite_1.6.1          xtable_1.8-4            gtable_0.3.0            lifecycle_0.1.0         magrittr_1.5           
+[49] scales_1.1.0            stringi_1.4.6           promises_1.1.0          scatterplot3d_0.3-41    xml2_1.2.2              vctrs_0.2.0             tools_3.6.1             manipulateWidget_0.10.0 glue_1.3.1              purrr_0.3.3             hms_0.5.2               crosstalk_1.0.0        
+[61] parallel_3.6.1          fastmap_1.0.1           yaml_2.2.1              colorspace_1.4-1        cluster_2.1.0           rvest_0.3.5            
 ```
 
 
@@ -1067,7 +1119,7 @@ biplot(prcomp(mes.iris, scale = TRUE), las = 1, cex = 0.7,
        main = "Données normalisées")
 ```
 
-<img src="figures/irisDeFisher_unnamed-chunk-29-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_unnamed-chunk-30-1.png" width="90%" style="display: block; margin: auto;" />
 
 *****
 

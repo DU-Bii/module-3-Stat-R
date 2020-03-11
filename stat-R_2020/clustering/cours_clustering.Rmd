@@ -106,7 +106,7 @@ nb.var=ncol(mes.iris)
 # Les données dans l'ordinateur (1)
 
 ## Les iris de Fisher 
-[Ces données sont un classique des méthodes d'apprentissage](https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1469-1809.1936.tb02137.x)
+Ces données sont un classique des méthodes d'apprentissage [Fisher](https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1469-1809.1936.tb02137.x)
 
 ```{r fleur.iris.1, echo=FALSE, out.width="60%"}
 include_graphics(path = "img/iris_petal_sepal.png")
@@ -124,11 +124,13 @@ head(mes.iris)
 head(mes.iris)
 ```
 
-- 1 ligne = 1 fleur = 1 vecteur
+- 1 ligne = 1 fleur = 1 individu = 1 vecteur
 
-- 1 colonne = 1 variable = 1 vecteur
+- 1 colonne = 1 variable = 1 feature = 1 vecteur
 
 - l'ensemble des données = 1 échantillon = 1 data.frame
+
+**!** : convention différente en RNA-seq
 
 # Représentons ces données : une fleur (1)
 
@@ -246,7 +248,7 @@ On a une **information** sur nos données
 
 # Clustering
 
-```{r are_there_clusters, echo=FALSE, out.width="60%", fig.cap="Y a-t-il des groupes ?"}
+```{r are_there_clusters, echo=FALSE, out.width="60%", fig.cap="données simulées : y a-t-il des groupes ?"}
 include_graphics(path = "img/figure1.png")
 ```
 
@@ -356,9 +358,9 @@ Ne sont pas des distances, mais indices de dissimilarité :
 - **Bray-Curtis** (en écologie, comparaison d'abondance d'espèces)
 - **Jensen-Shannon** (comparaison de distributions)
   
-**Note** : lors du TP, sur les données d'expression RNA-seq, nous utiliserons le **coefficient de corrélation de Spearman** et la distance dérivée, $d_c = 1-r$ ou $d_c = \sqrt{2 \times (1 - r)}$
+**Note** : lors du TP, sur les données d'expression RNA-seq, nous utiliserons le **coefficient de corrélation de Spearman** et la distance dérivée, $d_c = 1-r$
 
-# Avec R (1)
+# Avec R (1) : distance entre deux individus 
 
 - on utilise la fonction `dist()` avec l'option `method = "euclidean", "manhattan", ...` 
 
@@ -371,17 +373,25 @@ distance euclidienne : `r round(dist(mat.xy), digits = 2)`
 
 distance de manhattan = `r round(dist(mat.xy, method = "manhattan"), digits = 2)`
 
+# Avec R (2) : distance entre individus d'un nuage de points 
 
-# Avec R (2)
+- distance euclidienne
+```{r}
+mat.iris <- mes.iris[sample(1:150, 5),]
+print(dist(mat.iris), digits = 2)
+```
 
-- ou pour des distances particulières, par exemple l'indice de Jaccard :
-```{r echo = FALSE}
-v.a <- c(0, 1, 0, 0, 0, 0, 0)
-v.b <- c(0, 1, 0, 0, 0, 1, 0)
-v.c <- c(0, 1, 0, 0, 0, 0, 0)
-mat.abc <- as.matrix(rbind(v.a, v.b, v.c))
-knitr::kable(mat.abc, align = "c")
-vegan::vegdist(mat.abc)
+- distance de corrélation : $d = 1-r$
+```{r}
+cor.mat.iris <- cor(t(mat.iris))
+print(as.dist(1 - cor.mat.iris), digits = 2)
+```
+
+# Avec R (3) : distance entre variables décrivant le nuage de points 
+
+```{r}
+cor.mat.iris <- cor(mat.iris)
+print(as.dist(1 - cor.mat.iris), digits = 2)
 ```
 
 # Distances entre groupes (1)
@@ -393,9 +403,9 @@ mat1 <- cbind(x1, y1)
 x2 <- rnorm(5, 4, 1)
 y2 <- rnorm(5, 6, 2)
 mat2 <- cbind(x2, y2)
-mat <- rbind (mat1, mat2)
+mat <- rbind(mat1, mat2)
 plot(mat, col = rep(c("red", "blue"), each = 5),
-     xlab = "", ylab ="")
+     xlab = "", ylab = "")
 ```
 
 # Distances entre groupes (2)
@@ -449,84 +459,49 @@ summary(mes.iris)
 
 On peut ensuite essayer de visualiser les données
 
-  - par un `plot`
+  - par un `plot` (**!** ne pas faire si "grosses" données)
   
 ```{r plot_4variables, out.width="60%"}
 plot(mes.iris)
 ```
 
-# Visualisation des données - coloration par espèces
 
+# Préparation des données (1) : variables de variance nulle
 
-```{r plot_4variables_variety, out.width="60%"}
-species.colors <- c(setosa = "#BB44DD", virginica = "#AA0044", versicolor = "#4400FF")
-plot(mes.iris, col = species.colors[iris$Species], cex = 0.7)
-```
-
-
-# Visualisation des données
-
-- par la fonction `image()`
-  
-```{r var_image, out.width="60%"}
-image(1:nb.var, 1:nb.iris ,t(as.matrix(mes.iris)), xlab = "variables", ylab = "Observation nb", las = 1)
-```
-
-# Nettoyage des données (1) : données manquantes
-
-Avant de commencer à travailler, il est nécessaire de commencer par vérifier que :
-
-- il n'y a pas de données manquantes
-
-```{r}
-sum(is.na(mes.iris))
-```
-
-# Nettoyage des données (2) : variables constantes
-
-- aucune  variable n'est constante (aucune variable n'a une variance nulle)
-  
 ```{r}
 iris.var <- apply(mes.iris, 2, var)
 kable(iris.var, digits = 3, col.names = "Variance")
 sum(apply(mes.iris, 2, var) == 0)
 ```
 
+# Préparation des données (2) : "Normalisation"
 
-# Normalisation
-
-Afin de pouvoir considérer que toutes les variables sont à la même échelle, il est parfois nécessaire de normaliser les données.
+Afin de pouvoir considérer que toutes les variables sont à la même échelle, il est parfois nécessaire de standardiser les données.
 
 - soit 
 
-    - en centrant (ramener la moyenne de chaque variable à $0$)
+  - en centrant (ramener la moyenne de chaque variable à $0$)
   
 ```{r}
-mes.iris.centre <- scale(mes.iris, center=TRUE, scale=FALSE)
+mes.iris.centre <- scale(mes.iris, center = TRUE, scale = FALSE)
 ```
 
 - soit 
 
-    - en centrant (ramener la moyenne de chaque variable $0$)
-    - et mettant à l'échelle (ramener la variance de chaque variable à $1$)
+  - en centrant (ramener la moyenne de chaque variable $0$)
+  - et mettant à l'échelle (ramener la variance de chaque variable à $1$)
 
 ```{r}
-mes.iris.scaled <- scale(mes.iris, center=TRUE, scale=TRUE)
+mes.iris.scaled <- scale(mes.iris, center = TRUE, scale = TRUE)
 ```
 
+- soit en effectuant une transformation des variables, par exemple transformation logarithmique
 
-# On peut visuellement regarder l'effet de la normalisation :
+# On peut visuellement regarder l'effet de la standardisation :
 
-## par un plot des données 
+- par une boîte à moustaches (boxplot)
 
-```{r plot_raw_vs_scaled, out.width="60%", fig.width=12, fig.height=6}
-plot(mes.iris, main = "Raw variables")
-```
-
-**!** ne pas faire si "grosses" données
-
-
-# ... par une boîte à moustaches (boxplot)
+# standardisation par la moyenne et la variance
 
 ```{r boxplots_raw_vs_norm, out.width="70%", fig.width=8, fig.height=6}
 par(mfrow = c(1,2))
@@ -534,24 +509,39 @@ par(mar = c(7, 4.1, 4.1, 1.1)) # adapt margin sizes for the labels
 boxplot(mes.iris, main = "Raw data", las = 2)
 boxplot(mes.iris.scaled, main = "scaled", las = 2)
 par(mar = c(5.1, 4.1, 4.1, 2.1)) # Restore original margin sizes
+par(mfrow = c(1,1))
 ```
 
-# ... par une image
+# standardisation par la médiane
 
-```{r image_raw_vs_norm, out.width="80%", fig.width=12, fig.height=6}
-par(mfrow=c(1,2))
-image(1:nb.var, 1:nb.iris, t(as.matrix(mes.iris)), main="Raw data")
-image(1:nb.var, 1:nb.iris, t(as.matrix(mes.iris.scaled)), main="Scaled data")
+```{r normalisation.par.la.mediane, out.width="70%", fig.width=8, fig.height=6}
+iris.mediane <- apply(mes.iris, 2, median)
+mes.iris.scaled.mediane <- sweep(mes.iris, 2, iris.mediane)
+par(mfrow = c(1,2))
+par(mar = c(7, 4.1, 4.1, 1.1)) # adapt margin sizes for the labels
+boxplot(mes.iris.centre, main = "scaled, moyenne", las = 2)
+boxplot(mes.iris.scaled.mediane, main = "scaled, médiane", las = 2)
+par(mar = c(5.1, 4.1, 4.1, 2.1)) # Restore original margin sizes
+par(mfrow = c(1,1))
+```
+
+# par l'intervalle inter-quartile (IQR)
+
+```{r normalisation.par.IQR, out.width="70%", fig.width=8, fig.height=6}
+iris.iqr <- apply(mes.iris, 2, IQR)
+mat.iris.iqr <- matrix(rep(iris.iqr, each = nrow(mes.iris)), ncol = 4)
+mes.iris.scaled.iqr <- mes.iris / mat.iris.iqr
+par(mfrow = c(1,2))
+par(mar = c(7, 4.1, 4.1, 1.1)) # adapt margin sizes for the labels
+boxplot(mes.iris, main = "raw data", las = 2)
+boxplot(mes.iris.scaled.iqr, main = "scaled, IQR", las = 2)
+par(mar = c(5.1, 4.1, 4.1, 2.1)) # Restore original margin sizes
+par(mfrow = c(1,1))
 ```
 
 # La matrice de distances
 
 Nous utilisons ici la distance euclidienne sur données **normalisées**. 
-
-```{r echo=F}
-iris.acp <- FactoMineR::PCA(mes.iris, graph=F, scale.unit=F)
-iris.scaled.acp <- FactoMineR::PCA(mes.iris.scaled, graph=F)
-```
 
 ```{r echo = FALSE}
 iris.euc <- dist(mes.iris)
@@ -717,7 +707,10 @@ par(mfrow=c(1,1))
 # Les heatmap
 
 ```{r, out.width = "60%"}
-pheatmap::pheatmap(mes.iris.scaled)
+pheatmap::pheatmap(mes.iris, clustering.method = "ward.D2")
+pheatmap::pheatmap(mes.iris.scaled, clustering.method = "ward.D2")
+pheatmap::pheatmap(mes.iris, scale = "column", clustering.method = "ward.D2")
+pheatmap::pheatmap(mes.iris, scale = "row", clustering.method = "ward.D2")
 ```
 
 # Les k-means
@@ -833,7 +826,7 @@ La coupure de l’arbre à un niveau donné construit une partition. la coupure 
 ---
 
 ```{r plot_iris_ward, out.width="95%", fig.width=10, fig.height=5}
-plot(iris.scale.hclust.ward, hang=-1, cex=0.5)
+plot(iris.scale.hclust.ward, hang = -1, cex = 0.5)
 ```
 
 # Comment déterminer le nombre de clusters ? avec les kmeans
@@ -845,6 +838,53 @@ for (nbgrp in 2:6) {
   wss[nbgrp] <- kmeans(mes.iris.scaled, center = nbgrp)$tot.withinss
 }
 barplot(wss, names.arg = 1:6, main = "variance intra en fonction du nombre de cluster")
+```
+
+# Comparaison des résultats des deux clustering
+
+- par une table
+
+```{r echo = FALSE,results = TRUE}
+cluster.kmeans3 <- kmeans(mes.iris.scaled, center = 3)$cluster
+cluster.hclust5 <- cutree(hclust(dist(mes.iris.scaled), method = "ward.D2"), k = 5)
+ma.table <- table(cluster.hclust5, cluster.kmeans3)
+knitr::kable(ma.table, align = "c", col.names = NULL)
+```
+
+# Pros et cons des différents algorithmes
+
+| Algorithme | Pros | Cons |
+|-------------|------------------------------|------------------------|
+| **Hiérarchique** | L'arbre reflète la nature imbriquée de tous les sous-clusters | Complexité quadratique (mémoire et temps de calcul) $\rightarrow$ quadruple chaque fois qu'on double le nombre d'individus  |
+| | Permet une visualisation couplée dendrogramme (groupes) + heatmap (profils individuels) | |
+| | Choix a posteriori du nombre de clusters | |
+
+---
+
+| Algorithme | Pros | Cons |
+|-------------|------------------------------|------------------------|
+| **K-means** | Rapide (linéaire en temps), peut traiter des jeux de données énormes (centaines de milliers de pics ChIP-seq) | Positions initiales des centres est aléatoire $\rightarrow$ résultats changent d'une exécution à l'autre |
+| | | Distance euclidienne (pas appropriée pour transcriptome par exemple) |
+
+# Visualisation des données - coloration par espèces
+
+```{r plot_4variables_variety, out.width="60%"}
+species.colors <- c(setosa = "#BB44DD", virginica = "#AA0044", versicolor = "#4400FF")
+plot(mes.iris, col = species.colors[iris$Species], cex = 0.7)
+```
+***
+# Supplementary materials
+
+# Distance avec R : indice de Jaccard
+
+- ou pour des distances particulières, par exemple l'indice de Jaccard :
+```{r echo = FALSE}
+v.a <- c(0, 1, 0, 0, 0, 0, 0)
+v.b <- c(0, 1, 0, 0, 0, 1, 0)
+v.c <- c(0, 1, 0, 0, 0, 0, 0)
+mat.abc <- as.matrix(rbind(v.a, v.b, v.c))
+knitr::kable(mat.abc, align = "c")
+vegan::vegdist(mat.abc)
 ```
 
 # Comparaison de clustering: Rand Index
@@ -870,16 +910,6 @@ $$ ARI=\frac{RI-Expected RI}{Max RI -Expected RI}$$
 - Adapté pour nombre de classe différent entre les deux classifications
 et taille de classe différente
 
-# Comparaison des résultats des deux clustering
-
-- par une table de confusion
-
-```{r echo = FALSE,results = TRUE}
-cluster.kmeans3 <- kmeans(mes.iris.scaled, center = 3)$cluster
-cluster.hclust5 <- cutree(hclust(dist(mes.iris.scaled), method = "ward.D2"), k=5)
-ma.table <- table(cluster.hclust5, cluster.kmeans3)
-knitr::kable(ma.table, align = "c", col.names = NULL)
-```
 
 # Comparaison de clustering: Rand Index
 
@@ -911,20 +941,6 @@ et taille de classe différente
 clues::adjustedRand(cluster.hclust5, cluster.kmeans3)
 ```
 
-# Pros et cons des différents algorithmes
-
-| Algorithme | Pros | Cons |
-|-------------|------------------------------|------------------------|
-| **Hiérarchique** | L'arbre reflète la nature imbriquée de tous les sous-clusters | Complexité quadratique (mémoire et temps de calcul) $\rightarrow$ quadruple chaque fois qu'on double le nombre d'individus  |
-| | Permet une visualisation couplée dendrogramme (groupes) + heatmap (profils individuels) | |
-| | Choix a posteriori du nombre de clusters | |
-
----
-
-| Algorithme | Pros | Cons |
-|-------------|------------------------------|------------------------|
-| **K-means** | Rapide (linéaire en temps), peut traiter des jeux de données énormes (centaines de milliers de pics ChIP-seq) | Positions initiales des centres est aléatoire $\rightarrow$ résultats changent d'une exécution à l'autre |
-| | | Distance euclidienne (pas appropriée pour transcriptome par exemple) |
 
 ---
 
