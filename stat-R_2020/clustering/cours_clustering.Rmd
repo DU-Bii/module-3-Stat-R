@@ -4,18 +4,20 @@ subtitle: "Hierarchical clustering et Kmeans"
 author: "Anne Badel, Frédéric Guyon & Jacques van Helden"
 date: "`r Sys.Date()`"
 output:
-  beamer_presentation:
-    theme: Hannover #Montpellier
-    colortheme: beaver
-    fonttheme: professionalfonts #structurebold
-    highlight: pygments #default
-    fig_caption: no
-    fig_height: 4
-    fig_width: 5
+  slidy_presentation:
+    highlight: default
     incremental: no
-    keep_tex: no
+    smart: no
     slide_level: 1
+    self_contained: no
+    fig_caption: no
+    fig_height: 5
+    fig_width: 5
+    keep_md: yes
+    smaller: yes
+    theme: cerulean
     toc: yes
+    widescreen: yes
   revealjs::revealjs_presentation:
     theme: night
     transition: none
@@ -38,20 +40,18 @@ output:
     toc: yes
     toc_depth: 3
     toc_float: yes
-  slidy_presentation:
-    highlight: default
-    incremental: no
-    smart: no
-    slide_level: 1
-    self_contained: no
+  beamer_presentation:
+    theme: Hannover #Montpellier
+    colortheme: beaver
+    fonttheme: professionalfonts #structurebold
+    highlight: pygments #default
     fig_caption: no
-    fig_height: 5
+    fig_height: 4
     fig_width: 5
-    keep_md: yes
-    smaller: yes
-    theme: cerulean
+    incremental: no
+    keep_tex: no
+    slide_level: 1
     toc: yes
-    widescreen: yes
 font-import: http://fonts.googleapis.com/css?family=Risque
 font-family: Garamond
 transition: linear
@@ -108,7 +108,7 @@ nb.var=ncol(mes.iris)
 ## Les iris de Fisher 
 Ces données sont un classique des méthodes d'apprentissage [Fisher](https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1469-1809.1936.tb02137.x)
 
-```{r fleur.iris.1, echo=FALSE, out.width="60%"}
+```{r fleur.iris.1, echo=FALSE, out.width="50%"}
 include_graphics(path = "img/iris_petal_sepal.png")
 ```
 
@@ -248,7 +248,7 @@ On a une **information** sur nos données
 
 # Clustering
 
-```{r are_there_clusters, echo=FALSE, out.width="60%", fig.cap="données simulées : y a-t-il des groupes ?"}
+```{r are_there_clusters, echo=FALSE, out.width="50%", fig.cap="données simulées : y a-t-il des groupes ?"}
 include_graphics(path = "img/figure1.png")
 ```
 
@@ -301,36 +301,47 @@ Définition d'une distance : fonction positive de deux variables
 
 Si 1,2,3 : dissimilarité
 
-# Distances utilisées dans R (1)
+# Distance euclidienne
 
 - distance euclidienne ou distance $L_2$:
   $d(x,y)=\sqrt{\sum_i (x_i-y_i)^2}$
-  
-- distance de manahattan ou distance $L_1$:
-  $d(x,y)=\sum_i |x_i-y_i|$
-    
-- distance du maximum ou L-infinis, $L_\infty$:
-  $d(x,y)=\max_i |x_i-y_i|$
-    
-```{r distances, echo=FALSE, out.width="50%"}
-include_graphics(path = "img/distance.png")
+
+# Distance euclidienne et distance de corrélation
+
+```{r echo = FALSE, out.width = "80%", fig.height = 5, fig.width = 10}
+par(mfrow = c(1,2))
+plot(x = 0, y = 0, type = "n", xlim = c(0, 5), ylim = c(0, 5), 
+     main = "", xlab = "", ylab = "")
+points(x = 1, y = 1, col = "blue", pch = 19)
+text(x = 1, y = 1, col = "blue", label = "A", pos = 2)
+points(x = 2, y = 0, col = "green", pch = 19)
+text(x = 2, y = 0, col = "green", label = "B", pos = 4)
+points(x = 4, y = 4, col = "red", pch = 19)
+text(x = 4, y = 4, col = "red", label = "C", pos = 4)
+vect.A <- c(1, 1.5, 3, 3.5, 3, 1.5, 0.5, -1, -1.5, -1)
+vect.B <- c(1, 1.1, 1.2, 1.5, 1.2, 1.1, 1, 0.9, 0.8, 0.9)
+vect.C <- c(1, 0.9, 0.8, 0.7, 0.8, 0.9, 1, 0.95, 0.9, 0.8)
+plot(0:10, type = "n", xlim = c(1, 10), ylim = c(-2, 4), 
+     main = "", xlab = "", ylab = "")
+lines(vect.A, type = "b", col = "blue")
+lines(vect.B, type = "b", col = "green")
+lines(vect.C, type = "b", col = "red")
+legend(8, 3, legend = c("A", "B", "C"), 
+       col = c("blue", "green", "red"), lty = 1,
+       text.col = c("blue", "green", "red"))
+par(mfrow = c(1,1))
 ```
 
+```{r echo = FALSE}
+ABC.dist <- dist(rbind(vect.A, vect.B, vect.C))
+ABC.cor <- as.dist(cor(t(rbind(vect.A, vect.B, vect.C))))
+ABC.cordist <- as.dist(1 - ABC.cor)
+ABC.resume <- cbind(ABC.dist, ABC.cor, ABC.cordist)
+colnames(ABC.resume) <- c("distance euclidienne", "coefficient de corrélation", "distance de corrélation")
+rownames(ABC.resume) <- c("A - B", "A - C", "B - C")
+knitr::kable(ABC.resume, align = 'c', digits = 2)
+```
 
-# Distances utilisées dans R (2)
-
-- distance de Minkowski $l_p$:
-$$d(x,y)=\sqrt[p]{\sum_i (|x_i-y_i|^p}$$
-
-- distance de Canberra (x et y valeurs positives):
-$$d(x,y)=\sum_i \frac{x_i-y_i}{x_i+y_i}$$
-
-- distance binaire ou distance de Jaccard ou Tanimoto: proportion de propriétés communes
-
-
-
-  
-**Note** : lors du TP, sur les données d'expression RNA-seq, nous utiliserons le **coefficient de corrélation de Spearman** et la distance dérivée, $d_c = 1-r$
 
 # Avec R (1) : distance entre deux individus 
 
@@ -348,20 +359,20 @@ distance de manhattan = `r round(dist(mat.xy, method = "manhattan"), digits = 2)
 # Avec R (2) : distance entre individus d'un nuage de points 
 
 - distance euclidienne
-```{r}
+```{r echo = FALSE}
 mat.iris <- mes.iris[sample(1:150, 5),]
 print(dist(mat.iris), digits = 2)
 ```
 
 - distance de corrélation : $d = 1-r$
-```{r}
+```{r echo = FALSE}
 cor.mat.iris <- cor(t(mat.iris))
 print(as.dist(1 - cor.mat.iris), digits = 2)
 ```
 
 # Avec R (3) : distance entre variables décrivant le nuage de points 
 
-```{r}
+```{r echo = FALSE}
 cor.mat.iris <- cor(mat.iris)
 print(as.dist(1 - cor.mat.iris), digits = 2)
 ```
@@ -390,9 +401,7 @@ $$D(C_1,C_2) = \min_{i \in C_1, j \in C_2} D(x_i, x_j)$$
 
 $$D(C_1,C_2) = \max_{i \in C_1, j \in C_2} D(x_i, x_j)$$
 
-# Distances entre groupes (3)
-  
-- **Group average** : distance moyenne
+- **Average linkage** : distance moyenne
 
 $$D(C_1,C_2) = \frac{1}{N_1 N_2} \sum_{i \in C_1, j \in C_2} D(x_i, x_j)$$
   
@@ -410,21 +419,7 @@ include_graphics(path = "img/groupes.png")
 
 # Les données
 
-[Ces données sont un classique des méthodes d'apprentissage](https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1469-1809.1936.tb02137.x)
-
-Dans un premier temps, regardons les données
-
-```{r}
-dim(mes.iris)
-head(mes.iris)
-```
-
----
-
-```{r}
-str(mes.iris)
-summary(mes.iris)
-```
+Revenons à nos iris de Fisher
 
 
 # Visualisation des données
@@ -433,7 +428,7 @@ On peut ensuite essayer de visualiser les données
 
   - par un `plot` (**!** ne pas faire si "grosses" données)
   
-```{r plot_4variables, out.width="60%"}
+```{r plot_4variables, out.width="50%"}
 plot(mes.iris)
 ```
 
@@ -475,7 +470,7 @@ mes.iris.scaled <- scale(mes.iris, center = TRUE, scale = TRUE)
 
 # standardisation par la moyenne ou la médiane
 
-```{r normalisation.par.la.mediane, echo = FALSE, out.width="70%", fig.width=8, fig.height=6}
+```{r normalisation_par_la_mediane, echo = FALSE, out.width="70%", fig.width=8, fig.height=6}
 iris.mediane <- apply(mes.iris, 2, median)
 mes.iris.scaled.mediane <- sweep(mes.iris, 2, iris.mediane)
 par(mfrow = c(1,3))
@@ -489,7 +484,7 @@ par(mfrow = c(1,1))
 
 # standardisation par écart-type ou intervalle interquartile
 
-```{r normalisation.par.IQR, echo = FALSE, out.width="70%", fig.width=8, fig.height=6}
+```{r normalisation_par_IQR, echo = FALSE, out.width="70%", fig.width=8, fig.height=6}
 iris.sd <- apply(mes.iris, 2, sd)
 mat.iris.sd <- matrix(rep(iris.sd, each = nrow(mes.iris)), ncol = 4)
 mes.iris.scaled.sd <- mes.iris / mat.iris.sd
@@ -526,17 +521,16 @@ iris.euc <- dist(mes.iris)
 iris.scale.euc <- dist(mes.iris.scaled)
 mes.iris.cor <- cor(t(mes.iris))
 mes.iris.cor.dist <- 1 - mes.iris.cor
-mes.couleur <- colorspace::diverge_hsv(30)
 ```
 
 ```{r, out.width="70%", fig.width=6, fig.height=6, echo = FALSE}
-levelplot(as.matrix(iris.scale.euc))
+levelplot(as.matrix(iris.scale.euc), xlab = "", ylab = "")
 ```
 
 # La matrice de distance de corrélation
 
 ```{r, out.width="70%", fig.width=6, fig.height=6, echo = FALSE}
-levelplot(mes.iris.cor.dist)
+levelplot(mes.iris.cor.dist, xlab = "", ylab = "")
 ```
 
 # La classification hiérarchique : principe
@@ -862,6 +856,37 @@ plot(mes.iris, col = species.colors[iris$Species], cex = 0.7)
 # Supplementary materials
 
 POUR ALLER PLUS LOIN
+
+# Distances utilisées dans R (1)
+
+- distance euclidienne ou distance $L_2$:
+  $d(x,y)=\sqrt{\sum_i (x_i-y_i)^2}$
+  
+- distance de manahattan ou distance $L_1$:
+  $d(x,y)=\sum_i |x_i-y_i|$
+    
+- distance du maximum ou L-infinis, $L_\infty$:
+  $d(x,y)=\max_i |x_i-y_i|$
+    
+```{r distances, echo=FALSE, out.width="50%"}
+include_graphics(path = "img/distance.png")
+```
+
+
+# Distances utilisées dans R (2)
+
+- distance de Minkowski $l_p$:
+$$d(x,y)=\sqrt[p]{\sum_i (|x_i-y_i|^p}$$
+
+- distance de Canberra (x et y valeurs positives):
+$$d(x,y)=\sum_i \frac{x_i-y_i}{x_i+y_i}$$
+
+- distance binaire ou distance de Jaccard ou Tanimoto: proportion de propriétés communes
+
+
+
+  
+**Note** : lors du TP, sur les données d'expression RNA-seq, nous utiliserons le **coefficient de corrélation de Spearman** et la distance dérivée, $d_c = 1-r$
 
 # Autres distances non géométriques (pour information)
 

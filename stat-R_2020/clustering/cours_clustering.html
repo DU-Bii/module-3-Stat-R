@@ -110,7 +110,7 @@ Anne Badel, Frédéric Guyon &amp; Jacques van Helden
 <h1>Les données dans l’ordinateur (1)</h1>
 <h2 id="les-iris-de-fisher">Les iris de Fisher</h2>
 <p>Ces données sont un classique des méthodes d’apprentissage <a href="https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1469-1809.1936.tb02137.x">Fisher</a></p>
-<p><img src="img/iris_petal_sepal.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="img/iris_petal_sepal.png" width="50%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="les-données-dans-lordinateur-2" class="slide section level1">
 <h1>Les données dans l’ordinateur (2)</h1>
@@ -227,7 +227,7 @@ Anne Badel, Frédéric Guyon &amp; Jacques van Helden
 <div id="clustering" class="slide section level1">
 <h1>Clustering</h1>
 <div class="figure" style="text-align: center">
-<img src="img/figure1.png" alt="données simulées : y a-t-il des groupes ?" width="60%" />
+<img src="img/figure1.png" alt="données simulées : y a-t-il des groupes ?" width="50%" />
 <p class="caption">
 données simulées : y a-t-il des groupes ?
 </p>
@@ -275,23 +275,76 @@ données simulées : y a-t-il des groupes ?
 </ol>
 <p>Si 1,2,3 : dissimilarité</p>
 </div>
-<div id="distances-utilisées-dans-r-1" class="slide section level1">
-<h1>Distances utilisées dans R (1)</h1>
+<div id="distance-euclidienne" class="slide section level1">
+<h1>Distance euclidienne</h1>
 <ul>
-<li><p>distance euclidienne ou distance <span class="math inline">\(L_2\)</span>: <span class="math inline">\(d(x,y)=\sqrt{\sum_i (x_i-y_i)^2}\)</span></p></li>
-<li><p>distance de manahattan ou distance <span class="math inline">\(L_1\)</span>: <span class="math inline">\(d(x,y)=\sum_i |x_i-y_i|\)</span></p></li>
-<li><p>distance du maximum ou L-infinis, <span class="math inline">\(L_\infty\)</span>: <span class="math inline">\(d(x,y)=\max_i |x_i-y_i|\)</span></p></li>
+<li>distance euclidienne ou distance <span class="math inline">\(L_2\)</span>: <span class="math inline">\(d(x,y)=\sqrt{\sum_i (x_i-y_i)^2}\)</span></li>
 </ul>
-<p><img src="img/distance.png" width="50%" style="display: block; margin: auto;" /></p>
 </div>
-<div id="distances-utilisées-dans-r-2" class="slide section level1">
-<h1>Distances utilisées dans R (2)</h1>
-<ul>
-<li><p>distance de Minkowski <span class="math inline">\(l_p\)</span>: <span class="math display">\[d(x,y)=\sqrt[p]{\sum_i (|x_i-y_i|^p}\]</span></p></li>
-<li><p>distance de Canberra (x et y valeurs positives): <span class="math display">\[d(x,y)=\sum_i \frac{x_i-y_i}{x_i+y_i}\]</span></p></li>
-<li><p>distance binaire ou distance de Jaccard ou Tanimoto: proportion de propriétés communes</p></li>
-</ul>
-<p><strong>Note</strong> : lors du TP, sur les données d’expression RNA-seq, nous utiliserons le <strong>coefficient de corrélation de Spearman</strong> et la distance dérivée, <span class="math inline">\(d_c = 1-r\)</span></p>
+<div id="distance-euclidienne-et-distance-de-corrélation" class="slide section level1">
+<h1>Distance euclidienne et distance de corrélation</h1>
+<p><img src="figures/irisDeFisher_unnamed-chunk-13-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:center;">
+distance euclidienne
+</th>
+<th style="text-align:center;">
+coefficient de corrélation
+</th>
+<th style="text-align:center;">
+distance de corrélation
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+A - B
+</td>
+<td style="text-align:center;">
+4.85
+</td>
+<td style="text-align:center;">
+0.93
+</td>
+<td style="text-align:center;">
+0.07
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+A - C
+</td>
+<td style="text-align:center;">
+5.59
+</td>
+<td style="text-align:center;">
+-0.53
+</td>
+<td style="text-align:center;">
+1.53
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+B - C
+</td>
+<td style="text-align:center;">
+1.03
+</td>
+<td style="text-align:center;">
+-0.67
+</td>
+<td style="text-align:center;">
+1.67
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="avec-r-1-distance-entre-deux-individus" class="slide section level1">
 <h1>Avec R (1) : distance entre deux individus</h1>
@@ -302,78 +355,72 @@ données simulées : y a-t-il des groupes ?
 <tbody>
 <tr>
 <td style="text-align:right;">
-4.85
+4.27
 </td>
 <td style="text-align:right;">
-3.70
+2.98
 </td>
 <td style="text-align:right;">
-4.82
+2.82
 </td>
 <td style="text-align:right;">
-1.57
+4.58
 </td>
 <td style="text-align:right;">
-3.43
+3.04
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-2.46
+2.54
 </td>
 <td style="text-align:right;">
-2.11
+3.97
 </td>
 <td style="text-align:right;">
-2.31
+2.90
 </td>
 <td style="text-align:right;">
-3.90
+3.45
 </td>
 <td style="text-align:right;">
-3.12
+2.18
 </td>
 </tr>
 </tbody>
 </table>
-<p>distance euclidienne : 5.69</p>
-<p>distance de manhattan = 16.19</p>
+<p>distance euclidienne : 4.33</p>
+<p>distance de manhattan = 12.17</p>
 </div>
 <div id="avec-r-2-distance-entre-individus-dun-nuage-de-points" class="slide section level1">
 <h1>Avec R (2) : distance entre individus d’un nuage de points</h1>
 <ul>
 <li>distance euclidienne</li>
 </ul>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">mat.iris &lt;-<span class="st"> </span>mes.iris[<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">150</span>, <span class="dv">5</span>),]</a>
-<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="kw">print</span>(<span class="kw">dist</span>(mat.iris), <span class="dt">digits =</span> <span class="dv">2</span>)</a></code></pre></div>
-<pre><code>      24  131   25   10
-131 5.18               
-25  0.48 5.26          
-10  0.53 5.54 0.52     
-40  0.37 5.45 0.50 0.37</code></pre>
+<pre><code>      73  100   86   12
+100 1.06               
+86  1.03 0.84          
+12  3.95 2.94 3.44     
+137 1.45 2.04 1.39 4.81</code></pre>
 <ul>
 <li>distance de corrélation : <span class="math inline">\(d = 1-r\)</span></li>
 </ul>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">cor.mat.iris &lt;-<span class="st"> </span><span class="kw">cor</span>(<span class="kw">t</span>(mat.iris))</a>
-<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="kw">print</span>(<span class="kw">as.dist</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>cor.mat.iris), <span class="dt">digits =</span> <span class="dv">2</span>)</a></code></pre></div>
-<pre><code>         24     131      25      10
-131 0.35834                        
-25  0.00872 0.34746                
-10  0.00057 0.34840 0.00498        
-40  0.00116 0.38563 0.00625 0.00116</code></pre>
+<pre><code>        73    100     86     12
+100 0.0162                     
+86  0.0287 0.0028              
+12  0.3310 0.2103 0.1858       
+137 0.0062 0.0274 0.0358 0.3687</code></pre>
 </div>
 <div id="avec-r-3-distance-entre-variables-décrivant-le-nuage-de-points" class="slide section level1">
 <h1>Avec R (3) : distance entre variables décrivant le nuage de points</h1>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">cor.mat.iris &lt;-<span class="st"> </span><span class="kw">cor</span>(mat.iris)</a>
-<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="kw">print</span>(<span class="kw">as.dist</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>cor.mat.iris), <span class="dt">digits =</span> <span class="dv">2</span>)</a></code></pre></div>
 <pre><code>             Sepal.Length Sepal.Width Petal.Length
-Sepal.Width         1.862                         
-Petal.Length        0.016       1.854             
-Petal.Width         0.013       1.833        0.018</code></pre>
+Sepal.Width         1.341                         
+Petal.Length        0.018       1.255             
+Petal.Width         0.085       1.022        0.033</code></pre>
 </div>
 <div id="distances-entre-groupes-1" class="slide section level1">
 <h1>Distances entre groupes (1)</h1>
-<p><img src="figures/irisDeFisher_unnamed-chunk-17-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/irisDeFisher_unnamed-chunk-19-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="distances-entre-groupes-2" class="slide section level1">
 <h1>Distances entre groupes (2)</h1>
@@ -385,11 +432,8 @@ Petal.Width         0.013       1.833        0.018</code></pre>
 <li><strong>Complete linkage</strong> : éléments les plus éloignés des 2 groupes</li>
 </ul>
 <p><span class="math display">\[D(C_1,C_2) = \max_{i \in C_1, j \in C_2} D(x_i, x_j)\]</span></p>
-</div>
-<div id="distances-entre-groupes-3" class="slide section level1">
-<h1>Distances entre groupes (3)</h1>
 <ul>
-<li><strong>Group average</strong> : distance moyenne</li>
+<li><strong>Average linkage</strong> : distance moyenne</li>
 </ul>
 <p><span class="math display">\[D(C_1,C_2) = \frac{1}{N_1 N_2} \sum_{i \in C_1, j \in C_2} D(x_i, x_j)\]</span></p>
 <ul>
@@ -404,35 +448,7 @@ Petal.Width         0.013       1.833        0.018</code></pre>
 </div>
 <div id="les-données-1" class="slide section level1">
 <h1>Les données</h1>
-<p><a href="https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1469-1809.1936.tb02137.x">Ces données sont un classique des méthodes d’apprentissage</a></p>
-<p>Dans un premier temps, regardons les données</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">dim</span>(mes.iris)</a></code></pre></div>
-<pre><code>[1] 150   4</code></pre>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw">head</span>(mes.iris)</a></code></pre></div>
-<pre><code>  Sepal.Length Sepal.Width Petal.Length Petal.Width
-1          5.1         3.5          1.4         0.2
-2          4.9         3.0          1.4         0.2
-3          4.7         3.2          1.3         0.2
-4          4.6         3.1          1.5         0.2
-5          5.0         3.6          1.4         0.2
-6          5.4         3.9          1.7         0.4</code></pre>
-</div>
-<div class="slide section level1">
-
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw">str</span>(mes.iris)</a></code></pre></div>
-<pre><code>&#39;data.frame&#39;:   150 obs. of  4 variables:
- $ Sepal.Length: num  5.1 4.9 4.7 4.6 5 5.4 4.6 5 4.4 4.9 ...
- $ Sepal.Width : num  3.5 3 3.2 3.1 3.6 3.9 3.4 3.4 2.9 3.1 ...
- $ Petal.Length: num  1.4 1.4 1.3 1.5 1.4 1.7 1.4 1.5 1.4 1.5 ...
- $ Petal.Width : num  0.2 0.2 0.2 0.2 0.2 0.4 0.3 0.2 0.2 0.1 ...</code></pre>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="kw">summary</span>(mes.iris)</a></code></pre></div>
-<pre><code>  Sepal.Length    Sepal.Width     Petal.Length    Petal.Width   
- Min.   :4.300   Min.   :2.000   Min.   :1.000   Min.   :0.100  
- 1st Qu.:5.100   1st Qu.:2.800   1st Qu.:1.600   1st Qu.:0.300  
- Median :5.800   Median :3.000   Median :4.350   Median :1.300  
- Mean   :5.843   Mean   :3.057   Mean   :3.758   Mean   :1.199  
- 3rd Qu.:6.400   3rd Qu.:3.300   3rd Qu.:5.100   3rd Qu.:1.800  
- Max.   :7.900   Max.   :4.400   Max.   :6.900   Max.   :2.500  </code></pre>
+<p>Revenons à nos iris de Fisher</p>
 </div>
 <div id="visualisation-des-données" class="slide section level1">
 <h1>Visualisation des données</h1>
@@ -440,13 +456,13 @@ Petal.Width         0.013       1.833        0.018</code></pre>
 <ul>
 <li>par un <code>plot</code> (<strong>!</strong> ne pas faire si “grosses” données)</li>
 </ul>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="kw">plot</span>(mes.iris)</a></code></pre></div>
-<p><img src="figures/irisDeFisher_plot_4variables-1.png" width="60%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">plot</span>(mes.iris)</a></code></pre></div>
+<p><img src="figures/irisDeFisher_plot_4variables-1.png" width="50%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="préparation-des-données1-variables-de-variance-nulle" class="slide section level1">
 <h1>Préparation des données (1) : variables de variance nulle</h1>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1">iris.var &lt;-<span class="st"> </span><span class="kw">apply</span>(mes.iris, <span class="dv">2</span>, var)</a>
-<a class="sourceLine" id="cb21-2" data-line-number="2"><span class="kw">kable</span>(iris.var, <span class="dt">digits =</span> <span class="dv">3</span>, <span class="dt">col.names =</span> <span class="st">&quot;Variance&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">iris.var &lt;-<span class="st"> </span><span class="kw">apply</span>(mes.iris, <span class="dv">2</span>, var)</a>
+<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="kw">kable</span>(iris.var, <span class="dt">digits =</span> <span class="dv">3</span>, <span class="dt">col.names =</span> <span class="st">&quot;Variance&quot;</span>)</a></code></pre></div>
 <table>
 <thead>
 <tr>
@@ -492,7 +508,7 @@ Petal.Width
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="kw">sum</span>(<span class="kw">apply</span>(mes.iris, <span class="dv">2</span>, var) <span class="op">==</span><span class="st"> </span><span class="dv">0</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw">sum</span>(<span class="kw">apply</span>(mes.iris, <span class="dv">2</span>, var) <span class="op">==</span><span class="st"> </span><span class="dv">0</span>)</a></code></pre></div>
 <pre><code>[1] 0</code></pre>
 </div>
 <div id="préparation-des-données2-normalisation" class="slide section level1">
@@ -504,7 +520,7 @@ Petal.Width
 <li>en centrant (ramener la moyenne de chaque variable à <span class="math inline">\(0\)</span>)</li>
 </ul></li>
 </ul>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1">mes.iris.centre &lt;-<span class="st"> </span><span class="kw">scale</span>(mes.iris, <span class="dt">center =</span> <span class="ot">TRUE</span>, <span class="dt">scale =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">mes.iris.centre &lt;-<span class="st"> </span><span class="kw">scale</span>(mes.iris, <span class="dt">center =</span> <span class="ot">TRUE</span>, <span class="dt">scale =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
 <ul>
 <li><p>soit</p>
 <ul>
@@ -512,7 +528,7 @@ Petal.Width
 <li>et mettant à l’échelle (ramener la variance de chaque variable à <span class="math inline">\(1\)</span>)</li>
 </ul></li>
 </ul>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1">mes.iris.scaled &lt;-<span class="st"> </span><span class="kw">scale</span>(mes.iris, <span class="dt">center =</span> <span class="ot">TRUE</span>, <span class="dt">scale =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">mes.iris.scaled &lt;-<span class="st"> </span><span class="kw">scale</span>(mes.iris, <span class="dt">center =</span> <span class="ot">TRUE</span>, <span class="dt">scale =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <ul>
 <li>soit en effectuant une transformation des variables, par exemple transformation logarithmique</li>
 </ul>
@@ -525,11 +541,11 @@ Petal.Width
 </div>
 <div id="standardisation-par-la-moyenne-ou-la-médiane" class="slide section level1">
 <h1>standardisation par la moyenne ou la médiane</h1>
-<p><img src="figures/irisDeFisher_normalisation.par.la.mediane-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/irisDeFisher_normalisation_par_la_mediane-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="standardisation-par-écart-type-ou-intervalle-interquartile" class="slide section level1">
 <h1>standardisation par écart-type ou intervalle interquartile</h1>
-<p><img src="figures/irisDeFisher_normalisation.par.IQR-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/irisDeFisher_normalisation_par_IQR-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="standardisation" class="slide section level1">
 <h1>standardisation</h1>
@@ -633,9 +649,9 @@ Petal.Width
 <p>… c’est à dire aux options des fonctions <code>dist()</code> et <code>hclust()</code></p>
 <p><img src="figures/irisDeFisher_dont_care-1.png" width="60%" style="display: block; margin: auto;" /></p>
 <p><img src="figures/irisDeFisher_dont_care_norm-1.png" width="60%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">1</span>))</a>
-<a class="sourceLine" id="cb26-2" data-line-number="2"><span class="kw">plot</span>(iris.hclust, <span class="dt">hang =</span> <span class="dv">-1</span>, <span class="dt">cex =</span> <span class="fl">0.5</span>, <span class="dt">main =</span> <span class="st">&quot;Données brutes&quot;</span>)</a>
-<a class="sourceLine" id="cb26-3" data-line-number="3"><span class="kw">plot</span>(iris.scale.hclust, <span class="dt">hang =</span> <span class="dv">-1</span>, <span class="dt">cex =</span> <span class="fl">0.5</span>, <span class="dt">main =</span> <span class="st">&quot;Normalisées&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb15-2" data-line-number="2"><span class="kw">plot</span>(iris.hclust, <span class="dt">hang =</span> <span class="dv">-1</span>, <span class="dt">cex =</span> <span class="fl">0.5</span>, <span class="dt">main =</span> <span class="st">&quot;Données brutes&quot;</span>)</a>
+<a class="sourceLine" id="cb15-3" data-line-number="3"><span class="kw">plot</span>(iris.scale.hclust, <span class="dt">hang =</span> <span class="dv">-1</span>, <span class="dt">cex =</span> <span class="fl">0.5</span>, <span class="dt">main =</span> <span class="st">&quot;Normalisées&quot;</span>)</a></code></pre></div>
 <p><img src="figures/irisDeFisher_dont_care_raw_vs_norm-1.png" width="80%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="en-utilisant-une-autre-métrique" class="slide section level1">
@@ -660,13 +676,13 @@ Petal.Width
 </div>
 <div id="les-heatmap" class="slide section level1">
 <h1>Les heatmap</h1>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1">pheatmap<span class="op">::</span><span class="kw">pheatmap</span>(mes.iris, <span class="dt">clustering.method =</span> <span class="st">&quot;ward.D2&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1">pheatmap<span class="op">::</span><span class="kw">pheatmap</span>(mes.iris, <span class="dt">clustering.method =</span> <span class="st">&quot;ward.D2&quot;</span>)</a></code></pre></div>
 <p><img src="figures/irisDeFisher_unnamed-chunk-26-1.png" width="60%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1">pheatmap<span class="op">::</span><span class="kw">pheatmap</span>(mes.iris.scaled, <span class="dt">clustering.method =</span> <span class="st">&quot;ward.D2&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">pheatmap<span class="op">::</span><span class="kw">pheatmap</span>(mes.iris.scaled, <span class="dt">clustering.method =</span> <span class="st">&quot;ward.D2&quot;</span>)</a></code></pre></div>
 <p><img src="figures/irisDeFisher_unnamed-chunk-26-2.png" width="60%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1">pheatmap<span class="op">::</span><span class="kw">pheatmap</span>(mes.iris, <span class="dt">scale =</span> <span class="st">&quot;column&quot;</span>, <span class="dt">clustering.method =</span> <span class="st">&quot;ward.D2&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">pheatmap<span class="op">::</span><span class="kw">pheatmap</span>(mes.iris, <span class="dt">scale =</span> <span class="st">&quot;column&quot;</span>, <span class="dt">clustering.method =</span> <span class="st">&quot;ward.D2&quot;</span>)</a></code></pre></div>
 <p><img src="figures/irisDeFisher_unnamed-chunk-26-3.png" width="60%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1">pheatmap<span class="op">::</span><span class="kw">pheatmap</span>(mes.iris, <span class="dt">scale =</span> <span class="st">&quot;row&quot;</span>, <span class="dt">clustering.method =</span> <span class="st">&quot;ward.D2&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1">pheatmap<span class="op">::</span><span class="kw">pheatmap</span>(mes.iris, <span class="dt">scale =</span> <span class="st">&quot;row&quot;</span>, <span class="dt">clustering.method =</span> <span class="st">&quot;ward.D2&quot;</span>)</a></code></pre></div>
 <p><img src="figures/irisDeFisher_unnamed-chunk-26-4.png" width="60%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="les-k-means" class="slide section level1">
@@ -725,25 +741,25 @@ Petal.Width
 <div class="slide section level1">
 
 <h2 id="un-premier-k-means-en-5-groupes">Un premier k-means en 5 groupes</h2>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" data-line-number="1">iris.scale.kmeans5 &lt;-<span class="st"> </span><span class="kw">kmeans</span>(mes.iris.scaled, <span class="dt">center=</span><span class="dv">5</span>)</a>
-<a class="sourceLine" id="cb31-2" data-line-number="2">iris.scale.kmeans5</a></code></pre></div>
-<pre><code>K-means clustering with 5 clusters of sizes 53, 7, 47, 17, 26
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1">iris.scale.kmeans5 &lt;-<span class="st"> </span><span class="kw">kmeans</span>(mes.iris.scaled, <span class="dt">center=</span><span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb20-2" data-line-number="2">iris.scale.kmeans5</a></code></pre></div>
+<pre><code>K-means clustering with 5 clusters of sizes 10, 50, 43, 44, 3
 
 Cluster means:
   Sepal.Length Sepal.Width Petal.Length Petal.Width
-1  -0.05005221 -0.88042696    0.3465767   0.2805873
-2  -0.38011687  2.26106915   -1.2952890  -1.1986013
-3   1.13217737  0.08812645    0.9928284   1.0141287
-4  -1.39493454 -0.05056417   -1.3357516  -1.3187694
-5  -0.93018708  1.05972279   -1.2791040  -1.2202264
+1    1.8315767 -0.40685260    1.3946652   1.0110582
+2   -1.0111914  0.85041372   -1.3006301  -1.2507035
+3   -0.1646687 -0.98522499    0.2912216   0.2052911
+4    0.7490984 -0.01682473    0.7743734   0.8983518
+5    2.1214087  1.55093437    1.4966310   1.3565323
 
 Clustering vector:
-  [1] 5 4 4 4 5 2 5 5 4 4 5 5 4 4 2 2 2 5 2 5 5 5 5 5 5 4 5 5 5 4 4 5 2 2 4 4 5 5 4 5 5 4 4 5 5 4 5 4 5 5 3 3 3 1 1 1 3 1 1 1 1 1 1 1 1 3 1 1 1 1 3 1 1 1 1 3 3 3 1 1 1 1 1 1 1 3 3 1 1 1 1 1 1 1 1 1 1 1 1 1 3 1 3 3 3 3 1 3 3 3 3 3 3 1 1 3 3 3 3 1 3 1 3 1 3 3 1 3 3 3 3 3 3 1 1 3 3 3 1 3 3 3 1 3 3 3 1
-[148] 3 3 1
+  [1] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 4 4 4 3 4 3 4 3 4 3 3 3 3 3 3 4 3 3 3 3 4 3 3 3 4 4 4 4 3 3 3 3 3 3 3 4 4 3 3 3 3 4 3 3 3 3 3 3 3 3 4 3 1 4 4 1 3 1 1 5 4 4 4 3 4 4 4 5 1 3 4 3 1 4 4 1 4 4 4 1 1 5 4 4 3 1 4 4 4 4 4 4 3 4 4 4 3
+[148] 4 4 4
 
 Within cluster sum of squares by cluster:
-[1] 44.087545  1.974750 47.450194  5.163861  5.726442
- (between_SS / total_SS =  82.5 %)
+[1]  4.759739 47.350621 33.244196 26.975655  0.795318
+ (between_SS / total_SS =  81.0 %)
 
 Available components:
 
@@ -781,7 +797,7 @@ Available components:
 </div>
 <div class="slide section level1">
 
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" data-line-number="1"><span class="kw">plot</span>(iris.scale.hclust.ward, <span class="dt">hang =</span> <span class="dv">-1</span>, <span class="dt">cex =</span> <span class="fl">0.5</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="kw">plot</span>(iris.scale.hclust.ward, <span class="dt">hang =</span> <span class="dv">-1</span>, <span class="dt">cex =</span> <span class="fl">0.5</span>)</a></code></pre></div>
 <p><img src="figures/irisDeFisher_plot_iris_ward-1.png" width="95%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="comment-déterminer-le-nombre-de-clusters-avec-les-kmeans" class="slide section level1">
@@ -797,54 +813,54 @@ Available components:
 <tbody>
 <tr>
 <td style="text-align:center;">
-29
-</td>
-<td style="text-align:center;">
-0
-</td>
-<td style="text-align:center;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-20
-</td>
-<td style="text-align:center;">
-0
-</td>
-<td style="text-align:center;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-1
-</td>
-<td style="text-align:center;">
 0
 </td>
 <td style="text-align:center;">
 29
 </td>
+<td style="text-align:center;">
+0
+</td>
 </tr>
 <tr>
 <td style="text-align:center;">
 0
 </td>
 <td style="text-align:center;">
-21
+4
 </td>
 <td style="text-align:center;">
-24
+16
 </td>
 </tr>
 <tr>
 <td style="text-align:center;">
+25
+</td>
+<td style="text-align:center;">
 0
 </td>
+<td style="text-align:center;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+45
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+</tr>
+<tr>
 <td style="text-align:center;">
 26
+</td>
+<td style="text-align:center;">
+0
 </td>
 <td style="text-align:center;">
 0
@@ -918,13 +934,31 @@ Available components:
 </div>
 <div id="visualisation-des-données---coloration-par-espèces" class="slide section level1">
 <h1>Visualisation des données - coloration par espèces</h1>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1">species.colors &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">setosa =</span> <span class="st">&quot;#BB44DD&quot;</span>, <span class="dt">virginica =</span> <span class="st">&quot;#AA0044&quot;</span>, <span class="dt">versicolor =</span> <span class="st">&quot;#4400FF&quot;</span>)</a>
-<a class="sourceLine" id="cb34-2" data-line-number="2"><span class="kw">plot</span>(mes.iris, <span class="dt">col =</span> species.colors[iris<span class="op">$</span>Species], <span class="dt">cex =</span> <span class="fl">0.7</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1">species.colors &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">setosa =</span> <span class="st">&quot;#BB44DD&quot;</span>, <span class="dt">virginica =</span> <span class="st">&quot;#AA0044&quot;</span>, <span class="dt">versicolor =</span> <span class="st">&quot;#4400FF&quot;</span>)</a>
+<a class="sourceLine" id="cb23-2" data-line-number="2"><span class="kw">plot</span>(mes.iris, <span class="dt">col =</span> species.colors[iris<span class="op">$</span>Species], <span class="dt">cex =</span> <span class="fl">0.7</span>)</a></code></pre></div>
 <p><img src="figures/irisDeFisher_plot_4variables_variety-1.png" width="60%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="supplementary-materials" class="slide section level1">
 <h1>Supplementary materials</h1>
 <p>POUR ALLER PLUS LOIN</p>
+</div>
+<div id="distances-utilisées-dans-r-1" class="slide section level1">
+<h1>Distances utilisées dans R (1)</h1>
+<ul>
+<li><p>distance euclidienne ou distance <span class="math inline">\(L_2\)</span>: <span class="math inline">\(d(x,y)=\sqrt{\sum_i (x_i-y_i)^2}\)</span></p></li>
+<li><p>distance de manahattan ou distance <span class="math inline">\(L_1\)</span>: <span class="math inline">\(d(x,y)=\sum_i |x_i-y_i|\)</span></p></li>
+<li><p>distance du maximum ou L-infinis, <span class="math inline">\(L_\infty\)</span>: <span class="math inline">\(d(x,y)=\max_i |x_i-y_i|\)</span></p></li>
+</ul>
+<p><img src="img/distance.png" width="50%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="distances-utilisées-dans-r-2" class="slide section level1">
+<h1>Distances utilisées dans R (2)</h1>
+<ul>
+<li><p>distance de Minkowski <span class="math inline">\(l_p\)</span>: <span class="math display">\[d(x,y)=\sqrt[p]{\sum_i (|x_i-y_i|^p}\]</span></p></li>
+<li><p>distance de Canberra (x et y valeurs positives): <span class="math display">\[d(x,y)=\sum_i \frac{x_i-y_i}{x_i+y_i}\]</span></p></li>
+<li><p>distance binaire ou distance de Jaccard ou Tanimoto: proportion de propriétés communes</p></li>
+</ul>
+<p><strong>Note</strong> : lors du TP, sur les données d’expression RNA-seq, nous utiliserons le <strong>coefficient de corrélation de Spearman</strong> et la distance dérivée, <span class="math inline">\(d_c = 1-r\)</span></p>
 </div>
 <div id="autres-distances-non-géométriques-pour-information" class="slide section level1">
 <h1>Autres distances non géométriques (pour information)</h1>
@@ -1088,14 +1122,14 @@ v.c 0.0000000 0.3333333</code></pre>
 <ul>
 <li>rand index et adjusted rand index</li>
 </ul>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1">clues<span class="op">::</span><span class="kw">adjustedRand</span>(cluster.hclust5, cluster.kmeans3)</a></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1">clues<span class="op">::</span><span class="kw">adjustedRand</span>(cluster.hclust5, cluster.kmeans3)</a></code></pre></div>
 <pre><code>     Rand        HA        MA        FM   Jaccard 
-0.7848770 0.4637776 0.4730527 0.6167001 0.4299265 </code></pre>
+0.7020134 0.3855580 0.3924977 0.6118291 0.3931110 </code></pre>
 </div>
 <div class="slide section level1">
 
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" data-line-number="1"><span class="co">## Print the complete list of libraries + versions used in this session</span></a>
-<a class="sourceLine" id="cb38-2" data-line-number="2"><span class="kw">sessionInfo</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="co">## Print the complete list of libraries + versions used in this session</span></a>
+<a class="sourceLine" id="cb27-2" data-line-number="2"><span class="kw">sessionInfo</span>()</a></code></pre></div>
 <pre><code>R version 3.6.1 (2019-07-05)
 Platform: x86_64-apple-darwin15.6.0 (64-bit)
 Running under: macOS Catalina 10.15.3
@@ -1124,11 +1158,11 @@ loaded via a namespace (and not attached):
 <div class="slide section level1">
 
 <h2 id="par-une-projection-sur-une-acp">… par une projection sur une ACP</h2>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" data-line-number="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</a>
-<a class="sourceLine" id="cb40-2" data-line-number="2"><span class="kw">biplot</span>(<span class="kw">prcomp</span>(mes.iris), <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">cex =</span> <span class="fl">0.7</span>,</a>
-<a class="sourceLine" id="cb40-3" data-line-number="3">       <span class="dt">main =</span> <span class="st">&quot;Données non normalisées&quot;</span>)</a>
-<a class="sourceLine" id="cb40-4" data-line-number="4"><span class="kw">biplot</span>(<span class="kw">prcomp</span>(mes.iris, <span class="dt">scale =</span> <span class="ot">TRUE</span>), <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">cex =</span> <span class="fl">0.7</span>,</a>
-<a class="sourceLine" id="cb40-5" data-line-number="5">       <span class="dt">main =</span> <span class="st">&quot;Données normalisées&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb29-2" data-line-number="2"><span class="kw">biplot</span>(<span class="kw">prcomp</span>(mes.iris), <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">cex =</span> <span class="fl">0.7</span>,</a>
+<a class="sourceLine" id="cb29-3" data-line-number="3">       <span class="dt">main =</span> <span class="st">&quot;Données non normalisées&quot;</span>)</a>
+<a class="sourceLine" id="cb29-4" data-line-number="4"><span class="kw">biplot</span>(<span class="kw">prcomp</span>(mes.iris, <span class="dt">scale =</span> <span class="ot">TRUE</span>), <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">cex =</span> <span class="fl">0.7</span>,</a>
+<a class="sourceLine" id="cb29-5" data-line-number="5">       <span class="dt">main =</span> <span class="st">&quot;Données normalisées&quot;</span>)</a></code></pre></div>
 <p><img src="figures/irisDeFisher_unnamed-chunk-31-1.png" width="90%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="cas-détude-tcga-breast-invasive-cancer-bic" class="slide section level1">

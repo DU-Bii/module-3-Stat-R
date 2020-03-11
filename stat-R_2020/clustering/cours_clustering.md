@@ -77,7 +77,7 @@ transition: linear
 ## Les iris de Fisher 
 Ces données sont un classique des méthodes d'apprentissage [Fisher](https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1469-1809.1936.tb02137.x)
 
-<img src="img/iris_petal_sepal.png" width="60%" style="display: block; margin: auto;" />
+<img src="img/iris_petal_sepal.png" width="50%" style="display: block; margin: auto;" />
 
 # Les données dans l'ordinateur (2)
 
@@ -217,7 +217,7 @@ On a une **information** sur nos données
 # Clustering
 
 <div class="figure" style="text-align: center">
-<img src="img/figure1.png" alt="données simulées : y a-t-il des groupes ?" width="60%" />
+<img src="img/figure1.png" alt="données simulées : y a-t-il des groupes ?" width="50%" />
 <p class="caption">données simulées : y a-t-il des groupes ?</p>
 </div>
 
@@ -263,34 +263,46 @@ Définition d'une distance : fonction positive de deux variables
 
 Si 1,2,3 : dissimilarité
 
-# Distances utilisées dans R (1)
+# Distance euclidienne
 
 - distance euclidienne ou distance $L_2$:
   $d(x,y)=\sqrt{\sum_i (x_i-y_i)^2}$
-  
-- distance de manahattan ou distance $L_1$:
-  $d(x,y)=\sum_i |x_i-y_i|$
-    
-- distance du maximum ou L-infinis, $L_\infty$:
-  $d(x,y)=\max_i |x_i-y_i|$
-    
-<img src="img/distance.png" width="50%" style="display: block; margin: auto;" />
 
+# Distance euclidienne et distance de corrélation
 
-# Distances utilisées dans R (2)
+<img src="figures/irisDeFisher_unnamed-chunk-13-1.png" width="80%" style="display: block; margin: auto;" />
 
-- distance de Minkowski $l_p$:
-$$d(x,y)=\sqrt[p]{\sum_i (|x_i-y_i|^p}$$
+<table>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:center;"> distance euclidienne </th>
+   <th style="text-align:center;"> coefficient de corrélation </th>
+   <th style="text-align:center;"> distance de corrélation </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> A - B </td>
+   <td style="text-align:center;"> 4.85 </td>
+   <td style="text-align:center;"> 0.93 </td>
+   <td style="text-align:center;"> 0.07 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> A - C </td>
+   <td style="text-align:center;"> 5.59 </td>
+   <td style="text-align:center;"> -0.53 </td>
+   <td style="text-align:center;"> 1.53 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> B - C </td>
+   <td style="text-align:center;"> 1.03 </td>
+   <td style="text-align:center;"> -0.67 </td>
+   <td style="text-align:center;"> 1.67 </td>
+  </tr>
+</tbody>
+</table>
 
-- distance de Canberra (x et y valeurs positives):
-$$d(x,y)=\sum_i \frac{x_i-y_i}{x_i+y_i}$$
-
-- distance binaire ou distance de Jaccard ou Tanimoto: proportion de propriétés communes
-
-
-
-  
-**Note** : lors du TP, sur les données d'expression RNA-seq, nous utiliserons le **coefficient de corrélation de Spearman** et la distance dérivée, $d_c = 1-r$
 
 # Avec R (1) : distance entre deux individus 
 
@@ -299,76 +311,61 @@ $$d(x,y)=\sum_i \frac{x_i-y_i}{x_i+y_i}$$
 <table>
 <tbody>
   <tr>
-   <td style="text-align:right;"> 4.85 </td>
-   <td style="text-align:right;"> 3.70 </td>
-   <td style="text-align:right;"> 4.82 </td>
-   <td style="text-align:right;"> 1.57 </td>
-   <td style="text-align:right;"> 3.43 </td>
+   <td style="text-align:right;"> 4.27 </td>
+   <td style="text-align:right;"> 2.98 </td>
+   <td style="text-align:right;"> 2.82 </td>
+   <td style="text-align:right;"> 4.58 </td>
+   <td style="text-align:right;"> 3.04 </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 2.46 </td>
-   <td style="text-align:right;"> 2.11 </td>
-   <td style="text-align:right;"> 2.31 </td>
-   <td style="text-align:right;"> 3.90 </td>
-   <td style="text-align:right;"> 3.12 </td>
+   <td style="text-align:right;"> 2.54 </td>
+   <td style="text-align:right;"> 3.97 </td>
+   <td style="text-align:right;"> 2.90 </td>
+   <td style="text-align:right;"> 3.45 </td>
+   <td style="text-align:right;"> 2.18 </td>
   </tr>
 </tbody>
 </table>
 
-distance euclidienne : 5.69
+distance euclidienne : 4.33
 
-distance de manhattan = 16.19
+distance de manhattan = 12.17
 
 # Avec R (2) : distance entre individus d'un nuage de points 
 
 - distance euclidienne
 
-```r
-mat.iris <- mes.iris[sample(1:150, 5),]
-print(dist(mat.iris), digits = 2)
 ```
-
-```
-      24  131   25   10
-131 5.18               
-25  0.48 5.26          
-10  0.53 5.54 0.52     
-40  0.37 5.45 0.50 0.37
+      73  100   86   12
+100 1.06               
+86  1.03 0.84          
+12  3.95 2.94 3.44     
+137 1.45 2.04 1.39 4.81
 ```
 
 - distance de corrélation : $d = 1-r$
 
-```r
-cor.mat.iris <- cor(t(mat.iris))
-print(as.dist(1 - cor.mat.iris), digits = 2)
 ```
-
-```
-         24     131      25      10
-131 0.35834                        
-25  0.00872 0.34746                
-10  0.00057 0.34840 0.00498        
-40  0.00116 0.38563 0.00625 0.00116
+        73    100     86     12
+100 0.0162                     
+86  0.0287 0.0028              
+12  0.3310 0.2103 0.1858       
+137 0.0062 0.0274 0.0358 0.3687
 ```
 
 # Avec R (3) : distance entre variables décrivant le nuage de points 
 
 
-```r
-cor.mat.iris <- cor(mat.iris)
-print(as.dist(1 - cor.mat.iris), digits = 2)
-```
-
 ```
              Sepal.Length Sepal.Width Petal.Length
-Sepal.Width         1.862                         
-Petal.Length        0.016       1.854             
-Petal.Width         0.013       1.833        0.018
+Sepal.Width         1.341                         
+Petal.Length        0.018       1.255             
+Petal.Width         0.085       1.022        0.033
 ```
 
 # Distances entre groupes (1)
 
-<img src="figures/irisDeFisher_unnamed-chunk-17-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_unnamed-chunk-19-1.png" width="70%" style="display: block; margin: auto;" />
 
 # Distances entre groupes (2)
 
@@ -380,9 +377,7 @@ $$D(C_1,C_2) = \min_{i \in C_1, j \in C_2} D(x_i, x_j)$$
 
 $$D(C_1,C_2) = \max_{i \in C_1, j \in C_2} D(x_i, x_j)$$
 
-# Distances entre groupes (3)
-  
-- **Group average** : distance moyenne
+- **Average linkage** : distance moyenne
 
 $$D(C_1,C_2) = \frac{1}{N_1 N_2} \sum_{i \in C_1, j \in C_2} D(x_i, x_j)$$
   
@@ -398,61 +393,7 @@ $D(C_1,C_2) = \sqrt{\frac{N_1N_2}{N_1 + N_2}} \| m_1 -m_2 \|$
 
 # Les données
 
-[Ces données sont un classique des méthodes d'apprentissage](https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1469-1809.1936.tb02137.x)
-
-Dans un premier temps, regardons les données
-
-
-```r
-dim(mes.iris)
-```
-
-```
-[1] 150   4
-```
-
-```r
-head(mes.iris)
-```
-
-```
-  Sepal.Length Sepal.Width Petal.Length Petal.Width
-1          5.1         3.5          1.4         0.2
-2          4.9         3.0          1.4         0.2
-3          4.7         3.2          1.3         0.2
-4          4.6         3.1          1.5         0.2
-5          5.0         3.6          1.4         0.2
-6          5.4         3.9          1.7         0.4
-```
-
----
-
-
-```r
-str(mes.iris)
-```
-
-```
-'data.frame':	150 obs. of  4 variables:
- $ Sepal.Length: num  5.1 4.9 4.7 4.6 5 5.4 4.6 5 4.4 4.9 ...
- $ Sepal.Width : num  3.5 3 3.2 3.1 3.6 3.9 3.4 3.4 2.9 3.1 ...
- $ Petal.Length: num  1.4 1.4 1.3 1.5 1.4 1.7 1.4 1.5 1.4 1.5 ...
- $ Petal.Width : num  0.2 0.2 0.2 0.2 0.2 0.4 0.3 0.2 0.2 0.1 ...
-```
-
-```r
-summary(mes.iris)
-```
-
-```
-  Sepal.Length    Sepal.Width     Petal.Length    Petal.Width   
- Min.   :4.300   Min.   :2.000   Min.   :1.000   Min.   :0.100  
- 1st Qu.:5.100   1st Qu.:2.800   1st Qu.:1.600   1st Qu.:0.300  
- Median :5.800   Median :3.000   Median :4.350   Median :1.300  
- Mean   :5.843   Mean   :3.057   Mean   :3.758   Mean   :1.199  
- 3rd Qu.:6.400   3rd Qu.:3.300   3rd Qu.:5.100   3rd Qu.:1.800  
- Max.   :7.900   Max.   :4.400   Max.   :6.900   Max.   :2.500  
-```
+Revenons à nos iris de Fisher
 
 
 # Visualisation des données
@@ -466,7 +407,7 @@ On peut ensuite essayer de visualiser les données
 plot(mes.iris)
 ```
 
-<img src="figures/irisDeFisher_plot_4variables-1.png" width="60%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_plot_4variables-1.png" width="50%" style="display: block; margin: auto;" />
 
 
 # Préparation des données (1) : variables de variance nulle
@@ -543,11 +484,11 @@ mes.iris.scaled <- scale(mes.iris, center = TRUE, scale = TRUE)
 
 # standardisation par la moyenne ou la médiane
 
-<img src="figures/irisDeFisher_normalisation.par.la.mediane-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_normalisation_par_la_mediane-1.png" width="70%" style="display: block; margin: auto;" />
 
 # standardisation par écart-type ou intervalle interquartile
 
-<img src="figures/irisDeFisher_normalisation.par.IQR-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_normalisation_par_IQR-1.png" width="70%" style="display: block; margin: auto;" />
 
 # standardisation
 
@@ -779,23 +720,23 @@ iris.scale.kmeans5
 ```
 
 ```
-K-means clustering with 5 clusters of sizes 53, 7, 47, 17, 26
+K-means clustering with 5 clusters of sizes 10, 50, 43, 44, 3
 
 Cluster means:
   Sepal.Length Sepal.Width Petal.Length Petal.Width
-1  -0.05005221 -0.88042696    0.3465767   0.2805873
-2  -0.38011687  2.26106915   -1.2952890  -1.1986013
-3   1.13217737  0.08812645    0.9928284   1.0141287
-4  -1.39493454 -0.05056417   -1.3357516  -1.3187694
-5  -0.93018708  1.05972279   -1.2791040  -1.2202264
+1    1.8315767 -0.40685260    1.3946652   1.0110582
+2   -1.0111914  0.85041372   -1.3006301  -1.2507035
+3   -0.1646687 -0.98522499    0.2912216   0.2052911
+4    0.7490984 -0.01682473    0.7743734   0.8983518
+5    2.1214087  1.55093437    1.4966310   1.3565323
 
 Clustering vector:
-  [1] 5 4 4 4 5 2 5 5 4 4 5 5 4 4 2 2 2 5 2 5 5 5 5 5 5 4 5 5 5 4 4 5 2 2 4 4 5 5 4 5 5 4 4 5 5 4 5 4 5 5 3 3 3 1 1 1 3 1 1 1 1 1 1 1 1 3 1 1 1 1 3 1 1 1 1 3 3 3 1 1 1 1 1 1 1 3 3 1 1 1 1 1 1 1 1 1 1 1 1 1 3 1 3 3 3 3 1 3 3 3 3 3 3 1 1 3 3 3 3 1 3 1 3 1 3 3 1 3 3 3 3 3 3 1 1 3 3 3 1 3 3 3 1 3 3 3 1
-[148] 3 3 1
+  [1] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 4 4 4 3 4 3 4 3 4 3 3 3 3 3 3 4 3 3 3 3 4 3 3 3 4 4 4 4 3 3 3 3 3 3 3 4 4 3 3 3 3 4 3 3 3 3 3 3 3 3 4 3 1 4 4 1 3 1 1 5 4 4 4 3 4 4 4 5 1 3 4 3 1 4 4 1 4 4 4 1 1 5 4 4 3 1 4 4 4 4 4 4 3 4 4 4 3
+[148] 4 4 4
 
 Within cluster sum of squares by cluster:
-[1] 44.087545  1.974750 47.450194  5.163861  5.726442
- (between_SS / total_SS =  82.5 %)
+[1]  4.759739 47.350621 33.244196 26.975655  0.795318
+ (between_SS / total_SS =  81.0 %)
 
 Available components:
 
@@ -850,28 +791,28 @@ plot(iris.scale.hclust.ward, hang = -1, cex = 0.5)
 <table>
 <tbody>
   <tr>
-   <td style="text-align:center;"> 29 </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0 </td>
-  </tr>
-  <tr>
-   <td style="text-align:center;"> 20 </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0 </td>
-  </tr>
-  <tr>
-   <td style="text-align:center;"> 1 </td>
    <td style="text-align:center;"> 0 </td>
    <td style="text-align:center;"> 29 </td>
+   <td style="text-align:center;"> 0 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 21 </td>
-   <td style="text-align:center;"> 24 </td>
+   <td style="text-align:center;"> 4 </td>
+   <td style="text-align:center;"> 16 </td>
   </tr>
   <tr>
+   <td style="text-align:center;"> 25 </td>
    <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 5 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 45 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0 </td>
+  </tr>
+  <tr>
    <td style="text-align:center;"> 26 </td>
+   <td style="text-align:center;"> 0 </td>
    <td style="text-align:center;"> 0 </td>
   </tr>
 </tbody>
@@ -905,6 +846,35 @@ plot(mes.iris, col = species.colors[iris$Species], cex = 0.7)
 # Supplementary materials
 
 POUR ALLER PLUS LOIN
+
+# Distances utilisées dans R (1)
+
+- distance euclidienne ou distance $L_2$:
+  $d(x,y)=\sqrt{\sum_i (x_i-y_i)^2}$
+  
+- distance de manahattan ou distance $L_1$:
+  $d(x,y)=\sum_i |x_i-y_i|$
+    
+- distance du maximum ou L-infinis, $L_\infty$:
+  $d(x,y)=\max_i |x_i-y_i|$
+    
+<img src="img/distance.png" width="50%" style="display: block; margin: auto;" />
+
+
+# Distances utilisées dans R (2)
+
+- distance de Minkowski $l_p$:
+$$d(x,y)=\sqrt[p]{\sum_i (|x_i-y_i|^p}$$
+
+- distance de Canberra (x et y valeurs positives):
+$$d(x,y)=\sum_i \frac{x_i-y_i}{x_i+y_i}$$
+
+- distance binaire ou distance de Jaccard ou Tanimoto: proportion de propriétés communes
+
+
+
+  
+**Note** : lors du TP, sur les données d'expression RNA-seq, nous utiliserons le **coefficient de corrélation de Spearman** et la distance dérivée, $d_c = 1-r$
 
 # Autres distances non géométriques (pour information)
 
@@ -1036,7 +1006,7 @@ clues::adjustedRand(cluster.hclust5, cluster.kmeans3)
 
 ```
      Rand        HA        MA        FM   Jaccard 
-0.7848770 0.4637776 0.4730527 0.6167001 0.4299265 
+0.7020134 0.3855580 0.3924977 0.6118291 0.3931110 
 ```
 
 
