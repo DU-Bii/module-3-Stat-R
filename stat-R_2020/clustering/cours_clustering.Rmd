@@ -4,40 +4,6 @@ subtitle: "Hierarchical clustering et Kmeans"
 author: "Anne Badel, Frédéric Guyon & Jacques van Helden"
 date: "`r Sys.Date()`"
 output:
-  beamer_presentation:
-    theme: Hannover #Montpellier
-    colortheme: beaver
-    fonttheme: professionalfonts #structurebold
-    highlight: pygments #default
-    fig_caption: no
-    fig_height: 4
-    fig_width: 5
-    incremental: no
-    keep_tex: no
-    slide_level: 1
-    toc: yes
-  revealjs::revealjs_presentation:
-    theme: night
-    transition: none
-    self_contained: true
-    slide_level: 1
-    css: ../slides.css
-  html_document:
-    fig_caption: yes
-    highlight: zenburn
-    self_contained: no
-    theme: cerulean
-    toc: yes
-    toc_depth: 3
-    toc_float: yes
-  ioslides_presentation:
-    highlight: zenburn
-    incremental: no
-  pdf_document:
-    fig_caption: yes
-    highlight: zenburn
-    toc: yes
-    toc_depth: 3
   slidy_presentation:
     highlight: default
     incremental: no
@@ -52,6 +18,40 @@ output:
     theme: cerulean
     toc: yes
     widescreen: yes
+  revealjs::revealjs_presentation:
+    theme: night
+    transition: none
+    self_contained: true
+    slide_level: 1
+    css: ../slides.css
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
+  ioslides_presentation:
+    highlight: zenburn
+    incremental: no
+  html_document:
+    fig_caption: yes
+    highlight: zenburn
+    self_contained: no
+    theme: cerulean
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+  beamer_presentation:
+    theme: Hannover #Montpellier
+    colortheme: beaver
+    fonttheme: professionalfonts #structurebold
+    highlight: pygments #default
+    fig_caption: no
+    fig_height: 4
+    fig_width: 5
+    incremental: no
+    keep_tex: no
+    slide_level: 1
+    toc: yes
 font-import: http://fonts.googleapis.com/css?family=Risque
 font-family: Garamond
 transition: linear
@@ -162,8 +162,9 @@ représenté par un vecteur $v2 = ($ `r round(mes.iris[1,1], digits = 2)` $,$ `r
 # Représentons ces données : une fleur (3) 
 
 ```{r echo = FALSE}
-rgl::plot3d(mes.iris[1,1:3], col = "red", size = 40)
-rgl::decorate3d(xlim = c(3,7), ylim = c(2,5), zlim = c(0,2))
+## This command generates the 3D drawing but opens a pop-up window --> we comment it
+#rgl::plot3d(mes.iris[1,1:3], col = "red", size = 40)
+#rgl::decorate3d(xlim = c(3,7), ylim = c(2,5), zlim = c(0,2))
 ```
 
 Dans l'espace, un point de coordonnées :
@@ -249,14 +250,6 @@ On a une **information** sur nos données
 include_graphics(path = "img/figure1.png")
 ```
 
-# Méthodes
-Trois grands principes de méthodes basées sur:
-
-- La géométrie
-- Les probabilités (statistique)
-- Les graphes
-
-En fait, trois façons de voir les mêmes algorithmes
 
 # Géométrie et distances (1)
 
