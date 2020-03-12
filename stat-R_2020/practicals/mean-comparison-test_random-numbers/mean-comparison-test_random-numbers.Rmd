@@ -212,11 +212,11 @@ Note that each participant will have a different value for the sample sizes ($n_
 
 ## Sample sizes. 
 ## This parameter should be defined individually for each participant
-n1 <- 8 # sample size for the first group
-n2 <- 8 # ssample size for second group
+n1 <- 16 # sample size for the first group
+n2 <- 16 # ssample size for second group
 
 ## First data table
-m <- 100 # Number of features
+m <- 1000 # Number of features
 mu1 <- 7 # mean of the first population
 mu2 <- 10 # mean of the second population
 
@@ -348,7 +348,7 @@ summary(group1)
 summary(group2)
 
 ## Columns-wise statistics
-colStatsH0 <- data.frame(
+colStats <- data.frame(
     m1 = apply(group1, MARGIN = 2, mean),
     m2 = apply(group2, MARGIN = 2, mean),
     s1 = apply(group1, MARGIN = 2, sd),
@@ -356,7 +356,7 @@ colStatsH0 <- data.frame(
   )
 
 ## Row-wise statistics
-rowStatsH0 <- data.frame(
+rowStats <- data.frame(
     m1 = apply(group1, MARGIN = 1, mean),
     m2 = apply(group2, MARGIN = 1, mean),
     s1 = apply(group1, MARGIN = 1, sd),
@@ -372,7 +372,7 @@ rowStatsH0 <- data.frame(
 
 
 ```{r}
-rowStatsH0$diff <- rowStatsH0$m2 - rowStatsH0$m1
+rowStats$diff <- rowStats$m1 - rowStats$m2 
 ```
 
 ## Merge the two groups in a single data frame
@@ -414,13 +414,86 @@ dataTable <- dataTable[, -1] ## Suppress the first column which contained the ro
 
 **Tip: ** use `mfrow()` to display the histogram above each other, and set the limits of the abscissa (x axis) to the same value. 
 
+```{r hist_g1_g2, fig.width = 8, fig.heigh = 8, out.width="60%"}
 
+xlim  <- range(append(group1, group2))
 
+## Compute mean and sd for all the samples of group1 and group2, resp
+m1 <- mean(unlist(group1))
+m2 <- mean(unlist(group2))
+s1 <- sd(unlist(group1))
+s2 <- sd(unlist(group2))
+
+par(mfrow = c(2,1))
+## Plot histogram of Group1 values, and get the values in a variable named h1
+h1 <- hist(x = unlist(group1), breaks = 100, col = "#DDEEFF", border = "blue",
+     main = "Group 1", xlab = "X", las = 1, xlim = xlim)
+abline(v = m1, col = "blue", lwd = 2) ## mark the mean of all samples
+arrows(x0 = m1, x1 = m1 + s1, 
+       y0 = max(h1$counts)/2, y1 = max(h1$counts)/2,
+       length = 0.07, angle = 20, col = "blue", lwd = 2, code = 2)
+legend("topright", 
+       legend = c(paste0("m1 = ", round(digits = 2, m1)), 
+                  paste0("s1 = ", round(digits = 2, s1))))
+
+## Plot histogram of Group2 values, and get the values in a variable named h2
+h2 <- hist(x = unlist(group2), breaks = 100, col = "#FFEEDD", border = "brown", 
+     main = "Group 2", xlab = "X", las = 1, xlim = xlim)
+abline(v = mean(unlist(group2)), col = "brown", lwd = 2)
+arrows(x0 = m2, x1 = m2 + s2, 
+       y0 = max(h2$counts)/2, y1 = max(h2$counts)/2,
+       length = 0.07, angle = 20, col = "brown", lwd = 2, code = 2)
+legend("topright", 
+       legend = c(paste0("m2 = ", round(digits = 2, m2)),
+                  paste0("s2 = ", round(digits = 2, s2))))
+
+par(mfrow = c(1,1))
+```
 
 
 - Draw histogram with the sampling distribution of the means in the respective groups. 
 
+```{r sampling_distrib_mean, fig.width = 8, fig.heigh = 8, out.width="60%", fig.cap="Sampling distribution of the mean"}
+
+# xlim  <- range(append(colStats$m1, colStats$m2))
+
+## Compute the parameters (mean, sd) of the sampling distributions of the means
+mm1 <- mean(rowStats$m1)
+mm2 <- mean(rowStats$m2)
+se1 <- sd(rowStats$m1)
+se2 <- sd(rowStats$m2)
+
+par(mfrow = c(2,1))
+## Plot histogram of Group1 values, and get the values in a variable named h1
+h1 <- hist(x = rowStats$m1, breaks = 100, col = "#AACCFF", border = "#AACCFF", 
+     main = "Group 1", xlab = "X", las = 1, xlim = xlim)
+abline(v = mm1, col = "blue", lwd = 2) ## mark the mean of all samples
+arrows(x0 = mm1, x1 = mm1 + se1, 
+       y0 = max(h1$counts)/2, y1 = max(h1$counts)/2,
+       length = 0.07, angle = 20, col = "blue", lwd = 2, code = 2)
+legend("topright", 
+       legend = c(paste0("mm1 = ", round(digits = 2, mm1)),
+                  paste0("se1 = ", round(digits = 2, se1))))
+
+## Plot histogram of Group2 values, and get the values in a variable named h2
+h2 <- hist(x = rowStats$m2, breaks = 100, col = "#FFCCAA", border = "#FFCCAA", 
+     main = "Group 2", xlab = "X", las = 1, xlim = xlim)
+abline(v = mean(unlist(group2)), col = "brown", lwd = 2)
+arrows(x0 = mm2, x1 = mm2 + se2, 
+       y0 = max(h2$counts)/2, y1 = max(h2$counts)/2,
+       length = 0.07, angle = 20, col = "brown", lwd = 2, code = 2)
+legend("topright", 
+       legend = c(paste0("mm2 = ", round(digits = 2, mm2)),
+                  paste0("se2 = ", round(digits = 2, se2))))
+
+par(mfrow = c(1,1))
+```
+
+
 - Compare the standard deviations measures in the sampled values, and in the feature means. Do they differ ? Explain why. 
+
+**Answer: ** the standard deviation of the sample means corresponds to the **standard error**.  
+
 
 
 
@@ -491,65 +564,92 @@ For the sake of simplicity, we will first show how to implement a simple but ine
 ```{r t_test_loop}
 
 ## Define the statistics we want to collect
-result.columns <- c("i", "m1", "m2", "diff", "statistic", "p.value")
+resultColumns <- c("i",       # iteration number
+                    "m1",      # first sample mean
+                    "m2",      # second sample mean
+                    "s1",      # sd estimation for the first population
+                    "s2",      # sd estimation for the second population
+                    "d",       # difference between sample means
+                    "t",       # test statistics
+                    "df",      # degrees of freedom
+                    "p.value"  # nominal p-value
+                    )
 
 ## Instantiate a result table to store the results
-result.table <- data.frame(matrix(nrow = m, ncol = length(result.columns)))
-colnames(result.table) <- result.columns # set the column names
-# View(result.table) ## Check the table: it contians NA values
+resultTable <- data.frame(matrix(nrow = m, ncol = length(resultColumns)))
+colnames(resultTable) <- resultColumns # set the column names
+# View(resultTable) ## Check the table: it contians NA values
   
 ## Iterate random number sampling followed by t-tests
-for (i in 1:m) {
-  ## Generate two vectors containing the values for sample 1 and sample 2, resp.
-  x1 <- unlist(group1[i, ]) ## sample 1 values
-  x2 <- unlist(group2[i, ]) ## sample 2 values
+## Use the funciton system.time() to measure the elapsed time
+## This function is particular: you can also use it with curly brackets in order to enclose a block of several lines
+time.iteration <- system.time(
+  for (i in 1:m) {
+    ## Generate two vectors containing the values for sample 1 and sample 2, resp.
+    x1 <- unlist(group1[i, ]) ## sample 1 values
+    x2 <- unlist(group2[i, ]) ## sample 2 values
+    
+    ## Run the t test
+    t.result <- t.test(
+      x = x1, y = x2, 
+      alternative = "two.sided", var.equal = FALSE)
+    # names(t.result)
+    
+    ## Collect the selected statistics in the result table
+    resultTable[i, "i"] <- i
+    resultTable[i, "t"] <- t.result$statistic
+    resultTable[i, "df"] <- t.result$parameter
+    resultTable[i, "p.value"] <- t.result$p.value
+    
+    ## Compute some additional statistics about the samples
+    resultTable[i, "m1"] <- mean(x1) ## Mean of sample 1
+    resultTable[i, "m2"] <- mean(x2) ## Mean of sample 2
+    resultTable[i, "s1"] <- sd(x1) ## Standard dev estimation for population 1
+    resultTable[i, "s2"] <- sd(x2) ## Standard dev estimation for population 1
+    resultTable[i, "d"] <- resultTable[i, "m1"] - resultTable[i, "m2"]  ## Difference between sample means
+  }
+  #}
+  ## View(resultTable)
+)  
 
-  ## Run the t test
-  t.result <- t.test(
-    x = x1, y = x2, 
-    alternative = "two.sided", var.equal = FALSE)
-  # names(t.result)
-  
-  ## Collect the selected statistics in the result table
-  result.table[i, "i"] <- i
-  result.table[i, "statistic"] <- t.result["statistic"]
-  result.table[i, "p.value"] <- t.result["p.value"]
-  
-  ## Compute some additional statistics about the samples
-  result.table[i, "m1"] <- mean(x1) ## Mean of sample 1
-  result.table[i, "m2"] <- mean(x2) ## Mean of sample 2
-  result.table[i, "diff"] <- mean(x2) - mean(x1)  ## Difference between sample means
-
-}
-
-## View(result.table)
-
+print(time.iteration)
 ```
-
+  
 ### Distribution of the observed differences for the $`r m`$ iterations of the test
 
-```{r diff_histo, fig.width=6, fig.height=8, out.width="50%"}
+```{r diff_histo, fig.width=8, fig.height=8, out.width="50%"}
 par(mfrow = c(2, 1))
-#head(result.table)
+#head(resultTable)
+
+## Compute the maximal abslute value of difference to get a centered abcsissa.
+## This enables to highlight whether the differences are positive or negative. 
+max.diff <- max(abs(resultTable$d))
+
 ## Draw an histogram of the observed differences
-max.diff <- max(abs(result.table$diff))
-hist(result.table$diff, breaks = 100, 
-     col = "#BBFFDD", las = 1, 
+hist(resultTable$d, 
+     breaks = 100, 
+     col = "#DDFFEE", 
+     border = "#44DD88", 
+     las = 1, 
      xlim = c(-max.diff, max.diff), ## Make sure that the graph is centered on 0
      main = "Differences between means",
      xlab = "Difference between means",
      ylab = "Number of tests")
 abline(v = 0)
 
-max.t <- max(abs(result.table$statistic))
-hist(result.table$statistic, breaks = 100, 
-     col = "#BBFFDD", las = 1,
+max.t <- max(abs(resultTable$t))
+hist(resultTable$t, 
+     breaks = 100, 
+     col = "#DDFFEE", 
+     border = "#44DD88", 
+          las = 1,
      xlim = c(-max.t, max.t), ## Make sure that the graph is centered on 0
      main = "T statistics",
      xlab = "T-test statistic",
      ylab = "Number of tests")
-par(mfrow = c(1, 1))
 abline(v = 0)
+
+par(mfrow = c(1, 1))
 
 ```
 
@@ -557,9 +657,22 @@ abline(v = 0)
 ### P-value histogram
 
 ```{r pval_histo, fig.width=7, fig.height=5, out.width="50%"}
+
+## Choose a color depending on whether we are under H0 (grey) or H1 (pink)
+if (mu1 == mu2) {
+  histColor <- "#DDDDDD"
+  histBorder <- "#888888"
+} else {
+  histColor <- "#FFCCCC"
+  histBorder <- "#DD8888"
+}
+
 ## Draw an histogram of p-values with 20 bins
-hist(result.table$p.value, breaks = 20,
-     col = "#BBFFDD", las = 1,
+hist(resultTable$p.value, 
+     breaks = 20,
+     col = histColor, 
+     border = histBorder, 
+     las = 1,
      main = "P-value histogram",
      xlab = "T-test P-value",
      ylab = "Number of tests")
@@ -592,26 +705,47 @@ A better practice is to define a **function** that encapsulates the code, and en
 
 
 ```{r iterate_t_test_function}
-## Define a function that runs r iterations of the t-test.
-iterate.t.test <- function(mu1 = -0.5, ## Mean of the first population
-                           mu2 = 0.5,  ## Mean of the second population
-                           sigma1 = 1, ## Standard deviation of the first population
-                           sigma2 = 1,  ## Standard deviation of the second population
-                           n1 = 10,    ## First sample size
-                           n2 = 10,    ## Second sample size
-                           r = 10000  ## Iterations
-                           ) {
+#### Define a function that runs r iterations of the t-test ####
+
+#' @title Repeat a T test with random numbers drawn from a normal distribution
+#' @param mu1 mean of the first population
+#' @param mu2 mean of the second population
+#' @param sigma1 standard deviation of the first population
+#' @param sigma2 standard deviation of the second population
+#' @param n1 first sample size
+#' @param n2 second sample size
+#' @param m number of repetitions of the tests
+#' @param ... additional parameters are passed to t.test(). This enables to set var.equal, alternative, ...
+#' @return  a table with one row per repetition of the test, and one column per statistics
+IterateTtest <- function(mu1,    
+                         mu2,
+                         sigma1,
+                         sigma2, 
+                         n1,     
+                         n2,     
+                         m,    
+                         ...) {
+  
   
   ## Define the statistics we want to collect
-  result.columns <- c("i", "m1", "m2", "diff", "statistic", "p.value")
+  resultColumns <- c("i",       # iteration number
+                      "m1",      # first sample mean
+                      "m2",      # second sample mean
+                      "s1",      # sd estimation for the first population
+                      "s2",      # sd estimation for the second population
+                      "d",       # difference between sample means
+                      "t",       # test statistics
+                      "df",      # degrees of freedom
+                      "p.value"  # nominal p-value
+  )
   
   ## Instantiate a result table to store the results
-  result.table <- data.frame(matrix(nrow = r, ncol = length(result.columns)))
-  colnames(result.table) <- result.columns # set the column names
-  # View(result.table) ## Check the table: it contians NA values
+  resultTable <- data.frame(matrix(nrow = m, ncol = length(resultColumns)))
+  colnames(resultTable) <- resultColumns # set the column names
+  # View(resultTable) ## Check the table: it contians NA values
   
   ## Iterate random number sampling followed by t-tests
-  for (i in 1:r) {
+  for (i in 1:m) {
     ## Generate two vectors containing the values for sample 1 and sample 2, resp.
     x1 <- rnorm(n = n1, mean = mu1, sd = sigma1) ## sample 1 values
     x2 <- rnorm(n = n2, mean = mu2, sd = sigma2) ## sample 2 values
@@ -623,34 +757,63 @@ iterate.t.test <- function(mu1 = -0.5, ## Mean of the first population
     # names(t.result)
     
     ## Collect the selected statistics in the result table
-    result.table[i, "i"] <- i
-    result.table[i, "statistic"] <- t.result["statistic"]
-    result.table[i, "p.value"] <- t.result["p.value"]
+    resultTable[i, "i"] <- i
+    resultTable[i, "t"] <- t.result$statistic
+    resultTable[i, "df"] <- t.result$parameter
+    resultTable[i, "p.value"] <- t.result$p.value
     
     ## Compute some additional statistics about the samples
-    result.table[i, "m1"] <- mean(x1) ## Mean of sample 1
-    result.table[i, "m2"] <- mean(x2) ## Mean of sample 2
-    result.table[i, "diff"] <- mean(x2) - mean(x1) ## Difference between sample means
+    resultTable[i, "m1"] <- mean(x1) ## Mean of sample 1
+    resultTable[i, "m2"] <- mean(x2) ## Mean of sample 2
+    resultTable[i, "s1"] <- sd(x1) ## sd estimate for population 1
+    resultTable[i, "s2"] <- sd(x2) ## sd estimate for population 2
+    resultTable[i, "d"] <- resultTable[i, "m1"] - resultTable[i, "m2"] ## Difference between sample means
   }
   
-  return(result.table) ## This function returns the result table
+  return(resultTable) ## This function returns the result table
 }
 
 ```
+
+
+We can now use this function to iterate the $t$ test with the parameters we want.
+Let us measure the running time
+
+```{r}
+
+## Some tests under H1
+system.time(
+  tTestTableH1 <- IterateTtest(mu1 = 7, mu2 = 10, sigma1 = 2, sigma2 = 3, n1 = 16, n2 = 16, m = 1000)
+)
+
+## Some tests under H0
+system.time(
+  tTestTableH0 <- IterateTtest(mu1 = 10, mu2 = 10, sigma1 = 2, sigma2 = 3, n1 = 16, n2 = 16, m = 1000)
+)
+```
+
+
 
 This function can then be used several times, with different values of the parameters. 
 
 ```{r itrerate_t_test_runs}
 
 ## What happens when  the two means are equal (under the null hypothesis)
-d0 <- iterate.t.test(mu1 = 0, mu2 = 0)  ## Iterations
+testH0 <- IterateTtest(mu1 = 10, mu2 = 10, sigma1 = sigma1, sigma2 = sigma2, n1 = n1, n2 = n2, m = m, var.equal = FALSE, alternative = "two.sided")
 
-## Test increasing values of the difference between means
-d0.1 <- iterate.t.test(mu1 = -0.05, mu2 = 0.05)  ## Iterations
-d0.2 <- iterate.t.test(mu1 = -0.1, mu2 = 0.1)  ## Iterations
-d0.5 <- iterate.t.test(mu1 = -0.25, mu2 = 0.25)  ## Iterations
-d1 <- iterate.t.test(mu1 = -0.5, mu2 = 0.5)  ## Iterations
-d2 <- iterate.t.test(mu1 = -1, mu2 = 1)  ## Iterations
+
+## Test increasing values of the difference between population means (delta)
+delta0.1 <- IterateTtest(mu1 = mu1, mu2 = mu1 + 0.1, sigma1 = sigma1, sigma2 = sigma2, n1 = n1, n2 = n2, m = m, var.equal = FALSE, alternative = "two.sided")
+
+delta0.5 <- IterateTtest(mu1 = mu1, mu2 = mu1 + 0.5, sigma1 = sigma1, sigma2 = sigma2, n1 = n1, n2 = n2, m = m, var.equal = FALSE, alternative = "two.sided")
+
+delta1 <- IterateTtest(mu1 = mu1, mu2 = mu1 + 1, sigma1 = sigma1, sigma2 = sigma2, n1 = n1, n2 = n2, m = m, var.equal = FALSE, alternative = "two.sided")
+
+delta2 <- IterateTtest(mu1 = mu1, mu2 = mu1 + 2, sigma1 = sigma1, sigma2 = sigma2, n1 = n1, n2 = n2, m = m, var.equal = FALSE, alternative = "two.sided")
+
+delta3 <- IterateTtest(mu1 = mu1, mu2 = mu1 + 3, sigma1 = sigma1, sigma2 = sigma2, n1 = n1, n2 = n2, m = m, var.equal = FALSE, alternative = "two.sided")
+
+
 
 ```
 
@@ -660,36 +823,43 @@ d2 <- iterate.t.test(mu1 = -1, mu2 = 1)  ## Iterations
 ## based on the result table of t-test iterations
 ## as produced by the iterate.t.test() function.
 pvalHistogram <- function(
-  result.table, ## required input (no default value): the result table from iterate.t.test()
+  resultTable, ## required input (no default value): the result table from iterate.t.test()
   main = "P-value histogram",  ## main title (with default value)
   alpha = 0.05, ## Significance threshold
   ... ## Additional parameters, which will be passed to hist()
   ) {
   
   ## Plot the histogram
-  hist(result.table$p.value, 
+  hist(resultTable$p.value, 
        breaks = seq(from = 0, to = 1, by = 0.05),
        las = 1, 
        xlim = c(0,1),
        main = main,
        xlab = "T-test P-value",
-       ylab = "Number of tests", ...)
+       ylab = "Number of tests", 
+       ...)
   
   ## Draw a horizontal line indicating the number of tests per bin that would be expected under null hypothesis
   abline(h = m / 20, col = "darkgreen", lwd = 2)
   abline(v = alpha, col = "red", lwd = 2)
   
   ## Compute the percent of positive and negative results``
-  nb.pos <- sum(result.table$p.value < alpha)
+  nb.pos <- sum(resultTable$p.value < alpha)
   nb.neg <- m - nb.pos
   percent.pos <- 100 * nb.pos / m
   percent.neg <- 100 * nb.neg / m
   
   ## Add a legend indicating the percent of iterations declaed positive and negative, resp. 
-  legend("topright", bty = "o", bg = "white",
+  legend("topright", 
+         bty = "o", 
+         bg = "white",
+         cex = 0.7,
          legend = c(
-           paste("% pos =", round(digits = 2, percent.pos)),
-           paste("% neg =", round(digits = 2, percent.neg))
+           paste("m = ", nrow(resultTable)),
+           paste("N(+) = ", nb.pos),
+           paste("N(-) =", nb.neg),
+           paste("pc(+) = ", round(digits = 2, percent.pos)),
+           paste("pc(-) =", round(digits = 2, percent.neg))
          ))
 }
 
@@ -697,12 +867,12 @@ pvalHistogram <- function(
 
 ```{r pval_histograms, fig.width=8, fig.height=8, out.width="90%"}
 par(mfrow = c(3, 2)) ## Prepare 2 x 2 panels figure
-pvalHistogram(d0, main = "under H0 (mu1 = mu2)", col = "#BBFFDD")
-pvalHistogram(d0.1, main = "mu1 - mu2 = 0.1", col = "#FFDDBB")
-pvalHistogram(d0.2, main = "mu1 - mu2 = 0.2", col = "#FFBB88")
-pvalHistogram(d0.5, main = "mu1 - mu2 = 0.5", col = "#FF8866")
-pvalHistogram(d1, main = "mu1 - mu2 = 1", col = "#FF6633")
-pvalHistogram(d2, main = "mu1 - mu2 = 2", col = "#FF4422")
+pvalHistogram(testH0, main = "under H0 (mu1 = mu2)", col = "#DDDDDD", border = "#DDDDDD")
+pvalHistogram(delta0.1, main = "mu1 - mu2 = 0.1", col = "#FFDDBB")
+pvalHistogram(delta0.5, main = "mu1 - mu2 = 0.5", col = "#FFDDBB")
+pvalHistogram(delta1, main = "mu1 - mu2 = 1", col = "#FFDDBB")
+pvalHistogram(delta2, main = "mu1 - mu2 = 2", col = "#FFDDBB")
+pvalHistogram(delta3, main = "mu1 - mu2 = 3", col = "#FFDDBB")
 par(mfrow = c(1, 1)) ## Restore single-panel layout for next figures
 
 ```
