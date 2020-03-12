@@ -3,11 +3,15 @@ title: "Tutorial -- Comparing means under controlled conditions"
 author: "Jacques van Helden"
 date: "`r Sys.Date()`"
 output:
-  pdf_document:
+  html_document:
+    code_folding: hide
     fig_caption: yes
     highlight: zenburn
+    self_contained: no
+    theme: cerulean
     toc: yes
     toc_depth: 3
+    toc_float: yes
   beamer_presentation:
     colortheme: dolphin
     fig_caption: yes
@@ -33,15 +37,11 @@ output:
   word_document:
     toc: yes
     toc_depth: '3'
-  html_document:
-    code_folding: hide
+  pdf_document:
     fig_caption: yes
     highlight: zenburn
-    self_contained: no
-    theme: cerulean
     toc: yes
     toc_depth: 3
-    toc_float: yes
   slidy_presentation:
     fig_caption: yes
     fig_height: 6
@@ -406,9 +406,48 @@ row.names(dataTable) <- dataTable$Row.names
 dataTable <- dataTable[, -1] ## Suppress the first column which contained the row names
 # dim(dataTable)
 
+## Generate a metadata table
+metaData <- data.frame(
+  sampleNames = colnames(dataTable),
+  sampleGroup = c(rep("g1", length.out = n1), rep("g2", length.out = n2)),
+  sampleColor = c(rep("#DDEEFF", length.out = n1), rep("#FFEEDD", length.out = n2))
+)
+
+kable(metaData, caption = "Metadata table")
+
 ```
 
-#### Visualisation of the data
+## Visualisation of the data
+
+
+### Box plot of the sampled values
+
+```{r sample_boxplot, fig.width=8, fig.height=12, out.width="60%", fig.cap="Box plot of the sampled values"}
+#### Boxplot of the values per sample ####
+boxplot(dataTable, 
+        col = as.vector(metaData$sampleColor),
+        horizontal = TRUE, 
+        las = 1, 
+        main = "Sampled values", 
+        xlab = "X")
+
+```
+
+### Violin plot of the sampled values
+
+```{r sample_vioplot, fig.width=8, fig.height=12, out.width="60%", fig.cap="Violin plot of the sampled values"}
+#### Boxplot of the values per sample ####
+vioplot::vioplot(dataTable, 
+                 col = as.vector(metaData$sampleColor),
+                 horizontal = TRUE, 
+                 las = 1, 
+                 main = "Sampled values", 
+                 xlab = "X")
+
+```
+
+
+### Histogram of the sampled values
 
 - Draw two histograms with all the values group 1 and group2, respectively. 
 
@@ -451,7 +490,9 @@ par(mfrow = c(1,1))
 ```
 
 
-- Draw histogram with the sampling distribution of the means in the respective groups. 
+### Sampling distribution of the means
+
+Draw histogram with the sampling distribution of the means in the respective groups. 
 
 ```{r sampling_distrib_mean, fig.width = 8, fig.heigh = 8, out.width="60%", fig.cap="Sampling distribution of the mean"}
 
