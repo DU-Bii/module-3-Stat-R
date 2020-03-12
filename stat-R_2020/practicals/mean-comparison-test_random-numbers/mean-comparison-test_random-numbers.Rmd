@@ -3,11 +3,15 @@ title: "Tutorial -- Comparing means under controlled conditions"
 author: "Jacques van Helden"
 date: "`r Sys.Date()`"
 output:
-  pdf_document:
+  html_document:
+    code_folding: hide
     fig_caption: yes
     highlight: zenburn
+    self_contained: no
+    theme: cerulean
     toc: yes
     toc_depth: 3
+    toc_float: yes
   beamer_presentation:
     colortheme: dolphin
     fig_caption: yes
@@ -33,15 +37,11 @@ output:
   word_document:
     toc: yes
     toc_depth: '3'
-  html_document:
-    code_folding: hide
+  pdf_document:
     fig_caption: yes
     highlight: zenburn
-    self_contained: no
-    theme: cerulean
     toc: yes
     toc_depth: 3
-    toc_float: yes
   slidy_presentation:
     fig_caption: yes
     fig_height: 6
