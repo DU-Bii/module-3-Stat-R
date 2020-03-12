@@ -1,7 +1,7 @@
 ####  Parameters #####
 
 ## Population parameters
-mu1 <- 10
+mu1 <- 7
 mu2 <- 10
 sigma1 <- 2
 sigma2 <- 3
@@ -53,6 +53,7 @@ dim(dataTable)
 # View(dataTable)
 
 
+
 boxplot(dataTable, horizontal = TRUE, las = 1)
 
 #### Craftwork approach of the hypothesis test #####
@@ -70,8 +71,60 @@ resultVector <- c(tTestResult$statistic,
                   tTestResult$parameter,
                   "pValue" = tTestResult$p.value)
 
+#### Declare a function ####
+#' @title Run a t-test on random numbers
+#' @author Jacques van Helden
+#' @param n1=10 size of the first sample
+#' @param n2=10 size of the second sample
+#' @return a vector with the statistics of the test: t, p.value, df
+RandNumTest <- function(n1, 
+                        n2,
+                        mu1 = 7,
+                        mu2 = 10,
+                        sigma1 = 2,
+                        sigma2 = 3,
+                        ...
+                      ) {
+  message("Running random number test with n1 = ", n1, " and n2 = ", n2)
+  
+  ## Print the message passed in the arguments
+  x1 <- rnorm(n = n1, mean = mu1, sd = sigma1)
+  x2 <- rnorm(n = n2, mean = mu2, sd = sigma2)
+  
+  
+  testResult <- t.test(x1, x2, ...)
+  
+  m1 <- mean(x1)
+  m2 <- mean(x2)
+  d <-  m1 - m2
+  resultVector <- c(
+    m1 = m1,
+    m2 = m2,
+    d = d,
+    t = testResult$statistic, 
+    p.value = testResult$p.value, 
+    df = testResult$parameter)
+  return(resultVector)
+}
 
 
 
+# RandNumTest() ## fails
+RandNumTest(n1 = 4, n2 = 7, var.equal = FALSE, alternative = "two.sided")
+RandNumTest(n1 = 40, n2 = 70)
+
+print(testResult)
+
+print(n1)
+
+m <- 1000
+allResults <- data.frame(matrix(nrow=m, ncol = 6))
+colnames(allResults) <- c("m1", "m2", "d", "t", "p.value", "df")
+for (i in 1:m) {
+  allResults[i, ] <- RandNumTest(n1 = 16, n2 = 16, mu1 = 7, mu2 = 10,
+                                 var.equal = FALSE, alternative = "two.sided")
+}
+
+hist(allResults$p.value)
 
 
