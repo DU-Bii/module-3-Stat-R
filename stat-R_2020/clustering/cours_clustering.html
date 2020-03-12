@@ -7,7 +7,7 @@
   <meta http-equiv="Content-Style-Type" content="text/css" />
   <meta name="generator" content="pandoc" />
   <meta name="author" content="Anne Badel, Frédéric Guyon &amp; Jacques van Helden" />
-  <meta name="date" content="2020-03-11" />
+  <meta name="date" content="2020-03-12" />
   <title>Clustering</title>
   <style type="text/css">code{white-space: pre;}</style>
   <style type="text/css">
@@ -89,7 +89,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <p class="author">
 Anne Badel, Frédéric Guyon &amp; Jacques van Helden
   </p>
-  <p class="date">2020-03-11</p>
+  <p class="date">2020-03-12</p>
 </div>
 <div id="les-données" class="slide section level1">
 <h1>Les données</h1>
@@ -109,7 +109,7 @@ Anne Badel, Frédéric Guyon &amp; Jacques van Helden
 <h1>Les données dans l’ordinateur (1)</h1>
 <h2 id="les-iris-de-fisher">Les iris de Fisher</h2>
 <p>Ces données sont un classique des méthodes d’apprentissage <a href="https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1469-1809.1936.tb02137.x">Fisher</a></p>
-<p><img src="img/iris_petal_sepal.png" width="50%" style="display: block; margin: auto;" /></p>
+<p><img src="img/iris_petal_sepal.png" width="35%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="les-données-dans-lordinateur-2" class="slide section level1">
 <h1>Les données dans l’ordinateur (2)</h1>
@@ -142,7 +142,7 @@ Anne Badel, Frédéric Guyon &amp; Jacques van Helden
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">mes.iris[<span class="dv">1</span>,]</a></code></pre></div>
 <pre><code>  Sepal.Length Sepal.Width Petal.Length Petal.Width
 1          5.1         3.5          1.4         0.2</code></pre>
-<p><img src="img/440px-Iris_versicolor_3.jpg" width="30%" style="display: block; margin: auto;" /></p>
+<p><img src="img/440px-Iris_versicolor_3.jpg" width="20%" style="display: block; margin: auto;" /></p>
 <p>Comment représenter cette fleur ?</p>
 <ul>
 <li>par un point !</li>
@@ -152,7 +152,7 @@ Anne Badel, Frédéric Guyon &amp; Jacques van Helden
 <div id="représentons-ces-données-une-fleur-2" class="slide section level1">
 <h1>Représentons ces données : une fleur (2)</h1>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">plot</span>(mes.iris[<span class="dv">1</span>,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>])</a></code></pre></div>
-<p><img src="figures/irisDeFisher_unnamed-chunk-6-1.png" width="40%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/irisDeFisher_unnamed-chunk-5-1.png" width="40%" style="display: block; margin: auto;" /></p>
 <p>Dans le plan, un point de coordonnées :</p>
 <ul>
 <li>x = 5.1</li>
@@ -186,11 +186,11 @@ Anne Badel, Frédéric Guyon &amp; Jacques van Helden
 </div>
 <div id="représentons-ces-données-une-variable-à-la-fois-1" class="slide section level1">
 <h1>Représentons ces données : une variable à la fois (1)</h1>
-<p><img src="figures/irisDeFisher_unnamed-chunk-9-1.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/irisDeFisher_unnamed-chunk-8-1.png" width="60%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="représentons-ces-données-deux-variables-à-la-fois-2" class="slide section level1">
 <h1>Représentons ces données : deux variables à la fois (2)</h1>
-<p><img src="figures/irisDeFisher_unnamed-chunk-10-1.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/irisDeFisher_unnamed-chunk-9-1.png" width="50%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="il-faut-tenir-compte-de-toutes-les-dimensions" class="slide section level1">
 <h1>Il faut tenir compte de toutes les dimensions</h1>
@@ -226,7 +226,7 @@ Anne Badel, Frédéric Guyon &amp; Jacques van Helden
 <div id="clustering" class="slide section level1">
 <h1>Clustering</h1>
 <div class="figure" style="text-align: center">
-<img src="img/figure1.png" alt="données simulées : y a-t-il des groupes ?" width="50%" />
+<img src="img/figure1.png" alt="données simulées : y a-t-il des groupes ?" width="45%" />
 <p class="caption">
 données simulées : y a-t-il des groupes ?
 </p>
@@ -235,7 +235,7 @@ données simulées : y a-t-il des groupes ?
 <div id="géométrie-et-distances-1" class="slide section level1">
 <h1>Géométrie et distances (1)</h1>
 <p>On considère les données comme des points de <span class="math inline">\(\mathbb{R}^n\)</span></p>
-<p><img src="figures/irisDeFisher_unnamed-chunk-11-1.png" width="30%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/irisDeFisher_unnamed-chunk-10-1.png" width="30%" style="display: block; margin: auto;" /></p>
 <p><span class="math inline">\(\mathbb{R}^n\)</span> : espace Euclidien à <span class="math inline">\(n\)</span> dimensions, où</p>
 <ul>
 <li>chaque dimension représente une des variables observées;</li>
@@ -250,7 +250,7 @@ données simulées : y a-t-il des groupes ?
 <li>distances = dissimilarités imposées par le problème</li>
 <li>dissimilarités <span class="math inline">\(\longrightarrow\)</span> permettent visualisation de l’ensemble des points</li>
 </ul>
-<p><img src="figures/irisDeFisher_unnamed-chunk-12-1.png" width="30%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/irisDeFisher_unnamed-chunk-11-1.png" width="30%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="géométrie-et-distances-3" class="slide section level1">
 <h1>Géométrie et distances (3)</h1>
@@ -282,7 +282,7 @@ données simulées : y a-t-il des groupes ?
 </div>
 <div id="distance-euclidienne-et-distance-de-corrélation" class="slide section level1">
 <h1>Distance euclidienne et distance de corrélation</h1>
-<p><img src="figures/irisDeFisher_unnamed-chunk-13-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/irisDeFisher_cor_vs_euclidian_dist-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <table>
 <thead>
 <tr>
@@ -354,72 +354,72 @@ B - C
 <tbody>
 <tr>
 <td style="text-align:right;">
-4.29
+2.24
 </td>
 <td style="text-align:right;">
-2.8
+1.48
 </td>
 <td style="text-align:right;">
-1.17
+3.24
 </td>
 <td style="text-align:right;">
-3.32
+4.36
+</td>
+<td style="text-align:right;">
+2.53
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2.49
+</td>
+<td style="text-align:right;">
+3.19
+</td>
+<td style="text-align:right;">
+3.00
+</td>
+<td style="text-align:right;">
+3.79
 </td>
 <td style="text-align:right;">
 3.05
 </td>
 </tr>
-<tr>
-<td style="text-align:right;">
-2.93
-</td>
-<td style="text-align:right;">
-2.9
-</td>
-<td style="text-align:right;">
-2.89
-</td>
-<td style="text-align:right;">
-2.80
-</td>
-<td style="text-align:right;">
-2.68
-</td>
-</tr>
 </tbody>
 </table>
-<p>distance euclidienne : 3.2</p>
-<p>distance de manhattan = 8.05</p>
+<p>distance euclidienne : 4.04</p>
+<p>distance de manhattan = 10.68</p>
 </div>
 <div id="avec-r-2-distance-entre-individus-dun-nuage-de-points" class="slide section level1">
 <h1>Avec R (2) : distance entre individus d’un nuage de points</h1>
 <ul>
 <li>distance euclidienne</li>
 </ul>
-<pre><code>      80   50  137  140
-50  2.46               
-137 2.71 4.92          
-140 2.55 4.82 0.76     
-57  1.63 3.81 1.21 1.07</code></pre>
+<pre><code>      41  101  144   77
+101 5.35               
+144 5.34 0.56          
+77  4.15 1.77 1.48     
+74  3.75 1.92 1.82 0.73</code></pre>
 <ul>
 <li>distance de corrélation : <span class="math inline">\(d = 1-r\)</span></li>
 </ul>
-<pre><code>        80     50    137    140
-50  0.1552                     
-137 0.0611 0.3764              
-140 0.0330 0.3191 0.0087       
-57  0.0103 0.2169 0.0255 0.0156</code></pre>
+<pre><code>        41    101    144     77
+101 0.5149                     
+144 0.4428 0.0058              
+77  0.2965 0.0453 0.0199       
+74  0.3125 0.0316 0.0149 0.0052</code></pre>
 </div>
 <div id="avec-r-3-distance-entre-variables-décrivant-le-nuage-de-points" class="slide section level1">
 <h1>Avec R (3) : distance entre variables décrivant le nuage de points</h1>
 <pre><code>             Sepal.Length Sepal.Width Petal.Length
-Sepal.Width         0.900                         
-Petal.Length        0.060       0.853             
-Petal.Width         0.095       0.746        0.015</code></pre>
+Sepal.Width         1.598                         
+Petal.Length        0.115       1.418             
+Petal.Width         0.243       1.076        0.064</code></pre>
 </div>
 <div id="distances-entre-groupes-1" class="slide section level1">
 <h1>Distances entre groupes (1)</h1>
-<p><img src="figures/irisDeFisher_unnamed-chunk-19-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/irisDeFisher_group_distances_1-1.png" width="60%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="distances-entre-groupes-2" class="slide section level1">
 <h1>Distances entre groupes (2)</h1>
@@ -443,7 +443,7 @@ Petal.Width         0.095       0.746        0.015</code></pre>
 </div>
 <div id="distances-entre-groupes-4" class="slide section level1">
 <h1>Distances entre groupes (4)</h1>
-<p><img src="img/groupes.png" width="90%" style="display: block; margin: auto;" /></p>
+<p><img src="img/groupes.png" width="80%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="les-données-1" class="slide section level1">
 <h1>Les données</h1>
@@ -455,8 +455,8 @@ Petal.Width         0.095       0.746        0.015</code></pre>
 <ul>
 <li>par un <code>plot</code> (<strong>!</strong> ne pas faire si “grosses” données)</li>
 </ul>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">plot</span>(mes.iris)</a></code></pre></div>
-<p><img src="figures/irisDeFisher_plot_4variables-1.png" width="50%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">plot</span>(mes.iris, <span class="dt">col =</span> <span class="st">&quot;grey&quot;</span>, <span class="dt">las =</span> <span class="dv">1</span>)</a></code></pre></div>
+<p><img src="figures/irisDeFisher_plot_4variables-1.png" width="40%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="préparation-des-données1-variables-de-variance-nulle" class="slide section level1">
 <h1>Préparation des données (1) : variables de variance nulle</h1>
@@ -533,30 +533,30 @@ Petal.Width
 </ul>
 </div>
 <div id="on-peut-visuellement-regarder-leffet-de-la-standardisation" class="slide section level1">
-<h1>On peut visuellement regarder l’effet de la standardisation :</h1>
+<h1>On peut visuellement regarder l’effet de la standardisation</h1>
 <ul>
 <li>par des boîtes à moustaches (boxplot)</li>
 </ul>
 </div>
-<div id="standardisation-par-la-moyenne-ou-la-médiane" class="slide section level1">
-<h1>standardisation par la moyenne ou la médiane</h1>
-<p><img src="figures/irisDeFisher_normalisation_par_la_mediane-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<div id="centrage-sur-la-moyenne-ou-la-médiane" class="slide section level1">
+<h1>Centrage sur la moyenne ou la médiane</h1>
+<p><img src="figures/irisDeFisher_data_centring-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
-<div id="standardisation-par-écart-type-ou-intervalle-interquartile" class="slide section level1">
-<h1>standardisation par écart-type ou intervalle interquartile</h1>
-<p><img src="figures/irisDeFisher_normalisation_par_IQR-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<div id="mise-à-léchelle-écart-type-ou-intervalle-interquartile" class="slide section level1">
+<h1>Mise à l’échelle écart-type ou intervalle interquartile</h1>
+<p><img src="figures/irisDeFisher_data_scaling-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
-<div id="standardisation" class="slide section level1">
-<h1>standardisation</h1>
-<p><img src="figures/irisDeFisher_boxplots_raw_vs_norm-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<div id="standardisation-centrage-et-mise-à-léchelle" class="slide section level1">
+<h1>Standardisation : centrage et mise à l’échelle</h1>
+<p><img src="figures/irisDeFisher_standardization-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="la-matrice-de-distance-euclidienne" class="slide section level1">
 <h1>La matrice de distance euclidienne</h1>
-<p><img src="figures/irisDeFisher_unnamed-chunk-24-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/irisDeFisher_levelplot_euclidian-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="la-matrice-de-distance-de-corrélation" class="slide section level1">
 <h1>La matrice de distance de corrélation</h1>
-<p><img src="figures/irisDeFisher_unnamed-chunk-25-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/irisDeFisher_levelplot_cor-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="la-classification-hiérarchique-principe" class="slide section level1">
 <h1>La classification hiérarchique : principe</h1>
@@ -641,7 +641,7 @@ Petal.Width
 </div>
 <div id="dendrogramme-final" class="slide section level1">
 <h1>dendrogramme final</h1>
-<p><img src="img/hclust9.png" width="90%" style="display: block; margin: auto;" /></p>
+<p><img src="img/hclust9.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="je-ne-fais-pas-attention-à-ce-que-je-fais" class="slide section level1">
 <h1>Je ne fais pas attention à ce que je fais …</h1>
@@ -676,13 +676,13 @@ Petal.Width
 <div id="les-heatmap" class="slide section level1">
 <h1>Les heatmap</h1>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1">pheatmap<span class="op">::</span><span class="kw">pheatmap</span>(mes.iris, <span class="dt">clustering.method =</span> <span class="st">&quot;ward.D2&quot;</span>)</a></code></pre></div>
-<p><img src="figures/irisDeFisher_unnamed-chunk-26-1.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/irisDeFisher_pheatmap-1.png" width="60%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">pheatmap<span class="op">::</span><span class="kw">pheatmap</span>(mes.iris.scaled, <span class="dt">clustering.method =</span> <span class="st">&quot;ward.D2&quot;</span>)</a></code></pre></div>
-<p><img src="figures/irisDeFisher_unnamed-chunk-26-2.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/irisDeFisher_pheatmap-2.png" width="60%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">pheatmap<span class="op">::</span><span class="kw">pheatmap</span>(mes.iris, <span class="dt">scale =</span> <span class="st">&quot;column&quot;</span>, <span class="dt">clustering.method =</span> <span class="st">&quot;ward.D2&quot;</span>)</a></code></pre></div>
-<p><img src="figures/irisDeFisher_unnamed-chunk-26-3.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/irisDeFisher_pheatmap-3.png" width="60%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1">pheatmap<span class="op">::</span><span class="kw">pheatmap</span>(mes.iris, <span class="dt">scale =</span> <span class="st">&quot;row&quot;</span>, <span class="dt">clustering.method =</span> <span class="st">&quot;ward.D2&quot;</span>)</a></code></pre></div>
-<p><img src="figures/irisDeFisher_unnamed-chunk-26-4.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/irisDeFisher_pheatmap-4.png" width="60%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="les-k-means" class="slide section level1">
 <h1>Les k-means</h1>
@@ -742,23 +742,23 @@ Petal.Width
 <h2 id="un-premier-k-means-en-5-groupes">Un premier k-means en 5 groupes</h2>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1">iris.scale.kmeans5 &lt;-<span class="st"> </span><span class="kw">kmeans</span>(mes.iris.scaled, <span class="dt">center=</span><span class="dv">5</span>)</a>
 <a class="sourceLine" id="cb20-2" data-line-number="2">iris.scale.kmeans5</a></code></pre></div>
-<pre><code>K-means clustering with 5 clusters of sizes 27, 23, 22, 29, 49
+<pre><code>K-means clustering with 5 clusters of sizes 23, 48, 34, 16, 29
 
 Cluster means:
   Sepal.Length Sepal.Width Petal.Length Petal.Width
-1    0.2383957  -0.1485335   0.39724690  0.32642682
-2    0.4937294  -0.6801714   0.80454443  0.80514277
-3   -0.4201099  -1.4246794   0.03924137 -0.05279511
-4    1.3926646   0.2323817   1.15674505  1.21327591
-5   -0.9987207   0.9032290  -1.29875725 -1.25214931
+1   -0.3516137  -1.3285553    0.1026061  0.01228268
+2    0.3804044  -0.3896455    0.6067908  0.56390985
+3   -1.1924784   0.4015443   -1.3090939 -1.26089024
+4   -0.6259564   1.8042613   -1.2826445 -1.22905673
+5    1.3926646   0.2323817    1.1567451  1.21327591
 
 Clustering vector:
-  [1] 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 3 5 5 5 5 5 5 5 5 4 1 4 3 2 1 1 3 1 3 3 1 3 1 1 1 1 3 3 3 1 1 2 1 1 1 2 2 1 3 3 3 3 2 1 1 1 3 1 3 3 1 3 3 3 1 1 1 3 1 4 2 4 2 4 4 3 4 2 4 4 2 4 2 2 4 2 4 4 3 4 2 4 2 4 4 2 1 2 4 4 4 2 2 2 4 4 2 1 4 4 4 2 4 4 4 2
-[148] 2 4 1
+  [1] 3 3 3 3 4 4 3 3 3 3 4 3 3 3 4 4 4 3 4 4 3 4 3 3 3 3 3 3 3 3 3 3 4 4 3 3 4 4 3 3 3 3 3 3 4 3 4 3 4 3 5 2 5 1 2 2 2 1 2 1 1 2 1 2 1 2 2 1 1 1 2 2 2 2 2 2 2 2 2 1 1 1 1 2 2 2 2 1 2 1 1 2 1 1 1 2 2 2 1 1 5 2 5 2 5 5 1 5 2 5 5 2 5 2 2 5 2 5 5 1 5 2 5 2 5 5 2 2 2 5 5 5 2 2 2 5 5 2 2 5 5 5 2 5 5 5 2
+[148] 2 5 2
 
 Within cluster sum of squares by cluster:
-[1] 10.33898 10.02466 17.04641 26.89129 40.12172
- (between_SS / total_SS =  82.5 %)
+[1] 13.68659 27.83013 15.97485  6.45758 26.89129
+ (between_SS / total_SS =  84.8 %)
 
 Available components:
 
@@ -801,7 +801,7 @@ Available components:
 </div>
 <div id="comment-déterminer-le-nombre-de-clusters-avec-les-kmeans" class="slide section level1">
 <h1>Comment déterminer le nombre de clusters ? avec les kmeans</h1>
-<p><img src="figures/irisDeFisher_unnamed-chunk-27-1.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/irisDeFisher_unnamed-chunk-19-1.png" width="50%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="comparaison-des-résultats-des-deux-clustering" class="slide section level1">
 <h1>Comparaison des résultats des deux clustering</h1>
@@ -823,10 +823,10 @@ Available components:
 </tr>
 <tr>
 <td style="text-align:center;">
-20
+4
 </td>
 <td style="text-align:center;">
-0
+16
 </td>
 <td style="text-align:center;">
 0
@@ -834,13 +834,13 @@ Available components:
 </tr>
 <tr>
 <td style="text-align:center;">
-1
-</td>
-<td style="text-align:center;">
 0
 </td>
 <td style="text-align:center;">
-29
+5
+</td>
+<td style="text-align:center;">
+25
 </td>
 </tr>
 <tr>
@@ -848,21 +848,21 @@ Available components:
 0
 </td>
 <td style="text-align:center;">
-21
+0
 </td>
 <td style="text-align:center;">
-24
+45
 </td>
 </tr>
 <tr>
+<td style="text-align:center;">
+0
+</td>
 <td style="text-align:center;">
 0
 </td>
 <td style="text-align:center;">
 26
-</td>
-<td style="text-align:center;">
-0
 </td>
 </tr>
 </tbody>
@@ -899,31 +899,12 @@ Available components:
 <td>Choix a posteriori du nombre de clusters</td>
 <td></td>
 </tr>
-</tbody>
-</table>
-</div>
-<div class="slide section level1">
-
-<table>
-<colgroup>
-<col width="19%" />
-<col width="44%" />
-<col width="35%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Algorithme</th>
-<th>Pros</th>
-<th>Cons</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
+<tr class="even">
 <td><strong>K-means</strong></td>
 <td>Rapide (linéaire en temps), peut traiter des jeux de données énormes (centaines de milliers de pics ChIP-seq)</td>
 <td>Positions initiales des centres est aléatoire <span class="math inline">\(\rightarrow\)</span> résultats changent d’une exécution à l’autre</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td></td>
 <td></td>
 <td>Distance euclidienne (pas appropriée pour transcriptome par exemple)</td>
@@ -935,7 +916,7 @@ Available components:
 <h1>Visualisation des données - coloration par espèces</h1>
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1">species.colors &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">setosa =</span> <span class="st">&quot;#BB44DD&quot;</span>, <span class="dt">virginica =</span> <span class="st">&quot;#AA0044&quot;</span>, <span class="dt">versicolor =</span> <span class="st">&quot;#4400FF&quot;</span>)</a>
 <a class="sourceLine" id="cb23-2" data-line-number="2"><span class="kw">plot</span>(mes.iris, <span class="dt">col =</span> species.colors[iris<span class="op">$</span>Species], <span class="dt">cex =</span> <span class="fl">0.7</span>)</a></code></pre></div>
-<p><img src="figures/irisDeFisher_plot_4variables_variety-1.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/irisDeFisher_plot_4variables_variety-1.png" width="50%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="supplementary-materials" class="slide section level1">
 <h1>Supplementary materials</h1>
@@ -1123,7 +1104,7 @@ v.c 0.0000000 0.3333333</code></pre>
 </ul>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1">clues<span class="op">::</span><span class="kw">adjustedRand</span>(cluster.hclust5, cluster.kmeans3)</a></code></pre></div>
 <pre><code>     Rand        HA        MA        FM   Jaccard 
-0.7848770 0.4637776 0.4730527 0.6167001 0.4299265 </code></pre>
+0.7020134 0.3855580 0.3924977 0.6118291 0.3931110 </code></pre>
 </div>
 <div class="slide section level1">
 
@@ -1162,7 +1143,7 @@ loaded via a namespace (and not attached):
 <a class="sourceLine" id="cb29-3" data-line-number="3">       <span class="dt">main =</span> <span class="st">&quot;Données non normalisées&quot;</span>)</a>
 <a class="sourceLine" id="cb29-4" data-line-number="4"><span class="kw">biplot</span>(<span class="kw">prcomp</span>(mes.iris, <span class="dt">scale =</span> <span class="ot">TRUE</span>), <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">cex =</span> <span class="fl">0.7</span>,</a>
 <a class="sourceLine" id="cb29-5" data-line-number="5">       <span class="dt">main =</span> <span class="st">&quot;Données normalisées&quot;</span>)</a></code></pre></div>
-<p><img src="figures/irisDeFisher_unnamed-chunk-31-1.png" width="90%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/irisDeFisher_unnamed-chunk-23-1.png" width="90%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="cas-détude-tcga-breast-invasive-cancer-bic" class="slide section level1">
 <h1>Cas d’étude : TCGA Breast Invasive Cancer (BIC)</h1>

@@ -2,7 +2,7 @@
 title: "Clustering"
 subtitle: "Hierarchical clustering et Kmeans"
 author: "Anne Badel, Frédéric Guyon & Jacques van Helden"
-date: "2020-03-11"
+date: "2020-03-12"
 output:
   slidy_presentation:
     highlight: default
@@ -77,7 +77,7 @@ transition: linear
 ## Les iris de Fisher 
 Ces données sont un classique des méthodes d'apprentissage [Fisher](https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1469-1809.1936.tb02137.x)
 
-<img src="img/iris_petal_sepal.png" width="50%" style="display: block; margin: auto;" />
+<img src="img/iris_petal_sepal.png" width="35%" style="display: block; margin: auto;" />
 
 # Les données dans l'ordinateur (2)
 
@@ -125,7 +125,7 @@ mes.iris[1,]
 1          5.1         3.5          1.4         0.2
 ```
 
-<img src="img/440px-Iris_versicolor_3.jpg" width="30%" style="display: block; margin: auto;" />
+<img src="img/440px-Iris_versicolor_3.jpg" width="20%" style="display: block; margin: auto;" />
 
 Comment représenter cette fleur ?
 
@@ -140,7 +140,7 @@ Dans quel espace de réprésentation ?
 plot(mes.iris[1,1:2])
 ```
 
-<img src="figures/irisDeFisher_unnamed-chunk-6-1.png" width="40%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_unnamed-chunk-5-1.png" width="40%" style="display: block; margin: auto;" />
 
 Dans le plan, un point de coordonnées :
 
@@ -177,11 +177,11 @@ représenté par un vecteur $v3 = ($ 5.1 $,$ 3.5 $,$ 1.4$)$ dans $\mathbb{R}^3$
 
 # Représentons ces données : une variable à la fois (1)
 
-<img src="figures/irisDeFisher_unnamed-chunk-9-1.png" width="60%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_unnamed-chunk-8-1.png" width="60%" style="display: block; margin: auto;" />
 
 # Représentons ces données : deux variables à la fois (2)
 
-<img src="figures/irisDeFisher_unnamed-chunk-10-1.png" width="60%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_unnamed-chunk-9-1.png" width="50%" style="display: block; margin: auto;" />
 
 # Il faut tenir compte de toutes les dimensions
 
@@ -217,7 +217,7 @@ On a une **information** sur nos données
 # Clustering
 
 <div class="figure" style="text-align: center">
-<img src="img/figure1.png" alt="données simulées : y a-t-il des groupes ?" width="50%" />
+<img src="img/figure1.png" alt="données simulées : y a-t-il des groupes ?" width="45%" />
 <p class="caption">données simulées : y a-t-il des groupes ?</p>
 </div>
 
@@ -226,7 +226,7 @@ On a une **information** sur nos données
 
 On considère les données comme des points de $\mathbb{R}^n$ 
 
-<img src="figures/irisDeFisher_unnamed-chunk-11-1.png" width="30%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_unnamed-chunk-10-1.png" width="30%" style="display: block; margin: auto;" />
 
 $\mathbb{R}^n$ : espace Euclidien à $n$ dimensions, où 
 
@@ -241,7 +241,7 @@ On considère les données comme des points de $R^n$ (*)
 - distances = dissimilarités imposées par le problème
 - dissimilarités $\longrightarrow$ permettent visualisation de l'ensemble des points
 
-<img src="figures/irisDeFisher_unnamed-chunk-12-1.png" width="30%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_unnamed-chunk-11-1.png" width="30%" style="display: block; margin: auto;" />
 
 # Géométrie et distances (3)
 
@@ -270,7 +270,7 @@ Si 1,2,3 : dissimilarité
 
 # Distance euclidienne et distance de corrélation
 
-<img src="figures/irisDeFisher_unnamed-chunk-13-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_cor_vs_euclidian_dist-1.png" width="80%" style="display: block; margin: auto;" />
 
 <table>
  <thead>
@@ -311,46 +311,46 @@ Si 1,2,3 : dissimilarité
 <table>
 <tbody>
   <tr>
-   <td style="text-align:right;"> 4.29 </td>
-   <td style="text-align:right;"> 2.8 </td>
-   <td style="text-align:right;"> 1.17 </td>
-   <td style="text-align:right;"> 3.32 </td>
-   <td style="text-align:right;"> 3.05 </td>
+   <td style="text-align:right;"> 2.24 </td>
+   <td style="text-align:right;"> 1.48 </td>
+   <td style="text-align:right;"> 3.24 </td>
+   <td style="text-align:right;"> 4.36 </td>
+   <td style="text-align:right;"> 2.53 </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 2.93 </td>
-   <td style="text-align:right;"> 2.9 </td>
-   <td style="text-align:right;"> 2.89 </td>
-   <td style="text-align:right;"> 2.80 </td>
-   <td style="text-align:right;"> 2.68 </td>
+   <td style="text-align:right;"> 2.49 </td>
+   <td style="text-align:right;"> 3.19 </td>
+   <td style="text-align:right;"> 3.00 </td>
+   <td style="text-align:right;"> 3.79 </td>
+   <td style="text-align:right;"> 3.05 </td>
   </tr>
 </tbody>
 </table>
 
-distance euclidienne : 3.2
+distance euclidienne : 4.04
 
-distance de manhattan = 8.05
+distance de manhattan = 10.68
 
 # Avec R (2) : distance entre individus d'un nuage de points 
 
 - distance euclidienne
 
 ```
-      80   50  137  140
-50  2.46               
-137 2.71 4.92          
-140 2.55 4.82 0.76     
-57  1.63 3.81 1.21 1.07
+      41  101  144   77
+101 5.35               
+144 5.34 0.56          
+77  4.15 1.77 1.48     
+74  3.75 1.92 1.82 0.73
 ```
 
 - distance de corrélation : $d = 1-r$
 
 ```
-        80     50    137    140
-50  0.1552                     
-137 0.0611 0.3764              
-140 0.0330 0.3191 0.0087       
-57  0.0103 0.2169 0.0255 0.0156
+        41    101    144     77
+101 0.5149                     
+144 0.4428 0.0058              
+77  0.2965 0.0453 0.0199       
+74  0.3125 0.0316 0.0149 0.0052
 ```
 
 # Avec R (3) : distance entre variables décrivant le nuage de points 
@@ -358,14 +358,14 @@ distance de manhattan = 8.05
 
 ```
              Sepal.Length Sepal.Width Petal.Length
-Sepal.Width         0.900                         
-Petal.Length        0.060       0.853             
-Petal.Width         0.095       0.746        0.015
+Sepal.Width         1.598                         
+Petal.Length        0.115       1.418             
+Petal.Width         0.243       1.076        0.064
 ```
 
 # Distances entre groupes (1)
 
-<img src="figures/irisDeFisher_unnamed-chunk-19-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_group_distances_1-1.png" width="60%" style="display: block; margin: auto;" />
 
 # Distances entre groupes (2)
 
@@ -389,7 +389,7 @@ $D(C_1,C_2) = \sqrt{\frac{N_1N_2}{N_1 + N_2}} \| m_1 -m_2 \|$
 
 # Distances entre groupes (4)
 
-<img src="img/groupes.png" width="90%" style="display: block; margin: auto;" />
+<img src="img/groupes.png" width="80%" style="display: block; margin: auto;" />
 
 # Les données
 
@@ -404,10 +404,10 @@ On peut ensuite essayer de visualiser les données
   
 
 ```r
-plot(mes.iris)
+plot(mes.iris, col = "grey", las = 1)
 ```
 
-<img src="figures/irisDeFisher_plot_4variables-1.png" width="50%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_plot_4variables-1.png" width="40%" style="display: block; margin: auto;" />
 
 
 # Préparation des données (1) : variables de variance nulle
@@ -478,31 +478,31 @@ mes.iris.scaled <- scale(mes.iris, center = TRUE, scale = TRUE)
 
 - soit en effectuant une transformation des variables, par exemple transformation logarithmique
 
-# On peut visuellement regarder l'effet de la standardisation :
+# On peut visuellement regarder l'effet de la standardisation
 
 - par des boîtes à moustaches (boxplot)
 
-# standardisation par la moyenne ou la médiane
+# Centrage sur la moyenne ou la médiane
 
-<img src="figures/irisDeFisher_normalisation_par_la_mediane-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_data_centring-1.png" width="70%" style="display: block; margin: auto;" />
 
-# standardisation par écart-type ou intervalle interquartile
+# Mise à l'échelle écart-type ou intervalle interquartile
 
-<img src="figures/irisDeFisher_normalisation_par_IQR-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_data_scaling-1.png" width="70%" style="display: block; margin: auto;" />
 
-# standardisation
+# Standardisation : centrage et mise à l'échelle
 
-<img src="figures/irisDeFisher_boxplots_raw_vs_norm-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_standardization-1.png" width="70%" style="display: block; margin: auto;" />
 
 # La matrice de distance euclidienne
 
 
 
-<img src="figures/irisDeFisher_unnamed-chunk-24-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_levelplot_euclidian-1.png" width="70%" style="display: block; margin: auto;" />
 
 # La matrice de distance de corrélation
 
-<img src="figures/irisDeFisher_unnamed-chunk-25-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_levelplot_cor-1.png" width="70%" style="display: block; margin: auto;" />
 
 # La classification hiérarchique : principe
 
@@ -580,7 +580,7 @@ mes.iris.scaled <- scale(mes.iris, center = TRUE, scale = TRUE)
 
 # dendrogramme final
 
-<img src="img/hclust9.png" width="90%" style="display: block; margin: auto;" />
+<img src="img/hclust9.png" width="70%" style="display: block; margin: auto;" />
 
 # Je ne fais pas attention à ce que je fais ...
 
@@ -628,25 +628,25 @@ plot(iris.scale.hclust, hang = -1, cex = 0.5, main = "Normalisées")
 pheatmap::pheatmap(mes.iris, clustering.method = "ward.D2")
 ```
 
-<img src="figures/irisDeFisher_unnamed-chunk-26-1.png" width="60%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_pheatmap-1.png" width="60%" style="display: block; margin: auto;" />
 
 ```r
 pheatmap::pheatmap(mes.iris.scaled, clustering.method = "ward.D2")
 ```
 
-<img src="figures/irisDeFisher_unnamed-chunk-26-2.png" width="60%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_pheatmap-2.png" width="60%" style="display: block; margin: auto;" />
 
 ```r
 pheatmap::pheatmap(mes.iris, scale = "column", clustering.method = "ward.D2")
 ```
 
-<img src="figures/irisDeFisher_unnamed-chunk-26-3.png" width="60%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_pheatmap-3.png" width="60%" style="display: block; margin: auto;" />
 
 ```r
 pheatmap::pheatmap(mes.iris, scale = "row", clustering.method = "ward.D2")
 ```
 
-<img src="figures/irisDeFisher_unnamed-chunk-26-4.png" width="60%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_pheatmap-4.png" width="60%" style="display: block; margin: auto;" />
 
 # Les k-means
 
@@ -720,23 +720,23 @@ iris.scale.kmeans5
 ```
 
 ```
-K-means clustering with 5 clusters of sizes 27, 23, 22, 29, 49
+K-means clustering with 5 clusters of sizes 23, 48, 34, 16, 29
 
 Cluster means:
   Sepal.Length Sepal.Width Petal.Length Petal.Width
-1    0.2383957  -0.1485335   0.39724690  0.32642682
-2    0.4937294  -0.6801714   0.80454443  0.80514277
-3   -0.4201099  -1.4246794   0.03924137 -0.05279511
-4    1.3926646   0.2323817   1.15674505  1.21327591
-5   -0.9987207   0.9032290  -1.29875725 -1.25214931
+1   -0.3516137  -1.3285553    0.1026061  0.01228268
+2    0.3804044  -0.3896455    0.6067908  0.56390985
+3   -1.1924784   0.4015443   -1.3090939 -1.26089024
+4   -0.6259564   1.8042613   -1.2826445 -1.22905673
+5    1.3926646   0.2323817    1.1567451  1.21327591
 
 Clustering vector:
-  [1] 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 3 5 5 5 5 5 5 5 5 4 1 4 3 2 1 1 3 1 3 3 1 3 1 1 1 1 3 3 3 1 1 2 1 1 1 2 2 1 3 3 3 3 2 1 1 1 3 1 3 3 1 3 3 3 1 1 1 3 1 4 2 4 2 4 4 3 4 2 4 4 2 4 2 2 4 2 4 4 3 4 2 4 2 4 4 2 1 2 4 4 4 2 2 2 4 4 2 1 4 4 4 2 4 4 4 2
-[148] 2 4 1
+  [1] 3 3 3 3 4 4 3 3 3 3 4 3 3 3 4 4 4 3 4 4 3 4 3 3 3 3 3 3 3 3 3 3 4 4 3 3 4 4 3 3 3 3 3 3 4 3 4 3 4 3 5 2 5 1 2 2 2 1 2 1 1 2 1 2 1 2 2 1 1 1 2 2 2 2 2 2 2 2 2 1 1 1 1 2 2 2 2 1 2 1 1 2 1 1 1 2 2 2 1 1 5 2 5 2 5 5 1 5 2 5 5 2 5 2 2 5 2 5 5 1 5 2 5 2 5 5 2 2 2 5 5 5 2 2 2 5 5 2 2 5 5 5 2 5 5 5 2
+[148] 2 5 2
 
 Within cluster sum of squares by cluster:
-[1] 10.33898 10.02466 17.04641 26.89129 40.12172
- (between_SS / total_SS =  82.5 %)
+[1] 13.68659 27.83013 15.97485  6.45758 26.89129
+ (between_SS / total_SS =  84.8 %)
 
 Available components:
 
@@ -782,7 +782,7 @@ plot(iris.scale.hclust.ward, hang = -1, cex = 0.5)
 
 # Comment déterminer le nombre de clusters ? avec les kmeans
 
-<img src="figures/irisDeFisher_unnamed-chunk-27-1.png" width="60%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_unnamed-chunk-19-1.png" width="50%" style="display: block; margin: auto;" />
 
 # Comparaison des résultats des deux clustering
 
@@ -796,24 +796,24 @@ plot(iris.scale.hclust.ward, hang = -1, cex = 0.5)
    <td style="text-align:center;"> 0 </td>
   </tr>
   <tr>
-   <td style="text-align:center;"> 20 </td>
-   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 4 </td>
+   <td style="text-align:center;"> 16 </td>
    <td style="text-align:center;"> 0 </td>
   </tr>
   <tr>
-   <td style="text-align:center;"> 1 </td>
    <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 29 </td>
+   <td style="text-align:center;"> 5 </td>
+   <td style="text-align:center;"> 25 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 21 </td>
-   <td style="text-align:center;"> 24 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 45 </td>
   </tr>
   <tr>
+   <td style="text-align:center;"> 0 </td>
    <td style="text-align:center;"> 0 </td>
    <td style="text-align:center;"> 26 </td>
-   <td style="text-align:center;"> 0 </td>
   </tr>
 </tbody>
 </table>
@@ -825,11 +825,6 @@ plot(iris.scale.hclust.ward, hang = -1, cex = 0.5)
 | **Hiérarchique** | L'arbre reflète la nature imbriquée de tous les sous-clusters | Complexité quadratique (mémoire et temps de calcul) $\rightarrow$ quadruple chaque fois qu'on double le nombre d'individus  |
 | | Permet une visualisation couplée dendrogramme (groupes) + heatmap (profils individuels) | |
 | | Choix a posteriori du nombre de clusters | |
-
----
-
-| Algorithme | Pros | Cons |
-|-------------|------------------------------|------------------------|
 | **K-means** | Rapide (linéaire en temps), peut traiter des jeux de données énormes (centaines de milliers de pics ChIP-seq) | Positions initiales des centres est aléatoire $\rightarrow$ résultats changent d'une exécution à l'autre |
 | | | Distance euclidienne (pas appropriée pour transcriptome par exemple) |
 
@@ -841,7 +836,7 @@ species.colors <- c(setosa = "#BB44DD", virginica = "#AA0044", versicolor = "#44
 plot(mes.iris, col = species.colors[iris$Species], cex = 0.7)
 ```
 
-<img src="figures/irisDeFisher_plot_4variables_variety-1.png" width="60%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_plot_4variables_variety-1.png" width="50%" style="display: block; margin: auto;" />
 
 # Supplementary materials
 
@@ -1006,7 +1001,7 @@ clues::adjustedRand(cluster.hclust5, cluster.kmeans3)
 
 ```
      Rand        HA        MA        FM   Jaccard 
-0.7848770 0.4637776 0.4730527 0.6167001 0.4299265 
+0.7020134 0.3855580 0.3924977 0.6118291 0.3931110 
 ```
 
 
@@ -1059,7 +1054,7 @@ biplot(prcomp(mes.iris, scale = TRUE), las = 1, cex = 0.7,
        main = "Données normalisées")
 ```
 
-<img src="figures/irisDeFisher_unnamed-chunk-31-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_unnamed-chunk-23-1.png" width="90%" style="display: block; margin: auto;" />
 
 *****
 
