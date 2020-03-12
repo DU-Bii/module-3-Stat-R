@@ -59,6 +59,8 @@ dim(dataTable)
 metaData <- data.frame(row.names = colnames(dataTable),
                        group = c(rep(x = "g1", length.out = n1),
                                  rep(x = "g2", length.out = n2)))
+
+table(metaData$group)
 ## Add the replicate number
 metaData$replicate <- c(1:n1, 1:n2)
 
@@ -192,4 +194,4 @@ hist(repTests$p.value, breaks = 20)
 alpha <- 0.05
 abline(v = alpha, col = "red")
 
-## 
+## Volcano plot
