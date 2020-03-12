@@ -104,6 +104,7 @@ Link to the prerequisites:
 | Basic stats explained to biologists | Points of Significance |Nature Methods collection  |<https://www.nature.com/collections/qghhqm/pointsofsignificance> |
 | How to represent data | Points of View | Nature Methods collection |<http://blogs.nature.com/methagora/2013/07/data-visualization-points-of-view.html> |
 | How to represent data | DEFAKATOR | Détecter des graphiques trompeurs  |<https://www.youtube.com/watch?v=crTt-QIyS-o> |
+| Collective result table | Table to collect and compare trainee's results | <tinyurl.com/dubii20-randnumstat> |
 
 
 

@@ -3,15 +3,11 @@ title: "Tutorial -- Comparing means under controlled conditions"
 author: "Jacques van Helden"
 date: "`r Sys.Date()`"
 output:
-  html_document:
-    code_folding: hide
+  pdf_document:
     fig_caption: yes
     highlight: zenburn
-    self_contained: no
-    theme: cerulean
     toc: yes
     toc_depth: 3
-    toc_float: yes
   beamer_presentation:
     colortheme: dolphin
     fig_caption: yes
@@ -37,11 +33,15 @@ output:
   word_document:
     toc: yes
     toc_depth: '3'
-  pdf_document:
+  html_document:
+    code_folding: hide
     fig_caption: yes
     highlight: zenburn
+    self_contained: no
+    theme: cerulean
     toc: yes
     toc_depth: 3
+    toc_float: yes
   slidy_presentation:
     fig_caption: yes
     fig_height: 6
@@ -811,6 +811,29 @@ IterateTtest <- function(mu1,
     resultTable[i, "d"] <- resultTable[i, "m1"] - resultTable[i, "m2"] ## Difference between sample means
   }
   
+  #### Compute multiple testing corrections ####
+
+  ## E-value
+  ## Expected number of FP
+  resultTable$e.value <- resultTable$p.value * nrow(resultTable)
+  
+  ## Family-Wise Error Rate (FWER)
+  ## Probability to have at least one FP given the p-value
+  resultTable$FWER <- pbinom(q = 0, 
+                             size = nrow(resultTable), 
+                             prob = resultTable$p.value, 
+                             lower.tail = FALSE)
+
+  
+  ## Multiple testing corrections
+  for (method in p.adjust.methods) {
+    resultTable[, method] <- p.adjust(resultTable$p.value, method = method)
+  }
+  
+  # ## Storey - Tibshirani q-value
+  # qvalResult <- qvalue::qvalue(p = unlist(resultTable$p.value))
+  # resultTable$q.value <- 
+  
   return(resultTable) ## This function returns the result table
 }
 
@@ -859,6 +882,8 @@ delta3 <- IterateTtest(mu1 = mu1, mu2 = mu1 + 3, sigma1 = sigma1, sigma2 = sigma
 ```
 
 
+## P-value histograms
+
 ```{r pval_histogram_function}
 ## Define a function that rdraws the p-value histogram 
 ## based on the result table of t-test iterations
@@ -890,7 +915,7 @@ pvalHistogram <- function(
   percent.pos <- 100 * nb.pos / m
   percent.neg <- 100 * nb.neg / m
   
-  ## Add a legend indicating the percent of iterations declaed positive and negative, resp. 
+  ## Add a legend indicating the percent of iterations declaed positive and negative, resp.
   legend("topright", 
          bty = "o", 
          bg = "white",
@@ -906,7 +931,7 @@ pvalHistogram <- function(
 
 ```
 
-```{r pval_histograms, fig.width=8, fig.height=8, out.width="90%"}
+```{r pval_histograms, fig.width=8, fig.height=8, out.width="90%", fig.cap="P-value historams of the multiple test results with increasing effect sizes."}
 par(mfrow = c(3, 2)) ## Prepare 2 x 2 panels figure
 pvalHistogram(testH0, main = "under H0 (mu1 = mu2)", col = "#DDDDDD", border = "#DDDDDD")
 pvalHistogram(delta0.1, main = "mu1 - mu2 = 0.1", col = "#FFDDBB")
@@ -917,6 +942,126 @@ pvalHistogram(delta3, main = "mu1 - mu2 = 3", col = "#FFDDBB")
 par(mfrow = c(1, 1)) ## Restore single-panel layout for next figures
 
 ```
+
+
+## Volcano plots
+
+```{r volcanoplot_function}
+#### Define VolcanoPlot() function ####
+VolcanoPlot <- function(resultTable, 
+                        alpha = 0.05, 
+                        ...) {
+
+  
+  ## Collect effect size values for the X axis  
+  effectSize <- resultTable$d
+  maxXabs <- max(abs(effectSize))
+  xmax <- signif(digits = 1, maxXabs)
+
+  ## Collect p-values for the Y axis
+  log10Pval <- -log10(resultTable$p.value)
+    
+  plot(effectSize, 
+       log10Pval,
+       xlim = c(-xmax, xmax),
+       lax = 1,
+       xlab = "Effect size",
+       ylab = "-log10(Pval)",
+       ...
+       )
+  abline(v = 0) 
+  abline(h = 0)
+  abline(h = -log10(alpha), col = "red")
+  
+  ## Compute the percent of positive and negative results``
+  nb.pos <- sum(resultTable$p.value < alpha)
+  nb.neg <- m - nb.pos
+  percent.pos <- 100 * nb.pos / m
+  percent.neg <- 100 * nb.neg / m
+  
+
+  ## Add a legend indicating the percent of iterations declaed positive and negative, resp.
+  legend("topright", 
+         bty = "o", 
+         bg = "white",
+         cex = 0.7,
+         legend = c(
+           paste("m = ", nrow(resultTable)),
+           paste("N(+) = ", nb.pos),
+           paste("N(-) =", nb.neg),
+           paste("pc(+) = ", round(digits = 2, percent.pos)),
+           paste("pc(-) =", round(digits = 2, percent.neg))
+         ))
+
+}
+
+```
+
+```{r volcano_plots, fig.width=8, fig.height=8, out.width="90%", fig.cap="Volcano plots of the multiple test results with increasing effect sizes."}
+par(mfrow = c(3,2))
+
+VolcanoPlot(testH0, main = "under H0 (mu1 = mu2)", col = "#DDDDDD")
+VolcanoPlot(delta0.1, main = "mu1 - mu2 = 0.1", col = "#FFDDBB")
+VolcanoPlot(delta0.5, main = "mu1 - mu2 = 0.5", col = "#FFDDBB")
+VolcanoPlot(delta1, main = "mu1 - mu2 = 1", col = "#FFDDBB")
+VolcanoPlot(delta2, main = "mu1 - mu2 = 2", col = "#FFDDBB")
+VolcanoPlot(delta3, main = "mu1 - mu2 = 3", col = "#FFDDBB")
+
+par(mfrow = c(1,1))
+```
+
+## Multiple testing corrections
+
+```{r multi_test_corrections, fig.width=8, fig.height=8, out.width="90%", fig.cap="Multiple testing corrections."}
+par(mfrow = c(3,2))
+
+MultiCorrectionsPlot <- function(resultTable,
+                                 main = "Multiple testing corrections") {
+  #### Compare p-value corrections under H0 ####
+  plot(resultTable$p.value, 
+       resultTable$p.value,
+       main = main,
+       col = "grey",
+       log = "xy",
+       xlab = "Nominal P-value",
+       ylab = "Corrected P-value",
+       panel.first = grid())
+  abline(v = c(0,1))
+  abline(h = c(0,1))
+  abline(h  = alpha, col = "red")
+  abline(v  = alpha, col = "red")
+  
+  ## FWER
+  points(resultTable$p.value, 
+         resultTable$FWER, col = "blue")
+  
+  ## Bonferroni correction
+  points(resultTable$p.value, 
+         resultTable$bonferroni, col = "orange")
+  
+  ## Benjamini-Hochberg
+  points(resultTable$p.value, 
+         resultTable$BH, col = "darkgreen")
+}  
+
+
+
+MultiCorrectionsPlot(testH0, main = "under H0 (mu1 = mu2)")
+MultiCorrectionsPlot(delta0.1, main = "mu1 - mu2 = 0.1")
+MultiCorrectionsPlot(delta0.5, main = "mu1 - mu2 = 0.5")
+MultiCorrectionsPlot(delta1, main = "mu1 - mu2 = 1")
+MultiCorrectionsPlot(delta2, main = "mu1 - mu2 = 2")
+MultiCorrectionsPlot(delta3, main = "mu1 - mu2 = 3")
+
+par(mfrow = c(1,1))
+```
+
+
+
+
+```
+
+
 
 ## Interpretation of the results
 
@@ -932,7 +1077,6 @@ We should now write a report of interpretation, which will address the following
 
 - Discuss about the adequation between the test and the conditions of our simulations. 
 
-- Do these observations correspond to what would be expected? 
+- Do these observations correspond to what would be expected from the theory? 
 
-The same kind of questions will be asked for the 6 other questions above (impact of sample size,  variance,  non-normality, heteroscadicity, parametric vs non-parametric test). 
 
