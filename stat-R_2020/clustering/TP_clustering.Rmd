@@ -137,7 +137,7 @@ Les données ont été préparées pour vous, selon la procédure détaillée au
 
 3. Analyse différentielle multi-groupes (en utilisant le package Bioconductor `edgeR`).
 
-4. Correction des P-valeurs nomiables pour tenir compte des tests multiples (nous avons testé ici ~20.000 gènes). Nous estimons le le False Discovery Rate (FDR) selon la méthode de Benjamini-Hochberg (fonction R `p.adjust(all.pvalues, method="fdr")`). 
+4. Correction des P-valeurs pour tenir compte des tests multiples (nous avons testé ici ~20.000 gènes). Nous estimons le False Discovery Rate (FDR) selon la méthode de Benjamini-Hochberg (fonction R `p.adjust(all.pvalues, method="fdr")`). 
 
 5. Sélection de gènes différentiellement exprimés sur base d'un seuil $\alpha = 0.05$ appliqué au FDR.
 
@@ -146,51 +146,19 @@ Les données ont été préparées pour vous, selon la procédure détaillée au
 ## Choisir son environnement de travail
 
 
-Vous pouvez choisir de travailler soir sur le cluster core de l'IFB soit sur les ordinateurs de Paris-Diderot.
+Les données seront analysées sur le [**serveur RStudio de l'IFB**](https://rstudio.cluster.france-bioinformatique.fr/). Ouvrez serveur RStudio <https://rstudio.cluster.france-bioinformatique.fr/> et identifiez-vous.
 
-1.  Sur le [**cluster de l'IFB**](https://rstudio.cluster.france-bioinformatique.fr/)
-
-    - ouvrez une connexion au serveur RStudio <https://rstudio.cluster.france-bioinformatique.fr/> et identifiez-vous
-
-
-2. Sur les machines de la **salle d'ordinateurs de Paris-Diderot**
-
-
-    - vous devez avoir la commande suivante dans votre `.bashrc` : 
-    
-```{bash paris_diderot_conda, eval=FALSE, echo=TRUE}
-source /opt/sdv/anaconda/etc/profile.d/conda.sh`
-```
-
-
-- puis vous devez **lancer l'environnement conda** adéquat : 
-
-```conda activate ```
-
-
-- et enfin lancer le serveur Rstudio au moyen de la commande bash: `rstudio`
-    
 
 ## Dossier partagé contenant les données
 
-Les données sont dans un répertoire partagé, dont le chemin dépend du serveur auquel vous êtes connectézs. Nous allons définir une variable `data.folder` qui indiquera le chemin de ce dossier partagé, en fonction du serveur. 
+Les données sont dans un répertoire partagé `/shared/projects/du_bii_2019/data/module3/seance4/BIC/`.
 
-Sur le **serveur Rstudio de l'IFB-core-cluster**, les données sont dans le répertoire `/shared/projects/du_bii_2019/data/module3/seance4/BIC/`. 
+Nous allons définir une variable `data.folder` qui indiquera le chemin de ce dossier partagé, en fonction du serveur. 
 
 ```{r data_folder_ifb, eval=FALSE}
 ## Liste des fichiers de données
 data.folder <- "/shared/projects/du_bii_2019/data/module3/seance4/BIC/"
 ```
-
-<!--
-2. Sur les machines de Paris-Diderot, elles sont dans le répertoire `/home/sdv/dubii/data-m3/s4` 
-
-```{r data_folder_pdiderot, eval=FALSE}
-## Liste des fichiers de données
-data.folder <- "/home/sdv/dubii/data-m3/s4/"
-```
-
--->
 
 ## Contenu du dossier de données
 
@@ -236,7 +204,7 @@ kable(data.frame(data.file.Mb))
 
 Nous allons maintenant lire le fichier d'expression. Pour cela, nous concaténons le chemin du dossier de données et le nom du fichier d'expressiion (`BIC_log2-norm-counts_edgeR_DEG_top_1000.tsv.gz`). 
 
-Ce fichier contient le comptages de lectures RNA-seq par gène, avec une sélection des gènes déclarés positifs pour letest de comparaison de moyennes multiples (voir-ci-dessus). Par ailleurs, nous avons arbitrairement appliqué un seuil supplémentaire en n'exportant que les 1000 gènes les plus significatifs, pour éviter de passer trop de temps sur le clustering hiérachique (complexité quadratique). 
+Ce fichier contient le comptages de lectures RNA-seq par gène, avec une sélection des gènes déclarés positifs pour le test de comparaison de moyennes multiples (voir-ci-dessus). Par ailleurs, nous avons arbitrairement appliqué un seuil supplémentaire en n'exportant que les 1000 gènes les plus significatifs, pour éviter de passer trop de temps sur le clustering hiérachique (complexité quadratique). 
 
 ```{r file_path}
 
@@ -263,14 +231,14 @@ Prenez le temps d'identifier
 
 Pour des raisons historiques, en analyse transcriptomique les données sont toujours fournies avec
 
-  - 1 ligne = 1 gène
-  - 1 échantillon biologique = 1 colonne
+- 1 ligne = 1 gène
+- 1 échantillon biologique = 1 colonne
 
 Cette convention a été établie en 1997, lors des toutes premières publications sur le transcriptome de la levure. Dans ces études, l'objet d'intérêt (l'"éindividu") était le gène, et les variables étaient ses mesures d'expression dans les différentes conditions testées.
 
 Pour l'anlayse de tissus cancéreux, on considère au contraire que l'"objet" d'intérêt  est l'échantillon prélevé sur le patient, et les variables sont les mesures d'expression des différents gènes chez un patient.
 
-Ce qui implique de faire attention, et éventuellement de travailler sur la matrice transposée (fonction `t` en R) pour utiliser correctement les fonctions classiques.
+Ce qui implique de faire attention, et éventuellement de travailler sur la matrice transposée (fonction `t()` en R) pour utiliser correctement les fonctions classiques.
 
 ```{r}
 ## Les données d'expression
@@ -703,7 +671,7 @@ clues::adjustedRand(BIC.cutree10, BIC.kmeans3$cluster)
 
 #### clustering versus statut
 
-Nous connaissons les types de cancer des différentes tumeurs, définie en combinant trois marqueurs immunologiques :
+Nous connaissons les types de cancer des différentes tumeurs, définis en combinant trois marqueurs immunologiques :
 
 - HER2,
 - ER1 (récepteur d'œstrogène)
@@ -716,10 +684,10 @@ et nous obtenons les classes suivantes :
 - Luminal.A
 - Luminal.B
 
-qqs tumeurs sont non classées
+Quelques tumeurs sont non classées.
 
 Vous pouvez lire les données concernant le type de cancer grâce à la fonction `read.table`, la ligne de commande est : `mes.classes <- read.table("../../xxxx/BIC_sample-classes.tsv", h=T)`.
-A l'aide de la fonction `summary`, déterminez le nombre de tumeurs pour chaque type de cancer
+A l'aide de la fonction `summary`, déterminez le nombre de tumeurs pour chaque type de cancer.
 
   1. comparez vos résultats de clustering avec la réalité
     - par des visualisations
