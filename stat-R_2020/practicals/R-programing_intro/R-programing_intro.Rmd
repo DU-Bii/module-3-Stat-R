@@ -1,5 +1,5 @@
 ---
-title: "Programming with R"
+title: "Intro to programming with R"
 author: "Claire Vandiedonck & Jacques van Helden"
 date: "`r Sys.Date()`"
 output:
@@ -99,6 +99,11 @@ knitr::opts_chunk$set(
 ```
 
 
+#### Solutions
+
+En cas d'urgence poussez sur **Code** pour révéler la solution.
+
+
 ## Exercice 1 : test
 
 - Créez un vecteur de 100 valeurs tirées aléatoirement selon une loi normale de moyenne 4 et d'écart type 5.
@@ -108,7 +113,28 @@ knitr::opts_chunk$set(
 - Testez si la somme de ces valeurs est supérieure à 40, à 30 ou à 20 et affichez un message adéquat selon chaque éventualité.
 
 
-**Fonctions à utiliser :** rnorm(), which(),sum(), if(),else if(),else(), cat() ou print()
+**Fonctions recommandées :** rnorm(), which(),sum(), if(), ifelse(), else(), cat() ou print()
+
+```{r solution_1}
+vecRandom <- rnorm(100, mean = 4, sd = 5)
+vecAbove3 <- vecRandom[which(vecRandom > 3)]
+valSum <- sum(vecAbove3)
+
+if(valSum > 40){
+          cat("la somme est > 40 \n")
+          }else if(valSum > 30){
+          cat("la somme est > 30 mais <= 40 \n")
+          }else if(valSum > 20){
+          cat("la somme est > 20 mais <= 30 \n")
+          }else{
+          cat("la somme est < ou egal 20 \n")
+}
+
+# vous pouviez aussi obtenir le vecteur vecAbove3 avec la fonction ifelse():
+vecRandom[ifelse(vecRandom >3, TRUE, FALSE)]
+
+```
+
 
 ## Exercice 2 : création d'une boucle simple
 
@@ -116,7 +142,22 @@ knitr::opts_chunk$set(
 - Calculez au fur et à mesure la somme cumulée des indices dans un vecteur.
 - Affichez la somme cumulée finale.
 
-**Fonctions à utiliser :** for(), cat() ou print()
+**Fonctions recommandées :** for(), cat() ou print()
+
+```{r solution_2}
+sumCumul <- 0
+
+for(i in 1:10){
+  print(i) # always print the index of the result, we might prefer cat(), see below
+  sumCumul <- sumCumul + i
+  cat(paste("for i:", i, "  ,the sumCumul is: ", sumCumul, "\n", sep=""))
+}
+
+# affichage de la somme cumulee finale
+print(sumCumul)
+
+```
+
 
 
 ## Exercice 3 : création d'une fonction
@@ -124,25 +165,82 @@ knitr::opts_chunk$set(
 - Créez une fonction `calculSomme` qui calcule la somme de deux variables x et y passées en argument.
 - Testez la fonction.
 
-**Fonctions à utiliser :** function(), return()
+**Fonctions recommandées :** function(), return()
+
+```{r solution_3}
+calculSomme <- function(x, y){
+    return(x + y)
+}
+
+# test de la fonction avec par exemple 18 et 35:
+calculSomme(x = 18, y = 35)
+
+
+# pour aller plus loin:
+# --------------------
+
+# si vous voulez, vous pouvez definir avant un vecteur qui contiendra le resultat de la somme
+sum_xandy <- NULL
+calculSomme <- function(x, y){
+  sum_xandy <- x+y
+  return(sum_xandy)
+}
+sum_xandy <- calculSomme(x = 18, y = 35) # le resultat est stocke dans l'objet sum_xandy qui n'est plus NULL
+sum_xandy # affichez le resultat
+
+# si maintenant, vous voulez repeter l'operation et stocker les resultats dans un vecteur, il faut concatener les resultats dans un vecteur
+sum_xandy <- NULL
+calculSomme <- function(x, y){
+  sum_xandy <- c(sum_xandy, x+y)
+  return(sum_xandy)
+}
+sum_xandy <- calculSomme(x = 18, y = 35)
+sum_xandy <- calculSomme(x = 20, y = 35)
+sum_xandy <- calculSomme(x = 18, y = 3)
+# le resultat est stocke dans l'objet sum_xandy qui n'est plus NULL
+sum_xandy
+
+
+```
+
+
 
 ## Exercice 4: création d'une fonction avec des tests, utilisation de cette fonction de manière itérative
 
 - Ecrivez une fonction `calculTarif` qui prend pour argument  un âge et affiche "demi-tarif" si l'âge est inférieur à 12 ans, "tarif sénior" si l'âge est supérieur ou égal à 60 ans et "plein tarif" sinon.
 - Testez votre fonction pour des personnes de 5, 65, 85, 41, 23 et 47 ans.
 
-**Fonctions à utiliser :** 
+**Fonctions recommandées :** 
 
 - `function()`, 
 - `return()`, 
 - `print()`, 
 - `c()`
+- `if()`
+- `else()`
+- `ifelse()`
+- `for()`
 
-**Instructions conditionnelles: **
-- `if`
-- `else`
-- `else if`
-- `for`
+
+```{r solution_4}
+calculTarif <- function(age){
+    if(age < 12){
+        print("tarif reduit")
+    }else if(age >= 60){
+        print("tarif senior")
+    }else{
+        print("plein tarif")
+    }
+}
+
+# tests de la fonction
+for(i in c(5, 65, 85, 41, 23, 47)){
+    calculTarif(age = i)
+}
+
+
+```
+
 
 ## Exercice 5: création d'une fonction avec compteur de boucle
 
@@ -155,12 +253,48 @@ knitr::opts_chunk$set(
 - Améliorez la fonction en ajoutant un paramètre `interval` correspondant à l'incrément de boucles entre les affichages des entiers (dans la fonction précédente, cet incrément était de 10)
 Testez la fonction avec les entiers entre 3 et 55 et un intervalle de 15 par exemple.
 
-**Fonctions à utiliser :** 
+**Fonctions recommandées :** 
 
 - `function()`, 
 - `return()`, 
 - `cat()`, 
 - `seq()`
 
+```{r solution_5}
+sumCumul <- function(start,end){
+         temp <- 0
+         for(i in start:end){
+               temp <- temp + i
+               if (i %in% seq(start,end,10)){
+                  cat(i)
+                  }
+                  else {cat(".")}
+         }            
+         cat("\n")
+         cat(paste("le total cumule est de: "), temp, "\n",sep="")
+         return(temp)
+}
 
+res <- sumCumul(3,55)
+#3.........13.........23.........33.........43.........53..
+#le total cumule est de: 1537
+#
+# fonction amelioree avec un intervalle en argument:
+sumCumul <- function(start,end, interval){
+         temp <- 0
+         for(i in start:end){
+               temp <- temp + i
+               if (i %in% seq(start,end,interval)){
+                  cat(i)
+                  }
+                  else {cat(".")}
+         }            
+         cat("\n")
+         cat(paste("le total cumule est de: "), temp, "\n",sep="")
+         return(temp)
+}
+
+res <- sumCumul(3,55,15)
+
+```
 
