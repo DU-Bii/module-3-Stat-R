@@ -59,35 +59,83 @@ Jacques van Helden &amp; Olivier Sand
 </div>
 <div id="the-hypergeometric-test" class="slide section level1">
 <h1>The hypergeometric test</h1>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Symbol</th>
+<th align="left">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(g = 6000\)</span></td>
+<td align="left">number of genes</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(m = 40\)</span></td>
+<td align="left">genes involved in methionine metabolism</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(n = 5960\)</span></td>
+<td align="left">genes not involved in methionine metabolism</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(k = 10\)</span></td>
+<td align="left">number of genes in the cluster</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(x = 6\)</span></td>
+<td align="left">number of methionine genes in the cluster</td>
+</tr>
+</tbody>
+</table>
 <ul>
-<li>Let us define
-<ul>
-<li>g = 6000 (number of genes)</li>
-<li>m = 40 (genes involved in methionine metabolism)</li>
-<li>n = 5960 (genes not involved in methionine metabolism)</li>
-<li>k = 10 (number of genes in the cluster)</li>
-<li>x = 6 (number of methionine genes in the cluster)</li>
-</ul></li>
-<li>We calculate the number of possibilities for the following selections
-<ul>
-<li><p>C1 : 10 distinct genes among 6000</p>
-C1 = <span class="math inline">\(C_{m+n}^{k} = \frac{6000!}{10!5990!} = 1.65e^{31}\)</span></li>
-<li><p>C2 : 6 distinct genes among the 40 involved in methionine</p>
-C2 = <span class="math inline">\(C_{m}^{x} = \frac{40!}{6!34!} = 3.8e^{6}\)</span></li>
-<li><p>C3 : 4 genes among the 5960 which are not involved in methionine</p>
-C3 = <span class="math inline">\(C_{n}^{k-x} = \frac{5960!}{4!5956!} = 5.2e^{13}\)</span></li>
-<li><p>C4 : 6 methionine and 4 non-methionine genes</p>
-<p>C4 = <span class="math inline">\(C2*C3\)</span> = <span class="math inline">\(C_{m}^{x}C_{n}^{k-x} = 2.0e^{20}\)</span></p></li>
-</ul></li>
+<li>We calculate the number of possibilities for the following selections</li>
 </ul>
+<table>
+<colgroup>
+<col width="13%" />
+<col width="34%" />
+<col width="51%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Symbol</th>
+<th align="left">Meaning</th>
+<th align="left">Formula</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(C_1\)</span></td>
+<td align="left">choose 10 distinct genes among 6000</td>
+<td align="left"><span class="math inline">\(C_1 = C_{m+n}^{k} = \frac{6000!}{10!5990!} = 1.65e^{31}\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(C_2\)</span></td>
+<td align="left">choose 6 distinct genes among the 40 involved in methionine</td>
+<td align="left"><span class="math inline">\(C_2 = C_{m}^{x} = \frac{40!}{6!34!} = 3.8e^{6}\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(C_3\)</span></td>
+<td align="left">choose 4 genes among the 5960 which are not involved in methionine</td>
+<td align="left"><span class="math inline">\(C_3 = C_{n}^{k-x} = \frac{5960!}{4!5956!} = 5.2e^{13}\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(C_4\)</span></td>
+<td align="left">choose 6 methionine and 4 non-methionine genes</td>
+<td align="left"><span class="math inline">\(C_4 = C2 \cdot C3 = C_{m}^{x}C_{n}^{k-x} = 2.0e^{20}\)</span></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="the-hypergeometric-test---probabilities" class="slide section level1">
 <h1>The hypergeometric test - probabilities</h1>
 <ul>
-<li><p>P(X = 6): probability to have exactly 6 methionine genes within a selection of 10</p>
-<p>P(X=6) = <span class="math inline">\(\frac{C4}{C1}\)</span> = <span class="math inline">\(\frac{C_{m}^{x}C_{n}^{k-x}}{C_{m+n}^{k}} = 1.219e^{11}\)</span></p></li>
-<li><p>P(X &gt;= 6) : probability to have at least 6 methionine genes within a selection of 10</p>
-<p>P(X≥6) = <span class="math inline">\(\sum_{i=x}^{k}\frac{C_{m}^{i}C_{n}^{k-i}}{C_{m+n}^{k}} = 1.222e^{11}\)</span></p></li>
+<li><p>Probability to have exactly 6 methionine genes within a selection of 10</p>
+<p><span class="math display">\[P(X=6) = \frac{C4}{C1} = \frac{C_{m}^{x}C_{n}^{k-x}}{C_{m+n}^{k}} = \frac{C_{40}^{6}C_{5960}^{4}}{C_{6000}^{10}} = 1.219e^{-11}\]</span></p></li>
+<li><p>Probability to have at least 6 methionine genes within a selection of 10</p>
+<p><span class="math display">\[P(X \ge 6) = \sum_{i=x}^{k}\frac{C_{m}^{i}C_{n}^{k-i}}{C_{m+n}^{k}} = 1.222e^{-11}\]</span></p></li>
 </ul>
 </div>
 <div id="ora---precautions-to-take" class="slide section level1">
@@ -106,7 +154,7 @@ C3 = <span class="math inline">\(C_{n}^{k-x} = \frac{5960!}{4!5956!} = 5.2e^{13}
 <li>genes / proteins detected by an experimental approach (RNAseq, proteomics)</li>
 <li>genes reachable by your approach (ex : miRNA targets, Godard et al., 2015)</li>
 </ul></li>
-<li>multiple-test corrections
+<li>Multiple-test corrections
 <ul>
 <li>correction choice (adjusted P-values : Bonferroni correction, Benjamini-Hochberg FDR…)</li>
 <li>inter-test dependancies corrections</li>
@@ -116,9 +164,10 @@ C3 = <span class="math inline">\(C_{n}^{k-x} = \frac{5960!}{4!5956!} = 5.2e^{13}
 <div id="practical---annotating-a-group-of-differentially-expressed-genes-deg" class="slide section level1">
 <h1>Practical - Annotating a group of differentially expressed genes (DEG)</h1>
 <ul>
-<li>DEG:RNA-SEQ analysis of bdf1-Y187F-Y354F mutant strain during yeast sporulation</li>
-<li><a href="tool:g:GOSt" class="uri">tool:g:GOSt</a> from gProfiler (<a href="https://biit.cs.ut.ee/gprofiler/gost" class="uri">https://biit.cs.ut.ee/gprofiler/gost</a>)</li>
-<li>documentation:<a href="https://biit.cs.ut.ee/gprofiler/page/docs" class="uri">https://biit.cs.ut.ee/gprofiler/page/docs</a></li>
+<li>organism: <em>Saccharomyces cerevisiae</em></li>
+<li>DEG: RNA-SEQ analysis of mutant strain bdf1-Y187F-Y354F during yeast sporulation</li>
+<li>tool: g:GOSt from gProfiler <a href="https://biit.cs.ut.ee/gprofiler/gost" class="uri">https://biit.cs.ut.ee/gprofiler/gost</a></li>
+<li>documentation: <a href="https://biit.cs.ut.ee/gprofiler/page/docs" class="uri">https://biit.cs.ut.ee/gprofiler/page/docs</a></li>
 <li>Goal:
 <ul>
 <li>detect functions (biological process, pathways, regulation…) associated with the set of DEG</li>
@@ -130,12 +179,12 @@ C3 = <span class="math inline">\(C_{n}^{k-x} = \frac{5960!}{4!5956!} = 5.2e^{13}
 <div id="practical---deg" class="slide section level1">
 <h1>Practical - DEG</h1>
 <ul>
-<li><a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE89530" class="uri">https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE89530</a></li>
-<li>organism:Saccharomyces cerevisiae</li>
-<li>The aim of this study is to compare NGS-derived yeast transcriptome profiling (RNA-seq) of wild-type and bdf1-Y187F-Y354F mutant strains after sporulation induction (time points: 0h 4h and 8h)</li>
-<li>design:S. cerevisiae wild-type and bdf1-Y187F-Y354F mutant strains were collected 0h, 4h and 8h after sporulation induction in triplicates. mRNA were purifired, prepared and sequenced using Illumina HiSeq 2000 sequencer</li>
-<li>0h:<a href="https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2019/seance_5/results/bdf1_Y187F_Y354F_mutant_0__vs__Wild_type_0_DESeq2_positive_geneIDs.txt" class="uri">https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2019/seance_5/results/bdf1_Y187F_Y354F_mutant_0__vs__Wild_type_0_DESeq2_positive_geneIDs.txt</a></li>
-<li>4h:<a href="https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2019/seance_5/results/bdf1_Y187F_Y354F_mutant_4__vs__Wild_type_4_DESeq2_positive_geneIDs.txt" class="uri">https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2019/seance_5/results/bdf1_Y187F_Y354F_mutant_4__vs__Wild_type_4_DESeq2_positive_geneIDs.txt</a></li>
+<li><p><a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE89530" class="uri">https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE89530</a></p></li>
+<li><p>organism: <em>Saccharomyces cerevisiae</em></p></li>
+<li><p>The aim of this study is to compare NGS-derived yeast transcriptome profiling (RNA-seq) of wild-type and bdf1-Y187F-Y354F mutant strains after sporulation induction (time points: 0h 4h and 8h)</p></li>
+<li><p>design: <em>S. cerevisiae</em> wild-type and bdf1-Y187F-Y354F mutant strains were collected 0h, 4h and 8h after sporulation induction in triplicates. mRNA were purifired, prepared and sequenced using Illumina HiSeq 2000 sequencer</p></li>
+<li>0h: <a href="https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2019/seance_5/results/bdf1_Y187F_Y354F_mutant_0__vs__Wild_type_0_DESeq2_positive_geneIDs.txt" class="uri">https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2019/seance_5/results/bdf1_Y187F_Y354F_mutant_0__vs__Wild_type_0_DESeq2_positive_geneIDs.txt</a></li>
+<li><p>4h: <a href="https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2019/seance_5/results/bdf1_Y187F_Y354F_mutant_4__vs__Wild_type_4_DESeq2_positive_geneIDs.txt" class="uri">https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2019/seance_5/results/bdf1_Y187F_Y354F_mutant_4__vs__Wild_type_4_DESeq2_positive_geneIDs.txt</a></p></li>
 </ul>
 </div>
 <div id="practical---results" class="slide section level1">
@@ -157,10 +206,10 @@ C3 = <span class="math inline">\(C_{n}^{k-x} = \frac{5960!}{4!5956!} = 5.2e^{13}
 <div id="gsea-principle" class="slide section level1">
 <h1>GSEA principle</h1>
 <ul>
-<li>All genes are sorted according to some criterion (e.g. differential expression p-value, correlation of expression with other variables, …).</li>
-<li>Each graph compares the ranked gene list with one reference class (e.g. one biological process).</li>
-<li>Black bars denote genes belonging to the reference class.</li>
-<li>The green curve estimates, at each level i, the degree of over-representation of the reference genes in the i top-ranking genes.</li>
+<li><p>All genes are sorted according to some criterion (e.g. differential expression p-value, correlation of expression with other variables, …).</p></li>
+<li><p>Each graph compares the ranked gene list with one reference class (e.g. one biological process).</p></li>
+<li><p>Black bars denote genes belonging to the reference class.</p></li>
+<li><p>The green curve estimates, at each level i, the degree of over-representation of the reference genes in the i top-ranking genes.</p></li>
 </ul>
 <p><img src="images/GSEA_screenshot_1.png" alt="GSEA screenshot" /></p>
 </div>

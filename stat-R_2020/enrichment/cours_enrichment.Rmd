@@ -130,41 +130,38 @@ VennDiagram::venn.diagram(
 
 # The hypergeometric test
 
-- Let us define
-  - g = 6000	(number of genes)
-  - m = 40	(genes involved in methionine metabolism)
-  - n = 5960	(genes not involved in methionine metabolism)
-  - k = 10	(number of genes in the cluster)
-  - x = 6  (number of methionine genes in the cluster)
+| Symbol | Meaning |
+|:--------|:---------------------------|
+| $g = 6000$	| number of genes |
+| $m = 40$ | genes involved in methionine metabolism |
+| $n = 5960$ |	genes not involved in methionine metabolism |
+| $k = 10$ |	number of genes in the cluster |
+| $x = 6$ |  number of methionine genes in the cluster |
 
 - We calculate the number of possibilities for the following selections
-  - C1 : 10 distinct genes among 6000
 
-    C1 = $C_{m+n}^{k} = \frac{6000!}{10!5990!} = 1.65e^{31}$
-  - C2 : 6 distinct genes among the 40 involved in methionine
-
-    C2 = $C_{m}^{x} = \frac{40!}{6!34!} = 3.8e^{6}$
-  - C3 : 4 genes among the 5960 which are not involved in methionine
-
-    C3 = $C_{n}^{k-x} = \frac{5960!}{4!5956!} = 5.2e^{13}$
-  - C4 : 6 methionine and 4 non-methionine genes
-
-    C4 = $C2*C3$ = $C_{m}^{x}C_{n}^{k-x} = 2.0e^{20}$
+| Symbol | Meaning | Formula |
+|:------|:-----------------|:--------------------------|
+| $C_1$ | choose 10 distinct genes among 6000 | $C_1 = C_{m+n}^{k} = \frac{6000!}{10!5990!} = 1.65e^{31}$ |
+| $C_2$ | choose 6 distinct genes among the 40 involved in methionine | $C_2 = C_{m}^{x} = \frac{40!}{6!34!} = 3.8e^{6}$ |
+| $C_3$ | choose 4 genes among the 5960 which are not involved in methionine |$C_3 = C_{n}^{k-x} = \frac{5960!}{4!5956!} = 5.2e^{13}$ |
+| $C_4$ | choose 6 methionine and 4 non-methionine genes | $C_4 = C2 \cdot C3 = C_{m}^{x}C_{n}^{k-x} = 2.0e^{20}$ |
 
 # The hypergeometric test - probabilities
 
-- P(X = 6): probability to have exactly 6 methionine genes within a selection of 10
+- Probability to have exactly 6 methionine genes within a selection of 10
 
-  P(X=6) = $\frac{C4}{C1}$ = $\frac{C_{m}^{x}C_{n}^{k-x}}{C_{m+n}^{k}} = 1.219e^{11}$
+  $$P(X=6) = \frac{C4}{C1} = \frac{C_{m}^{x}C_{n}^{k-x}}{C_{m+n}^{k}} = \frac{C_{40}^{6}C_{5960}^{4}}{C_{6000}^{10}} = 1.219e^{-11}$$
 
-- P(X >= 6) : probability to have at least 6 methionine genes within a selection of 10
+- Probability to have at least 6 methionine genes within a selection of 10
 
-  P(X≥6) = $\sum_{i=x}^{k}\frac{C_{m}^{i}C_{n}^{k-i}}{C_{m+n}^{k}} = 1.222e^{11}$
+  $$P(X \ge 6) = \sum_{i=x}^{k}\frac{C_{m}^{i}C_{n}^{k-i}}{C_{m+n}^{k}} = 1.222e^{-11}$$
 
 # ORA - precautions to take
 
 - Define your universe (background)
   - set with all the genes susceptible to be part of your analysis
+
 - Not so simple
   - all genes in genomic annotations ?
   - all genes with at least one annotation in the ontology you used ?
@@ -172,45 +169,58 @@ VennDiagram::venn.diagram(
   - genes on a biochip ?
   - genes / proteins detected by an experimental approach (RNAseq, proteomics)
   - genes reachable by your approach (ex : miRNA targets, Godard et al., 2015)
-- multiple-test corrections
+
+- Multiple-test corrections
   - correction choice (adjusted P-values : Bonferroni correction, Benjamini-Hochberg FDR...)
   - inter-test dependancies corrections
 
 # Practical - Annotating a group of differentially expressed genes (DEG)
-- DEG:RNA-SEQ analysis of bdf1-Y187F-Y354F mutant strain during yeast sporulation
-- tool:g:GOSt from gProfiler (https://biit.cs.ut.ee/gprofiler/gost)
-- documentation:https://biit.cs.ut.ee/gprofiler/page/docs
+
+- organism: *Saccharomyces cerevisiae*
+- DEG: RNA-SEQ analysis of mutant strain bdf1-Y187F-Y354F during yeast sporulation
+- tool: g:GOSt from gProfiler <https://biit.cs.ut.ee/gprofiler/gost>
+- documentation: <https://biit.cs.ut.ee/gprofiler/page/docs>
 - Goal:
     - detect functions (biological process, pathways, regulation...) associated with the set of DEG
     - interpret the resuls
 - What about a negative control ?
 
 # Practical - DEG
-- https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE89530
-- organism:Saccharomyces cerevisiae
+
+- <https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE89530>
+
+- organism: *Saccharomyces cerevisiae*
+
 - The aim of this study is to compare NGS-derived yeast transcriptome profiling (RNA-seq) of wild-type and bdf1-Y187F-Y354F mutant strains after sporulation induction (time points: 0h 4h and 8h)
-- design:S. cerevisiae wild-type and bdf1-Y187F-Y354F mutant strains were collected 0h, 4h and 8h after sporulation induction in triplicates. mRNA were purifired, prepared and sequenced using Illumina HiSeq 2000 sequencer
-- 0h:https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2019/seance_5/results/bdf1_Y187F_Y354F_mutant_0__vs__Wild_type_0_DESeq2_positive_geneIDs.txt
-- 4h:https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2019/seance_5/results/bdf1_Y187F_Y354F_mutant_4__vs__Wild_type_4_DESeq2_positive_geneIDs.txt
+
+- design: *S. cerevisiae* wild-type and bdf1-Y187F-Y354F mutant strains were collected 0h, 4h and 8h after sporulation induction in triplicates. mRNA were purifired, prepared and sequenced using Illumina HiSeq 2000 sequencer
+
+- 0h: <https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2019/seance_5/results/bdf1_Y187F_Y354F_mutant_0__vs__Wild_type_0_DESeq2_positive_geneIDs.txt>
+- 4h: <https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2019/seance_5/results/bdf1_Y187F_Y354F_mutant_4__vs__Wild_type_4_DESeq2_positive_geneIDs.txt>
 
 # Practical - Results
 
 Screenshots ?
 
 # Gene Set Enrichment Analysis
+
 - GSEA
 - since 2006
 - determines whether an a priori defined set of genes shows statistically significant, concordant differences between two biological states
-- http://software.broadinstitute.org/gsea/index.jsp
+- <http://software.broadinstitute.org/gsea/index.jsp>
 - MSigDB (The Molecular Signatures Database) : collection of annotated gene sets
-- R package : https://bioconductor.org/packages/release/bioc/html/GSEABase.html
+- R package : <https://bioconductor.org/packages/release/bioc/html/GSEABase.html>
 
 ![GSEA](images/GSEA-homegraphic.gif)
 
 # GSEA principle
+
 - All genes are sorted according to some criterion (e.g. differential expression p-value, correlation of expression with other variables, …).
+
 - Each graph compares the ranked gene list with one reference class (e.g. one biological process).
+
 - Black bars denote genes belonging to the reference class.
+
 - The green curve estimates, at each level i, the degree of over-representation of the reference genes in the i top-ranking genes.
 
 ![GSEA screenshot](images/GSEA_screenshot_1.png)
