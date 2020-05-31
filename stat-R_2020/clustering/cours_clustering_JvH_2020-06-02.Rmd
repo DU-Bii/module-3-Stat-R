@@ -1,0 +1,1038 @@
+---
+title: "Clustering"
+subtitle: "Hierarchical clustering et Kmeans"
+author: "Anne Badel, Frédéric Guyon & Jacques van Helden"
+date: "`r Sys.Date()`"
+output:
+  slidy_presentation:
+    highlight: default
+    incremental: no
+    smart: no
+    slide_level: 1
+    self_contained: no
+    fig_caption: no
+    fig_height: 5
+    fig_width: 5
+    keep_md: yes
+    smaller: yes
+    theme: cerulean
+    toc: yes
+    widescreen: yes
+  revealjs::revealjs_presentation:
+    theme: night
+    transition: none
+    self_contained: true
+    slide_level: 1
+    css: ../slides.css
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
+  ioslides_presentation:
+    highlight: zenburn
+    incremental: no
+  html_document:
+    fig_caption: yes
+    highlight: zenburn
+    self_contained: no
+    theme: cerulean
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+  beamer_presentation:
+    theme: Hannover #Montpellier
+    colortheme: beaver
+    fonttheme: professionalfonts #structurebold
+    highlight: pygments #default
+    fig_caption: no
+    fig_height: 4
+    fig_width: 5
+    incremental: no
+    keep_tex: no
+    slide_level: 1
+    toc: yes
+font-import: http://fonts.googleapis.com/css?family=Risque
+font-family: Garamond
+transition: linear
+---
+
+
+```{r settings, include=FALSE, echo=FALSE, eval=TRUE}
+## Install required packages
+packages <- c("knitr", "kableExtra", "FactoMineR", "clues", "RColorBrewer", "rgl", "vegan", "pheatmap")
+
+for (pkg in packages) {
+  if (!require(pkg, character.only = TRUE)) {
+    install.packages(pkg)
+  }
+}
+
+# library(formattable)
+
+options(width = 300)
+
+# options(encoding = 'UTF-8')
+
+knitr::opts_chunk$set(
+  fig.width = 5, fig.height = 5, 
+  fig.path = 'figures/irisDeFisher_',
+  fig.align = "center", 
+  size = "tiny", 
+  echo = TRUE, eval = TRUE, 
+  warning = FALSE, message = FALSE, 
+  results = TRUE, comment = "")
+
+options(scipen = 12) ## Max number of digits for non-scientific notation
+```
+
+```{r  echo=F}
+mes.iris <- iris[, 1:4]
+mes.iris.scaled <- data.frame(scale(mes.iris, T, T))
+nb.iris <- nrow(mes.iris)
+nb.var <- ncol(mes.iris)
+```
+
+# Les données
+
+- Comment sont représentées les données dans l'ordinateur ?
+- Comment représenter les données dans l'espace ?
+- Comment découvrir des "clusters" dans les données ?
+  - classification hiérarchique
+  - kmeans
+- comment déterminer le nombre de groupe optimal ?
+- comment comparer deux classifications ?
+
+# Les données dans l'ordinateur (1)
+
+## Les iris de Fisher 
+Ces données sont un classique des méthodes d'apprentissage [Fisher](https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1469-1809.1936.tb02137.x)
+
+```{r fleur.iris.1, echo=FALSE, out.width="35%"}
+include_graphics(path = "img/iris_petal_sepal.png")
+```
+
+# Les données dans l'ordinateur (2)
+
+```{r, echo = FALSE}
+head(mes.iris)
+```
+
+# Les données dans l'ordinateur (2)
+
+```{r, echo = FALSE}
+head(mes.iris)
+```
+
+- 1 ligne = 1 fleur = 1 individu = 1 vecteur
+
+- 1 colonne = 1 variable = 1 feature = 1 vecteur
+
+- l'ensemble des données = 1 échantillon = 1 data.frame
+
+**!** : convention différente en RNA-seq
+
+# Représentons ces données : une fleur (1)
+
+```{r}
+mes.iris[1,]
+```
+
+```{r fleur.iris.2, echo=FALSE, out.width="20%"}
+include_graphics(path = "img/440px-Iris_versicolor_3.jpg")
+```
+
+Comment représenter cette fleur ?
+
+- par un point !
+
+Dans quel espace de réprésentation ?
+
+# Représentons ces données : une fleur (2)
+
+```{r, out.width="40%"}
+plot(mes.iris[1,1:2])
+```
+
+Dans le plan, un point de coordonnées :
+
+- x = `r round(mes.iris[1,1], digits = 2)`
+- y = `r round(mes.iris[1,2], digits = 2)`
+
+représenté par un vecteur $v2 = ($ `r round(mes.iris[1,1], digits = 2)` $,$ `r round(mes.iris[1,2], digits = 2)`$)$ dans $\mathbb{R}^2$
+
+# Représentons ces données : une fleur (3) 
+
+```{r echo = FALSE}
+## This command generates the 3D drawing but opens a pop-up window --> we comment it
+#rgl::plot3d(mes.iris[1,1:3], col = "red", size = 40)
+#rgl::decorate3d(xlim = c(3,7), ylim = c(2,5), zlim = c(0,2))
+```
+
+Dans l'espace, un point de coordonnées :
+
+- x = `r round(mes.iris[1,1], digits = 2)`
+- y = `r round(mes.iris[1,2], digits = 2)`
+- z = `r round(mes.iris[1,3], digits = 2)`
+
+```{r, echo=FALSE, out.width="40%"}
+include_graphics(path = "img/fleur3D.png")
+```
+
+représenté par un vecteur $v3 = ($ `r round(mes.iris[1,1], digits = 2)` $,$ `r round(mes.iris[1,2], digits = 2)` $,$ `r round(mes.iris[1,3], digits = 2)`$)$ dans $\mathbb{R}^3$
+
+# Représentons ces données : toutes les fleurs (4)
+
+= un nuage de points dans un espace à 4 dimensions
+
+  - chaque point est représenté par un vecteur dans $\mathbb{R}^4$
+  - le nuage de points est représenté par une matrice à n et p (= 4 dimensions)
+    + n = nombre de lignes = nombre d'individus = taille de l'échantillon
+    + p = nombre de colonnes = nombre de variables décrivant l'échantillon
+
+= PAS de représentation possible (pour l'instant)
+
+
+# Représentons ces données : une variable à la fois (1)
+
+```{r, echo = FALSE, out.width = "60%"}
+par(mfrow = c(2,2))
+hist(mes.iris[,"Sepal.Length"], main = "longueur des sépales", xlab = "", yab = "")
+hist(mes.iris[,"Petal.Length"], main = "longueur des pétales", xlab = "", yab = "")
+boxplot(mes.iris[,"Sepal.Length"])
+my.jitter <- jitter(mes.iris[,"Sepal.Length"], factor = 2)
+points(rep(1, nrow(mes.iris)), my.jitter, col = "red", pch = 20)
+boxplot(mes.iris[,"Petal.Length"])
+my.jitter <- jitter(mes.iris[,"Petal.Length"], factor = 2)
+points(rep(1, nrow(mes.iris)), my.jitter, col = "red", pch = 20)
+par(mfrow = c(1,1))
+```
+
+# Représentons ces données : deux variables à la fois (2)
+
+```{r echo = FALSE, out.width = "50%"}
+plot(mes.iris[,"Sepal.Length"], mes.iris[,"Petal.Length"],
+     xlab = "Longueur des sépales", ylab = "Longueur des pétales",
+     las = 1)
+```
+
+# Il faut tenir compte de toutes les dimensions
+
+c'est à dire de toutes les variables à notre disposition
+
+# Clustering et classification (termes anglais)
+
+On a une **information** sur nos données
+
+- variables quantitatives = vecteur de réels
+ 
+**Clustering** : on cherche à mettre en évidence des groupes dans les données
+
+- le clustering appartient aux méthodes dites **non supervisées**, ou descriptives
+
+# Clustering et classification (termes anglais)
+
+On a une **information** sur nos données
+
+**Clustering** : on cherche à mettre en évidence des groupes dans les données
+
+**Classification** :
+
+- on connaît le partitionnement de notre jeu de données
+    
+  + variables quantitatives = vecteur de réels
+  + ET
+  + variable qualitative = groupe (cluster) d'appartenance = vecteurs de entiers / niveau d'un facteur
+  + on cherche à prédire le groupe (la classe) de nouvelles données
+
+- la classification appartient aux méthodes dites **supervisées**, ou prédictives
+
+# Clustering
+
+```{r are_there_clusters, echo=FALSE, out.width="45%", fig.cap="données simulées : y a-t-il des groupes ?"}
+include_graphics(path = "img/figure1.png")
+```
+
+
+# Géométrie et distances (1)
+
+On considère les données comme des points de $\mathbb{R}^n$ 
+
+```{r, echo = FALSE, out.width = "30%"}
+x = runif(10, 1, 5)
+y = runif(10, 2, 4)
+plot(x, y, xlab = "", ylab = "", las = 1, panel.first = grid())
+```
+
+$\mathbb{R}^n$ : espace Euclidien à $n$ dimensions, où 
+
+- chaque dimension représente une des variables observées;
+- un individu est décrit comme un vecteur à $n$ valeurs, qui correspond à un point dans cet espace. 
+
+# Géométrie et distances (2)
+
+On considère les données comme des points de $R^n$ (*)
+
+- géométrie donnée par distances
+- distances = dissimilarités imposées par le problème
+- dissimilarités $\longrightarrow$ permettent visualisation de l'ensemble des points
+
+```{r echo = FALSE, out.width = "30%"}
+plot(x, y, xlab = "", ylab = "", las = 1, panel.first = grid())
+segments(x[2], y[2], x[4], y[4], col = "red", lwd = 2, lty = 2)
+```
+
+# Géométrie et distances (3)
+
+Sur la base d'une distance (souvent euclidienne)
+
+- Clustering :
+
+  + Méthode agglomérative ou hierarchical clustering
+  + Moyennes mobiles ou K-means : séparation optimale des groupes connaissant le nombre de groupes
+
+# Distances
+
+Définition d'une distance : fonction positive de deux variables
+
+1. $d(x,y) \ge 0$
+2. $d(x,y) = d(y,x)$
+3. $d(x,y) = 0 \Longleftrightarrow x = y$
+4. **Inégalité triangulaire :** $d(x,z) \le$ d(x,y)+d(y,z)
+
+Si 1,2,3 : dissimilarité
+
+# Distance euclidienne
+
+- distance euclidienne ou distance $L_2$:
+  $d(x,y)=\sqrt{\sum_i (x_i-y_i)^2}$
+
+# Distance euclidienne et distance de corrélation
+
+```{r cor_vs_euclidian_dist, echo = FALSE, fig.width = 10, fig.height = 5, out.width = "80%"}
+
+par(mfrow = c(1,2))
+
+## Plot distances between 3 points in a 2D Euclidian space
+plot(x = 0, y = 0, type = "n", xlim = c(0, 5), ylim = c(0, 5), 
+     main = "", xlab = "", ylab = "", las = 1, panel.first = grid())
+points(x = 1, y = 1, col = "blue", pch = 19)
+text(x = 1, y = 1, col = "blue", label = "A", pos = 2)
+points(x = 2, y = 0, col = "green", pch = 19)
+text(x = 2, y = 0, col = "green", label = "B", pos = 4)
+points(x = 4, y = 4, col = "red", pch = 19)
+text(x = 4, y = 4, col = "red", label = "C", pos = 4)
+vect.A <- c(1, 1.5, 3, 3.5, 3, 1.5, 0.5, -1, -1.5, -1)
+vect.B <- c(1, 1.1, 1.2, 1.5, 1.2, 1.1, 1, 0.9, 0.8, 0.9)
+vect.C <- c(1, 0.9, 0.8, 0.7, 0.8, 0.9, 1, 0.95, 0.9, 0.8)
+
+## Plot distance between curves in a time series
+plot(0:10, type = "n", xlim = c(1, 10), ylim = c(-2, 4), 
+     main = "", xlab = "", ylab = "", las = 1, panel.first = grid())
+lines(vect.A, type = "b", col = "blue")
+lines(vect.B, type = "b", col = "green")
+lines(vect.C, type = "b", col = "red")
+legend("topright", legend = c("A", "B", "C"), 
+       col = c("blue", "green", "red"), lty = 1,
+       text.col = c("blue", "green", "red"))
+par(mfrow = c(1,1))
+```
+
+```{r echo = FALSE}
+ABC.dist <- dist(rbind(vect.A, vect.B, vect.C))
+ABC.cor <- as.dist(cor(t(rbind(vect.A, vect.B, vect.C))))
+ABC.cordist <- as.dist(1 - ABC.cor)
+ABC.resume <- cbind(ABC.dist, ABC.cor, ABC.cordist)
+colnames(ABC.resume) <- c("distance euclidienne", "coefficient de corrélation", "distance de corrélation")
+rownames(ABC.resume) <- c("A - B", "A - C", "B - C")
+knitr::kable(ABC.resume, align = 'c', digits = 2)
+```
+
+
+# Avec R (1) : distance entre deux individus 
+
+- on utilise la fonction `dist()` avec l'option `method = "euclidean", "manhattan", ...` 
+
+```{r echo = FALSE}
+mat.xy <- matrix(rbind(x,y), nrow = 2)
+knitr::kable(mat.xy[,1:5], digits = 2)
+```
+
+distance euclidienne : `r round(dist(mat.xy), digits = 2)`
+
+distance de manhattan = `r round(dist(mat.xy, method = "manhattan"), digits = 2)`
+
+# Avec R (2) : distance entre individus d'un nuage de points 
+
+- distance euclidienne
+```{r iris_dist, echo = FALSE}
+mat.iris <- mes.iris[sample(1:150, 5),]
+print(dist(mat.iris), digits = 2)
+```
+
+- distance de corrélation : $d = 1-r$
+```{r iris_cor_dist, echo = FALSE}
+cor.mat.iris <- cor(t(mat.iris))
+print(as.dist(1 - cor.mat.iris), digits = 2)
+```
+
+# Avec R (3) : distance entre variables décrivant le nuage de points 
+
+```{r echo = FALSE}
+cor.mat.iris <- cor(mat.iris)
+print(as.dist(1 - cor.mat.iris), digits = 2)
+```
+
+# Distances entre groupes (1)
+
+```{r group_distances_1, echo = FALSE, fig.width = 6, fig.height = 6, out.width = "60%"}
+x1 <- rnorm(5, 1, 0.5)
+y1 <- rnorm(5, 0, 1)
+mat1 <- cbind(x1, y1)
+x2 <- rnorm(5, 4, 1)
+y2 <- rnorm(5, 6, 2)
+mat2 <- cbind(x2, y2)
+mat <- rbind(mat1, mat2)
+plot(mat, col = rep(c("red", "blue"), each = 5),
+     xlab = "", ylab = "", las = 1, panel.first = grid())
+```
+
+# Distances entre groupes (2)
+
+- **Single linkage** : élements les plus proches des 2 groupes
+
+$$D(C_1,C_2) = \min_{i \in C_1, j \in C_2} D(x_i, x_j)$$
+  
+- **Complete linkage** : éléments les plus éloignés des 2 groupes
+
+$$D(C_1,C_2) = \max_{i \in C_1, j \in C_2} D(x_i, x_j)$$
+
+- **Average linkage** : distance moyenne
+
+$$D(C_1,C_2) = \frac{1}{N_1 N_2} \sum_{i \in C_1, j \in C_2} D(x_i, x_j)$$
+  
+- **Ward**
+
+$d^2(C_i,C_j) = I_{intra}(C_i \cup C_j)-I_{intra}(C_i)-I_{intra}(C_j)$
+
+$D(C_1,C_2) = \sqrt{\frac{N_1N_2}{N_1 + N_2}} \| m_1 -m_2 \|$
+
+# Distances entre groupes (4)
+
+```{r group_distances_2, echo=FALSE, out.width="80%"}
+include_graphics(path = "img/groupes.png")
+```
+
+# Les données
+
+Revenons à nos iris de Fisher
+
+
+# Visualisation des données
+
+On peut ensuite essayer de visualiser les données
+
+  - par un `plot` (**!** ne pas faire si "grosses" données)
+  
+```{r plot_4variables, out.width="40%"}
+plot(mes.iris, col = "grey", las = 1)
+```
+
+
+# Préparation des données (1) : variables de variance nulle
+
+```{r}
+iris.var <- apply(mes.iris, 2, var)
+kable(iris.var, digits = 3, col.names = "Variance")
+sum(apply(mes.iris, 2, var) == 0)
+```
+
+# Préparation des données (2) : "Normalisation"
+
+Afin de pouvoir considérer que toutes les variables sont à la même échelle, il est parfois nécessaire de standardiser les données.
+
+- soit 
+
+  - en centrant (ramener la moyenne de chaque variable à $0$)
+  
+```{r}
+mes.iris.centre <- scale(mes.iris, center = TRUE, scale = FALSE)
+```
+
+- soit 
+
+  - en centrant (ramener la moyenne de chaque variable $0$)
+  - et mettant à l'échelle (ramener la variance de chaque variable à $1$)
+
+```{r}
+mes.iris.scaled <- scale(mes.iris, center = TRUE, scale = TRUE)
+```
+
+- soit en effectuant une transformation des variables, par exemple transformation logarithmique
+
+# On peut visuellement regarder l'effet de la standardisation
+
+- par des boîtes à moustaches (boxplot)
+
+# Centrage sur la moyenne ou la médiane
+
+```{r data_centring, echo = FALSE, out.width="70%", fig.width=8, fig.height=6}
+iris.mediane <- apply(mes.iris, 2, median)
+mes.iris.scaled.mediane <- sweep(mes.iris, 2, iris.mediane)
+par(mfrow = c(1,3))
+par(mar = c(7, 4.1, 4.1, 1.1)) # adapt margin sizes for the labels
+boxplot(mes.iris, main = "Raw data", las = 2)
+boxplot(mes.iris.centre, main = "Centered on the mean", las = 2)
+boxplot(mes.iris.scaled.mediane, main = "Centered on the median", las = 2)
+par(mar = c(5.1, 4.1, 4.1, 2.1)) # Restore original margin sizes
+par(mfrow = c(1,1))
+```
+
+# Mise à l'échelle écart-type ou intervalle interquartile
+
+```{r data_scaling, echo = FALSE, out.width="70%", fig.width=8, fig.height=6}
+## Show the impact of data scaling: raw versus sd-based scaling vs IQR-based scaling
+iris.sd <- apply(mes.iris, 2, sd)
+mat.iris.sd <- matrix(rep(iris.sd, each = nrow(mes.iris)), ncol = 4)
+mes.iris.scaled.sd <- mes.iris / mat.iris.sd
+iris.iqr <- apply(mes.iris, 2, IQR)
+mat.iris.iqr <- matrix(rep(iris.iqr, each = nrow(mes.iris)), ncol = 4)
+mes.iris.scaled.iqr <- mes.iris / mat.iris.iqr
+par(mfrow = c(1,3))
+par(mar = c(7, 4.1, 4.1, 1.1)) # adapt margin sizes for the labels
+
+## Raw data
+boxplot(mes.iris, main = "Raw data", las = 2)
+
+## Standard deviation-based scaling
+boxplot(mes.iris.scaled.sd, main = "Scaled, standard deviation", las = 2)
+
+## IQR-based scaling
+boxplot(mes.iris.scaled.iqr, main = "Scaled, IQR", las = 2)
+par(mar = c(5.1, 4.1, 4.1, 2.1)) # Restore original margin sizes
+par(mfrow = c(1,1))
+```
+
+# Standardisation : centrage et mise à l'échelle
+
+```{r standardization, echo = FALSE, out.width="70%", fig.width=8, fig.height=6}
+iris.iqr.mediane <- apply(mes.iris.scaled.iqr, 2, median)
+mes.iris.scaled.iqr.mediane <- sweep(mes.iris.scaled.iqr, 2, iris.iqr.mediane)
+par(mfrow = c(1,3))
+par(mar = c(7, 4.1, 4.1, 1.1)) # adapt margin sizes for the labels
+
+## Raw data
+boxplot(mes.iris, main = "Raw data", las = 2)
+
+## Standardization based on the mean and standard deviation 
+boxplot(mes.iris.scaled, main = "Standardized (mean, sd)", las = 2)
+
+## Standardisation based no robust estimators:= median + IQR
+boxplot(mes.iris.scaled.iqr.mediane, main = "Standardized (median, IQR)", las = 2)
+par(mar = c(5.1, 4.1, 4.1, 2.1)) # Restore original margin sizes
+par(mfrow = c(1,1))
+```
+
+# La matrice de distance euclidienne
+
+```{r echo = FALSE}
+iris.euc <- dist(mes.iris)
+iris.scale.euc <- dist(mes.iris.scaled)
+mes.iris.cor <- cor(t(mes.iris))
+mes.iris.cor.dist <- 1 - mes.iris.cor
+```
+
+```{r levelplot_euclidian, out.width="70%", fig.width=6, fig.height=6, echo = FALSE}
+levelplot(as.matrix(iris.scale.euc), xlab = "", ylab = "")
+```
+
+# La matrice de distance de corrélation
+
+```{r levelplot_cor, out.width="70%", fig.width=6, fig.height=6, echo = FALSE}
+levelplot(mes.iris.cor.dist, xlab = "", ylab = "")
+```
+
+# La classification hiérarchique : principe
+
+**classification hiérarchique** : mettre en évidence des liens hiérachiques entre les individus
+
+- classification hiérarchique **ascendante** : partir des individus pour arriver à des classes / cluster
+- classification hiérarchique **descendante** : partir d'un groupe qu'on subdivise en sous-groupes /clusters jusqu'à arriver à des individus.
+
+# Notion importante, cf distances
+
+- ressemblance entre individus = distance
+
+  - euclidienne
+  - corrélation
+- ressemblance entre groupes d'invidus = critère d'aggrégation
+
+  - lien simple
+  - lien complet
+  - lien moyen
+  - critère de Ward
+
+# L'algorithme : étape 1
+
+- départ : n individus = n clusters distincts
+- calcul des distances entre tous les individus
+
+  +  choix de la métrique à utiliser en fonction du type de données
+
+- regroupement des 2 individus les plus proches => (n-1) clusters
+
+# au départ
+
+```{r hclust_initial, echo=FALSE, out.width="90%"}
+include_graphics(path = "img/hclust1.png")
+```
+
+
+# identification des individus les plus proches
+
+```{r hclust_closest, echo=FALSE, out.width="90%"}
+include_graphics(path = "img/hclust2.png")
+```
+
+
+# construction du dendrogramme
+
+```{r hclust_dendrogram, echo=FALSE, out.width="90%"}
+include_graphics(path = "img/hclust3.png")
+```
+
+# étape j :
+
+- calcul des dissemblances entre chaque groupe obtenu à l'étape $(j-1)$
+
+- regroupement des deux groupes les plus proches => $(n-j)$ clusters
+  
+# calcul des nouveaux représentants 'BE' et 'CD'
+
+```{r hclust_nvx_representants, echo=FALSE, out.width="90%"}
+include_graphics(path = "img/hclust4.png")
+```
+
+# calcul des distances de l'individu restant 'A' aux points moyens
+
+```{r hclust_update_dist, echo=FALSE, out.width="90%"}
+include_graphics(path = "img/hclust5.png")
+```
+
+
+# A est plus proche de ...
+
+```{r hclust_closest_a, echo=FALSE, out.width="90%"}
+include_graphics(path = "img/hclust6.png")
+```
+
+# dendrogramme
+
+```{r hclust_dendrogram2, echo=FALSE, out.width="90%"}
+include_graphics(path = "img/hclust7.png")
+```
+
+# pour finir
+
+```{r hclust_finalize, echo=FALSE, out.width="90%"}
+include_graphics(path = "img/hclust8.png")
+```
+
+---
+
+- à l'étape $(n-1)$, tous les individus sont regroupés dans un même cluster
+
+# dendrogramme final
+
+```{r hclust_dendrogram_final, echo=FALSE, out.width="70%"}
+include_graphics(path = "img/hclust9.png")
+```
+
+# Je ne fais pas attention à ce que je fais ...
+
+... c'est à dire aux options des fonctions `dist()` et `hclust()`
+
+```{r dont_care, fig.width=10, fig.height=4, out.width="60%", echo = FALSE}
+iris.hclust <- hclust(iris.euc)
+plot(iris.hclust, hang = -1, cex = 0.5)
+```
+
+```{r dont_care_norm, fig.width=10, fig.height=4, out.width="60%", echo = FALSE}
+iris.scale.hclust <- hclust(iris.scale.euc)
+plot(iris.scale.hclust, hang = -1, cex = 0.5)
+```
+
+```{r dont_care_raw_vs_norm, fig.width=10, fig.height=7, out.width="80%", fig.width=10, fig.height=7}
+par(mfrow = c(2, 1))
+plot(iris.hclust, hang = -1, cex = 0.5, main = "Données brutes")
+plot(iris.scale.hclust, hang = -1, cex = 0.5, main = "Normalisées")
+```
+
+# En utilisant une autre métrique
+
+```{r hclust_euclidian_vs_manhattan, fig.width=10, fig.height=7, out.width="80%", fig.width=10, fig.height=7, echo = FALSE}
+iris.scale.max <- dist(mes.iris.scaled, method = "manhattan")
+iris.scale.hclust.max <- hclust(iris.scale.max)
+par(mfrow=c(2,1))
+plot(iris.scale.hclust, hang=-1, cex=0.5, main = "Euclidian dist")
+plot(iris.scale.hclust.max, hang=-1, cex=0.5, main = "Manhattan dist")
+```
+
+# En utilisant un autre critère d'aggrégation
+
+```{r linkage_rule, fig.width=10, fig.height=7, out.width="80%", echo = FALSE}
+iris.scale.hclust.single <- hclust(iris.scale.euc, method="single")
+iris.scale.hclust.ward <- hclust(iris.scale.euc, method="ward.D2")
+par(mfrow=c(2,1))
+plot(iris.scale.hclust.single, hang=-1, cex=0.5, main = "Single linkage")
+plot(iris.scale.hclust.ward, hang=-1, cex=0.5, main = "Ward linkage")
+par(mfrow=c(1,1))
+```
+
+---
+
+# En conclusion
+
+- Faire attention au données
+
+  + données manquantes
+  + données invariantes
+  + données normalisées
+  
+- Choisir la distance et le critère d'aggrégation adaptés à nos données
+
+---
+
+# Les heatmap
+
+```{r pheatmap, fig.width = 8, fig.heigh = 6, out.width="60%"}
+pheatmap::pheatmap(mes.iris, clustering.method = "ward.D2")
+pheatmap::pheatmap(mes.iris.scaled, clustering.method = "ward.D2")
+pheatmap::pheatmap(mes.iris, scale = "column", clustering.method = "ward.D2")
+pheatmap::pheatmap(mes.iris, scale = "row", clustering.method = "ward.D2")
+```
+
+# Les k-means
+
+Les individus dans le plan
+
+```{r kmeans_initial, echo=FALSE, out.width="80%"}
+include_graphics(path = "img/kmeans0.png")
+```
+
+=> faire apparaitres des classes / des clusters
+
+# L'algorithme
+
+## étape 1 :
+
+- $k$ centres provisoires tirés au hasard
+- $k$ clusters créés à partir des centres en regroupant les individus les plus proches de chaque centre
+- obtention de la partition $P_0$ 
+
+---
+
+## Choix des centres provisoires 
+
+```{r kmeans_init_centers, echo=FALSE, out.width="80%"}
+include_graphics(path = "img/kmeans1.png")
+```
+
+
+---
+
+## Calcul des distances aux centres provisoires 
+
+```{r kmeans_dist_to_centers, echo=FALSE, out.width="80%"}
+include_graphics(path = "img/kmeans2.png")
+```
+
+---
+
+## Affectation à un cluster
+
+```{r kmeans_cluster_assignment, echo=FALSE, out.width="80%"}
+include_graphics(path = "img/kmeans3.png")
+```
+
+---
+
+## Calcul des nouveaux centres de classes
+
+## Etape j :
+
+- construction des centres de gravité des k clusters construits à l’étape $(j-1)$
+
+- $k$ nouveaux clusters créés à partir des nouveaux centres suivant la même règle qu’à l’étape $0$
+
+- obtention de la partition $P_j$
+
+```{r kmeans_update_centers, echo=FALSE, out.width="80%"}
+include_graphics(path = "img/kmeans4.png")
+```
+
+---
+
+## Fin : 
+
+- l’algorithme converge vers une partition stable
+
+## Arrêt : 
+
+- lorsque la partition reste la même, ou lorsque la variance intra-cluster ne décroit plus, ou lorsque le nombre maximal d’itérations est atteint.
+
+```{r kmeans_stop, echo=FALSE, out.width="80%"}
+include_graphics(path = "img/kmeans5.png")
+```
+
+---
+
+## Un premier k-means en 5 groupes
+
+```{r calc_kmeans, results = TRUE}
+iris.scale.kmeans5 <- kmeans(mes.iris.scaled, center=5)
+iris.scale.kmeans5
+```
+
+# Comment déterminer le nombre de clusters ? (1)
+
+Ces méthodes non supervisées, sont sans *a priori* sur la structure, le nombre de groupe, des données.
+
+rappel : un cluster est composé
+
+- d'individus qui se ressemblent
+- d'individus très différents des individus de ceux des autres clusters
+
+
+# Comment déterminer le nombre de clusters ? (2)
+  
+- si les individus d’un même cluster sont proches
+
+  - homogénéité maximale à l’intérieur de chaque cluster => variance intra faible
+
+- si les individus de 2 clusters différents sont éloignés => variance inter forte
+
+  - hétérogénéité maximale entre chaque cluster
+    
+# Comment déterminer le nombre de clusters ? avec la classification hiérarchique
+
+La coupure de l’arbre à un niveau donné construit une partition. la coupure doit se faire :
+
+- après les agrégations correspondant à des valeurs peu élevées de l’indice
+
+- avant les agrégations correspondant à des niveaux élevés de l’indice, qui dissocient les groupes bien distincts dans la population.
+
+---
+
+```{r plot_iris_ward, out.width="95%", fig.width=10, fig.height=5}
+plot(iris.scale.hclust.ward, hang = -1, cex = 0.5)
+```
+
+# Comment déterminer le nombre de clusters ? avec les kmeans
+
+```{r, echo = FALSE, out.width = "50%"}
+wss <- numeric(length = 6)
+wss[1] <- kmeans(mes.iris.scaled, center = 2)$totss
+for (nbgrp in 2:6) {
+  wss[nbgrp] <- kmeans(mes.iris.scaled, center = nbgrp)$tot.withinss
+}
+barplot(wss, names.arg = 1:6, main = "variance intra en fonction du nombre de cluster")
+```
+
+# Comparaison des résultats des deux clustering
+
+- par une table
+
+```{r echo = FALSE,results = TRUE}
+cluster.kmeans3 <- kmeans(mes.iris.scaled, center = 3)$cluster
+cluster.hclust5 <- cutree(hclust(dist(mes.iris.scaled), method = "ward.D2"), k = 5)
+ma.table <- table(cluster.hclust5, cluster.kmeans3)
+knitr::kable(ma.table, align = "c", col.names = NULL)
+```
+
+# Pros et cons des différents algorithmes
+
+| Algorithme | Pros | Cons |
+|-------------|------------------------------|------------------------|
+| **Hiérarchique** | L'arbre reflète la nature imbriquée de tous les sous-clusters | Complexité quadratique (mémoire et temps de calcul) $\rightarrow$ quadruple chaque fois qu'on double le nombre d'individus  |
+| | Permet une visualisation couplée dendrogramme (groupes) + heatmap (profils individuels) | |
+| | Choix a posteriori du nombre de clusters | |
+| **K-means** | Rapide (linéaire en temps), peut traiter des jeux de données énormes (centaines de milliers de pics ChIP-seq) | Positions initiales des centres est aléatoire $\rightarrow$ résultats changent d'une exécution à l'autre |
+| | | Distance euclidienne (pas appropriée pour transcriptome par exemple) |
+
+# Visualisation des données - coloration par espèces
+
+```{r plot_4variables_variety, out.width="50%"}
+species.colors <- c(setosa = "#BB44DD", virginica = "#AA0044", versicolor = "#4400FF")
+plot(mes.iris, col = species.colors[iris$Species], cex = 0.7)
+```
+
+# Supplementary materials
+
+POUR ALLER PLUS LOIN
+
+# Distances utilisées dans R (1)
+
+- distance euclidienne ou distance $L_2$:
+  $d(x,y)=\sqrt{\sum_i (x_i-y_i)^2}$
+  
+- distance de manahattan ou distance $L_1$:
+  $d(x,y)=\sum_i |x_i-y_i|$
+    
+- distance du maximum ou L-infinis, $L_\infty$:
+  $d(x,y)=\max_i |x_i-y_i|$
+    
+```{r distances, echo=FALSE, out.width="50%"}
+include_graphics(path = "img/distance.png")
+```
+
+
+# Distances utilisées dans R (2)
+
+- distance de Minkowski $l_p$:
+$$d(x,y)=\sqrt[p]{\sum_i (|x_i-y_i|^p}$$
+
+- distance de Canberra (x et y valeurs positives):
+$$d(x,y)=\sum_i \frac{x_i-y_i}{x_i+y_i}$$
+
+- distance binaire ou distance de Jaccard ou Tanimoto: proportion de propriétés communes
+
+
+
+  
+**Note** : lors du TP, sur les données d'expression RNA-seq, nous utiliserons le **coefficient de corrélation de Spearman** et la distance dérivée, $d_c = 1-r$
+
+# Autres distances non géométriques (pour information)
+
+Utilisées en bio-informatique:
+
+- Distance de **Hamming**: nombre de remplacements de caractères (substitutions)
+
+- Distance de **Levenshtein**: nombre de substitutions, insertions, deletions entre deux chaînes de caractères
+
+$$d("BONJOUR", "BONSOIR")=2$$
+
+- Distance d'**alignements**: distances de Levenshtein avec poids (par ex. matrices BLOSSUM)
+
+- Distances d'**arbre** (Neighbor Joining)
+
+- Distances **ultra-métriques** (phylogénie UPGMA)
+
+
+# Distances plus classiques en génomique
+
+Il existe d'autres mesures de distances, plus ou moins adaptées à chaque problématique :
+
+- **Jaccard** (comparaison d'ensembles): $J_D = \frac{A \cap B}{A \cup B}$
+
+- Distance du $\chi^2$ (comparaison de tableau d'effectifs)
+
+Ne sont pas des distances, mais indices de dissimilarité :
+
+- **Bray-Curtis** (en écologie, comparaison d'abondance d'espèces)
+- **Jensen-Shannon** (comparaison de distributions)
+# Distance avec R : indice de Jaccard
+
+- ou pour des distances particulières, par exemple l'indice de Jaccard :
+```{r echo = FALSE}
+v.a <- c(0, 1, 0, 0, 0, 0, 0)
+v.b <- c(0, 1, 0, 0, 0, 1, 0)
+v.c <- c(0, 1, 0, 0, 0, 0, 0)
+mat.abc <- as.matrix(rbind(v.a, v.b, v.c))
+knitr::kable(mat.abc, align = "c")
+vegan::vegdist(mat.abc)
+```
+
+# Comparaison de clustering: Rand Index
+
+Mesure de similarité entre deux clustering
+
+à partir du nombre de fois que les classifications sont d'accord
+
+$$R=\frac{m+s}{t}$$
+
+- m=nombre de paires dans la même classe dans les deux classifications
+- s=nombre de paires séparées dans les deux classifications
+- t=nombre de paires totales
+
+# Comparaison de clustering: Adjusted Rand Index
+
+$$ ARI=\frac{RI-Expected RI}{Max RI -Expected RI}$$
+
+- ARI=RI normalisé
+- Prend en compte la taille des classes
+- ARI=1 pour classification identique
+- ARI $\simeq$ 0 pour classification aléatoire (peut être <0)
+- Adapté pour nombre de classe différent entre les deux classifications
+et taille de classe différente
+
+
+# Comparaison de clustering: Rand Index
+
+Mesure de similarité entre deux clustering
+
+à partir du nombre de fois que les classifications sont d'accord
+
+$$R=\frac{m+s}{t}$$
+
+- m = nombre de paires dans la même classe dans les deux classifications
+- s = nombre de paires séparées dans les deux classifications
+- t = nombre de paires totales
+
+# Comparaison de clustering: Adjusted Rand Index
+
+$$ ARI=\frac{RI-Expected RI}{Max RI -Expected RI}$$
+
+- ARI=RI normalisé
+- Prend en compte la taille des classes
+- ARI=1 pour classification identique
+- ARI $\simeq$ 0 pour classification aléatoire (peut être <0)
+- Adapté pour nombre de classe différent entre les deux classifications
+et taille de classe différente
+
+# Comparaison des résultats des deux classifications
+
+- rand index et adjusted rand index
+```{r}
+clues::adjustedRand(cluster.hclust5, cluster.kmeans3)
+```
+
+
+---
+
+```{r session_info}
+## Print the complete list of libraries + versions used in this session
+sessionInfo()
+```
+
+
+----
+
+## ... par une projection sur une ACP
+
+```{r,  out.width="90%", fig.width=12, fig.height=6}
+par(mfrow = c(1,2))
+biplot(prcomp(mes.iris), las = 1, cex = 0.7,
+       main = "Données non normalisées")
+biplot(prcomp(mes.iris, scale = TRUE), las = 1, cex = 0.7,
+       main = "Données normalisées")
+```
+
+*****
+
+# Cas d'étude : TCGA Breast Invasive Cancer (BIC)
+
+- Présentation du cas d'étude (Jacques van Helden A COMPLETER)
+
+# TP : analyse de données d'expression
+
+- TP clustering : 
+[[html](TP_clustering.html)]
+[[pdf](TP_clustering.pdf)]
+[[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/seance_4/TP_clustering.Rmd)]
+
+- Première partie : chargement des données
+
+---
+
+Contact: <anne.badel@univ-paris-diderot.fr>
