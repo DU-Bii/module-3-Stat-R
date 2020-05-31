@@ -187,16 +187,17 @@ VennDiagram::venn.diagram(
 
 # Practical - DEG
 
-- <https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE89530>
+- Organism: *Saccharomyces cerevisiae*
 
-- organism: *Saccharomyces cerevisiae*
+- Data source: <https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE89530>
 
 - The aim of this study is to compare NGS-derived yeast transcriptome profiling (RNA-seq) of wild-type and bdf1-Y187F-Y354F mutant strains after sporulation induction (time points: 0h 4h and 8h)
 
 - design: *S. cerevisiae* wild-type and bdf1-Y187F-Y354F mutant strains were collected 0h, 4h and 8h after sporulation induction in triplicates. mRNA were purifired, prepared and sequenced using Illumina HiSeq 2000 sequencer
 
-- 0h: <https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2019/seance_5/results/bdf1_Y187F_Y354F_mutant_0__vs__Wild_type_0_DESeq2_positive_geneIDs.txt>
-- 4h: <https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2019/seance_5/results/bdf1_Y187F_Y354F_mutant_4__vs__Wild_type_4_DESeq2_positive_geneIDs.txt>
+- WT vs mutant at 0h: [bdf1_Y187F_Y354F_mutant_0__vs__Wild_type_0_DESeq2_positive_geneIDs.txt](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2019/seance_5/results/bdf1_Y187F_Y354F_mutant_0__vs__Wild_type_0_DESeq2_positive_geneIDs.txt)
+
+- WT vs mutant at 4h: [bdf1_Y187F_Y354F_mutant_4__vs__Wild_type_4_DESeq2_positive_geneIDs.txt](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2019/seance_5/results/bdf1_Y187F_Y354F_mutant_4__vs__Wild_type_4_DESeq2_positive_geneIDs.txt)
 
 # Practical - Results
 
