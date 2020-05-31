@@ -60,7 +60,7 @@ transition: linear
 
 ```{r settings, include=FALSE, echo=FALSE, eval=TRUE}
 ## Install required packages
-packages <- c("knitr", "kableExtra", "stringr")
+packages <- c("knitr", "kableExtra", "stringr", "limma")
 
 for (pkg in packages) {
   if (!require(pkg, character.only = TRUE)) {
@@ -88,14 +88,14 @@ options(scipen = 12) ## Max number of digits for non-scientific notation
 
 # Two main approches
 
-- Gene set comparisons
+- Gene set comparison or over-representation analysis (ORA)
   - Input: a set of functionally related genes
-  - Reference: a database of annotated gene functions (GO, pathways, TF targets, …)
-  - Approach: evaluate the significance of the intersection (over-represented ?)
+  - Reference: a database of annotated gene functions (GO, pathways, TF targets…)
+  - Approach: evaluate the significance of the intersection (over-represented?)
   - Stat: hypergeometric test
 - Gene Set Enrichment analysis
   - Input: a sorted list of genes
-  - Reference: a database of annotated gene functions (GO, pathways, TF targets, …)
+  - Reference: a database of annotated gene functions (GO, pathways, TF targets…)
   - Approach: evaluate the significance of the rank of the genes belonging to a reference class in the ordered list.
   - Stat: enrichment scores (alternative)
 
@@ -105,10 +105,25 @@ options(scipen = 12) ## Max number of digits for non-scientific notation
 - A set of 10 genes were reported as co-expressed in an RNAseq experiment. Among them, 6 are related to methionine metabolism. 
 - How significant is this observation ? More precisely, what would be the probability to observe such a correspondence by chance alone ?
 
-```{r Venn diagram, include=FALSE, echo=FALSE, eval=TRUE}
+```{r venn_diagram, include=FALSE, results=TRUE, echo=FALSE, eval=TRUE, out.width="50%"}
 # Draw a venn diagram indicating the number of genes in a 
 # co-expression cluster that are involved in methionine metobolism
-VennDiagram::venn.diagram(list(Genome = 1:6000, Methionine_metabolism = 1:40, coexpression_cluster = 35:44), "images/venn_yeast_methionine.png", main = "Genes in co-expressed cluster vs methionine metabolism", imagetype = "png", col = c("darkblue", "darkgreen", "darkred"), cat.col = c("darkblue", "darkgreen", "darkred"))
+VennDiagram::venn.diagram(
+  list(Genome = 1:6000, Methionine_metabolism = 1:40, coexpression_cluster = 35:44),
+  height = 400,
+  width = 700,
+  main.cex = 0.35,
+  cex=0.3,
+  cat.cex  = 0.25,
+  lwd = c(0.5,0.5,0.5),
+  cat.pos = c(-10,-45,10),
+  filename = "images/venn_yeast_methionine.png", 
+  main = "Genes in co-expressed cluster vs methionine metabolism", 
+  imagetype = "png", 
+  col = c("darkblue", "darkgreen", "darkred"), 
+  cat.col = c("darkblue", "darkgreen", "darkred"))
+
+#include_graphics(path = "images/venn_yeast_methionine.png")
 ```
 
 ![Venn diagram](images/venn_yeast_methionine.png)
@@ -134,19 +149,19 @@ VennDiagram::venn.diagram(list(Genome = 1:6000, Methionine_metabolism = 1:40, co
     C3 = $C_{n}^{k-x} = \frac{5960!}{4!5956!} = 5.2e^{13}$
   - C4 : 6 methionine and 4 non-methionine genes
 
-    C4 = $C_{m}^{x}C_{n}^{k-x} = 2.0e^{20}$
+    C4 = $C2*C3$ = $C_{m}^{x}C_{n}^{k-x} = 2.0e^{20}$
 
 # The hypergeometric test - probabilities
 
 - P(X = 6): probability to have exactly 6 methionine genes within a selection of 10
 
-  P(X=6) = $\frac{C_{m}^{x}C_{n}^{k-x}}{C_{m+n}^{k}} = 1.219e^{11}$
+  P(X=6) = $\frac{C4}{C1}$ = $\frac{C_{m}^{x}C_{n}^{k-x}}{C_{m+n}^{k}} = 1.219e^{11}$
 
 - P(X >= 6) : probability to have at least 6 methionine genes within a selection of 10
 
   P(X≥6) = $\sum_{i=x}^{k}\frac{C_{m}^{i}C_{n}^{k-i}}{C_{m+n}^{k}} = 1.222e^{11}$
 
-# Over-representation analysis (precautions to take)
+# ORA - precautions to take
 
 - Define your universe (background)
   - set with all the genes susceptible to be part of your analysis
@@ -158,11 +173,32 @@ VennDiagram::venn.diagram(list(Genome = 1:6000, Methionine_metabolism = 1:40, co
   - genes / proteins detected by an experimental approach (RNAseq, proteomics)
   - genes reachable by your approach (ex : miRNA targets, Godard et al., 2015)
 - multiple-test corrections
-  - correction choice (adjusted P-values : Bonferroni, Benjamini-Hochberg, FDR)
-  - inter-test dependancies corrections (usually not taken into account in tools)
-  
-# GSEA
-- Gene Set Enrichment Analysis
+  - correction choice (adjusted P-values : Bonferroni correction, Benjamini-Hochberg FDR...)
+  - inter-test dependancies corrections
+
+# Practical - Annotating a group of differentially expressed genes (DEG)
+- DEG:RNA-SEQ analysis of bdf1-Y187F-Y354F mutant strain during yeast sporulation
+- tool:g:GOSt from gProfiler (https://biit.cs.ut.ee/gprofiler/gost)
+- documentation:https://biit.cs.ut.ee/gprofiler/page/docs
+- Goal:
+    - detect functions (biological process, pathways, regulation...) associated with the set of DEG
+    - interpret the resuls
+- What about a negative control ?
+
+# Practical - DEG
+- https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE89530
+- organism:Saccharomyces cerevisiae
+- The aim of this study is to compare NGS-derived yeast transcriptome profiling (RNA-seq) of wild-type and bdf1-Y187F-Y354F mutant strains after sporulation induction (time points: 0h 4h and 8h)
+- design:S. cerevisiae wild-type and bdf1-Y187F-Y354F mutant strains were collected 0h, 4h and 8h after sporulation induction in triplicates. mRNA were purifired, prepared and sequenced using Illumina HiSeq 2000 sequencer
+- 0h:https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2019/seance_5/results/bdf1_Y187F_Y354F_mutant_0__vs__Wild_type_0_DESeq2_positive_geneIDs.txt
+- 4h:https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2019/seance_5/results/bdf1_Y187F_Y354F_mutant_4__vs__Wild_type_4_DESeq2_positive_geneIDs.txt
+
+# Practical - Results
+
+Screenshots ?
+
+# Gene Set Enrichment Analysis
+- GSEA
 - since 2006
 - determines whether an a priori defined set of genes shows statistically significant, concordant differences between two biological states
 - http://software.broadinstitute.org/gsea/index.jsp
@@ -178,5 +214,7 @@ VennDiagram::venn.diagram(list(Genome = 1:6000, Methionine_metabolism = 1:40, co
 - The green curve estimates, at each level i, the degree of over-representation of the reference genes in the i top-ranking genes.
 
 ![GSEA screenshot](images/GSEA_screenshot_1.png)
+
+# Practical
 
 
