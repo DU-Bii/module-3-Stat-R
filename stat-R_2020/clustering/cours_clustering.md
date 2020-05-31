@@ -2,7 +2,7 @@
 title: "Clustering"
 subtitle: "Hierarchical clustering et Kmeans"
 author: "Anne Badel, Frédéric Guyon & Jacques van Helden"
-date: "2020-03-12"
+date: "2020-05-31"
 output:
   slidy_presentation:
     highlight: default
@@ -18,20 +18,6 @@ output:
     theme: cerulean
     toc: yes
     widescreen: yes
-  revealjs::revealjs_presentation:
-    theme: night
-    transition: none
-    self_contained: true
-    slide_level: 1
-    css: ../slides.css
-  pdf_document:
-    fig_caption: yes
-    highlight: zenburn
-    toc: yes
-    toc_depth: 3
-  ioslides_presentation:
-    highlight: zenburn
-    incremental: no
   html_document:
     fig_caption: yes
     highlight: zenburn
@@ -40,6 +26,20 @@ output:
     toc: yes
     toc_depth: 3
     toc_float: yes
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
+  ioslides_presentation:
+    highlight: zenburn
+    incremental: no
+  revealjs::revealjs_presentation:
+    theme: night
+    transition: none
+    self_contained: true
+    slide_level: 1
+    css: ../slides.css
   beamer_presentation:
     theme: Hannover #Montpellier
     colortheme: beaver
@@ -55,6 +55,8 @@ output:
 font-import: http://fonts.googleapis.com/css?family=Risque
 font-family: Garamond
 transition: linear
+editor_options: 
+  chunk_output_type: console
 ---
 
 
@@ -62,19 +64,22 @@ transition: linear
 
 
 
-# Les données
+# Questions abordées dans ce cours
 
-- Comment sont représentées les données dans l'ordinateur ?
-- Comment représenter les données dans l'espace ?
-- Comment découvrir des "clusters" dans les données ?
-  - classification hiérarchique
-  - kmeans
-- comment déterminer le nombre de groupe optimal ?
-- comment comparer deux classifications ?
+1. Comment sont représentées les données dans l'ordinateur ?
+2. Comment représenter les données dans l'espace ?
+3. Comment découvrir des "clusters" dans les données ?
+
+    - classification hiérarchique
+    - kmeans
+
+4. Comment déterminer le nombre de groupe optimal ?
+5. Comment comparer deux classifications ?
 
 # Les données dans l'ordinateur (1)
 
 ## Les iris de Fisher 
+
 Ces données sont un classique des méthodes d'apprentissage [Fisher](https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1469-1809.1936.tb02137.x)
 
 <img src="img/iris_petal_sepal.png" width="35%" style="display: block; margin: auto;" />
@@ -140,14 +145,11 @@ Dans quel espace de réprésentation ?
 plot(mes.iris[1,1:2])
 ```
 
-<img src="figures/irisDeFisher_unnamed-chunk-5-1.png" width="40%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_unnamed-chunk-5-1.png" width="35%" style="display: block; margin: auto;" />
 
-Dans le plan, un point de coordonnées :
+Dans le plan, un point de coordonnées : $x = 5.1$, $y = 3.5$
 
-- x = 5.1
-- y = 3.5
-
-représenté par un vecteur $v2 = ($ 5.1 $,$ 3.5$)$ dans $\mathbb{R}^2$
+représenté par un vecteur $v2 = (5.1, 3.5)$ dans $\mathbb{R}^2$
 
 # Représentons ces données : une fleur (3) 
 
@@ -155,9 +157,9 @@ représenté par un vecteur $v2 = ($ 5.1 $,$ 3.5$)$ dans $\mathbb{R}^2$
 
 Dans l'espace, un point de coordonnées :
 
-- x = 5.1
-- y = 3.5
-- z = 1.4
+- $x = 5.1$
+- $y = 3.5$
+- $z = 1.4$
 
 <img src="img/fleur3D.png" width="40%" style="display: block; margin: auto;" />
 
@@ -268,9 +270,43 @@ Si 1,2,3 : dissimilarité
 - distance euclidienne ou distance $L_2$:
   $d(x,y)=\sqrt{\sum_i (x_i-y_i)^2}$
 
+# Représentation des vecteurs-individus
+
+<img src="figures/irisDeFisher_points_vs_curves-1.png" width="80%" style="display: block; margin: auto;" />
+
+
 # Distance euclidienne et distance de corrélation
 
-<img src="figures/irisDeFisher_cor_vs_euclidian_dist-1.png" width="80%" style="display: block; margin: auto;" />
+
+<img src="figures/irisDeFisher_cor_vs_eucl-1.png" width="40%" style="display: block; margin: auto;" />
+
+
+
+
+```r
+## Plot distance between curves in a time series
+vect.A <- c(1, 1.5, 3, 3.5, 3, 1.5, 0.5, -1, -1.5, -1)
+vect.B <- c(1, 1.1, 1.2, 1.5, 1.2, 1.1, 1, 0.9, 0.8, 0.9)
+vect.C <- c(1, 0.9, 0.8, 0.7, 0.8, 0.9, 1, 0.95, 0.9, 0.8)
+plot(0:10, type = "n", xlim = c(1, 10), ylim = c(-2, 4), 
+     main = "3 individuals in a 10-D space\nCurve representation",
+     xlab = "", ylab = "", las = 1, panel.first = grid())
+lines(vect.A, type = "b", col = "blue")
+lines(vect.B, type = "b", col = "green")
+lines(vect.C, type = "b", col = "red")
+legend("topright", legend = c("A", "B", "C"), 
+       col = c("blue", "green", "red"), lty = 1,
+       text.col = c("blue", "green", "red"))
+```
+
+<img src="figures/irisDeFisher_unnamed-chunk-12-1.png" style="display: block; margin: auto;" />
+
+```r
+par(mfrow = c(1,1))
+```
+
+```
+
 
 <table>
  <thead>
@@ -311,46 +347,46 @@ Si 1,2,3 : dissimilarité
 <table>
 <tbody>
   <tr>
-   <td style="text-align:right;"> 2.24 </td>
-   <td style="text-align:right;"> 1.48 </td>
-   <td style="text-align:right;"> 3.24 </td>
-   <td style="text-align:right;"> 4.36 </td>
-   <td style="text-align:right;"> 2.53 </td>
+   <td style="text-align:right;"> 2.39 </td>
+   <td style="text-align:right;"> 4.05 </td>
+   <td style="text-align:right;"> 4.16 </td>
+   <td style="text-align:right;"> 2.51 </td>
+   <td style="text-align:right;"> 1.32 </td>
   </tr>
   <tr>
+   <td style="text-align:right;"> 3.13 </td>
+   <td style="text-align:right;"> 3.33 </td>
+   <td style="text-align:right;"> 2.10 </td>
    <td style="text-align:right;"> 2.49 </td>
-   <td style="text-align:right;"> 3.19 </td>
-   <td style="text-align:right;"> 3.00 </td>
-   <td style="text-align:right;"> 3.79 </td>
-   <td style="text-align:right;"> 3.05 </td>
+   <td style="text-align:right;"> 3.12 </td>
   </tr>
 </tbody>
 </table>
 
-distance euclidienne : 4.04
+distance euclidienne : 4.33
 
-distance de manhattan = 10.68
+distance de manhattan = 10.46
 
 # Avec R (2) : distance entre individus d'un nuage de points 
 
 - distance euclidienne
 
 ```
-      41  101  144   77
-101 5.35               
-144 5.34 0.56          
-77  4.15 1.77 1.48     
-74  3.75 1.92 1.82 0.73
+    114   23   17   47
+23 4.65               
+17 4.28 0.93          
+47 4.10 0.81 0.48     
+63 1.48 3.68 3.30 3.13
 ```
 
 - distance de corrélation : $d = 1-r$
 
 ```
-        41    101    144     77
-101 0.5149                     
-144 0.4428 0.0058              
-77  0.2965 0.0453 0.0199       
-74  0.3125 0.0316 0.0149 0.0052
+      114     23     17     47
+23 0.5710                     
+17 0.5224 0.0026              
+47 0.4741 0.0071 0.0055       
+63 0.0333 0.3632 0.3193 0.2859
 ```
 
 # Avec R (3) : distance entre variables décrivant le nuage de points 
@@ -358,9 +394,9 @@ distance de manhattan = 10.68
 
 ```
              Sepal.Length Sepal.Width Petal.Length
-Sepal.Width         1.598                         
-Petal.Length        0.115       1.418             
-Petal.Width         0.243       1.076        0.064
+Sepal.Width         1.765                         
+Petal.Length        0.196       1.919             
+Petal.Width         0.318       1.792        0.052
 ```
 
 # Distances entre groupes (1)
@@ -720,23 +756,23 @@ iris.scale.kmeans5
 ```
 
 ```
-K-means clustering with 5 clusters of sizes 23, 48, 34, 16, 29
+K-means clustering with 5 clusters of sizes 28, 21, 22, 50, 29
 
 Cluster means:
-  Sepal.Length Sepal.Width Petal.Length Petal.Width
-1   -0.3516137  -1.3285553    0.1026061  0.01228268
-2    0.3804044  -0.3896455    0.6067908  0.56390985
-3   -1.1924784   0.4015443   -1.3090939 -1.26089024
-4   -0.6259564   1.8042613   -1.2826445 -1.22905673
-5    1.3926646   0.2323817    1.1567451  1.21327591
+  Sepal.Length Sepal.Width Petal.Length   Petal.Width
+1   -0.7467198   1.4252951   -1.2932659 -1.2173430935
+2   -0.3628650  -1.4097814    0.1074147  0.0008746178
+3   -1.3477916   0.1187465   -1.3100027 -1.2931622378
+4    0.3558492  -0.3930869    0.5846038  0.5466361525
+5    1.3926646   0.2323817    1.1567451  1.2132759051
 
 Clustering vector:
-  [1] 3 3 3 3 4 4 3 3 3 3 4 3 3 3 4 4 4 3 4 4 3 4 3 3 3 3 3 3 3 3 3 3 4 4 3 3 4 4 3 3 3 3 3 3 4 3 4 3 4 3 5 2 5 1 2 2 2 1 2 1 1 2 1 2 1 2 2 1 1 1 2 2 2 2 2 2 2 2 2 1 1 1 1 2 2 2 2 1 2 1 1 2 1 1 1 2 2 2 1 1 5 2 5 2 5 5 1 5 2 5 5 2 5 2 2 5 2 5 5 1 5 2 5 2 5 5 2 2 2 5 5 5 2 2 2 5 5 2 2 5 5 5 2 5 5 5 2
-[148] 2 5 2
+  [1] 1 3 3 3 1 1 3 1 3 3 1 3 3 3 1 1 1 1 1 1 1 1 1 3 3 3 1 1 1 3 3 1 1 1 3 3 1 1 3 1 1 3 3 1 1 3 1 3 1 3 5 4 5 2 4 4 4 2 4 2 2 4 2 4 4 4 4 2 2 2 4 4 4 4 4 4 4 4 4 2 2 2 2 4 4 4 4 2 4 2 2 4 2 2 2 4 4 4 2 4 5 4 5 4 5 5 2 5 4 5 5 4 5 4 4 5 4 5 5 2 5 4 5 4 5 5 4 4 4 5 5 5 4 4 4 5 5 4 4 5 5 5 4 5 5 5 4
+[148] 4 5 4
 
 Within cluster sum of squares by cluster:
-[1] 13.68659 27.83013 15.97485  6.45758 26.89129
- (between_SS / total_SS =  84.8 %)
+[1] 13.761588 11.951942  8.032603 29.590390 26.891293
+ (between_SS / total_SS =  84.9 %)
 
 Available components:
 
@@ -782,7 +818,7 @@ plot(iris.scale.hclust.ward, hang = -1, cex = 0.5)
 
 # Comment déterminer le nombre de clusters ? avec les kmeans
 
-<img src="figures/irisDeFisher_unnamed-chunk-19-1.png" width="50%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_unnamed-chunk-20-1.png" width="50%" style="display: block; margin: auto;" />
 
 # Comparaison des résultats des deux clustering
 
@@ -791,29 +827,29 @@ plot(iris.scale.hclust.ward, hang = -1, cex = 0.5)
 <table>
 <tbody>
   <tr>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0 </td>
    <td style="text-align:center;"> 29 </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0 </td>
   </tr>
   <tr>
-   <td style="text-align:center;"> 4 </td>
    <td style="text-align:center;"> 16 </td>
    <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 4 </td>
   </tr>
   <tr>
-   <td style="text-align:center;"> 0 </td>
    <td style="text-align:center;"> 5 </td>
    <td style="text-align:center;"> 25 </td>
+   <td style="text-align:center;"> 0 </td>
   </tr>
   <tr>
-   <td style="text-align:center;"> 0 </td>
    <td style="text-align:center;"> 0 </td>
    <td style="text-align:center;"> 45 </td>
+   <td style="text-align:center;"> 0 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0 </td>
    <td style="text-align:center;"> 26 </td>
+   <td style="text-align:center;"> 0 </td>
   </tr>
 </tbody>
 </table>
@@ -1014,30 +1050,30 @@ sessionInfo()
 ```
 
 ```
-R version 3.6.1 (2019-07-05)
-Platform: x86_64-apple-darwin15.6.0 (64-bit)
-Running under: macOS Mojave 10.14.6
+R version 3.6.3 (2020-02-29)
+Platform: x86_64-conda_cos6-linux-gnu (64-bit)
+Running under: CentOS Linux 7 (Core)
 
 Matrix products: default
-BLAS:   /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
-LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib
+BLAS/LAPACK: /shared/mfs/data/software/miniconda/envs/r-3.6.3/lib/libopenblasp-r0.3.9.so
 
 locale:
-[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C               LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8     LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8    LC_PAPER=en_US.UTF-8       LC_NAME=C                  LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
 
 attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] pheatmap_1.0.12    vegan_2.5-6        lattice_0.20-38    permute_0.9-5      rgl_0.100.30       RColorBrewer_1.1-2 clues_0.6.2.2      FactoMineR_2.3     kableExtra_1.1.0   knitr_1.28        
+ [1] pheatmap_1.0.12    vegan_2.5-6        lattice_0.20-41    permute_0.9-5      rgl_0.100.54       RColorBrewer_1.1-2 clues_0.6.2.2      FactoMineR_2.3     kableExtra_1.1.0   knitr_1.28        
 
 loaded via a namespace (and not attached):
- [1] ggrepel_0.8.1           Rcpp_1.0.2              assertthat_0.2.1        zeallot_0.1.0           digest_0.6.21           mime_0.7                R6_2.4.0                backports_1.1.5         evaluate_0.14           highr_0.8               httr_1.4.1              ggplot2_3.2.1          
-[13] pillar_1.4.2            rlang_0.4.0             lazyeval_0.2.2          rstudioapi_0.10         miniUI_0.1.1.1          Matrix_1.2-17           rmarkdown_1.16          splines_3.6.1           webshot_0.5.1           readr_1.3.1             stringr_1.4.0           htmlwidgets_1.5.1      
-[25] munsell_0.5.0           shiny_1.4.0             compiler_3.6.1          httpuv_1.5.2            xfun_0.10               pkgconfig_2.0.3         mgcv_1.8-29             htmltools_0.4.0         flashClust_1.01-2       tidyselect_0.2.5        tibble_2.1.3            viridisLite_0.3.0      
-[37] crayon_1.3.4            dplyr_0.8.3             later_1.0.0             MASS_7.3-51.4           leaps_3.1               grid_3.6.1              nlme_3.1-141            jsonlite_1.6            xtable_1.8-4            gtable_0.3.0            magrittr_1.5            scales_1.0.0           
-[49] stringi_1.4.3           promises_1.1.0          scatterplot3d_0.3-41    xml2_1.2.2              vctrs_0.2.0             tools_3.6.1             manipulateWidget_0.10.0 glue_1.3.1              purrr_0.3.2             hms_0.5.1               crosstalk_1.0.0         parallel_3.6.1         
-[61] fastmap_1.0.1           yaml_2.2.0              colorspace_1.4-1        cluster_2.1.0           rvest_0.3.4            
+ [1] ggrepel_0.8.2           Rcpp_1.0.4.6            assertthat_0.2.1        digest_0.6.25           mime_0.9                R6_2.4.1                evaluate_0.14           highr_0.8               httr_1.4.1              ggplot2_3.3.1           pillar_1.4.4            rlang_0.4.6            
+[13] rstudioapi_0.11         miniUI_0.1.1.1          Matrix_1.2-18           rmarkdown_2.1           splines_3.6.3           webshot_0.5.2           readr_1.3.1             stringr_1.4.0           htmlwidgets_1.5.1       munsell_0.5.0           shiny_1.4.0.2           compiler_3.6.3         
+[25] httpuv_1.5.2            xfun_0.14               pkgconfig_2.0.3         mgcv_1.8-31             htmltools_0.4.0         flashClust_1.01-2       tidyselect_1.1.0        tibble_3.0.1            viridisLite_0.3.0       crayon_1.3.4            dplyr_0.8.5             later_1.0.0            
+[37] MASS_7.3-51.6           leaps_3.1               grid_3.6.3              nlme_3.1-147            jsonlite_1.6.1          xtable_1.8-4            gtable_0.3.0            lifecycle_0.2.0         magrittr_1.5            scales_1.1.1            stringi_1.4.6           promises_1.1.0         
+[49] scatterplot3d_0.3-41    xml2_1.3.2              ellipsis_0.3.1          vctrs_0.3.0             tools_3.6.3             manipulateWidget_0.10.1 glue_1.4.1              purrr_0.3.4             hms_0.5.3               crosstalk_1.1.0.1       parallel_3.6.3          fastmap_1.0.1          
+[61] yaml_2.2.1              colorspace_1.4-1        cluster_2.1.0           rvest_0.3.5            
 ```
 
 
@@ -1054,7 +1090,7 @@ biplot(prcomp(mes.iris, scale = TRUE), las = 1, cex = 0.7,
        main = "Données normalisées")
 ```
 
-<img src="figures/irisDeFisher_unnamed-chunk-23-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="figures/irisDeFisher_unnamed-chunk-24-1.png" width="90%" style="display: block; margin: auto;" />
 
 *****
 
