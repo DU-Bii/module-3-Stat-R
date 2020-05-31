@@ -183,7 +183,7 @@ Anne Badel, Frédéric Guyon &amp; Jacques van Helden
 </div>
 <div id="représentons-ces-données-une-variable-à-la-fois-1" class="slide section level1">
 <h1>Représentons ces données : une variable à la fois (1)</h1>
-<p><img src="figures/irisDeFisher_unnamed-chunk-8-1.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/irisDeFisher_unnamed-chunk-8-1.png" width="50%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="représentons-ces-données-deux-variables-à-la-fois-2" class="slide section level1">
 <h1>Représentons ces données : deux variables à la fois (2)</h1>
@@ -340,51 +340,51 @@ données simulées : y a-t-il des groupes ?
 &lt;table&gt;
 &lt;tbody&gt;
   &lt;tr&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 2.39 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 4.05 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 4.16 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 2.51 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 1.32 &lt;/td&gt;
+   &lt;td style=&quot;text-align:right;&quot;&gt; 2.98 &lt;/td&gt;
+   &lt;td style=&quot;text-align:right;&quot;&gt; 3.71 &lt;/td&gt;
+   &lt;td style=&quot;text-align:right;&quot;&gt; 3.73 &lt;/td&gt;
+   &lt;td style=&quot;text-align:right;&quot;&gt; 4.30 &lt;/td&gt;
+   &lt;td style=&quot;text-align:right;&quot;&gt; 2.92 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 3.13 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 3.33 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 2.10 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 2.49 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 3.12 &lt;/td&gt;
+   &lt;td style=&quot;text-align:right;&quot;&gt; 2.83 &lt;/td&gt;
+   &lt;td style=&quot;text-align:right;&quot;&gt; 2.73 &lt;/td&gt;
+   &lt;td style=&quot;text-align:right;&quot;&gt; 2.78 &lt;/td&gt;
+   &lt;td style=&quot;text-align:right;&quot;&gt; 2.62 &lt;/td&gt;
+   &lt;td style=&quot;text-align:right;&quot;&gt; 2.13 &lt;/td&gt;
   &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 
-distance euclidienne : 4.33
+distance euclidienne : 3.97
 
-distance de manhattan = 10.46
+distance de manhattan = 11.12
 
 # Avec R (2) : distance entre individus d&#39;un nuage de points 
 
 - distance euclidienne
 </code></pre>
-<pre><code>114   23   17   47</code></pre>
-<p>23 4.65<br />
-17 4.28 0.93<br />
-47 4.10 0.81 0.48<br />
-63 1.48 3.68 3.30 3.13</p>
+<pre><code> 132   83   56   75</code></pre>
+<p>83 3.54<br />
+56 3.15 0.62<br />
+75 2.82 0.75 0.73<br />
+112 2.16 1.68 1.22 1.18</p>
 <pre><code>
 - distance de corrélation : $d = 1-r$
 </code></pre>
-<pre><code>  114     23     17     47</code></pre>
-<p>23 0.5710<br />
-17 0.5224 0.0026<br />
-47 0.4741 0.0071 0.0055<br />
-63 0.0333 0.3632 0.3193 0.2859</p>
+<pre><code>    132      83      56      75</code></pre>
+<p>83 0.01698<br />
+56 0.00115 0.01186<br />
+75 0.01574 0.00011 0.01129<br />
+112 0.00862 0.03597 0.01567 0.03283</p>
 <pre><code>
 # Avec R (3) : distance entre variables décrivant le nuage de points 
 
 </code></pre>
 <pre><code>         Sepal.Length Sepal.Width Petal.Length</code></pre>
-<p>Sepal.Width 1.765<br />
-Petal.Length 0.196 1.919<br />
-Petal.Width 0.318 1.792 0.052 ```</p>
+<p>Sepal.Width 0.070<br />
+Petal.Length 0.101 0.178<br />
+Petal.Width 0.201 0.384 0.057 ```</p>
 </div>
 <div id="distances-entre-groupes-1" class="slide section level1">
 <h1>Distances entre groupes (1)</h1>
@@ -711,22 +711,22 @@ Petal.Width
 <h2 id="un-premier-k-means-en-5-groupes">Un premier k-means en 5 groupes</h2>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1">iris.scale.kmeans5 &lt;-<span class="st"> </span><span class="kw">kmeans</span>(mes.iris.scaled, <span class="dt">center=</span><span class="dv">5</span>)</a>
 <a class="sourceLine" id="cb25-2" data-line-number="2">iris.scale.kmeans5</a></code></pre></div>
-<pre><code>K-means clustering with 5 clusters of sizes 28, 21, 22, 50, 29
+<pre><code>K-means clustering with 5 clusters of sizes 29, 48, 22, 28, 23
 
 Cluster means:
-  Sepal.Length Sepal.Width Petal.Length   Petal.Width
-1   -0.7467198   1.4252951   -1.2932659 -1.2173430935
-2   -0.3628650  -1.4097814    0.1074147  0.0008746178
-3   -1.3477916   0.1187465   -1.3100027 -1.2931622378
-4    0.3558492  -0.3930869    0.5846038  0.5466361525
-5    1.3926646   0.2323817    1.1567451  1.2132759051
+  Sepal.Length Sepal.Width Petal.Length Petal.Width
+1    1.3926646   0.2323817    1.1567451  1.21327591
+2    0.3804044  -0.3896455    0.6067908  0.56390985
+3   -1.3477916   0.1187465   -1.3100027 -1.29316224
+4   -0.7467198   1.4252951   -1.2932659 -1.21734309
+5   -0.3516137  -1.3285553    0.1026061  0.01228268
 
 Clustering vector:
-  [1] 1 3 3 3 1 1 3 1 3 3 1 3 3 3 1 1 1 1 1 1 1 1 1 3 3 3 1 1 1 3 3 1 1 1 3 3 1 1 3 1 1 3 3 1 1 3 1 3 1 3 5 4 5 2 4 4 4 2 4 2 2 4 2 4 4 4 4 2 2 2 4 4 4 4 4 4 4 4 4 2 2 2 2 4 4 4 4 2 4 2 2 4 2 2 2 4 4 4 2 4 5 4 5 4 5 5 2 5 4 5 5 4 5 4 4 5 4 5 5 2 5 4 5 4 5 5 4 4 4 5 5 5 4 4 4 5 5 4 4 5 5 5 4 5 5 5 4
-[148] 4 5 4
+  [1] 4 3 3 3 4 4 3 4 3 3 4 3 3 3 4 4 4 4 4 4 4 4 4 3 3 3 4 4 4 3 3 4 4 4 3 3 4 4 3 4 4 3 3 4 4 3 4 3 4 3 1 2 1 5 2 2 2 5 2 5 5 2 5 2 5 2 2 5 5 5 2 2 2 2 2 2 2 2 2 5 5 5 5 2 2 2 2 5 2 5 5 2 5 5 5 2 2 2 5 5 1 2 1 2 1 1 5 1 2 1 1 2 1 2 2 1 2 1 1 5 1 2 1 2 1 1 2 2 2 1 1 1 2 2 2 1 1 2 2 1 1 1 2 1 1 1 2
+[148] 2 1 2
 
 Within cluster sum of squares by cluster:
-[1] 13.761588 11.951942  8.032603 29.590390 26.891293
+[1] 26.891293 27.830133  8.032603 13.761588 13.686590
  (between_SS / total_SS =  84.9 %)
 
 Available components:
@@ -781,33 +781,33 @@ Available components:
 <tbody>
 <tr>
 <td style="text-align:center;">
+29
+</td>
+<td style="text-align:center;">
 0
 </td>
 <td style="text-align:center;">
 0
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+20
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+1
 </td>
 <td style="text-align:center;">
 29
 </td>
-</tr>
-<tr>
-<td style="text-align:center;">
-16
-</td>
-<td style="text-align:center;">
-0
-</td>
-<td style="text-align:center;">
-4
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-5
-</td>
-<td style="text-align:center;">
-25
-</td>
 <td style="text-align:center;">
 0
 </td>
@@ -817,21 +817,21 @@ Available components:
 0
 </td>
 <td style="text-align:center;">
-45
+24
 </td>
 <td style="text-align:center;">
-0
+21
 </td>
 </tr>
 <tr>
+<td style="text-align:center;">
+0
+</td>
 <td style="text-align:center;">
 0
 </td>
 <td style="text-align:center;">
 26
-</td>
-<td style="text-align:center;">
-0
 </td>
 </tr>
 </tbody>
@@ -1073,7 +1073,7 @@ v.c 0.0000000 0.3333333</code></pre>
 </ul>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1">clues<span class="op">::</span><span class="kw">adjustedRand</span>(cluster.hclust5, cluster.kmeans3)</a></code></pre></div>
 <pre><code>     Rand        HA        MA        FM   Jaccard 
-0.7020134 0.3855580 0.3924977 0.6118291 0.3931110 </code></pre>
+0.7848770 0.4637776 0.4730527 0.6167001 0.4299265 </code></pre>
 </div>
 <div class="slide section level1">
 
