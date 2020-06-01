@@ -200,7 +200,7 @@ représenté par un vecteur $v3 = ($ `r round(mes.iris[1,1], digits = 2)` $,$ `r
 
 # Représentons ces données : une variable à la fois (1)
 
-```{r, echo = FALSE, out.width = "60%"}
+```{r, echo = FALSE, out.width = "50%"}
 par(mfrow = c(2,2))
 hist(mes.iris[,"Sepal.Length"], main = "longueur des sépales", xlab = "", yab = "")
 hist(mes.iris[,"Petal.Length"], main = "longueur des pétales", xlab = "", yab = "")
