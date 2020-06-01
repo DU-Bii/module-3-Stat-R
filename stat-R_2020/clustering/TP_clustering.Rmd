@@ -70,6 +70,29 @@ editor_options:
 
 
 
+```{r load_libraries}
+
+## Install required packages
+packages <- c("ClassDiscovery", 
+              "clues", 
+              "ComplexHeatmap",
+              "FactoMineR",
+              "RColorBrewer")
+
+message("Loading libraries ", paste(collapse = ", ", packages))
+
+for (pkg in packages) {
+  if (!require(pkg, character.only = TRUE)) {
+    install.packages(pkg)
+    require(pkg, character.only = TRUE)
+  }
+}
+
+library(knitr)
+#library(kableExtra) ## Note: kableExtra has some side effect on kable: column padding is null, so all numbers seem to be mixed up
+
+```
+
 ```{r knitr_options, echo=FALSE, include=FALSE, eval=TRUE}
 
 ## Define options for the R markdown output
@@ -100,23 +123,6 @@ data.folder <- "~/TCGA_import/data/BIC/" # Just for preparation
 
 ```
 
-
-```{r load_libraries}
-## Load libraries
-message("Loading libraries")
-library(knitr)
-#library(kableExtra) ## Note: kableExtra has some side effect on kable: column padding is null, so all numbers seem to be mixed up
-library(FactoMineR)
-library(clues)
-library(RColorBrewer)
-library(ComplexHeatmap)
-
-# library(corrplot)
-library(FactoMineR)
-library(ClassDiscovery)
-# library(formattable)
-
-```
 
 ## Introduction
 
