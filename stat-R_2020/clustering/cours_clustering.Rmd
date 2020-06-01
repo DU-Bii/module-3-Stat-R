@@ -62,7 +62,11 @@ editor_options:
 
 ```{r settings, include=FALSE, echo=FALSE, eval=TRUE}
 ## Install required packages
-packages <- c("knitr", "kableExtra", "FactoMineR", "clues", "RColorBrewer", "rgl", "vegan", "pheatmap")
+packages <- c("knitr", 
+              #              "kableExtra", 
+              "FactoMineR", 
+              "clues", 
+              "RColorBrewer", "rgl", "vegan", "pheatmap")
 # library(formattable)
 
 for (pkg in packages) {
@@ -349,7 +353,6 @@ par(mfrow = c(1,1))
 
 # Distance euclidienne et distance de corrélation
 
-
 ```{r cor_vs_eucl, echo = FALSE, fig.width = 10, fig.height = 5, out.width = "40%"}
 
 ## Plot distance between curves in a time series
@@ -365,28 +368,6 @@ lines(vect.C, type = "b", col = "red")
 legend("topright", legend = c("A", "B", "C"), 
        col = c("blue", "green", "red"), lty = 1,
        text.col = c("blue", "green", "red"))
-
-```
-
-
-
-```{r}
-
-## Plot distance between curves in a time series
-vect.A <- c(1, 1.5, 3, 3.5, 3, 1.5, 0.5, -1, -1.5, -1)
-vect.B <- c(1, 1.1, 1.2, 1.5, 1.2, 1.1, 1, 0.9, 0.8, 0.9)
-vect.C <- c(1, 0.9, 0.8, 0.7, 0.8, 0.9, 1, 0.95, 0.9, 0.8)
-plot(0:10, type = "n", xlim = c(1, 10), ylim = c(-2, 4), 
-     main = "3 individuals in a 10-D space\nCurve representation",
-     xlab = "", ylab = "", las = 1, panel.first = grid())
-lines(vect.A, type = "b", col = "blue")
-lines(vect.B, type = "b", col = "green")
-lines(vect.C, type = "b", col = "red")
-legend("topright", legend = c("A", "B", "C"), 
-       col = c("blue", "green", "red"), lty = 1,
-       text.col = c("blue", "green", "red"))
-par(mfrow = c(1,1))
-```
 
 ```
 
@@ -407,7 +388,8 @@ knitr::kable(ABC.resume, align = 'c', digits = 2)
 - on utilise la fonction `dist()` avec l'option `method = "euclidean", "manhattan", ...` 
 
 ```{r echo = FALSE}
-mat.xy <- matrix(rbind(x,y), nrow = 2)
+mat.xy <- data.frame(matrix(rbind(x,y), nrow = 2))
+names(mat.xy) <- paste0("t", 1:ncol(mat.xy))
 knitr::kable(mat.xy[,1:5], digits = 2)
 ```
 
