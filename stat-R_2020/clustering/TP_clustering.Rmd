@@ -116,12 +116,6 @@ options(scipen = 12)
 
 
 
-```{r custom_parameters}
-## Location of the shared folder on the current install
-data.folder <- "~/TCGA_import/data/BIC/" # Just for preparation
-#data.folder <- "/shared/projects/du_bii_2019/data/module3/seance4/BIC/" # on the IFB-cluster-core
-
-```
 
 
 ## Introduction
@@ -157,14 +151,19 @@ Les données seront analysées sur le [**serveur RStudio de l'IFB**](https://rst
 
 ## Dossier partagé contenant les données
 
-Les données sont dans un répertoire partagé `/shared/projects/du_bii_2019/data/module3/seance4/BIC/`.
+Pour les cours du DUBii, les données sont dans un répertoire partagé
 
-Nous allons définir une variable `data.folder` qui indiquera le chemin de ce dossier partagé, en fonction du serveur. 
+- `/shared/projects/du_bii_2019/data/module3/seance4/BIC/`
+
+Nous définissons ci-dessous une variable `data.folder` qui indique le chemin de ce dossier partagé.
+Si noous désirons reproduire les analyses sur une autre machine, eci nous permettra de facilement modifier le chemin  en fonction de la configuration locale. 
 
 ```{r data_folder_ifb, eval=FALSE}
-## Liste des fichiers de données
-data.folder <- "/shared/projects/du_bii_2019/data/module3/seance4/BIC/"
+## Location of the shared folder on the current install
+#data.folder <- "~/TCGA_import/data/BIC/" # Just for preparation
+data.folder <- "/shared/projects/du_bii_2019/data/module3/seance4/BIC/" # on the IFB-cluster-core
 ```
+
 
 ## Contenu du dossier de données
 
@@ -181,7 +180,7 @@ Astuces:
 
 
 ```{r list_data_files}
-# Return file sizes (in bytes)
+wak# Return file sizes (in bytes)
 message("Listing files in data folder: ", data.folder)
 
 data.files <- list.files(path = data.folder) # List the data files
@@ -428,7 +427,7 @@ Par défaut, elle effectue simultanément un clustering hiérarchique sur les li
 ```{r heatmap, out.width="80%", fig.width=10, fig.height=10, fig.cap="Heat map of the expression matrix clustered by genes (rows) and samples (columns)."} 
 
 heatmap(as.matrix(BIC.expr), 
-        distfun = function(x) as.dist(1 - cor(t(x), method = "spearman")), 
+        distfun = function(x) { as.dist(1 - cor(t(x), method = "spearman")) }, 
         hclustfun = function(x) hclust(x, method = "ward.D2"),
         labRow = NA, labCol = NA)
 ```
