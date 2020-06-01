@@ -4,40 +4,6 @@ subtitle: "Hierarchical clustering et Kmeans"
 author: "Anne Badel, Frédéric Guyon & Jacques van Helden"
 date: "`r Sys.Date()`"
 output:
-  html_document:
-    fig_caption: yes
-    highlight: zenburn
-    self_contained: no
-    theme: cerulean
-    toc: yes
-    toc_depth: 3
-    toc_float: yes
-  pdf_document:
-    fig_caption: yes
-    highlight: zenburn
-    toc: yes
-    toc_depth: 3
-  beamer_presentation:
-    theme: Hannover #Montpellier
-    colortheme: beaver
-    fonttheme: professionalfonts #structurebold
-    highlight: pygments #default
-    fig_caption: no
-    fig_height: 4
-    fig_width: 5
-    incremental: no
-    keep_tex: no
-    slide_level: 1
-    toc: yes
-  ioslides_presentation:
-    highlight: zenburn
-    incremental: no
-  revealjs::revealjs_presentation:
-    theme: night
-    transition: none
-    self_contained: true
-    slide_level: 1
-    css: ../slides.css
   slidy_presentation:
     highlight: default
     incremental: no
@@ -52,6 +18,40 @@ output:
     theme: cerulean
     toc: yes
     widescreen: yes
+  html_document:
+    fig_caption: yes
+    highlight: zenburn
+    self_contained: no
+    theme: cerulean
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+  beamer_presentation:
+    theme: Hannover #Montpellier
+    colortheme: beaver
+    fonttheme: professionalfonts #structurebold
+    highlight: pygments #default
+    fig_caption: no
+    fig_height: 4
+    fig_width: 5
+    incremental: no
+    keep_tex: no
+    slide_level: 1
+    toc: yes
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
+  revealjs::revealjs_presentation:
+    theme: night
+    transition: none
+    self_contained: true
+    slide_level: 1
+    css: ../slides.css
+  ioslides_presentation:
+    highlight: zenburn
+    incremental: no
 font-import: http://fonts.googleapis.com/css?family=Risque
 font-family: Garamond
 transition: linear
@@ -63,10 +63,8 @@ editor_options:
 ```{r settings, include=FALSE, echo=FALSE, eval=TRUE}
 ## Install required packages
 packages <- c("knitr", 
-              # "kableExtra",
               "FactoMineR", 
               "aricode",  # for adjusted Rand Index,
-              # "clues", # not maintained anymore
               "RColorBrewer", "rgl", "vegan", "pheatmap")
 # library(formattable)
 
@@ -389,9 +387,18 @@ knitr::kable(ABC.resume, align = 'c', digits = 2)
 - on utilise la fonction `dist()` avec l'option `method = "euclidean", "manhattan", ...` 
 
 ```{r echo = FALSE}
-mat.xy <- data.frame(matrix(rbind(x,y), nrow = 2))
+mat.xy <- data.frame(matrix(rbind(x,y), nrow = 2))[, 1:5]
 names(mat.xy) <- paste0("t", 1:ncol(mat.xy))
-knitr::kable(mat.xy[,1:5], digits = 2)
+rownames(mat.xy) <- c("X", "Y")
+
+## Display the details of distance computation
+mat.details <- mat.xy
+mat.details["abs(Y - X)", ] <- abs(mat.details["Y", ] - mat.xy["X", ])
+mat.details["(Y - X)^2", ] <- (mat.details["Y", ] - mat.xy["X", ])^2
+mat.details[, "SUM"] <- apply(mat.details, 1, sum)
+mat.details["Eucl",]  <- mat.details["abs(Y - X)", ]
+mat.details["Eucl", "SUM"] <- sqrt(mat.details["(Y - X)^2", "SUM"]) 
+knitr::kable(mat.details[,], digits = 2)
 ```
 
 distance euclidienne : `r round(dist(mat.xy), digits = 2)`
@@ -421,7 +428,7 @@ print(as.dist(1 - cor.mat.iris), digits = 2)
 
 # Distances entre groupes (1)
 
-```{r group_distances_1, echo = FALSE, fig.width = 6, fig.height = 6, out.width = "60%"}
+```{r group_distances_1, echo = FALSE, fig.width = 6, fig.height = 6, out.width = "50%"}
 x1 <- rnorm(5, 1, 0.5)
 y1 <- rnorm(5, 0, 1)
 mat1 <- cbind(x1, y1)
@@ -455,7 +462,7 @@ $D(C_1,C_2) = \sqrt{\frac{N_1N_2}{N_1 + N_2}} \| m_1 -m_2 \|$
 
 # Distances entre groupes (4)
 
-```{r group_distances_2, echo=FALSE, out.width="80%"}
+```{r group_distances_2, echo=FALSE, out.width="60%"}
 include_graphics(path = "img/groupes.png")
 ```
 
@@ -578,13 +585,13 @@ mes.iris.cor <- cor(t(mes.iris))
 mes.iris.cor.dist <- 1 - mes.iris.cor
 ```
 
-```{r levelplot_euclidian, out.width="70%", fig.width=6, fig.height=6, echo = FALSE}
+```{r levelplot_euclidian, out.width="50%", fig.width=6, fig.height=6, echo = FALSE}
 levelplot(as.matrix(iris.scale.euc), xlab = "", ylab = "")
 ```
 
 # La matrice de distance de corrélation
 
-```{r levelplot_cor, out.width="70%", fig.width=6, fig.height=6, echo = FALSE}
+```{r levelplot_cor, out.width="50%", fig.width=6, fig.height=6, echo = FALSE}
 levelplot(mes.iris.cor.dist, xlab = "", ylab = "")
 ```
 
@@ -617,60 +624,60 @@ levelplot(mes.iris.cor.dist, xlab = "", ylab = "")
 
 - regroupement des 2 individus les plus proches => (n-1) clusters
 
-# au départ
+# Au départ
 
-```{r hclust_initial, echo=FALSE, out.width="90%"}
+```{r hclust_initial, echo=FALSE, out.width="60%"}
 include_graphics(path = "img/hclust1.png")
 ```
 
 
-# identification des individus les plus proches
+# Identification des individus les plus proches
 
-```{r hclust_closest, echo=FALSE, out.width="90%"}
+```{r hclust_closest, echo=FALSE, out.width="60%"}
 include_graphics(path = "img/hclust2.png")
 ```
 
 
-# construction du dendrogramme
+# Construction du dendrogramme
 
-```{r hclust_dendrogram, echo=FALSE, out.width="90%"}
+```{r hclust_dendrogram, echo=FALSE, out.width="50%"}
 include_graphics(path = "img/hclust3.png")
 ```
 
-# étape j :
+# Etape j :
 
 - calcul des dissemblances entre chaque groupe obtenu à l'étape $(j-1)$
 
 - regroupement des deux groupes les plus proches => $(n-j)$ clusters
   
-# calcul des nouveaux représentants 'BE' et 'CD'
+# Calcul des nouveaux représentants 'BE' et 'CD'
 
-```{r hclust_nvx_representants, echo=FALSE, out.width="90%"}
+```{r hclust_nvx_representants, echo=FALSE, out.width="60%"}
 include_graphics(path = "img/hclust4.png")
 ```
 
-# calcul des distances de l'individu restant 'A' aux points moyens
+# Calcul des distances de l'individu restant 'A' aux points moyens
 
-```{r hclust_update_dist, echo=FALSE, out.width="90%"}
+```{r hclust_update_dist, echo=FALSE, out.width="60%"}
 include_graphics(path = "img/hclust5.png")
 ```
 
 
 # A est plus proche de ...
 
-```{r hclust_closest_a, echo=FALSE, out.width="90%"}
+```{r hclust_closest_a, echo=FALSE, out.width="60%"}
 include_graphics(path = "img/hclust6.png")
 ```
 
 # dendrogramme
 
-```{r hclust_dendrogram2, echo=FALSE, out.width="90%"}
+```{r hclust_dendrogram2, echo=FALSE, out.width="60%"}
 include_graphics(path = "img/hclust7.png")
 ```
 
 # pour finir
 
-```{r hclust_finalize, echo=FALSE, out.width="90%"}
+```{r hclust_finalize, echo=FALSE, out.width="60%"}
 include_graphics(path = "img/hclust8.png")
 ```
 
@@ -739,12 +746,27 @@ par(mfrow=c(1,1))
 
 ---
 
-# Les heatmap
+# Les heatmap - donnes brutes
 
-```{r pheatmap, fig.width = 8, fig.heigh = 6, out.width="60%"}
+```{r pheatmap1, fig.width = 8, fig.heigh = 6, out.width="60%"}
 pheatmap::pheatmap(mes.iris, clustering.method = "ward.D2")
+```
+
+# Les heatmap - mise à l'échelle
+
+```{r pheatmap2, fig.width = 8, fig.heigh = 6, out.width="60%"}
 pheatmap::pheatmap(mes.iris.scaled, clustering.method = "ward.D2")
+```
+
+# Les heatmap - échelle de couleur standardisée par colonne
+
+```{r pheatmap3, fig.width = 8, fig.heigh = 6, out.width="60%"}
 pheatmap::pheatmap(mes.iris, scale = "column", clustering.method = "ward.D2")
+```
+
+# Les heatmap - échelle de couleur standardisée par ligne
+
+```{r pheatmap4, fig.width = 8, fig.heigh = 6, out.width="60%"}
 pheatmap::pheatmap(mes.iris, scale = "row", clustering.method = "ward.D2")
 ```
 
@@ -752,7 +774,7 @@ pheatmap::pheatmap(mes.iris, scale = "row", clustering.method = "ward.D2")
 
 Les individus dans le plan
 
-```{r kmeans_initial, echo=FALSE, out.width="80%"}
+```{r kmeans_initial, echo=FALSE, out.width="50%", fig.width=5, fig.height=5}
 include_graphics(path = "img/kmeans0.png")
 ```
 
@@ -881,9 +903,12 @@ barplot(wss, names.arg = 1:6, main = "variance intra en fonction du nombre de cl
 
 ```{r echo = FALSE,results = TRUE}
 cluster.kmeans3 <- kmeans(mes.iris.scaled, center = 3)$cluster
+cluster.kmeans3 <- paste0("k", cluster.kmeans3)
 cluster.hclust5 <- cutree(hclust(dist(mes.iris.scaled), method = "ward.D2"), k = 5)
-ma.table <- table(cluster.hclust5, cluster.kmeans3)
-knitr::kable(ma.table, align = "c", col.names = NULL)
+cluster.hclust5 <- paste0("c", cluster.hclust5)
+contingency.table <- table(as.vector(cluster.hclust5), as.vector(cluster.kmeans3))
+
+knitr::kable(contingency.table, align = "c",  row.names = TRUE)
 ```
 
 # Pros et cons des différents algorithmes
@@ -987,44 +1012,23 @@ Mesure de similarité entre deux clustering
 
 $$R=\frac{m+s}{t}$$
 
-- m=nombre de paires dans la même classe dans les deux classifications
-- s=nombre de paires séparées dans les deux classifications
-- t=nombre de paires totales
+- $m$ = nombre de paires dans la même classe dans les deux classifications
+- $s$ = nombre de paires séparées dans les deux classifications
+- $t$ = nombre total de paires
 
 # Comparaison de clustering: Adjusted Rand Index
 
-$$ ARI=\frac{RI-Expected RI}{Max RI -Expected RI}$$
+$$ \text{ARI} = \frac{\text{RI}-\text{E(RI)}}{\text{Max RI} - \text{E(RI)}}$$
 
-- ARI=RI normalisé
+- $\text{ARI}$ = adjusted Rand Index = RI normalisé
+- $E(RI)$ = expected RI, espérance aléatoire (en assignant les groupes au hasard)
 - Prend en compte la taille des classes
-- ARI=1 pour classification identique
-- ARI $\simeq$ 0 pour classification aléatoire (peut être <0)
-- Adapté pour nombre de classe différent entre les deux classifications
-et taille de classe différente
+- $\text{ARI}= 1$ pour classification identique
+- $\text{ARI} \simeq  0$ pour classification aléatoire (peut être <0)
+- Adapté même si les nombres de classes diffèrent entre les deux classifications
+- Adapé à des tailles de classes différentes
 
 
-# Comparaison de clustering: Rand Index
-
-Mesure de similarité entre deux clustering
-
-à partir du nombre de fois que les classifications sont d'accord
-
-$$R=\frac{m+s}{t}$$
-
-- m = nombre de paires dans la même classe dans les deux classifications
-- s = nombre de paires séparées dans les deux classifications
-- t = nombre de paires totales
-
-# Comparaison de clustering: Adjusted Rand Index
-
-$$ ARI=\frac{RI-Expected RI}{Max RI -Expected RI}$$
-
-- ARI=RI normalisé
-- Prend en compte la taille des classes
-- ARI=1 pour classification identique
-- ARI $\simeq$ 0 pour classification aléatoire (peut être <0)
-- Adapté pour nombre de classe différent entre les deux classifications
-et taille de classe différente
 
 # Comparaison des résultats des deux classifications
 
@@ -1033,14 +1037,6 @@ et taille de classe différente
 ```{r}
 ## Compute adjusted Rand index
 (ARI <- aricode::ARI(cluster.hclust5, cluster.kmeans3))
-```
-
-
----
-
-```{r session_info}
-## Print the complete list of libraries + versions used in this session
-sessionInfo()
 ```
 
 
@@ -1056,13 +1052,8 @@ biplot(prcomp(mes.iris, scale = TRUE), las = 1, cex = 0.7,
        main = "Données normalisées")
 ```
 
-*****
 
-# Cas d'étude : TCGA Breast Invasive Cancer (BIC)
-
-- Présentation du cas d'étude (Jacques van Helden A COMPLETER)
-
-# TP : analyse de données d'expression
+# Supplément : analyse de données d'expression 2019
 
 - TP clustering : 
 [[html](TP_clustering.html)]
@@ -1070,6 +1061,16 @@ biplot(prcomp(mes.iris, scale = TRUE), las = 1, cex = 0.7,
 [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/seance_4/TP_clustering.Rmd)]
 
 - Première partie : chargement des données
+
+
+---
+# R environment used for this analysis
+
+```{r session_info}
+## Print the complete list of libraries + versions used in this session
+sessionInfo()
+```
+
 
 ---
 
