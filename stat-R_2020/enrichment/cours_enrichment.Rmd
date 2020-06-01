@@ -68,6 +68,11 @@ for (pkg in packages) {
   }
 }
 
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("GSEABase")
+
 # library(formattable)
 
 options(width = 300)
@@ -176,14 +181,14 @@ VennDiagram::venn.diagram(
 
 # Practical - Annotating a group of differentially expressed genes (DEG)
 
-- organism: *Saccharomyces cerevisiae*
-- DEG: RNA-SEQ analysis of mutant strain bdf1-Y187F-Y354F during yeast sporulation
 - tool: g:GOSt from gProfiler <https://biit.cs.ut.ee/gprofiler/gost>
 - documentation: <https://biit.cs.ut.ee/gprofiler/page/docs>
 - Goal:
     - detect functions (biological process, pathways, regulation...) associated with the set of DEG
     - interpret the resuls
 - What about a negative control ?
+
+![gProfiler site](images/gProfiler_site.png)
 
 # Practical - DEG
 
@@ -193,7 +198,7 @@ VennDiagram::venn.diagram(
 
 - The aim of this study is to compare NGS-derived yeast transcriptome profiling (RNA-seq) of wild-type and bdf1-Y187F-Y354F mutant strains after sporulation induction (time points: 0h 4h and 8h)
 
-- design: *S. cerevisiae* wild-type and bdf1-Y187F-Y354F mutant strains were collected 0h, 4h and 8h after sporulation induction in triplicates. mRNA were purifired, prepared and sequenced using Illumina HiSeq 2000 sequencer
+- design: *S. cerevisiae* wild-type and bdf1-Y187F-Y354F mutant strains were collected 0h, 4h and 8h after sporulation induction in triplicates. mRNA were purified, prepared and sequenced using Illumina HiSeq 2000 sequencer
 
 - WT vs mutant at 0h: [bdf1_Y187F_Y354F_mutant_0__vs__Wild_type_0_DESeq2_positive_geneIDs.txt](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2019/seance_5/results/bdf1_Y187F_Y354F_mutant_0__vs__Wild_type_0_DESeq2_positive_geneIDs.txt)
 
@@ -201,15 +206,30 @@ VennDiagram::venn.diagram(
 
 # Practical - Results
 
-Screenshots ?
+- t0:
+
+![gProfiler t0](images/gProfiler_results_t0.png)
+
+- t4:
+
+![gProfiler t0](images/gProfiler_results_t4.png)
+
+# Practical - detailled results t0
+
+![gProfiler t0](images/gProfiler_detailled_results_t0_all.png)
+
+# Practical - detailled results t4
+
+![gProfiler t0](images/gProfiler_detailled_results_t4_all.png)
 
 # Gene Set Enrichment Analysis
 
 - GSEA
+- Broad Institute
 - since 2006
 - determines whether an a priori defined set of genes shows statistically significant, concordant differences between two biological states
 - <http://software.broadinstitute.org/gsea/index.jsp>
-- MSigDB (The Molecular Signatures Database) : collection of annotated gene sets
+- MSigDB (The Molecular Signatures Database) : collection of annotated gene sets (https://www.gsea-msigdb.org/gsea/msigdb/index.jsp)
 - R package : <https://bioconductor.org/packages/release/bioc/html/GSEABase.html>
 
 ![GSEA](images/GSEA-homegraphic.gif)
@@ -227,5 +247,4 @@ Screenshots ?
 ![GSEA screenshot](images/GSEA_screenshot_1.png)
 
 # Practical
-
 
