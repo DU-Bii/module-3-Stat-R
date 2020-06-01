@@ -115,6 +115,12 @@ options(scipen = 12)
 ```
 
 
+```{r data_folder, include=FALSE}
+## A trick : we define data folder here but explain it later
+#data.folder <- "~/TCGA_import/data/BIC/" # Just for preparation
+data.folder <- "/shared/projects/du_bii_2019/data/module3/seance4/BIC/" # on the IFB-cluster-core
+
+```
 
 
 
@@ -160,7 +166,6 @@ Si noous désirons reproduire les analyses sur une autre machine, eci nous perme
 
 ```{r data_folder_ifb, eval=FALSE}
 ## Location of the shared folder on the current install
-#data.folder <- "~/TCGA_import/data/BIC/" # Just for preparation
 data.folder <- "/shared/projects/du_bii_2019/data/module3/seance4/BIC/" # on the IFB-cluster-core
 ```
 
@@ -180,7 +185,7 @@ Astuces:
 
 
 ```{r list_data_files}
-wak# Return file sizes (in bytes)
+# Return file sizes (in bytes)
 message("Listing files in data folder: ", data.folder)
 
 data.files <- list.files(path = data.folder) # List the data files
