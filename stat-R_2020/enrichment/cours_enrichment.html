@@ -7,7 +7,7 @@
   <meta http-equiv="Content-Style-Type" content="text/css" />
   <meta name="generator" content="pandoc" />
   <meta name="author" content="Jacques van Helden &amp; Olivier Sand" />
-  <meta name="date" content="2020-05-31" />
+  <meta name="date" content="2020-06-01" />
   <title>Statistics with R</title>
   <style type="text/css">code{white-space: pre;}</style>
   <script src="cours_enrichment_files/jquery-1.11.3/jquery.min.js"></script>
@@ -27,7 +27,7 @@
   <p class="author">
 Jacques van Helden &amp; Olivier Sand
   </p>
-  <p class="date">2020-05-31</p>
+  <p class="date">2020-06-01</p>
 </div>
 <div id="two-main-approches" class="slide section level1">
 <h1>Two main approches</h1>
@@ -164,8 +164,6 @@ Jacques van Helden &amp; Olivier Sand
 <div id="practical---annotating-a-group-of-differentially-expressed-genes-deg" class="slide section level1">
 <h1>Practical - Annotating a group of differentially expressed genes (DEG)</h1>
 <ul>
-<li>organism: <em>Saccharomyces cerevisiae</em></li>
-<li>DEG: RNA-SEQ analysis of mutant strain bdf1-Y187F-Y354F during yeast sporulation</li>
 <li>tool: g:GOSt from gProfiler <a href="https://biit.cs.ut.ee/gprofiler/gost" class="uri">https://biit.cs.ut.ee/gprofiler/gost</a></li>
 <li>documentation: <a href="https://biit.cs.ut.ee/gprofiler/page/docs" class="uri">https://biit.cs.ut.ee/gprofiler/page/docs</a></li>
 <li>Goal:
@@ -175,6 +173,7 @@ Jacques van Helden &amp; Olivier Sand
 </ul></li>
 <li>What about a negative control ?</li>
 </ul>
+<p><img src="images/gProfiler_site.png" alt="gProfiler site" /></p>
 </div>
 <div id="practical---deg" class="slide section level1">
 <h1>Practical - DEG</h1>
@@ -182,7 +181,7 @@ Jacques van Helden &amp; Olivier Sand
 <li><p>Organism: <em>Saccharomyces cerevisiae</em></p></li>
 <li><p>Data source: <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE89530" class="uri">https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE89530</a></p></li>
 <li><p>The aim of this study is to compare NGS-derived yeast transcriptome profiling (RNA-seq) of wild-type and bdf1-Y187F-Y354F mutant strains after sporulation induction (time points: 0h 4h and 8h)</p></li>
-<li><p>design: <em>S. cerevisiae</em> wild-type and bdf1-Y187F-Y354F mutant strains were collected 0h, 4h and 8h after sporulation induction in triplicates. mRNA were purifired, prepared and sequenced using Illumina HiSeq 2000 sequencer</p></li>
+<li><p>design: <em>S. cerevisiae</em> wild-type and bdf1-Y187F-Y354F mutant strains were collected 0h, 4h and 8h after sporulation induction in triplicates. mRNA were purified, prepared and sequenced using Illumina HiSeq 2000 sequencer</p></li>
 <li><p>WT vs mutant at 0h: <a href="https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2019/seance_5/results/bdf1_Y187F_Y354F_mutant_0__vs__Wild_type_0_DESeq2_positive_geneIDs.txt">bdf1_Y187F_Y354F_mutant_0__vs__Wild_type_0_DESeq2_positive_geneIDs.txt</a></p></li>
 <li><p>WT vs mutant at 4h: <a href="https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2019/seance_5/results/bdf1_Y187F_Y354F_mutant_4__vs__Wild_type_4_DESeq2_positive_geneIDs.txt">bdf1_Y187F_Y354F_mutant_4__vs__Wild_type_4_DESeq2_positive_geneIDs.txt</a></p></li>
 </ul>

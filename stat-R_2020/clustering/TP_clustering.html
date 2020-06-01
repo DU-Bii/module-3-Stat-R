@@ -1,18 +1,17 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 <meta name="author" content="Anne Badel, Frederic Guyon &amp; Jacques van Helden" />
 
-<meta name="date" content="2020-03-12" />
+<meta name="date" content="2020-06-01" />
 
 <title>TP de la séance 4, Clustering</title>
 
@@ -233,6 +232,7 @@ summary {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -264,6 +264,12 @@ summary {
 }
 }
 
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
 
 .toc-content {
   padding-left: 30px;
@@ -345,27 +351,46 @@ div.tocify {
 <h1 class="title toc-ignore">TP de la séance 4, Clustering</h1>
 <h3 class="subtitle">Diplôme Interuniversitaire en Bioinformatique intégrative (DU-Bii 2019)</h3>
 <h4 class="author">Anne Badel, Frederic Guyon &amp; Jacques van Helden</h4>
-<h4 class="date">2020-03-12</h4>
+<h4 class="date">2020-06-01</h4>
 
 </div>
 
 
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co">## Location of the shared folder on the current install</span></a>
-<a class="sourceLine" id="cb1-2" data-line-number="2">data.folder &lt;-<span class="st"> &quot;~/TCGA_import/data/BIC/&quot;</span> <span class="co"># Just for preparation</span></a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="co">#data.folder &lt;- &quot;/shared/projects/du_bii_2019/data/module3/seance4/BIC/&quot; # on the IFB-cluster-core</span></a></code></pre></div>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co">## Load libraries</span></a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw">message</span>(<span class="st">&quot;Loading libraries&quot;</span>)</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="kw">library</span>(knitr)</a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co">#library(kableExtra) ## Note: kableExtra has some side effect on kable: column padding is null, so all numbers seem to be mixed up</span></a>
-<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="kw">library</span>(FactoMineR)</a>
-<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="kw">library</span>(clues)</a>
-<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="kw">library</span>(RColorBrewer)</a>
-<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="kw">library</span>(ComplexHeatmap)</a>
-<a class="sourceLine" id="cb2-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb2-10" data-line-number="10"><span class="co"># library(corrplot)</span></a>
-<a class="sourceLine" id="cb2-11" data-line-number="11"><span class="kw">library</span>(FactoMineR)</a>
-<a class="sourceLine" id="cb2-12" data-line-number="12"><span class="kw">library</span>(ClassDiscovery)</a>
-<a class="sourceLine" id="cb2-13" data-line-number="13"><span class="co"># library(formattable)</span></a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co">## Install required packages</span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">packages &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;ClassDiscovery&quot;</span>, </a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">              <span class="st">&quot;clues&quot;</span>, </a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">              <span class="st">&quot;ComplexHeatmap&quot;</span>,</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">              <span class="st">&quot;FactoMineR&quot;</span>,</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6">              <span class="st">&quot;RColorBrewer&quot;</span>)</a>
+<a class="sourceLine" id="cb1-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="kw">message</span>(<span class="st">&quot;Loading libraries &quot;</span>, <span class="kw">paste</span>(<span class="dt">collapse =</span> <span class="st">&quot;, &quot;</span>, packages))</a></code></pre></div>
+<pre><code>## Loading libraries ClassDiscovery, clues, ComplexHeatmap, FactoMineR, RColorBrewer</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="cf">for</span> (pkg <span class="cf">in</span> packages) {</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">  <span class="cf">if</span> (<span class="op">!</span><span class="kw">require</span>(pkg, <span class="dt">character.only =</span> <span class="ot">TRUE</span>)) {</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">    <span class="kw">install.packages</span>(pkg)</a>
+<a class="sourceLine" id="cb3-4" data-line-number="4">    <span class="kw">require</span>(pkg, <span class="dt">character.only =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb3-5" data-line-number="5">  }</a>
+<a class="sourceLine" id="cb3-6" data-line-number="6">}</a></code></pre></div>
+<pre><code>## Loading required package: ClassDiscovery</code></pre>
+<pre><code>## Loading required package: cluster</code></pre>
+<pre><code>## Loading required package: oompaBase</code></pre>
+<pre><code>## Loading required package: clues</code></pre>
+<pre><code>## Loading required package: ComplexHeatmap</code></pre>
+<pre><code>## Loading required package: grid</code></pre>
+<pre><code>## ========================================
+## ComplexHeatmap version 2.2.0
+## Bioconductor page: http://bioconductor.org/packages/ComplexHeatmap/
+## Github page: https://github.com/jokergoo/ComplexHeatmap
+## Documentation: http://jokergoo.github.io/ComplexHeatmap-reference
+## 
+## If you use it in published research, please cite:
+## Gu, Z. Complex heatmaps reveal patterns and correlations in multidimensional 
+##   genomic data. Bioinformatics 2016.
+## ========================================</code></pre>
+<pre><code>## Loading required package: FactoMineR</code></pre>
+<pre><code>## Loading required package: RColorBrewer</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw">library</span>(knitr)</a>
+<a class="sourceLine" id="cb13-2" data-line-number="2"><span class="co">#library(kableExtra) ## Note: kableExtra has some side effect on kable: column padding is null, so all numbers seem to be mixed up</span></a></code></pre></div>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
 <div id="but-de-ce-tp" class="section level3">
@@ -391,10 +416,13 @@ div.tocify {
 </div>
 <div id="dossier-partagé-contenant-les-données" class="section level2">
 <h2>Dossier partagé contenant les données</h2>
-<p>Les données sont dans un répertoire partagé <code>/shared/projects/du_bii_2019/data/module3/seance4/BIC/</code>.</p>
-<p>Nous allons définir une variable <code>data.folder</code> qui indiquera le chemin de ce dossier partagé, en fonction du serveur.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="co">## Liste des fichiers de données</span></a>
-<a class="sourceLine" id="cb3-2" data-line-number="2">data.folder &lt;-<span class="st"> &quot;/shared/projects/du_bii_2019/data/module3/seance4/BIC/&quot;</span></a></code></pre></div>
+<p>Pour les cours du DUBii, les données sont dans un répertoire partagé</p>
+<ul>
+<li><code>/shared/projects/du_bii_2019/data/module3/seance4/BIC/</code></li>
+</ul>
+<p>Nous définissons ci-dessous une variable <code>data.folder</code> qui indique le chemin de ce dossier partagé. Si noous désirons reproduire les analyses sur une autre machine, eci nous permettra de facilement modifier le chemin en fonction de la configuration locale.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="co">## Location of the shared folder on the current install</span></a>
+<a class="sourceLine" id="cb14-2" data-line-number="2">data.folder &lt;-<span class="st"> &quot;/shared/projects/du_bii_2019/data/module3/seance4/BIC/&quot;</span> <span class="co"># on the IFB-cluster-core</span></a></code></pre></div>
 </div>
 <div id="contenu-du-dossier-de-données" class="section level2">
 <h2>Contenu du dossier de données</h2>
@@ -409,28 +437,28 @@ div.tocify {
 <li>Calculez la taille des fichiers en bytes et en Megabytes (<span class="math inline">\(1Mb = 1024 \cot 1024 \cdot b\)</span>), sachant que pour chaque conversion il faut diviser par 1024.</li>
 <li>Vous pouvez consulter notre solution à l’aide du code suivant (cliquer sur <strong><em>Code</em></strong> pour l’afficher).</li>
 </ul>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co"># Return file sizes (in bytes)</span></a>
-<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw">message</span>(<span class="st">&quot;Listing files in data folder: &quot;</span>, data.folder)</a>
-<a class="sourceLine" id="cb4-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb4-4" data-line-number="4">data.files &lt;-<span class="st"> </span><span class="kw">list.files</span>(<span class="dt">path =</span> data.folder) <span class="co"># List the data files</span></a>
-<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="kw">print</span>(data.files)</a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="co"># Return file sizes (in bytes)</span></a>
+<a class="sourceLine" id="cb15-2" data-line-number="2"><span class="kw">message</span>(<span class="st">&quot;Listing files in data folder: &quot;</span>, data.folder)</a>
+<a class="sourceLine" id="cb15-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb15-4" data-line-number="4">data.files &lt;-<span class="st"> </span><span class="kw">list.files</span>(<span class="dt">path =</span> data.folder) <span class="co"># List the data files</span></a>
+<a class="sourceLine" id="cb15-5" data-line-number="5"><span class="kw">print</span>(data.files)</a></code></pre></div>
 <pre><code> [1] &quot;BIC_counts_all-genes.tsv.gz&quot;                    &quot;BIC_counts_filtered-genes.tsv.gz&quot;               &quot;BIC_edgeR_DEG_table.tsv&quot;                        &quot;BIC_edgeR_DEG_table.tsv.gz&quot;                     &quot;BIC_log2-norm-counts_all-genes.tsv.gz&quot;          &quot;BIC_log2-norm-counts_edgeR_DEG_fdr_0.01.tsv&quot;   
  [7] &quot;BIC_log2-norm-counts_edgeR_DEG_fdr_0.01.tsv.gz&quot; &quot;BIC_log2-norm-counts_edgeR_DEG_top_1000.tsv.gz&quot; &quot;BIC_log2-norm-counts_filtered-genes.tsv&quot;        &quot;BIC_log2-norm-counts_filtered-genes.tsv.gz&quot;     &quot;BIC_pheno.tsv.gz&quot;                               &quot;BIC_sample-classes.tsv.gz&quot;                     </code></pre>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="co">## Full path</span></a>
-<a class="sourceLine" id="cb6-2" data-line-number="2">data.path &lt;-<span class="st"> </span><span class="kw">list.files</span>(<span class="dt">path =</span> data.folder, <span class="dt">full.names =</span> <span class="ot">TRUE</span>) <span class="co"># List the data files</span></a>
-<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="kw">print</span>(data.files)</a></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="co">## Full path</span></a>
+<a class="sourceLine" id="cb17-2" data-line-number="2">data.path &lt;-<span class="st"> </span><span class="kw">list.files</span>(<span class="dt">path =</span> data.folder, <span class="dt">full.names =</span> <span class="ot">TRUE</span>) <span class="co"># List the data files</span></a>
+<a class="sourceLine" id="cb17-3" data-line-number="3"><span class="kw">print</span>(data.files)</a></code></pre></div>
 <pre><code> [1] &quot;BIC_counts_all-genes.tsv.gz&quot;                    &quot;BIC_counts_filtered-genes.tsv.gz&quot;               &quot;BIC_edgeR_DEG_table.tsv&quot;                        &quot;BIC_edgeR_DEG_table.tsv.gz&quot;                     &quot;BIC_log2-norm-counts_all-genes.tsv.gz&quot;          &quot;BIC_log2-norm-counts_edgeR_DEG_fdr_0.01.tsv&quot;   
  [7] &quot;BIC_log2-norm-counts_edgeR_DEG_fdr_0.01.tsv.gz&quot; &quot;BIC_log2-norm-counts_edgeR_DEG_top_1000.tsv.gz&quot; &quot;BIC_log2-norm-counts_filtered-genes.tsv&quot;        &quot;BIC_log2-norm-counts_filtered-genes.tsv.gz&quot;     &quot;BIC_pheno.tsv.gz&quot;                               &quot;BIC_sample-classes.tsv.gz&quot;                     </code></pre>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">data.file.sizes &lt;-<span class="st"> </span><span class="kw">file.size</span>(data.path) <span class="co"># Get the size of the data files, in bytes</span></a>
-<a class="sourceLine" id="cb8-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="co">## Add file names </span></a>
-<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="co">## (for some strange reason, file.size returns a vector</span></a>
-<a class="sourceLine" id="cb8-5" data-line-number="5"><span class="co">## with no names, which is not very convenient)</span></a>
-<a class="sourceLine" id="cb8-6" data-line-number="6"><span class="kw">names</span>(data.file.sizes) &lt;-<span class="st"> </span>data.files</a>
-<a class="sourceLine" id="cb8-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb8-8" data-line-number="8"><span class="co">## Compute file sizes in megabytes</span></a>
-<a class="sourceLine" id="cb8-9" data-line-number="9">data.file.Mb &lt;-<span class="st"> </span><span class="kw">signif</span>(<span class="dt">digits =</span> <span class="dv">2</span>, data.file.sizes <span class="op">/</span><span class="st"> </span>(<span class="dv">1024</span><span class="op">^</span><span class="dv">2</span>))</a>
-<a class="sourceLine" id="cb8-10" data-line-number="10"><span class="kw">kable</span>(<span class="kw">data.frame</span>(data.file.Mb))</a></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1">data.file.sizes &lt;-<span class="st"> </span><span class="kw">file.size</span>(data.path) <span class="co"># Get the size of the data files, in bytes</span></a>
+<a class="sourceLine" id="cb19-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb19-3" data-line-number="3"><span class="co">## Add file names </span></a>
+<a class="sourceLine" id="cb19-4" data-line-number="4"><span class="co">## (for some strange reason, file.size returns a vector</span></a>
+<a class="sourceLine" id="cb19-5" data-line-number="5"><span class="co">## with no names, which is not very convenient)</span></a>
+<a class="sourceLine" id="cb19-6" data-line-number="6"><span class="kw">names</span>(data.file.sizes) &lt;-<span class="st"> </span>data.files</a>
+<a class="sourceLine" id="cb19-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb19-8" data-line-number="8"><span class="co">## Compute file sizes in megabytes</span></a>
+<a class="sourceLine" id="cb19-9" data-line-number="9">data.file.Mb &lt;-<span class="st"> </span><span class="kw">signif</span>(<span class="dt">digits =</span> <span class="dv">2</span>, data.file.sizes <span class="op">/</span><span class="st"> </span>(<span class="dv">1024</span><span class="op">^</span><span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb19-10" data-line-number="10"><span class="kw">kable</span>(<span class="kw">data.frame</span>(data.file.Mb))</a></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -453,11 +481,11 @@ div.tocify {
 </tr>
 <tr class="even">
 <td>BIC_edgeR_DEG_table.tsv.gz</td>
-<td align="right">1.700</td>
+<td align="right">1.600</td>
 </tr>
 <tr class="odd">
 <td>BIC_log2-norm-counts_all-genes.tsv.gz</td>
-<td align="right">120.000</td>
+<td align="right">59.000</td>
 </tr>
 <tr class="even">
 <td>BIC_log2-norm-counts_edgeR_DEG_fdr_0.01.tsv</td>
@@ -465,7 +493,7 @@ div.tocify {
 </tr>
 <tr class="odd">
 <td>BIC_log2-norm-counts_edgeR_DEG_fdr_0.01.tsv.gz</td>
-<td align="right">85.000</td>
+<td align="right">62.000</td>
 </tr>
 <tr class="even">
 <td>BIC_log2-norm-counts_edgeR_DEG_top_1000.tsv.gz</td>
@@ -477,7 +505,7 @@ div.tocify {
 </tr>
 <tr class="even">
 <td>BIC_log2-norm-counts_filtered-genes.tsv.gz</td>
-<td align="right">120.000</td>
+<td align="right">62.000</td>
 </tr>
 <tr class="odd">
 <td>BIC_pheno.tsv.gz</td>
@@ -494,13 +522,13 @@ div.tocify {
 <h2>Lire le tableau de valeurs d’expression</h2>
 <p>Nous allons maintenant lire le fichier d’expression. Pour cela, nous concaténons le chemin du dossier de données et le nom du fichier d’expressiion (<code>BIC_log2-norm-counts_edgeR_DEG_top_1000.tsv.gz</code>).</p>
 <p>Ce fichier contient le comptages de lectures RNA-seq par gène, avec une sélection des gènes déclarés positifs pour le test de comparaison de moyennes multiples (voir-ci-dessus). Par ailleurs, nous avons arbitrairement appliqué un seuil supplémentaire en n’exportant que les 1000 gènes les plus significatifs, pour éviter de passer trop de temps sur le clustering hiérachique (complexité quadratique).</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="co"># Define the path of the expression file, by concatenating the data folder and the file name</span></a>
-<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="co"># Note that file.path is convenient because it automatically used the appropriate parameter to separate the elements of a path (/ on Unix, \\ on Windows)</span></a>
-<a class="sourceLine" id="cb9-3" data-line-number="3">BIC.expr.file &lt;-<span class="st"> </span><span class="kw">file.path</span>(data.folder, <span class="st">&quot;BIC_log2-norm-counts_edgeR_DEG_top_1000.tsv.gz&quot;</span>)</a>
-<a class="sourceLine" id="cb9-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb9-5" data-line-number="5"><span class="co"># Load expression</span></a>
-<a class="sourceLine" id="cb9-6" data-line-number="6"><span class="kw">message</span>(<span class="st">&quot;Loading expression file</span><span class="ch">\t</span><span class="st">&quot;</span>, BIC.expr.file)</a>
-<a class="sourceLine" id="cb9-7" data-line-number="7">BIC.expr &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="dt">file =</span> BIC.expr.file, <span class="dt">header =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="co"># Define the path of the expression file, by concatenating the data folder and the file name</span></a>
+<a class="sourceLine" id="cb20-2" data-line-number="2"><span class="co"># Note that file.path is convenient because it automatically used the appropriate parameter to separate the elements of a path (/ on Unix, \\ on Windows)</span></a>
+<a class="sourceLine" id="cb20-3" data-line-number="3">BIC.expr.file &lt;-<span class="st"> </span><span class="kw">file.path</span>(data.folder, <span class="st">&quot;BIC_log2-norm-counts_edgeR_DEG_top_1000.tsv.gz&quot;</span>)</a>
+<a class="sourceLine" id="cb20-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb20-5" data-line-number="5"><span class="co"># Load expression</span></a>
+<a class="sourceLine" id="cb20-6" data-line-number="6"><span class="kw">message</span>(<span class="st">&quot;Loading expression file</span><span class="ch">\t</span><span class="st">&quot;</span>, BIC.expr.file)</a>
+<a class="sourceLine" id="cb20-7" data-line-number="7">BIC.expr &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="dt">file =</span> BIC.expr.file, <span class="dt">header =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 </div>
 <div id="mesure-de-la-taille-des-données" class="section level2">
 <h2>Mesure de la taille des données</h2>
@@ -519,27 +547,27 @@ div.tocify {
 <p>Cette convention a été établie en 1997, lors des toutes premières publications sur le transcriptome de la levure. Dans ces études, l’objet d’intérêt (l’“éindividu”) était le gène, et les variables étaient ses mesures d’expression dans les différentes conditions testées.</p>
 <p>Pour l’anlayse de tissus cancéreux, on considère au contraire que l’“objet” d’intérêt est l’échantillon prélevé sur le patient, et les variables sont les mesures d’expression des différents gènes chez un patient.</p>
 <p>Ce qui implique de faire attention, et éventuellement de travailler sur la matrice transposée (fonction <code>t()</code> en R) pour utiliser correctement les fonctions classiques.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="co">## Les données d&#39;expression</span></a>
-<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="kw">dim</span>(BIC.expr)</a></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="co">## Les données d&#39;expression</span></a>
+<a class="sourceLine" id="cb21-2" data-line-number="2"><span class="kw">dim</span>(BIC.expr)</a></code></pre></div>
 <pre><code>[1] 1000  819</code></pre>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="co">## Les noms des lignes correspondent à des gènes</span></a>
-<a class="sourceLine" id="cb12-2" data-line-number="2"><span class="kw">head</span>(<span class="kw">rownames</span>(BIC.expr))</a></code></pre></div>
-<pre><code>[1] &quot;ENSG00000001617.11&quot; &quot;ENSG00000002834.17&quot; &quot;ENSG00000003989.16&quot; &quot;ENSG00000004838.13&quot; &quot;ENSG00000005302.17&quot; &quot;ENSG00000006016.10&quot;</code></pre>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="co">## Les noms des colonnes correspondent à des échantillons</span></a>
-<a class="sourceLine" id="cb14-2" data-line-number="2"><span class="kw">head</span>(<span class="kw">colnames</span>(BIC.expr))</a></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="co">## Les noms des lignes correspondent à des gènes</span></a>
+<a class="sourceLine" id="cb23-2" data-line-number="2"><span class="kw">head</span>(<span class="kw">rownames</span>(BIC.expr))</a></code></pre></div>
+<pre><code>[1] &quot;ENSG00000000003.14&quot; &quot;ENSG00000000419.12&quot; &quot;ENSG00000000457.13&quot; &quot;ENSG00000000460.16&quot; &quot;ENSG00000000938.12&quot; &quot;ENSG00000000971.15&quot;</code></pre>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="co">## Les noms des colonnes correspondent à des échantillons</span></a>
+<a class="sourceLine" id="cb25-2" data-line-number="2"><span class="kw">head</span>(<span class="kw">colnames</span>(BIC.expr))</a></code></pre></div>
 <pre><code>[1] &quot;X1AB92ADA.637E.4A42.A39A.70CEEEA41AE3&quot; &quot;DA98A67C.F11F.41D3.8223.1161EBFF8B58&quot;  &quot;X06CCFD0F.7FB8.471E.B823.C7876582D6FC&quot; &quot;A33B2F42.6EC6.4FB2.8BE5.542407A0382E&quot;  &quot;D021A258.8713.4383.9DCA.45E2F54A0411&quot;  &quot;C705FA90.D9AA.4949.BACA.1C022A14CB03&quot; </code></pre>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="co">## transposons la table d&#39;expression</span></a>
-<a class="sourceLine" id="cb16-2" data-line-number="2"><span class="kw">message</span>(<span class="st">&quot;Transcribing expression matrix&quot;</span>)</a>
-<a class="sourceLine" id="cb16-3" data-line-number="3">BIC.expr.transposed &lt;-<span class="st"> </span><span class="kw">t</span>(BIC.expr)</a></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="co">## transposons la table d&#39;expression</span></a>
+<a class="sourceLine" id="cb27-2" data-line-number="2"><span class="kw">message</span>(<span class="st">&quot;Transcribing expression matrix&quot;</span>)</a>
+<a class="sourceLine" id="cb27-3" data-line-number="3">BIC.expr.transposed &lt;-<span class="st"> </span><span class="kw">t</span>(BIC.expr)</a></code></pre></div>
 </div>
 <div id="charger-les-étiquettes-de-classes-des-échantillons" class="section level2">
 <h2>Charger les étiquettes de classes des échantillons</h2>
 <p>Le fichier <code>BIC_sample-classes.tsv.gz</code>contient les étiquettes de classes des échantillons.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">BIC.sample.classes &lt;-<span class="st"> </span><span class="kw">read.table</span>(</a>
-<a class="sourceLine" id="cb17-2" data-line-number="2">  <span class="kw">file.path</span>(data.folder, <span class="st">&quot;BIC_sample-classes.tsv.gz&quot;</span>),</a>
-<a class="sourceLine" id="cb17-3" data-line-number="3">  <span class="dt">header =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb17-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb17-5" data-line-number="5"><span class="kw">kable</span>(BIC.sample.classes[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>,])</a></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1">BIC.sample.classes &lt;-<span class="st"> </span><span class="kw">read.table</span>(</a>
+<a class="sourceLine" id="cb28-2" data-line-number="2">  <span class="kw">file.path</span>(data.folder, <span class="st">&quot;BIC_sample-classes.tsv.gz&quot;</span>),</a>
+<a class="sourceLine" id="cb28-3" data-line-number="3">  <span class="dt">header =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb28-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb28-5" data-line-number="5"><span class="kw">kable</span>(BIC.sample.classes[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>,])</a></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -635,25 +663,25 @@ div.tocify {
 <li><p>La fonction R <code>table()</code> pour calculer le nombre d’échantillons de chaque type de cancer.</p></li>
 <li><p>La fonction R <code>table()</code> pour calculer une table de contiingence des marqueurs ER1 et PR1</p></li>
 </ul>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="kw">summary</span>(BIC.sample.classes)</a></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1"><span class="kw">summary</span>(BIC.sample.classes)</a></code></pre></div>
 <pre><code>       cancer.type        ER1            PR1            Her2    
  Basal.like  :131   Negative:184   Negative:267   Negative:631  
  HER2pos     : 41   Positive:635   Positive:552   Positive:188  
  Luminal.A   :422                                               
  Luminal.B   :118                                               
  Unclassified:107                                               </code></pre>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="kw">table</span>(BIC.sample.classes<span class="op">$</span>cancer.type)</a></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" data-line-number="1"><span class="kw">table</span>(BIC.sample.classes<span class="op">$</span>cancer.type)</a></code></pre></div>
 <pre><code>
   Basal.like      HER2pos    Luminal.A    Luminal.B Unclassified 
          131           41          422          118          107 </code></pre>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="kw">table</span>(BIC.sample.classes<span class="op">$</span>ER1, BIC.sample.classes<span class="op">$</span>PR1)</a></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" data-line-number="1"><span class="kw">table</span>(BIC.sample.classes<span class="op">$</span>ER1, BIC.sample.classes<span class="op">$</span>PR1)</a></code></pre></div>
 <pre><code>          
            Negative Positive
   Negative      172       12
   Positive       95      540</code></pre>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="kw">table</span>(BIC.sample.classes<span class="op">$</span>ER1, </a>
-<a class="sourceLine" id="cb24-2" data-line-number="2">      BIC.sample.classes<span class="op">$</span>PR1, </a>
-<a class="sourceLine" id="cb24-3" data-line-number="3">      BIC.sample.classes<span class="op">$</span>Her2)</a></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" data-line-number="1"><span class="kw">table</span>(BIC.sample.classes<span class="op">$</span>ER1, </a>
+<a class="sourceLine" id="cb35-2" data-line-number="2">      BIC.sample.classes<span class="op">$</span>PR1, </a>
+<a class="sourceLine" id="cb35-3" data-line-number="3">      BIC.sample.classes<span class="op">$</span>Her2)</a></code></pre></div>
 <pre><code>, ,  = Negative
 
           
@@ -671,34 +699,34 @@ div.tocify {
 <div id="projection-acp-des-échantillons" class="section level2">
 <h2>Projection ACP des échantillons</h2>
 <p>Nous allons réaliser une ACP sans mise à l’échelle.</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="co">## Transformation ACP</span></a>
-<a class="sourceLine" id="cb26-2" data-line-number="2">BIC.prcomp &lt;-<span class="st"> </span><span class="kw">prcomp</span>(BIC.expr.transposed, <span class="dt">center =</span> <span class="ot">FALSE</span>, <span class="dt">scale. =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb26-3" data-line-number="3"><span class="kw">names</span>(BIC.prcomp) <span class="co"># check the name of the fields of the PCA object</span></a></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" data-line-number="1"><span class="co">## Transformation ACP</span></a>
+<a class="sourceLine" id="cb37-2" data-line-number="2">BIC.prcomp &lt;-<span class="st"> </span><span class="kw">prcomp</span>(BIC.expr.transposed, <span class="dt">center =</span> <span class="ot">FALSE</span>, <span class="dt">scale. =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb37-3" data-line-number="3"><span class="kw">names</span>(BIC.prcomp) <span class="co"># check the name of the fields of the PCA object</span></a></code></pre></div>
 <pre><code>[1] &quot;sdev&quot;     &quot;rotation&quot; &quot;center&quot;   &quot;scale&quot;    &quot;x&quot;       </code></pre>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</a>
-<a class="sourceLine" id="cb28-2" data-line-number="2"><span class="co">## Plot de l&#39;écart-type sur les premières composantes</span></a>
-<a class="sourceLine" id="cb28-3" data-line-number="3"><span class="kw">barplot</span>(BIC.prcomp<span class="op">$</span>sdev[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>], <span class="dt">col =</span> <span class="st">&quot;#FFEEDD&quot;</span>,</a>
-<a class="sourceLine" id="cb28-4" data-line-number="4">        <span class="dt">main =</span> <span class="st">&quot;Standard deviation per PC&quot;</span>)</a>
-<a class="sourceLine" id="cb28-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb28-6" data-line-number="6"><span class="co">## Visualisation des données</span></a>
-<a class="sourceLine" id="cb28-7" data-line-number="7"><span class="kw">plot</span>(BIC.prcomp, <span class="dt">main =</span> <span class="st">&quot;Variance per PC&quot;</span>, <span class="dt">col=</span><span class="st">&quot;#BBDDFF&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" data-line-number="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb39-2" data-line-number="2"><span class="co">## Plot de l&#39;écart-type sur les premières composantes</span></a>
+<a class="sourceLine" id="cb39-3" data-line-number="3"><span class="kw">barplot</span>(BIC.prcomp<span class="op">$</span>sdev[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>], <span class="dt">col =</span> <span class="st">&quot;#FFEEDD&quot;</span>,</a>
+<a class="sourceLine" id="cb39-4" data-line-number="4">        <span class="dt">main =</span> <span class="st">&quot;Standard deviation per PC&quot;</span>)</a>
+<a class="sourceLine" id="cb39-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb39-6" data-line-number="6"><span class="co">## Visualisation des données</span></a>
+<a class="sourceLine" id="cb39-7" data-line-number="7"><span class="kw">plot</span>(BIC.prcomp, <span class="dt">main =</span> <span class="st">&quot;Variance per PC&quot;</span>, <span class="dt">col=</span><span class="st">&quot;#BBDDFF&quot;</span>)</a></code></pre></div>
 <p><img src="figures/TP_pca_var-1.png" width="80%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" data-line-number="1"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</a></code></pre></div>
 <p>Définissez une couleur pour chaque classe, et assignez à chaque échantillon la couleur correspondant à sa classe. Dessinez ensuite un nuage de points avec les coordonnées de chaque échantillon dans les 1ère et 2ème composantes (PC2 vs PC1)</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1"><span class="co"># Assign a color to each cancer type</span></a>
-<a class="sourceLine" id="cb30-2" data-line-number="2">classes &lt;-<span class="st"> </span><span class="kw">unique</span>(BIC.sample.classes<span class="op">$</span>cancer.type)</a>
-<a class="sourceLine" id="cb30-3" data-line-number="3">class.colors &lt;-<span class="st"> </span><span class="kw">rainbow</span>(<span class="dt">n =</span> <span class="kw">length</span>(classes))</a>
-<a class="sourceLine" id="cb30-4" data-line-number="4"><span class="kw">names</span>(class.colors) &lt;-<span class="st"> </span>classes</a>
-<a class="sourceLine" id="cb30-5" data-line-number="5"><span class="kw">data.frame</span>(class.colors)</a></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" data-line-number="1"><span class="co"># Assign a color to each cancer type</span></a>
+<a class="sourceLine" id="cb41-2" data-line-number="2">classes &lt;-<span class="st"> </span><span class="kw">unique</span>(BIC.sample.classes<span class="op">$</span>cancer.type)</a>
+<a class="sourceLine" id="cb41-3" data-line-number="3">class.colors &lt;-<span class="st"> </span><span class="kw">rainbow</span>(<span class="dt">n =</span> <span class="kw">length</span>(classes))</a>
+<a class="sourceLine" id="cb41-4" data-line-number="4"><span class="kw">names</span>(class.colors) &lt;-<span class="st"> </span>classes</a>
+<a class="sourceLine" id="cb41-5" data-line-number="5"><span class="kw">data.frame</span>(class.colors)</a></code></pre></div>
 <pre><code>             class.colors
 Luminal.A       #FF0000FF
 Unclassified    #CCFF00FF
 HER2pos         #00FF66FF
 Luminal.B       #0066FFFF
 Basal.like      #CC00FFFF</code></pre>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" data-line-number="1"><span class="co"># Associate a color to each sample accordinig to its cancer type</span></a>
-<a class="sourceLine" id="cb32-2" data-line-number="2">sample.colors &lt;-<span class="st"> </span>class.colors[BIC.sample.classes<span class="op">$</span>cancer.type]</a>
-<a class="sourceLine" id="cb32-3" data-line-number="3"><span class="kw">table</span>(BIC.sample.classes<span class="op">$</span>cancer.type, sample.colors)</a></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" data-line-number="1"><span class="co"># Associate a color to each sample accordinig to its cancer type</span></a>
+<a class="sourceLine" id="cb43-2" data-line-number="2">sample.colors &lt;-<span class="st"> </span>class.colors[BIC.sample.classes<span class="op">$</span>cancer.type]</a>
+<a class="sourceLine" id="cb43-3" data-line-number="3"><span class="kw">table</span>(BIC.sample.classes<span class="op">$</span>cancer.type, sample.colors)</a></code></pre></div>
 <pre><code>              sample.colors
                #0066FFFF #00FF66FF #CC00FFFF #CCFF00FF #FF0000FF
   Basal.like           0         0         0         0       131
@@ -717,49 +745,49 @@ Basal.like      #CC00FFFF</code></pre>
 <li><p>Lisez l’aide de la fonction <code>cor</code>, et utilisez cette fonction pour calculer la matrice de corrélation entre échantillons.</p></li>
 <li><p>transformation du corrélation de Spearman en une distance à l’aide de la transformation : <span class="math inline">\(d = 1 - r\)</span></p></li>
 </ol>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1"><span class="co">## Compute Spearman correlation coefficient</span></a>
-<a class="sourceLine" id="cb34-2" data-line-number="2">BIC.cor &lt;-<span class="st"> </span><span class="kw">cor</span>(BIC.expr, <span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>)</a>
-<a class="sourceLine" id="cb34-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb34-4" data-line-number="4"><span class="co"># Check the dimensions of the correlation matrix</span></a>
-<a class="sourceLine" id="cb34-5" data-line-number="5"><span class="co"># (should be N x N, where N is the number of samples)</span></a>
-<a class="sourceLine" id="cb34-6" data-line-number="6"><span class="kw">dim</span>(BIC.cor)</a></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" data-line-number="1"><span class="co">## Compute Spearman correlation coefficient</span></a>
+<a class="sourceLine" id="cb45-2" data-line-number="2">BIC.cor &lt;-<span class="st"> </span><span class="kw">cor</span>(BIC.expr, <span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>)</a>
+<a class="sourceLine" id="cb45-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb45-4" data-line-number="4"><span class="co"># Check the dimensions of the correlation matrix</span></a>
+<a class="sourceLine" id="cb45-5" data-line-number="5"><span class="co"># (should be N x N, where N is the number of samples)</span></a>
+<a class="sourceLine" id="cb45-6" data-line-number="6"><span class="kw">dim</span>(BIC.cor)</a></code></pre></div>
 <pre><code>[1] 819 819</code></pre>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1"><span class="co">## Derive a dissimilarity value from the corrrelation</span></a>
-<a class="sourceLine" id="cb36-2" data-line-number="2">BIC.dist &lt;-<span class="st"> </span><span class="kw">as.dist</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>BIC.cor)</a></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb47-1" data-line-number="1"><span class="co">## Derive a dissimilarity value from the corrrelation</span></a>
+<a class="sourceLine" id="cb47-2" data-line-number="2">BIC.dist &lt;-<span class="st"> </span><span class="kw">as.dist</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>BIC.cor)</a></code></pre></div>
 </div>
 <div id="hclust" class="section level3">
 <h3>hclust</h3>
 <p>Faites un premier clustering hiérarchique, avec le critère d’aggrégation par défaut (lisez l’aide de la fonction <code>hclust()</code> pour savoir quelle est ce critère par défaut).</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" data-line-number="1"><span class="co">## Run hierarchical clustering on the expression data</span></a>
-<a class="sourceLine" id="cb37-2" data-line-number="2"><span class="co">## (use default parameters)</span></a>
-<a class="sourceLine" id="cb37-3" data-line-number="3">BIC.hclust.complete &lt;-<span class="st"> </span><span class="kw">hclust</span>(BIC.dist)</a>
-<a class="sourceLine" id="cb37-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb37-5" data-line-number="5"><span class="co">## Plot the resulting tree</span></a>
-<a class="sourceLine" id="cb37-6" data-line-number="6"><span class="kw">plot</span>(BIC.hclust.complete, <span class="dt">labels =</span> F, <span class="dt">hang =</span> <span class="dv">-1</span>, <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="st">&quot;grey&quot;</span>,</a>
-<a class="sourceLine" id="cb37-7" data-line-number="7">     <span class="dt">main =</span> <span class="st">&quot;Spearman dissimilarity, complete linkage&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb48-1" data-line-number="1"><span class="co">## Run hierarchical clustering on the expression data</span></a>
+<a class="sourceLine" id="cb48-2" data-line-number="2"><span class="co">## (use default parameters)</span></a>
+<a class="sourceLine" id="cb48-3" data-line-number="3">BIC.hclust.complete &lt;-<span class="st"> </span><span class="kw">hclust</span>(BIC.dist)</a>
+<a class="sourceLine" id="cb48-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb48-5" data-line-number="5"><span class="co">## Plot the resulting tree</span></a>
+<a class="sourceLine" id="cb48-6" data-line-number="6"><span class="kw">plot</span>(BIC.hclust.complete, <span class="dt">labels =</span> F, <span class="dt">hang =</span> <span class="dv">-1</span>, <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="st">&quot;grey&quot;</span>,</a>
+<a class="sourceLine" id="cb48-7" data-line-number="7">     <span class="dt">main =</span> <span class="st">&quot;Spearman dissimilarity, complete linkage&quot;</span>)</a></code></pre></div>
 <p><img src="figures/TP_unnamed-chunk-5-1.png" width="480" style="display: block; margin: auto;" /></p>
 <ol start="2" style="list-style-type: decimal">
 <li>faire un deuxième clustering hiérarchique, avec le critère d’aggrégation de Ward</li>
 </ol>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" data-line-number="1"><span class="co">##  Run hierarchical clustering with Ward agglomeration</span></a>
-<a class="sourceLine" id="cb38-2" data-line-number="2">BIC.hclust.ward &lt;-<span class="st"> </span><span class="kw">hclust</span>(BIC.dist, <span class="dt">method =</span> <span class="st">&quot;ward.D2&quot;</span>)</a>
-<a class="sourceLine" id="cb38-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb38-4" data-line-number="4"><span class="co">## Plot the resulting tree</span></a>
-<a class="sourceLine" id="cb38-5" data-line-number="5"><span class="kw">plot</span>(BIC.hclust.ward, <span class="dt">labels =</span> F, <span class="dt">hang =</span> <span class="dv">-1</span>, <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="st">&quot;#88BB66&quot;</span>, </a>
-<a class="sourceLine" id="cb38-6" data-line-number="6">     <span class="dt">main =</span> <span class="st">&quot;Spearman dissimilarity, Ward linkage&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb49-1" data-line-number="1"><span class="co">##  Run hierarchical clustering with Ward agglomeration</span></a>
+<a class="sourceLine" id="cb49-2" data-line-number="2">BIC.hclust.ward &lt;-<span class="st"> </span><span class="kw">hclust</span>(BIC.dist, <span class="dt">method =</span> <span class="st">&quot;ward.D2&quot;</span>)</a>
+<a class="sourceLine" id="cb49-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb49-4" data-line-number="4"><span class="co">## Plot the resulting tree</span></a>
+<a class="sourceLine" id="cb49-5" data-line-number="5"><span class="kw">plot</span>(BIC.hclust.ward, <span class="dt">labels =</span> F, <span class="dt">hang =</span> <span class="dv">-1</span>, <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="st">&quot;#88BB66&quot;</span>, </a>
+<a class="sourceLine" id="cb49-6" data-line-number="6">     <span class="dt">main =</span> <span class="st">&quot;Spearman dissimilarity, Ward linkage&quot;</span>)</a></code></pre></div>
 <p><img src="figures/TP_unnamed-chunk-6-1.png" width="480" style="display: block; margin: auto;" /></p>
 <ol start="3" style="list-style-type: decimal">
 <li>Redessiner les arbres de ces deux résultats de clustering en colorant les échantillons selon la classe de cancer.</li>
 </ol>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" data-line-number="1">ClassDiscovery<span class="op">::</span><span class="kw">plotColoredClusters</span>(</a>
-<a class="sourceLine" id="cb39-2" data-line-number="2">  BIC.hclust.ward, </a>
-<a class="sourceLine" id="cb39-3" data-line-number="3">  <span class="dt">labs=</span>BIC.sample.classes<span class="op">$</span>cancer.type, <span class="dt">col =</span> <span class="st">&quot;grey&quot;</span>,</a>
-<a class="sourceLine" id="cb39-4" data-line-number="4">  <span class="dt">cols=</span>sample.colors, <span class="dt">cex=</span><span class="fl">0.2</span>)</a>
-<a class="sourceLine" id="cb39-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb39-6" data-line-number="6"><span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>,</a>
-<a class="sourceLine" id="cb39-7" data-line-number="7">       <span class="dt">legend=</span><span class="kw">sort</span>(classes), </a>
-<a class="sourceLine" id="cb39-8" data-line-number="8">       <span class="dt">col =</span> class.colors,</a>
-<a class="sourceLine" id="cb39-9" data-line-number="9">       <span class="dt">text.col =</span> class.colors, <span class="dt">cex=</span><span class="fl">0.9</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb50-1" data-line-number="1">ClassDiscovery<span class="op">::</span><span class="kw">plotColoredClusters</span>(</a>
+<a class="sourceLine" id="cb50-2" data-line-number="2">  BIC.hclust.ward, </a>
+<a class="sourceLine" id="cb50-3" data-line-number="3">  <span class="dt">labs=</span>BIC.sample.classes<span class="op">$</span>cancer.type, <span class="dt">col =</span> <span class="st">&quot;grey&quot;</span>,</a>
+<a class="sourceLine" id="cb50-4" data-line-number="4">  <span class="dt">cols=</span>sample.colors, <span class="dt">cex=</span><span class="fl">0.2</span>)</a>
+<a class="sourceLine" id="cb50-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb50-6" data-line-number="6"><span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>,</a>
+<a class="sourceLine" id="cb50-7" data-line-number="7">       <span class="dt">legend=</span><span class="kw">sort</span>(classes), </a>
+<a class="sourceLine" id="cb50-8" data-line-number="8">       <span class="dt">col =</span> class.colors,</a>
+<a class="sourceLine" id="cb50-9" data-line-number="9">       <span class="dt">text.col =</span> class.colors, <span class="dt">cex=</span><span class="fl">0.9</span>)</a></code></pre></div>
 <p><img src="figures/TP_tree_colored_labels-1.png" width="480" style="display: block; margin: auto;" /></p>
 <ol start="3" style="list-style-type: decimal">
 <li>Comparer les classifications obtenues avec les règles d’agglomératioin complète et Ward, respectivement, en étudiant l’impact du nombre de clusters.</li>
@@ -774,61 +802,61 @@ Basal.like      #CC00FFFF</code></pre>
 <p>La fonction R <code>heatmap()</code> permet de représenter à la fois les arbres produit par le clustering hiérarchique, et les profils d’expression.</p>
 <p>Par défaut, elle effectue simultanément un clustering hiérarchique sur les lignes et sur les colonnes, ce qui permet de distinguer non seulement les groupes d’échantillons biologiques, mais également ceux de gènes.</p>
 <p><strong>Attention:</strong> la fonction <code>heatmap()</code> effectue par défaut un clustering hiérarchique sur les lignes et colonnes de votre matrice d’expression.</p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" data-line-number="1"><span class="kw">heatmap</span>(<span class="kw">as.matrix</span>(BIC.expr), </a>
-<a class="sourceLine" id="cb40-2" data-line-number="2">        <span class="dt">distfun =</span> <span class="cf">function</span>(x) <span class="kw">as.dist</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">cor</span>(<span class="kw">t</span>(x), <span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>)), </a>
-<a class="sourceLine" id="cb40-3" data-line-number="3">        <span class="dt">hclustfun =</span> <span class="cf">function</span>(x) <span class="kw">hclust</span>(x, <span class="dt">method =</span> <span class="st">&quot;ward.D2&quot;</span>),</a>
-<a class="sourceLine" id="cb40-4" data-line-number="4">        <span class="dt">labRow =</span> <span class="ot">NA</span>, <span class="dt">labCol =</span> <span class="ot">NA</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb51-1" data-line-number="1"><span class="kw">heatmap</span>(<span class="kw">as.matrix</span>(BIC.expr), </a>
+<a class="sourceLine" id="cb51-2" data-line-number="2">        <span class="dt">distfun =</span> <span class="cf">function</span>(x) { <span class="kw">as.dist</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">cor</span>(<span class="kw">t</span>(x), <span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>)) }, </a>
+<a class="sourceLine" id="cb51-3" data-line-number="3">        <span class="dt">hclustfun =</span> <span class="cf">function</span>(x) <span class="kw">hclust</span>(x, <span class="dt">method =</span> <span class="st">&quot;ward.D2&quot;</span>),</a>
+<a class="sourceLine" id="cb51-4" data-line-number="4">        <span class="dt">labRow =</span> <span class="ot">NA</span>, <span class="dt">labCol =</span> <span class="ot">NA</span>)</a></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figures/TP_heatmap-1.png" alt="Heat map of the expression matrix clustered by genes (rows) and samples (columns)." width="80%" />
 <p class="caption">
 Heat map of the expression matrix clustered by genes (rows) and samples (columns).
 </p>
 </div>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" data-line-number="1"><span class="co"># Compute mean value per gene</span></a>
-<a class="sourceLine" id="cb41-2" data-line-number="2">gene.means &lt;-<span class="st"> </span><span class="kw">apply</span>(BIC.expr, <span class="dv">1</span>, mean)</a>
-<a class="sourceLine" id="cb41-3" data-line-number="3">gene.sd &lt;-<span class="st">  </span><span class="kw">apply</span>(BIC.expr, <span class="dv">1</span>, sd)</a>
-<a class="sourceLine" id="cb41-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb41-5" data-line-number="5"><span class="co"># Compute gene-wise centered expression values</span></a>
-<a class="sourceLine" id="cb41-6" data-line-number="6">BIC.expr.genes.centered &lt;-<span class="st"> </span>BIC.expr <span class="op">-</span><span class="st"> </span>gene.means</a>
-<a class="sourceLine" id="cb41-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb41-8" data-line-number="8"><span class="co"># Compute gene-wise centred + scaled expression values</span></a>
-<a class="sourceLine" id="cb41-9" data-line-number="9">BIC.expr.genes.standardized &lt;-<span class="st"> </span>BIC.expr.genes.centered <span class="op">/</span><span class="st"> </span>gene.sd</a>
-<a class="sourceLine" id="cb41-10" data-line-number="10"></a>
-<a class="sourceLine" id="cb41-11" data-line-number="11"><span class="kw">summary</span>(<span class="kw">unlist</span>(BIC.expr.genes.standardized))</a></code></pre></div>
-<pre><code>    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
--7.00569 -0.63658 -0.03651  0.00000  0.60201 12.86463 </code></pre>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" data-line-number="1"><span class="kw">hist</span>(<span class="kw">unlist</span>(BIC.expr.genes.standardized), <span class="dt">breaks =</span> <span class="dv">100</span>,</a>
-<a class="sourceLine" id="cb43-2" data-line-number="2">     <span class="dt">main =</span> <span class="st">&quot;Gene-wise standardized expression values&quot;</span>,</a>
-<a class="sourceLine" id="cb43-3" data-line-number="3">     <span class="dt">xlab =</span> <span class="st">&quot;z-score&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Number of measures&quot;</span>, </a>
-<a class="sourceLine" id="cb43-4" data-line-number="4">     <span class="dt">col =</span> <span class="st">&quot;#DDEEFF&quot;</span>, <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">7</span>,<span class="dv">7</span>))</a>
-<a class="sourceLine" id="cb43-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb43-6" data-line-number="6"><span class="co"># Draw a vertical grid</span></a>
-<a class="sourceLine" id="cb43-7" data-line-number="7"><span class="kw">abline</span>(<span class="dt">v =</span> <span class="dv">-7</span><span class="op">:</span><span class="dv">7</span>, <span class="dt">col =</span> <span class="st">&quot;#BBBBBB&quot;</span>, <span class="dt">lty =</span> <span class="st">&quot;dotted&quot;</span>)</a>
-<a class="sourceLine" id="cb43-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb43-9" data-line-number="9"><span class="co">#Mark center</span></a>
-<a class="sourceLine" id="cb43-10" data-line-number="10"><span class="kw">abline</span>(<span class="dt">v =</span> <span class="dv">0</span>, <span class="dt">col =</span> <span class="st">&quot;#008800&quot;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb43-11" data-line-number="11"></a>
-<a class="sourceLine" id="cb43-12" data-line-number="12"><span class="co"># Mark dispersion (mean +- 1 sdev)</span></a>
-<a class="sourceLine" id="cb43-13" data-line-number="13"><span class="kw">arrows</span>(<span class="dt">x0 =</span> <span class="dv">-1</span>, <span class="dt">y0 =</span> <span class="dv">50000</span>, <span class="dt">x1 =</span> <span class="dv">1</span>, <span class="dt">y1 =</span> <span class="dv">50000</span>, <span class="dt">length =</span> <span class="fl">0.05</span>, <span class="dt">angle =</span> <span class="dv">30</span>, <span class="dt">code =</span> <span class="dv">3</span>, <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">col =</span> <span class="st">&quot;#008800&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb52-1" data-line-number="1"><span class="co"># Compute mean value per gene</span></a>
+<a class="sourceLine" id="cb52-2" data-line-number="2">gene.means &lt;-<span class="st"> </span><span class="kw">apply</span>(BIC.expr, <span class="dv">1</span>, mean)</a>
+<a class="sourceLine" id="cb52-3" data-line-number="3">gene.sd &lt;-<span class="st">  </span><span class="kw">apply</span>(BIC.expr, <span class="dv">1</span>, sd)</a>
+<a class="sourceLine" id="cb52-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb52-5" data-line-number="5"><span class="co"># Compute gene-wise centered expression values</span></a>
+<a class="sourceLine" id="cb52-6" data-line-number="6">BIC.expr.genes.centered &lt;-<span class="st"> </span>BIC.expr <span class="op">-</span><span class="st"> </span>gene.means</a>
+<a class="sourceLine" id="cb52-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb52-8" data-line-number="8"><span class="co"># Compute gene-wise centred + scaled expression values</span></a>
+<a class="sourceLine" id="cb52-9" data-line-number="9">BIC.expr.genes.standardized &lt;-<span class="st"> </span>BIC.expr.genes.centered <span class="op">/</span><span class="st"> </span>gene.sd</a>
+<a class="sourceLine" id="cb52-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb52-11" data-line-number="11"><span class="kw">summary</span>(<span class="kw">unlist</span>(BIC.expr.genes.standardized))</a></code></pre></div>
+<pre><code>     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-8.969062 -0.622261 -0.001282  0.000000  0.618155  9.470421 </code></pre>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb54-1" data-line-number="1"><span class="kw">hist</span>(<span class="kw">unlist</span>(BIC.expr.genes.standardized), <span class="dt">breaks =</span> <span class="dv">100</span>,</a>
+<a class="sourceLine" id="cb54-2" data-line-number="2">     <span class="dt">main =</span> <span class="st">&quot;Gene-wise standardized expression values&quot;</span>,</a>
+<a class="sourceLine" id="cb54-3" data-line-number="3">     <span class="dt">xlab =</span> <span class="st">&quot;z-score&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Number of measures&quot;</span>, </a>
+<a class="sourceLine" id="cb54-4" data-line-number="4">     <span class="dt">col =</span> <span class="st">&quot;#DDEEFF&quot;</span>, <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">7</span>,<span class="dv">7</span>))</a>
+<a class="sourceLine" id="cb54-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb54-6" data-line-number="6"><span class="co"># Draw a vertical grid</span></a>
+<a class="sourceLine" id="cb54-7" data-line-number="7"><span class="kw">abline</span>(<span class="dt">v =</span> <span class="dv">-7</span><span class="op">:</span><span class="dv">7</span>, <span class="dt">col =</span> <span class="st">&quot;#BBBBBB&quot;</span>, <span class="dt">lty =</span> <span class="st">&quot;dotted&quot;</span>)</a>
+<a class="sourceLine" id="cb54-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb54-9" data-line-number="9"><span class="co">#Mark center</span></a>
+<a class="sourceLine" id="cb54-10" data-line-number="10"><span class="kw">abline</span>(<span class="dt">v =</span> <span class="dv">0</span>, <span class="dt">col =</span> <span class="st">&quot;#008800&quot;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb54-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb54-12" data-line-number="12"><span class="co"># Mark dispersion (mean +- 1 sdev)</span></a>
+<a class="sourceLine" id="cb54-13" data-line-number="13"><span class="kw">arrows</span>(<span class="dt">x0 =</span> <span class="dv">-1</span>, <span class="dt">y0 =</span> <span class="dv">50000</span>, <span class="dt">x1 =</span> <span class="dv">1</span>, <span class="dt">y1 =</span> <span class="dv">50000</span>, <span class="dt">length =</span> <span class="fl">0.05</span>, <span class="dt">angle =</span> <span class="dv">30</span>, <span class="dt">code =</span> <span class="dv">3</span>, <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">col =</span> <span class="st">&quot;#008800&quot;</span>)</a></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figures/TP_standardize_genes-1.png" alt="Histogram of expression values after gene-wise standardization (centering and scaling)." width="80%" />
 <p class="caption">
 Histogram of expression values after gene-wise standardization (centering and scaling).
 </p>
 </div>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb44-1" data-line-number="1"><span class="co">## define a Blue - White - Red palette</span></a>
-<a class="sourceLine" id="cb44-2" data-line-number="2">frenchflag.palette &lt;-<span class="st"> </span><span class="kw">colorRampPalette</span>(<span class="kw">c</span>(<span class="st">&#39;dark blue&#39;</span>,<span class="st">&#39;white&#39;</span>,<span class="st">&#39;dark red&#39;</span>))</a>
-<a class="sourceLine" id="cb44-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb44-4" data-line-number="4"><span class="co">## Define a green - black - red palette</span></a>
-<a class="sourceLine" id="cb44-5" data-line-number="5">GBR.palette &lt;-<span class="st"> </span><span class="kw">colorRampPalette</span>(<span class="kw">c</span>(<span class="st">&#39;green&#39;</span>,<span class="st">&#39;black&#39;</span>,<span class="st">&#39;red&#39;</span>))</a>
-<a class="sourceLine" id="cb44-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb44-7" data-line-number="7"><span class="kw">heatmap</span>(<span class="kw">as.matrix</span>(BIC.expr.genes.standardized),</a>
-<a class="sourceLine" id="cb44-8" data-line-number="8">        <span class="dt">zlim =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">4</span>,<span class="dv">4</span>),</a>
-<a class="sourceLine" id="cb44-9" data-line-number="9">        <span class="dt">distfun =</span> <span class="cf">function</span>(x) <span class="kw">as.dist</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">cor</span>(<span class="kw">t</span>(x), <span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>)), </a>
-<a class="sourceLine" id="cb44-10" data-line-number="10">        <span class="dt">hclustfun =</span> <span class="cf">function</span>(x) <span class="kw">hclust</span>(x, <span class="dt">method =</span> <span class="st">&quot;ward.D2&quot;</span>),</a>
-<a class="sourceLine" id="cb44-11" data-line-number="11">        <span class="dt">labRow =</span> <span class="ot">NA</span>, <span class="dt">labCol =</span> <span class="ot">NA</span>,  <span class="co"># DO not print the labels (unreadable anyway)</span></a>
-<a class="sourceLine" id="cb44-12" data-line-number="12">        <span class="dt">col =</span> <span class="kw">GBR.palette</span>(<span class="dv">100</span>),</a>
-<a class="sourceLine" id="cb44-13" data-line-number="13">        <span class="dt">scale =</span> <span class="st">&quot;none&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb55-1" data-line-number="1"><span class="co">## define a Blue - White - Red palette</span></a>
+<a class="sourceLine" id="cb55-2" data-line-number="2">frenchflag.palette &lt;-<span class="st"> </span><span class="kw">colorRampPalette</span>(<span class="kw">c</span>(<span class="st">&#39;dark blue&#39;</span>,<span class="st">&#39;white&#39;</span>,<span class="st">&#39;dark red&#39;</span>))</a>
+<a class="sourceLine" id="cb55-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb55-4" data-line-number="4"><span class="co">## Define a green - black - red palette</span></a>
+<a class="sourceLine" id="cb55-5" data-line-number="5">GBR.palette &lt;-<span class="st"> </span><span class="kw">colorRampPalette</span>(<span class="kw">c</span>(<span class="st">&#39;green&#39;</span>,<span class="st">&#39;black&#39;</span>,<span class="st">&#39;red&#39;</span>))</a>
+<a class="sourceLine" id="cb55-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb55-7" data-line-number="7"><span class="kw">heatmap</span>(<span class="kw">as.matrix</span>(BIC.expr.genes.standardized),</a>
+<a class="sourceLine" id="cb55-8" data-line-number="8">        <span class="dt">zlim =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">4</span>,<span class="dv">4</span>),</a>
+<a class="sourceLine" id="cb55-9" data-line-number="9">        <span class="dt">distfun =</span> <span class="cf">function</span>(x) <span class="kw">as.dist</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">cor</span>(<span class="kw">t</span>(x), <span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>)), </a>
+<a class="sourceLine" id="cb55-10" data-line-number="10">        <span class="dt">hclustfun =</span> <span class="cf">function</span>(x) <span class="kw">hclust</span>(x, <span class="dt">method =</span> <span class="st">&quot;ward.D2&quot;</span>),</a>
+<a class="sourceLine" id="cb55-11" data-line-number="11">        <span class="dt">labRow =</span> <span class="ot">NA</span>, <span class="dt">labCol =</span> <span class="ot">NA</span>,  <span class="co"># DO not print the labels (unreadable anyway)</span></a>
+<a class="sourceLine" id="cb55-12" data-line-number="12">        <span class="dt">col =</span> <span class="kw">GBR.palette</span>(<span class="dv">100</span>),</a>
+<a class="sourceLine" id="cb55-13" data-line-number="13">        <span class="dt">scale =</span> <span class="st">&quot;none&quot;</span>)</a></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figures/TP_heatmap_frenchflag_palette-1.png" alt="Heat map of the expression matrix clustered by genes (rows) and samples (columns)." width="80%" />
 <p class="caption">
@@ -839,70 +867,70 @@ Heat map of the expression matrix clustered by genes (rows) and samples (columns
 <div id="draw-a-tree-with-heatmap.2" class="section level3">
 <h3>Draw a tree with heatmap.2()</h3>
 <p>The function <code>heatmap.2()</code> is derived from <code>heatmap()</code> but offers nice additional formatting options.</p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" data-line-number="1"><span class="co"># Define a color for the heatmap</span></a>
-<a class="sourceLine" id="cb45-2" data-line-number="2">expr.colors &lt;-<span class="st"> </span><span class="kw">heat.colors</span>(<span class="dt">n =</span> <span class="dv">100</span>)</a>
-<a class="sourceLine" id="cb45-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb45-4" data-line-number="4"><span class="co"># Compute dendrogram with the hclust() function</span></a>
-<a class="sourceLine" id="cb45-5" data-line-number="5"><span class="co"># Choose a custom dissimilirity measure</span></a>
-<a class="sourceLine" id="cb45-6" data-line-number="6"><span class="co"># and agglomeration rule</span></a>
-<a class="sourceLine" id="cb45-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb45-8" data-line-number="8"><span class="co"># compute dissimilarity between samples</span></a>
-<a class="sourceLine" id="cb45-9" data-line-number="9">sample.dist &lt;-<span class="st"> </span><span class="kw">as.dist</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">cor</span>(BIC.expr, <span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>)) </a>
-<a class="sourceLine" id="cb45-10" data-line-number="10"></a>
-<a class="sourceLine" id="cb45-11" data-line-number="11"><span class="co"># Run hierarchical clustering on samples</span></a>
-<a class="sourceLine" id="cb45-12" data-line-number="12">sample.clust =<span class="st"> </span><span class="kw">hclust</span>(sample.dist, <span class="dt">method =</span> <span class="st">&quot;complete&quot;</span>)</a>
-<a class="sourceLine" id="cb45-13" data-line-number="13"></a>
-<a class="sourceLine" id="cb45-14" data-line-number="14"><span class="co"># Convert the clustering result in a tree object that can be used with plot() and / or heatmap()</span></a>
-<a class="sourceLine" id="cb45-15" data-line-number="15">sample.tree &lt;-<span class="st"> </span><span class="kw">as.dendrogram</span>(sample.clust)</a>
-<a class="sourceLine" id="cb45-16" data-line-number="16"></a>
-<a class="sourceLine" id="cb45-17" data-line-number="17"><span class="co"># Define colors for the cancer type</span></a>
-<a class="sourceLine" id="cb45-18" data-line-number="18">cancer.type &lt;-<span class="st"> </span><span class="kw">unique</span>(BIC.sample.classes<span class="op">$</span>cancer.type)</a>
-<a class="sourceLine" id="cb45-19" data-line-number="19">type.cancer.colors &lt;-<span class="st"> </span><span class="kw">rainbow</span>(<span class="dt">n =</span> <span class="kw">length</span>(cancer.type))</a>
-<a class="sourceLine" id="cb45-20" data-line-number="20"><span class="kw">names</span>(type.cancer.colors) &lt;-<span class="st"> </span>cancer.type</a>
-<a class="sourceLine" id="cb45-21" data-line-number="21"></a>
-<a class="sourceLine" id="cb45-22" data-line-number="22"><span class="co"># Define colors for ER1 marker</span></a>
-<a class="sourceLine" id="cb45-23" data-line-number="23">ER1.classes &lt;-<span class="st"> </span><span class="kw">unique</span>(BIC.sample.classes<span class="op">$</span>ER1)</a>
-<a class="sourceLine" id="cb45-24" data-line-number="24">ER1.colors &lt;-<span class="st"> </span><span class="kw">rainbow</span>(<span class="dt">n =</span> <span class="kw">length</span>(ER1.classes))</a>
-<a class="sourceLine" id="cb45-25" data-line-number="25"><span class="kw">names</span>(ER1.colors) &lt;-<span class="st"> </span>ER1.classes</a>
-<a class="sourceLine" id="cb45-26" data-line-number="26"><span class="kw">print</span>(ER1.colors)</a></code></pre></div>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" data-line-number="1"><span class="co"># Define a color for the heatmap</span></a>
+<a class="sourceLine" id="cb56-2" data-line-number="2">expr.colors &lt;-<span class="st"> </span><span class="kw">heat.colors</span>(<span class="dt">n =</span> <span class="dv">100</span>)</a>
+<a class="sourceLine" id="cb56-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb56-4" data-line-number="4"><span class="co"># Compute dendrogram with the hclust() function</span></a>
+<a class="sourceLine" id="cb56-5" data-line-number="5"><span class="co"># Choose a custom dissimilirity measure</span></a>
+<a class="sourceLine" id="cb56-6" data-line-number="6"><span class="co"># and agglomeration rule</span></a>
+<a class="sourceLine" id="cb56-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb56-8" data-line-number="8"><span class="co"># compute dissimilarity between samples</span></a>
+<a class="sourceLine" id="cb56-9" data-line-number="9">sample.dist &lt;-<span class="st"> </span><span class="kw">as.dist</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">cor</span>(BIC.expr, <span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>)) </a>
+<a class="sourceLine" id="cb56-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb56-11" data-line-number="11"><span class="co"># Run hierarchical clustering on samples</span></a>
+<a class="sourceLine" id="cb56-12" data-line-number="12">sample.clust =<span class="st"> </span><span class="kw">hclust</span>(sample.dist, <span class="dt">method =</span> <span class="st">&quot;complete&quot;</span>)</a>
+<a class="sourceLine" id="cb56-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb56-14" data-line-number="14"><span class="co"># Convert the clustering result in a tree object that can be used with plot() and / or heatmap()</span></a>
+<a class="sourceLine" id="cb56-15" data-line-number="15">sample.tree &lt;-<span class="st"> </span><span class="kw">as.dendrogram</span>(sample.clust)</a>
+<a class="sourceLine" id="cb56-16" data-line-number="16"></a>
+<a class="sourceLine" id="cb56-17" data-line-number="17"><span class="co"># Define colors for the cancer type</span></a>
+<a class="sourceLine" id="cb56-18" data-line-number="18">cancer.type &lt;-<span class="st"> </span><span class="kw">unique</span>(BIC.sample.classes<span class="op">$</span>cancer.type)</a>
+<a class="sourceLine" id="cb56-19" data-line-number="19">type.cancer.colors &lt;-<span class="st"> </span><span class="kw">rainbow</span>(<span class="dt">n =</span> <span class="kw">length</span>(cancer.type))</a>
+<a class="sourceLine" id="cb56-20" data-line-number="20"><span class="kw">names</span>(type.cancer.colors) &lt;-<span class="st"> </span>cancer.type</a>
+<a class="sourceLine" id="cb56-21" data-line-number="21"></a>
+<a class="sourceLine" id="cb56-22" data-line-number="22"><span class="co"># Define colors for ER1 marker</span></a>
+<a class="sourceLine" id="cb56-23" data-line-number="23">ER1.classes &lt;-<span class="st"> </span><span class="kw">unique</span>(BIC.sample.classes<span class="op">$</span>ER1)</a>
+<a class="sourceLine" id="cb56-24" data-line-number="24">ER1.colors &lt;-<span class="st"> </span><span class="kw">rainbow</span>(<span class="dt">n =</span> <span class="kw">length</span>(ER1.classes))</a>
+<a class="sourceLine" id="cb56-25" data-line-number="25"><span class="kw">names</span>(ER1.colors) &lt;-<span class="st"> </span>ER1.classes</a>
+<a class="sourceLine" id="cb56-26" data-line-number="26"><span class="kw">print</span>(ER1.colors)</a></code></pre></div>
 <pre><code>   Positive    Negative 
 &quot;#FF0000FF&quot; &quot;#00FFFFFF&quot; </code></pre>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb47-1" data-line-number="1"><span class="co"># Define colors for PR1 marker</span></a>
-<a class="sourceLine" id="cb47-2" data-line-number="2">PR1.classes &lt;-<span class="st"> </span><span class="kw">unique</span>(BIC.sample.classes<span class="op">$</span>PR1)</a>
-<a class="sourceLine" id="cb47-3" data-line-number="3">PR1.colors &lt;-<span class="st"> </span><span class="kw">heat.colors</span>(<span class="dt">n =</span> <span class="kw">length</span>(PR1.classes))</a>
-<a class="sourceLine" id="cb47-4" data-line-number="4"><span class="kw">names</span>(PR1.colors) &lt;-<span class="st"> </span>PR1.classes</a>
-<a class="sourceLine" id="cb47-5" data-line-number="5"><span class="kw">print</span>(PR1.colors)</a></code></pre></div>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb58-1" data-line-number="1"><span class="co"># Define colors for PR1 marker</span></a>
+<a class="sourceLine" id="cb58-2" data-line-number="2">PR1.classes &lt;-<span class="st"> </span><span class="kw">unique</span>(BIC.sample.classes<span class="op">$</span>PR1)</a>
+<a class="sourceLine" id="cb58-3" data-line-number="3">PR1.colors &lt;-<span class="st"> </span><span class="kw">heat.colors</span>(<span class="dt">n =</span> <span class="kw">length</span>(PR1.classes))</a>
+<a class="sourceLine" id="cb58-4" data-line-number="4"><span class="kw">names</span>(PR1.colors) &lt;-<span class="st"> </span>PR1.classes</a>
+<a class="sourceLine" id="cb58-5" data-line-number="5"><span class="kw">print</span>(PR1.colors)</a></code></pre></div>
 <pre><code>   Positive    Negative 
 &quot;#FF0000FF&quot; &quot;#FFFF00FF&quot; </code></pre>
-<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb49-1" data-line-number="1"><span class="co"># Define colors for Her2 marker</span></a>
-<a class="sourceLine" id="cb49-2" data-line-number="2">Her2.classes &lt;-<span class="st"> </span><span class="kw">unique</span>(BIC.sample.classes<span class="op">$</span>Her2)</a>
-<a class="sourceLine" id="cb49-3" data-line-number="3">Her2.colors &lt;-<span class="st"> </span><span class="kw">topo.colors</span>(<span class="dt">n =</span> <span class="kw">length</span>(Her2.classes))</a>
-<a class="sourceLine" id="cb49-4" data-line-number="4"><span class="kw">names</span>(Her2.colors) &lt;-<span class="st"> </span>Her2.classes</a>
-<a class="sourceLine" id="cb49-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb49-6" data-line-number="6"><span class="co">## Detiine annotations for the heatmap</span></a>
-<a class="sourceLine" id="cb49-7" data-line-number="7"><span class="co">## combining the 3 markers + cancer type</span></a>
-<a class="sourceLine" id="cb49-8" data-line-number="8">annot.tumeur.column =<span class="st"> </span><span class="kw">HeatmapAnnotation</span>(</a>
-<a class="sourceLine" id="cb49-9" data-line-number="9">  <span class="dt">df =</span> BIC.sample.classes,</a>
-<a class="sourceLine" id="cb49-10" data-line-number="10">  <span class="dt">col =</span> <span class="kw">list</span>(<span class="dt">cancer.type =</span> type.cancer.colors,</a>
-<a class="sourceLine" id="cb49-11" data-line-number="11">             <span class="dt">ER1 =</span> ER1.colors, </a>
-<a class="sourceLine" id="cb49-12" data-line-number="12">             <span class="dt">PR1 =</span> PR1.colors,</a>
-<a class="sourceLine" id="cb49-13" data-line-number="13">             <span class="dt">Her2 =</span> Her2.colors)</a>
-<a class="sourceLine" id="cb49-14" data-line-number="14">)</a>
-<a class="sourceLine" id="cb49-15" data-line-number="15"></a>
-<a class="sourceLine" id="cb49-16" data-line-number="16"><span class="co"># A first heatmap</span></a>
-<a class="sourceLine" id="cb49-17" data-line-number="17">my.heatmap &lt;-<span class="st"> </span>ComplexHeatmap<span class="op">::</span><span class="kw">Heatmap</span>(</a>
-<a class="sourceLine" id="cb49-18" data-line-number="18">  <span class="kw">as.matrix</span>(BIC.expr.genes.standardized), </a>
-<a class="sourceLine" id="cb49-19" data-line-number="19">  <span class="dt">name =</span> <span class="st">&quot;TCGA Breast Invasive Cancer&quot;</span>, </a>
-<a class="sourceLine" id="cb49-20" data-line-number="20">  <span class="co"># col = frenchflag.palette(100),</span></a>
-<a class="sourceLine" id="cb49-21" data-line-number="21">  <span class="dt">col =</span> <span class="kw">brewer.pal</span>(<span class="dv">11</span>,<span class="st">&quot;RdBu&quot;</span>),</a>
-<a class="sourceLine" id="cb49-22" data-line-number="22">  <span class="dt">column_title =</span> <span class="st">&quot;Samples&quot;</span>,</a>
-<a class="sourceLine" id="cb49-23" data-line-number="23">  <span class="dt">row_title =</span> <span class="st">&quot;Genes&quot;</span>,</a>
-<a class="sourceLine" id="cb49-24" data-line-number="24">  <span class="dt">cluster_columns =</span> sample.tree,</a>
-<a class="sourceLine" id="cb49-25" data-line-number="25">  <span class="dt">show_column_names =</span> <span class="ot">FALSE</span>, </a>
-<a class="sourceLine" id="cb49-26" data-line-number="26">  <span class="dt">show_row_names =</span> <span class="ot">FALSE</span>,</a>
-<a class="sourceLine" id="cb49-27" data-line-number="27">  <span class="dt">bottom_annotation =</span> annot.tumeur.column</a>
-<a class="sourceLine" id="cb49-28" data-line-number="28">)</a>
-<a class="sourceLine" id="cb49-29" data-line-number="29"><span class="kw">draw</span>(my.heatmap)</a></code></pre></div>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb60-1" data-line-number="1"><span class="co"># Define colors for Her2 marker</span></a>
+<a class="sourceLine" id="cb60-2" data-line-number="2">Her2.classes &lt;-<span class="st"> </span><span class="kw">unique</span>(BIC.sample.classes<span class="op">$</span>Her2)</a>
+<a class="sourceLine" id="cb60-3" data-line-number="3">Her2.colors &lt;-<span class="st"> </span><span class="kw">topo.colors</span>(<span class="dt">n =</span> <span class="kw">length</span>(Her2.classes))</a>
+<a class="sourceLine" id="cb60-4" data-line-number="4"><span class="kw">names</span>(Her2.colors) &lt;-<span class="st"> </span>Her2.classes</a>
+<a class="sourceLine" id="cb60-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb60-6" data-line-number="6"><span class="co">## Detiine annotations for the heatmap</span></a>
+<a class="sourceLine" id="cb60-7" data-line-number="7"><span class="co">## combining the 3 markers + cancer type</span></a>
+<a class="sourceLine" id="cb60-8" data-line-number="8">annot.tumeur.column =<span class="st"> </span><span class="kw">HeatmapAnnotation</span>(</a>
+<a class="sourceLine" id="cb60-9" data-line-number="9">  <span class="dt">df =</span> BIC.sample.classes,</a>
+<a class="sourceLine" id="cb60-10" data-line-number="10">  <span class="dt">col =</span> <span class="kw">list</span>(<span class="dt">cancer.type =</span> type.cancer.colors,</a>
+<a class="sourceLine" id="cb60-11" data-line-number="11">             <span class="dt">ER1 =</span> ER1.colors, </a>
+<a class="sourceLine" id="cb60-12" data-line-number="12">             <span class="dt">PR1 =</span> PR1.colors,</a>
+<a class="sourceLine" id="cb60-13" data-line-number="13">             <span class="dt">Her2 =</span> Her2.colors)</a>
+<a class="sourceLine" id="cb60-14" data-line-number="14">)</a>
+<a class="sourceLine" id="cb60-15" data-line-number="15"></a>
+<a class="sourceLine" id="cb60-16" data-line-number="16"><span class="co"># A first heatmap</span></a>
+<a class="sourceLine" id="cb60-17" data-line-number="17">my.heatmap &lt;-<span class="st"> </span>ComplexHeatmap<span class="op">::</span><span class="kw">Heatmap</span>(</a>
+<a class="sourceLine" id="cb60-18" data-line-number="18">  <span class="kw">as.matrix</span>(BIC.expr.genes.standardized), </a>
+<a class="sourceLine" id="cb60-19" data-line-number="19">  <span class="dt">name =</span> <span class="st">&quot;TCGA Breast Invasive Cancer&quot;</span>, </a>
+<a class="sourceLine" id="cb60-20" data-line-number="20">  <span class="co"># col = frenchflag.palette(100),</span></a>
+<a class="sourceLine" id="cb60-21" data-line-number="21">  <span class="dt">col =</span> <span class="kw">brewer.pal</span>(<span class="dv">11</span>,<span class="st">&quot;RdBu&quot;</span>),</a>
+<a class="sourceLine" id="cb60-22" data-line-number="22">  <span class="dt">column_title =</span> <span class="st">&quot;Samples&quot;</span>,</a>
+<a class="sourceLine" id="cb60-23" data-line-number="23">  <span class="dt">row_title =</span> <span class="st">&quot;Genes&quot;</span>,</a>
+<a class="sourceLine" id="cb60-24" data-line-number="24">  <span class="dt">cluster_columns =</span> sample.tree,</a>
+<a class="sourceLine" id="cb60-25" data-line-number="25">  <span class="dt">show_column_names =</span> <span class="ot">FALSE</span>, </a>
+<a class="sourceLine" id="cb60-26" data-line-number="26">  <span class="dt">show_row_names =</span> <span class="ot">FALSE</span>,</a>
+<a class="sourceLine" id="cb60-27" data-line-number="27">  <span class="dt">bottom_annotation =</span> annot.tumeur.column</a>
+<a class="sourceLine" id="cb60-28" data-line-number="28">)</a>
+<a class="sourceLine" id="cb60-29" data-line-number="29"><span class="kw">draw</span>(my.heatmap)</a></code></pre></div>
 <p><img src="figures/TP_complex_heatmap-1.png" width="95%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="kmeans" class="section level3">
@@ -914,90 +942,90 @@ Heat map of the expression matrix clustered by genes (rows) and samples (columns
 <li><p>visualiser ces groupes par exemple sur une projection des données dans le plan par PCA, à l’aide de la fonction <code>prcomp()</code>.</p></li>
 </ol>
 <p><strong>Astuce:</strong> dans le résultat de <code>prcomp()</code>, les coordonnées des points se trouvent dans le champs <code>x</code> .</p>
-<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb50-1" data-line-number="1"><span class="co">## Run k-means clustering with 20 centers</span></a>
-<a class="sourceLine" id="cb50-2" data-line-number="2">BIC.kmeans &lt;-<span class="st"> </span><span class="kw">kmeans</span>(BIC.expr.transposed, <span class="dt">centers=</span><span class="dv">20</span>)</a>
-<a class="sourceLine" id="cb50-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb50-4" data-line-number="4"><span class="co">## Report the table of the clusters</span></a>
-<a class="sourceLine" id="cb50-5" data-line-number="5"><span class="kw">table</span>(BIC.kmeans<span class="op">$</span>cluster)</a></code></pre></div>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb61-1" data-line-number="1"><span class="co">## Run k-means clustering with 20 centers</span></a>
+<a class="sourceLine" id="cb61-2" data-line-number="2">BIC.kmeans &lt;-<span class="st"> </span><span class="kw">kmeans</span>(BIC.expr.transposed, <span class="dt">centers=</span><span class="dv">20</span>)</a>
+<a class="sourceLine" id="cb61-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb61-4" data-line-number="4"><span class="co">## Report the table of the clusters</span></a>
+<a class="sourceLine" id="cb61-5" data-line-number="5"><span class="kw">table</span>(BIC.kmeans<span class="op">$</span>cluster)</a></code></pre></div>
 <pre><code>
  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 
-48 16 21 39 27 38 91 67 38 35 14 56 46 76 16  5 32 41 74 39 </code></pre>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb52-1" data-line-number="1">T1 =<span class="st"> </span><span class="kw">Sys.time</span>() <span class="co"># take time at the beginning of the task</span></a>
-<a class="sourceLine" id="cb52-2" data-line-number="2">I.intra =<span class="st"> </span><span class="kw">numeric</span>(<span class="dt">length=</span><span class="dv">20</span>)</a>
-<a class="sourceLine" id="cb52-3" data-line-number="3">I.intra[<span class="dv">1</span>] =<span class="st"> </span><span class="kw">kmeans</span>(BIC.expr.transposed, <span class="dt">centers=</span><span class="dv">2</span>)<span class="op">$</span>totss</a>
-<a class="sourceLine" id="cb52-4" data-line-number="4"><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span><span class="dv">20</span>) {</a>
-<a class="sourceLine" id="cb52-5" data-line-number="5">  <span class="kw">message</span>(<span class="st">&quot;Running k-means with &quot;</span>, i, <span class="st">&quot; centers&quot;</span>)</a>
-<a class="sourceLine" id="cb52-6" data-line-number="6">  kmi &lt;-<span class="st"> </span><span class="kw">kmeans</span>(BIC.expr.transposed, <span class="dt">centers=</span>i)</a>
-<a class="sourceLine" id="cb52-7" data-line-number="7">  I.intra[i] &lt;-<span class="st"> </span>kmi<span class="op">$</span>tot.withinss</a>
-<a class="sourceLine" id="cb52-8" data-line-number="8">}</a>
-<a class="sourceLine" id="cb52-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb52-10" data-line-number="10"><span class="co"># Plot a curve showint the intra-cluster variance as a function of the number of clusters </span></a>
-<a class="sourceLine" id="cb52-11" data-line-number="11"><span class="kw">plot</span>((<span class="dv">1</span><span class="op">:</span><span class="dv">20</span>)<span class="op">-</span><span class="fl">0.5</span>, I.intra, <span class="dt">type=</span><span class="st">&quot;h&quot;</span>, <span class="dt">lwd=</span><span class="dv">2</span>, <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>, </a>
-<a class="sourceLine" id="cb52-12" data-line-number="12">     <span class="dt">xlab =</span> <span class="st">&quot;k&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Intra-cluster variance&quot;</span>,</a>
-<a class="sourceLine" id="cb52-13" data-line-number="13">     <span class="dt">main =</span> <span class="st">&quot;k-mean: impact of k on the intra-cluster variance&quot;</span>)</a></code></pre></div>
+97 64 41 61 60 31 12  4 48 29 31 56 16 50 43 73 35 26  5 37 </code></pre>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb63-1" data-line-number="1">T1 =<span class="st"> </span><span class="kw">Sys.time</span>() <span class="co"># take time at the beginning of the task</span></a>
+<a class="sourceLine" id="cb63-2" data-line-number="2">I.intra =<span class="st"> </span><span class="kw">numeric</span>(<span class="dt">length=</span><span class="dv">20</span>)</a>
+<a class="sourceLine" id="cb63-3" data-line-number="3">I.intra[<span class="dv">1</span>] =<span class="st"> </span><span class="kw">kmeans</span>(BIC.expr.transposed, <span class="dt">centers=</span><span class="dv">2</span>)<span class="op">$</span>totss</a>
+<a class="sourceLine" id="cb63-4" data-line-number="4"><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span><span class="dv">20</span>) {</a>
+<a class="sourceLine" id="cb63-5" data-line-number="5">  <span class="kw">message</span>(<span class="st">&quot;Running k-means with &quot;</span>, i, <span class="st">&quot; centers&quot;</span>)</a>
+<a class="sourceLine" id="cb63-6" data-line-number="6">  kmi &lt;-<span class="st"> </span><span class="kw">kmeans</span>(BIC.expr.transposed, <span class="dt">centers=</span>i)</a>
+<a class="sourceLine" id="cb63-7" data-line-number="7">  I.intra[i] &lt;-<span class="st"> </span>kmi<span class="op">$</span>tot.withinss</a>
+<a class="sourceLine" id="cb63-8" data-line-number="8">}</a>
+<a class="sourceLine" id="cb63-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb63-10" data-line-number="10"><span class="co"># Plot a curve showint the intra-cluster variance as a function of the number of clusters </span></a>
+<a class="sourceLine" id="cb63-11" data-line-number="11"><span class="kw">plot</span>((<span class="dv">1</span><span class="op">:</span><span class="dv">20</span>)<span class="op">-</span><span class="fl">0.5</span>, I.intra, <span class="dt">type=</span><span class="st">&quot;h&quot;</span>, <span class="dt">lwd=</span><span class="dv">2</span>, <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>, </a>
+<a class="sourceLine" id="cb63-12" data-line-number="12">     <span class="dt">xlab =</span> <span class="st">&quot;k&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Intra-cluster variance&quot;</span>,</a>
+<a class="sourceLine" id="cb63-13" data-line-number="13">     <span class="dt">main =</span> <span class="st">&quot;k-mean: impact of k on the intra-cluster variance&quot;</span>)</a></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figures/TP_intra_cluster_variance-1.png" alt="Intra-cluster variance plot. for a series of k-mean clustering with increasing values of k.  " width="768" />
 <p class="caption">
 Intra-cluster variance plot. for a series of k-mean clustering with increasing values of k.
 </p>
 </div>
-<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb53-1" data-line-number="1"><span class="co"># Measure elapsed time</span></a>
-<a class="sourceLine" id="cb53-2" data-line-number="2">T2 =<span class="st"> </span><span class="kw">Sys.time</span>()</a>
-<a class="sourceLine" id="cb53-3" data-line-number="3">Tdiff =<span class="st"> </span><span class="kw">difftime</span>(T2,T1) <span class="co">## Measure elapsed time</span></a>
-<a class="sourceLine" id="cb53-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb53-5" data-line-number="5"><span class="co">## Run k-means clustering with 2 clusters</span></a>
-<a class="sourceLine" id="cb53-6" data-line-number="6">BIC.kmeans2 &lt;-<span class="st"> </span><span class="kw">kmeans</span>(BIC.expr.transposed, <span class="dt">centers =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb53-7" data-line-number="7"><span class="kw">table</span>(BIC.kmeans2<span class="op">$</span>cluster) <span class="co">## Cluster sizes</span></a></code></pre></div>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb64-1" data-line-number="1"><span class="co"># Measure elapsed time</span></a>
+<a class="sourceLine" id="cb64-2" data-line-number="2">T2 =<span class="st"> </span><span class="kw">Sys.time</span>()</a>
+<a class="sourceLine" id="cb64-3" data-line-number="3">Tdiff =<span class="st"> </span><span class="kw">difftime</span>(T2,T1) <span class="co">## Measure elapsed time</span></a>
+<a class="sourceLine" id="cb64-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb64-5" data-line-number="5"><span class="co">## Run k-means clustering with 2 clusters</span></a>
+<a class="sourceLine" id="cb64-6" data-line-number="6">BIC.kmeans2 &lt;-<span class="st"> </span><span class="kw">kmeans</span>(BIC.expr.transposed, <span class="dt">centers =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb64-7" data-line-number="7"><span class="kw">table</span>(BIC.kmeans2<span class="op">$</span>cluster) <span class="co">## Cluster sizes</span></a></code></pre></div>
 <pre><code>
   1   2 
-158 661 </code></pre>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb55-1" data-line-number="1"><span class="co">## Run k-means clustering with 3 clusters</span></a>
-<a class="sourceLine" id="cb55-2" data-line-number="2">BIC.kmeans3 &lt;-<span class="st"> </span><span class="kw">kmeans</span>(BIC.expr.transposed, <span class="dt">centers =</span> <span class="dv">3</span>)</a>
-<a class="sourceLine" id="cb55-3" data-line-number="3"><span class="kw">table</span>(BIC.kmeans3<span class="op">$</span>cluster) <span class="co">## Cluster sizes</span></a></code></pre></div>
+645 174 </code></pre>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb66-1" data-line-number="1"><span class="co">## Run k-means clustering with 3 clusters</span></a>
+<a class="sourceLine" id="cb66-2" data-line-number="2">BIC.kmeans3 &lt;-<span class="st"> </span><span class="kw">kmeans</span>(BIC.expr.transposed, <span class="dt">centers =</span> <span class="dv">3</span>)</a>
+<a class="sourceLine" id="cb66-3" data-line-number="3"><span class="kw">table</span>(BIC.kmeans3<span class="op">$</span>cluster) <span class="co">## Cluster sizes</span></a></code></pre></div>
 <pre><code>
   1   2   3 
-138 482 199 </code></pre>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" data-line-number="1"><span class="co">## Run k-means clustering with 10 clusters</span></a>
-<a class="sourceLine" id="cb57-2" data-line-number="2">BIC.kmeans10 &lt;-<span class="st"> </span><span class="kw">kmeans</span>(BIC.expr.transposed, <span class="dt">centers =</span> <span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb57-3" data-line-number="3"><span class="kw">table</span>(BIC.kmeans10<span class="op">$</span>cluster) <span class="co">## Cluster sizes</span></a></code></pre></div>
+201 475 143 </code></pre>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb68-1" data-line-number="1"><span class="co">## Run k-means clustering with 10 clusters</span></a>
+<a class="sourceLine" id="cb68-2" data-line-number="2">BIC.kmeans10 &lt;-<span class="st"> </span><span class="kw">kmeans</span>(BIC.expr.transposed, <span class="dt">centers =</span> <span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb68-3" data-line-number="3"><span class="kw">table</span>(BIC.kmeans10<span class="op">$</span>cluster) <span class="co">## Cluster sizes</span></a></code></pre></div>
 <pre><code>
   1   2   3   4   5   6   7   8   9  10 
- 93 131  49  65  87 139  79  41  43  92 </code></pre>
-<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb59-1" data-line-number="1"><span class="co">## Cut the tree at some arbitrary levels to get clusters</span></a>
-<a class="sourceLine" id="cb59-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb59-3" data-line-number="3"><span class="co">## 2 clusters to see if the first subdivision corresponds to one of the 3 markers (ER1, PR1, Her2)</span></a>
-<a class="sourceLine" id="cb59-4" data-line-number="4">BIC.cutree2 &lt;-<span class="st"> </span><span class="kw">cutree</span>(BIC.hclust.ward, <span class="dt">k =</span> <span class="dv">2</span>) </a>
-<a class="sourceLine" id="cb59-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb59-6" data-line-number="6"><span class="co">## 5 clusters to see if the match the cancer types defined by biologists</span></a>
-<a class="sourceLine" id="cb59-7" data-line-number="7">BIC.cutree5 &lt;-<span class="st"> </span><span class="kw">cutree</span>(BIC.hclust.ward, <span class="dt">k =</span> <span class="dv">5</span>)</a>
-<a class="sourceLine" id="cb59-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb59-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb59-10" data-line-number="10"><span class="co">## Define sample colors reflecting the cluster membership</span></a>
-<a class="sourceLine" id="cb59-11" data-line-number="11">hclust.k2.colors &lt;-<span class="st"> </span>BIC.cutree2</a>
-<a class="sourceLine" id="cb59-12" data-line-number="12">kmeans.k2.colors &lt;-<span class="st"> </span>BIC.kmeans2<span class="op">$</span>cluster</a>
-<a class="sourceLine" id="cb59-13" data-line-number="13">kmeans.k10.colors &lt;-<span class="st"> </span>BIC.kmeans10<span class="op">$</span>cluster</a>
-<a class="sourceLine" id="cb59-14" data-line-number="14"></a>
-<a class="sourceLine" id="cb59-15" data-line-number="15"><span class="co">## Define characters reflecting markers</span></a>
-<a class="sourceLine" id="cb59-16" data-line-number="16">pch.cancer.type &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(BIC.sample.classes<span class="op">$</span>cancer.type)</a>
-<a class="sourceLine" id="cb59-17" data-line-number="17">pch.er1 &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(BIC.sample.classes<span class="op">$</span>ER1)</a>
-<a class="sourceLine" id="cb59-18" data-line-number="18">pch.pr1 &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(BIC.sample.classes<span class="op">$</span>PR1)</a>
-<a class="sourceLine" id="cb59-19" data-line-number="19">pch.her2 &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(BIC.sample.classes<span class="op">$</span>Her2)</a>
-<a class="sourceLine" id="cb59-20" data-line-number="20"></a>
-<a class="sourceLine" id="cb59-21" data-line-number="21"><span class="co">## Compare clusters and markers on the PC plot, to evaluate whether </span></a>
-<a class="sourceLine" id="cb59-22" data-line-number="22"><span class="co">## the components capture relevant information</span></a>
-<a class="sourceLine" id="cb59-23" data-line-number="23"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</a>
-<a class="sourceLine" id="cb59-24" data-line-number="24"><span class="kw">plot</span>(BIC.prcomp<span class="op">$</span>x[,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>], </a>
-<a class="sourceLine" id="cb59-25" data-line-number="25">     <span class="dt">col =</span> hclust.k2.colors, </a>
-<a class="sourceLine" id="cb59-26" data-line-number="26">     <span class="dt">pch =</span> pch.er1,</a>
-<a class="sourceLine" id="cb59-27" data-line-number="27">     <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">cex =</span> <span class="fl">0.7</span>, </a>
-<a class="sourceLine" id="cb59-28" data-line-number="28">     <span class="dt">main =</span> <span class="st">&quot;Hclust 2 clusters versus markers&quot;</span>)</a>
-<a class="sourceLine" id="cb59-29" data-line-number="29"><span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="dt">cex =</span> <span class="fl">0.8</span>, <span class="dt">legend =</span> <span class="kw">c</span>(<span class="st">&quot;ER1+&quot;</span>, <span class="st">&quot;ER1-&quot;</span>), <span class="dt">pch =</span> )</a>
-<a class="sourceLine" id="cb59-30" data-line-number="30"></a>
-<a class="sourceLine" id="cb59-31" data-line-number="31"><span class="kw">plot</span>(BIC.prcomp<span class="op">$</span>x[,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>], </a>
-<a class="sourceLine" id="cb59-32" data-line-number="32">     <span class="dt">col =</span> kmeans.k10.colors, </a>
-<a class="sourceLine" id="cb59-33" data-line-number="33">     <span class="dt">pch =</span> pch.er1,</a>
-<a class="sourceLine" id="cb59-34" data-line-number="34">     <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">cex =</span> <span class="fl">0.7</span>, </a>
-<a class="sourceLine" id="cb59-35" data-line-number="35">     <span class="dt">main =</span> <span class="st">&quot;K-means 10 clusters versus markers&quot;</span>)</a></code></pre></div>
+ 65  65  81  94  77  47  21 171 121  77 </code></pre>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb70-1" data-line-number="1"><span class="co">## Cut the tree at some arbitrary levels to get clusters</span></a>
+<a class="sourceLine" id="cb70-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb70-3" data-line-number="3"><span class="co">## 2 clusters to see if the first subdivision corresponds to one of the 3 markers (ER1, PR1, Her2)</span></a>
+<a class="sourceLine" id="cb70-4" data-line-number="4">BIC.cutree2 &lt;-<span class="st"> </span><span class="kw">cutree</span>(BIC.hclust.ward, <span class="dt">k =</span> <span class="dv">2</span>) </a>
+<a class="sourceLine" id="cb70-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb70-6" data-line-number="6"><span class="co">## 5 clusters to see if the match the cancer types defined by biologists</span></a>
+<a class="sourceLine" id="cb70-7" data-line-number="7">BIC.cutree5 &lt;-<span class="st"> </span><span class="kw">cutree</span>(BIC.hclust.ward, <span class="dt">k =</span> <span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb70-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb70-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb70-10" data-line-number="10"><span class="co">## Define sample colors reflecting the cluster membership</span></a>
+<a class="sourceLine" id="cb70-11" data-line-number="11">hclust.k2.colors &lt;-<span class="st"> </span>BIC.cutree2</a>
+<a class="sourceLine" id="cb70-12" data-line-number="12">kmeans.k2.colors &lt;-<span class="st"> </span>BIC.kmeans2<span class="op">$</span>cluster</a>
+<a class="sourceLine" id="cb70-13" data-line-number="13">kmeans.k10.colors &lt;-<span class="st"> </span>BIC.kmeans10<span class="op">$</span>cluster</a>
+<a class="sourceLine" id="cb70-14" data-line-number="14"></a>
+<a class="sourceLine" id="cb70-15" data-line-number="15"><span class="co">## Define characters reflecting markers</span></a>
+<a class="sourceLine" id="cb70-16" data-line-number="16">pch.cancer.type &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(BIC.sample.classes<span class="op">$</span>cancer.type)</a>
+<a class="sourceLine" id="cb70-17" data-line-number="17">pch.er1 &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(BIC.sample.classes<span class="op">$</span>ER1)</a>
+<a class="sourceLine" id="cb70-18" data-line-number="18">pch.pr1 &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(BIC.sample.classes<span class="op">$</span>PR1)</a>
+<a class="sourceLine" id="cb70-19" data-line-number="19">pch.her2 &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(BIC.sample.classes<span class="op">$</span>Her2)</a>
+<a class="sourceLine" id="cb70-20" data-line-number="20"></a>
+<a class="sourceLine" id="cb70-21" data-line-number="21"><span class="co">## Compare clusters and markers on the PC plot, to evaluate whether </span></a>
+<a class="sourceLine" id="cb70-22" data-line-number="22"><span class="co">## the components capture relevant information</span></a>
+<a class="sourceLine" id="cb70-23" data-line-number="23"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb70-24" data-line-number="24"><span class="kw">plot</span>(BIC.prcomp<span class="op">$</span>x[,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>], </a>
+<a class="sourceLine" id="cb70-25" data-line-number="25">     <span class="dt">col =</span> hclust.k2.colors, </a>
+<a class="sourceLine" id="cb70-26" data-line-number="26">     <span class="dt">pch =</span> pch.er1,</a>
+<a class="sourceLine" id="cb70-27" data-line-number="27">     <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">cex =</span> <span class="fl">0.7</span>, </a>
+<a class="sourceLine" id="cb70-28" data-line-number="28">     <span class="dt">main =</span> <span class="st">&quot;Hclust 2 clusters versus markers&quot;</span>)</a>
+<a class="sourceLine" id="cb70-29" data-line-number="29"><span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="dt">cex =</span> <span class="fl">0.8</span>, <span class="dt">legend =</span> <span class="kw">c</span>(<span class="st">&quot;ER1+&quot;</span>, <span class="st">&quot;ER1-&quot;</span>), <span class="dt">pch =</span> )</a>
+<a class="sourceLine" id="cb70-30" data-line-number="30"></a>
+<a class="sourceLine" id="cb70-31" data-line-number="31"><span class="kw">plot</span>(BIC.prcomp<span class="op">$</span>x[,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>], </a>
+<a class="sourceLine" id="cb70-32" data-line-number="32">     <span class="dt">col =</span> kmeans.k10.colors, </a>
+<a class="sourceLine" id="cb70-33" data-line-number="33">     <span class="dt">pch =</span> pch.er1,</a>
+<a class="sourceLine" id="cb70-34" data-line-number="34">     <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">cex =</span> <span class="fl">0.7</span>, </a>
+<a class="sourceLine" id="cb70-35" data-line-number="35">     <span class="dt">main =</span> <span class="st">&quot;K-means 10 clusters versus markers&quot;</span>)</a></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figures/TP_intra_cluster_variance-2.png" alt="Intra-cluster variance plot. for a series of k-mean clustering with increasing values of k.  " width="768" />
 <p class="caption">
@@ -1014,52 +1042,52 @@ Intra-cluster variance plot. for a series of k-mean clustering with increasing v
 <li><p>à l’aide de la fonction <code>table</code>, calculez la matrice de confusion de vos deux clustering. Commentez.</p></li>
 <li><p>à l’aide de la fonction <code>adjustedRand(clues)</code> calculez le RI et le ARI de vos clustering. Commentez.</p></li>
 </ol>
-<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb60-1" data-line-number="1"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</a>
-<a class="sourceLine" id="cb60-2" data-line-number="2"><span class="kw">plot</span>(BIC.hclust.ward, <span class="dt">labels=</span><span class="ot">FALSE</span>, <span class="dt">hang=</span><span class="op">-</span><span class="dv">1</span>, <span class="dt">main =</span> <span class="st">&quot;Ward&quot;</span>)</a>
-<a class="sourceLine" id="cb60-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb60-4" data-line-number="4"><span class="kw">rect.hclust</span>(BIC.hclust.ward, <span class="dt">k=</span><span class="dv">3</span>)</a>
-<a class="sourceLine" id="cb60-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb60-6" data-line-number="6">BIC.cutree3 &lt;-<span class="st"> </span><span class="kw">cutree</span>(BIC.hclust.ward, <span class="dt">k=</span><span class="dv">3</span>)</a>
-<a class="sourceLine" id="cb60-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb60-8" data-line-number="8"><span class="kw">plot</span>(BIC.hclust.ward, <span class="dt">labels =</span> F, <span class="dt">hang =</span> <span class="dv">-1</span>, <span class="dt">main =</span> <span class="st">&quot;complete&quot;</span>)</a>
-<a class="sourceLine" id="cb60-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb60-10" data-line-number="10"><span class="kw">rect.hclust</span>(BIC.hclust.ward, <span class="dt">k =</span> <span class="dv">10</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb71-1" data-line-number="1"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb71-2" data-line-number="2"><span class="kw">plot</span>(BIC.hclust.ward, <span class="dt">labels=</span><span class="ot">FALSE</span>, <span class="dt">hang=</span><span class="op">-</span><span class="dv">1</span>, <span class="dt">main =</span> <span class="st">&quot;Ward&quot;</span>)</a>
+<a class="sourceLine" id="cb71-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb71-4" data-line-number="4"><span class="kw">rect.hclust</span>(BIC.hclust.ward, <span class="dt">k=</span><span class="dv">3</span>)</a>
+<a class="sourceLine" id="cb71-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb71-6" data-line-number="6">BIC.cutree3 &lt;-<span class="st"> </span><span class="kw">cutree</span>(BIC.hclust.ward, <span class="dt">k=</span><span class="dv">3</span>)</a>
+<a class="sourceLine" id="cb71-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb71-8" data-line-number="8"><span class="kw">plot</span>(BIC.hclust.ward, <span class="dt">labels =</span> F, <span class="dt">hang =</span> <span class="dv">-1</span>, <span class="dt">main =</span> <span class="st">&quot;complete&quot;</span>)</a>
+<a class="sourceLine" id="cb71-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb71-10" data-line-number="10"><span class="kw">rect.hclust</span>(BIC.hclust.ward, <span class="dt">k =</span> <span class="dv">10</span>)</a></code></pre></div>
 <p><img src="figures/TP_unnamed-chunk-7-1.png" width="480" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb61-1" data-line-number="1">BIC.cutree10 &lt;-<span class="st"> </span><span class="kw">cutree</span>(BIC.hclust.ward, <span class="dt">k =</span> <span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb61-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb61-3" data-line-number="3"><span class="kw">table</span>(BIC.cutree3, BIC.kmeans<span class="op">$</span>cluster)</a></code></pre></div>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb72-1" data-line-number="1">BIC.cutree10 &lt;-<span class="st"> </span><span class="kw">cutree</span>(BIC.hclust.ward, <span class="dt">k =</span> <span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb72-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb72-3" data-line-number="3"><span class="kw">table</span>(BIC.cutree3, BIC.kmeans<span class="op">$</span>cluster)</a></code></pre></div>
 <pre><code>           
 BIC.cutree3  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20
-          1 41 16  4 33 26 38 91 61  2 16  0  0 16  0 16  5 32  0 73  2
-          2  0  0  0  0  0  0  0  0  0  0  0 56  0 75  0  0  0  0  1  0
-          3  7  0 17  6  1  0  0  6 36 19 14  0 30  1  0  0  0 41  0 37</code></pre>
-<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb63-1" data-line-number="1"><span class="kw">table</span>(BIC.cutree10, BIC.kmeans<span class="op">$</span>cluster)</a></code></pre></div>
+          1 96  1 40 61 44  1  0  4 46 29 31  2  0 50 43 73 34 26  0  4
+          2  1 63  0  0 16  1 12  0  1  0  0  0 16  0  0  0  0  0  5  0
+          3  0  0  1  0  0 29  0  0  1  0  0 54  0  0  0  0  1  0  0 33</code></pre>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb74-1" data-line-number="1"><span class="kw">table</span>(BIC.cutree10, BIC.kmeans<span class="op">$</span>cluster)</a></code></pre></div>
 <pre><code>            
 BIC.cutree10  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20
-          1  37  2  3 26  1 10 88 54  2  6  0  0 16  0  0  0 14  0  0  2
-          2   0  0  0  0  0  0  0  0  0  0  0 48  0 17  0  0  0  0  1  0
-          3   0  0  0  0  0  0  0  0  1  0  0  0  1  1  0  0  0 38  0 15
-          4   7  0 17  6  1  0  0  6 35 19 14  0 29  0  0  0  0  3  0 22
-          5   0 14  0  0  0  0  0  0  0  1  0  0  0  0  0  0  1  0  0  0
-          6   0  0  0  0  0  0  0  0  0  0  0  3  0 58  0  0  0  0  0  0
-          7   4  0  1  1 25 28  1  7  0  9  0  0  0  0 16  5 17  0  0  0
-          8   0  0  0  6  0  0  2  0  0  0  0  0  0  0  0  0  0  0 62  0
-          9   0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0 11  0
-          10  0  0  0  0  0  0  0  0  0  0  0  5  0  0  0  0  0  0  0  0</code></pre>
-<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb65-1" data-line-number="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</a>
-<a class="sourceLine" id="cb65-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb65-3" data-line-number="3">clues<span class="op">::</span><span class="kw">adjustedRand</span>(BIC.cutree3, BIC.kmeans3<span class="op">$</span>cluster)</a></code></pre></div>
+          1  92  0  1 17 24  0  0  0  3  0  3  0  0  3  7 58  6  0  0  0
+          2   0 63  0  0  0  1 12  0  0  0  0  0  0  0  0  0  0  0  0  0
+          3   2  0  1 13  0  0  0  0 42  0  1  0  0 11  0  3 11  0  0  4
+          4   1  0  0  0 16  0  0  0  1  0  0  0 16  0  0  0  0  0  0  0
+          5   1  0  0 31 20  1  0  0  1 28 21  0  0 34  1  6  0 26  0  0
+          6   0  0  0  0  0 19  0  0  1  0  0 42  0  0  0  0  0  0  0  2
+          7   1  0  0  0  0  0  0  0  0  0  0  2  0  0  0  0 13  0  0  0
+          8   0  1 38  0  0  0  0  4  0  1  6  0  0  2 35  6  4  0  0  0
+          9   0  0  1  0  0 10  0  0  0  0  0 12  0  0  0  0  1  0  0 31
+          10  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  5  0</code></pre>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb76-1" data-line-number="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb76-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb76-3" data-line-number="3">clues<span class="op">::</span><span class="kw">adjustedRand</span>(BIC.cutree3, BIC.kmeans3<span class="op">$</span>cluster)</a></code></pre></div>
 <pre><code>     Rand        HA        MA        FM   Jaccard 
-0.8793209 0.7537875 0.7541858 0.8596080 0.7537419 </code></pre>
-<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb67-1" data-line-number="1">clues<span class="op">::</span><span class="kw">adjustedRand</span>(BIC.cutree10, BIC.kmeans10<span class="op">$</span>cluster)</a></code></pre></div>
+0.7572267 0.5215652 0.5221581 0.7576169 0.6018955 </code></pre>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb78-1" data-line-number="1">clues<span class="op">::</span><span class="kw">adjustedRand</span>(BIC.cutree10, BIC.kmeans10<span class="op">$</span>cluster)</a></code></pre></div>
 <pre><code>     Rand        HA        MA        FM   Jaccard 
-0.8373591 0.3623006 0.3666913 0.4642480 0.2919986 </code></pre>
-<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb69-1" data-line-number="1">clues<span class="op">::</span><span class="kw">adjustedRand</span>(BIC.cutree3, BIC.kmeans10<span class="op">$</span>cluster)</a></code></pre></div>
+0.8718188 0.4671911 0.4711651 0.5447400 0.3700927 </code></pre>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb80-1" data-line-number="1">clues<span class="op">::</span><span class="kw">adjustedRand</span>(BIC.cutree3, BIC.kmeans10<span class="op">$</span>cluster)</a></code></pre></div>
 <pre><code>     Rand        HA        MA        FM   Jaccard 
-0.6606512 0.2343302 0.2364671 0.4559698 0.2289503 </code></pre>
-<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb71-1" data-line-number="1">clues<span class="op">::</span><span class="kw">adjustedRand</span>(BIC.cutree10, BIC.kmeans3<span class="op">$</span>cluster)</a></code></pre></div>
+0.5514686 0.1666285 0.1681189 0.4320150 0.1994405 </code></pre>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb82-1" data-line-number="1">clues<span class="op">::</span><span class="kw">adjustedRand</span>(BIC.cutree10, BIC.kmeans3<span class="op">$</span>cluster)</a></code></pre></div>
 <pre><code>     Rand        HA        MA        FM   Jaccard 
-0.6900508 0.3224897 0.3241621 0.5435114 0.3300510 </code></pre>
+0.6479218 0.2168089 0.2188601 0.4471450 0.2474876 </code></pre>
 </div>
 <div id="clustering-versus-statut" class="section level4">
 <h4>clustering versus statut</h4>
@@ -1082,8 +1110,8 @@ BIC.cutree10  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20
 <li><p>comparez vos résultats de clustering avec la réalité - par des visualisations - le calcul de la matrice de confusion - le calcul des rand index et adjusted rand index</p></li>
 <li><p>Interprétez les résultats suivants (cliquez sur “code” pour afficher le code, et exécutez-le)</p></li>
 </ol>
-<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb73-1" data-line-number="1"><span class="co">## Correspondence between markers</span></a>
-<a class="sourceLine" id="cb73-2" data-line-number="2"><span class="kw">kable</span>(<span class="kw">table</span>(BIC.sample.classes<span class="op">$</span>ER1, BIC.sample.classes<span class="op">$</span>PR1))</a></code></pre></div>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb84-1" data-line-number="1"><span class="co">## Correspondence between markers</span></a>
+<a class="sourceLine" id="cb84-2" data-line-number="2"><span class="kw">kable</span>(<span class="kw">table</span>(BIC.sample.classes<span class="op">$</span>ER1, BIC.sample.classes<span class="op">$</span>PR1))</a></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -1105,7 +1133,7 @@ BIC.cutree10  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb74-1" data-line-number="1"><span class="kw">fisher.test</span>(<span class="kw">table</span>(BIC.sample.classes<span class="op">$</span>ER1, BIC.sample.classes<span class="op">$</span>PR1))</a></code></pre></div>
+<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb85-1" data-line-number="1"><span class="kw">fisher.test</span>(<span class="kw">table</span>(BIC.sample.classes<span class="op">$</span>ER1, BIC.sample.classes<span class="op">$</span>PR1))</a></code></pre></div>
 <pre><code>
     Fisher&#39;s Exact Test for Count Data
 
@@ -1117,76 +1145,76 @@ alternative hypothesis: true odds ratio is not equal to 1
 sample estimates:
 odds ratio 
   80.90786 </code></pre>
-<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb76-1" data-line-number="1"><span class="co"># cut the tree at different levels (2, 5)</span></a>
-<a class="sourceLine" id="cb76-2" data-line-number="2"><span class="kw">plot</span>(BIC.hclust.ward, <span class="dt">labels =</span> <span class="ot">FALSE</span>, <span class="dt">hang =</span> <span class="dv">-1</span>)</a>
-<a class="sourceLine" id="cb76-3" data-line-number="3"><span class="kw">rect.hclust</span>(BIC.hclust.ward, <span class="dt">k =</span> <span class="dv">5</span>, <span class="dt">border =</span> <span class="st">&quot;blue&quot;</span>)</a>
-<a class="sourceLine" id="cb76-4" data-line-number="4"><span class="kw">rect.hclust</span>(BIC.hclust.ward, <span class="dt">k =</span> <span class="dv">2</span>, <span class="dt">border =</span> <span class="st">&quot;red&quot;</span>)</a>
-<a class="sourceLine" id="cb76-5" data-line-number="5"><span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, </a>
-<a class="sourceLine" id="cb76-6" data-line-number="6">       <span class="dt">legend =</span> <span class="kw">c</span>(<span class="st">&quot;2 clusters&quot;</span>, <span class="st">&quot;5 clusters&quot;</span>), </a>
-<a class="sourceLine" id="cb76-7" data-line-number="7">       <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;blue&quot;</span>), <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">cex =</span> <span class="fl">0.7</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb87-1" data-line-number="1"><span class="co"># cut the tree at different levels (2, 5)</span></a>
+<a class="sourceLine" id="cb87-2" data-line-number="2"><span class="kw">plot</span>(BIC.hclust.ward, <span class="dt">labels =</span> <span class="ot">FALSE</span>, <span class="dt">hang =</span> <span class="dv">-1</span>)</a>
+<a class="sourceLine" id="cb87-3" data-line-number="3"><span class="kw">rect.hclust</span>(BIC.hclust.ward, <span class="dt">k =</span> <span class="dv">5</span>, <span class="dt">border =</span> <span class="st">&quot;blue&quot;</span>)</a>
+<a class="sourceLine" id="cb87-4" data-line-number="4"><span class="kw">rect.hclust</span>(BIC.hclust.ward, <span class="dt">k =</span> <span class="dv">2</span>, <span class="dt">border =</span> <span class="st">&quot;red&quot;</span>)</a>
+<a class="sourceLine" id="cb87-5" data-line-number="5"><span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, </a>
+<a class="sourceLine" id="cb87-6" data-line-number="6">       <span class="dt">legend =</span> <span class="kw">c</span>(<span class="st">&quot;2 clusters&quot;</span>, <span class="st">&quot;5 clusters&quot;</span>), </a>
+<a class="sourceLine" id="cb87-7" data-line-number="7">       <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;blue&quot;</span>), <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">cex =</span> <span class="fl">0.7</span>)</a></code></pre></div>
 <p><img src="figures/TP_markers_vs_clusters-1.png" width="480" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb77-1" data-line-number="1"><span class="co">## hclust 2 clusters versus each marker</span></a>
-<a class="sourceLine" id="cb77-2" data-line-number="2"><span class="kw">table</span>(BIC.cutree2, BIC.sample.classes<span class="op">$</span>Her2)</a></code></pre></div>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb88-1" data-line-number="1"><span class="co">## hclust 2 clusters versus each marker</span></a>
+<a class="sourceLine" id="cb88-2" data-line-number="2"><span class="kw">table</span>(BIC.cutree2, BIC.sample.classes<span class="op">$</span>Her2)</a></code></pre></div>
 <pre><code>           
 BIC.cutree2 Negative Positive
-          1      508      179
-          2      123        9</code></pre>
-<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb79-1" data-line-number="1"><span class="kw">table</span>(BIC.cutree2, BIC.sample.classes<span class="op">$</span>ER1)</a></code></pre></div>
+          1      521      179
+          2      110        9</code></pre>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb90-1" data-line-number="1"><span class="kw">table</span>(BIC.cutree2, BIC.sample.classes<span class="op">$</span>ER1)</a></code></pre></div>
 <pre><code>           
 BIC.cutree2 Negative Positive
-          1       67      620
-          2      117       15</code></pre>
-<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb81-1" data-line-number="1"><span class="kw">table</span>(BIC.cutree2, BIC.sample.classes<span class="op">$</span>PR1)</a></code></pre></div>
+          1       79      621
+          2      105       14</code></pre>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb92-1" data-line-number="1"><span class="kw">table</span>(BIC.cutree2, BIC.sample.classes<span class="op">$</span>PR1)</a></code></pre></div>
 <pre><code>           
 BIC.cutree2 Negative Positive
-          1      142      545
-          2      125        7</code></pre>
-<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb83-1" data-line-number="1"><span class="co">## K-means 2 clusters versus each marker</span></a>
-<a class="sourceLine" id="cb83-2" data-line-number="2"><span class="kw">table</span>(BIC.kmeans2<span class="op">$</span>cluster, BIC.sample.classes<span class="op">$</span>ER1)</a></code></pre></div>
+          1      154      546
+          2      113        6</code></pre>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb94-1" data-line-number="1"><span class="co">## K-means 2 clusters versus each marker</span></a>
+<a class="sourceLine" id="cb94-2" data-line-number="2"><span class="kw">table</span>(BIC.kmeans2<span class="op">$</span>cluster, BIC.sample.classes<span class="op">$</span>ER1)</a></code></pre></div>
 <pre><code>   
     Negative Positive
-  1      139       19
-  2       45      616</code></pre>
-<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb85-1" data-line-number="1"><span class="kw">table</span>(BIC.kmeans2<span class="op">$</span>cluster, BIC.sample.classes<span class="op">$</span>PR1)</a></code></pre></div>
+  1       39      606
+  2      145       29</code></pre>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb96-1" data-line-number="1"><span class="kw">table</span>(BIC.kmeans2<span class="op">$</span>cluster, BIC.sample.classes<span class="op">$</span>PR1)</a></code></pre></div>
 <pre><code>   
     Negative Positive
-  1      148       10
-  2      119      542</code></pre>
-<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb87-1" data-line-number="1"><span class="kw">table</span>(BIC.kmeans2<span class="op">$</span>cluster, BIC.sample.classes<span class="op">$</span>Her2)</a></code></pre></div>
+  1      111      534
+  2      156       18</code></pre>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb98-1" data-line-number="1"><span class="kw">table</span>(BIC.kmeans2<span class="op">$</span>cluster, BIC.sample.classes<span class="op">$</span>Her2)</a></code></pre></div>
 <pre><code>   
     Negative Positive
-  1      134       24
-  2      497      164</code></pre>
-<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb89-1" data-line-number="1"><span class="co">## 5 clusters</span></a>
-<a class="sourceLine" id="cb89-2" data-line-number="2"><span class="kw">table</span>(BIC.cutree5, BIC.sample.classes<span class="op">$</span>Her2)</a></code></pre></div>
+  1      493      152
+  2      138       36</code></pre>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb100-1" data-line-number="1"><span class="co">## 5 clusters</span></a>
+<a class="sourceLine" id="cb100-2" data-line-number="2"><span class="kw">table</span>(BIC.cutree5, BIC.sample.classes<span class="op">$</span>Her2)</a></code></pre></div>
 <pre><code>           
 BIC.cutree5 Negative Positive
-          1      337       54
-          2      123        9
-          3       16       40
-          4       96       63
-          5       59       22</code></pre>
-<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb91-1" data-line-number="1"><span class="kw">table</span>(BIC.cutree5, BIC.sample.classes<span class="op">$</span>ER1)</a></code></pre></div>
+          1      358      130
+          2       56       20
+          3       32        7
+          4      110        9
+          5       75       22</code></pre>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb102-1" data-line-number="1"><span class="kw">table</span>(BIC.cutree5, BIC.sample.classes<span class="op">$</span>ER1)</a></code></pre></div>
 <pre><code>           
 BIC.cutree5 Negative Positive
-          1        4      387
-          2      117       15
-          3       42       14
-          4        4      155
-          5       17       64</code></pre>
-<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb93-1" data-line-number="1"><span class="kw">table</span>(BIC.cutree5, BIC.sample.classes<span class="op">$</span>cancer.type)</a></code></pre></div>
+          1       50      438
+          2       14       62
+          3        6       33
+          4      105       14
+          5        9       88</code></pre>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb104-1" data-line-number="1"><span class="kw">table</span>(BIC.cutree5, BIC.sample.classes<span class="op">$</span>cancer.type)</a></code></pre></div>
 <pre><code>           
 BIC.cutree5 Basal.like HER2pos Luminal.A Luminal.B Unclassified
-          1          3       0       298        51           39
-          2        104       7         1         0           20
-          3         11      28         2         5           10
-          4          1       2        80        47           29
-          5         12       4        41        15            9</code></pre>
-<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb95-1" data-line-number="1">cluster.vs.cancertype &lt;-<span class="st"> </span><span class="kw">table</span>(</a>
-<a class="sourceLine" id="cb95-2" data-line-number="2">  BIC.cutree5, </a>
-<a class="sourceLine" id="cb95-3" data-line-number="3">  BIC.sample.classes<span class="op">$</span>cancer.type)</a>
-<a class="sourceLine" id="cb95-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb95-5" data-line-number="5"><span class="kw">kable</span>(cluster.vs.cancertype, <span class="dt">caption =</span> <span class="st">&quot;Hierarchical clusters (c = 5) versus cancer type. &quot;</span>)</a></code></pre></div>
+          1         17      27       295        82           67
+          2         10       3        39        14           10
+          3          5       1        26         6            1
+          4         94       7         2         0           16
+          5          5       3        60        16           13</code></pre>
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb106-1" data-line-number="1">cluster.vs.cancertype &lt;-<span class="st"> </span><span class="kw">table</span>(</a>
+<a class="sourceLine" id="cb106-2" data-line-number="2">  BIC.cutree5, </a>
+<a class="sourceLine" id="cb106-3" data-line-number="3">  BIC.sample.classes<span class="op">$</span>cancer.type)</a>
+<a class="sourceLine" id="cb106-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb106-5" data-line-number="5"><span class="kw">kable</span>(cluster.vs.cancertype, <span class="dt">caption =</span> <span class="st">&quot;Hierarchical clusters (c = 5) versus cancer type. &quot;</span>)</a></code></pre></div>
 <table>
 <caption>Hierarchical clusters (c = 5) versus cancer type.</caption>
 <thead>
@@ -1200,150 +1228,150 @@ BIC.cutree5 Basal.like HER2pos Luminal.A Luminal.B Unclassified
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">3</td>
-<td align="right">0</td>
-<td align="right">298</td>
-<td align="right">51</td>
-<td align="right">39</td>
+<td align="right">17</td>
+<td align="right">27</td>
+<td align="right">295</td>
+<td align="right">82</td>
+<td align="right">67</td>
 </tr>
 <tr class="even">
-<td align="right">104</td>
-<td align="right">7</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">20</td>
-</tr>
-<tr class="odd">
-<td align="right">11</td>
-<td align="right">28</td>
-<td align="right">2</td>
-<td align="right">5</td>
+<td align="right">10</td>
+<td align="right">3</td>
+<td align="right">39</td>
+<td align="right">14</td>
 <td align="right">10</td>
 </tr>
-<tr class="even">
+<tr class="odd">
+<td align="right">5</td>
 <td align="right">1</td>
+<td align="right">26</td>
+<td align="right">6</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="right">94</td>
+<td align="right">7</td>
 <td align="right">2</td>
-<td align="right">80</td>
-<td align="right">47</td>
-<td align="right">29</td>
+<td align="right">0</td>
+<td align="right">16</td>
 </tr>
 <tr class="odd">
-<td align="right">12</td>
-<td align="right">4</td>
-<td align="right">41</td>
-<td align="right">15</td>
-<td align="right">9</td>
+<td align="right">5</td>
+<td align="right">3</td>
+<td align="right">60</td>
+<td align="right">16</td>
+<td align="right">13</td>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb96-1" data-line-number="1"><span class="co">## clustering versus cancer.type</span></a>
-<a class="sourceLine" id="cb96-2" data-line-number="2"><span class="co">## Compute the confusion table and adjusted RAND index (ARI)</span></a>
-<a class="sourceLine" id="cb96-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb96-4" data-line-number="4"><span class="co">## 2 clusters versus each marker</span></a>
-<a class="sourceLine" id="cb96-5" data-line-number="5"><span class="kw">table</span>(BIC.cutree2, BIC.sample.classes<span class="op">$</span>ER1)</a></code></pre></div>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb107-1" data-line-number="1"><span class="co">## clustering versus cancer.type</span></a>
+<a class="sourceLine" id="cb107-2" data-line-number="2"><span class="co">## Compute the confusion table and adjusted RAND index (ARI)</span></a>
+<a class="sourceLine" id="cb107-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb107-4" data-line-number="4"><span class="co">## 2 clusters versus each marker</span></a>
+<a class="sourceLine" id="cb107-5" data-line-number="5"><span class="kw">table</span>(BIC.cutree2, BIC.sample.classes<span class="op">$</span>ER1)</a></code></pre></div>
 <pre><code>           
 BIC.cutree2 Negative Positive
-          1       67      620
-          2      117       15</code></pre>
-<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb98-1" data-line-number="1">clues<span class="op">::</span><span class="kw">adjustedRand</span>(</a>
-<a class="sourceLine" id="cb98-2" data-line-number="2">  BIC.cutree2, </a>
-<a class="sourceLine" id="cb98-3" data-line-number="3">  <span class="kw">as.numeric</span>(BIC.sample.classes<span class="op">$</span>ER1))</a></code></pre></div>
+          1       79      621
+          2      105       14</code></pre>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb109-1" data-line-number="1">clues<span class="op">::</span><span class="kw">adjustedRand</span>(</a>
+<a class="sourceLine" id="cb109-2" data-line-number="2">  BIC.cutree2, </a>
+<a class="sourceLine" id="cb109-3" data-line-number="3">  <span class="kw">as.numeric</span>(BIC.sample.classes<span class="op">$</span>ER1))</a></code></pre></div>
 <pre><code>     Rand        HA        MA        FM   Jaccard 
-0.8195844 0.5810808 0.5813049 0.8707027 0.7688294 </code></pre>
-<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb100-1" data-line-number="1"><span class="kw">table</span>(BIC.cutree2, BIC.sample.classes<span class="op">$</span>PR1)</a></code></pre></div>
+0.7984363 0.5246178 0.5248551 0.8584747 0.7486861 </code></pre>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb111-1" data-line-number="1"><span class="kw">table</span>(BIC.cutree2, BIC.sample.classes<span class="op">$</span>PR1)</a></code></pre></div>
 <pre><code>           
 BIC.cutree2 Negative Positive
-          1      142      545
-          2      125        7</code></pre>
-<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb102-1" data-line-number="1">clues<span class="op">::</span><span class="kw">adjustedRand</span>(</a>
-<a class="sourceLine" id="cb102-2" data-line-number="2">  BIC.cutree2, </a>
-<a class="sourceLine" id="cb102-3" data-line-number="3">  <span class="kw">as.numeric</span>(BIC.sample.classes<span class="op">$</span>PR1))</a></code></pre></div>
+          1      154      546
+          2      113        6</code></pre>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb113-1" data-line-number="1">clues<span class="op">::</span><span class="kw">adjustedRand</span>(</a>
+<a class="sourceLine" id="cb113-2" data-line-number="2">  BIC.cutree2, </a>
+<a class="sourceLine" id="cb113-3" data-line-number="3">  <span class="kw">as.numeric</span>(BIC.sample.classes<span class="op">$</span>PR1))</a></code></pre></div>
 <pre><code>     Rand        HA        MA        FM   Jaccard 
-0.7019742 0.3692338 0.3696219 0.7755577 0.6244903 </code></pre>
-<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb104-1" data-line-number="1"><span class="kw">table</span>(BIC.cutree2, BIC.sample.classes<span class="op">$</span>Her2)</a></code></pre></div>
+0.6852265 0.3300361 0.3304169 0.7681779 0.6128497 </code></pre>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb115-1" data-line-number="1"><span class="kw">table</span>(BIC.cutree2, BIC.sample.classes<span class="op">$</span>Her2)</a></code></pre></div>
 <pre><code>           
 BIC.cutree2 Negative Positive
-          1      508      179
-          2      123        9</code></pre>
-<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb106-1" data-line-number="1">clues<span class="op">::</span><span class="kw">adjustedRand</span>(</a>
-<a class="sourceLine" id="cb106-2" data-line-number="2">  BIC.cutree2, </a>
-<a class="sourceLine" id="cb106-3" data-line-number="3">  <span class="kw">as.numeric</span>(BIC.sample.classes<span class="op">$</span>Her2))</a></code></pre></div>
+          1      521      179
+          2      110        9</code></pre>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb117-1" data-line-number="1">clues<span class="op">::</span><span class="kw">adjustedRand</span>(</a>
+<a class="sourceLine" id="cb117-2" data-line-number="2">  BIC.cutree2, </a>
+<a class="sourceLine" id="cb117-3" data-line-number="3">  <span class="kw">as.numeric</span>(BIC.sample.classes<span class="op">$</span>Her2))</a></code></pre></div>
 <pre><code>       Rand          HA          MA          FM     Jaccard 
- 0.53388801 -0.07618062 -0.07559919  0.66226224  0.49369937 </code></pre>
-<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb108-1" data-line-number="1"><span class="co">## 5 clusters versus cancer type</span></a>
-<a class="sourceLine" id="cb108-2" data-line-number="2"><span class="kw">table</span>(BIC.cutree5, BIC.sample.classes<span class="op">$</span>cancer.type)</a></code></pre></div>
+ 0.54273654 -0.07166150 -0.07112162  0.67464828  0.50684499 </code></pre>
+<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb119-1" data-line-number="1"><span class="co">## 5 clusters versus cancer type</span></a>
+<a class="sourceLine" id="cb119-2" data-line-number="2"><span class="kw">table</span>(BIC.cutree5, BIC.sample.classes<span class="op">$</span>cancer.type)</a></code></pre></div>
 <pre><code>           
 BIC.cutree5 Basal.like HER2pos Luminal.A Luminal.B Unclassified
-          1          3       0       298        51           39
-          2        104       7         1         0           20
-          3         11      28         2         5           10
-          4          1       2        80        47           29
-          5         12       4        41        15            9</code></pre>
-<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb110-1" data-line-number="1">clues<span class="op">::</span><span class="kw">adjustedRand</span>(</a>
-<a class="sourceLine" id="cb110-2" data-line-number="2">  BIC.cutree5, </a>
-<a class="sourceLine" id="cb110-3" data-line-number="3">  <span class="kw">as.numeric</span>(BIC.sample.classes<span class="op">$</span>cancer.type))</a></code></pre></div>
+          1         17      27       295        82           67
+          2         10       3        39        14           10
+          3          5       1        26         6            1
+          4         94       7         2         0           16
+          5          5       3        60        16           13</code></pre>
+<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb121-1" data-line-number="1">clues<span class="op">::</span><span class="kw">adjustedRand</span>(</a>
+<a class="sourceLine" id="cb121-2" data-line-number="2">  BIC.cutree5, </a>
+<a class="sourceLine" id="cb121-3" data-line-number="3">  <span class="kw">as.numeric</span>(BIC.sample.classes<span class="op">$</span>cancer.type))</a></code></pre></div>
 <pre><code>     Rand        HA        MA        FM   Jaccard 
-0.7105600 0.3330860 0.3348268 0.5451923 0.3743410 </code></pre>
-<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb112-1" data-line-number="1"><span class="co">## Negative control: compute the same stat with randomly permuted values</span></a>
-<a class="sourceLine" id="cb112-2" data-line-number="2"><span class="kw">table</span>(BIC.cutree5, BIC.sample.classes<span class="op">$</span>cancer.type)</a></code></pre></div>
+0.6103245 0.1641953 0.1659490 0.4690065 0.3045188 </code></pre>
+<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb123-1" data-line-number="1"><span class="co">## Negative control: compute the same stat with randomly permuted values</span></a>
+<a class="sourceLine" id="cb123-2" data-line-number="2"><span class="kw">table</span>(BIC.cutree5, BIC.sample.classes<span class="op">$</span>cancer.type)</a></code></pre></div>
 <pre><code>           
 BIC.cutree5 Basal.like HER2pos Luminal.A Luminal.B Unclassified
-          1          3       0       298        51           39
-          2        104       7         1         0           20
-          3         11      28         2         5           10
-          4          1       2        80        47           29
-          5         12       4        41        15            9</code></pre>
-<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb114-1" data-line-number="1">clues<span class="op">::</span><span class="kw">adjustedRand</span>(</a>
-<a class="sourceLine" id="cb114-2" data-line-number="2">  <span class="kw">sample</span>(BIC.cutree5), </a>
-<a class="sourceLine" id="cb114-3" data-line-number="3">  <span class="kw">as.numeric</span>(BIC.sample.classes<span class="op">$</span>cancer.type))</a></code></pre></div>
-<pre><code>      Rand         HA         MA         FM    Jaccard 
-0.57124647 0.01208625 0.01466490 0.32589921 0.19448557 </code></pre>
-<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb116-1" data-line-number="1"><span class="kw">table</span>(BIC.kmeans3<span class="op">$</span>cluster, BIC.sample.classes<span class="op">$</span>cancer.type)</a></code></pre></div>
+          1         17      27       295        82           67
+          2         10       3        39        14           10
+          3          5       1        26         6            1
+          4         94       7         2         0           16
+          5          5       3        60        16           13</code></pre>
+<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb125-1" data-line-number="1">clues<span class="op">::</span><span class="kw">adjustedRand</span>(</a>
+<a class="sourceLine" id="cb125-2" data-line-number="2">  <span class="kw">sample</span>(BIC.cutree5), </a>
+<a class="sourceLine" id="cb125-3" data-line-number="3">  <span class="kw">as.numeric</span>(BIC.sample.classes<span class="op">$</span>cancer.type))</a></code></pre></div>
+<pre><code>        Rand           HA           MA           FM      Jaccard 
+ 0.532305782 -0.003144876 -0.001040097  0.361776643  0.219606476 </code></pre>
+<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb127-1" data-line-number="1"><span class="kw">table</span>(BIC.kmeans3<span class="op">$</span>cluster, BIC.sample.classes<span class="op">$</span>cancer.type)</a></code></pre></div>
 <pre><code>   
     Basal.like HER2pos Luminal.A Luminal.B Unclassified
-  1        108       8         1         0           21
-  2         14       3       349        69           47
-  3          9      30        72        49           39</code></pre>
-<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb118-1" data-line-number="1">clues<span class="op">::</span><span class="kw">adjustedRand</span>(</a>
-<a class="sourceLine" id="cb118-2" data-line-number="2">  BIC.kmeans3<span class="op">$</span>cluster,</a>
-<a class="sourceLine" id="cb118-3" data-line-number="3">  <span class="kw">as.numeric</span>(BIC.sample.classes<span class="op">$</span>cancer.type))</a></code></pre></div>
+  1         19       4       132        26           20
+  2          7      23       288        91           66
+  3        105      14         2         1           21</code></pre>
+<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb129-1" data-line-number="1">clues<span class="op">::</span><span class="kw">adjustedRand</span>(</a>
+<a class="sourceLine" id="cb129-2" data-line-number="2">  BIC.kmeans3<span class="op">$</span>cluster,</a>
+<a class="sourceLine" id="cb129-3" data-line-number="3">  <span class="kw">as.numeric</span>(BIC.sample.classes<span class="op">$</span>cancer.type))</a></code></pre></div>
 <pre><code>     Rand        HA        MA        FM   Jaccard 
-0.6853429 0.3408014 0.3420787 0.5933483 0.4164101 </code></pre>
-<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb120-1" data-line-number="1"><span class="kw">table</span>(BIC.kmeans10<span class="op">$</span>cluster, BIC.sample.classes[,<span class="dv">1</span>])</a></code></pre></div>
+0.6188207 0.1976187 0.1991993 0.5004741 0.3301858 </code></pre>
+<div class="sourceCode" id="cb131"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb131-1" data-line-number="1"><span class="kw">table</span>(BIC.kmeans10<span class="op">$</span>cluster, BIC.sample.classes[,<span class="dv">1</span>])</a></code></pre></div>
 <pre><code>    
      Basal.like HER2pos Luminal.A Luminal.B Unclassified
-  1           1       0        68        10           14
-  2         104       7         1         0           19
-  3           0       0        33        11            5
-  4           0       0        47         8           10
-  5           0       0        63        13           11
-  6           1       0       113        21            4
-  7          13       4        38        15            9
-  8           1       8         0        20           12
-  9           9      22         2         2            8
-  10          2       0        57        18           15</code></pre>
-<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb122-1" data-line-number="1">clues<span class="op">::</span><span class="kw">adjustedRand</span>(BIC.kmeans10<span class="op">$</span>cluster,</a>
-<a class="sourceLine" id="cb122-2" data-line-number="2">                    <span class="kw">as.numeric</span>(BIC.sample.classes[,<span class="dv">1</span>]))</a></code></pre></div>
+  1          50       6         1         0            8
+  2          49       3         2         0           11
+  3          12       4        41        14           10
+  4           8      19        25        23           19
+  5           4       2        46        15           10
+  6           0       0        38         2            7
+  7           5       0        13         3            0
+  8           2       0       135        20           14
+  9           1       6        67        32           15
+  10          0       1        54         9           13</code></pre>
+<div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb133-1" data-line-number="1">clues<span class="op">::</span><span class="kw">adjustedRand</span>(BIC.kmeans10<span class="op">$</span>cluster,</a>
+<a class="sourceLine" id="cb133-2" data-line-number="2">                    <span class="kw">as.numeric</span>(BIC.sample.classes[,<span class="dv">1</span>]))</a></code></pre></div>
 <pre><code>     Rand        HA        MA        FM   Jaccard 
-0.6844354 0.1457520 0.1490861 0.3329400 0.1703425 </code></pre>
-<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb124-1" data-line-number="1"><span class="co"># Visualisation</span></a>
-<a class="sourceLine" id="cb124-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb124-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb124-4" data-line-number="4"><span class="co">## hclust (2 groupes) et HER2+/-</span></a>
-<a class="sourceLine" id="cb124-5" data-line-number="5"><span class="kw">plot</span>(BIC.prcomp<span class="op">$</span>x[,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>], </a>
-<a class="sourceLine" id="cb124-6" data-line-number="6">     <span class="dt">col =</span> hclust.k2.colors,</a>
-<a class="sourceLine" id="cb124-7" data-line-number="7">     <span class="dt">pch =</span> <span class="kw">as.numeric</span>(BIC.sample.classes<span class="op">$</span>ER1), <span class="co"># character indicates ER1 status</span></a>
-<a class="sourceLine" id="cb124-8" data-line-number="8">     <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">cex =</span> <span class="fl">0.7</span>, </a>
-<a class="sourceLine" id="cb124-9" data-line-number="9">     <span class="dt">main =</span> <span class="st">&quot;Clusters versus markers&quot;</span>)</a>
-<a class="sourceLine" id="cb124-10" data-line-number="10"><span class="kw">grid</span>()</a>
-<a class="sourceLine" id="cb124-11" data-line-number="11">texte.legend &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;ER1-&quot;</span>, <span class="st">&quot;ER1+&quot;</span>, <span class="st">&quot;gr1&quot;</span>, <span class="st">&quot;gr2&quot;</span>)</a>
-<a class="sourceLine" id="cb124-12" data-line-number="12"><span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, texte.legend, </a>
-<a class="sourceLine" id="cb124-13" data-line-number="13">       <span class="dt">col =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>), </a>
-<a class="sourceLine" id="cb124-14" data-line-number="14">       <span class="dt">pch =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="ot">NA</span>, <span class="ot">NA</span>), </a>
-<a class="sourceLine" id="cb124-15" data-line-number="15">       <span class="dt">text.col =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>))</a></code></pre></div>
+0.6682489 0.1076470 0.1110806 0.3002718 0.1535632 </code></pre>
+<div class="sourceCode" id="cb135"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb135-1" data-line-number="1"><span class="co"># Visualisation</span></a>
+<a class="sourceLine" id="cb135-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb135-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb135-4" data-line-number="4"><span class="co">## hclust (2 groupes) et HER2+/-</span></a>
+<a class="sourceLine" id="cb135-5" data-line-number="5"><span class="kw">plot</span>(BIC.prcomp<span class="op">$</span>x[,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>], </a>
+<a class="sourceLine" id="cb135-6" data-line-number="6">     <span class="dt">col =</span> hclust.k2.colors,</a>
+<a class="sourceLine" id="cb135-7" data-line-number="7">     <span class="dt">pch =</span> <span class="kw">as.numeric</span>(BIC.sample.classes<span class="op">$</span>ER1), <span class="co"># character indicates ER1 status</span></a>
+<a class="sourceLine" id="cb135-8" data-line-number="8">     <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">cex =</span> <span class="fl">0.7</span>, </a>
+<a class="sourceLine" id="cb135-9" data-line-number="9">     <span class="dt">main =</span> <span class="st">&quot;Clusters versus markers&quot;</span>)</a>
+<a class="sourceLine" id="cb135-10" data-line-number="10"><span class="kw">grid</span>()</a>
+<a class="sourceLine" id="cb135-11" data-line-number="11">texte.legend &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;ER1-&quot;</span>, <span class="st">&quot;ER1+&quot;</span>, <span class="st">&quot;gr1&quot;</span>, <span class="st">&quot;gr2&quot;</span>)</a>
+<a class="sourceLine" id="cb135-12" data-line-number="12"><span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, texte.legend, </a>
+<a class="sourceLine" id="cb135-13" data-line-number="13">       <span class="dt">col =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>), </a>
+<a class="sourceLine" id="cb135-14" data-line-number="14">       <span class="dt">pch =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="ot">NA</span>, <span class="ot">NA</span>), </a>
+<a class="sourceLine" id="cb135-15" data-line-number="15">       <span class="dt">text.col =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>))</a></code></pre></div>
 <p><img src="figures/TP_unnamed-chunk-9-1.png" width="80%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb125-1" data-line-number="1"><span class="co">## Draw a confusion table of cluster versus ER1</span></a>
-<a class="sourceLine" id="cb125-2" data-line-number="2"><span class="kw">kable</span>(<span class="kw">table</span>(BIC.cutree2, BIC.sample.classes<span class="op">$</span>ER1), <span class="dt">caption =</span> <span class="st">&quot;hclust clusters versus ER1 marker&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb136-1" data-line-number="1"><span class="co">## Draw a confusion table of cluster versus ER1</span></a>
+<a class="sourceLine" id="cb136-2" data-line-number="2"><span class="kw">kable</span>(<span class="kw">table</span>(BIC.cutree2, BIC.sample.classes<span class="op">$</span>ER1), <span class="dt">caption =</span> <span class="st">&quot;hclust clusters versus ER1 marker&quot;</span>)</a></code></pre></div>
 <table>
 <caption>hclust clusters versus ER1 marker</caption>
 <thead>
@@ -1354,12 +1382,12 @@ BIC.cutree5 Basal.like HER2pos Luminal.A Luminal.B Unclassified
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">67</td>
-<td align="right">620</td>
+<td align="right">79</td>
+<td align="right">621</td>
 </tr>
 <tr class="even">
-<td align="right">117</td>
-<td align="right">15</td>
+<td align="right">105</td>
+<td align="right">14</td>
 </tr>
 </tbody>
 </table>
@@ -1369,30 +1397,30 @@ BIC.cutree5 Basal.like HER2pos Luminal.A Luminal.B Unclassified
 <div id="lister-son-environnement" class="section level2">
 <h2>Lister son environnement</h2>
 <p>A la fin de tout travail d’analyse, il est important de conserver une trace précise et complète de l’environnement précis utilisé pour produire les résultats.</p>
-<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb126-1" data-line-number="1"><span class="co">## Print the complete list of libraries + versions used in this session</span></a>
-<a class="sourceLine" id="cb126-2" data-line-number="2"><span class="kw">sessionInfo</span>()</a></code></pre></div>
-<pre><code>R version 3.6.1 (2019-07-05)
-Platform: x86_64-apple-darwin15.6.0 (64-bit)
-Running under: macOS Mojave 10.14.6
+<div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb137-1" data-line-number="1"><span class="co">## Print the complete list of libraries + versions used in this session</span></a>
+<a class="sourceLine" id="cb137-2" data-line-number="2"><span class="kw">sessionInfo</span>()</a></code></pre></div>
+<pre><code>R version 3.6.3 (2020-02-29)
+Platform: x86_64-conda_cos6-linux-gnu (64-bit)
+Running under: CentOS Linux 7 (Core)
 
 Matrix products: default
-BLAS:   /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
-LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib
+BLAS/LAPACK: /shared/mfs/data/software/miniconda/envs/r-3.6.3/lib/libopenblasp-r0.3.9.so
 
 locale:
-[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C               LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8     LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8    LC_PAPER=en_US.UTF-8       LC_NAME=C                  LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
 
 attached base packages:
 [1] grid      stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] ClassDiscovery_3.3.12 oompaBase_3.2.9       cluster_2.1.0         ComplexHeatmap_2.0.0  RColorBrewer_1.1-2    clues_0.6.2.2         FactoMineR_2.3        knitr_1.28           
+[1] knitr_1.28            RColorBrewer_1.1-2    FactoMineR_2.3        ComplexHeatmap_2.2.0  clues_0.6.2.2         ClassDiscovery_3.3.12 oompaBase_3.2.9       cluster_2.1.0        
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.2           oompaData_3.1.1      highr_0.8            pillar_1.4.2         compiler_3.6.1       tools_3.6.1          mclust_5.4.5         digest_0.6.21        clue_0.3-57          evaluate_0.14        tibble_2.1.3         gtable_0.3.0         lattice_0.20-38      png_0.1-7           
-[15] pkgconfig_2.0.3      rlang_0.4.0          parallel_3.6.1       ggrepel_0.8.1        yaml_2.2.0           xfun_0.10            dplyr_0.8.3          stringr_1.4.0        GlobalOptions_0.1.1  flashClust_1.01-2    tidyselect_0.2.5     scatterplot3d_0.3-41 glue_1.3.1           R6_2.4.0            
-[29] GetoptLong_0.1.8     rmarkdown_1.16       ggplot2_3.2.1        purrr_0.3.2          magrittr_1.5         scales_1.0.0         htmltools_0.4.0      leaps_3.1            MASS_7.3-51.4        assertthat_0.2.1     shape_1.4.4          circlize_0.4.8       colorspace_1.4-1     stringi_1.4.3       
-[43] lazyeval_0.2.2       munsell_0.5.0        rjson_0.2.20         crayon_1.3.4        </code></pre>
+ [1] Rcpp_1.0.4.6         oompaData_3.1.1      highr_0.8            pillar_1.4.4         compiler_3.6.3       tools_3.6.3          digest_0.6.25        mclust_5.4.6         lattice_0.20-41      tibble_3.0.1         lifecycle_0.2.0      evaluate_0.14        gtable_0.3.0         clue_0.3-57         
+[15] pkgconfig_2.0.3      png_0.1-7            rlang_0.4.6          ggrepel_0.8.2        yaml_2.2.1           parallel_3.6.3       xfun_0.14            dplyr_0.8.5          stringr_1.4.0        vctrs_0.3.0          GlobalOptions_0.1.1  flashClust_1.01-2    scatterplot3d_0.3-41 tidyselect_1.1.0    
+[29] glue_1.4.1           R6_2.4.1             GetoptLong_0.1.8     rmarkdown_2.1        purrr_0.3.4          ggplot2_3.3.1        magrittr_1.5         MASS_7.3-51.6        ellipsis_0.3.1       scales_1.1.1         htmltools_0.4.0      leaps_3.1            assertthat_0.2.1     shape_1.4.4         
+[43] circlize_0.4.9       colorspace_1.4-1     stringi_1.4.6        munsell_0.5.0        crayon_1.3.4         rjson_0.2.20        </code></pre>
 </div>
 
 

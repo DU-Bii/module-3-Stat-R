@@ -73,6 +73,12 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
 
 BiocManager::install("GSEABase")
 
+library(GSEABase)
+
+install.packages("msigdbr")
+
+library(msigdbr)
+
 # library(formattable)
 
 options(width = 300)
@@ -248,3 +254,86 @@ VennDiagram::venn.diagram(
 
 # Practical
 
+- Gene sets
+
+```{r genesets, include=FALSE, echo=FALSE, eval=TRUE}
+
+msigdbr_show_species()
+
+m_df = msigdbr(species = "Saccharomyces cerevisiae")
+
+#head(m_df)
+
+m_df %>% dplyr::distinct(gs_cat, gs_subcat) %>% dplyr::arrange(gs_cat, gs_subcat)
+
+
+```
+
+## In/Output directories
+
+```{r outdirs, include=FALSE, echo=FALSE, eval=TRUE}
+
+#### Output directories ####
+outdirs <- list()
+outdirs$main <- getwd()
+
+## Data directory, where the data will be downloaded and uncompressed
+outdirs$data <- file.path(outdirs$main, "data")
+dir.create(outdirs$data, recursive = TRUE, showWarnings = FALSE)
+
+## Main result directory
+outdirs$results <- file.path(outdirs$main, "results")
+
+# Transcriptome results
+#outdirs$transcriptome <- file.path(outdirs$main, "results/transcriptome")
+#dir.create(outdirs$transcriptome, recursive = TRUE, showWarnings = FALSE)
+```
+
+## Download DEG data
+
+```{r download_deg, include=FALSE, echo=FALSE, eval=TRUE}
+#### Download DEG data ####
+t0dataFile <- "bdf1_Y187F_Y354F_mutant_0__vs__Wild_type_0_DESeq2_positive.tsv"
+t4dataFile <- "bdf1_Y187F_Y354F_mutant_4__vs__Wild_type_4_DESeq2_positive.tsv"
+t0URL <- file.path("https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2019/seance_5/results", t0dataFile)
+t4URL <- file.path("https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2019/seance_5/results", t4dataFile)
+localt0Data <- file.path(outdirs$data, t0dataFile)
+localt4Data <- file.path(outdirs$data, t4dataFile)
+
+if (file.exists(localt0Data) & !parameters$forceDownload) {
+  message("t0 data already downloaded:\n\t", localt0Data)
+} else {
+  message("Downloading t0 data from github: ", t0URL)
+  download.file(url = t0URL, destfile =  localt0Data)
+}
+
+if (file.exists(localt4Data) & !parameters$forceDownload) {
+  message("t4 data already downloaded:\n\t", localt4Data)
+} else {
+  message("Downloading t4 data from github: ", t4URL)
+  download.file(url = t4URL, destfile =  localt4Data)
+}
+```
+
+# DEG in dataframe
+
+```{r deg, include=FALSE, echo=FALSE, eval=TRUE}
+t0degFile <- file.path(
+  outdirs$data,
+  "bdf1_Y187F_Y354F_mutant_0__vs__Wild_type_0_DESeq2_positive.tsv")
+t0degValues <- read.csv(file = t0degFile, header = 1, row.names = 1)
+t4degFile <- file.path(
+  outdirs$data,
+  "bdf1_Y187F_Y354F_mutant_4__vs__Wild_type_4_DESeq2_positive.tsv")
+t4degValues <- read.csv(file = t4degFile, header = 1, row.names = 1)
+```
+
+# Analysis
+
+```{r analysis, include=FALSE, echo=FALSE, eval=TRUE}
+
+m_t2g = m_df %>% dplyr::select(gs_name, gene_symbol) %>% as.data.frame()
+#enricher(gene = gene_symbols_vector, TERM2GENE = m_t2g, ...)
+
+
+```

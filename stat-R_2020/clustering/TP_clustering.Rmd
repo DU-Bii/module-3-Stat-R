@@ -70,29 +70,6 @@ editor_options:
 
 
 
-```{r load_libraries}
-
-## Install required packages
-packages <- c("ClassDiscovery", 
-              "clues", 
-              "ComplexHeatmap",
-              "FactoMineR",
-              "RColorBrewer")
-
-message("Loading libraries ", paste(collapse = ", ", packages))
-
-for (pkg in packages) {
-  if (!require(pkg, character.only = TRUE)) {
-    install.packages(pkg)
-    require(pkg, character.only = TRUE)
-  }
-}
-
-library(knitr)
-#library(kableExtra) ## Note: kableExtra has some side effect on kable: column padding is null, so all numbers seem to be mixed up
-
-```
-
 ```{r knitr_options, echo=FALSE, include=FALSE, eval=TRUE}
 
 ## Define options for the R markdown output
@@ -123,6 +100,29 @@ data.folder <- "/shared/projects/du_bii_2019/data/module3/seance4/BIC/" # on the
 ```
 
 
+
+```{r load_libraries}
+
+## Install required packages
+packages <- c("ClassDiscovery", 
+              "clues", 
+              "ComplexHeatmap",
+              "FactoMineR",
+              "RColorBrewer")
+
+message("Loading libraries ", paste(collapse = ", ", packages))
+
+for (pkg in packages) {
+  if (!require(pkg, character.only = TRUE)) {
+    install.packages(pkg, repos = "https://cloud.r-project.org/")
+    require(pkg, character.only = TRUE)
+  }
+}
+
+library(knitr)
+#library(kableExtra) ## Note: kableExtra has some side effect on kable: column padding is null, so all numbers seem to be mixed up
+
+```
 
 ## Introduction
 
@@ -164,7 +164,7 @@ Pour les cours du DUBii, les données sont dans un répertoire partagé
 Nous définissons ci-dessous une variable `data.folder` qui indique le chemin de ce dossier partagé.
 Si noous désirons reproduire les analyses sur une autre machine, eci nous permettra de facilement modifier le chemin  en fonction de la configuration locale. 
 
-```{r data_folder_ifb, eval=FALSE}
+```{r data_folder_ifb}
 ## Location of the shared folder on the current install
 data.folder <- "/shared/projects/du_bii_2019/data/module3/seance4/BIC/" # on the IFB-cluster-core
 ```
