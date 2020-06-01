@@ -68,16 +68,29 @@ font-family: Garamond
 transition: linear
 ---
 
-```{r include=FALSE, echo=FALSE, eval=TRUE}
-library(knitr)
-library(kableExtra)
-library(png)
-library(grid)
-library(FactoMineR)
-library(factoextra)
-library(corrplot)
-library(tidyverse)
-library(gridExtra)
+
+```{r install_packages, echo=FALSE, eval=TRUE}
+#### Load required packages and install them if required ####
+packages <- c("knitr", 
+              "png", 
+              "grid", 
+              "FactoMineR", 
+              "factoextra", 
+              "corrplot",
+              "tidyverse",
+              "gridExtra")
+
+for (pkg in packages) {
+  if (!require(pkg, character.only = TRUE)) {
+    install.packages(pkg)
+    require(pkg, character.only = TRUE)
+  }
+}
+
+```
+
+
+```{r settings, include=FALSE, echo=FALSE, eval=TRUE}
 
 options(width = 300)
 knitr::opts_chunk$set(
@@ -155,7 +168,9 @@ decathlon2 %>%
 
 ## Standardisation des données
 
-- Centrer et réduire = soustraire à chaque valeur la moyenne de la variable et diviser par l’écart-type (fonction scale()) : $\frac{x_{i} - mean(x)}{sd(x)}$
+- **Centrer** = soustraire à chaque valeur la moyenne de la variable
+- **Réduire** = diviser par l’écart-type
+- fonction `scale()` : $\frac{x_{i} - mean(x)}{sd(x)}$
 
 
 ```{r, echo=FALSE, fig = TRUE}
@@ -168,10 +183,12 @@ decathlon2 %>%
   geom_boxplot() + 
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
-- L’ACP appliquée à ces données transformées est appelée ACP normée.
+
+- L’ACP appliquée à ces données transformées est appelée **ACP normée**.
 
 
 ## Code R
+
 ```{r}
 library("FactoMineR")
 library("factoextra")

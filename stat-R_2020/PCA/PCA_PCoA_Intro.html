@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PCA_PCoA_Intro.utf8</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+  <meta name="date" content="2019-07-02" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: '<div class="line-block">Module 3<br />
+Analyse statistique avec R<br />
+Séance 2 : L’analyse en composantes principales</div>',
+                        subtitle: 'DUBii 2019',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                      },
+
+      // Author information
+      presenters: [
+            {
+        name:  'Magali Berland' ,
+        company: '',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <link href="PCA_PCoA_Intro_files/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="PCA_PCoA_Intro_files/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="PCA_PCoA_Intro_files/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="PCA_PCoA_Intro_files/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="PCA_PCoA_Intro_files/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="PCA_PCoA_Intro_files/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="PCA_PCoA_Intro_files/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="PCA_PCoA_Intro_files/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="PCA_PCoA_Intro_files/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="PCA_PCoA_Intro_files/ioslides-13.5.1/js/slide-deck.js"></script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    summary {
+      display: list-item;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+/* https://github.com/ropensci/plotly/pull/524#issuecomment-468142578 */
+slide:not(.current) .plotly.html-widget{
+  display: block;
+}
+
+  </style>
+
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">07/02/2019</p>
+          </hgroup>
+  </slide>
+
+<pre >## Loading required package: knitr</pre>
+
+<pre >## Loading required package: png</pre>
+
+<pre >## Loading required package: grid</pre>
+
+<pre >## Loading required package: FactoMineR</pre>
+
+<pre >## Loading required package: factoextra</pre>
+
+<pre >## Loading required package: ggplot2</pre>
+
+<pre >## Welcome! Want to learn more? See two factoextra-related books at https://goo.gl/ve3WBa</pre>
+
+<pre >## Loading required package: corrplot</pre>
+
+<pre >## corrplot 0.84 loaded</pre>
+
+<pre >## Loading required package: tidyverse</pre>
+
+<pre >## ── Attaching packages ────────────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──</pre>
+
+<pre >## ✓ tibble  3.0.1     ✓ dplyr   1.0.0
+## ✓ tidyr   1.1.0     ✓ stringr 1.4.0
+## ✓ readr   1.3.1     ✓ forcats 0.5.0
+## ✓ purrr   0.3.4</pre>
+
+<pre >## ── Conflicts ───────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</pre>
+
+<pre >## Loading required package: gridExtra</pre>
+
+<pre >## 
+## Attaching package: &#39;gridExtra&#39;</pre>
+
+<pre >## The following object is masked from &#39;package:dplyr&#39;:
+## 
+##     combine</pre>
+
+<slide class=""><hgroup><h2>Analyse en Composantes Principales</h2></hgroup><article  id="analyse-en-composantes-principales" class="smaller ">
+
+<p>Objectif : décrire sans a priori un tableau de données constitué exclusivement de variables quantitatives.</p>
+
+<!-- ![](img/data1.png){height=300px} ![](img/data2.png){height=300px} -->
+
+<img height="400px" src='img/data3.png' title=''/>
+
+<p>Cette méthode permet de résumer l’information et d’en réduire la dimensionnalité.</p>
+
+</article></slide><slide class=""><hgroup><h2>Analyse en Composantes Principales</h2></hgroup><article  id="analyse-en-composantes-principales-1" class="smaller ">
+
+<ul>
+<li><p>L’ACP permet de déterminer les espaces de dimension inférieure à l’espace initial :</p>
+
+<ul>
+<li>où la projection du nuage de points initial est la moins déformée possible,</li>
+<li>qui conserve le plus d’information c’est-à-dire de variabilité.</li>
+</ul></li>
+<li><p>L’ACP permet de conserver au mieux la structure de corrélation entre les variables initiales</p>
+
+<ul>
+<li>Lorsque plusieurs variables sont corrélées, les composantes principales = combinaison de ces variables</li>
+<li>Permet de représenter les observations avec une perte d’information minimale</li>
+<li>L’ACP est particulièrement utile lorsque les variables sont fortement corrélées (réduction de dimension)</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Analyse en Composantes Principales</h2></hgroup><article  id="analyse-en-composantes-principales-2" class="smaller ">
+
+<p>Le principe de l’ACP :</p>
+
+<ul>
+<li>Trouver un axe ( = la première composante principale),</li>
+<li>Issu d’une combinaison linéaire des variables initiales,</li>
+<li>Tel que la variance du nuage autour de cet axe soit maximale.</li>
+<li>Réitérer ce processus dans des directions orthogonales pour déterminer les composantes principales suivantes.</li>
+</ul>
+
+<img width="600px" src='img/ACP1.png' title=''/>
+
+</article></slide><slide class=""><hgroup><h2>Analyse en Composantes Principales</h2></hgroup><article  id="analyse-en-composantes-principales-3" class="smaller ">
+
+<img width="900px" src='img/poisson.png' title=''/>
+
+<ul>
+<li>L’ACP suppose que les directions avec les plus grandes variances sont les plus &ldquo;importantes&rdquo;</li>
+<li>La quantité de variance expliquée par chaque composante principale est mesurée par ce que l’on appelle valeur propre.</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Standardisation des données</h2></hgroup><article  id="standardisation-des-données" class="smaller ">
+
+<ul>
+<li>Pour faire une ACP, les variables sont souvent normalisées</li>
+<li>Particulièrement recommandé lorsque les variables sont mesurées dans différentes unités</li>
+<li>L’objectif est de rendre les variables comparables.</li>
+</ul>
+
+<p><img src="figures/PCA_PCoA_intro_unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /></p>
+
+</article></slide><slide class=""><hgroup><h2>Standardisation des données</h2></hgroup><article  id="standardisation-des-données-1" class="smaller ">
+
+<ul>
+<li><strong>Centrer</strong> = soustraire à chaque valeur la moyenne de la variable</li>
+<li><strong>Réduire</strong> = diviser par l’écart-type</li>
+<li>fonction <code>scale()</code> : \(\frac{x_{i} - mean(x)}{sd(x)}\)</li>
+</ul>
+
+<p><img src="figures/PCA_PCoA_intro_unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+
+<ul>
+<li>L’ACP appliquée à ces données transformées est appelée <strong>ACP normée</strong>.</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Code R</h2></hgroup><article  id="code-r" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>library(&quot;FactoMineR&quot;)
+library(&quot;factoextra&quot;)</pre>
+
+<pre class = 'prettyprint lang-r'>PCA(X, scale.unit = TRUE, ncp = 5, graph = TRUE)</pre>
+
+<ul>
+<li>X : jeu de données de type data frame. Les lignes sont des individus et les colonnes sont des variables numériques</li>
+<li>scale.unit : une valeur logique. Si TRUE, les données sont standardisées/normalisées avant l’analyse.</li>
+<li>ncp : nombre de dimensions conservées dans les résultats finaux.</li>
+<li>graph : une valeur logique. Si TRUE un graphique est affiché.</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>data(decathlon2)
+res.pca = PCA(decathlon2[, 1:10], graph = FALSE)</pre>
+
+</article></slide><slide class=""><hgroup><h2>Code R</h2></hgroup><article  id="code-r-1" class="smaller ">
+
+<p>Le résultat de la fonction PCA() est une liste, contenant les éléments suivants :</p>
+
+<pre class = 'prettyprint lang-r'>res.pca</pre>
+
+<pre >**Results for the Principal Component Analysis (PCA)**
+The analysis was performed on 27 individuals, described by 10 variables
+*The results are available in the following objects:
+
+   name               description                          
+1  &quot;$eig&quot;             &quot;eigenvalues&quot;                        
+2  &quot;$var&quot;             &quot;results for the variables&quot;          
+3  &quot;$var$coord&quot;       &quot;coord. for the variables&quot;           
+4  &quot;$var$cor&quot;         &quot;correlations variables - dimensions&quot;
+5  &quot;$var$cos2&quot;        &quot;cos2 for the variables&quot;             
+6  &quot;$var$contrib&quot;     &quot;contributions of the variables&quot;     
+7  &quot;$ind&quot;             &quot;results for the individuals&quot;        
+8  &quot;$ind$coord&quot;       &quot;coord. for the individuals&quot;         
+9  &quot;$ind$cos2&quot;        &quot;cos2 for the individuals&quot;           
+10 &quot;$ind$contrib&quot;     &quot;contributions of the individuals&quot;   
+11 &quot;$call&quot;            &quot;summary statistics&quot;                 
+12 &quot;$call$centre&quot;     &quot;mean of the variables&quot;              
+13 &quot;$call$ecart.type&quot; &quot;standard error of the variables&quot;    
+14 &quot;$call$row.w&quot;      &quot;weights for the individuals&quot;        
+15 &quot;$call$col.w&quot;      &quot;weights for the variables&quot;          </pre>
+
+</article></slide><slide class=""><hgroup><h2>Valeurs propres / Variances</h2></hgroup><article  id="valeurs-propres-variances" class="smaller ">
+
+<ul>
+<li>Les valeurs propres (eigenvalues en anglais) mesurent la quantité de variance expliquée par chaque axe principal.</li>
+<li>Elles sont grandes pour les premiers axes et petites pour les axes suivants.</li>
+<li>Les premiers axes correspondent aux directions portant la quantité maximale de variation contenue dans le jeu de données.</li>
+<li>On peut examiner les valeurs propres pour déterminer le nombre de composantes principales à prendre en compte.</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Valeurs propres / Variances</h2></hgroup><article  id="valeurs-propres-variances-1" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>eig.val = get_eigenvalue(res.pca)
+eig.val</pre>
+
+<p>Les valeurs propres peuvent être utilisées pour déterminer le nombre d’axes principaux à conserver.</p>
+
+<ul>
+<li>Une valeur propre &gt; 1 : la composante principale (PC) concernée représente plus de variance par rapport à une seule variable d’origine, lorsque les données sont standardisées.</li>
+<li>On peut regarder le nombre d’axes qui représente une certaine fraction de la variance totale. Par exemple, le nombre d’axe qui permet de parvenir à 70% de la variance totale expliquée.</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Valeurs propres / Variances</h2></hgroup><article  id="valeurs-propres-variances-2" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>fviz_eig(res.pca, addlabels = TRUE, ylim = c(0, 50))</pre>
+
+<p><img src="figures/PCA_PCoA_intro_unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+
+</article></slide><slide class=""><hgroup><h2>Étude des variables</h2></hgroup><article  id="étude-des-variables" class="smaller ">
+
+<p>L’ACP permet d’étudier les liaisons linéaires entre les variables.</p>
+
+<p>Les objectifs sont de résumer la matrice des corrélations et de chercher des variables synthétiques : peut-on résumer les observations par un petit nombre de variables ?</p>
+
+<blockquote>
+<p>Dans notre exemple : les variables représentent les performances des athlètes dans chaque discipline</p>
+</blockquote>
+
+</article></slide><slide class=""><hgroup><h2>Graphiques des variables</h2></hgroup><article  id="graphiques-des-variables" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>var = get_pca_var(res.pca)
+var</pre>
+
+<pre >Principal Component Analysis Results for variables
+ ===================================================
+  Name       Description                                    
+1 &quot;$coord&quot;   &quot;Coordinates for the variables&quot;                
+2 &quot;$cor&quot;     &quot;Correlations between variables and dimensions&quot;
+3 &quot;$cos2&quot;    &quot;Cos2 for the variables&quot;                       
+4 &quot;$contrib&quot; &quot;contributions of the variables&quot;               </pre>
+
+<p>Les composants de get_pca_var() peuvent être utilisés dans le graphique des variables comme suit :</p>
+
+<ul>
+<li>var$coord : coordonnées des variables pour représenter le nuage de points.</li>
+<li>var$cos2 : cosinus carré des variables. Représente la qualité de représentation des variables sur le graphique de l’ACP. Il est calculé comme étant les coordonnées au carré : \(var.cos^2 = var.coord * var.coord\).</li>
+<li>var$contrib : contient les contributions (en pourcentage), des variables, aux composantes principales. La contribution d’une variable (var) à une composante principale donnée : \((var.cos^2 \times 100) / (\sum_{composante} cos^2)\).</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Graphiques des variables</h2></hgroup><article  id="graphiques-des-variables-1" class="smaller ">
+
+<pre class = 'prettyprint lang-r'># Coordonnées
+var$coord[1:3, 1:4]</pre>
+
+<pre >               Dim.1      Dim.2        Dim.3       Dim.4
+X100m     -0.8189521  0.3427787  0.100864539  0.10134200
+Long.jump  0.7588985 -0.3814931 -0.006261254 -0.18542415
+Shot.put   0.7150783  0.2821167  0.473854591  0.03610404</pre>
+
+<pre class = 'prettyprint lang-r'># Cos2: qualité de répresentation
+var$cos2[1:3, 1:4]</pre>
+
+<pre >              Dim.1      Dim.2        Dim.3       Dim.4
+X100m     0.6706825 0.11749725 0.0101736553 0.010270201
+Long.jump 0.5759270 0.14553701 0.0000392033 0.034382115
+Shot.put  0.5113370 0.07958983 0.2245381732 0.001303502</pre>
+
+<pre class = 'prettyprint lang-r'># Contributions aux composantes principales
+var$contrib[1:3, 1:4]</pre>
+
+<pre >             Dim.1    Dim.2        Dim.3     Dim.4
+X100m     17.88500 6.732718  0.670277238 0.9949816
+Long.jump 15.35817 8.339426  0.002582856 3.3309545
+Shot.put  13.63575 4.560583 14.793387670 0.1262838</pre>
+
+</article></slide><slide class=""><hgroup><h2>Le cercle de corrélation</h2></hgroup><article  id="le-cercle-de-corrélation" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>fviz_pca_var(res.pca, col.var = &quot;black&quot;)</pre>
+
+<p><img src="figures/PCA_PCoA_intro_unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+
+<ul>
+<li>Plus une variable est proche du cercle de corrélation, meilleure est sa représentation et elle est plus importante pour interpréter les composantes principales en considération</li>
+<li>Les variables qui sont proche du centre du graphique sont moins importantes pour interpréter les composantes.</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Qualité de représentation</h2></hgroup><article  id="qualité-de-représentation" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>corrplot(var$cos2, is.corr=FALSE)</pre>
+
+<p><img src="figures/PCA_PCoA_intro_unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+
+<ul>
+<li>Un \(cos^2\) élevé = bonne représentation de la variable sur les axes principaux<br/>\(\rightarrow\) la variable est positionnée à proximité du bord du cercle de corrélation.</li>
+<li>Un faible \(cos^2\) = la variable n’est pas bien représentée par les axes principaux<br/>\(\rightarrow\) la variable est proche du centre du cercle.</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Qualité de représentation</h2></hgroup><article  id="qualité-de-représentation-1" class="smaller ">
+
+<pre class = 'prettyprint lang-r'># Cos2 total des variables sur Dim.1 et Dim.2
+fviz_cos2(res.pca, choice = &quot;var&quot;, axes = 1:2)</pre>
+
+<p><img src="figures/PCA_PCoA_intro_unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+
+<ul>
+<li>Si une variable est parfaitement représentée par les deux 1ères composantes principales, les variables seront positionnées sur le cercle de corrélation.</li>
+<li>Pour certaines des variables, plus de 2 axes peuvent être nécessaires pour représenter parfaitement les données.</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Qualité de représentation</h2></hgroup><article  id="qualité-de-représentation-2" class="smaller ">
+
+<pre class = 'prettyprint lang-r'># Cos2 total des variables sur Dim.1 et Dim.2
+fviz_cos2(res.pca, choice = &quot;var&quot;, axes = 1:5)</pre>
+
+<p><img src="figures/PCA_PCoA_intro_unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
+
+<ul>
+<li>Pour une variable donnée, la somme des \(cos^2\) sur toutes les composantes principales est égale à 1.</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Qualité de représentation</h2></hgroup><article  id="qualité-de-représentation-3" class="smaller ">
+
+<pre class = 'prettyprint lang-r'># Colorer en fonction du cos2 : qualité de représentation
+fviz_pca_var(res.pca, col.var = &quot;cos2&quot;,
+             gradient.cols = c(&quot;#00AFBB&quot;, &quot;#E7B800&quot;, &quot;#FC4E07&quot;),
+             repel = TRUE # Évite le chevauchement de texte
+             )</pre>
+
+<p><img src="figures/PCA_PCoA_intro_unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
+
+</article></slide><slide class=""><hgroup><h2>Contributions des variables aux axes principaux</h2></hgroup><article  id="contributions-des-variables-aux-axes-principaux" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>head(var$contrib, 4)</pre>
+
+<pre >             Dim.1     Dim.2        Dim.3     Dim.4    Dim.5
+X100m     17.88500  6.732718  0.670277238 0.9949816  7.81996
+Long.jump 15.35817  8.339426  0.002582856 3.3309545 11.25620
+Shot.put  13.63575  4.560583 14.793387670 0.1262838 12.56616
+High.jump  9.87378 21.416504  0.001397716 0.4917303 14.62394</pre>
+
+<ul>
+<li>Plus la valeur de la contribution est importante, plus la variable contribue à la composante principale en question.</li>
+<li>Les contributions des variables sont exprimées en pourcentage.</li>
+<li>Les variables corrélées avec PC1 (i.e., Dim.1) et PC2 (i.e., Dim.2) sont les plus importantes pour expliquer la variabilité dans le jeu de données.</li>
+<li>Les variables qui ne sont pas en corrélation avec un axe ou qui sont corrélées avec les derniers axes sont des variables à faible apport et peuvent être supprimées pour simplifier l’analyse globale.</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Contributions des variables aux axes principaux</h2></hgroup><article  id="contributions-des-variables-aux-axes-principaux-1" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>corrplot(var$contrib, is.corr=FALSE)</pre>
+
+<p><img src="figures/PCA_PCoA_intro_unnamed-chunk-17-1.png" width="672" style="display: block; margin: auto;" /></p>
+
+</article></slide><slide class=""><hgroup><h2>Contributions des variables aux axes principaux</h2></hgroup><article  id="contributions-des-variables-aux-axes-principaux-2" class="smaller ">
+
+<pre class = 'prettyprint lang-r'># Contributions des variables à PC1
+fviz_contrib(res.pca, choice = &quot;var&quot;, axes = 1, top = 10)
+# Contributions des variables à PC2
+fviz_contrib(res.pca, choice = &quot;var&quot;, axes = 2, top = 10)</pre>
+
+<p><img src="figures/PCA_PCoA_intro_unnamed-chunk-19-1.png" width="960" style="display: block; margin: auto;" /></p>
+
+<p>Contribution moyenne attendue : Une variable avec une contribution supérieure à ce seuil pourrait être considérée comme importante pour contribuer à la composante.</p>
+
+</article></slide><slide class=""><hgroup><h2>Contributions des variables aux axes principaux</h2></hgroup><article  id="contributions-des-variables-aux-axes-principaux-3" class="smaller ">
+
+<p>La contribution totale à PC1 et PC2 est obtenue avec le code R suivant :</p>
+
+<pre class = 'prettyprint lang-r'>fviz_contrib(res.pca, choice = &quot;var&quot;, axes = 1:2, top = 10)</pre>
+
+<p><img src="figures/PCA_PCoA_intro_unnamed-chunk-20-1.png" width="672" style="display: block; margin: auto;" /></p>
+
+</article></slide><slide class=""><hgroup><h2>Contributions des variables aux axes principaux</h2></hgroup><article  id="contributions-des-variables-aux-axes-principaux-4" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>fviz_pca_var(res.pca, col.var = &quot;contrib&quot;,
+             gradient.cols = c(&quot;#00AFBB&quot;, &quot;#E7B800&quot;, &quot;#FC4E07&quot;)
+             )</pre>
+
+<p><img src="figures/PCA_PCoA_intro_unnamed-chunk-21-1.png" width="672" style="display: block; margin: auto;" /></p>
+
+</article></slide><slide class=""><hgroup><h2>Description des dimensions</h2></hgroup><article  id="description-des-dimensions" class="smaller ">
+
+<p>La fonction dimdesc() peut être utilisée pour identifier les variables les plus significativement associées avec une composante principale donnée :</p>
+
+<pre class = 'prettyprint lang-r'>res.desc = dimdesc(res.pca, axes = c(1,2), proba = 0.05)
+# Description de la dimension 1
+res.desc$Dim.1</pre>
+
+<pre >$quanti
+             correlation         p.value
+Long.jump      0.7588985 0.0000044696655
+Discus         0.7168881 0.0000258693448
+Shot.put       0.7150783 0.0000277085025
+High.jump      0.6084933 0.0007579915942
+X400m         -0.6438482 0.0002904661206
+X110m.hurdle  -0.7164203 0.0000263340399
+X100m         -0.8189521 0.0000001769961
+
+attr(,&quot;class&quot;)
+[1] &quot;condes&quot; &quot;list &quot; </pre>
+
+<pre class = 'prettyprint lang-r'># Description de la dimension 2
+res.desc$Dim.2</pre>
+
+<pre >$quanti
+           correlation      p.value
+High.jump    0.6113542 0.0007043348
+Long.jump   -0.3814931 0.0495907675
+X1500m      -0.5681197 0.0019922408
+Pole.vault  -0.7375479 0.0000113643
+
+attr(,&quot;class&quot;)
+[1] &quot;condes&quot; &quot;list &quot; </pre>
+
+<p>Les variables sont triées en fonction de la p-value de la corrélation.</p>
+
+</article></slide><slide class=""><hgroup><h2>Ajout de variables supplémentaires pour aider à l’interprétation</h2></hgroup><article  id="ajout-de-variables-supplémentaires-pour-aider-à-linterprétation" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>res.pca = PCA(decathlon2[, 1:12], quanti.sup = 11:12, graph = FALSE)
+fviz_pca_var(res.pca, col.var = &quot;cos2&quot;,
+             gradient.cols = c(&quot;#00AFBB&quot;, &quot;#E7B800&quot;, &quot;#FC4E07&quot;),
+             col.quanti.sup = &quot;blue&quot;,
+             repel = TRUE # Évite le chevauchement de texte
+             )</pre>
+
+<p><img src="figures/PCA_PCoA_intro_unnamed-chunk-23-1.png" width="672" style="display: block; margin: auto;" /></p>
+
+</article></slide><slide class=""><hgroup><h2>Étude des individus</h2></hgroup><article  id="étude-des-individus" class="smaller ">
+
+<p>On peut également étudier la variabilité entre individus.</p>
+
+<p>Y a-t-il des similarités entre les individus pour toutes les variables ? Peut-on établir des profils d’individus ? Peut-on opposer un groupe d’individus à un autre ?</p>
+
+<blockquote>
+<p>Dans notre exemple : les individus sont les athlètes : deux athlètes sont proches s’ils ont des résultats similaires.</p>
+</blockquote>
+
+</article></slide><slide class=""><hgroup><h2>Graphique des individus</h2></hgroup><article  id="graphique-des-individus" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>ind = get_pca_ind(res.pca)
+ind</pre>
+
+<p>Pour accéder aux différents éléments, utilisez ceci :</p>
+
+<pre class = 'prettyprint lang-r'># Coordonnées des individus
+ind$coord[1:3, 1:4]</pre>
+
+<pre >             Dim.1      Dim.2     Dim.3      Dim.4
+SEBRLE   0.2779582 -0.5364345 1.5852390  0.1058225
+CLAY     0.9048536 -2.0942803 0.8406848  1.8507178
+BERNARD -1.3722659 -1.3481155 0.9619317 -1.4930718</pre>
+
+<pre class = 'prettyprint lang-r'># Qualité des individus
+ind$cos2[1:3, 1:4]</pre>
+
+<pre >             Dim.1      Dim.2      Dim.3       Dim.4
+SEBRLE  0.01544651 0.05753138 0.50241310 0.002238865
+CLAY    0.06557423 0.35127414 0.05660346 0.274319687
+BERNARD 0.23223664 0.22413434 0.11411498 0.274925838</pre>
+
+<pre class = 'prettyprint lang-r'># Contributions des individus
+ind$contrib[1:3, 1:4]</pre>
+
+<pre >             Dim.1     Dim.2    Dim.3       Dim.4
+SEBRLE  0.07630746 0.6107062 6.132015  0.04018174
+CLAY    0.80865774 9.3082618 1.724567 12.29002506
+BERNARD 1.85987901 3.8570314 2.257887  7.99896372</pre>
+
+</article></slide><slide class=""><hgroup><h2>Graphique : qualité et contribution</h2></hgroup><article  id="graphique-qualité-et-contribution" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>fviz_pca_ind (res.pca, col.ind = &quot;cos2&quot;,
+             gradient.cols = c(&quot;#00AFBB&quot;, &quot;#E7B800&quot;, &quot;#FC4E07&quot;),
+             repel = TRUE) # Évite le chevauchement de texte</pre>
+
+<p><img src="figures/PCA_PCoA_intro_unnamed-chunk-26-1.png" width="672" style="display: block; margin: auto;" /></p>
+
+</article></slide><slide class=""><hgroup><h2>Graphique : qualité et contribution</h2></hgroup><article  id="graphique-qualité-et-contribution-1" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>fviz_pca_ind (res.pca, pointsize = &quot;cos2&quot;,
+             pointshape = 21, fill = &quot;#E7B800&quot;,
+             repel = TRUE) # Évite le chevauchement de texte</pre>
+
+<p><img src="figures/PCA_PCoA_intro_unnamed-chunk-27-1.png" width="672" style="display: block; margin: auto;" /></p>
+
+</article></slide><slide class=""><hgroup><h2>Graphique : qualité et contribution</h2></hgroup><article  id="graphique-qualité-et-contribution-2" class="smaller ">
+
+<pre class = 'prettyprint lang-r'># Contribution totale sur PC1 et PC2
+fviz_contrib(res.pca, choice = &quot;ind&quot;, axes = 1:2)</pre>
+
+<p><img src="figures/PCA_PCoA_intro_unnamed-chunk-28-1.png" width="960" style="display: block; margin: auto;" /></p>
+
+</article></slide><slide class=""><hgroup><h2>Lien entre les variables et les observations</h2></hgroup><article  id="lien-entre-les-variables-et-les-observations" class="smaller ">
+
+<p>Permet de répondre à la question : peut-on caractériser des groupes d’individus par des variables ?</p>
+
+</article></slide><slide class=""><hgroup><h2>Le biplot : représenter les individus et les variables en même temps</h2></hgroup><article  id="le-biplot-représenter-les-individus-et-les-variables-en-même-temps" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>fviz_pca_biplot(res.pca, repel = TRUE,
+                col.var = &quot;#2E9FDF&quot;, # Couleur des variables
+                col.ind = &quot;#696969&quot;) # Couleur des individues</pre>
+
+<p><img src="figures/PCA_PCoA_intro_unnamed-chunk-29-1.png" width="672" style="display: block; margin: auto;" /></p>
+
+<blockquote>
+<p>Le biplot n’est utile que s’il existe un faible nombre de variables et d’individus dans le jeu de données</p>
+</blockquote>
+
+<blockquote>
+<p>Les coordonnées des individus et des variables ne sont pas construites dans le même espace.<br/>\(\rightarrow\) se concentrer sur la direction des variables mais pas sur leurs positions absolues sur le graphique.</p>
+</blockquote>
+
+</article></slide><slide class=""><hgroup><h2>Le biplot : représenter les individus et les variables en même temps</h2></hgroup><article  id="le-biplot-représenter-les-individus-et-les-variables-en-même-temps-1" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>fviz_pca_biplot(res.pca, repel = TRUE,
+                col.var = &quot;#2E9FDF&quot;, # Couleur des variables
+                col.ind = &quot;#696969&quot;) # Couleur des individues</pre>
+
+<p><img src="figures/PCA_PCoA_intro_unnamed-chunk-30-1.png" width="672" style="display: block; margin: auto;" /></p>
+
+<blockquote>
+<p>Un individu qui se trouve du même côté d’une variable donnée a une valeur élevée pour cette variable ;</p>
+</blockquote>
+
+<blockquote>
+<p>Un individu qui se trouve sur le côté opposé d’une variable donnée a une faible valeur pour cette variable.</p>
+</blockquote>
+
+</article></slide><slide class=""><hgroup><h2>Colorer par groupes (variable qualitative)</h2></hgroup><article  id="colorer-par-groupes-variable-qualitative" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>fviz_pca_ind(res.pca,
+             geom.ind = &quot;point&quot;, # Montre les points seulement (mais pas le label)
+             col.ind = decathlon2$Competition, # colorer by groups
+             addEllipses = TRUE, # Ellipses de concentration
+             ellipse.level = 0.5,
+             legend.title = &quot;Compétition&quot;)</pre>
+
+<p><img src="figures/PCA_PCoA_intro_unnamed-chunk-31-1.png" width="672" style="display: block; margin: auto;" /></p>
+
+</article></slide><slide class=""><hgroup><h2>Colorer par groupes (variable qualitative)</h2></hgroup><article  id="colorer-par-groupes-variable-qualitative-1" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>fviz_pca_ind(res.pca,
+             col.ind = decathlon2$Competition, # colorer by groups
+             addEllipses = TRUE, # Ellipses de concentration
+             ellipse.level = 0.5,
+             legend.title = &quot;Compétition&quot;)</pre>
+
+<p><img src="figures/PCA_PCoA_intro_unnamed-chunk-32-1.png" width="672" style="display: block; margin: auto;" /></p></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>
