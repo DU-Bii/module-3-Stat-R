@@ -1,8 +1,5 @@
 ---
-title: |
-  | Module 3  
-  | Analyse statistique avec R  
-  | Séance 2 : L'analyse en composantes principales
+title: "Séance 2 : L'analyse en composantes principales"
 author: "Magali Berland"
 date: 07/02/2019
 output:
@@ -63,10 +60,34 @@ output:
     theme: Montpellier
     toc: yes
 font-import: http://fonts.googleapis.com/css?family=Risque
-subtitle: DUBii 2019
+subtitle: |
+  | DUBii 2020 
+  | Module 3. Analyse statistique avec R
 font-family: Garamond
 transition: linear
 ---
+
+
+```{r settings, include=FALSE, echo=FALSE, eval=TRUE}
+
+options(width = 300)
+knitr::opts_chunk$set(
+  fig.width = 7, fig.height = 5, 
+  fig.path = 'figures/PCA_PCoA_intro_',
+  fig.align = "center", 
+  size = "tiny", 
+  echo = TRUE, 
+  eval = TRUE, 
+  warning = FALSE, 
+  message = FALSE, 
+  results = FALSE, 
+  comment = "")
+
+options(scipen = 12) ## Max number of digits for non-scientific notation
+
+```
+
+
 
 
 ```{r install_packages, echo=FALSE, eval=TRUE}
@@ -86,23 +107,6 @@ for (pkg in packages) {
     require(pkg, character.only = TRUE)
   }
 }
-
-```
-
-
-```{r settings, include=FALSE, echo=FALSE, eval=TRUE}
-
-options(width = 300)
-knitr::opts_chunk$set(
-  fig.width = 7, fig.height = 5, 
-  fig.path = 'figures/PCA_PCoA_intro_',
-  fig.align = "center", 
-  size = "tiny", 
-  echo = TRUE, eval = TRUE, 
-  warning = FALSE, message = FALSE, 
-  results = FALSE, comment = "")
-
-options(scipen = 12) ## Max number of digits for non-scientific notation
 
 ```
 
