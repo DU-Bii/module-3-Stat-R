@@ -9,12 +9,13 @@
 - [R tutorials and good practice](#r-tutorials-and-good-practice)
 - [Teaching material](#teaching-material)
 
-    - [Session 1. R and Rmd basics](#session-1-r-and-rmd-basics)
-    - [Session 2. Statistical analysis with R](#session-2-statistical-analysis-with-r)
-    - [Session 3. Statistics for omics data](#session-3-statistics-for-omics-data)
-    - [Session 4. Clustering](clustering/)
-    - [Session 5. Data exploration and enrichment analysis](#session-5-data-exploration-and-enrichment-analysis)
-    - [Session 6. Supervised classification and learning](#session-6-supervised-classification-and-learning)
+    - [Session 1. R and Rmd basics](#r-and-rmd-basics)
+    - [Session 2. Statistical analysis with R](#statistical-analysis-with-r)
+    - [Session 3. Statistics for omics data](#statistics-for-omics-data)
+    - [Session 4. Clustering](#clustering)
+    - [Session 5. Data exploration](#data-exploration)
+    - [Session 6. Enrichment analysis](#enrichment-analysis)
+    - [Session 7. Supervised classification and learning](#supervised-classification-and-learning)
 
 ## Goals
 
@@ -49,7 +50,7 @@ Link to the prerequisites:
 
 | Doc | Description |URL |
 |---------|---------------------------|---------------------------------------|
-| **Git pages** | **Web site of the course**  (to see the supports) | <https://du-bii.github.io/module-3-Stat-R/> | 
+| **Git pages** | **Web site of the course**  (to see the supports) | <https://du-bii.github.io/module-3-Stat-R/stat-R_2020/> | 
 | Git repo | Repository enabling to download or clone the teaching material on your computer | <https://github.com/DU-Bii/module-3-Stat-R> |
 | RStudio at IFB cluster | link to RStudio on th IFB cluster | <https://rstudio.cluster.france-bioinformatique.fr/> |
 | Moodle | link to the Moddle web page of the DUBii with your ENT account] | <https://moodlesupd.script.univ-paris-diderot.fr/course/view.php?id=10629> |
@@ -67,7 +68,7 @@ Link to the prerequisites:
 
 ## Teaching material
 
-### Session 1. R and Rmd basics
+### R and Rmd basics
 
 
 | Topics |  Duration | Material |
@@ -83,7 +84,7 @@ Link to the prerequisites:
 | R markdown | 45' | Demo and [[COVID-19_HK.nb.html](practicals/Rmarkdown_demo/COVID-19_HK.nb.html)] |
 
 
-### Session 2. Statistical analysis with R
+### Statistical analysis with R
 
 
 | Type |  Description | Links |
@@ -109,7 +110,7 @@ Link to the prerequisites:
 
 
 
-### Session 3. Statistics for omics data
+### Statistics for omics data
 
 | Topics | Description | Duration | Material |
 |----------------------|-------------------------------------|-----|-----------------------------------------------|
@@ -123,14 +124,33 @@ Link to the prerequisites:
 | Statistics on omics data - part II | parameters estimation issue | 15' | [[pdf](slides/DUBii_R_Session_3.pdf)] |
 
 
-
-### Session 4. Clustering
+### Clustering
 
 Contents: [clustering/](clustering/)
 
-### Session 5. Data exploration and enrichment analysis
+### Data exploration
 
-### Session 6. Supervised classification and learning
+- Teachers:  Jacques van Helden & Olivier Sand
+- Date: 2020-06-02 PM
+- Videoconference
 
+
+| Topics | Type | Duration | Material |
+|--------------------------------|-------|----------------|
+| Clustering | Slides | Prerequisite (seen last time) | [[html](clustering/cours_clustering.html)] [[Rmd]()] |
+
+### Enrichment analysis
+
+- Teachers: Olivier Sand & Jacques van Helden
+- Date: 2020-06-03 PM
+- Videoconference
+
+
+### Supervised classification and learning
+
+
+- Teachers: Olivier Sand & Jacques van Helden
+- Date: 2020-06-11 PM
+- Videoconference
 
 
