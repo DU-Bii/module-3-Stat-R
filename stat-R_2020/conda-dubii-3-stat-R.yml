@@ -1,7 +1,7 @@
 ## Conda environment for the course "Statistical Analysis with R" 
 ## of the "Diplome Universitaire en Bioinformatique integrative" (DU-Bii).
 ## https://du-bii.github.io/accueil/
-name: du_bii_m3_stat_r-2019
+name: dubii_m3_stat_r-2020
 
 channels:
   - bioconda
@@ -13,7 +13,7 @@ dependencies:
   ## RCRAN packages
   ## Note: whenever possible, Gildas recommends to use the conda-forge 
   ## rather than the r channel in Anaconda Cloud (https://anaconda.org/)
-  - conda-forge::r-base  >=3.5
+  - conda-forge::r-base  >=3.6, <4.0
   - conda-forge::r-knitr        # For R markdown
   - conda-forge::r-kableextra   # To export nice-looking tables in the R markdown reports
   - conda-forge::r-formattable  # nice formating of tables in reports
