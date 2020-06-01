@@ -7,3 +7,6 @@ README.html
 ./seance_4/cancer
 *~
 *.log
+#*
+\.#*
+\#*
