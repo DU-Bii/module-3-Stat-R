@@ -137,7 +137,8 @@ Contents: [clustering/](clustering/)
 
 | Topics | Type | Duration | Material |
 |--------------------------------|-------|----------------|
-| Clustering | Slides | Prerequisite (seen last time) | [[html](clustering/cours_clustering.html)] [[Rmd]()] |
+| Clustering: rappel de la séance précédente | Slides | 10'  | [[html](clustering/cours_clustering.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/clustering/cours_clustering.Rmd)] |
+| Analyse en composante principale | Diapos | 20' | [[html](PCA/PCA_PCoA_Intro.html)] [[]](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/PCA/PCA_PCoA_Intro.Rmd) |
 
 ### Enrichment analysis
 
