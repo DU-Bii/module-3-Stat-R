@@ -4,6 +4,40 @@ subtitle: "Hierarchical clustering et Kmeans"
 author: "Anne Badel, Frédéric Guyon & Jacques van Helden"
 date: "`r Sys.Date()`"
 output:
+  html_document:
+    fig_caption: yes
+    highlight: zenburn
+    self_contained: no
+    theme: cerulean
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
+  beamer_presentation:
+    theme: Hannover #Montpellier
+    colortheme: beaver
+    fonttheme: professionalfonts #structurebold
+    highlight: pygments #default
+    fig_caption: no
+    fig_height: 4
+    fig_width: 5
+    incremental: no
+    keep_tex: no
+    slide_level: 1
+    toc: yes
+  ioslides_presentation:
+    highlight: zenburn
+    incremental: no
+  revealjs::revealjs_presentation:
+    theme: night
+    transition: none
+    self_contained: true
+    slide_level: 1
+    css: ../slides.css
   slidy_presentation:
     highlight: default
     incremental: no
@@ -18,40 +52,6 @@ output:
     theme: cerulean
     toc: yes
     widescreen: yes
-  html_document:
-    fig_caption: yes
-    highlight: zenburn
-    self_contained: no
-    theme: cerulean
-    toc: yes
-    toc_depth: 3
-    toc_float: yes
-  pdf_document:
-    fig_caption: yes
-    highlight: zenburn
-    toc: yes
-    toc_depth: 3
-  ioslides_presentation:
-    highlight: zenburn
-    incremental: no
-  revealjs::revealjs_presentation:
-    theme: night
-    transition: none
-    self_contained: true
-    slide_level: 1
-    css: ../slides.css
-  beamer_presentation:
-    theme: Hannover #Montpellier
-    colortheme: beaver
-    fonttheme: professionalfonts #structurebold
-    highlight: pygments #default
-    fig_caption: no
-    fig_height: 4
-    fig_width: 5
-    incremental: no
-    keep_tex: no
-    slide_level: 1
-    toc: yes
 font-import: http://fonts.googleapis.com/css?family=Risque
 font-family: Garamond
 transition: linear
@@ -63,9 +63,10 @@ editor_options:
 ```{r settings, include=FALSE, echo=FALSE, eval=TRUE}
 ## Install required packages
 packages <- c("knitr", 
-              #              "kableExtra", 
+              # "kableExtra",
               "FactoMineR", 
-              "clues", 
+              "aricode",  # for adjusted Rand Index,
+              # "clues", # not maintained anymore
               "RColorBrewer", "rgl", "vegan", "pheatmap")
 # library(formattable)
 
@@ -1028,8 +1029,10 @@ et taille de classe différente
 # Comparaison des résultats des deux classifications
 
 - rand index et adjusted rand index
+
 ```{r}
-clues::adjustedRand(cluster.hclust5, cluster.kmeans3)
+## Compute adjusted Rand index
+(ARI <- aricode::ARI(cluster.hclust5, cluster.kmeans3))
 ```
 
 
