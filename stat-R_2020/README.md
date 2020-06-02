@@ -142,6 +142,8 @@ Contents: [clustering/](clustering/)
 | Practical: data preparation (Pavkovic, 2019) | Notebook code |  | [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/pavkovic_2019/prepare-data_pavkovic_2019.Rmd)] |
 | Practical: data preparation (Pavkovic, 2019) - UUO proteome dataset | Notebook report | | [[html](practicals/pavkovic_2019/pavkovic2019_proteome_uuo.html)]  |
 | Practical: data preparation (Pavkovic, 2019) - UUO transcriptome dataset | Notebook report | | [[html](practicals/pavkovic_2019/pavkovic2019_transcriptome_uuo.html)]  |
+| Practical: data preparation (Pavkovic, 2019) - FA proteome dataset | Notebook report | | [[html](practicals/pavkovic_2019/pavkovic2019_proteome_fa.html)]  |
+| Practical: data preparation (Pavkovic, 2019) - FA transcriptome dataset | Notebook report | | [[html](practicals/pavkovic_2019/pavkovic2019_transcriptome_fa.html)]  |
 
 
 ### Enrichment analysis
