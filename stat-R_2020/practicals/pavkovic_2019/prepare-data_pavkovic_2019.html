@@ -423,7 +423,7 @@ div.tocify {
 <span id="cb1-18"><a href="#cb1-18"></a></span>
 <span id="cb1-19"><a href="#cb1-19"></a></span>
 <span id="cb1-20"><a href="#cb1-20"></a><span class="co">## Redefine the directory and prefix of the figures exported by knitr</span></span>
-<span id="cb1-21"><a href="#cb1-21"></a>parameters<span class="op">$</span>filePrefix &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&#39;pavkovic2019_&#39;</span>, parameters<span class="op">$</span>dataype, <span class="st">&quot;_&quot;</span>, parameters<span class="op">$</span>dataset, <span class="st">&quot;_&quot;</span>)</span>
+<span id="cb1-21"><a href="#cb1-21"></a>parameters<span class="op">$</span>filePrefix &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&#39;pavkovic2019_&#39;</span>, parameters<span class="op">$</span>datatype, <span class="st">&quot;_&quot;</span>, parameters<span class="op">$</span>dataset, <span class="st">&quot;_&quot;</span>)</span>
 <span id="cb1-22"><a href="#cb1-22"></a></span>
 <span id="cb1-23"><a href="#cb1-23"></a><span class="co">## Print the parameters</span></span>
 <span id="cb1-24"><a href="#cb1-24"></a><span class="kw">kable</span>(<span class="kw">t</span>(<span class="kw">as.data.frame</span>(parameters)), <span class="dt">col.names =</span> <span class="st">&quot;Parameter&quot;</span>)</span></code></pre></div>
@@ -457,7 +457,7 @@ div.tocify {
 </tr>
 <tr class="even">
 <td>filePrefix</td>
-<td align="left">pavkovic2019_<em>uuo</em></td>
+<td align="left">pavkovic2019_proteome_uuo_</td>
 </tr>
 </tbody>
 </table>
@@ -907,7 +907,7 @@ div.tocify {
 <span id="cb8-3"><a href="#cb8-3"></a>     <span class="dt">xlab =</span> <span class="st">&quot;Raw values&quot;</span>, </span>
 <span id="cb8-4"><a href="#cb8-4"></a>     <span class="dt">ylab =</span> <span class="st">&quot;Number of features (all samples)&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figures/proteome/uuo/pavkovic2019__uuo_RNA-seq_count_distrib-1.png" alt="Distribution of raw counts" width="70%" />
+<img src="figures/proteome/uuo/pavkovic2019_proteome_uuo_RNA-seq_count_distrib-1.png" alt="Distribution of raw counts" width="70%" />
 <p class="caption">
 Distribution of raw counts
 </p>
@@ -935,7 +935,7 @@ Distribution of raw counts
 <span id="cb9-15"><a href="#cb9-15"></a>     <span class="dt">xlab =</span> <span class="st">&quot;Raw values (below percentile 95)&quot;</span>, </span>
 <span id="cb9-16"><a href="#cb9-16"></a>     <span class="dt">ylab =</span> <span class="st">&quot;Number of features (all samples)&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figures/proteome/uuo/pavkovic2019__uuo_raw_distrib_truncated_p95-1.png" alt="Distribution of raw counts" width="70%" />
+<img src="figures/proteome/uuo/pavkovic2019_proteome_uuo_raw_distrib_truncated_p95-1.png" alt="Distribution of raw counts" width="70%" />
 <p class="caption">
 Distribution of raw counts
 </p>
@@ -943,7 +943,7 @@ Distribution of raw counts
 </div>
 <div id="distribution-of-raw-counts---two-sides-trimming" class="section level2">
 <h2>Distribution of raw counts - two-sides trimming</h2>
-<p>For visualisation, it is sometimes convenient to truncate both tails of the distribution, in order to avoid both the outliers (right tail) and the sometimes large number of zero values. This is particularly useful for single-cell RNA-seq data, which can have a “zero-inflated” distribution, but it is also useful for other data types.</p>
+<p>For visualization, it is sometimes convenient to truncate both tails of the distribution, in order to avoid both the outliers (right tail) and the sometimes large number of zero values. This is particularly useful for single-cell RNA-seq data, which can have a “zero-inflated” distribution, but it is also useful for other data types.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co">#### Count distrib - truncated on both tails ####</span></span>
 <span id="cb10-2"><a href="#cb10-2"></a></span>
 <span id="cb10-3"><a href="#cb10-3"></a><span class="co">## Compute the percentile 95 of all the data</span></span>
@@ -962,7 +962,7 @@ Distribution of raw counts
 <span id="cb10-16"><a href="#cb10-16"></a>     <span class="dt">xlab =</span> <span class="st">&quot;Raw values (between p05 and p95)&quot;</span>, </span>
 <span id="cb10-17"><a href="#cb10-17"></a>     <span class="dt">ylab =</span> <span class="st">&quot;Number of features (all samples)&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figures/proteome/uuo/pavkovic2019__uuo_raw_distrib_trimmed_p05-p95-1.png" alt="Distribution of raw counts" width="70%" />
+<img src="figures/proteome/uuo/pavkovic2019_proteome_uuo_raw_distrib_trimmed_p05-p95-1.png" alt="Distribution of raw counts" width="70%" />
 <p class="caption">
 Distribution of raw counts
 </p>
@@ -981,7 +981,7 @@ Distribution of raw counts
 <span id="cb11-6"><a href="#cb11-6"></a>     <span class="dt">main =</span> <span class="st">&quot;log2(values) distribution&quot;</span>,</span>
 <span id="cb11-7"><a href="#cb11-7"></a>     <span class="dt">xlab =</span> <span class="st">&quot;log2(raw + epsilon)&quot;</span>, </span>
 <span id="cb11-8"><a href="#cb11-8"></a>     <span class="dt">ylab =</span> <span class="st">&quot;Number of features&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;#BBFFBB&quot;</span>)</span></code></pre></div>
-<p><img src="figures/proteome/uuo/pavkovic2019__uuo_log2_counts-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/proteome/uuo/pavkovic2019_proteome_uuo_log2_counts-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="box-plots" class="section level2">
 <h2>Box plots</h2>
@@ -1002,7 +1002,7 @@ Distribution of raw counts
 <span id="cb12-14"><a href="#cb12-14"></a>        <span class="dt">main =</span> <span class="st">&quot;log2-transformed&quot;</span>, </span>
 <span id="cb12-15"><a href="#cb12-15"></a>        <span class="dt">xlab =</span> <span class="st">&quot;log2(value)&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figures/proteome/uuo/pavkovic2019__uuo_boxplots_raw_vs_log2-1.png" alt="Box plot of the raw values (left) and log2-transformed values (right)" width="80%" />
+<img src="figures/proteome/uuo/pavkovic2019_proteome_uuo_boxplots_raw_vs_log2-1.png" alt="Box plot of the raw values (left) and log2-transformed values (right)" width="80%" />
 <p class="caption">
 Box plot of the raw values (left) and log2-transformed values (right)
 </p>
@@ -1034,7 +1034,7 @@ Box plot of the raw values (left) and log2-transformed values (right)
 <span id="cb14-20"><a href="#cb14-20"></a>        <span class="dt">main =</span> <span class="st">&quot;Filtered features&quot;</span>, </span>
 <span id="cb14-21"><a href="#cb14-21"></a>        <span class="dt">xlab =</span> <span class="st">&quot;log2(value)&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figures/proteome/uuo/pavkovic2019__uuo_boxplots_filtering-1.png" alt="Box plot of the log2-transformed values before (left) and after (right)  feature filtering. " width="80%" />
+<img src="figures/proteome/uuo/pavkovic2019_proteome_uuo_boxplots_filtering-1.png" alt="Box plot of the log2-transformed values before (left) and after (right)  feature filtering. " width="80%" />
 <p class="caption">
 Box plot of the log2-transformed values before (left) and after (right) feature filtering.
 </p>
@@ -1042,9 +1042,9 @@ Box plot of the log2-transformed values before (left) and after (right) feature 
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw">par</span>(par.ori)</span></code></pre></div>
 <p>We filtered out all the features whose maximal count value across all samples was lower than 100. Among the 8508 genes from the raw count table, 0 were considered undetected according to this criterion. We use the remaining 8508 genes for the subsequent analyses.</p>
 </div>
-<div id="standardisation-centering" class="section level2">
-<h2>Standardisation: centering</h2>
-<p>Before going any further, it is important to ensure some standardisation of the samples, in order to correct for biases due to inter-sample differences in sequencing depth (RNA-seq) or other sample-specific bias.</p>
+<div id="standardization-centering" class="section level2">
+<h2>Standardization: centering</h2>
+<p>Before going any further, it is important to ensure some standardization of the samples, in order to correct for biases due to inter-sample differences in sequencing depth (RNA-seq) or other sample-specific bias.</p>
 <p>For the sake of simplicity, we will use here a very simple criterion: median-based centering.</p>
 <p>When we start from the raw values, the principle is to divide the counts of each sample by a sample-specific scaling factor in order to bring each sample to the same median count.</p>
 <p>Since we are working with log2-transformed values, we compute the difference, which is equivalent to apply a ratio to the raw values.</p>
@@ -1080,17 +1080,17 @@ Box plot of the log2-transformed values before (left) and after (right) feature 
 <span id="cb16-30"><a href="#cb16-30"></a>        <span class="dt">main =</span> <span class="st">&quot;Median-based centered&quot;</span>, </span>
 <span id="cb16-31"><a href="#cb16-31"></a>        <span class="dt">xlab =</span> <span class="st">&quot;log2(value)&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figures/proteome/uuo/pavkovic2019__uuo_boxplots_centering-1.png" alt="Box plot of the log2-transformed feature-filtered values before (left) and after (right) median-based standardisation.  " width="80%" />
+<img src="figures/proteome/uuo/pavkovic2019_proteome_uuo_boxplots_centering-1.png" alt="Box plot of the log2-transformed feature-filtered values before (left) and after (right) median-based standardization.  " width="80%" />
 <p class="caption">
-Box plot of the log2-transformed feature-filtered values before (left) and after (right) median-based standardisation.
+Box plot of the log2-transformed feature-filtered values before (left) and after (right) median-based standardization.
 </p>
 </div>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="kw">par</span>(par.ori)</span></code></pre></div>
 <p>Consistently, after centering, all the medians appear aligned on the box plot.</p>
 </div>
-<div id="standardisation-scaling" class="section level2">
-<h2>Standardisation: scaling</h2>
-<p>The second step of standardisation is to ensure homogeous dispersion between samples. This relies on some biological assumption, so it has to be evaluated on a case-per-case basis.</p>
+<div id="standardization-scaling" class="section level2">
+<h2>Standardization: scaling</h2>
+<p>The second step of standardization is to ensure homogeous dispersion between samples. This relies on some biological assumption, so it has to be evaluated on a case-per-case basis.</p>
 <p><strong>My trick: </strong> for high-throughput data, I generally use the inter-quartile range (IQR) rather than the standard deviation as scaling factor. This ensures robustness to outliers, which may have a very strong impact for some datatypes (e.g. RNA-seq).</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="co">#### IQR-based scaling ####</span></span>
 <span id="cb18-2"><a href="#cb18-2"></a>sampleIQR &lt;-<span class="st"> </span><span class="kw">apply</span>(log2MedianCentered, <span class="dv">2</span>, IQR)</span>
@@ -1128,7 +1128,7 @@ Box plot of the log2-transformed feature-filtered values before (left) and after
 <span id="cb18-34"><a href="#cb18-34"></a>        <span class="dt">main =</span> <span class="st">&quot;Standardized</span><span class="ch">\n</span><span class="st">(median centering, IQR scaling)&quot;</span>, </span>
 <span id="cb18-35"><a href="#cb18-35"></a>        <span class="dt">xlab =</span> <span class="st">&quot;log2(value)&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figures/proteome/uuo/pavkovic2019__uuo_boxplots_scaling-1.png" alt="Box plot of the log2-transformed feature-filtered values before (left) and after (right) IQR-based scaling.   " width="80%" />
+<img src="figures/proteome/uuo/pavkovic2019_proteome_uuo_boxplots_scaling-1.png" alt="Box plot of the log2-transformed feature-filtered values before (left) and after (right) IQR-based scaling.   " width="80%" />
 <p class="caption">
 Box plot of the log2-transformed feature-filtered values before (left) and after (right) IQR-based scaling.
 </p>
@@ -1151,12 +1151,12 @@ Box plot of the log2-transformed feature-filtered values before (left) and after
 <span id="cb20-11"><a href="#cb20-11"></a>        <span class="dt">col =</span> metadata<span class="op">$</span>color,</span>
 <span id="cb20-12"><a href="#cb20-12"></a>        <span class="dt">horizontal =</span> <span class="ot">TRUE</span>, </span>
 <span id="cb20-13"><a href="#cb20-13"></a>        <span class="dt">las =</span> <span class="dv">1</span>, </span>
-<span id="cb20-14"><a href="#cb20-14"></a>        <span class="dt">main =</span> <span class="st">&quot;Filtered, normalized and standardised&quot;</span>, </span>
+<span id="cb20-14"><a href="#cb20-14"></a>        <span class="dt">main =</span> <span class="st">&quot;Filtered, normalized and standardized&quot;</span>, </span>
 <span id="cb20-15"><a href="#cb20-15"></a>        <span class="dt">xlab =</span> <span class="st">&quot;log2(counts)&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figures/proteome/uuo/pavkovic2019__uuo_boxplots_raw_vs_standardized-1.png" alt="Box plot of the raw values (left) and the final data after feature filtering, normalisation by log2 transormation, centering and scaling (right).  " width="80%" />
+<img src="figures/proteome/uuo/pavkovic2019_proteome_uuo_boxplots_raw_vs_standardized-1.png" alt="Box plot of the raw values (left) and the final data after feature filtering, normalization by log2 transormation, centering and scaling (right).  " width="80%" />
 <p class="caption">
-Box plot of the raw values (left) and the final data after feature filtering, normalisation by log2 transormation, centering and scaling (right).
+Box plot of the raw values (left) and the final data after feature filtering, normalization by log2 transormation, centering and scaling (right).
 </p>
 </div>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="kw">par</span>(par.ori)</span></code></pre></div>
@@ -1177,12 +1177,12 @@ Box plot of the raw values (left) and the final data after feature filtering, no
 <span id="cb22-11"><a href="#cb22-11"></a>        <span class="dt">col =</span> metadata<span class="op">$</span>color,</span>
 <span id="cb22-12"><a href="#cb22-12"></a>        <span class="dt">horizontal =</span> <span class="ot">TRUE</span>, </span>
 <span id="cb22-13"><a href="#cb22-13"></a>        <span class="dt">las =</span> <span class="dv">1</span>, </span>
-<span id="cb22-14"><a href="#cb22-14"></a>        <span class="dt">main =</span> <span class="st">&quot;Filtered, normalized and standardised&quot;</span>, </span>
+<span id="cb22-14"><a href="#cb22-14"></a>        <span class="dt">main =</span> <span class="st">&quot;Filtered, normalized and standardized&quot;</span>, </span>
 <span id="cb22-15"><a href="#cb22-15"></a>        <span class="dt">xlab =</span> <span class="st">&quot;log2(counts)&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figures/proteome/uuo/pavkovic2019__uuo_violin_plots_raw_vs_standardized-1.png" alt="Box plot of the raw values (left) and the final data after feature filtering, normalisation by log2 transormation, centering and scaling (right).  " width="80%" />
+<img src="figures/proteome/uuo/pavkovic2019_proteome_uuo_violin_plots_raw_vs_standardized-1.png" alt="Box plot of the raw values (left) and the final data after feature filtering, normalization by log2 transormation, centering and scaling (right).  " width="80%" />
 <p class="caption">
-Box plot of the raw values (left) and the final data after feature filtering, normalisation by log2 transormation, centering and scaling (right).
+Box plot of the raw values (left) and the final data after feature filtering, normalization by log2 transormation, centering and scaling (right).
 </p>
 </div>
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="kw">par</span>(par.ori)</span></code></pre></div>
@@ -1245,13 +1245,13 @@ Box plot of the raw values (left) and the final data after feature filtering, no
 <span id="cb25-44"><a href="#cb25-44"></a></span>
 <span id="cb25-45"><a href="#cb25-45"></a></span>
 <span id="cb25-46"><a href="#cb25-46"></a><span class="co">## Filtered genes only, log2-transformed and standardized counts</span></span>
-<span id="cb25-47"><a href="#cb25-47"></a>outfiles[<span class="st">&quot;standardised&quot;</span>] &lt;-<span class="st"> </span><span class="kw">file.path</span>(outdirs<span class="op">$</span>dataset, </span>
+<span id="cb25-47"><a href="#cb25-47"></a>outfiles[<span class="st">&quot;standardized&quot;</span>] &lt;-<span class="st"> </span><span class="kw">file.path</span>(outdirs<span class="op">$</span>dataset, </span>
 <span id="cb25-48"><a href="#cb25-48"></a>                                    <span class="kw">paste0</span>(parameters<span class="op">$</span>dataset, </span>
 <span id="cb25-49"><a href="#cb25-49"></a>                                           <span class="st">&quot;_&quot;</span>, parameters<span class="op">$</span>datatype, </span>
-<span id="cb25-50"><a href="#cb25-50"></a>                                           <span class="st">&quot;_log2_standardised.tsv.gz&quot;</span>))</span>
+<span id="cb25-50"><a href="#cb25-50"></a>                                           <span class="st">&quot;_log2_standardized.tsv.gz&quot;</span>))</span>
 <span id="cb25-51"><a href="#cb25-51"></a><span class="kw">write.table</span>(<span class="dt">x =</span> <span class="kw">format</span>(<span class="dt">digits =</span> <span class="dv">3</span>, <span class="dt">big.mark   =</span> <span class="st">&quot;&quot;</span>, <span class="dt">decimal.mark =</span> <span class="st">&quot;.&quot;</span>, log2Standardized), </span>
 <span id="cb25-52"><a href="#cb25-52"></a>            <span class="dt">dec =</span> <span class="st">&quot;.&quot;</span>, </span>
-<span id="cb25-53"><a href="#cb25-53"></a>            <span class="dt">file =</span> <span class="kw">gzfile</span>(outfiles[<span class="st">&quot;standardised&quot;</span>], <span class="st">&quot;w&quot;</span>), </span>
+<span id="cb25-53"><a href="#cb25-53"></a>            <span class="dt">file =</span> <span class="kw">gzfile</span>(outfiles[<span class="st">&quot;standardized&quot;</span>], <span class="st">&quot;w&quot;</span>), </span>
 <span id="cb25-54"><a href="#cb25-54"></a>            <span class="dt">quote =</span> <span class="ot">FALSE</span>, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>)</span>
 <span id="cb25-55"><a href="#cb25-55"></a></span>
 <span id="cb25-56"><a href="#cb25-56"></a><span class="co">## Metadata</span></span>
@@ -1310,8 +1310,8 @@ Box plot of the raw values (left) and the final data after feature filtering, no
 <td align="left"><a href="./results/proteome/uuo/uuo_proteome_log2_median-centered.tsv.gz">uuo_proteome_log2_median-centered.tsv.gz</a></td>
 </tr>
 <tr class="odd">
-<td align="left">standardised</td>
-<td align="left"><a href="./results/proteome/uuo/uuo_proteome_log2_standardised.tsv.gz">uuo_proteome_log2_standardised.tsv.gz</a></td>
+<td align="left">standardized</td>
+<td align="left"><a href="./results/proteome/uuo/uuo_proteome_log2_standardized.tsv.gz">uuo_proteome_log2_standardized.tsv.gz</a></td>
 </tr>
 <tr class="even">
 <td align="left">metadata</td>
@@ -1319,7 +1319,7 @@ Box plot of the raw values (left) and the final data after feature filtering, no
 </tr>
 <tr class="odd">
 <td align="left">memory_image</td>
-<td align="left"><a href="./results/pavkovic2019__uuo__memimage.Rdata">pavkovic2019__uuo__memimage.Rdata</a></td>
+<td align="left"><a href="./results/pavkovic2019_proteome_uuo__memimage.Rdata">pavkovic2019_proteome_uuo__memimage.Rdata</a></td>
 </tr>
 </tbody>
 </table>

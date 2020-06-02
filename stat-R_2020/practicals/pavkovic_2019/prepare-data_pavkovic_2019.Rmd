@@ -162,7 +162,7 @@ if (parameters$datatype == "transcriptome") {
 
 
 ## Redefine the directory and prefix of the figures exported by knitr
-parameters$filePrefix <- paste0('pavkovic2019_', parameters$dataype, "_", parameters$dataset, "_")
+parameters$filePrefix <- paste0('pavkovic2019_', parameters$datatype, "_", parameters$dataset, "_")
 
 ## Print the parameters
 kable(t(as.data.frame(parameters)), col.names = "Parameter")
@@ -356,7 +356,7 @@ hist(p95Values, breaks = 100,
 
 ## Distribution of raw counts - two-sides trimming
 
-For visualisation, it is sometimes convenient to truncate both tails of the distribution, in order to avoid both the outliers (right tail) and the sometimes large number of zero values. This is particularly useful for single-cell RNA-seq data, which can have a "zero-inflated" distribution, but it is also useful for other data types. 
+For visualization, it is sometimes convenient to truncate both tails of the distribution, in order to avoid both the outliers (right tail) and the sometimes large number of zero values. This is particularly useful for single-cell RNA-seq data, which can have a "zero-inflated" distribution, but it is also useful for other data types. 
 
 ```{r raw_distrib_trimmed_p05-p95, fig.width=12, fig.height=5, out.width="70%", fig.cap="Distribution of raw counts"}
 #### Count distrib - truncated on both tails ####
@@ -462,9 +462,9 @@ par(par.ori)
 We filtered out all the features whose maximal count value across all samples was lower than `r parameters$undetectedLimit`. Among the `r nrow(rawValues)` genes from the raw count table, `r sum(undetectedFeatures)` were considered undetected according to this criterion. We use the remaining `r nrow(log2Filtered)` genes for the subsequent analyses. 
 
 
-## Standardisation: centering
+## Standardization: centering
 
-Before going any further, it is important to ensure some standardisation of the samples, in order to correct for biases due to inter-sample differences in sequencing depth (RNA-seq) or other sample-specific bias. 
+Before going any further, it is important to ensure some standardization of the samples, in order to correct for biases due to inter-sample differences in sequencing depth (RNA-seq) or other sample-specific bias. 
 
 For the sake of simplicity, we will use here a very simple criterion: median-based centering. 
 
@@ -473,7 +473,7 @@ When we start from the raw values, the principle is to divide the counts of each
 Since we are working with log2-transformed values, we compute the difference, which is equivalent to apply a ratio to the raw values.  
 
 
-```{r boxplots_centering, fig.width=10, fig.height=7, out.width="80%", fig.cap="Box plot of the log2-transformed feature-filtered values before (left) and after (right) median-based standardisation.  "}
+```{r boxplots_centering, fig.width=10, fig.height=7, out.width="80%", fig.cap="Box plot of the log2-transformed feature-filtered values before (left) and after (right) median-based standardization.  "}
 
 #### Median-based centering ####
 sampleLog2Medians <- apply(log2Filtered, 2, median)
@@ -513,9 +513,9 @@ Consistently, after centering, all the medians appear aligned on the box plot.
 
 
 
-## Standardisation: scaling
+## Standardization: scaling
 
-The second step of standardisation is to ensure homogeous dispersion between samples. 
+The second step of standardization is to ensure homogeous dispersion between samples. 
 This relies on some biological assumption, so it has to be evaluated on a case-per-case basis. 
 
 **My trick: ** for high-throughput data, I generally use the inter-quartile range (IQR) rather than the standard deviation as scaling factor. This ensures robustness to outliers, which may have a very strong impact for some datatypes (e.g. RNA-seq). 
@@ -566,7 +566,7 @@ par(par.ori)
 
 At the end of this journey, we can compare the raw and the standardized values. Needless to say that the preceding steps quite transformed the data. Since this will likely impact all the subsequent analyses, it is worth making sure we took the right choices for each step (filtering, log2-transformation, centering, scaling). This should be evaluated based on your knowledge of your data. 
 
-```{r boxplots_raw_vs_standardized, fig.width=10, fig.height=7, out.width="80%", fig.cap="Box plot of the raw values (left) and the final data after feature filtering, normalisation by log2 transormation, centering and scaling (right).  "}
+```{r boxplots_raw_vs_standardized, fig.width=10, fig.height=7, out.width="80%", fig.cap="Box plot of the raw values (left) and the final data after feature filtering, normalization by log2 transormation, centering and scaling (right).  "}
 #### Violin plots ####
 par(mar = c(4, 6, 5, 1))
 par(mfrow = c(1,2))
@@ -580,7 +580,7 @@ boxplot(log2Standardized,
         col = metadata$color,
         horizontal = TRUE, 
         las = 1, 
-        main = "Filtered, normalized and standardised", 
+        main = "Filtered, normalized and standardized", 
         xlab = "log2(counts)")
 par(par.ori)
 ```
@@ -589,7 +589,7 @@ par(par.ori)
 
 We can also inspect the distribution of counts per sample with the `vioplot()` function.
 
-```{r violin_plots_raw_vs_standardized, fig.width=10, fig.height=7, out.width="80%", fig.cap="Box plot of the raw values (left) and the final data after feature filtering, normalisation by log2 transormation, centering and scaling (right).  "}
+```{r violin_plots_raw_vs_standardized, fig.width=10, fig.height=7, out.width="80%", fig.cap="Box plot of the raw values (left) and the final data after feature filtering, normalization by log2 transormation, centering and scaling (right).  "}
 #### Violin plots ####
 par(mar = c(4, 6, 5, 1))
 par(mfrow = c(1,2))
@@ -603,7 +603,7 @@ vioplot::vioplot(log2Standardized,
         col = metadata$color,
         horizontal = TRUE, 
         las = 1, 
-        main = "Filtered, normalized and standardised", 
+        main = "Filtered, normalized and standardized", 
         xlab = "log2(counts)")
 par(par.ori)
 ```
@@ -673,13 +673,13 @@ write.table(x = format(digits = 3, big.mark   = "", decimal.mark = ".", log2Medi
 
 
 ## Filtered genes only, log2-transformed and standardized counts
-outfiles["standardised"] <- file.path(outdirs$dataset, 
+outfiles["standardized"] <- file.path(outdirs$dataset, 
                                     paste0(parameters$dataset, 
                                            "_", parameters$datatype, 
-                                           "_log2_standardised.tsv.gz"))
+                                           "_log2_standardized.tsv.gz"))
 write.table(x = format(digits = 3, big.mark   = "", decimal.mark = ".", log2Standardized), 
             dec = ".", 
-            file = gzfile(outfiles["standardised"], "w"), 
+            file = gzfile(outfiles["standardized"], "w"), 
             quote = FALSE, sep = "\t")
 
 ## Metadata
