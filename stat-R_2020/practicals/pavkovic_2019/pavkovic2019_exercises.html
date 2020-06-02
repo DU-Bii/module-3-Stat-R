@@ -282,23 +282,60 @@ div.tocify {
 <p>We prepared memory images that enable you to reload the preprocessed datasets.</p>
 <p><a href="R/01_reload_data.R">R script to reload data</a></p>
 </div>
+<div id="instructions" class="section level2">
+<h2>Instructions</h2>
+<p>The following tasks will be covered in 2 sessions + a bit of personal work.</p>
+<ul>
+<li>Write the solution of each exercise in a separate R script file.</li>
+<li>Take care to properly document the code</li>
+<li>Once the code is satisfying, write a report in R markdown that will incoroporate the R files, and comment the results.</li>
+</ul>
+<p>Alternatively you can immediately write the code inside a R markdown document, as far as it combines a properly documented code and relevant interpretation comments.</p>
+</div>
 <div id="exercises" class="section level2">
 <h2>Exercises</h2>
 <ol style="list-style-type: decimal">
 <li><p>Choose one of the datasets and load the memory image</p></li>
-<li><p>Explore the dataset</p>
+<li><p>Compute sample-wise and feature-wise descriptive statistics</p>
 <ul>
-<li>compute the following between-sample matrices: covariance, Pearson’s and Spearman’s correlation</li>
-<li>run principal component analysis and analyse the sample positions on the 6 first components. Are they consistent with their time and status?</li>
+<li>mean,</li>
+<li>median,</li>
+<li>sd,</li>
+<li>var,</li>
+<li>IQR,</li>
+<li>some relevant percentiles (0, 05, 25, 50 , 75, 95, 100)</li>
 </ul></li>
+<li><p>Compute the mean value per condition (mean between the replicates)</p></li>
 <li><p>Select the 500 top features according to two different criteria</p>
 <ol style="list-style-type: lower-alpha">
 <li>highest variance</li>
 <li>highest log2-ratio between untreated samples and the last day of the experiment</li>
 </ol></li>
-<li><p>Run clustering on the selected datasets. Study the impact of the (dis)similarity metrics (Euclidian, correlation, covariance) and of the agglomeration rule</p></li>
+<li><p>Compute different matrices indicating the relations between samples (columns) of the log2-transformed values</p>
+<ul>
+<li>covariance,</li>
+<li>Pearson correlation</li>
+<li>Spearman correlation</li>
+<li>Euclidian distance</li>
+</ul></li>
 </ol>
-<p>Write the solution of each exercise in a separate R script file. After this, write a report in R markdown that will incoroporate the R files, and comment the results.</p>
+<p>Compute these on the commplete dataset and on the 500 matrix selections</p>
+<ol start="6" style="list-style-type: decimal">
+<li><p>Use the hclust() method on the seleected features</p>
+<ul>
+<li>with different dissimlarity metrics (Euclidian, Pearson, Spearman)</li>
+<li>with different agglomeration rules (single, average, complete, ward)</li>
+</ul></li>
+</ol>
+<p>Plot the feature tree and compare the results obtained with the different choices.</p>
+<ol start="7" style="list-style-type: decimal">
+<li><p>Draw heatmaps of the feature profiles (do not cluster the samples)</p></li>
+<li><p>Run principal component analysis</p>
+<ul>
+<li>Use the visualisation tools from Magali Berland’s course</li>
+<li>Plot the sample positions on the 6 first components. Are they consistent with their time and status?</li>
+</ul></li>
+</ol>
 </div>
 
 

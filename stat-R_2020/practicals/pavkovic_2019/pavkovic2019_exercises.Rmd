@@ -104,24 +104,67 @@ We prepared memory images that enable you to reload the preprocessed datasets.
 
 [R script to reload data](R/01_reload_data.R)
 
+## Instructions
+
+The following tasks will be covered in 2 sessions + a bit of personal work. 
+
+
+- Write the solution of each exercise in a separate R script file. 
+- Take care to properly document the code
+- Once the code is satisfying, write a report in R markdown that will incoroporate the R files, and comment the results. 
+
+Alternatively you can immediately write the code inside a R markdown document, as far as it combines a properly documented code and relevant interpretation comments. 
+
+
 ## Exercises
+
+
 
 1. Choose one of the datasets and load the memory image
 
-2. Explore the dataset 
 
-    - compute the following between-sample matrices: covariance, Pearson's and Spearman's correlation 
-    - run principal component analysis and analyse the sample positions on the 6 first components. Are they consistent with their time and status?
+2. Compute sample-wise and feature-wise descriptive statistics 
 
-3. Select the 500 top features according to two different criteria
+    - mean, 
+    - median, 
+    - sd, 
+    - var,
+    - IQR, 
+    - some relevant percentiles (0, 05, 25, 50 , 75, 95, 100)
+    
+3. Compute the mean value per condition (mean between the replicates)
+
+
+4. Select the 500 top features according to two different criteria
 
       a. highest variance
       b. highest log2-ratio between untreated samples and the last day of the experiment
 
-4. Run clustering on the selected datasets. Study the impact of the (dis)similarity metrics (Euclidian, correlation, covariance) and of the agglomeration rule
+5. Compute different matrices indicating the relations between samples (columns) of the log2-transformed values
 
-Write the solution of each exercise in a separate R script file. 
-After this, write a report in R markdown that will incoroporate the R files, and comment the results. 
+    - covariance, 
+    - Pearson correlation
+    - Spearman correlation 
+    - Euclidian distance
+
+Compute these on the commplete dataset and on the 500 matrix selections
+
+6. Use the hclust() method on the seleected features 
+
+    - with different dissimlarity metrics (Euclidian, Pearson, Spearman)
+    - with different agglomeration rules (single, average, complete, ward)
+    
+Plot the feature tree and compare the results obtained with the different choices. 
+
+7. Draw heatmaps of the feature profiles (do not cluster the samples)
+
+8. Run principal component analysis 
+
+    - Use the visualisation tools from Magali Berland's course
+    - Plot the sample positions on the 6 first components. Are they consistent with their time and status?
+
+
+
 
 
 
