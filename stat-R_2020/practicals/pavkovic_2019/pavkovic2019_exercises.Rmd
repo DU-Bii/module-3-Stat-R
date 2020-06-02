@@ -118,8 +118,6 @@ Alternatively you can immediately write the code inside a R markdown document, a
 
 ## Exercises
 
-
-
 1. Choose one of the datasets and load the memory image
 
 
@@ -131,9 +129,21 @@ Alternatively you can immediately write the code inside a R markdown document, a
     - var,
     - IQR, 
     - some relevant percentiles (0, 05, 25, 50 , 75, 95, 100)
-    
+
+Use different graphical representations to compare the values and get familiar with your data. 
+
+For example : 
+
+- histogram of all the values
+- boxplot of the values per sample
+- feature means versus medians
+- feature standard deviation versus IQR
+- mean versus variance plot
+
+
 3. Compute the mean value per condition (mean between the replicates)
 
+Draw a dot plot to compare the values between each time point and the control.   
 
 4. Select the 500 top features according to two different criteria
 
