@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Olivier Sand and Jacques van Helden" />
+
+<meta name="date" content="2020-06-02" />
+
+<title>DU-Bii Study cases - Mouse fibrotic kidney</title>
+
+<script src="pavkovic2019_proteome_uuo_files/header-attrs-2.1/header-attrs.js"></script>
+<script src="pavkovic2019_proteome_uuo_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="pavkovic2019_proteome_uuo_files/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="pavkovic2019_proteome_uuo_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="pavkovic2019_proteome_uuo_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="pavkovic2019_proteome_uuo_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="pavkovic2019_proteome_uuo_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="pavkovic2019_proteome_uuo_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="pavkovic2019_proteome_uuo_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="pavkovic2019_proteome_uuo_files/navigation-1.1/tabsets.js"></script>
+<script src="pavkovic2019_proteome_uuo_files/navigation-1.1/codefolding.js"></script>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  { color: #cccccc; background-color: #303030; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ffcfaf; } /* Alert */
+code span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+code span.at { } /* Attribute */
+code span.bn { color: #dca3a3; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #f0dfaf; } /* ControlFlow */
+code span.ch { color: #dca3a3; } /* Char */
+code span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+code span.co { color: #7f9f7f; } /* Comment */
+code span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+code span.do { color: #7f9f7f; } /* Documentation */
+code span.dt { color: #dfdfbf; } /* DataType */
+code span.dv { color: #dcdccc; } /* DecVal */
+code span.er { color: #c3bf9f; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #c0bed1; } /* Float */
+code span.fu { color: #efef8f; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+code span.kw { color: #f0dfaf; } /* Keyword */
+code span.op { color: #f0efd0; } /* Operator */
+code span.ot { color: #efef8f; } /* Other */
+code span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+code span.sc { color: #dca3a3; } /* SpecialChar */
+code span.ss { color: #cc9393; } /* SpecialString */
+code span.st { color: #cc9393; } /* String */
+code span.va { } /* Variable */
+code span.vs { color: #cc9393; } /* VerbatimString */
+code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
+
+.sourceCode .row {
+  width: 100%;
+}
+.sourceCode {
+  overflow-x: auto;
+}
+.code-folding-btn {
+  margin-right: -30px;
+}
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">DU-Bii Study cases - Mouse fibrotic kidney</h1>
+<h3 class="subtitle">DUBii 2020</h3>
+<h4 class="author">Olivier Sand and Jacques van Helden</h4>
+<h4 class="date">2020-06-02</h4>
+
+</div>
+
+
+<div id="reference" class="section level2">
+<h2>Reference</h2>
+<p>Pavkovic, M., Pantano, L., Gerlach, C.V. et al. Multi omics analysis of fibrotic kidneys in two mouse models. Sci Data 6, 92 (2019).</p>
+<ul>
+<li><a href="https://doi.org/10.1038/s41597-019-0095-5" class="uri">https://doi.org/10.1038/s41597-019-0095-5</a></li>
+<li><a href="https://www.nature.com/articles/s41597-019-0095-5#citeas" class="uri">https://www.nature.com/articles/s41597-019-0095-5#citeas</a></li>
+<li>Mouse fibrotic kidney browser: <a href="http://hbcreports.med.harvard.edu/fmm/" class="uri">http://hbcreports.med.harvard.edu/fmm/</a></li>
+<li>Data on Zenodo: <a href="https://zenodo.org/record/2592516" class="uri">https://zenodo.org/record/2592516</a></li>
+</ul>
+</div>
+<div id="samples" class="section level2">
+<h2>Samples</h2>
+<blockquote>
+<p>Samples from two mouse models were collected. The first one is a reversible chemical-induced injury model (folic acid (FA) induced nephropathy). The second one is an irreversible surgically-induced fibrosis model (unilateral ureteral obstruction (UUO)). mRNA and small RNA sequencing, as well as 10-plex tandem mass tag (TMT) proteomics were performed with kidney samples from different time points over the course of fibrosis development. In the FA model, mice were sacrificed before the treatment (day 0) and 1, 2, 7, and 14 days after a single injection of folic acid. For the UUO model, mice were sacrificed before obstruction (day 0) and 3, 7, and 14 days after the ureter of the left kidney was obstructed via ligation. For both studies, kidneys were removed at each time point for total RNA isolation and protein sample preparation.</p>
+</blockquote>
+<p>We will first explore the UUO transcriptome data.</p>
+</div>
+<div id="data-sources" class="section level2">
+<h2>Data sources</h2>
+<table>
+<colgroup>
+<col width="52%" />
+<col width="47%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Doc</th>
+<th align="left">URL</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Total RNA for the experiment on Unilateral ureter obstruction (UUO) model</td>
+<td align="left"><a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE118339" class="uri">https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE118339</a></td>
+</tr>
+<tr class="even">
+<td align="left">Supplementary material of the article with all the data tables (zip archive)</td>
+<td align="left"><a href="https://zenodo.org/record/2592516" class="uri">https://zenodo.org/record/2592516</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="parameters" class="section level2">
+<h2>Parameters</h2>
+<p>We define all the parameters of the analysis in a list, which can be adapted to handle different data types (transcrptome, proteome, small RNA) or treatments (uuo, fa) with the same script.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co">#### Define parameters for the analysis ####</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="co">## Keep a trace of the original parameters</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a>par.ori &lt;-<span class="st"> </span><span class="kw">par</span>(<span class="dt">no.readonly =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb1-5"><a href="#cb1-5"></a></span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="co">## Analysis parameters</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a>parameters &lt;-<span class="st"> </span><span class="kw">list</span>(</span>
+<span id="cb1-8"><a href="#cb1-8"></a>  <span class="dt">dataset =</span> <span class="st">&quot;uuo&quot;</span>, <span class="co">## Supported: uuo, fa</span></span>
+<span id="cb1-9"><a href="#cb1-9"></a>  <span class="dt">datatype =</span> <span class="st">&quot;proteome&quot;</span>, <span class="co">## Supported: transcriptome, proteome</span></span>
+<span id="cb1-10"><a href="#cb1-10"></a>  <span class="dt">epsilon =</span> <span class="fl">0.1</span>,</span>
+<span id="cb1-11"><a href="#cb1-11"></a>  <span class="dt">forceDownload =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb1-12"><a href="#cb1-12"></a></span>
+<span id="cb1-13"><a href="#cb1-13"></a><span class="cf">if</span> (parameters<span class="op">$</span>datatype <span class="op">==</span><span class="st"> &quot;transcriptome&quot;</span>) {</span>
+<span id="cb1-14"><a href="#cb1-14"></a>    parameters<span class="op">$</span>undetectedLimit =<span class="st"> </span><span class="dv">10</span></span>
+<span id="cb1-15"><a href="#cb1-15"></a>} <span class="cf">else</span> <span class="cf">if</span> (parameters<span class="op">$</span>datatype <span class="op">==</span><span class="st"> &quot;proteome&quot;</span>) {</span>
+<span id="cb1-16"><a href="#cb1-16"></a>    parameters<span class="op">$</span>undetectedLimit =<span class="st"> </span><span class="dv">100</span></span>
+<span id="cb1-17"><a href="#cb1-17"></a>}</span>
+<span id="cb1-18"><a href="#cb1-18"></a></span>
+<span id="cb1-19"><a href="#cb1-19"></a></span>
+<span id="cb1-20"><a href="#cb1-20"></a><span class="co">## Redefine the directory and prefix of the figures exported by knitr</span></span>
+<span id="cb1-21"><a href="#cb1-21"></a>parameters<span class="op">$</span>filePrefix &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&#39;pavkovic2019_&#39;</span>, parameters<span class="op">$</span>datatype, <span class="st">&quot;_&quot;</span>, parameters<span class="op">$</span>dataset, <span class="st">&quot;_&quot;</span>)</span>
+<span id="cb1-22"><a href="#cb1-22"></a></span>
+<span id="cb1-23"><a href="#cb1-23"></a><span class="co">## Print the parameters</span></span>
+<span id="cb1-24"><a href="#cb1-24"></a><span class="kw">kable</span>(<span class="kw">t</span>(<span class="kw">as.data.frame</span>(parameters)), <span class="dt">col.names =</span> <span class="st">&quot;Parameter&quot;</span>)</span></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="left">Parameter</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>dataset</td>
+<td align="left">uuo</td>
+</tr>
+<tr class="even">
+<td>datatype</td>
+<td align="left">proteome</td>
+</tr>
+<tr class="odd">
+<td>epsilon</td>
+<td align="left">0.1</td>
+</tr>
+<tr class="even">
+<td>forceDownload</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td>undetectedLimit</td>
+<td align="left">100</td>
+</tr>
+<tr class="even">
+<td>filePrefix</td>
+<td align="left">pavkovic2019_proteome_uuo_</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="output-directories" class="section level2">
+<h2>Output directories</h2>
+<p>All directories are defined relative to the main directory, in order to ensure reusability of the code.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co">#### Output directories ####</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a>outdirs &lt;-<span class="st"> </span><span class="kw">list</span>()</span>
+<span id="cb2-3"><a href="#cb2-3"></a>outdirs<span class="op">$</span>main &lt;-<span class="st"> &quot;.&quot;</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a></span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="co">## Data directory, where the data will be downloaded and uncompressed</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a>outdirs<span class="op">$</span>data &lt;-<span class="st"> </span><span class="kw">file.path</span>(outdirs<span class="op">$</span>main, <span class="st">&quot;data&quot;</span>)</span>
+<span id="cb2-7"><a href="#cb2-7"></a><span class="kw">dir.create</span>(outdirs<span class="op">$</span>data, <span class="dt">recursive =</span> <span class="ot">TRUE</span>, <span class="dt">showWarnings =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb2-8"><a href="#cb2-8"></a></span>
+<span id="cb2-9"><a href="#cb2-9"></a><span class="co">## Main result directory</span></span>
+<span id="cb2-10"><a href="#cb2-10"></a>outdirs<span class="op">$</span>results &lt;-<span class="st"> </span><span class="kw">file.path</span>(outdirs<span class="op">$</span>main, <span class="st">&quot;results&quot;</span>)</span>
+<span id="cb2-11"><a href="#cb2-11"></a></span>
+<span id="cb2-12"><a href="#cb2-12"></a><span class="co">## Figures</span></span>
+<span id="cb2-13"><a href="#cb2-13"></a>outdirs<span class="op">$</span>figures &lt;-<span class="st"> </span><span class="kw">file.path</span>(<span class="st">&#39;figures&#39;</span>,  parameters<span class="op">$</span>datatype, parameters<span class="op">$</span>dataset)</span>
+<span id="cb2-14"><a href="#cb2-14"></a></span>
+<span id="cb2-15"><a href="#cb2-15"></a><span class="co"># Results for this data type</span></span>
+<span id="cb2-16"><a href="#cb2-16"></a>outdirs<span class="op">$</span>datatype &lt;-<span class="st"> </span><span class="kw">file.path</span>(outdirs<span class="op">$</span>results, parameters<span class="op">$</span>datatype)</span>
+<span id="cb2-17"><a href="#cb2-17"></a></span>
+<span id="cb2-18"><a href="#cb2-18"></a><span class="co"># Results for this  dataset</span></span>
+<span id="cb2-19"><a href="#cb2-19"></a>outdirs<span class="op">$</span>dataset &lt;-<span class="st"> </span><span class="kw">file.path</span>(outdirs<span class="op">$</span>datatype, parameters<span class="op">$</span>dataset)</span>
+<span id="cb2-20"><a href="#cb2-20"></a><span class="kw">dir.create</span>(outdirs<span class="op">$</span>dataset, <span class="dt">recursive =</span> <span class="ot">TRUE</span>, <span class="dt">showWarnings =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb2-21"><a href="#cb2-21"></a></span>
+<span id="cb2-22"><a href="#cb2-22"></a><span class="co">## Print the directories</span></span>
+<span id="cb2-23"><a href="#cb2-23"></a><span class="kw">kable</span>(<span class="kw">t</span>(<span class="kw">as.data.frame.list</span>(outdirs)), <span class="dt">col.names =</span> <span class="st">&quot;Directories&quot;</span>, <span class="dt">caption =</span> <span class="st">&quot;Directories&quot;</span>)</span></code></pre></div>
+<table>
+<caption>Directories</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th align="left">Directories</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>main</td>
+<td align="left">.</td>
+</tr>
+<tr class="even">
+<td>data</td>
+<td align="left">./data</td>
+</tr>
+<tr class="odd">
+<td>results</td>
+<td align="left">./results</td>
+</tr>
+<tr class="even">
+<td>figures</td>
+<td align="left">figures/proteome/uuo</td>
+</tr>
+<tr class="odd">
+<td>datatype</td>
+<td align="left">./results/proteome</td>
+</tr>
+<tr class="even">
+<td>dataset</td>
+<td align="left">./results/proteome/uuo</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>knitr<span class="op">::</span>opts_chunk<span class="op">$</span><span class="kw">set</span>(<span class="dt">fig.path =</span> <span class="kw">file.path</span>(outdirs<span class="op">$</span>figures, parameters<span class="op">$</span>filePrefix))</span></code></pre></div>
+</div>
+<div id="download-supplementary-material-from-pavkovic-et-al." class="section level2">
+<h2>Download supplementary material from Pavkovic <em>et al.</em></h2>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co">#### Download transcriptome data ####</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a>archiveFile &lt;-<span class="st"> &quot;MouseKidneyFibrOmics-v1.0.zip&quot;</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a>archiveURL &lt;-<span class="st"> </span><span class="kw">file.path</span>(<span class="st">&quot;https://zenodo.org/record/2592516/files/hbc&quot;</span>, archiveFile)</span>
+<span id="cb4-4"><a href="#cb4-4"></a>localDataArchive &lt;-<span class="st"> </span><span class="kw">file.path</span>(outdirs<span class="op">$</span>data, archiveFile)</span>
+<span id="cb4-5"><a href="#cb4-5"></a></span>
+<span id="cb4-6"><a href="#cb4-6"></a><span class="cf">if</span> (<span class="kw">file.exists</span>(localDataArchive) <span class="op">&amp;</span><span class="st"> </span><span class="op">!</span>parameters<span class="op">$</span>forceDownload) {</span>
+<span id="cb4-7"><a href="#cb4-7"></a>  <span class="kw">message</span>(<span class="st">&quot;Data archive already downloaded:</span><span class="ch">\n\t</span><span class="st">&quot;</span>, localDataArchive)</span>
+<span id="cb4-8"><a href="#cb4-8"></a>} <span class="cf">else</span> {</span>
+<span id="cb4-9"><a href="#cb4-9"></a>  <span class="kw">message</span>(<span class="st">&quot;Downloading data archive from zenodo: &quot;</span>, archiveURL)</span>
+<span id="cb4-10"><a href="#cb4-10"></a>  <span class="kw">download.file</span>(<span class="dt">url =</span> archiveURL, <span class="dt">destfile =</span>  localDataArchive)</span>
+<span id="cb4-11"><a href="#cb4-11"></a>  </span>
+<span id="cb4-12"><a href="#cb4-12"></a>  <span class="co">## Uncompess the archive</span></span>
+<span id="cb4-13"><a href="#cb4-13"></a>  <span class="kw">message</span>(<span class="st">&quot;Uncompressing data archive&quot;</span>)</span>
+<span id="cb4-14"><a href="#cb4-14"></a>  <span class="kw">unzip</span>(<span class="dt">zipfile =</span> localDataArchive, <span class="dt">exdir =</span> outdirs<span class="op">$</span>data)</span>
+<span id="cb4-15"><a href="#cb4-15"></a>}</span>
+<span id="cb4-16"><a href="#cb4-16"></a></span>
+<span id="cb4-17"><a href="#cb4-17"></a><span class="co">## Define destination directory</span></span>
+<span id="cb4-18"><a href="#cb4-18"></a><span class="co"># outdirs$csv &lt;- file.path(outdirs$data, &quot;CSV&quot;)</span></span>
+<span id="cb4-19"><a href="#cb4-19"></a><span class="co"># dir.create(outdirs$csv, showWarnings = FALSE, recursive = TRUE)</span></span></code></pre></div>
+</div>
+<div id="load-raw-counts" class="section level2">
+<h2>Load raw counts</h2>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co">#### Load raw counts data table ####</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a></span>
+<span id="cb5-3"><a href="#cb5-3"></a></span>
+<span id="cb5-4"><a href="#cb5-4"></a><span class="co">## Note: the &quot;raw&quot; counts are decimal numbers, I suspect that they have been somewhat normalized. To check. </span></span>
+<span id="cb5-5"><a href="#cb5-5"></a><span class="cf">if</span> (parameters<span class="op">$</span>datatype <span class="op">==</span><span class="st"> &quot;transcriptome&quot;</span>) {</span>
+<span id="cb5-6"><a href="#cb5-6"></a>  rawCountFile &lt;-<span class="st"> </span><span class="kw">file.path</span>(</span>
+<span id="cb5-7"><a href="#cb5-7"></a>    outdirs<span class="op">$</span>data,</span>
+<span id="cb5-8"><a href="#cb5-8"></a>    <span class="kw">paste0</span>(<span class="st">&quot;hbc-MouseKidneyFibrOmics-a39e55a/tables/&quot;</span>, </span>
+<span id="cb5-9"><a href="#cb5-9"></a>           parameters<span class="op">$</span>dataset, </span>
+<span id="cb5-10"><a href="#cb5-10"></a>           <span class="st">&quot;/results/counts/raw_counts.csv.gz&quot;</span>))</span>
+<span id="cb5-11"><a href="#cb5-11"></a>} <span class="cf">else</span> <span class="cf">if</span>  (parameters<span class="op">$</span>datatype <span class="op">==</span><span class="st"> &quot;proteome&quot;</span>) {</span>
+<span id="cb5-12"><a href="#cb5-12"></a>  rawCountFile &lt;-<span class="st"> </span><span class="kw">file.path</span>(</span>
+<span id="cb5-13"><a href="#cb5-13"></a>  outdirs<span class="op">$</span>data,</span>
+<span id="cb5-14"><a href="#cb5-14"></a>  <span class="kw">paste0</span>(<span class="st">&quot;hbc-MouseKidneyFibrOmics-a39e55a/tables/p&quot;</span>, </span>
+<span id="cb5-15"><a href="#cb5-15"></a>         parameters<span class="op">$</span>dataset,</span>
+<span id="cb5-16"><a href="#cb5-16"></a>         <span class="st">&quot;/results/counts/&quot;</span>, </span>
+<span id="cb5-17"><a href="#cb5-17"></a>          parameters<span class="op">$</span>dataset, <span class="st">&quot;_model_counts.csv&quot;</span>))</span>
+<span id="cb5-18"><a href="#cb5-18"></a></span>
+<span id="cb5-19"><a href="#cb5-19"></a>}</span>
+<span id="cb5-20"><a href="#cb5-20"></a>rawData &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="dt">file =</span> rawCountFile, <span class="dt">header =</span> <span class="dv">1</span>, <span class="dt">row.names =</span> <span class="ot">NULL</span>)</span>
+<span id="cb5-21"><a href="#cb5-21"></a><span class="kw">rownames</span>(rawData) &lt;-<span class="st"> </span><span class="kw">make.names</span>(rawData[, <span class="st">&quot;id&quot;</span>], <span class="dt">unique =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb5-22"><a href="#cb5-22"></a><span class="co"># names(rawData)</span></span>
+<span id="cb5-23"><a href="#cb5-23"></a><span class="co"># unique(sort(as.vector(rawData[, &quot;id&quot;])))</span></span>
+<span id="cb5-24"><a href="#cb5-24"></a><span class="co"># length(unique(sort(as.vector(rawValues[, 1]))))</span></span>
+<span id="cb5-25"><a href="#cb5-25"></a></span>
+<span id="cb5-26"><a href="#cb5-26"></a><span class="co">## Extract a separate data frame with only the values to analyse</span></span>
+<span id="cb5-27"><a href="#cb5-27"></a>rawValues &lt;-<span class="st"> </span>rawData[, <span class="dv">-1</span>] </span></code></pre></div>
+<p>The data was loaded from the supplementary file ./data/hbc-MouseKidneyFibrOmics-a39e55a/tables/puuo/results/counts/uuo_model_counts.csv as raw counts.</p>
+<ul>
+<li>This table contains 8508 rows (variables/features/genes/proteins) and 10 columns (individuals, samples).<br />
+</li>
+<li>The rawvalues range from 1.18985 to 84182.8.</li>
+</ul>
+</div>
+<div id="build-metadata-table" class="section level2">
+<h2>Build metadata table</h2>
+<p>We roughly build a minimal metadata table from the info we find in the data table. This should be improved by importing dataset-specific information for a more relevant analysis.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co">#### Build metadata table ####</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a>metadata &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
+<span id="cb6-3"><a href="#cb6-3"></a>  <span class="dt">dataType =</span> <span class="st">&quot;transcriptome&quot;</span>,</span>
+<span id="cb6-4"><a href="#cb6-4"></a>  <span class="dt">sampleName =</span> <span class="kw">colnames</span>(rawValues))</span>
+<span id="cb6-5"><a href="#cb6-5"></a>metadata[ , <span class="kw">c</span>(<span class="st">&quot;condition&quot;</span>, <span class="st">&quot;sampleNumber&quot;</span>)] &lt;-<span class="st"> </span></span>
+<span id="cb6-6"><a href="#cb6-6"></a><span class="st">  </span><span class="kw">str_split_fixed</span>(<span class="dt">string =</span> metadata<span class="op">$</span>sampleName, <span class="dt">pattern =</span> <span class="st">&quot;_&quot;</span>, <span class="dt">n =</span> <span class="dv">2</span>)</span>
+<span id="cb6-7"><a href="#cb6-7"></a></span>
+<span id="cb6-8"><a href="#cb6-8"></a><span class="co">## Colors per condition</span></span>
+<span id="cb6-9"><a href="#cb6-9"></a>colPerCondition &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">normal =</span> <span class="st">&quot;#BBFFBB&quot;</span>,</span>
+<span id="cb6-10"><a href="#cb6-10"></a>                     <span class="dt">day3 =</span> <span class="st">&quot;#FFFFDD&quot;</span>, </span>
+<span id="cb6-11"><a href="#cb6-11"></a>                     <span class="dt">day7 =</span> <span class="st">&quot;#FFDD88&quot;</span>,</span>
+<span id="cb6-12"><a href="#cb6-12"></a>                     <span class="dt">day14 =</span> <span class="st">&quot;#FF4400&quot;</span>)</span>
+<span id="cb6-13"><a href="#cb6-13"></a>metadata<span class="op">$</span>color &lt;-<span class="st"> </span>colPerCondition[metadata<span class="op">$</span>condition]</span>
+<span id="cb6-14"><a href="#cb6-14"></a></span>
+<span id="cb6-15"><a href="#cb6-15"></a><span class="kw">kable</span>(metadata, <span class="dt">caption =</span> <span class="kw">paste0</span>(<span class="st">&quot;Rough metadata table. &quot;</span>, </span>
+<span id="cb6-16"><a href="#cb6-16"></a>                                 <span class="st">&quot;Data type = &quot;</span>, parameters<span class="op">$</span>datatype,</span>
+<span id="cb6-17"><a href="#cb6-17"></a>                                 <span class="st">&quot;Dataset = &quot;</span>, parameters<span class="op">$</span>dataset))</span></code></pre></div>
+<table>
+<caption>Rough metadata table. Data type = proteomeDataset = uuo</caption>
+<thead>
+<tr class="header">
+<th align="left">dataType</th>
+<th align="left">sampleName</th>
+<th align="left">condition</th>
+<th align="left">sampleNumber</th>
+<th align="left">color</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">transcriptome</td>
+<td align="left">normal_1</td>
+<td align="left">normal</td>
+<td align="left">1</td>
+<td align="left">#BBFFBB</td>
+</tr>
+<tr class="even">
+<td align="left">transcriptome</td>
+<td align="left">normal_2</td>
+<td align="left">normal</td>
+<td align="left">2</td>
+<td align="left">#BBFFBB</td>
+</tr>
+<tr class="odd">
+<td align="left">transcriptome</td>
+<td align="left">day3_1</td>
+<td align="left">day3</td>
+<td align="left">1</td>
+<td align="left">#FFFFDD</td>
+</tr>
+<tr class="even">
+<td align="left">transcriptome</td>
+<td align="left">day3_2</td>
+<td align="left">day3</td>
+<td align="left">2</td>
+<td align="left">#FFFFDD</td>
+</tr>
+<tr class="odd">
+<td align="left">transcriptome</td>
+<td align="left">day3_3</td>
+<td align="left">day3</td>
+<td align="left">3</td>
+<td align="left">#FFFFDD</td>
+</tr>
+<tr class="even">
+<td align="left">transcriptome</td>
+<td align="left">day7_1</td>
+<td align="left">day7</td>
+<td align="left">1</td>
+<td align="left">#FFDD88</td>
+</tr>
+<tr class="odd">
+<td align="left">transcriptome</td>
+<td align="left">day7_2</td>
+<td align="left">day7</td>
+<td align="left">2</td>
+<td align="left">#FFDD88</td>
+</tr>
+<tr class="even">
+<td align="left">transcriptome</td>
+<td align="left">day7_3</td>
+<td align="left">day7</td>
+<td align="left">3</td>
+<td align="left">#FFDD88</td>
+</tr>
+<tr class="odd">
+<td align="left">transcriptome</td>
+<td align="left">day14_1</td>
+<td align="left">day14</td>
+<td align="left">1</td>
+<td align="left">#FF4400</td>
+</tr>
+<tr class="even">
+<td align="left">transcriptome</td>
+<td align="left">day14_2</td>
+<td align="left">day14</td>
+<td align="left">2</td>
+<td align="left">#FF4400</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="compute-sample-wise-statistics" class="section level2">
+<h2>Compute sample-wise statistics</h2>
+<p>We describe our data by computing sample-wise descriptors of the central tendency (mean, median), dispersion (standard deviation, inter-quartile range) and some milestone percentiles (05, 25, 50, 75, 95).</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>sampleStat &lt;-<span class="st"> </span>metadata</span>
+<span id="cb7-2"><a href="#cb7-2"></a>sampleStat<span class="op">$</span>mean &lt;-<span class="st"> </span><span class="kw">apply</span>(<span class="dt">X =</span> rawValues, <span class="dv">2</span>, mean)</span>
+<span id="cb7-3"><a href="#cb7-3"></a>sampleStat<span class="op">$</span>median &lt;-<span class="st"> </span><span class="kw">apply</span>(<span class="dt">X =</span> rawValues, <span class="dv">2</span>, median)</span>
+<span id="cb7-4"><a href="#cb7-4"></a>sampleStat<span class="op">$</span>sd &lt;-<span class="st"> </span><span class="kw">apply</span>(<span class="dt">X =</span> rawValues, <span class="dv">2</span>, sd)</span>
+<span id="cb7-5"><a href="#cb7-5"></a>sampleStat<span class="op">$</span>IQR &lt;-<span class="st"> </span><span class="kw">apply</span>(<span class="dt">X =</span> rawValues, <span class="dv">2</span>, IQR)</span>
+<span id="cb7-6"><a href="#cb7-6"></a>sampleStat<span class="op">$</span>min &lt;-<span class="st"> </span><span class="kw">apply</span>(<span class="dt">X =</span> rawValues, <span class="dv">2</span>, min)</span>
+<span id="cb7-7"><a href="#cb7-7"></a>sampleStat<span class="op">$</span>perc05 &lt;-<span class="st"> </span><span class="kw">apply</span>(<span class="dt">X =</span> rawValues, <span class="dv">2</span>, quantile, <span class="dt">prob =</span> <span class="fl">0.05</span>)</span>
+<span id="cb7-8"><a href="#cb7-8"></a>sampleStat<span class="op">$</span>Q1 &lt;-<span class="st"> </span><span class="kw">apply</span>(<span class="dt">X =</span> rawValues, <span class="dv">2</span>, quantile, <span class="dt">prob =</span> <span class="fl">0.25</span>)</span>
+<span id="cb7-9"><a href="#cb7-9"></a>sampleStat<span class="op">$</span>median &lt;-<span class="st"> </span><span class="kw">apply</span>(<span class="dt">X =</span> rawValues, <span class="dv">2</span>, quantile, <span class="dt">prob =</span> <span class="fl">0.5</span>)</span>
+<span id="cb7-10"><a href="#cb7-10"></a>sampleStat<span class="op">$</span>Q3 &lt;-<span class="st"> </span><span class="kw">apply</span>(<span class="dt">X =</span> rawValues, <span class="dv">2</span>, quantile, <span class="dt">prob =</span> <span class="fl">0.75</span>)</span>
+<span id="cb7-11"><a href="#cb7-11"></a>sampleStat<span class="op">$</span>perc95 &lt;-<span class="st"> </span><span class="kw">apply</span>(<span class="dt">X =</span> rawValues, <span class="dv">2</span>, quantile, <span class="dt">prob =</span> <span class="fl">0.95</span>)</span>
+<span id="cb7-12"><a href="#cb7-12"></a>sampleStat<span class="op">$</span>max &lt;-<span class="st"> </span><span class="kw">apply</span>(<span class="dt">X =</span> rawValues, <span class="dv">2</span>, max)</span>
+<span id="cb7-13"><a href="#cb7-13"></a></span>
+<span id="cb7-14"><a href="#cb7-14"></a><span class="co">## Print statistics per sample</span></span>
+<span id="cb7-15"><a href="#cb7-15"></a><span class="kw">kable</span>(<span class="kw">format</span>(<span class="dt">x =</span> <span class="kw">format</span>(<span class="dt">digits =</span> <span class="dv">5</span>, sampleStat)))</span></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">dataType</th>
+<th align="left">sampleName</th>
+<th align="left">condition</th>
+<th align="left">sampleNumber</th>
+<th align="left">color</th>
+<th align="left">mean</th>
+<th align="left">median</th>
+<th align="left">sd</th>
+<th align="left">IQR</th>
+<th align="left">min</th>
+<th align="left">perc05</th>
+<th align="left">Q1</th>
+<th align="left">Q3</th>
+<th align="left">perc95</th>
+<th align="left">max</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">transcriptome</td>
+<td align="left">normal_1</td>
+<td align="left">normal</td>
+<td align="left">1</td>
+<td align="left">#BBFFBB</td>
+<td align="left">1881.3</td>
+<td align="left">731.14</td>
+<td align="left">3756.4</td>
+<td align="left">1652.0</td>
+<td align="left">1.4976</td>
+<td align="left">48.588</td>
+<td align="left">239.83</td>
+<td align="left">1891.8</td>
+<td align="left">7463.8</td>
+<td align="left">84183</td>
+</tr>
+<tr class="even">
+<td align="left">transcriptome</td>
+<td align="left">normal_2</td>
+<td align="left">normal</td>
+<td align="left">2</td>
+<td align="left">#BBFFBB</td>
+<td align="left">1675.7</td>
+<td align="left">675.93</td>
+<td align="left">3266.2</td>
+<td align="left">1483.4</td>
+<td align="left">1.1899</td>
+<td align="left">46.894</td>
+<td align="left">225.55</td>
+<td align="left">1709.0</td>
+<td align="left">6559.9</td>
+<td align="left">73210</td>
+</tr>
+<tr class="odd">
+<td align="left">transcriptome</td>
+<td align="left">day3_1</td>
+<td align="left">day3</td>
+<td align="left">1</td>
+<td align="left">#FFFFDD</td>
+<td align="left">1715.6</td>
+<td align="left">843.60</td>
+<td align="left">2858.5</td>
+<td align="left">1652.1</td>
+<td align="left">6.7569</td>
+<td align="left">76.704</td>
+<td align="left">318.55</td>
+<td align="left">1970.7</td>
+<td align="left">6050.8</td>
+<td align="left">61663</td>
+</tr>
+<tr class="even">
+<td align="left">transcriptome</td>
+<td align="left">day3_2</td>
+<td align="left">day3</td>
+<td align="left">2</td>
+<td align="left">#FFFFDD</td>
+<td align="left">1912.4</td>
+<td align="left">943.17</td>
+<td align="left">3169.4</td>
+<td align="left">1870.2</td>
+<td align="left">9.5006</td>
+<td align="left">82.463</td>
+<td align="left">353.51</td>
+<td align="left">2223.7</td>
+<td align="left">6702.8</td>
+<td align="left">67802</td>
+</tr>
+<tr class="odd">
+<td align="left">transcriptome</td>
+<td align="left">day3_3</td>
+<td align="left">day3</td>
+<td align="left">3</td>
+<td align="left">#FFFFDD</td>
+<td align="left">1788.7</td>
+<td align="left">879.47</td>
+<td align="left">3032.2</td>
+<td align="left">1716.6</td>
+<td align="left">8.2186</td>
+<td align="left">78.684</td>
+<td align="left">329.64</td>
+<td align="left">2046.2</td>
+<td align="left">6258.7</td>
+<td align="left">66225</td>
+</tr>
+<tr class="even">
+<td align="left">transcriptome</td>
+<td align="left">day7_1</td>
+<td align="left">day7</td>
+<td align="left">1</td>
+<td align="left">#FFDD88</td>
+<td align="left">1535.7</td>
+<td align="left">772.21</td>
+<td align="left">2589.1</td>
+<td align="left">1503.8</td>
+<td align="left">10.1767</td>
+<td align="left">71.455</td>
+<td align="left">297.81</td>
+<td align="left">1801.6</td>
+<td align="left">5254.4</td>
+<td align="left">64460</td>
+</tr>
+<tr class="odd">
+<td align="left">transcriptome</td>
+<td align="left">day7_2</td>
+<td align="left">day7</td>
+<td align="left">2</td>
+<td align="left">#FFDD88</td>
+<td align="left">1767.2</td>
+<td align="left">865.20</td>
+<td align="left">3045.3</td>
+<td align="left">1747.5</td>
+<td align="left">4.3223</td>
+<td align="left">79.410</td>
+<td align="left">334.24</td>
+<td align="left">2081.7</td>
+<td align="left">5972.5</td>
+<td align="left">70714</td>
+</tr>
+<tr class="even">
+<td align="left">transcriptome</td>
+<td align="left">day7_3</td>
+<td align="left">day7</td>
+<td align="left">3</td>
+<td align="left">#FFDD88</td>
+<td align="left">1604.9</td>
+<td align="left">803.62</td>
+<td align="left">2762.1</td>
+<td align="left">1593.5</td>
+<td align="left">7.2826</td>
+<td align="left">71.727</td>
+<td align="left">304.52</td>
+<td align="left">1898.0</td>
+<td align="left">5375.4</td>
+<td align="left">65294</td>
+</tr>
+<tr class="odd">
+<td align="left">transcriptome</td>
+<td align="left">day14_1</td>
+<td align="left">day14</td>
+<td align="left">1</td>
+<td align="left">#FF4400</td>
+<td align="left">1566.7</td>
+<td align="left">760.19</td>
+<td align="left">3055.8</td>
+<td align="left">1474.5</td>
+<td align="left">12.6918</td>
+<td align="left">72.337</td>
+<td align="left">297.53</td>
+<td align="left">1772.1</td>
+<td align="left">5247.2</td>
+<td align="left">78074</td>
+</tr>
+<tr class="even">
+<td align="left">transcriptome</td>
+<td align="left">day14_2</td>
+<td align="left">day14</td>
+<td align="left">2</td>
+<td align="left">#FF4400</td>
+<td align="left">1482.4</td>
+<td align="left">714.26</td>
+<td align="left">2961.8</td>
+<td align="left">1399.4</td>
+<td align="left">4.1563</td>
+<td align="left">64.983</td>
+<td align="left">277.37</td>
+<td align="left">1676.7</td>
+<td align="left">4951.8</td>
+<td align="left">82035</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="distribution-of-raw-counts" class="section level2">
+<h2>Distribution of raw counts</h2>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">hist</span>(<span class="kw">unlist</span>(rawValues), <span class="dt">breaks =</span> <span class="dv">1000</span>, </span>
+<span id="cb8-2"><a href="#cb8-2"></a>     <span class="dt">main =</span> <span class="st">&quot;Raw value distribution&quot;</span>, </span>
+<span id="cb8-3"><a href="#cb8-3"></a>     <span class="dt">xlab =</span> <span class="st">&quot;Raw values&quot;</span>, </span>
+<span id="cb8-4"><a href="#cb8-4"></a>     <span class="dt">ylab =</span> <span class="st">&quot;Number of features (all samples)&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/proteome/uuo/pavkovic2019_proteome_uuo_RNA-seq_count_distrib-1.png" alt="Distribution of raw counts" width="70%" />
+<p class="caption">
+Distribution of raw counts
+</p>
+</div>
+<p>The distribution of raw counts is not very informative, because the range is defined by some outlier, i.e. a feature having a huge values respective to the rest of the distribution.</p>
+<p>This problem is particularly sensitive for RNA-seq data: even with a strong zoom on the abcsissa range from 0 to 500, the histogram shows a steep drop in the first bins.</p>
+</div>
+<div id="distribution-of-raw-counts---right-side-trimming" class="section level2">
+<h2>Distribution of raw counts - right-side trimming</h2>
+<p>In order to see the relevant part of the data it is convenient to truncate the histogram to the 95th percentile.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co">#### Count distrib - truncated right tail ####</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a></span>
+<span id="cb9-3"><a href="#cb9-3"></a><span class="co">## Compute the percentile 95 of all the data</span></span>
+<span id="cb9-4"><a href="#cb9-4"></a>p95 &lt;-<span class="st"> </span><span class="kw">quantile</span>(<span class="dt">x =</span> <span class="kw">unlist</span>(rawValues), <span class="dt">probs =</span> <span class="fl">0.95</span>)</span>
+<span id="cb9-5"><a href="#cb9-5"></a></span>
+<span id="cb9-6"><a href="#cb9-6"></a><span class="co">## Select the values below this percentile</span></span>
+<span id="cb9-7"><a href="#cb9-7"></a>allValues &lt;-<span class="st"> </span><span class="kw">unlist</span>(rawValues)</span>
+<span id="cb9-8"><a href="#cb9-8"></a><span class="co"># length(allValues)</span></span>
+<span id="cb9-9"><a href="#cb9-9"></a>p95Values &lt;-<span class="st"> </span>allValues[allValues <span class="op">&lt;=</span><span class="st"> </span>p95]</span>
+<span id="cb9-10"><a href="#cb9-10"></a><span class="co"># length(p95Values)</span></span>
+<span id="cb9-11"><a href="#cb9-11"></a></span>
+<span id="cb9-12"><a href="#cb9-12"></a><span class="co">## Plot the histogram</span></span>
+<span id="cb9-13"><a href="#cb9-13"></a><span class="kw">hist</span>(p95Values, <span class="dt">breaks =</span> <span class="dv">100</span>, </span>
+<span id="cb9-14"><a href="#cb9-14"></a>     <span class="dt">main =</span> <span class="st">&quot;Distribution of raw values</span><span class="ch">\n</span><span class="st">below the 95th percentile&quot;</span>, </span>
+<span id="cb9-15"><a href="#cb9-15"></a>     <span class="dt">xlab =</span> <span class="st">&quot;Raw values (below percentile 95)&quot;</span>, </span>
+<span id="cb9-16"><a href="#cb9-16"></a>     <span class="dt">ylab =</span> <span class="st">&quot;Number of features (all samples)&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/proteome/uuo/pavkovic2019_proteome_uuo_raw_distrib_truncated_p95-1.png" alt="Distribution of raw counts" width="70%" />
+<p class="caption">
+Distribution of raw counts
+</p>
+</div>
+</div>
+<div id="distribution-of-raw-counts---two-sides-trimming" class="section level2">
+<h2>Distribution of raw counts - two-sides trimming</h2>
+<p>For visualization, it is sometimes convenient to truncate both tails of the distribution, in order to avoid both the outliers (right tail) and the sometimes large number of zero values. This is particularly useful for single-cell RNA-seq data, which can have a “zero-inflated” distribution, but it is also useful for other data types.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co">#### Count distrib - truncated on both tails ####</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a></span>
+<span id="cb10-3"><a href="#cb10-3"></a><span class="co">## Compute the percentile 95 of all the data</span></span>
+<span id="cb10-4"><a href="#cb10-4"></a>p05 &lt;-<span class="st"> </span><span class="kw">quantile</span>(<span class="dt">x =</span> <span class="kw">unlist</span>(rawValues), <span class="dt">probs =</span> <span class="fl">0.05</span>)</span>
+<span id="cb10-5"><a href="#cb10-5"></a>p95 &lt;-<span class="st"> </span><span class="kw">quantile</span>(<span class="dt">x =</span> <span class="kw">unlist</span>(rawValues), <span class="dt">probs =</span> <span class="fl">0.95</span>)</span>
+<span id="cb10-6"><a href="#cb10-6"></a></span>
+<span id="cb10-7"><a href="#cb10-7"></a><span class="co">## Select the values below this percentile</span></span>
+<span id="cb10-8"><a href="#cb10-8"></a>allValues &lt;-<span class="st"> </span><span class="kw">unlist</span>(rawValues)</span>
+<span id="cb10-9"><a href="#cb10-9"></a><span class="co"># length(allValues)</span></span>
+<span id="cb10-10"><a href="#cb10-10"></a>trimmedValues &lt;-<span class="st"> </span>allValues[(allValues <span class="op">&gt;=</span><span class="st"> </span>p05) <span class="op">&amp;</span><span class="st"> </span>(allValues <span class="op">&lt;=</span><span class="st"> </span>p95)]</span>
+<span id="cb10-11"><a href="#cb10-11"></a><span class="co"># length(trimmedValues)</span></span>
+<span id="cb10-12"><a href="#cb10-12"></a></span>
+<span id="cb10-13"><a href="#cb10-13"></a><span class="co">## Plot the histogram</span></span>
+<span id="cb10-14"><a href="#cb10-14"></a><span class="kw">hist</span>(trimmedValues, <span class="dt">breaks =</span> <span class="dv">100</span>, </span>
+<span id="cb10-15"><a href="#cb10-15"></a>     <span class="dt">main =</span> <span class="st">&quot;Distribution of trimmed raw values</span><span class="ch">\n</span><span class="st">from p05 to p95&quot;</span>, </span>
+<span id="cb10-16"><a href="#cb10-16"></a>     <span class="dt">xlab =</span> <span class="st">&quot;Raw values (between p05 and p95)&quot;</span>, </span>
+<span id="cb10-17"><a href="#cb10-17"></a>     <span class="dt">ylab =</span> <span class="st">&quot;Number of features (all samples)&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/proteome/uuo/pavkovic2019_proteome_uuo_raw_distrib_trimmed_p05-p95-1.png" alt="Distribution of raw counts" width="70%" />
+<p class="caption">
+Distribution of raw counts
+</p>
+</div>
+</div>
+<div id="log2-transformed-values" class="section level2">
+<h2>Log2-transformed values</h2>
+<p>A typical normalising approach is apply a log2 transformation .</p>
+<p>For RNA-seq data, this might however create a problem when the counts of a given gene in a given sample is 0. To circumvent this, we can add an epsilon (<span class="math inline">\(\epsilon = 0.1\)</span>) before the log2 transformation.</p>
+<p><strong>Note: </strong> Pancovic’s “raw counts” are actually decimal numbers and their mimimal value is higher than 0. The epsilon is thus not required but we keep it in this script in order to enable re-using it with other data sources.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="co">#### Log2 transformation ot the raw values ####</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a>log2Values &lt;-<span class="st"> </span><span class="kw">log2</span>(rawValues <span class="op">+</span><span class="st"> </span>parameters<span class="op">$</span>epsilon)</span>
+<span id="cb11-3"><a href="#cb11-3"></a></span>
+<span id="cb11-4"><a href="#cb11-4"></a><span class="co">## Plot the histogram of log2-transformed values</span></span>
+<span id="cb11-5"><a href="#cb11-5"></a><span class="kw">hist</span>(<span class="kw">unlist</span>(log2Values), <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">-5</span>, <span class="dt">to =</span> <span class="dv">22</span>, <span class="dt">by =</span> <span class="fl">0.1</span>),</span>
+<span id="cb11-6"><a href="#cb11-6"></a>     <span class="dt">main =</span> <span class="st">&quot;log2(values) distribution&quot;</span>,</span>
+<span id="cb11-7"><a href="#cb11-7"></a>     <span class="dt">xlab =</span> <span class="st">&quot;log2(raw + epsilon)&quot;</span>, </span>
+<span id="cb11-8"><a href="#cb11-8"></a>     <span class="dt">ylab =</span> <span class="st">&quot;Number of features&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;#BBFFBB&quot;</span>)</span></code></pre></div>
+<p><img src="figures/proteome/uuo/pavkovic2019_proteome_uuo_log2_counts-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="box-plots" class="section level2">
+<h2>Box plots</h2>
+<p>We can now inspect the distribution of counts per sample with the <code>boxplot()</code> function.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="co">#### Box plots - raw vs log2-ransformed ####</span></span>
+<span id="cb12-2"><a href="#cb12-2"></a><span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">5</span>, <span class="dv">1</span>))</span>
+<span id="cb12-3"><a href="#cb12-3"></a><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb12-4"><a href="#cb12-4"></a><span class="kw">boxplot</span>(rawValues, </span>
+<span id="cb12-5"><a href="#cb12-5"></a>        <span class="dt">col =</span> metadata<span class="op">$</span>color,</span>
+<span id="cb12-6"><a href="#cb12-6"></a>        <span class="dt">horizontal =</span> <span class="ot">TRUE</span>, </span>
+<span id="cb12-7"><a href="#cb12-7"></a>        <span class="dt">las =</span> <span class="dv">1</span>, </span>
+<span id="cb12-8"><a href="#cb12-8"></a>        <span class="dt">main =</span> <span class="st">&quot;Raw values&quot;</span>, </span>
+<span id="cb12-9"><a href="#cb12-9"></a>        <span class="dt">xlab =</span> <span class="st">&quot;Raw value&quot;</span>)</span>
+<span id="cb12-10"><a href="#cb12-10"></a><span class="kw">boxplot</span>(log2Values, </span>
+<span id="cb12-11"><a href="#cb12-11"></a>        <span class="dt">col =</span> metadata<span class="op">$</span>color,</span>
+<span id="cb12-12"><a href="#cb12-12"></a>        <span class="dt">horizontal =</span> <span class="ot">TRUE</span>, </span>
+<span id="cb12-13"><a href="#cb12-13"></a>        <span class="dt">las =</span> <span class="dv">1</span>, </span>
+<span id="cb12-14"><a href="#cb12-14"></a>        <span class="dt">main =</span> <span class="st">&quot;log2-transformed&quot;</span>, </span>
+<span id="cb12-15"><a href="#cb12-15"></a>        <span class="dt">xlab =</span> <span class="st">&quot;log2(value)&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/proteome/uuo/pavkovic2019_proteome_uuo_boxplots_raw_vs_log2-1.png" alt="Box plot of the raw values (left) and log2-transformed values (right)" width="80%" />
+<p class="caption">
+Box plot of the raw values (left) and log2-transformed values (right)
+</p>
+</div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">par</span>(par.ori)</span></code></pre></div>
+</div>
+<div id="feature-filtering" class="section level2">
+<h2>Feature filtering</h2>
+<p>We filter out the features having very low values across all the samples, which we consider as undetected.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="co">## Filter out the features with very low counts in all conditions</span></span>
+<span id="cb14-2"><a href="#cb14-2"></a>undetectedFeatures &lt;-<span class="st"> </span><span class="kw">apply</span>(rawValues, <span class="dt">MARGIN =</span> <span class="dv">1</span>, <span class="dt">FUN =</span> sum) <span class="op">&lt;</span><span class="st"> </span>parameters<span class="op">$</span>undetectedLimit</span>
+<span id="cb14-3"><a href="#cb14-3"></a><span class="co"># table(undetectedFeatures)</span></span>
+<span id="cb14-4"><a href="#cb14-4"></a>log2Filtered &lt;-<span class="st"> </span>log2Values[<span class="op">!</span>undetectedFeatures, ]</span>
+<span id="cb14-5"><a href="#cb14-5"></a></span>
+<span id="cb14-6"><a href="#cb14-6"></a><span class="co">#### Box plots before and after filtering ####</span></span>
+<span id="cb14-7"><a href="#cb14-7"></a><span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">5</span>, <span class="dv">1</span>))</span>
+<span id="cb14-8"><a href="#cb14-8"></a><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb14-9"><a href="#cb14-9"></a></span>
+<span id="cb14-10"><a href="#cb14-10"></a><span class="kw">boxplot</span>(log2Values, </span>
+<span id="cb14-11"><a href="#cb14-11"></a>        <span class="dt">col =</span> metadata<span class="op">$</span>color,</span>
+<span id="cb14-12"><a href="#cb14-12"></a>        <span class="dt">horizontal =</span> <span class="ot">TRUE</span>, </span>
+<span id="cb14-13"><a href="#cb14-13"></a>        <span class="dt">las =</span> <span class="dv">1</span>, </span>
+<span id="cb14-14"><a href="#cb14-14"></a>        <span class="dt">main =</span> <span class="st">&quot;log2-transformed&quot;</span>, </span>
+<span id="cb14-15"><a href="#cb14-15"></a>        <span class="dt">xlab =</span> <span class="st">&quot;log2(value)&quot;</span>)</span>
+<span id="cb14-16"><a href="#cb14-16"></a><span class="kw">boxplot</span>(log2Filtered, </span>
+<span id="cb14-17"><a href="#cb14-17"></a>        <span class="dt">col =</span> metadata<span class="op">$</span>color,</span>
+<span id="cb14-18"><a href="#cb14-18"></a>        <span class="dt">horizontal =</span> <span class="ot">TRUE</span>, </span>
+<span id="cb14-19"><a href="#cb14-19"></a>        <span class="dt">las =</span> <span class="dv">1</span>,</span>
+<span id="cb14-20"><a href="#cb14-20"></a>        <span class="dt">main =</span> <span class="st">&quot;Filtered features&quot;</span>, </span>
+<span id="cb14-21"><a href="#cb14-21"></a>        <span class="dt">xlab =</span> <span class="st">&quot;log2(value)&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/proteome/uuo/pavkovic2019_proteome_uuo_boxplots_filtering-1.png" alt="Box plot of the log2-transformed values before (left) and after (right)  feature filtering. " width="80%" />
+<p class="caption">
+Box plot of the log2-transformed values before (left) and after (right) feature filtering.
+</p>
+</div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw">par</span>(par.ori)</span></code></pre></div>
+<p>We filtered out all the features whose maximal count value across all samples was lower than 100. Among the 8508 genes from the raw count table, 0 were considered undetected according to this criterion. We use the remaining 8508 genes for the subsequent analyses.</p>
+</div>
+<div id="standardization-centering" class="section level2">
+<h2>Standardization: centering</h2>
+<p>Before going any further, it is important to ensure some standardization of the samples, in order to correct for biases due to inter-sample differences in sequencing depth (RNA-seq) or other sample-specific bias.</p>
+<p>For the sake of simplicity, we will use here a very simple criterion: median-based centering.</p>
+<p>When we start from the raw values, the principle is to divide the counts of each sample by a sample-specific scaling factor in order to bring each sample to the same median count.</p>
+<p>Since we are working with log2-transformed values, we compute the difference, which is equivalent to apply a ratio to the raw values.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co">#### Median-based centering ####</span></span>
+<span id="cb16-2"><a href="#cb16-2"></a>sampleLog2Medians &lt;-<span class="st"> </span><span class="kw">apply</span>(log2Filtered, <span class="dv">2</span>, median)</span>
+<span id="cb16-3"><a href="#cb16-3"></a>seriesLog2Median &lt;-<span class="st"> </span><span class="kw">median</span>(sampleLog2Medians)</span>
+<span id="cb16-4"><a href="#cb16-4"></a></span>
+<span id="cb16-5"><a href="#cb16-5"></a>log2MedianCentered &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">matrix</span>(</span>
+<span id="cb16-6"><a href="#cb16-6"></a>  <span class="dt">nrow =</span> <span class="kw">nrow</span>(log2Filtered),</span>
+<span id="cb16-7"><a href="#cb16-7"></a>  <span class="dt">ncol =</span> <span class="kw">ncol</span>(log2Filtered)))</span>
+<span id="cb16-8"><a href="#cb16-8"></a><span class="kw">colnames</span>(log2MedianCentered) &lt;-<span class="st"> </span><span class="kw">colnames</span>(log2Filtered)</span>
+<span id="cb16-9"><a href="#cb16-9"></a><span class="kw">rownames</span>(log2MedianCentered) &lt;-<span class="st"> </span><span class="kw">rownames</span>(log2Filtered)</span>
+<span id="cb16-10"><a href="#cb16-10"></a><span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(log2Filtered)) {</span>
+<span id="cb16-11"><a href="#cb16-11"></a>  log2MedianCentered[, j] &lt;-<span class="st"> </span>log2Filtered[, j] <span class="op">-</span><span class="st"> </span>sampleLog2Medians[j] <span class="op">+</span><span class="st"> </span>seriesLog2Median</span>
+<span id="cb16-12"><a href="#cb16-12"></a>}</span>
+<span id="cb16-13"><a href="#cb16-13"></a></span>
+<span id="cb16-14"><a href="#cb16-14"></a></span>
+<span id="cb16-15"><a href="#cb16-15"></a><span class="co">#### Box plots after median-based centering ####</span></span>
+<span id="cb16-16"><a href="#cb16-16"></a></span>
+<span id="cb16-17"><a href="#cb16-17"></a><span class="co">#### Box plots before and after filtering ####</span></span>
+<span id="cb16-18"><a href="#cb16-18"></a><span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">5</span>, <span class="dv">1</span>))</span>
+<span id="cb16-19"><a href="#cb16-19"></a><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb16-20"><a href="#cb16-20"></a><span class="kw">boxplot</span>(log2Filtered, </span>
+<span id="cb16-21"><a href="#cb16-21"></a>        <span class="dt">col =</span> metadata<span class="op">$</span>color,</span>
+<span id="cb16-22"><a href="#cb16-22"></a>        <span class="dt">horizontal =</span> <span class="ot">TRUE</span>, </span>
+<span id="cb16-23"><a href="#cb16-23"></a>        <span class="dt">las =</span> <span class="dv">1</span>,</span>
+<span id="cb16-24"><a href="#cb16-24"></a>        <span class="dt">main =</span> <span class="st">&quot;Filtered features&quot;</span>, </span>
+<span id="cb16-25"><a href="#cb16-25"></a>        <span class="dt">xlab =</span> <span class="st">&quot;log2(value)&quot;</span>)</span>
+<span id="cb16-26"><a href="#cb16-26"></a><span class="kw">boxplot</span>(log2MedianCentered, </span>
+<span id="cb16-27"><a href="#cb16-27"></a>        <span class="dt">col =</span> metadata<span class="op">$</span>color,</span>
+<span id="cb16-28"><a href="#cb16-28"></a>        <span class="dt">horizontal =</span> <span class="ot">TRUE</span>, </span>
+<span id="cb16-29"><a href="#cb16-29"></a>        <span class="dt">las =</span> <span class="dv">1</span>,</span>
+<span id="cb16-30"><a href="#cb16-30"></a>        <span class="dt">main =</span> <span class="st">&quot;Median-based centered&quot;</span>, </span>
+<span id="cb16-31"><a href="#cb16-31"></a>        <span class="dt">xlab =</span> <span class="st">&quot;log2(value)&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/proteome/uuo/pavkovic2019_proteome_uuo_boxplots_centering-1.png" alt="Box plot of the log2-transformed feature-filtered values before (left) and after (right) median-based standardization.  " width="80%" />
+<p class="caption">
+Box plot of the log2-transformed feature-filtered values before (left) and after (right) median-based standardization.
+</p>
+</div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="kw">par</span>(par.ori)</span></code></pre></div>
+<p>Consistently, after centering, all the medians appear aligned on the box plot.</p>
+</div>
+<div id="standardization-scaling" class="section level2">
+<h2>Standardization: scaling</h2>
+<p>The second step of standardization is to ensure homogeous dispersion between samples. This relies on some biological assumption, so it has to be evaluated on a case-per-case basis.</p>
+<p><strong>My trick: </strong> for high-throughput data, I generally use the inter-quartile range (IQR) rather than the standard deviation as scaling factor. This ensures robustness to outliers, which may have a very strong impact for some datatypes (e.g. RNA-seq).</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="co">#### IQR-based scaling ####</span></span>
+<span id="cb18-2"><a href="#cb18-2"></a>sampleIQR &lt;-<span class="st"> </span><span class="kw">apply</span>(log2MedianCentered, <span class="dv">2</span>, IQR)</span>
+<span id="cb18-3"><a href="#cb18-3"></a>seriesIQR &lt;-<span class="st"> </span><span class="kw">median</span>(sampleIQR)</span>
+<span id="cb18-4"><a href="#cb18-4"></a>scalingFactors &lt;-<span class="st"> </span>sampleIQR <span class="op">/</span><span class="st"> </span>seriesIQR</span>
+<span id="cb18-5"><a href="#cb18-5"></a></span>
+<span id="cb18-6"><a href="#cb18-6"></a>log2Standardized &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">matrix</span>(</span>
+<span id="cb18-7"><a href="#cb18-7"></a>  <span class="dt">nrow =</span> <span class="kw">nrow</span>(log2Filtered),</span>
+<span id="cb18-8"><a href="#cb18-8"></a>  <span class="dt">ncol =</span> <span class="kw">ncol</span>(log2Filtered)))</span>
+<span id="cb18-9"><a href="#cb18-9"></a><span class="kw">colnames</span>(log2Standardized) &lt;-<span class="st"> </span><span class="kw">colnames</span>(log2Standardized)</span>
+<span id="cb18-10"><a href="#cb18-10"></a><span class="kw">rownames</span>(log2Standardized) &lt;-<span class="st"> </span><span class="kw">rownames</span>(log2Standardized)</span>
+<span id="cb18-11"><a href="#cb18-11"></a><span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(log2MedianCentered)) {</span>
+<span id="cb18-12"><a href="#cb18-12"></a>  log2Standardized[, j] &lt;-<span class="st"> </span></span>
+<span id="cb18-13"><a href="#cb18-13"></a><span class="st">    </span>(log2Filtered[, j] <span class="op">-</span><span class="st"> </span>sampleLog2Medians[j] ) <span class="op">/</span><span class="st"> </span>scalingFactors[j] <span class="op">+</span><span class="st"> </span>seriesLog2Median</span>
+<span id="cb18-14"><a href="#cb18-14"></a>}</span>
+<span id="cb18-15"><a href="#cb18-15"></a></span>
+<span id="cb18-16"><a href="#cb18-16"></a><span class="co">## Check the IQR after scaling</span></span>
+<span id="cb18-17"><a href="#cb18-17"></a><span class="co"># apply(log2Standardized, 2, IQR)</span></span>
+<span id="cb18-18"><a href="#cb18-18"></a></span>
+<span id="cb18-19"><a href="#cb18-19"></a><span class="co">#### Box plots after median-based centering ####</span></span>
+<span id="cb18-20"><a href="#cb18-20"></a></span>
+<span id="cb18-21"><a href="#cb18-21"></a><span class="co">#### Box plots before and after filtering ####</span></span>
+<span id="cb18-22"><a href="#cb18-22"></a><span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">5</span>, <span class="dv">1</span>))</span>
+<span id="cb18-23"><a href="#cb18-23"></a><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb18-24"><a href="#cb18-24"></a><span class="kw">boxplot</span>(log2MedianCentered, </span>
+<span id="cb18-25"><a href="#cb18-25"></a>        <span class="dt">col =</span> metadata<span class="op">$</span>color,</span>
+<span id="cb18-26"><a href="#cb18-26"></a>        <span class="dt">horizontal =</span> <span class="ot">TRUE</span>, </span>
+<span id="cb18-27"><a href="#cb18-27"></a>        <span class="dt">las =</span> <span class="dv">1</span>,</span>
+<span id="cb18-28"><a href="#cb18-28"></a>        <span class="dt">main =</span> <span class="st">&quot;Median-based centered&quot;</span>, </span>
+<span id="cb18-29"><a href="#cb18-29"></a>        <span class="dt">xlab =</span> <span class="st">&quot;log2(value)&quot;</span>)</span>
+<span id="cb18-30"><a href="#cb18-30"></a><span class="kw">boxplot</span>(log2Standardized, </span>
+<span id="cb18-31"><a href="#cb18-31"></a>        <span class="dt">col =</span> metadata<span class="op">$</span>color,</span>
+<span id="cb18-32"><a href="#cb18-32"></a>        <span class="dt">horizontal =</span> <span class="ot">TRUE</span>, </span>
+<span id="cb18-33"><a href="#cb18-33"></a>        <span class="dt">las =</span> <span class="dv">1</span>,</span>
+<span id="cb18-34"><a href="#cb18-34"></a>        <span class="dt">main =</span> <span class="st">&quot;Standardized</span><span class="ch">\n</span><span class="st">(median centering, IQR scaling)&quot;</span>, </span>
+<span id="cb18-35"><a href="#cb18-35"></a>        <span class="dt">xlab =</span> <span class="st">&quot;log2(value)&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/proteome/uuo/pavkovic2019_proteome_uuo_boxplots_scaling-1.png" alt="Box plot of the log2-transformed feature-filtered values before (left) and after (right) IQR-based scaling.   " width="80%" />
+<p class="caption">
+Box plot of the log2-transformed feature-filtered values before (left) and after (right) IQR-based scaling.
+</p>
+</div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="kw">par</span>(par.ori)</span></code></pre></div>
+</div>
+<div id="raw-versus-standardized-values" class="section level2">
+<h2>Raw versus standardized values</h2>
+<p>At the end of this journey, we can compare the raw and the standardized values. Needless to say that the preceding steps quite transformed the data. Since this will likely impact all the subsequent analyses, it is worth making sure we took the right choices for each step (filtering, log2-transformation, centering, scaling). This should be evaluated based on your knowledge of your data.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="co">#### Violin plots ####</span></span>
+<span id="cb20-2"><a href="#cb20-2"></a><span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">5</span>, <span class="dv">1</span>))</span>
+<span id="cb20-3"><a href="#cb20-3"></a><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb20-4"><a href="#cb20-4"></a><span class="kw">boxplot</span>(rawValues, </span>
+<span id="cb20-5"><a href="#cb20-5"></a>        <span class="dt">col =</span> metadata<span class="op">$</span>color,</span>
+<span id="cb20-6"><a href="#cb20-6"></a>        <span class="dt">horizontal =</span> <span class="ot">TRUE</span>, </span>
+<span id="cb20-7"><a href="#cb20-7"></a>        <span class="dt">las =</span> <span class="dv">1</span>, </span>
+<span id="cb20-8"><a href="#cb20-8"></a>        <span class="dt">main =</span> <span class="st">&quot;Raw values&quot;</span>, </span>
+<span id="cb20-9"><a href="#cb20-9"></a>        <span class="dt">xlab =</span> <span class="st">&quot;raw value&quot;</span>)</span>
+<span id="cb20-10"><a href="#cb20-10"></a><span class="kw">boxplot</span>(log2Standardized, </span>
+<span id="cb20-11"><a href="#cb20-11"></a>        <span class="dt">col =</span> metadata<span class="op">$</span>color,</span>
+<span id="cb20-12"><a href="#cb20-12"></a>        <span class="dt">horizontal =</span> <span class="ot">TRUE</span>, </span>
+<span id="cb20-13"><a href="#cb20-13"></a>        <span class="dt">las =</span> <span class="dv">1</span>, </span>
+<span id="cb20-14"><a href="#cb20-14"></a>        <span class="dt">main =</span> <span class="st">&quot;Filtered, normalized and standardized&quot;</span>, </span>
+<span id="cb20-15"><a href="#cb20-15"></a>        <span class="dt">xlab =</span> <span class="st">&quot;log2(counts)&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/proteome/uuo/pavkovic2019_proteome_uuo_boxplots_raw_vs_standardized-1.png" alt="Box plot of the raw values (left) and the final data after feature filtering, normalization by log2 transormation, centering and scaling (right).  " width="80%" />
+<p class="caption">
+Box plot of the raw values (left) and the final data after feature filtering, normalization by log2 transormation, centering and scaling (right).
+</p>
+</div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="kw">par</span>(par.ori)</span></code></pre></div>
+</div>
+<div id="violin-plots" class="section level2">
+<h2>Violin plots</h2>
+<p>We can also inspect the distribution of counts per sample with the <code>vioplot()</code> function.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="co">#### Violin plots ####</span></span>
+<span id="cb22-2"><a href="#cb22-2"></a><span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">5</span>, <span class="dv">1</span>))</span>
+<span id="cb22-3"><a href="#cb22-3"></a><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb22-4"><a href="#cb22-4"></a>vioplot<span class="op">::</span><span class="kw">vioplot</span>(rawValues, </span>
+<span id="cb22-5"><a href="#cb22-5"></a>        <span class="dt">col =</span> metadata<span class="op">$</span>color,</span>
+<span id="cb22-6"><a href="#cb22-6"></a>        <span class="dt">horizontal =</span> <span class="ot">TRUE</span>, </span>
+<span id="cb22-7"><a href="#cb22-7"></a>        <span class="dt">las =</span> <span class="dv">1</span>, </span>
+<span id="cb22-8"><a href="#cb22-8"></a>        <span class="dt">main =</span> <span class="st">&quot;Raw values&quot;</span>, </span>
+<span id="cb22-9"><a href="#cb22-9"></a>        <span class="dt">xlab =</span> <span class="st">&quot;raw value&quot;</span>)</span>
+<span id="cb22-10"><a href="#cb22-10"></a>vioplot<span class="op">::</span><span class="kw">vioplot</span>(log2Standardized, </span>
+<span id="cb22-11"><a href="#cb22-11"></a>        <span class="dt">col =</span> metadata<span class="op">$</span>color,</span>
+<span id="cb22-12"><a href="#cb22-12"></a>        <span class="dt">horizontal =</span> <span class="ot">TRUE</span>, </span>
+<span id="cb22-13"><a href="#cb22-13"></a>        <span class="dt">las =</span> <span class="dv">1</span>, </span>
+<span id="cb22-14"><a href="#cb22-14"></a>        <span class="dt">main =</span> <span class="st">&quot;Filtered, normalized and standardized&quot;</span>, </span>
+<span id="cb22-15"><a href="#cb22-15"></a>        <span class="dt">xlab =</span> <span class="st">&quot;log2(counts)&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/proteome/uuo/pavkovic2019_proteome_uuo_violin_plots_raw_vs_standardized-1.png" alt="Box plot of the raw values (left) and the final data after feature filtering, normalization by log2 transormation, centering and scaling (right).  " width="80%" />
+<p class="caption">
+Box plot of the raw values (left) and the final data after feature filtering, normalization by log2 transormation, centering and scaling (right).
+</p>
+</div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="kw">par</span>(par.ori)</span></code></pre></div>
+</div>
+<div id="scatter-plots" class="section level2">
+<h2>Scatter plots</h2>
+<p>We can also inspect the distribution of counts per sample with the <code>plot()</code> function.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="co">#### Scatter plots ####</span></span>
+<span id="cb24-2"><a href="#cb24-2"></a><span class="co">#par(mar = c(4, 6, 5, 1))</span></span>
+<span id="cb24-3"><a href="#cb24-3"></a><span class="co">#plot(log2Values[,metadata$sampleName], </span></span>
+<span id="cb24-4"><a href="#cb24-4"></a><span class="co">#        col = metadata$color)</span></span>
+<span id="cb24-5"><a href="#cb24-5"></a><span class="co">#par(par.ori)</span></span></code></pre></div>
+</div>
+<div id="exporting-the-result" class="section level2">
+<h2>Exporting the result</h2>
+<p>We export the pre-processed data in separate tables for further reuse.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="co">#### Save tables  ####</span></span>
+<span id="cb25-2"><a href="#cb25-2"></a></span>
+<span id="cb25-3"><a href="#cb25-3"></a>outfiles &lt;-<span class="st"> </span><span class="kw">vector</span>()</span>
+<span id="cb25-4"><a href="#cb25-4"></a></span>
+<span id="cb25-5"><a href="#cb25-5"></a><span class="co">## Raw counts, all the variables</span></span>
+<span id="cb25-6"><a href="#cb25-6"></a>outfiles[<span class="st">&quot;raw&quot;</span>] &lt;-<span class="st"> </span><span class="kw">file.path</span>(outdirs<span class="op">$</span>dataset, </span>
+<span id="cb25-7"><a href="#cb25-7"></a>                                    <span class="kw">paste0</span>(parameters<span class="op">$</span>dataset, </span>
+<span id="cb25-8"><a href="#cb25-8"></a>                                           <span class="st">&quot;_&quot;</span>, parameters<span class="op">$</span>datatype, </span>
+<span id="cb25-9"><a href="#cb25-9"></a>                                           <span class="st">&quot;_raw.tsv.gz&quot;</span>))</span>
+<span id="cb25-10"><a href="#cb25-10"></a><span class="kw">write.table</span>(<span class="dt">x =</span> <span class="kw">format</span>(<span class="dt">digits =</span> <span class="dv">3</span>, <span class="dt">big.mark   =</span> <span class="st">&quot;&quot;</span>, <span class="dt">decimal.mark =</span> <span class="st">&quot;.&quot;</span>, rawValues), </span>
+<span id="cb25-11"><a href="#cb25-11"></a>            <span class="dt">dec =</span> <span class="st">&quot;.&quot;</span>, </span>
+<span id="cb25-12"><a href="#cb25-12"></a>            <span class="dt">file =</span> <span class="kw">gzfile</span>(outfiles[<span class="st">&quot;raw&quot;</span>], <span class="st">&quot;w&quot;</span>), </span>
+<span id="cb25-13"><a href="#cb25-13"></a>            <span class="dt">quote =</span> <span class="ot">FALSE</span>, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>)</span>
+<span id="cb25-14"><a href="#cb25-14"></a></span>
+<span id="cb25-15"><a href="#cb25-15"></a><span class="co">## Log2-transformed counts, all the features</span></span>
+<span id="cb25-16"><a href="#cb25-16"></a>outfiles[<span class="st">&quot;log2&quot;</span>] &lt;-<span class="st"> </span><span class="kw">file.path</span>(outdirs<span class="op">$</span>dataset, </span>
+<span id="cb25-17"><a href="#cb25-17"></a>                                    <span class="kw">paste0</span>(parameters<span class="op">$</span>dataset, </span>
+<span id="cb25-18"><a href="#cb25-18"></a>                                           <span class="st">&quot;_&quot;</span>, parameters<span class="op">$</span>datatype, </span>
+<span id="cb25-19"><a href="#cb25-19"></a>                                           <span class="st">&quot;_log2.tsv.gz&quot;</span>))</span>
+<span id="cb25-20"><a href="#cb25-20"></a><span class="kw">write.table</span>(<span class="dt">x =</span> <span class="kw">format</span>(<span class="dt">digits =</span> <span class="dv">3</span>, <span class="dt">big.mark   =</span> <span class="st">&quot;&quot;</span>, <span class="dt">decimal.mark =</span> <span class="st">&quot;.&quot;</span>, log2Values), </span>
+<span id="cb25-21"><a href="#cb25-21"></a>            <span class="dt">dec =</span> <span class="st">&quot;.&quot;</span>, </span>
+<span id="cb25-22"><a href="#cb25-22"></a>            <span class="dt">file =</span> <span class="kw">gzfile</span>(outfiles[<span class="st">&quot;log2&quot;</span>], <span class="st">&quot;w&quot;</span>), </span>
+<span id="cb25-23"><a href="#cb25-23"></a>            <span class="dt">quote =</span> <span class="ot">FALSE</span>, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>)</span>
+<span id="cb25-24"><a href="#cb25-24"></a></span>
+<span id="cb25-25"><a href="#cb25-25"></a><span class="co">## Filtered features only, log2-transformed values</span></span>
+<span id="cb25-26"><a href="#cb25-26"></a>outfiles[<span class="st">&quot;filtered&quot;</span>] &lt;-<span class="st"> </span><span class="kw">file.path</span>(outdirs<span class="op">$</span>dataset, </span>
+<span id="cb25-27"><a href="#cb25-27"></a>                                    <span class="kw">paste0</span>(parameters<span class="op">$</span>dataset, </span>
+<span id="cb25-28"><a href="#cb25-28"></a>                                           <span class="st">&quot;_&quot;</span>, parameters<span class="op">$</span>datatype, </span>
+<span id="cb25-29"><a href="#cb25-29"></a>                                           <span class="st">&quot;_log2_filtered.tsv.gz&quot;</span>))</span>
+<span id="cb25-30"><a href="#cb25-30"></a><span class="kw">write.table</span>(<span class="dt">x =</span> <span class="kw">format</span>(<span class="dt">digits =</span> <span class="dv">3</span>, <span class="dt">big.mark   =</span> <span class="st">&quot;&quot;</span>, <span class="dt">decimal.mark =</span> <span class="st">&quot;.&quot;</span>, log2Filtered), </span>
+<span id="cb25-31"><a href="#cb25-31"></a>            <span class="dt">dec =</span> <span class="st">&quot;.&quot;</span>, </span>
+<span id="cb25-32"><a href="#cb25-32"></a>            <span class="dt">file =</span> <span class="kw">gzfile</span>(outfiles[<span class="st">&quot;filtered&quot;</span>], <span class="st">&quot;w&quot;</span>), </span>
+<span id="cb25-33"><a href="#cb25-33"></a>            <span class="dt">quote =</span> <span class="ot">FALSE</span>, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>)</span>
+<span id="cb25-34"><a href="#cb25-34"></a></span>
+<span id="cb25-35"><a href="#cb25-35"></a><span class="co">## Filtered genes only, log2-transformed and centered but not scaled data</span></span>
+<span id="cb25-36"><a href="#cb25-36"></a>outfiles[<span class="st">&quot;centered&quot;</span>] &lt;-<span class="st"> </span><span class="kw">file.path</span>(outdirs<span class="op">$</span>dataset, </span>
+<span id="cb25-37"><a href="#cb25-37"></a>                                    <span class="kw">paste0</span>(parameters<span class="op">$</span>dataset, </span>
+<span id="cb25-38"><a href="#cb25-38"></a>                                           <span class="st">&quot;_&quot;</span>, parameters<span class="op">$</span>datatype, </span>
+<span id="cb25-39"><a href="#cb25-39"></a>                                           <span class="st">&quot;_log2_median-centered.tsv.gz&quot;</span>))</span>
+<span id="cb25-40"><a href="#cb25-40"></a><span class="kw">write.table</span>(<span class="dt">x =</span> <span class="kw">format</span>(<span class="dt">digits =</span> <span class="dv">3</span>, <span class="dt">big.mark   =</span> <span class="st">&quot;&quot;</span>, <span class="dt">decimal.mark =</span> <span class="st">&quot;.&quot;</span>, log2MedianCentered), </span>
+<span id="cb25-41"><a href="#cb25-41"></a>            <span class="dt">dec =</span> <span class="st">&quot;.&quot;</span>, </span>
+<span id="cb25-42"><a href="#cb25-42"></a>            <span class="dt">file =</span> <span class="kw">gzfile</span>(outfiles[<span class="st">&quot;centered&quot;</span>], <span class="st">&quot;w&quot;</span>), </span>
+<span id="cb25-43"><a href="#cb25-43"></a>            <span class="dt">quote =</span> <span class="ot">FALSE</span>, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>)</span>
+<span id="cb25-44"><a href="#cb25-44"></a></span>
+<span id="cb25-45"><a href="#cb25-45"></a></span>
+<span id="cb25-46"><a href="#cb25-46"></a><span class="co">## Filtered genes only, log2-transformed and standardized counts</span></span>
+<span id="cb25-47"><a href="#cb25-47"></a>outfiles[<span class="st">&quot;standardized&quot;</span>] &lt;-<span class="st"> </span><span class="kw">file.path</span>(outdirs<span class="op">$</span>dataset, </span>
+<span id="cb25-48"><a href="#cb25-48"></a>                                    <span class="kw">paste0</span>(parameters<span class="op">$</span>dataset, </span>
+<span id="cb25-49"><a href="#cb25-49"></a>                                           <span class="st">&quot;_&quot;</span>, parameters<span class="op">$</span>datatype, </span>
+<span id="cb25-50"><a href="#cb25-50"></a>                                           <span class="st">&quot;_log2_standardized.tsv.gz&quot;</span>))</span>
+<span id="cb25-51"><a href="#cb25-51"></a><span class="kw">write.table</span>(<span class="dt">x =</span> <span class="kw">format</span>(<span class="dt">digits =</span> <span class="dv">3</span>, <span class="dt">big.mark   =</span> <span class="st">&quot;&quot;</span>, <span class="dt">decimal.mark =</span> <span class="st">&quot;.&quot;</span>, log2Standardized), </span>
+<span id="cb25-52"><a href="#cb25-52"></a>            <span class="dt">dec =</span> <span class="st">&quot;.&quot;</span>, </span>
+<span id="cb25-53"><a href="#cb25-53"></a>            <span class="dt">file =</span> <span class="kw">gzfile</span>(outfiles[<span class="st">&quot;standardized&quot;</span>], <span class="st">&quot;w&quot;</span>), </span>
+<span id="cb25-54"><a href="#cb25-54"></a>            <span class="dt">quote =</span> <span class="ot">FALSE</span>, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>)</span>
+<span id="cb25-55"><a href="#cb25-55"></a></span>
+<span id="cb25-56"><a href="#cb25-56"></a><span class="co">## Metadata</span></span>
+<span id="cb25-57"><a href="#cb25-57"></a>outfiles[<span class="st">&quot;metadata&quot;</span>] &lt;-<span class="st"> </span><span class="kw">file.path</span>(outdirs<span class="op">$</span>dataset, </span>
+<span id="cb25-58"><a href="#cb25-58"></a>                                    <span class="kw">paste0</span>(parameters<span class="op">$</span>dataset, </span>
+<span id="cb25-59"><a href="#cb25-59"></a>                                           <span class="st">&quot;_&quot;</span>, parameters<span class="op">$</span>datatype, </span>
+<span id="cb25-60"><a href="#cb25-60"></a>                                           <span class="st">&quot;_metadata.tsv&quot;</span>))</span>
+<span id="cb25-61"><a href="#cb25-61"></a><span class="kw">write.table</span>(<span class="dt">x =</span> metadata, </span>
+<span id="cb25-62"><a href="#cb25-62"></a>            <span class="dt">file =</span> outfiles[<span class="st">&quot;metadata&quot;</span>] ,</span>
+<span id="cb25-63"><a href="#cb25-63"></a>            <span class="dt">quote =</span> <span class="ot">FALSE</span>, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>)</span></code></pre></div>
+</div>
+<div id="memory-image" class="section level2">
+<h2>Memory image</h2>
+<p>We will now save a memory image in order to enable us to reload the data exactly in the state we reached now, without having to redo all the steps.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="co">#### Save memory image ####</span></span>
+<span id="cb26-2"><a href="#cb26-2"></a>outfiles[<span class="st">&quot;memory_image&quot;</span>] &lt;-<span class="st"> </span><span class="kw">file.path</span>(outdirs<span class="op">$</span>results, <span class="kw">paste0</span>(parameters<span class="op">$</span>filePrefix, <span class="st">&quot;_memimage.Rdata&quot;</span>))</span>
+<span id="cb26-3"><a href="#cb26-3"></a><span class="kw">save.image</span>(<span class="dt">file =</span> outfiles[<span class="st">&quot;memory_image&quot;</span>])</span></code></pre></div>
+</div>
+<div id="output-files" class="section level2">
+<h2>Output files</h2>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="co">#### Print a table with the links to the output files ####</span></span>
+<span id="cb27-2"><a href="#cb27-2"></a></span>
+<span id="cb27-3"><a href="#cb27-3"></a><span class="co">## Build a table to display the links in the report</span></span>
+<span id="cb27-4"><a href="#cb27-4"></a>fileTable &lt;-<span class="st"> </span><span class="kw">data.frame</span>(outfiles)</span>
+<span id="cb27-5"><a href="#cb27-5"></a>fileTable<span class="op">$</span>basename &lt;-<span class="st"> </span><span class="kw">basename</span>(fileTable<span class="op">$</span>outfiles)</span>
+<span id="cb27-6"><a href="#cb27-6"></a>fileTable<span class="op">$</span>dirname &lt;-<span class="st"> </span><span class="kw">dirname</span>(fileTable<span class="op">$</span>outfiles)</span>
+<span id="cb27-7"><a href="#cb27-7"></a>fileTable<span class="op">$</span>link &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;[&quot;</span>, fileTable<span class="op">$</span>basename, <span class="st">&quot;]&quot;</span>, <span class="st">&quot;(&quot;</span>, fileTable<span class="op">$</span>outfiles, <span class="st">&quot;)&quot;</span>)</span>
+<span id="cb27-8"><a href="#cb27-8"></a></span>
+<span id="cb27-9"><a href="#cb27-9"></a></span>
+<span id="cb27-10"><a href="#cb27-10"></a><span class="co">##  Print the link table</span></span>
+<span id="cb27-11"><a href="#cb27-11"></a><span class="kw">kable</span>(<span class="kw">cbind</span>(<span class="kw">rownames</span>(fileTable), fileTable<span class="op">$</span>link), <span class="dt">row.names =</span> <span class="ot">FALSE</span>, <span class="dt">col.names =</span> <span class="kw">c</span>(<span class="st">&quot;Contents&quot;</span>, <span class="st">&quot;Link&quot;</span>),</span>
+<span id="cb27-12"><a href="#cb27-12"></a>      <span class="dt">caption =</span> <span class="st">&quot;Output files&quot;</span>)</span></code></pre></div>
+<table>
+<caption>Output files</caption>
+<thead>
+<tr class="header">
+<th align="left">Contents</th>
+<th align="left">Link</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">raw</td>
+<td align="left"><a href="./results/proteome/uuo/uuo_proteome_raw.tsv.gz">uuo_proteome_raw.tsv.gz</a></td>
+</tr>
+<tr class="even">
+<td align="left">log2</td>
+<td align="left"><a href="./results/proteome/uuo/uuo_proteome_log2.tsv.gz">uuo_proteome_log2.tsv.gz</a></td>
+</tr>
+<tr class="odd">
+<td align="left">filtered</td>
+<td align="left"><a href="./results/proteome/uuo/uuo_proteome_log2_filtered.tsv.gz">uuo_proteome_log2_filtered.tsv.gz</a></td>
+</tr>
+<tr class="even">
+<td align="left">centered</td>
+<td align="left"><a href="./results/proteome/uuo/uuo_proteome_log2_median-centered.tsv.gz">uuo_proteome_log2_median-centered.tsv.gz</a></td>
+</tr>
+<tr class="odd">
+<td align="left">standardized</td>
+<td align="left"><a href="./results/proteome/uuo/uuo_proteome_log2_standardized.tsv.gz">uuo_proteome_log2_standardized.tsv.gz</a></td>
+</tr>
+<tr class="even">
+<td align="left">metadata</td>
+<td align="left"><a href="./results/proteome/uuo/uuo_proteome_metadata.tsv">uuo_proteome_metadata.tsv</a></td>
+</tr>
+<tr class="odd">
+<td align="left">memory_image</td>
+<td align="left"><a href="./results/pavkovic2019_proteome_uuo__memimage.Rdata">pavkovic2019_proteome_uuo__memimage.Rdata</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="session-info" class="section level2">
+<h2>Session info</h2>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="kw">sessionInfo</span>()</span></code></pre></div>
+<pre><code>R version 4.0.0 (2020-04-24)
+Platform: x86_64-apple-darwin17.0 (64-bit)
+Running under: macOS Mojave 10.14.6
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRblas.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] vioplot_0.3.4 zoo_1.8-8     sm_2.2-5.6    stringr_1.4.0 knitr_1.28   
+
+loaded via a namespace (and not attached):
+ [1] Rcpp_1.0.4.6    lattice_0.20-41 digest_0.6.25   grid_4.0.0      magrittr_1.5    evaluate_0.14   highr_0.8       rlang_0.4.6     stringi_1.4.6   rmarkdown_2.1   tools_4.0.0     xfun_0.14       yaml_2.2.1      compiler_4.0.0  tcltk_4.0.0     htmltools_0.4.0</code></pre>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
