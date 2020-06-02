@@ -25,8 +25,10 @@ dim(sampleCov) ## Check the dimensions
 
 ## Classical Pearson's correlation correlation between each pair of sample
 samplePearsonCor <- cor(x, method = "pearson")
+print(samplePearsonCor)
 
 sampleSpearmanCor <- cor(x, method = "spearman")
+print(sampleSpearmanCor)
 
 dim(sampleSpearmanCor)
 
@@ -35,4 +37,5 @@ dim(sampleSpearmanCor)
 library("FactoMineR")
 library("factoextra")
 
-PCA(uuo_prot.expr.transposed, scale.unit = TRUE, ncp = 6, graph = TRUE)
+PCA(x, scale.unit = TRUE, ncp = 6, graph = TRUE)
+
