@@ -1,0 +1,721 @@
+---
+title: "DU-Bii Study cases - Mouse fibrotic kidney"
+author: "Olivier Sand and Jacques van Helden"
+date: '`r Sys.Date()`'
+output:
+  html_document:
+    self_contained: no
+    fig_caption: yes
+    highlight: zenburn
+    theme: cerulean
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+    code_folding: "hide"
+  ioslides_presentation:
+    slide_level: 2
+    self_contained: no
+    colortheme: dolphin
+    fig_caption: yes
+    fig_height: 5
+    fig_width: 7
+    fonttheme: structurebold
+    highlight: tango
+    smaller: yes
+    toc: yes
+    widescreen: yes
+  slidy_presentation:
+    smart: no
+    slide_level: 2
+    self_contained: yes
+    fig_caption: yes
+    fig_height: 5
+    fig_width: 7
+    highlight: tango
+    incremental: no
+    keep_md: yes
+    smaller: yes
+    theme: cerulean
+    toc: yes
+    widescreen: yes
+  beamer_presentation:
+    colortheme: dolphin
+    fig_caption: yes
+    fig_height: 5
+    fig_width: 7
+    fonttheme: structurebold
+    highlight: tango
+    incremental: no
+    keep_tex: no
+    slide_level: 2
+    theme: Montpellier
+    toc: yes
+  revealjs::revealjs_presentation:
+    theme: night
+    transition: none
+    self_contained: true
+    css: ../slides.css
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
+  powerpoint_presentation:
+    slide_level: 2
+    fig_caption: yes
+    fig_height: 5
+    fig_width: 7
+    toc: yes
+font-import: http://fonts.googleapis.com/css?family=Risque
+subtitle: DUBii 2020
+font-family: Garamond
+transition: linear
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+```{r settings, include=FALSE, echo=FALSE, eval=TRUE}
+
+options(width = 300)
+# options(encoding = 'UTF-8')
+knitr::opts_chunk$set(
+  fig.width = 7, fig.height = 5, 
+  fig.path = 'figures/pavkovic2019_',
+  fig.align = "center", 
+  size = "tiny", 
+  echo = TRUE, 
+  eval = TRUE, 
+  warning = FALSE, 
+  message = FALSE, 
+  results = TRUE, 
+  comment = "")
+
+options(scipen = 12) ## Max number of digits for non-scientific notation
+# knitr::asis_output("\\footnotesize")
+
+```
+
+
+
+```{r libraries, echo=FALSE, eval=TRUE}
+requiredLib <- c("knitr", "stringr", "vioplot")
+for (lib in requiredLib) {
+  if (!require(lib, character.only = TRUE)) {
+    install.packages(lib, )
+  }
+  require(lib, character.only = TRUE)
+}
+
+```
+
+## Reference
+
+
+Pavkovic, M., Pantano, L., Gerlach, C.V. et al. Multi omics analysis of fibrotic kidneys in two mouse models. Sci Data 6, 92 (2019). 
+
+- <https://doi.org/10.1038/s41597-019-0095-5> 
+- <https://www.nature.com/articles/s41597-019-0095-5#citeas>
+- Mouse fibrotic kidney browser: <http://hbcreports.med.harvard.edu/fmm/>
+- Data on Zenodo: <https://zenodo.org/record/2592516>
+
+
+## Samples
+
+>Samples from two mouse models were collected. The first one is a reversible chemical-induced injury model (folic acid (FA) induced nephropathy). The second one is an irreversible surgically-induced fibrosis model (unilateral ureteral obstruction (UUO)). mRNA and small RNA sequencing, as well as 10-plex tandem mass tag (TMT) proteomics were performed with kidney samples from different time points over the course of fibrosis development. 
+> In the FA model, mice were sacrificed before the treatment (day 0) and 1, 2, 7, and 14 days after a single injection of folic acid. 
+> For the UUO model, mice were sacrificed before obstruction (day 0) and 3, 7, and 14 days after the ureter of the left kidney was obstructed via ligation. For both studies, kidneys were removed at each time point for total RNA isolation and protein sample preparation.
+
+We will first explore the UUO transcriptome data.
+
+
+## Data sources
+
+| Doc | URL | 
+|:-----------------------------|:--------------------------|
+| Total RNA for the experiment on Unilateral ureter obstruction (UUO) model | <https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE118339> |
+| Supplementary material of the article with all the data tables (zip archive)  | <https://zenodo.org/record/2592516> |
+
+## Parameters
+
+We define all the parameters of the analysis in a list, which can be adapted to handle different data types (transcrptome, proteome, small RNA) or treatments (uuo, fa) with the same script. 
+
+```{r parameters}
+#### Define parameters for the analysis ####
+
+## Keep a trace of the original parameters
+par.ori <- par(no.readonly = TRUE)
+
+## Analysis parameters
+parameters <- list(
+  dataset = "uuo", ## Supported: uuo, fa
+  datatype = "proteome", ## Supported: transcriptome, proteome
+  epsilon = 0.1,
+  forceDownload = FALSE)
+
+if (parameters$datatype == "transcriptome") {
+    parameters$undetectedLimit = 10
+} else if (parameters$datatype == "proteome") {
+    parameters$undetectedLimit = 100
+}
+
+
+## Redefine the directory and prefix of the figures exported by knitr
+parameters$filePrefix <- paste0('pavkovic2019_', parameters$figures, "_", parameters$dataset, "_")
+
+## Print the parameters
+kable(t(as.data.frame(parameters)), col.names = "Parameter")
+
+```
+
+## Output directories
+
+All directories are defined relative to the main directory, in order to ensure  reusability of the code. 
+
+```{r outdirs}
+#### Output directories ####
+outdirs <- list()
+outdirs$main <- "."
+
+## Data directory, where the data will be downloaded and uncompressed
+outdirs$data <- file.path(outdirs$main, "data")
+dir.create(outdirs$data, recursive = TRUE, showWarnings = FALSE)
+
+## Main result directory
+outdirs$results <- file.path(outdirs$main, "results")
+
+## Figures
+outdirs$figures <- file.path('figures',  parameters$datatype, parameters$dataset)
+
+# Results for this data type
+outdirs$datatype <- file.path(outdirs$results, parameters$datatype)
+
+# Results for this  dataset
+outdirs$dataset <- file.path(outdirs$datatype, parameters$dataset)
+dir.create(outdirs$dataset, recursive = TRUE, showWarnings = FALSE)
+
+## Print the directories
+kable(t(as.data.frame.list(outdirs)), col.names = "Directories", caption = "Directories")
+
+knitr::opts_chunk$set(
+  fig.path = file.path(parameters$figures, parameters$filePrefix))
+
+```
+
+## Download supplementary material from Pavkovic *et al.*
+
+```{r download_transcriptome}
+#### Download transcriptome data ####
+archiveFile <- "MouseKidneyFibrOmics-v1.0.zip"
+archiveURL <- file.path("https://zenodo.org/record/2592516/files/hbc", archiveFile)
+localDataArchive <- file.path(outdirs$data, archiveFile)
+
+if (file.exists(localDataArchive) & !parameters$forceDownload) {
+  message("Data archive already downloaded:\n\t", localDataArchive)
+} else {
+  message("Downloading data archive from zenodo: ", archiveURL)
+  download.file(url = archiveURL, destfile =  localDataArchive)
+  
+  ## Uncompess the archive
+  message("Uncompressing data archive")
+  unzip(zipfile = localDataArchive, exdir = outdirs$data)
+}
+
+## Define destination directory
+# outdirs$csv <- file.path(outdirs$data, "CSV")
+# dir.create(outdirs$csv, showWarnings = FALSE, recursive = TRUE)
+
+```
+
+## Load raw counts
+
+```{r load_raw_counts}
+#### Load raw counts data table ####
+
+
+## Note: the "raw" counts are decimal numbers, I suspect that they have been somewhat normalised. To check. 
+if (parameters$datatype == "transcriptome") {
+  rawCountFile <- file.path(
+    outdirs$data,
+    paste0("hbc-MouseKidneyFibrOmics-a39e55a/tables/", 
+           parameters$dataset, 
+           "/results/counts/raw_counts.csv.gz"))
+} else if  (parameters$datatype == "proteome") {
+  rawCountFile <- file.path(
+  outdirs$data,
+  paste0("hbc-MouseKidneyFibrOmics-a39e55a/tables/p", 
+         parameters$dataset,
+         "/results/counts/", 
+          parameters$dataset, "_model_counts.csv"))
+
+}
+rawData <- read.csv(file = rawCountFile, header = 1, row.names = NULL)
+rownames(rawData) <- make.names(rawData[, "id"], unique = TRUE)
+# names(rawData)
+# unique(sort(as.vector(rawData[, "id"])))
+# length(unique(sort(as.vector(rawValues[, 1]))))
+
+## Extract a separate data frame with only the values to analyse
+rawValues <- rawData[, -1] 
+
+```
+
+The data was loaded from the supplementary file `r rawCountFile` as raw counts. 
+
+- This table contains `r nrow(rawValues)` rows (variables/features/genes/proteins) and `r ncol(rawValues)` columns (individuals, samples).  
+- The rawvalues range from `r min(rawValues)` to `r max(rawValues)`. 
+
+
+## Build metadata table
+
+We roughly build a minimal metadata table from the info we find in the data table. 
+This should be improved by importing dataset-specific information for a more relevant analysis. 
+
+```{r metadata}
+#### Build metadata table ####
+metadata <- data.frame(
+  dataType = "transcriptome",
+  sampleName = colnames(rawValues))
+metadata[ , c("condition", "sampleNumber")] <- 
+  str_split_fixed(string = metadata$sampleName, pattern = "_", n = 2)
+
+## Colors per condition
+colPerCondition <- c(normal = "#BBFFBB",
+                     day3 = "#FFFFDD", 
+                     day7 = "#FFDD88",
+                     day14 = "#FF4400")
+metadata$color <- colPerCondition[metadata$condition]
+
+kable(metadata, caption = paste0("Rough metadata table. ", 
+                                 "Data type = ", parameters$datatype,
+                                 "Dataset = ", parameters$dataset))
+```
+
+
+## Compute sample-wise statistics
+
+We describe our data by computing sample-wise descriptors of the central tendency (mean, median), dispersion (standard deviation, inter-quartile range) and some milestone percentiles (05, 25, 50, 75, 95). 
+
+```{r sample_wise_stat}
+
+sampleStat <- metadata
+sampleStat$mean <- apply(X = rawValues, 2, mean)
+sampleStat$median <- apply(X = rawValues, 2, median)
+sampleStat$sd <- apply(X = rawValues, 2, sd)
+sampleStat$IQR <- apply(X = rawValues, 2, IQR)
+sampleStat$min <- apply(X = rawValues, 2, min)
+sampleStat$perc05 <- apply(X = rawValues, 2, quantile, prob = 0.05)
+sampleStat$Q1 <- apply(X = rawValues, 2, quantile, prob = 0.25)
+sampleStat$median <- apply(X = rawValues, 2, quantile, prob = 0.5)
+sampleStat$Q3 <- apply(X = rawValues, 2, quantile, prob = 0.75)
+sampleStat$perc95 <- apply(X = rawValues, 2, quantile, prob = 0.95)
+sampleStat$max <- apply(X = rawValues, 2, max)
+
+## Print statistics per sample
+kable(format(x = format(digits = 5, sampleStat)))
+
+```
+
+
+## Distribution of raw counts
+
+```{r RNA-seq_count_distrib, fig.width=12, fig.height=5, out.width="70%", fig.cap="Distribution of raw counts"}
+hist(unlist(rawValues), breaks = 1000, 
+     main = "Raw value distribution", 
+     xlab = "Raw values", 
+     ylab = "Number of features (all samples)")
+```
+
+The distribution of raw counts is not very informative, because the range is defined by some outlier, i.e. a feature having a huge values respective to the rest of the distribution. 
+
+This problem is particularly sensitive for RNA-seq data: even with a strong zoom on the abcsissa range from 0 to 500, the histogram shows a steep drop in the first bins. 
+
+## Distribution of raw counts - right-side trimming
+
+In order to see the relevant part of the data it is convenient to truncate the histogram to the 95th percentile. 
+
+```{r raw_distrib_truncated_p95, fig.width=12, fig.height=5, out.width="70%", fig.cap="Distribution of raw counts"}
+#### Count distrib - truncated right tail ####
+
+## Compute the percentile 95 of all the data
+p95 <- quantile(x = unlist(rawValues), probs = 0.95)
+
+## Select the values below this percentile
+allValues <- unlist(rawValues)
+# length(allValues)
+p95Values <- allValues[allValues <= p95]
+# length(p95Values)
+
+## Plot the histogram
+hist(p95Values, breaks = 100, 
+     main = "Distribution of raw values\nbelow the 95th percentile", 
+     xlab = "Raw values (below percentile 95)", 
+     ylab = "Number of features (all samples)")
+
+```
+
+## Distribution of raw counts - two-sides trimming
+
+For visualisation, it is sometimes convenient to truncate both tails of the distribution, in order to avoid both the outliers (right tail) and the sometimes large number of zero values. This is particularly useful for single-cell RNA-seq data, which can have a "zero-inflated" distribution, but it is also useful for other data types. 
+
+```{r raw_distrib_trimmed_p05-p95, fig.width=12, fig.height=5, out.width="70%", fig.cap="Distribution of raw counts"}
+#### Count distrib - truncated on both tails ####
+
+## Compute the percentile 95 of all the data
+p05 <- quantile(x = unlist(rawValues), probs = 0.05)
+p95 <- quantile(x = unlist(rawValues), probs = 0.95)
+
+## Select the values below this percentile
+allValues <- unlist(rawValues)
+# length(allValues)
+trimmedValues <- allValues[(allValues >= p05) & (allValues <= p95)]
+# length(trimmedValues)
+
+## Plot the histogram
+hist(trimmedValues, breaks = 100, 
+     main = "Distribution of trimmed raw values\nfrom p05 to p95", 
+     xlab = "Raw values (between p05 and p95)", 
+     ylab = "Number of features (all samples)")
+
+```
+
+
+## Log2-transformed values
+
+A typical normalising approach is apply a log2 transformation .
+
+For RNA-seq data, this might however create a problem when the counts of a given gene in a given sample is 0. To circumvent this, we can add an epsilon ($\epsilon = `r parameters$epsilon`$) before the log2 transformation. 
+
+**Note:  ** Pancovic's "raw counts" are actually decimal numbers and their mimimal value is higher than 0. The epsilon is thus not required but we keep it in this script in order to enable re-using it with other data sources. 
+
+```{r log2_counts, fig.width=12, fig.height=5, out.width="70%"}
+
+#### Log2 transformation ot the raw values ####
+log2Values <- log2(rawValues + parameters$epsilon)
+
+## Plot the histogram of log2-transformed values
+hist(unlist(log2Values), breaks = seq(from = -5, to = 22, by = 0.1),
+     main = "log2(values) distribution",
+     xlab = "log2(raw + epsilon)", 
+     ylab = "Number of features", col = "#BBFFBB")
+
+```
+
+
+## Box plots
+
+We can now inspect the distribution of counts per sample with the `boxplot()` function.
+
+
+```{r boxplots_raw_vs_log2, fig.width=10, fig.height=7, out.width="80%", fig.cap="Box plot of the raw values (left) and log2-transformed values (right)"}
+#### Box plots - raw vs log2-ransformed ####
+par(mar = c(4, 6, 5, 1))
+par(mfrow = c(1,2))
+boxplot(rawValues, 
+        col = metadata$color,
+        horizontal = TRUE, 
+        las = 1, 
+        main = "Raw values", 
+        xlab = "Raw value")
+boxplot(log2Values, 
+        col = metadata$color,
+        horizontal = TRUE, 
+        las = 1, 
+        main = "log2-transformed", 
+        xlab = "log2(value)")
+par(par.ori)
+```
+
+
+## Feature filtering
+
+We filter out the features having very low values across all the samples, which we consider as undetected. 
+
+```{r boxplots_filtering, fig.width=10, fig.height=7, out.width="80%", fig.cap="Box plot of the log2-transformed values before (left) and after (right)  feature filtering. "}
+
+## Filter out the features with very low counts in all conditions
+undetectedFeatures <- apply(rawValues, MARGIN = 1, FUN = sum) < parameters$undetectedLimit
+# table(undetectedFeatures)
+log2Filtered <- log2Values[!undetectedFeatures, ]
+
+#### Box plots before and after filtering ####
+par(mar = c(4, 6, 5, 1))
+par(mfrow = c(1,2))
+
+boxplot(log2Values, 
+        col = metadata$color,
+        horizontal = TRUE, 
+        las = 1, 
+        main = "log2-transformed", 
+        xlab = "log2(value)")
+boxplot(log2Filtered, 
+        col = metadata$color,
+        horizontal = TRUE, 
+        las = 1,
+        main = "Filtered features", 
+        xlab = "log2(value)")
+par(par.ori)
+
+```
+
+
+We filtered out all the features whose maximal count value across all samples was lower than `r parameters$undetectedLimit`. Among the `r nrow(rawValues)` genes from the raw count table, `r sum(undetectedFeatures)` were considered undetected according to this criterion. We use the remaining `r nrow(log2Filtered)` genes for the subsequent analyses. 
+
+
+## Standardisation: centering
+
+Before going any further, it is important to ensure some standardisation of the samples, in order to correct for biases due to inter-sample differences in sequencing depth (RNA-seq) or other sample-specific bias. 
+
+For the sake of simplicity, we will use here a very simple criterion: median-based centering. 
+
+When we start from the raw values, the principle is to divide the counts of each sample by a sample-specific scaling factor in order to bring each sample to the same median count. 
+
+Since we are working with log2-transformed values, we compute the difference, which is equivalent to apply a ratio to the raw values.  
+
+
+```{r boxplots_centering, fig.width=10, fig.height=7, out.width="80%", fig.cap="Box plot of the log2-transformed feature-filtered values before (left) and after (right) median-based standardisation.  "}
+
+#### Median-based centering ####
+sampleLog2Medians <- apply(log2Filtered, 2, median)
+seriesLog2Median <- median(sampleLog2Medians)
+
+log2MedianCentered <- data.frame(matrix(
+  nrow = nrow(log2Filtered),
+  ncol = ncol(log2Filtered)))
+colnames(log2MedianCentered) <- colnames(log2Filtered)
+rownames(log2MedianCentered) <- rownames(log2Filtered)
+for (j in 1:ncol(log2Filtered)) {
+  log2MedianCentered[, j] <- log2Filtered[, j] - sampleLog2Medians[j] + seriesLog2Median
+}
+
+
+#### Box plots after median-based centering ####
+
+#### Box plots before and after filtering ####
+par(mar = c(4, 6, 5, 1))
+par(mfrow = c(1,2))
+boxplot(log2Filtered, 
+        col = metadata$color,
+        horizontal = TRUE, 
+        las = 1,
+        main = "Filtered features", 
+        xlab = "log2(value)")
+boxplot(log2MedianCentered, 
+        col = metadata$color,
+        horizontal = TRUE, 
+        las = 1,
+        main = "Median-based centered", 
+        xlab = "log2(value)")
+par(par.ori)
+```
+
+Consistently, after centering, all the medians appear aligned on the box plot. 
+
+
+
+## Standardisation: scaling
+
+The second step of standardisation is to ensure homogeous dispersion between samples. 
+This relies on some biological assumption, so it has to be evaluated on a case-per-case basis. 
+
+**My trick: ** for high-throughput data, I generally use the inter-quartile range (IQR) rather than the standard deviation as scaling factor. This ensures robustness to outliers, which may have a very strong impact for some datatypes (e.g. RNA-seq). 
+
+```{r boxplots_scaling, fig.width=10, fig.height=7, out.width="80%", fig.cap="Box plot of the log2-transformed feature-filtered values before (left) and after (right) IQR-based scaling.   "}
+
+#### IQR-based scaling ####
+sampleIQR <- apply(log2MedianCentered, 2, IQR)
+seriesIQR <- median(sampleIQR)
+scalingFactors <- sampleIQR / seriesIQR
+
+log2Standardized <- data.frame(matrix(
+  nrow = nrow(log2Filtered),
+  ncol = ncol(log2Filtered)))
+colnames(log2Standardized) <- colnames(log2Standardized)
+rownames(log2Standardized) <- rownames(log2Standardized)
+for (j in 1:ncol(log2MedianCentered)) {
+  log2Standardized[, j] <- 
+    (log2Filtered[, j] - sampleLog2Medians[j] ) / scalingFactors[j] + seriesLog2Median
+}
+
+## Check the IQR after scaling
+# apply(log2Standardized, 2, IQR)
+
+#### Box plots after median-based centering ####
+
+#### Box plots before and after filtering ####
+par(mar = c(4, 6, 5, 1))
+par(mfrow = c(1,2))
+boxplot(log2MedianCentered, 
+        col = metadata$color,
+        horizontal = TRUE, 
+        las = 1,
+        main = "Median-based centered", 
+        xlab = "log2(value)")
+boxplot(log2Standardized, 
+        col = metadata$color,
+        horizontal = TRUE, 
+        las = 1,
+        main = "Standardized\n(median centering, IQR scaling)", 
+        xlab = "log2(value)")
+par(par.ori)
+```
+
+
+
+## Raw versus standardized values
+
+At the end of this journey, we can compare the raw and the standardized values. Needless to say that the preceding steps quite transformed the data. Since this will likely impact all the subsequent analyses, it is worth making sure we took the right choices for each step (filtering, log2-transformation, centering, scaling). This should be evaluated based on your knowledge of your data. 
+
+```{r boxplots_raw_vs_standardized, fig.width=10, fig.height=7, out.width="80%", fig.cap="Box plot of the raw values (left) and the final data after feature filtering, normalisation by log2 transormation, centering and scaling (right).  "}
+#### Violin plots ####
+par(mar = c(4, 6, 5, 1))
+par(mfrow = c(1,2))
+boxplot(rawValues, 
+        col = metadata$color,
+        horizontal = TRUE, 
+        las = 1, 
+        main = "Raw values", 
+        xlab = "raw value")
+boxplot(log2Standardized, 
+        col = metadata$color,
+        horizontal = TRUE, 
+        las = 1, 
+        main = "Filtered, normalised and standardised", 
+        xlab = "log2(counts)")
+par(par.ori)
+```
+
+## Violin plots
+
+We can also inspect the distribution of counts per sample with the `vioplot()` function.
+
+```{r violin_plots_raw_vs_standardized, fig.width=10, fig.height=7, out.width="80%", fig.cap="Box plot of the raw values (left) and the final data after feature filtering, normalisation by log2 transormation, centering and scaling (right).  "}
+#### Violin plots ####
+par(mar = c(4, 6, 5, 1))
+par(mfrow = c(1,2))
+vioplot::vioplot(rawValues, 
+        col = metadata$color,
+        horizontal = TRUE, 
+        las = 1, 
+        main = "Raw values", 
+        xlab = "raw value")
+vioplot::vioplot(log2Standardized, 
+        col = metadata$color,
+        horizontal = TRUE, 
+        las = 1, 
+        main = "Filtered, normalised and standardised", 
+        xlab = "log2(counts)")
+par(par.ori)
+```
+
+## Scatter plots
+
+We can also inspect the distribution of counts per sample with the `plot()` function.
+
+```{r scatter plots, fig.width=5, fig.height=7, out.width="25%"}
+#### Scatter plots ####
+#par(mar = c(4, 6, 5, 1))
+#plot(log2Values[,metadata$sampleName], 
+#        col = metadata$color)
+#par(par.ori)
+```
+
+## Combinations
+
+
+## Exporting the result
+
+We export the pre-processed data in separate tables for further reuse. 
+
+```{r save_tables}
+#### Save tables  ####
+
+outfiles <- vector()
+
+## Raw counts, all the variables
+outfiles["raw"] <- file.path(outdirs$dataset, 
+                                    paste0(parameters$dataset, 
+                                           "_", parameters$datatype, 
+                                           "_raw.tsv.gz"))
+write.table(x = format(digits = 3, big.mark   = "", decimal.mark = ".", rawValues), 
+            dec = ".", 
+            file = gzfile(outfiles["raw"], "w"), 
+            quote = FALSE, sep = "\t")
+
+## Log2-transformed counts, all the features
+outfiles["log2"] <- file.path(outdirs$dataset, 
+                                    paste0(parameters$dataset, 
+                                           "_", parameters$datatype, 
+                                           "_log2.tsv.gz"))
+write.table(x = format(digits = 3, big.mark   = "", decimal.mark = ".", log2Values), 
+            dec = ".", 
+            file = gzfile(outfiles["log2"], "w"), 
+            quote = FALSE, sep = "\t")
+
+## Filtered features only, log2-transformed values
+outfiles["filtered"] <- file.path(outdirs$dataset, 
+                                    paste0(parameters$dataset, 
+                                           "_", parameters$datatype, 
+                                           "_log2_filtered.tsv.gz"))
+write.table(x = format(digits = 3, big.mark   = "", decimal.mark = ".", log2Filtered), 
+            dec = ".", 
+            file = gzfile(outfiles["filtered"], "w"), 
+            quote = FALSE, sep = "\t")
+
+## Filtered genes only, log2-transformed and centered but not scaled data
+outfiles["centered"] <- file.path(outdirs$dataset, 
+                                    paste0(parameters$dataset, 
+                                           "_", parameters$datatype, 
+                                           "_log2_median-centered.tsv.gz"))
+write.table(x = format(digits = 3, big.mark   = "", decimal.mark = ".", log2MedianCentered), 
+            dec = ".", 
+            file = gzfile(outfiles["centered"], "w"), 
+            quote = FALSE, sep = "\t")
+
+
+## Filtered genes only, log2-transformed and standardized counts
+outfiles["standardised"] <- file.path(outdirs$dataset, 
+                                    paste0(parameters$dataset, 
+                                           "_", parameters$datatype, 
+                                           "_log2_standardised.tsv.gz"))
+write.table(x = format(digits = 3, big.mark   = "", decimal.mark = ".", log2Standardised), 
+            dec = ".", 
+            file = gzfile(outfiles["standardised"], "w"), 
+            quote = FALSE, sep = "\t")
+
+## Metadata
+outfiles["metadata"] <- file.path(outdirs$dataset, 
+                                    paste0(parameters$dataset, 
+                                           "_", parameters$datatype, 
+                                           "_metadata.tsv"))
+write.table(x = metadata, 
+            file = outfiles["metadata"] ,
+            quote = FALSE, sep = "\t")
+
+
+
+
+
+
+## Build a table to display the links in the report
+fileTable <- data.frame(outfiles)
+fileTable$basename <- basename(fileTable$outfiles)
+fileTable$dirname <- dirname(fileTable$outfiles)
+fileTable$link <- paste0("[", fileTable$basename, "]", "(", fileTable$outfiles, ")")
+
+
+##  Print the link table
+kable(cbind(rownames(fileTable), fileTable$link), row.names = FALSE, col.names = c("Contents", "Link"),
+      caption = "Output files")
+```
+
+
+
+## Session info
+
+```{r session_info}
+
+sessionInfo()
+```
+
