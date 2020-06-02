@@ -28,7 +28,9 @@ View(x)
 meanPerFt <- apply(X = x, MARGIN = 1, FUN = mean)
 class(meanPerFt)
 head(meanPerFt)
-hist(meanPerFt, breaks = 100, "mean per feature", xlab = "log2(values)")
+hist(meanPerFt, 
+     breaks = 100, 
+     main = "mean per feature", xlab = "log2(values)")
 
 
 varPerFt <- apply(X = x, MARGIN = 1, FUN = var)
