@@ -3,8 +3,17 @@
 datatype <- "transcriptome"
 dataset <- "fa"
 
-## Define the path of the shared data dir
+
+#### Define the path of the shared data dir ###
+
+## From inside the IFB cluster
 sharedDir <- "/shared/projects/dubii2020/data/module3/seance5"
+
+## Note: if you are working on your own computer, you can download the memory image files from here 
+## https://github.com/DU-Bii/module-3-Stat-R/tree/master/stat-R_2020/practicals/pavkovic_2019/memimages
+## - click on the file of your choice
+## - click Download
+## - adapt the sharedDir to specify the location of folder containing the memoryimage on your computed
 
 ## List the files available in the shared data dir
 list.files(sharedDir)
@@ -20,3 +29,4 @@ load(memFile)
 
 ## Check the parameters
 print(as.data.frame(parameters))
+

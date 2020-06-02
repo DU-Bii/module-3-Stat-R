@@ -1,5 +1,5 @@
 ---
-knit: (function(inputFile, encoding) { rmarkdown::render(inputFile, encoding = encoding, output_file ='pavkovic2019_proteome_uuo.html') })
+knit: (function(inputFile, encoding) { rmarkdown::render(inputFile, encoding = encoding, output_file ='pavkovic2019_proteome_fa.html') })
 title: "DU-Bii Study cases - Mouse fibrotic kidney"
 author: "Olivier Sand and Jacques van Helden"
 date: '`r Sys.Date()`'
@@ -150,8 +150,8 @@ par.ori <- par(no.readonly = TRUE)
 
 ## Analysis parameters
 parameters <- list(
-  dataset = "uuo", ## Supported: uuo, fa
   datatype = "proteome", ## Supported: transcriptome, proteome
+  dataset = "fa", ## Supported: uuo, fa
   epsilon = 0.1,
   forceDownload = FALSE)
 
@@ -182,6 +182,10 @@ outdirs$main <- "."
 ## Data directory, where the data will be downloaded and uncompressed
 outdirs$data <- file.path(outdirs$main, "data")
 dir.create(outdirs$data, recursive = TRUE, showWarnings = FALSE)
+
+## Directory for memory images
+outdirs$memimages <- file.path(outdirs$main, "memimages")
+dir.create(outdirs$memimages, recursive = TRUE, showWarnings = FALSE)
 
 ## Main result directory
 outdirs$results <- file.path(outdirs$main, "results")
@@ -283,8 +287,10 @@ metadata[ , c("condition", "sampleNumber")] <-
 
 ## Colors per condition
 colPerCondition <- c(normal = "#BBFFBB",
-                     day3 = "#FFFFDD", 
-                     day7 = "#FFDD88",
+                     day1 = "#FFFFDD", 
+                     day2 = "#FFDD88", 
+                     day3 = "#FFBB44", 
+                     day7 = "#FF8800",
                      day14 = "#FF4400")
 metadata$color <- colPerCondition[metadata$condition]
 
@@ -319,10 +325,11 @@ kable(format(x = format(digits = 5, sampleStat)))
 ```
 
 
-## Distribution of raw counts
+## Distribution of raw values
 
-```{r RNA-seq_count_distrib, fig.width=12, fig.height=5, out.width="70%", fig.cap="Distribution of raw counts"}
-hist(unlist(rawValues), breaks = 1000, 
+```{r raw_distrib, fig.width=12, fig.height=5, out.width="70%", fig.cap="Distribution of raw counts"}
+hist(unlist(rawValues), 
+     breaks = 1000, 
      main = "Raw value distribution", 
      xlab = "Raw values", 
      ylab = "Number of features (all samples)")
@@ -396,7 +403,11 @@ For RNA-seq data, this might however create a problem when the counts of a given
 log2Values <- log2(rawValues + parameters$epsilon)
 
 ## Plot the histogram of log2-transformed values
-hist(unlist(log2Values), breaks = seq(from = -5, to = 22, by = 0.1),
+x <- unlist(log2Values)
+minx <- floor(min(x))
+maxx <- ceiling(max(x))
+hist(x, 
+     breaks = seq(from = minx, to = maxx, by = 0.1),
      main = "log2(values) distribution",
      xlab = "log2(raw + epsilon)", 
      ylab = "Number of features", col = "#BBFFBB")
@@ -532,8 +543,8 @@ scalingFactors <- sampleIQR / seriesIQR
 log2Standardized <- data.frame(matrix(
   nrow = nrow(log2Filtered),
   ncol = ncol(log2Filtered)))
-colnames(log2Standardized) <- colnames(log2Standardized)
-rownames(log2Standardized) <- rownames(log2Standardized)
+colnames(log2Standardized) <- colnames(log2MedianCentered)
+rownames(log2Standardized) <- rownames(log2MedianCentered)
 for (j in 1:ncol(log2MedianCentered)) {
   log2Standardized[, j] <- 
     (log2Filtered[, j] - sampleLog2Medians[j] ) / scalingFactors[j] + seriesLog2Median
@@ -640,7 +651,8 @@ outfiles["raw"] <- file.path(outdirs$dataset,
 write.table(x = format(digits = 3, big.mark   = "", decimal.mark = ".", rawValues), 
             dec = ".", 
             file = gzfile(outfiles["raw"], "w"), 
-            quote = FALSE, sep = "\t")
+            quote = FALSE, 
+            sep = "\t")
 
 ## Log2-transformed counts, all the features
 outfiles["log2"] <- file.path(outdirs$dataset, 
@@ -699,8 +711,8 @@ We will now save a memory image in order to enable us to reload the data exactly
 
 ```{r memory_image}
 #### Save memory image ####
-outfiles["memory_image"] <- file.path(outdirs$results, paste0(parameters$filePrefix, "memimage.Rdata"))
-save.image(file = outfiles["memory_image"])
+outfiles["memory_image"] <- file.path(outdirs$memimages, paste0(parameters$filePrefix, "memimage.Rdata"))
+save.image(file = outfiles["memory_image"], compress = TRUE)
 
 ```
 
@@ -714,8 +726,8 @@ The memory image can be reloaded with a single R command: load(`r outfiles["memo
 
 ## Build a table to display the links in the report
 fileTable <- data.frame(outfiles)
-fileTable$basename <- basename(fileTable$outfiles)
-fileTable$dirname <- dirname(fileTable$outfiles)
+fileTable$basename <- basename(as.vector(fileTable$outfiles))
+fileTable$dirname <- dirname(as.vector(fileTable$outfiles))
 fileTable$link <- paste0("[", fileTable$basename, "]", "(", fileTable$outfiles, ")")
 
 
