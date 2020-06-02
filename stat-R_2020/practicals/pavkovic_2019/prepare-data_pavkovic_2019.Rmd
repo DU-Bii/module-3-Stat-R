@@ -1,4 +1,5 @@
 ---
+knit: (function(inputFile, encoding) { rmarkdown::render(inputFile, encoding = encoding, output_file ='pavkovic2019_proteome_uuo.html') })
 title: "DU-Bii Study cases - Mouse fibrotic kidney"
 author: "Olivier Sand and Jacques van Helden"
 date: '`r Sys.Date()`'
