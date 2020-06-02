@@ -136,9 +136,11 @@ Contents: [clustering/](clustering/)
 
 
 | Topics | Type | Duration | Material |
-|--------------------------------|-------|----------------|
+|--------------------------------|-------|-----|----------------|
 | Clustering: rappel de la séance précédente | Slides | 10'  | [[html](clustering/cours_clustering.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/clustering/cours_clustering.Rmd)] |
 | Analyse en composante principale | Diapos | 20' | [[html](PCA/PCA_PCoA_Intro.html)] [[Rmd]](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/PCA/PCA_PCoA_Intro.Rmd) |
+| Practical: data preparation (Pavkovic, 2019) | Notebook | 20' | [[html](practicals/pavkovic_2019/prepare-data_pavkovic_2019.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/pavkovic_2019/prepare-data_pavkovic_2019.Rmd)] |
+
 
 ### Enrichment analysis
 
