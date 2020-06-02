@@ -280,7 +280,7 @@ This should be improved by importing dataset-specific information for a more rel
 ```{r metadata}
 #### Build metadata table ####
 metadata <- data.frame(
-  dataType = "transcriptome",
+  dataType = parameters$datatype,
   sampleName = colnames(rawValues))
 metadata[ , c("condition", "sampleNumber")] <- 
   str_split_fixed(string = metadata$sampleName, pattern = "_", n = 2)
