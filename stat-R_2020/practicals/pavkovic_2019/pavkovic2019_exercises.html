@@ -303,10 +303,9 @@ div.tocify {
 <li>sd,</li>
 <li>var,</li>
 <li>IQR,</li>
-<li>some relevant percentiles (0, 05, 25, 50 , 75, 95, 100)</li>
-</ul></li>
-</ol>
-<p>Use different graphical representations to compare the values and get familiar with your data.</p>
+<li><p>some relevant percentiles (0, 05, 25, 50 , 75, 95, 100)</p>
+<p>Use different graphical representations to compare the values and get familiar with your data.</p></li>
+</ul>
 <p>For example :</p>
 <ul>
 <li>histogram of all the values</li>
@@ -314,16 +313,13 @@ div.tocify {
 <li>feature means versus medians</li>
 <li>feature standard deviation versus IQR</li>
 <li>mean versus variance plot</li>
-</ul>
-<ol start="3" style="list-style-type: decimal">
-<li>Compute the mean value per condition (mean between the replicates)</li>
-</ol>
-<p>Draw a dot plot to compare the values between each time point and the control.</p>
-<ol start="4" style="list-style-type: decimal">
+</ul></li>
+<li><p>Compute the mean value per condition (mean between the replicates)</p>
+<p>Draw a dot plot to compare the values between each time point and the control.</p></li>
 <li><p>Select the 500 top features according to two different criteria</p>
 <ol style="list-style-type: lower-alpha">
 <li>highest variance</li>
-<li>highest log2-ratio between untreated samples and the last day of the experiment</li>
+<li>differential analysis (will be provided by the teachers)</li>
 </ol></li>
 <li><p>Compute different matrices indicating the relations between samples (columns) of the log2-transformed values</p>
 <ul>
@@ -331,25 +327,71 @@ div.tocify {
 <li>Pearson correlation</li>
 <li>Spearman correlation</li>
 <li>Euclidian distance</li>
-</ul></li>
-</ol>
-<p>Compute these on the commplete dataset and on the 500 matrix selections</p>
-<ol start="6" style="list-style-type: decimal">
+</ul>
+<p>Compute these on the commplete dataset and on the 500 matrix selections</p></li>
 <li><p>Use the hclust() method on the seleected features</p>
 <ul>
 <li>with different dissimlarity metrics (Euclidian, Pearson, Spearman)</li>
 <li>with different agglomeration rules (single, average, complete, ward)</li>
-</ul></li>
-</ol>
-<p>Plot the feature tree and compare the results obtained with the different choices.</p>
-<ol start="7" style="list-style-type: decimal">
+</ul>
+<p>Plot the feature tree and compare the results obtained with the different choices.</p></li>
 <li><p>Draw heatmaps of the feature profiles (do not cluster the samples)</p></li>
 <li><p>Run principal component analysis</p>
 <ul>
-<li>Use the visualisation tools from Magali Berland’s course</li>
-<li>Plot the sample positions on the 6 first components. Are they consistent with their time and status?</li>
+<li><p>Use the visualisation tools from Magali Berland’s course</p></li>
+<li><p>Generate PC plots with</p>
+<pre><code>- the whole dataset
+- the subset of features declared positive in the differential analysis (provided by the teachers)</code></pre></li>
+<li><p>Plot the sample positions on the 6 first components. Are they consistent with their time and status?</p></li>
+</ul></li>
+<li><p>Enrichment analysis</p>
+<ul>
+<li><p>analyse the features declared positive (provided by the teachers) to the gProfiler function profiling web tool (<a href="https://biit.cs.ut.ee/gprofiler/gost" class="uri">https://biit.cs.ut.ee/gprofiler/gost</a>)</p></li>
+<li><p>write a piece of R code that runs the same anlaysis with the <code>gProfileR</code> package</p></li>
+<li><p>analyse (either with R or with the Web site) the different gene groups discovered by the hclust approach, and evaluate if the results are more relevant when you submit all the differentially expressed features at once, or when you submit them cluster per cluster</p></li>
 </ul></li>
 </ol>
+<hr />
+</div>
+<div id="modalités-de-contrôle-des-connaissances" class="section level2">
+<h2>Modalités de contrôle des connaissances</h2>
+<div id="note-dassiduité-25" class="section level3">
+<h3>Note d’assiduité (25%)</h3>
+<p>Présence physique et virtuelle, comme à l’école des fans, tous gagnants</p>
+</div>
+<div id="contrôle-continu-25" class="section level3">
+<h3>Contrôle continu (25%)</h3>
+<p>QCM dernière séance, sur les concepts de stat de l’ensemble des cours</p>
+</div>
+<div id="evaluation-finale-50" class="section level3">
+<h3>Evaluation finale (50%)</h3>
+<p>Choix entre deux sujets:</p>
+<ol style="list-style-type: decimal">
+<li>Terminer les exercices d’exploration des données</li>
+<li>Comparer 2 méthodes de classification supervisée</li>
+</ol>
+<p>Date de Rendu:</p>
+<ul>
+<li>Le plus tard possible ? Septembre ? Demander à Bertrand ce qui est possible.</li>
+</ul>
+<p>Rendu:</p>
+<ul>
+<li>Un script bien documenté + un rapport d’interprétation (pdf avec figures, tables, texte …)</li>
+<li>Optionnellement (pour ceux qui veulent pousser plus loin), un notebook Rmd qui inclut le code + les résultats, et peut être ré-utilisé par les formateurs. Joindre aussi le fichier compilé en pdf et / ou HTML self-contained avec code visible.</li>
+</ul>
+<p>Le rapport doit être synthétique:</p>
+<ul>
+<li>Intro / contexte : ~15 lignes</li>
+<li>Mat é Méthodes: une explication synthétique (éventuellement graphique, flow chart) du déroulé de l’analyse</li>
+<li>Résultats
+<ul>
+<li>utiliser des représentations graphiques + tableaux représentatifs (max 10)</li>
+<li>quelques phrase d’interprétation pour chaque figure ou tableau</li>
+</ul></li>
+<li>Discussion: conclusions et perspectives</li>
+</ul>
+<p>Le travail peut être réalisé à titre individuel ou en binôme.</p>
+</div>
 </div>
 
 
