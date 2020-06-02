@@ -1,7 +1,7 @@
 #### Reload the data from memory image ####
 
 datatype <- "proteome"
-dataset <- "uuo"
+dataset <- "fa"
 
 
 #### Define the path of the shared data dir ###
@@ -30,4 +30,13 @@ load(memFile)
 
 ## Check the parameters
 print(as.data.frame(parameters))
+
+## We now dispose of the following tables, corresponding to the different steps of the pre-processing
+# - rawValues: raw values
+# - log2Values: log2-transformed values
+# - log2Filtered: filtered out the undetected features
+# - log2MedianCentered: median-based sample-wise centering
+# - log2Standardized: median-based centering and IQR-based scaling
+## We will have to choose the appropriate data types depending on our purposes
+
 
