@@ -162,7 +162,7 @@ if (parameters$datatype == "transcriptome") {
 
 
 ## Redefine the directory and prefix of the figures exported by knitr
-parameters$filePrefix <- paste0('pavkovic2019_', parameters$figures, "_", parameters$dataset, "_")
+parameters$filePrefix <- paste0('pavkovic2019_', parameters$dataype, "_", parameters$dataset, "_")
 
 ## Print the parameters
 kable(t(as.data.frame(parameters)), col.names = "Parameter")
@@ -198,8 +198,7 @@ dir.create(outdirs$dataset, recursive = TRUE, showWarnings = FALSE)
 ## Print the directories
 kable(t(as.data.frame.list(outdirs)), col.names = "Directories", caption = "Directories")
 
-knitr::opts_chunk$set(
-  fig.path = file.path(parameters$figures, parameters$filePrefix))
+knitr::opts_chunk$set(fig.path = file.path(outdirs$figures, parameters$filePrefix))
 
 ```
 
@@ -234,7 +233,7 @@ if (file.exists(localDataArchive) & !parameters$forceDownload) {
 #### Load raw counts data table ####
 
 
-## Note: the "raw" counts are decimal numbers, I suspect that they have been somewhat normalised. To check. 
+## Note: the "raw" counts are decimal numbers, I suspect that they have been somewhat normalized. To check. 
 if (parameters$datatype == "transcriptome") {
   rawCountFile <- file.path(
     outdirs$data,
@@ -581,7 +580,7 @@ boxplot(log2Standardized,
         col = metadata$color,
         horizontal = TRUE, 
         las = 1, 
-        main = "Filtered, normalised and standardised", 
+        main = "Filtered, normalized and standardised", 
         xlab = "log2(counts)")
 par(par.ori)
 ```
@@ -604,7 +603,7 @@ vioplot::vioplot(log2Standardized,
         col = metadata$color,
         horizontal = TRUE, 
         las = 1, 
-        main = "Filtered, normalised and standardised", 
+        main = "Filtered, normalized and standardised", 
         xlab = "log2(counts)")
 par(par.ori)
 ```
@@ -621,7 +620,6 @@ We can also inspect the distribution of counts per sample with the `plot()` func
 #par(par.ori)
 ```
 
-## Combinations
 
 
 ## Exporting the result
@@ -679,7 +677,7 @@ outfiles["standardised"] <- file.path(outdirs$dataset,
                                     paste0(parameters$dataset, 
                                            "_", parameters$datatype, 
                                            "_log2_standardised.tsv.gz"))
-write.table(x = format(digits = 3, big.mark   = "", decimal.mark = ".", log2Standardised), 
+write.table(x = format(digits = 3, big.mark   = "", decimal.mark = ".", log2Standardized), 
             dec = ".", 
             file = gzfile(outfiles["standardised"], "w"), 
             quote = FALSE, sep = "\t")
@@ -696,7 +694,25 @@ write.table(x = metadata,
 
 
 
+```
 
+## Memory image
+
+
+We will now save a memory image in order to enable us to reload the data exactly in the state we reached now, without having to redo all the steps. 
+
+```{r memory_image}
+#### Save memory image ####
+outfiles["memory_image"] <- file.path(outdirs$results, paste0(parameters$filePrefix, "_memimage.Rdata"))
+save.image(file = outfiles["memory_image"])
+
+```
+
+
+## Output files
+
+```{r print_outfiles}
+#### Print a table with the links to the output files ####
 
 ## Build a table to display the links in the report
 fileTable <- data.frame(outfiles)
@@ -709,7 +725,6 @@ fileTable$link <- paste0("[", fileTable$basename, "]", "(", fileTable$outfiles, 
 kable(cbind(rownames(fileTable), fileTable$link), row.names = FALSE, col.names = c("Contents", "Link"),
       caption = "Output files")
 ```
-
 
 
 ## Session info
