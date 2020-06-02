@@ -144,7 +144,7 @@ Contents: [clustering/](clustering/)
 | Practical: data preparation (Pavkovic, 2019) - UUO transcriptome dataset | Notebook report | | [[html](practicals/pavkovic_2019/pavkovic2019_transcriptome_uuo.html)]  |
 | Practical: data preparation (Pavkovic, 2019) - FA proteome dataset | Notebook report | | [[html](practicals/pavkovic_2019/pavkovic2019_proteome_fa.html)]  |
 | Practical: data preparation (Pavkovic, 2019) - FA transcriptome dataset | Notebook report | | [[html](practicals/pavkovic_2019/pavkovic2019_transcriptome_fa.html)]  |
-
+| Practical: data exploration (Pavkovic, 2019)  | Exercises | | [[html](practicals/pavkovic_2019/pavkovic2019_exercises.html)]  |
 
 ### Enrichment analysis
 
