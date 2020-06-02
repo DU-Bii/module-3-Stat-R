@@ -130,25 +130,25 @@ Alternatively you can immediately write the code inside a R markdown document, a
     - IQR, 
     - some relevant percentiles (0, 05, 25, 50 , 75, 95, 100)
 
-Use different graphical representations to compare the values and get familiar with your data. 
+      Use different graphical representations to compare the values and get familiar with your data. 
 
-For example : 
-
-- histogram of all the values
-- boxplot of the values per sample
-- feature means versus medians
-- feature standard deviation versus IQR
-- mean versus variance plot
-
+    For example : 
+    
+    - histogram of all the values
+    - boxplot of the values per sample
+    - feature means versus medians
+    - feature standard deviation versus IQR
+    - mean versus variance plot
+ 
 
 3. Compute the mean value per condition (mean between the replicates)
 
-Draw a dot plot to compare the values between each time point and the control.   
+    Draw a dot plot to compare the values between each time point and the control.   
 
 4. Select the 500 top features according to two different criteria
 
       a. highest variance
-      b. highest log2-ratio between untreated samples and the last day of the experiment
+      b. differential analysis (will be provided by the teachers)
 
 5. Compute different matrices indicating the relations between samples (columns) of the log2-transformed values
 
@@ -157,21 +157,80 @@ Draw a dot plot to compare the values between each time point and the control.
     - Spearman correlation 
     - Euclidian distance
 
-Compute these on the commplete dataset and on the 500 matrix selections
+    Compute these on the commplete dataset and on the 500 matrix selections
 
-6. Use the hclust() method on the seleected features 
+6. Use the hclust() method on the selected features 
 
     - with different dissimlarity metrics (Euclidian, Pearson, Spearman)
     - with different agglomeration rules (single, average, complete, ward)
     
-Plot the feature tree and compare the results obtained with the different choices. 
+    Plot the feature tree and compare the results obtained with the different choices. 
 
 7. Draw heatmaps of the feature profiles (do not cluster the samples)
 
 8. Run principal component analysis 
 
     - Use the visualisation tools from Magali Berland's course
+
+    - Generate PC plots with 
+
+          - the whole dataset
+          - the subset of features declared positive in the differential analysis (provided by the teachers)
+    
     - Plot the sample positions on the 6 first components. Are they consistent with their time and status?
+
+
+9. Enrichment analysis
+
+    - analyse the features declared positive (provided by the teachers) to the gProfiler function profiling web tool (<https://biit.cs.ut.ee/gprofiler/gost>)
+    
+    - write a piece of R code that runs the same anlaysis with the `gProfileR` package
+
+    - analyse (either with R or with the Web site) the different gene groups discovered by the hclust approach, and evaluate if the results are more relevant when you submit all the differentially expressed features at once, or when you submit them cluster per cluster
+    
+
+
+***********
+
+## Modalités de contrôle des connaissances
+
+
+### Note d'assiduité (25%)
+
+Présence physique et virtuelle, comme à l'école des fans, tous gagnants
+
+### Contrôle continu (25%)
+
+QCM dernière séance, sur les concepts de stat de l'ensemble des cours
+
+### Evaluation finale (50%) 
+
+Choix entre deux sujets: 
+
+1. Terminer les exercices d'exploration des données
+2. Comparer 2 méthodes de classification supervisée
+
+Date de Rendu: 
+
+- Le plus tard possible ? Septembre ? Demander à Bertrand ce qui est possible. 
+
+Rendu:
+
+- Un script bien documenté + un rapport d'interprétation (pdf avec figures, tables, texte ...)
+- Optionnellement (pour ceux qui veulent pousser plus loin), un notebook Rmd qui inclut le code + les résultats, et peut être ré-utilisé par les formateurs. Joindre aussi le fichier compilé en pdf et / ou HTML self-contained avec code visible. 
+    
+Le rapport doit être synthétique: 
+
+- Intro / contexte : ~15 lignes
+- Mat é Méthodes: une explication synthétique (éventuellement graphique, flow chart) du déroulé de l'analyse
+- Résultats
+    - utiliser des représentations graphiques + tableaux représentatifs (max 10)
+    - quelques phrase d'interprétation pour chaque figure ou tableau
+- Discussion: conclusions et perspectives
+
+Le travail peut être réalisé à titre individuel ou en binôme. 
+
+
 
 
 
