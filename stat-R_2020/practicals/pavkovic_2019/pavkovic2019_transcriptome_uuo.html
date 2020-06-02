@@ -15,18 +15,18 @@
 
 <title>DU-Bii Study cases - Mouse fibrotic kidney</title>
 
-<script src="pavkovic2019_proteome_uuo_files/header-attrs-2.1/header-attrs.js"></script>
-<script src="pavkovic2019_proteome_uuo_files/jquery-1.11.3/jquery.min.js"></script>
+<script src="pavkovic2019_transcriptome_uuo_files/header-attrs-2.1/header-attrs.js"></script>
+<script src="pavkovic2019_transcriptome_uuo_files/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="pavkovic2019_proteome_uuo_files/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
-<script src="pavkovic2019_proteome_uuo_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
-<script src="pavkovic2019_proteome_uuo_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
-<script src="pavkovic2019_proteome_uuo_files/bootstrap-3.3.5/shim/respond.min.js"></script>
-<script src="pavkovic2019_proteome_uuo_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
-<link href="pavkovic2019_proteome_uuo_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="pavkovic2019_proteome_uuo_files/tocify-1.9.1/jquery.tocify.js"></script>
-<script src="pavkovic2019_proteome_uuo_files/navigation-1.1/tabsets.js"></script>
-<script src="pavkovic2019_proteome_uuo_files/navigation-1.1/codefolding.js"></script>
+<link href="pavkovic2019_transcriptome_uuo_files/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="pavkovic2019_transcriptome_uuo_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="pavkovic2019_transcriptome_uuo_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="pavkovic2019_transcriptome_uuo_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="pavkovic2019_transcriptome_uuo_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="pavkovic2019_transcriptome_uuo_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="pavkovic2019_transcriptome_uuo_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="pavkovic2019_transcriptome_uuo_files/navigation-1.1/tabsets.js"></script>
+<script src="pavkovic2019_transcriptome_uuo_files/navigation-1.1/codefolding.js"></script>
 
 
 <style type="text/css">code{white-space: pre;}</style>
@@ -411,7 +411,7 @@ div.tocify {
 <span id="cb1-6"><a href="#cb1-6"></a><span class="co">## Analysis parameters</span></span>
 <span id="cb1-7"><a href="#cb1-7"></a>parameters &lt;-<span class="st"> </span><span class="kw">list</span>(</span>
 <span id="cb1-8"><a href="#cb1-8"></a>  <span class="dt">dataset =</span> <span class="st">&quot;uuo&quot;</span>, <span class="co">## Supported: uuo, fa</span></span>
-<span id="cb1-9"><a href="#cb1-9"></a>  <span class="dt">datatype =</span> <span class="st">&quot;proteome&quot;</span>, <span class="co">## Supported: transcriptome, proteome</span></span>
+<span id="cb1-9"><a href="#cb1-9"></a>  <span class="dt">datatype =</span> <span class="st">&quot;transcriptome&quot;</span>, <span class="co">## Supported: transcriptome, proteome</span></span>
 <span id="cb1-10"><a href="#cb1-10"></a>  <span class="dt">epsilon =</span> <span class="fl">0.1</span>,</span>
 <span id="cb1-11"><a href="#cb1-11"></a>  <span class="dt">forceDownload =</span> <span class="ot">FALSE</span>)</span>
 <span id="cb1-12"><a href="#cb1-12"></a></span>
@@ -441,7 +441,7 @@ div.tocify {
 </tr>
 <tr class="even">
 <td>datatype</td>
-<td align="left">proteome</td>
+<td align="left">transcriptome</td>
 </tr>
 <tr class="odd">
 <td>epsilon</td>
@@ -453,11 +453,11 @@ div.tocify {
 </tr>
 <tr class="odd">
 <td>undetectedLimit</td>
-<td align="left">100</td>
+<td align="left">10</td>
 </tr>
 <tr class="even">
 <td>filePrefix</td>
-<td align="left">pavkovic2019_proteome_uuo_</td>
+<td align="left">pavkovic2019_transcriptome_uuo_</td>
 </tr>
 </tbody>
 </table>
@@ -511,15 +511,15 @@ div.tocify {
 </tr>
 <tr class="even">
 <td>figures</td>
-<td align="left">figures/proteome/uuo</td>
+<td align="left">figures/transcriptome/uuo</td>
 </tr>
 <tr class="odd">
 <td>datatype</td>
-<td align="left">./results/proteome</td>
+<td align="left">./results/transcriptome</td>
 </tr>
 <tr class="even">
 <td>dataset</td>
-<td align="left">./results/proteome/uuo</td>
+<td align="left">./results/transcriptome/uuo</td>
 </tr>
 </tbody>
 </table>
@@ -577,11 +577,11 @@ div.tocify {
 <span id="cb5-26"><a href="#cb5-26"></a></span>
 <span id="cb5-27"><a href="#cb5-27"></a><span class="co">## Extract a separate data frame with only the values to analyse</span></span>
 <span id="cb5-28"><a href="#cb5-28"></a>rawValues &lt;-<span class="st"> </span>rawData[, <span class="dv">-1</span>] </span></code></pre></div>
-<p>The data was loaded from the supplementary file ./data/hbc-MouseKidneyFibrOmics-a39e55a/tables/puuo/results/counts/uuo_model_counts.csv as raw counts.</p>
+<p>The data was loaded from the supplementary file ./data/hbc-MouseKidneyFibrOmics-a39e55a/tables/uuo/results/counts/raw_counts.csv.gz as raw counts.</p>
 <ul>
-<li>This table contains 8508 rows (variables/features/genes/proteins) and 10 columns (individuals, samples).<br />
+<li>This table contains 46679 rows (variables/features/genes/proteins) and 15 columns (individuals, samples).<br />
 </li>
-<li>The rawvalues range from 1.18985 to 84182.8.</li>
+<li>The rawvalues range from 0 to 1349891.5187616.</li>
 </ul>
 </div>
 <div id="build-metadata-table" class="section level2">
@@ -605,7 +605,7 @@ div.tocify {
 <span id="cb6-16"><a href="#cb6-16"></a>                                 <span class="st">&quot;Data type = &quot;</span>, parameters<span class="op">$</span>datatype,</span>
 <span id="cb6-17"><a href="#cb6-17"></a>                                 <span class="st">&quot;Dataset = &quot;</span>, parameters<span class="op">$</span>dataset))</span></code></pre></div>
 <table>
-<caption>Rough metadata table. Data type = proteomeDataset = uuo</caption>
+<caption>Rough metadata table. Data type = transcriptomeDataset = uuo</caption>
 <thead>
 <tr class="header">
 <th align="left">dataType</th>
@@ -616,6 +616,90 @@ div.tocify {
 </tr>
 </thead>
 <tbody>
+<tr class="odd">
+<td align="left">transcriptome</td>
+<td align="left">day14_12</td>
+<td align="left">day14</td>
+<td align="left">12</td>
+<td align="left">#FF4400</td>
+</tr>
+<tr class="even">
+<td align="left">transcriptome</td>
+<td align="left">day14_13</td>
+<td align="left">day14</td>
+<td align="left">13</td>
+<td align="left">#FF4400</td>
+</tr>
+<tr class="odd">
+<td align="left">transcriptome</td>
+<td align="left">day14_14</td>
+<td align="left">day14</td>
+<td align="left">14</td>
+<td align="left">#FF4400</td>
+</tr>
+<tr class="even">
+<td align="left">transcriptome</td>
+<td align="left">day14_15</td>
+<td align="left">day14</td>
+<td align="left">15</td>
+<td align="left">#FF4400</td>
+</tr>
+<tr class="odd">
+<td align="left">transcriptome</td>
+<td align="left">day3_4</td>
+<td align="left">day3</td>
+<td align="left">4</td>
+<td align="left">#FFFFDD</td>
+</tr>
+<tr class="even">
+<td align="left">transcriptome</td>
+<td align="left">day3_5</td>
+<td align="left">day3</td>
+<td align="left">5</td>
+<td align="left">#FFFFDD</td>
+</tr>
+<tr class="odd">
+<td align="left">transcriptome</td>
+<td align="left">day3_6</td>
+<td align="left">day3</td>
+<td align="left">6</td>
+<td align="left">#FFFFDD</td>
+</tr>
+<tr class="even">
+<td align="left">transcriptome</td>
+<td align="left">day3_7</td>
+<td align="left">day3</td>
+<td align="left">7</td>
+<td align="left">#FFFFDD</td>
+</tr>
+<tr class="odd">
+<td align="left">transcriptome</td>
+<td align="left">day7_10</td>
+<td align="left">day7</td>
+<td align="left">10</td>
+<td align="left">#FFDD88</td>
+</tr>
+<tr class="even">
+<td align="left">transcriptome</td>
+<td align="left">day7_11</td>
+<td align="left">day7</td>
+<td align="left">11</td>
+<td align="left">#FFDD88</td>
+</tr>
+<tr class="odd">
+<td align="left">transcriptome</td>
+<td align="left">day7_8</td>
+<td align="left">day7</td>
+<td align="left">8</td>
+<td align="left">#FFDD88</td>
+</tr>
+<tr class="even">
+<td align="left">transcriptome</td>
+<td align="left">day7_9</td>
+<td align="left">day7</td>
+<td align="left">9</td>
+<td align="left">#FFDD88</td>
+</tr>
 <tr class="odd">
 <td align="left">transcriptome</td>
 <td align="left">normal_1</td>
@@ -632,59 +716,10 @@ div.tocify {
 </tr>
 <tr class="odd">
 <td align="left">transcriptome</td>
-<td align="left">day3_1</td>
-<td align="left">day3</td>
-<td align="left">1</td>
-<td align="left">#FFFFDD</td>
-</tr>
-<tr class="even">
-<td align="left">transcriptome</td>
-<td align="left">day3_2</td>
-<td align="left">day3</td>
-<td align="left">2</td>
-<td align="left">#FFFFDD</td>
-</tr>
-<tr class="odd">
-<td align="left">transcriptome</td>
-<td align="left">day3_3</td>
-<td align="left">day3</td>
+<td align="left">normal_3</td>
+<td align="left">normal</td>
 <td align="left">3</td>
-<td align="left">#FFFFDD</td>
-</tr>
-<tr class="even">
-<td align="left">transcriptome</td>
-<td align="left">day7_1</td>
-<td align="left">day7</td>
-<td align="left">1</td>
-<td align="left">#FFDD88</td>
-</tr>
-<tr class="odd">
-<td align="left">transcriptome</td>
-<td align="left">day7_2</td>
-<td align="left">day7</td>
-<td align="left">2</td>
-<td align="left">#FFDD88</td>
-</tr>
-<tr class="even">
-<td align="left">transcriptome</td>
-<td align="left">day7_3</td>
-<td align="left">day7</td>
-<td align="left">3</td>
-<td align="left">#FFDD88</td>
-</tr>
-<tr class="odd">
-<td align="left">transcriptome</td>
-<td align="left">day14_1</td>
-<td align="left">day14</td>
-<td align="left">1</td>
-<td align="left">#FF4400</td>
-</tr>
-<tr class="even">
-<td align="left">transcriptome</td>
-<td align="left">day14_2</td>
-<td align="left">day14</td>
-<td align="left">2</td>
-<td align="left">#FF4400</td>
+<td align="left">#BBFFBB</td>
 </tr>
 </tbody>
 </table>
@@ -730,20 +765,224 @@ div.tocify {
 <tbody>
 <tr class="odd">
 <td align="left">transcriptome</td>
+<td align="left">day14_12</td>
+<td align="left">day14</td>
+<td align="left">12</td>
+<td align="left">#FF4400</td>
+<td align="left">577.40</td>
+<td align="left">1.32543</td>
+<td align="left">4020.5</td>
+<td align="left">227.855</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">227.855</td>
+<td align="left">2563.5</td>
+<td align="left">480841</td>
+</tr>
+<tr class="even">
+<td align="left">transcriptome</td>
+<td align="left">day14_13</td>
+<td align="left">day14</td>
+<td align="left">13</td>
+<td align="left">#FF4400</td>
+<td align="left">317.42</td>
+<td align="left">0.99779</td>
+<td align="left">2538.1</td>
+<td align="left">130.509</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">130.509</td>
+<td align="left">1371.5</td>
+<td align="left">258977</td>
+</tr>
+<tr class="odd">
+<td align="left">transcriptome</td>
+<td align="left">day14_14</td>
+<td align="left">day14</td>
+<td align="left">14</td>
+<td align="left">#FF4400</td>
+<td align="left">439.77</td>
+<td align="left">1.19451</td>
+<td align="left">2758.5</td>
+<td align="left">190.710</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">190.710</td>
+<td align="left">2043.2</td>
+<td align="left">280431</td>
+</tr>
+<tr class="even">
+<td align="left">transcriptome</td>
+<td align="left">day14_15</td>
+<td align="left">day14</td>
+<td align="left">15</td>
+<td align="left">#FF4400</td>
+<td align="left">464.17</td>
+<td align="left">1.24853</td>
+<td align="left">5165.5</td>
+<td align="left">180.824</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">180.824</td>
+<td align="left">1855.8</td>
+<td align="left">693041</td>
+</tr>
+<tr class="odd">
+<td align="left">transcriptome</td>
+<td align="left">day3_4</td>
+<td align="left">day3</td>
+<td align="left">4</td>
+<td align="left">#FFFFDD</td>
+<td align="left">736.30</td>
+<td align="left">1.00880</td>
+<td align="left">8571.4</td>
+<td align="left">197.157</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">197.157</td>
+<td align="left">2901.5</td>
+<td align="left">923949</td>
+</tr>
+<tr class="even">
+<td align="left">transcriptome</td>
+<td align="left">day3_5</td>
+<td align="left">day3</td>
+<td align="left">5</td>
+<td align="left">#FFFFDD</td>
+<td align="left">670.62</td>
+<td align="left">1.67158</td>
+<td align="left">7646.5</td>
+<td align="left">222.837</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">222.837</td>
+<td align="left">2687.5</td>
+<td align="left">874143</td>
+</tr>
+<tr class="odd">
+<td align="left">transcriptome</td>
+<td align="left">day3_6</td>
+<td align="left">day3</td>
+<td align="left">6</td>
+<td align="left">#FFFFDD</td>
+<td align="left">657.52</td>
+<td align="left">1.02132</td>
+<td align="left">8424.8</td>
+<td align="left">181.088</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">181.088</td>
+<td align="left">2513.6</td>
+<td align="left">987332</td>
+</tr>
+<tr class="even">
+<td align="left">transcriptome</td>
+<td align="left">day3_7</td>
+<td align="left">day3</td>
+<td align="left">7</td>
+<td align="left">#FFFFDD</td>
+<td align="left">762.34</td>
+<td align="left">1.20783</td>
+<td align="left">11164.8</td>
+<td align="left">216.455</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">216.455</td>
+<td align="left">2781.6</td>
+<td align="left">1349892</td>
+</tr>
+<tr class="odd">
+<td align="left">transcriptome</td>
+<td align="left">day7_10</td>
+<td align="left">day7</td>
+<td align="left">10</td>
+<td align="left">#FFDD88</td>
+<td align="left">747.06</td>
+<td align="left">1.72124</td>
+<td align="left">7495.7</td>
+<td align="left">242.263</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">242.263</td>
+<td align="left">3132.0</td>
+<td align="left">889506</td>
+</tr>
+<tr class="even">
+<td align="left">transcriptome</td>
+<td align="left">day7_11</td>
+<td align="left">day7</td>
+<td align="left">11</td>
+<td align="left">#FFDD88</td>
+<td align="left">507.88</td>
+<td align="left">1.01550</td>
+<td align="left">4781.0</td>
+<td align="left">185.765</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">185.765</td>
+<td align="left">2135.0</td>
+<td align="left">556133</td>
+</tr>
+<tr class="odd">
+<td align="left">transcriptome</td>
+<td align="left">day7_8</td>
+<td align="left">day7</td>
+<td align="left">8</td>
+<td align="left">#FFDD88</td>
+<td align="left">724.46</td>
+<td align="left">1.47772</td>
+<td align="left">7201.4</td>
+<td align="left">236.473</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">236.473</td>
+<td align="left">3005.6</td>
+<td align="left">904431</td>
+</tr>
+<tr class="even">
+<td align="left">transcriptome</td>
+<td align="left">day7_9</td>
+<td align="left">day7</td>
+<td align="left">9</td>
+<td align="left">#FFDD88</td>
+<td align="left">756.34</td>
+<td align="left">1.99637</td>
+<td align="left">6429.8</td>
+<td align="left">291.494</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">291.494</td>
+<td align="left">3264.0</td>
+<td align="left">733494</td>
+</tr>
+<tr class="odd">
+<td align="left">transcriptome</td>
 <td align="left">normal_1</td>
 <td align="left">normal</td>
 <td align="left">1</td>
 <td align="left">#BBFFBB</td>
-<td align="left">1881.3</td>
-<td align="left">731.14</td>
-<td align="left">3756.4</td>
-<td align="left">1652.0</td>
-<td align="left">1.4976</td>
-<td align="left">48.588</td>
-<td align="left">239.83</td>
-<td align="left">1891.8</td>
-<td align="left">7463.8</td>
-<td align="left">84183</td>
+<td align="left">801.47</td>
+<td align="left">0.95108</td>
+<td align="left">11585.8</td>
+<td align="left">123.308</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">123.308</td>
+<td align="left">2740.6</td>
+<td align="left">1259045</td>
 </tr>
 <tr class="even">
 <td align="left">transcriptome</td>
@@ -751,152 +990,33 @@ div.tocify {
 <td align="left">normal</td>
 <td align="left">2</td>
 <td align="left">#BBFFBB</td>
-<td align="left">1675.7</td>
-<td align="left">675.93</td>
-<td align="left">3266.2</td>
-<td align="left">1483.4</td>
-<td align="left">1.1899</td>
-<td align="left">46.894</td>
-<td align="left">225.55</td>
-<td align="left">1709.0</td>
-<td align="left">6559.9</td>
-<td align="left">73210</td>
+<td align="left">585.72</td>
+<td align="left">0.00000</td>
+<td align="left">8237.1</td>
+<td align="left">88.908</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">88.908</td>
+<td align="left">2035.8</td>
+<td align="left">912206</td>
 </tr>
 <tr class="odd">
 <td align="left">transcriptome</td>
-<td align="left">day3_1</td>
-<td align="left">day3</td>
-<td align="left">1</td>
-<td align="left">#FFFFDD</td>
-<td align="left">1715.6</td>
-<td align="left">843.60</td>
-<td align="left">2858.5</td>
-<td align="left">1652.1</td>
-<td align="left">6.7569</td>
-<td align="left">76.704</td>
-<td align="left">318.55</td>
-<td align="left">1970.7</td>
-<td align="left">6050.8</td>
-<td align="left">61663</td>
-</tr>
-<tr class="even">
-<td align="left">transcriptome</td>
-<td align="left">day3_2</td>
-<td align="left">day3</td>
-<td align="left">2</td>
-<td align="left">#FFFFDD</td>
-<td align="left">1912.4</td>
-<td align="left">943.17</td>
-<td align="left">3169.4</td>
-<td align="left">1870.2</td>
-<td align="left">9.5006</td>
-<td align="left">82.463</td>
-<td align="left">353.51</td>
-<td align="left">2223.7</td>
-<td align="left">6702.8</td>
-<td align="left">67802</td>
-</tr>
-<tr class="odd">
-<td align="left">transcriptome</td>
-<td align="left">day3_3</td>
-<td align="left">day3</td>
+<td align="left">normal_3</td>
+<td align="left">normal</td>
 <td align="left">3</td>
-<td align="left">#FFFFDD</td>
-<td align="left">1788.7</td>
-<td align="left">879.47</td>
-<td align="left">3032.2</td>
-<td align="left">1716.6</td>
-<td align="left">8.2186</td>
-<td align="left">78.684</td>
-<td align="left">329.64</td>
-<td align="left">2046.2</td>
-<td align="left">6258.7</td>
-<td align="left">66225</td>
-</tr>
-<tr class="even">
-<td align="left">transcriptome</td>
-<td align="left">day7_1</td>
-<td align="left">day7</td>
-<td align="left">1</td>
-<td align="left">#FFDD88</td>
-<td align="left">1535.7</td>
-<td align="left">772.21</td>
-<td align="left">2589.1</td>
-<td align="left">1503.8</td>
-<td align="left">10.1767</td>
-<td align="left">71.455</td>
-<td align="left">297.81</td>
-<td align="left">1801.6</td>
-<td align="left">5254.4</td>
-<td align="left">64460</td>
-</tr>
-<tr class="odd">
-<td align="left">transcriptome</td>
-<td align="left">day7_2</td>
-<td align="left">day7</td>
-<td align="left">2</td>
-<td align="left">#FFDD88</td>
-<td align="left">1767.2</td>
-<td align="left">865.20</td>
-<td align="left">3045.3</td>
-<td align="left">1747.5</td>
-<td align="left">4.3223</td>
-<td align="left">79.410</td>
-<td align="left">334.24</td>
-<td align="left">2081.7</td>
-<td align="left">5972.5</td>
-<td align="left">70714</td>
-</tr>
-<tr class="even">
-<td align="left">transcriptome</td>
-<td align="left">day7_3</td>
-<td align="left">day7</td>
-<td align="left">3</td>
-<td align="left">#FFDD88</td>
-<td align="left">1604.9</td>
-<td align="left">803.62</td>
-<td align="left">2762.1</td>
-<td align="left">1593.5</td>
-<td align="left">7.2826</td>
-<td align="left">71.727</td>
-<td align="left">304.52</td>
-<td align="left">1898.0</td>
-<td align="left">5375.4</td>
-<td align="left">65294</td>
-</tr>
-<tr class="odd">
-<td align="left">transcriptome</td>
-<td align="left">day14_1</td>
-<td align="left">day14</td>
-<td align="left">1</td>
-<td align="left">#FF4400</td>
-<td align="left">1566.7</td>
-<td align="left">760.19</td>
-<td align="left">3055.8</td>
-<td align="left">1474.5</td>
-<td align="left">12.6918</td>
-<td align="left">72.337</td>
-<td align="left">297.53</td>
-<td align="left">1772.1</td>
-<td align="left">5247.2</td>
-<td align="left">78074</td>
-</tr>
-<tr class="even">
-<td align="left">transcriptome</td>
-<td align="left">day14_2</td>
-<td align="left">day14</td>
-<td align="left">2</td>
-<td align="left">#FF4400</td>
-<td align="left">1482.4</td>
-<td align="left">714.26</td>
-<td align="left">2961.8</td>
-<td align="left">1399.4</td>
-<td align="left">4.1563</td>
-<td align="left">64.983</td>
-<td align="left">277.37</td>
-<td align="left">1676.7</td>
-<td align="left">4951.8</td>
-<td align="left">82035</td>
+<td align="left">#BBFFBB</td>
+<td align="left">638.52</td>
+<td align="left">0.77229</td>
+<td align="left">9846.7</td>
+<td align="left">95.103</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">95.103</td>
+<td align="left">2149.2</td>
+<td align="left">1101035</td>
 </tr>
 </tbody>
 </table>
@@ -908,7 +1028,7 @@ div.tocify {
 <span id="cb8-3"><a href="#cb8-3"></a>     <span class="dt">xlab =</span> <span class="st">&quot;Raw values&quot;</span>, </span>
 <span id="cb8-4"><a href="#cb8-4"></a>     <span class="dt">ylab =</span> <span class="st">&quot;Number of features (all samples)&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figures/proteome/uuo/pavkovic2019_proteome_uuo_RNA-seq_count_distrib-1.png" alt="Distribution of raw counts" width="70%" />
+<img src="figures/transcriptome/uuo/pavkovic2019_transcriptome_uuo_RNA-seq_count_distrib-1.png" alt="Distribution of raw counts" width="70%" />
 <p class="caption">
 Distribution of raw counts
 </p>
@@ -936,7 +1056,7 @@ Distribution of raw counts
 <span id="cb9-15"><a href="#cb9-15"></a>     <span class="dt">xlab =</span> <span class="st">&quot;Raw values (below percentile 95)&quot;</span>, </span>
 <span id="cb9-16"><a href="#cb9-16"></a>     <span class="dt">ylab =</span> <span class="st">&quot;Number of features (all samples)&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figures/proteome/uuo/pavkovic2019_proteome_uuo_raw_distrib_truncated_p95-1.png" alt="Distribution of raw counts" width="70%" />
+<img src="figures/transcriptome/uuo/pavkovic2019_transcriptome_uuo_raw_distrib_truncated_p95-1.png" alt="Distribution of raw counts" width="70%" />
 <p class="caption">
 Distribution of raw counts
 </p>
@@ -963,7 +1083,7 @@ Distribution of raw counts
 <span id="cb10-16"><a href="#cb10-16"></a>     <span class="dt">xlab =</span> <span class="st">&quot;Raw values (between p05 and p95)&quot;</span>, </span>
 <span id="cb10-17"><a href="#cb10-17"></a>     <span class="dt">ylab =</span> <span class="st">&quot;Number of features (all samples)&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figures/proteome/uuo/pavkovic2019_proteome_uuo_raw_distrib_trimmed_p05-p95-1.png" alt="Distribution of raw counts" width="70%" />
+<img src="figures/transcriptome/uuo/pavkovic2019_transcriptome_uuo_raw_distrib_trimmed_p05-p95-1.png" alt="Distribution of raw counts" width="70%" />
 <p class="caption">
 Distribution of raw counts
 </p>
@@ -982,7 +1102,7 @@ Distribution of raw counts
 <span id="cb11-6"><a href="#cb11-6"></a>     <span class="dt">main =</span> <span class="st">&quot;log2(values) distribution&quot;</span>,</span>
 <span id="cb11-7"><a href="#cb11-7"></a>     <span class="dt">xlab =</span> <span class="st">&quot;log2(raw + epsilon)&quot;</span>, </span>
 <span id="cb11-8"><a href="#cb11-8"></a>     <span class="dt">ylab =</span> <span class="st">&quot;Number of features&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;#BBFFBB&quot;</span>)</span></code></pre></div>
-<p><img src="figures/proteome/uuo/pavkovic2019_proteome_uuo_log2_counts-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/transcriptome/uuo/pavkovic2019_transcriptome_uuo_log2_counts-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="box-plots" class="section level2">
 <h2>Box plots</h2>
@@ -1003,7 +1123,7 @@ Distribution of raw counts
 <span id="cb12-14"><a href="#cb12-14"></a>        <span class="dt">main =</span> <span class="st">&quot;log2-transformed&quot;</span>, </span>
 <span id="cb12-15"><a href="#cb12-15"></a>        <span class="dt">xlab =</span> <span class="st">&quot;log2(value)&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figures/proteome/uuo/pavkovic2019_proteome_uuo_boxplots_raw_vs_log2-1.png" alt="Box plot of the raw values (left) and log2-transformed values (right)" width="80%" />
+<img src="figures/transcriptome/uuo/pavkovic2019_transcriptome_uuo_boxplots_raw_vs_log2-1.png" alt="Box plot of the raw values (left) and log2-transformed values (right)" width="80%" />
 <p class="caption">
 Box plot of the raw values (left) and log2-transformed values (right)
 </p>
@@ -1035,13 +1155,13 @@ Box plot of the raw values (left) and log2-transformed values (right)
 <span id="cb14-20"><a href="#cb14-20"></a>        <span class="dt">main =</span> <span class="st">&quot;Filtered features&quot;</span>, </span>
 <span id="cb14-21"><a href="#cb14-21"></a>        <span class="dt">xlab =</span> <span class="st">&quot;log2(value)&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figures/proteome/uuo/pavkovic2019_proteome_uuo_boxplots_filtering-1.png" alt="Box plot of the log2-transformed values before (left) and after (right)  feature filtering. " width="80%" />
+<img src="figures/transcriptome/uuo/pavkovic2019_transcriptome_uuo_boxplots_filtering-1.png" alt="Box plot of the log2-transformed values before (left) and after (right)  feature filtering. " width="80%" />
 <p class="caption">
 Box plot of the log2-transformed values before (left) and after (right) feature filtering.
 </p>
 </div>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw">par</span>(par.ori)</span></code></pre></div>
-<p>We filtered out all the features whose maximal count value across all samples was lower than 100. Among the 8508 genes from the raw count table, 0 were considered undetected according to this criterion. We use the remaining 8508 genes for the subsequent analyses.</p>
+<p>We filtered out all the features whose maximal count value across all samples was lower than 10. Among the 46679 genes from the raw count table, 20851 were considered undetected according to this criterion. We use the remaining 25828 genes for the subsequent analyses.</p>
 </div>
 <div id="standardization-centering" class="section level2">
 <h2>Standardization: centering</h2>
@@ -1081,7 +1201,7 @@ Box plot of the log2-transformed values before (left) and after (right) feature 
 <span id="cb16-30"><a href="#cb16-30"></a>        <span class="dt">main =</span> <span class="st">&quot;Median-based centered&quot;</span>, </span>
 <span id="cb16-31"><a href="#cb16-31"></a>        <span class="dt">xlab =</span> <span class="st">&quot;log2(value)&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figures/proteome/uuo/pavkovic2019_proteome_uuo_boxplots_centering-1.png" alt="Box plot of the log2-transformed feature-filtered values before (left) and after (right) median-based standardization.  " width="80%" />
+<img src="figures/transcriptome/uuo/pavkovic2019_transcriptome_uuo_boxplots_centering-1.png" alt="Box plot of the log2-transformed feature-filtered values before (left) and after (right) median-based standardization.  " width="80%" />
 <p class="caption">
 Box plot of the log2-transformed feature-filtered values before (left) and after (right) median-based standardization.
 </p>
@@ -1129,7 +1249,7 @@ Box plot of the log2-transformed feature-filtered values before (left) and after
 <span id="cb18-34"><a href="#cb18-34"></a>        <span class="dt">main =</span> <span class="st">&quot;Standardized</span><span class="ch">\n</span><span class="st">(median centering, IQR scaling)&quot;</span>, </span>
 <span id="cb18-35"><a href="#cb18-35"></a>        <span class="dt">xlab =</span> <span class="st">&quot;log2(value)&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figures/proteome/uuo/pavkovic2019_proteome_uuo_boxplots_scaling-1.png" alt="Box plot of the log2-transformed feature-filtered values before (left) and after (right) IQR-based scaling.   " width="80%" />
+<img src="figures/transcriptome/uuo/pavkovic2019_transcriptome_uuo_boxplots_scaling-1.png" alt="Box plot of the log2-transformed feature-filtered values before (left) and after (right) IQR-based scaling.   " width="80%" />
 <p class="caption">
 Box plot of the log2-transformed feature-filtered values before (left) and after (right) IQR-based scaling.
 </p>
@@ -1155,7 +1275,7 @@ Box plot of the log2-transformed feature-filtered values before (left) and after
 <span id="cb20-14"><a href="#cb20-14"></a>        <span class="dt">main =</span> <span class="st">&quot;Filtered, normalized and standardized&quot;</span>, </span>
 <span id="cb20-15"><a href="#cb20-15"></a>        <span class="dt">xlab =</span> <span class="st">&quot;log2(counts)&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figures/proteome/uuo/pavkovic2019_proteome_uuo_boxplots_raw_vs_standardized-1.png" alt="Box plot of the raw values (left) and the final data after feature filtering, normalization by log2 transormation, centering and scaling (right).  " width="80%" />
+<img src="figures/transcriptome/uuo/pavkovic2019_transcriptome_uuo_boxplots_raw_vs_standardized-1.png" alt="Box plot of the raw values (left) and the final data after feature filtering, normalization by log2 transormation, centering and scaling (right).  " width="80%" />
 <p class="caption">
 Box plot of the raw values (left) and the final data after feature filtering, normalization by log2 transormation, centering and scaling (right).
 </p>
@@ -1181,7 +1301,7 @@ Box plot of the raw values (left) and the final data after feature filtering, no
 <span id="cb22-14"><a href="#cb22-14"></a>                 <span class="dt">main =</span> <span class="st">&quot;Filtered, normalized and standardized&quot;</span>, </span>
 <span id="cb22-15"><a href="#cb22-15"></a>                 <span class="dt">xlab =</span> <span class="st">&quot;log2(counts)&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figures/proteome/uuo/pavkovic2019_proteome_uuo_violin_plots_raw_vs_standardized-1.png" alt="Box plot of the raw values (left) and the final data after feature filtering, normalization by log2 transormation, centering and scaling (right).  " width="80%" />
+<img src="figures/transcriptome/uuo/pavkovic2019_transcriptome_uuo_violin_plots_raw_vs_standardized-1.png" alt="Box plot of the raw values (left) and the final data after feature filtering, normalization by log2 transormation, centering and scaling (right).  " width="80%" />
 <p class="caption">
 Box plot of the raw values (left) and the final data after feature filtering, normalization by log2 transormation, centering and scaling (right).
 </p>
@@ -1264,7 +1384,7 @@ Box plot of the raw values (left) and the final data after feature filtering, no
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="co">#### Save memory image ####</span></span>
 <span id="cb26-2"><a href="#cb26-2"></a>outfiles[<span class="st">&quot;memory_image&quot;</span>] &lt;-<span class="st"> </span><span class="kw">file.path</span>(outdirs<span class="op">$</span>results, <span class="kw">paste0</span>(parameters<span class="op">$</span>filePrefix, <span class="st">&quot;memimage.Rdata&quot;</span>))</span>
 <span id="cb26-3"><a href="#cb26-3"></a><span class="kw">save.image</span>(<span class="dt">file =</span> outfiles[<span class="st">&quot;memory_image&quot;</span>])</span></code></pre></div>
-<p>The memory image can be reloaded with a single R command: load(./results/pavkovic2019_proteome_uuo_memimage.Rdata)</p>
+<p>The memory image can be reloaded with a single R command: load(./results/pavkovic2019_transcriptome_uuo_memimage.Rdata)</p>
 </div>
 <div id="output-files" class="section level2">
 <h2>Output files</h2>
@@ -1291,31 +1411,31 @@ Box plot of the raw values (left) and the final data after feature filtering, no
 <tbody>
 <tr class="odd">
 <td align="left">raw</td>
-<td align="left"><a href="./results/proteome/uuo/pavkovic2019_proteome_uuo_raw.tsv.gz">pavkovic2019_proteome_uuo_raw.tsv.gz</a></td>
+<td align="left"><a href="./results/transcriptome/uuo/pavkovic2019_transcriptome_uuo_raw.tsv.gz">pavkovic2019_transcriptome_uuo_raw.tsv.gz</a></td>
 </tr>
 <tr class="even">
 <td align="left">log2</td>
-<td align="left"><a href="./results/proteome/uuo/pavkovic2019_proteome_uuo_log2.tsv.gz">pavkovic2019_proteome_uuo_log2.tsv.gz</a></td>
+<td align="left"><a href="./results/transcriptome/uuo/pavkovic2019_transcriptome_uuo_log2.tsv.gz">pavkovic2019_transcriptome_uuo_log2.tsv.gz</a></td>
 </tr>
 <tr class="odd">
 <td align="left">filtered</td>
-<td align="left"><a href="./results/proteome/uuo/pavkovic2019_proteome_uuo_log2_filtered.tsv.gz">pavkovic2019_proteome_uuo_log2_filtered.tsv.gz</a></td>
+<td align="left"><a href="./results/transcriptome/uuo/pavkovic2019_transcriptome_uuo_log2_filtered.tsv.gz">pavkovic2019_transcriptome_uuo_log2_filtered.tsv.gz</a></td>
 </tr>
 <tr class="even">
 <td align="left">centered</td>
-<td align="left"><a href="./results/proteome/uuo/pavkovic2019_proteome_uuo_log2_median-centered.tsv.gz">pavkovic2019_proteome_uuo_log2_median-centered.tsv.gz</a></td>
+<td align="left"><a href="./results/transcriptome/uuo/pavkovic2019_transcriptome_uuo_log2_median-centered.tsv.gz">pavkovic2019_transcriptome_uuo_log2_median-centered.tsv.gz</a></td>
 </tr>
 <tr class="odd">
 <td align="left">standardized</td>
-<td align="left"><a href="./results/proteome/uuo/pavkovic2019_proteome_uuo_log2_standardized.tsv.gz">pavkovic2019_proteome_uuo_log2_standardized.tsv.gz</a></td>
+<td align="left"><a href="./results/transcriptome/uuo/pavkovic2019_transcriptome_uuo_log2_standardized.tsv.gz">pavkovic2019_transcriptome_uuo_log2_standardized.tsv.gz</a></td>
 </tr>
 <tr class="even">
 <td align="left">metadata</td>
-<td align="left"><a href="./results/proteome/uuo/pavkovic2019_proteome_uuo_metadata.tsv">pavkovic2019_proteome_uuo_metadata.tsv</a></td>
+<td align="left"><a href="./results/transcriptome/uuo/pavkovic2019_transcriptome_uuo_metadata.tsv">pavkovic2019_transcriptome_uuo_metadata.tsv</a></td>
 </tr>
 <tr class="odd">
 <td align="left">memory_image</td>
-<td align="left"><a href="./results/pavkovic2019_proteome_uuo_memimage.Rdata">pavkovic2019_proteome_uuo_memimage.Rdata</a></td>
+<td align="left"><a href="./results/pavkovic2019_transcriptome_uuo_memimage.Rdata">pavkovic2019_transcriptome_uuo_memimage.Rdata</a></td>
 </tr>
 </tbody>
 </table>

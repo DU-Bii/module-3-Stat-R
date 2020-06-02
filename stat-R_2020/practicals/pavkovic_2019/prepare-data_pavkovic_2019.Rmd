@@ -156,9 +156,9 @@ parameters <- list(
   forceDownload = FALSE)
 
 if (parameters$datatype == "transcriptome") {
-    parameters$undetectedLimit = 10
+  parameters$undetectedLimit = 10
 } else if (parameters$datatype == "proteome") {
-    parameters$undetectedLimit = 100
+  parameters$undetectedLimit = 100
 }
 
 
@@ -243,15 +243,16 @@ if (parameters$datatype == "transcriptome") {
            "/results/counts/raw_counts.csv.gz"))
 } else if  (parameters$datatype == "proteome") {
   rawCountFile <- file.path(
-  outdirs$data,
-  paste0("hbc-MouseKidneyFibrOmics-a39e55a/tables/p", 
-         parameters$dataset,
-         "/results/counts/", 
-          parameters$dataset, "_model_counts.csv"))
-
+    outdirs$data,
+    paste0("hbc-MouseKidneyFibrOmics-a39e55a/tables/p", 
+           parameters$dataset,
+           "/results/counts/", 
+           parameters$dataset, "_model_counts.csv"))
+  
 }
 rawData <- read.csv(file = rawCountFile, header = 1, row.names = NULL)
-rownames(rawData) <- make.names(rawData[, "id"], unique = TRUE)
+# names(rawData)
+rownames(rawData) <- make.names(rawData[, 1], unique = TRUE)
 # names(rawData)
 # unique(sort(as.vector(rawData[, "id"])))
 # length(unique(sort(as.vector(rawValues[, 1]))))
@@ -595,17 +596,17 @@ We can also inspect the distribution of counts per sample with the `vioplot()` f
 par(mar = c(4, 6, 5, 1))
 par(mfrow = c(1,2))
 vioplot::vioplot(rawValues, 
-        col = metadata$color,
-        horizontal = TRUE, 
-        las = 1, 
-        main = "Raw values", 
-        xlab = "raw value")
+                 col = metadata$color,
+                 horizontal = TRUE, 
+                 las = 1, 
+                 main = "Raw values", 
+                 xlab = "raw value")
 vioplot::vioplot(log2Standardized, 
-        col = metadata$color,
-        horizontal = TRUE, 
-        las = 1, 
-        main = "Filtered, normalized and standardized", 
-        xlab = "log2(counts)")
+                 col = metadata$color,
+                 horizontal = TRUE, 
+                 las = 1, 
+                 main = "Filtered, normalized and standardized", 
+                 xlab = "log2(counts)")
 par(par.ori)
 ```
 
@@ -634,9 +635,8 @@ outfiles <- vector()
 
 ## Raw counts, all the variables
 outfiles["raw"] <- file.path(outdirs$dataset, 
-                                    paste0(parameters$dataset, 
-                                           "_", parameters$datatype, 
-                                           "_raw.tsv.gz"))
+                             paste0(parameters$filePrefix, 
+                                    "raw.tsv.gz"))
 write.table(x = format(digits = 3, big.mark   = "", decimal.mark = ".", rawValues), 
             dec = ".", 
             file = gzfile(outfiles["raw"], "w"), 
@@ -644,9 +644,8 @@ write.table(x = format(digits = 3, big.mark   = "", decimal.mark = ".", rawValue
 
 ## Log2-transformed counts, all the features
 outfiles["log2"] <- file.path(outdirs$dataset, 
-                                    paste0(parameters$dataset, 
-                                           "_", parameters$datatype, 
-                                           "_log2.tsv.gz"))
+                              paste0(parameters$filePrefix, 
+                                     "log2.tsv.gz"))
 write.table(x = format(digits = 3, big.mark   = "", decimal.mark = ".", log2Values), 
             dec = ".", 
             file = gzfile(outfiles["log2"], "w"), 
@@ -654,9 +653,8 @@ write.table(x = format(digits = 3, big.mark   = "", decimal.mark = ".", log2Valu
 
 ## Filtered features only, log2-transformed values
 outfiles["filtered"] <- file.path(outdirs$dataset, 
-                                    paste0(parameters$dataset, 
-                                           "_", parameters$datatype, 
-                                           "_log2_filtered.tsv.gz"))
+                                  paste0(parameters$filePrefix, 
+                                         "log2_filtered.tsv.gz"))
 write.table(x = format(digits = 3, big.mark   = "", decimal.mark = ".", log2Filtered), 
             dec = ".", 
             file = gzfile(outfiles["filtered"], "w"), 
@@ -664,9 +662,8 @@ write.table(x = format(digits = 3, big.mark   = "", decimal.mark = ".", log2Filt
 
 ## Filtered genes only, log2-transformed and centered but not scaled data
 outfiles["centered"] <- file.path(outdirs$dataset, 
-                                    paste0(parameters$dataset, 
-                                           "_", parameters$datatype, 
-                                           "_log2_median-centered.tsv.gz"))
+                                  paste0(parameters$filePrefix, 
+                                         "log2_median-centered.tsv.gz"))
 write.table(x = format(digits = 3, big.mark   = "", decimal.mark = ".", log2MedianCentered), 
             dec = ".", 
             file = gzfile(outfiles["centered"], "w"), 
@@ -675,9 +672,8 @@ write.table(x = format(digits = 3, big.mark   = "", decimal.mark = ".", log2Medi
 
 ## Filtered genes only, log2-transformed and standardized counts
 outfiles["standardized"] <- file.path(outdirs$dataset, 
-                                    paste0(parameters$dataset, 
-                                           "_", parameters$datatype, 
-                                           "_log2_standardized.tsv.gz"))
+                                      paste0(parameters$filePrefix, 
+                                             "log2_standardized.tsv.gz"))
 write.table(x = format(digits = 3, big.mark   = "", decimal.mark = ".", log2Standardized), 
             dec = ".", 
             file = gzfile(outfiles["standardized"], "w"), 
@@ -685,9 +681,8 @@ write.table(x = format(digits = 3, big.mark   = "", decimal.mark = ".", log2Stan
 
 ## Metadata
 outfiles["metadata"] <- file.path(outdirs$dataset, 
-                                    paste0(parameters$dataset, 
-                                           "_", parameters$datatype, 
-                                           "_metadata.tsv"))
+                                  paste0(parameters$filePrefix, 
+                                         "metadata.tsv"))
 write.table(x = metadata, 
             file = outfiles["metadata"] ,
             quote = FALSE, sep = "\t")
@@ -704,10 +699,12 @@ We will now save a memory image in order to enable us to reload the data exactly
 
 ```{r memory_image}
 #### Save memory image ####
-outfiles["memory_image"] <- file.path(outdirs$results, paste0(parameters$filePrefix, "_memimage.Rdata"))
+outfiles["memory_image"] <- file.path(outdirs$results, paste0(parameters$filePrefix, "memimage.Rdata"))
 save.image(file = outfiles["memory_image"])
 
 ```
+
+The memory image can be reloaded with a single R command: load(`r outfiles["memory_image"]`)
 
 
 ## Output files
