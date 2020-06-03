@@ -75,6 +75,49 @@ editor_options:
 ---
 
 
+
+
+```{r settings, include=FALSE, echo=FALSE, eval=TRUE}
+
+options(width = 300)
+# options(encoding = 'UTF-8')
+knitr::opts_chunk$set(
+  fig.width = 7, fig.height = 5, 
+  fig.path = 'figures/pavkovic2019_',
+  fig.align = "center", 
+  size = "tiny", 
+  echo = TRUE, 
+  eval = TRUE, 
+  warning = FALSE, 
+  message = FALSE, 
+  results = TRUE, 
+  comment = "")
+
+options(scipen = 12) ## Max number of digits for non-scientific notation
+# knitr::asis_output("\\footnotesize")
+
+```
+
+
+
+```{r libraries, echo=FALSE, eval=TRUE}
+requiredLib <- c("knitr")
+for (lib in requiredLib) {
+  if (!require(lib, character.only = TRUE)) {
+    install.packages(lib, )
+  }
+  require(lib, character.only = TRUE)
+}
+
+```
+
+## Reloading the data
+
+```{r data_reload}
+source('R/01_reload_data.R')
+```
+
+
 ## ANOVA-based variable ordering (multiple subtypes)
 
 The **ANOVA** test allows to select genes whose inter-group variance is significantly higher than the so-called **residual variance**, i.e. the variance remaining after removing the inter-group variance from the todal variance.  
@@ -93,7 +136,7 @@ Some remarks about the implementation.
 
 1. In contrast with the Welch test, which was a 2-groups test, ANOVA can be used to compare multiple groups in a single analysis. For ANOVA, we will use the original sample labels (with all the ALL subtypes explicitly named), rather than the `one.vs.other` vector that we created for 2-groups analysis.
 
-2. We will run a  single-factor ANOVA, with gene expression as values, and sample labels as grouping.
+2. We will run a  single-factor ANOVA, with gene expression as values, and sample labels as groupinfeature.
 
 3. The R methods `aov()` and `anova()` take as input a data frame with the values (gene expression values) in the first column, and the groupings (sample labels) in the second one.
 
@@ -103,38 +146,91 @@ Some remarks about the implementation.
 
 
 ```{r}
-i <- 123 ## Select an arbitrary feature
 
 x <- log2Filtered
 
+
+i <- 123 ## Select an arbitrary feature
+
+
 ## Build a data frame with gene expression values in the first column, 
 ## and sample labels in the second column.
-expr <- unlist(x[i,]) ## Select the expression profile for this feature
-g.for.anova <- data.frame("expr"=g.expr, "group"=sample.labels)
+feature.expr <- unlist(x[i,]) ## Select the expression profile for this feature
+
+feature.for.anova <- data.frame("expr" = feature.expr, "group" = metadata$condition)
+
+
+kable(feature.for.anova)
 
 ## Run the aov() method to check the warnings
-g.aov.result <- aov(formula = expr ~ group, data = g.for.anova)
-print(g.aov.result)
+feature.aov.result <- aov(formula = expr ~ group, data = feature.for.anova)
+print(feature.aov.result)
 
 
 ## We thus try the indirect approach: fit a linear model and run anova on it.
-g.anova.result <- anova(lm(formula = expr ~ group, data = g.for.anova))
-print(g.anova.result)
+feature.anova.result <- anova(lm(formula = expr ~ group, data = feature.for.anova))
+print(feature.anova.result)
 
 ## Extract the p-value from the ANOVA result
-attributes(g.anova.result)
-pval <- as.numeric(unlist(g.anova.result)["Pr(>F)1"])
+# attributes(feature.anova.result)
+pval <- as.numeric(unlist(feature.anova.result)["Pr(>F)1"])
 print(pval)
 
 ## Compute the e-value from this p-value
-eval <- pval * nrow(denboer2009.expr)
+eval <- pval * nrow(x)
 print(eval)
 
 ## Summarise the result in a vector
-g.anova.summary <- data.frame("g"=g, 
-                     "name"=row.names(denboer2009.expr[g,]),
-                     "pval"=pval,
-                     "eval"=eval,
-                     "sig"=-log(eval, base=10))
-kable(g.anova.summary, caption = "Anova result for an aribtrary gene. ")
+feature.anova.summary <- data.frame("g" = i, 
+                                    "name"=row.names(x[i,]),
+                                    "pval"=pval,
+                                    "eval"=eval,
+                                    "sig"=-log(eval, base=10))
+kable(feature.anova.summary, caption = "Anova result for an aribtrary gene. ")
 ```
+
+
+
+```{r feature_anova_function}
+#' @title run ANOVA and retunr relevant statistics
+featureANOVA <- function(expr, group) {
+  feature.for.anova <- data.frame("expr" = expr, "group" = group)
+  
+  ## aov() method
+  # feature.aov.result <- aov(formula = expr ~ group, data = feature.for.anova)
+  
+  ## Alternative: fit a linear model and run anova on it.
+  feature.anova.result <- anova(lm(formula = expr ~ group, data = feature.for.anova))
+  
+  ## Extract the p-value from the ANOVA result
+  # attributes(feature.anova.result)
+
+  ## Summarise the result in a vector
+  feature.anova.summary <- c(
+    "F" = as.numeric(unlist(feature.anova.result)["F value1"]),
+    "pval" = as.numeric(unlist(feature.anova.result)["Pr(>F)1"]))
+  return(feature.anova.summary)
+} 
+
+
+## Run ANOVA on each feature
+system.time(
+  anovaResult <- data.frame(t(apply(X = x, MARGIN = 1, FUN = featureANOVA, group = metadata$condition)))
+)
+
+anovaResult$evalue <- anovaResult$pval * nrow(anovaResult)
+
+
+```
+
+
+### P-value distribution
+
+```{r pval_distrib, fig.width=7, fig.height=5, out.width="80%", fig.cap="P-value histogram of the feature-wise ANOVA. "}
+#### P-value hisogram ####
+hist(anovaResult$pval, breaks = 20)
+
+```
+
+
+

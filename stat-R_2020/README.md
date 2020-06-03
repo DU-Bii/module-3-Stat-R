@@ -148,7 +148,18 @@ Contents: [clustering/](clustering/)
 | R scripts (click on script, then "Raw") | R scripts |  | [[github](https://github.com/DU-Bii/module-3-Stat-R/tree/master/stat-R_2020/practicals/pavkovic_2019/R)]  |
 | Report template with nice yaml header  | Rmd |  | [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/templates/YOUR-NAME_REPORT-TOPICS.Rmd)] [[html](templates/YOUR-NAME_REPORT-TOPICS.html)] |
 
+Topics for 2020-06-03
 
+
+- Descriptive statistics: commented solutions of yesterday's exercise (15')
+
+    - Split in rooms depending on level of completion of the exercise
+
+- PCA: slides (15')
+
+- Embedding your script in an R markdown report: demo (20')
+
+- Practicals : clustering (20')
 
 ### Enrichment analysis
 
