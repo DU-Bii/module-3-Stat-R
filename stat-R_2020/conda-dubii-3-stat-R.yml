@@ -13,11 +13,7 @@ dependencies:
   ## RCRAN packages
   ## Note: whenever possible, Gildas recommends to use the conda-forge 
   ## rather than the r channel in Anaconda Cloud (https://anaconda.org/)
-<<<<<<< HEAD
   - conda-forge::r-base  >=3.6
-=======
-  - conda-forge::r-base  >=3.5, <4.0
->>>>>>> 2014efa1127c3f060466bc5cf2a45fa22fbe5f1c
   - conda-forge::r-knitr        # For R markdown
   - conda-forge::r-kableextra   # To export nice-looking tables in the R markdown reports
   - conda-forge::r-formattable  # nice formating of tables in reports
@@ -33,15 +29,16 @@ dependencies:
   - conda-forge::r-caret        # To supervised classification
   - conda-forge::r-cowplot      # Add-on to ggplot2 for enhanced design
   - conda-forge::r-corrplot     # Graphical display of a correlation matrix, confidence interval
-#  - conda-forge::r-momr         # Analysis of metagenomic data
+#  - conda-forge::r-momr        # Analysis of metagenomic data
   - conda-forge::r-gridExtra    # Graphical display of several plots
   - conda-forge::r-ade4         # PCoA
   - conda-forge::r-vegan        # Distances calculations
   - conda-forge::r-ggpubr       # Stats on the graphs
-#  - conda-forge::r-clues        # For clustering
+#  - conda-forge::r-clues       # For clustering
   - conda-forge::r-gprofiler    # functional enrichment 
   - conda-forge::r-vioplot      # Violin plots
-  - conda-forge::r-sm            # undeclared dependency of vioplot
+  - conda-forge::r-sm           # undeclared dependency of vioplot
+  - conda-forge::r-gprofiler2   # for enrichment analysis
   - r::r-aricode                # To compute adjusted Rand Index for cluster comparison
 
 
