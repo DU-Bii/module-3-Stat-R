@@ -68,6 +68,8 @@ for (pkg in packages) {
   }
 }
 
+library(gprofiler2)
+
 #if (!requireNamespace("BiocManager", quietly = TRUE))
 #    install.packages("BiocManager")
 
@@ -260,7 +262,7 @@ if (file.exists(localt4Data) & !parameters$forceDownload) {
 }
 ```
 
-# DEG in dataframe
+# DEG in vector
 
 ```{r deg, include=FALSE, echo=FALSE, eval=TRUE}
 t4degFile <- file.path(
@@ -274,7 +276,7 @@ t4degValues <- scan(file = t4degFile,
 # gProfiler in R
 
 ```{r gprofiler, include=FALSE, echo=FALSE, eval=TRUE}
-library(gprofiler2)
+
 
 query <- t4degValues
 
@@ -293,7 +295,13 @@ sources = NULL,
 as_short_link = FALSE
 )
 
-#gostplot(gostres, capped = TRUE, interactive = TRUE)
+```
+
+# Plot the results
+
+```{r gprofplot, include=FALSE, echo=FALSE, eval=TRUE}
+
+gostplot(gostres, capped = FALSE, interactive = TRUE)
 
 ```
 
@@ -400,7 +408,7 @@ t4degValues <- read.csv(file = t4degFile, header = 1, row.names = 1)
 
 # Analysis
 
-```{r analysis, include=FALSE, echo=FALSE, eval=TRUE}
+```{r gsea_analysis, include=FALSE, echo=FALSE, eval=TRUE}
 
 m_t2g = m_df %>% dplyr::select(gs_name, gene_symbol) %>% as.data.frame()
 #enricher(gene = gene_symbols_vector, TERM2GENE = m_t2g, ...)
