@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Jacques van Helden and Denis Puthier" />
+
+<meta name="date" content="2020-06-03" />
+
+<title>Analysis of omics data from Pavkovic 2019 - Feature selection</title>
+
+<script src="pavkovic2019_feature_selection_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="pavkovic2019_feature_selection_files/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="pavkovic2019_feature_selection_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="pavkovic2019_feature_selection_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="pavkovic2019_feature_selection_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="pavkovic2019_feature_selection_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="pavkovic2019_feature_selection_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="pavkovic2019_feature_selection_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="pavkovic2019_feature_selection_files/navigation-1.1/tabsets.js"></script>
+<script src="pavkovic2019_feature_selection_files/navigation-1.1/codefolding.js"></script>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  { color: #cccccc; background-color: #303030; }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ffcfaf; } /* Alert */
+code span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+code span.at { } /* Attribute */
+code span.bn { color: #dca3a3; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #f0dfaf; } /* ControlFlow */
+code span.ch { color: #dca3a3; } /* Char */
+code span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+code span.co { color: #7f9f7f; } /* Comment */
+code span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+code span.do { color: #7f9f7f; } /* Documentation */
+code span.dt { color: #dfdfbf; } /* DataType */
+code span.dv { color: #dcdccc; } /* DecVal */
+code span.er { color: #c3bf9f; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #c0bed1; } /* Float */
+code span.fu { color: #efef8f; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+code span.kw { color: #f0dfaf; } /* Keyword */
+code span.op { color: #f0efd0; } /* Operator */
+code span.ot { color: #efef8f; } /* Other */
+code span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+code span.sc { color: #dca3a3; } /* SpecialChar */
+code span.ss { color: #cc9393; } /* SpecialString */
+code span.st { color: #cc9393; } /* String */
+code span.va { } /* Variable */
+code span.vs { color: #cc9393; } /* VerbatimString */
+code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
+
+.sourceCode .row {
+  width: 100%;
+}
+.sourceCode {
+  overflow-x: auto;
+}
+.code-folding-btn {
+  margin-right: -30px;
+}
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Analysis of omics data from Pavkovic 2019 - Feature selection</h1>
+<h3 class="subtitle">DUBii 2020</h3>
+<h4 class="author">Jacques van Helden and Denis Puthier</h4>
+<h4 class="date">2020-06-03</h4>
+
+</div>
+
+
+<div id="reloading-the-data" class="section level2">
+<h2>Reloading the data</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">source</span>(<span class="st">&#39;R/01_reload_data.R&#39;</span>)</a></code></pre></div>
+<pre><code>  datatype dataset epsilon forceDownload undetectedLimit                filePrefix
+1 proteome      fa     0.1         FALSE             100 pavkovic2019_proteome_fa_</code></pre>
+<p><img src="figures/pavkovic2019_data_reload-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="anova-based-variable-ordering-multiple-subtypes" class="section level2">
+<h2>ANOVA-based variable ordering (multiple subtypes)</h2>
+<p>The <strong>ANOVA</strong> test allows to select genes whose inter-group variance is significantly higher than the so-called <strong>residual variance</strong>, i.e. the variance remaining after removing the inter-group variance from the todal variance.</p>
+<p>In the context of detection of differentially expressed genes, ANOVA can be thought of as generalization of the Welch test. Indeed, Welch and Student tests were conceived to test the equality of the mean between two groups (for example one subtype of interest and all the other subtypes), whereas ANOVA simultaneously tests the equality of the mean for multiple groups.</p>
+<p><span class="math display">\[H_0= \mu_1 = \mu_2= \cdots = \mu_g\]</span></p>
+<p>We could thus use ANOVA to establish a general ranking criterion that would select the genes showing higest differences between ALL subtypes, without specifying a priori which particular subtypes have to be different.</p>
+<p>In a first time, we will apply the ANOVA test to one arbitrarily selected gene. We will then see how to run this test on each row of the expression matrix.</p>
+<p>Some remarks about the implementation.</p>
+<ol style="list-style-type: decimal">
+<li><p>In contrast with the Welch test, which was a 2-groups test, ANOVA can be used to compare multiple groups in a single analysis. For ANOVA, we will use the original sample labels (with all the ALL subtypes explicitly named), rather than the <code>one.vs.other</code> vector that we created for 2-groups analysis.</p></li>
+<li><p>We will run a single-factor ANOVA, with gene expression as values, and sample labels as groupinfeature.</p></li>
+<li><p>The R methods <code>aov()</code> and <code>anova()</code> take as input a data frame with the values (gene expression values) in the first column, and the groupings (sample labels) in the second one.</p></li>
+<li><p><strong>R</strong> proposes two methods for the ANOVA test. The <code>aov()</code> function automatically fits a linear model and runs the anova test. However it is conceived for balanced groups (all groups should have smiliar effectives), which is not our case (some of the ALL subtypes have very few samples). With our data, it returns a warning <em>“Estimated effects must be unbalanced”</em>. Hereafter we will run both approaches to illustrate their implementation., but the second one (<code>anova()</code>) is the most flexible.</p></li>
+<li><p>Even though <code>anova()</code> can handle unbalanced groups, we should keep in mind that the power of the test depends on the fact that we dispose of a sufficient number of samples per group. It might thus be wise to restrict the analysis to the groups containing a minimum number of samples (for example at least 8).</p></li>
+</ol>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">x &lt;-<span class="st"> </span>log2Filtered</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4">i &lt;-<span class="st"> </span><span class="dv">123</span> <span class="co">## Select an arbitrary feature</span></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb3-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="co">## Build a data frame with gene expression values in the first column, </span></a>
+<a class="sourceLine" id="cb3-8" data-line-number="8"><span class="co">## and sample labels in the second column.</span></a>
+<a class="sourceLine" id="cb3-9" data-line-number="9">feature.expr &lt;-<span class="st"> </span><span class="kw">unlist</span>(x[i,]) <span class="co">## Select the expression profile for this feature</span></a>
+<a class="sourceLine" id="cb3-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb3-11" data-line-number="11">feature.for.anova &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="st">&quot;expr&quot;</span> =<span class="st"> </span>feature.expr, <span class="st">&quot;group&quot;</span> =<span class="st"> </span>metadata<span class="op">$</span>condition)</a>
+<a class="sourceLine" id="cb3-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb3-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb3-14" data-line-number="14"><span class="kw">kable</span>(feature.for.anova)</a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">expr</th>
+<th align="left">group</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>normal_1</td>
+<td align="right">8.713686</td>
+<td align="left">normal</td>
+</tr>
+<tr class="even">
+<td>normal_2</td>
+<td align="right">9.181488</td>
+<td align="left">normal</td>
+</tr>
+<tr class="odd">
+<td>day1_1</td>
+<td align="right">8.780842</td>
+<td align="left">day1</td>
+</tr>
+<tr class="even">
+<td>day1_2</td>
+<td align="right">8.763192</td>
+<td align="left">day1</td>
+</tr>
+<tr class="odd">
+<td>day2_1</td>
+<td align="right">8.904764</td>
+<td align="left">day2</td>
+</tr>
+<tr class="even">
+<td>day2_2</td>
+<td align="right">9.229146</td>
+<td align="left">day2</td>
+</tr>
+<tr class="odd">
+<td>day7_1</td>
+<td align="right">8.297251</td>
+<td align="left">day7</td>
+</tr>
+<tr class="even">
+<td>day7_2</td>
+<td align="right">9.344917</td>
+<td align="left">day7</td>
+</tr>
+<tr class="odd">
+<td>day14_1</td>
+<td align="right">7.835267</td>
+<td align="left">day14</td>
+</tr>
+<tr class="even">
+<td>day14_2</td>
+<td align="right">8.631177</td>
+<td align="left">day14</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co">## Run the aov() method to check the warnings</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">feature.aov.result &lt;-<span class="st"> </span><span class="kw">aov</span>(<span class="dt">formula =</span> expr <span class="op">~</span><span class="st"> </span>group, <span class="dt">data =</span> feature.for.anova)</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="kw">print</span>(feature.aov.result)</a></code></pre></div>
+<pre><code>Call:
+   aov(formula = expr ~ group, data = feature.for.anova)
+
+Terms:
+                    group Residuals
+Sum of Squares  0.8208933 1.0277254
+Deg. of Freedom         4         5
+
+Residual standard error: 0.4533708
+Estimated effects may be unbalanced</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="co">## We thus try the indirect approach: fit a linear model and run anova on it.</span></a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">feature.anova.result &lt;-<span class="st"> </span><span class="kw">anova</span>(<span class="kw">lm</span>(<span class="dt">formula =</span> expr <span class="op">~</span><span class="st"> </span>group, <span class="dt">data =</span> feature.for.anova))</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="kw">print</span>(feature.anova.result)</a></code></pre></div>
+<pre><code>Analysis of Variance Table
+
+Response: expr
+          Df  Sum Sq Mean Sq F value Pr(&gt;F)
+group      4 0.82089 0.20522  0.9984 0.4863
+Residuals  5 1.02773 0.20555               </code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="co">## Extract the p-value from the ANOVA result</span></a>
+<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="co"># attributes(feature.anova.result)</span></a>
+<a class="sourceLine" id="cb8-3" data-line-number="3">pval &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">unlist</span>(feature.anova.result)[<span class="st">&quot;Pr(&gt;F)1&quot;</span>])</a>
+<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="kw">print</span>(pval)</a></code></pre></div>
+<pre><code>[1] 0.4862801</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="co">## Compute the e-value from this p-value</span></a>
+<a class="sourceLine" id="cb10-2" data-line-number="2">eval &lt;-<span class="st"> </span>pval <span class="op">*</span><span class="st"> </span><span class="kw">nrow</span>(x)</a>
+<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="kw">print</span>(eval)</a></code></pre></div>
+<pre><code>[1] 3911.637</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="co">## Summarise the result in a vector</span></a>
+<a class="sourceLine" id="cb12-2" data-line-number="2">feature.anova.summary &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="st">&quot;g&quot;</span> =<span class="st"> </span>i, </a>
+<a class="sourceLine" id="cb12-3" data-line-number="3">                                    <span class="st">&quot;name&quot;</span>=<span class="kw">row.names</span>(x[i,]),</a>
+<a class="sourceLine" id="cb12-4" data-line-number="4">                                    <span class="st">&quot;pval&quot;</span>=pval,</a>
+<a class="sourceLine" id="cb12-5" data-line-number="5">                                    <span class="st">&quot;eval&quot;</span>=eval,</a>
+<a class="sourceLine" id="cb12-6" data-line-number="6">                                    <span class="st">&quot;sig&quot;</span>=<span class="op">-</span><span class="kw">log</span>(eval, <span class="dt">base=</span><span class="dv">10</span>))</a>
+<a class="sourceLine" id="cb12-7" data-line-number="7"><span class="kw">kable</span>(feature.anova.summary, <span class="dt">caption =</span> <span class="st">&quot;Anova result for an aribtrary gene. &quot;</span>)</a></code></pre></div>
+<table>
+<caption>Anova result for an aribtrary gene.</caption>
+<thead>
+<tr class="header">
+<th align="right">g</th>
+<th align="left">name</th>
+<th align="right">pval</th>
+<th align="right">eval</th>
+<th align="right">sig</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">123</td>
+<td align="left">ENSMUSG00000034653</td>
+<td align="right">0.4862801</td>
+<td align="right">3911.637</td>
+<td align="right">-3.592359</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="co">#&#39; @title run ANOVA and retunr relevant statistics</span></a>
+<a class="sourceLine" id="cb13-2" data-line-number="2">featureANOVA &lt;-<span class="st"> </span><span class="cf">function</span>(expr, group) {</a>
+<a class="sourceLine" id="cb13-3" data-line-number="3">  feature.for.anova &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="st">&quot;expr&quot;</span> =<span class="st"> </span>expr, <span class="st">&quot;group&quot;</span> =<span class="st"> </span>group)</a>
+<a class="sourceLine" id="cb13-4" data-line-number="4">  </a>
+<a class="sourceLine" id="cb13-5" data-line-number="5">  <span class="co">## aov() method</span></a>
+<a class="sourceLine" id="cb13-6" data-line-number="6">  <span class="co"># feature.aov.result &lt;- aov(formula = expr ~ group, data = feature.for.anova)</span></a>
+<a class="sourceLine" id="cb13-7" data-line-number="7">  </a>
+<a class="sourceLine" id="cb13-8" data-line-number="8">  <span class="co">## Alternative: fit a linear model and run anova on it.</span></a>
+<a class="sourceLine" id="cb13-9" data-line-number="9">  feature.anova.result &lt;-<span class="st"> </span><span class="kw">anova</span>(<span class="kw">lm</span>(<span class="dt">formula =</span> expr <span class="op">~</span><span class="st"> </span>group, <span class="dt">data =</span> feature.for.anova))</a>
+<a class="sourceLine" id="cb13-10" data-line-number="10">  </a>
+<a class="sourceLine" id="cb13-11" data-line-number="11">  <span class="co">## Extract the p-value from the ANOVA result</span></a>
+<a class="sourceLine" id="cb13-12" data-line-number="12">  <span class="co"># attributes(feature.anova.result)</span></a>
+<a class="sourceLine" id="cb13-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb13-14" data-line-number="14">  <span class="co">## Summarise the result in a vector</span></a>
+<a class="sourceLine" id="cb13-15" data-line-number="15">  feature.anova.summary &lt;-<span class="st"> </span><span class="kw">c</span>(</a>
+<a class="sourceLine" id="cb13-16" data-line-number="16">    <span class="st">&quot;F&quot;</span> =<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">unlist</span>(feature.anova.result)[<span class="st">&quot;F value1&quot;</span>]),</a>
+<a class="sourceLine" id="cb13-17" data-line-number="17">    <span class="st">&quot;pval&quot;</span> =<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">unlist</span>(feature.anova.result)[<span class="st">&quot;Pr(&gt;F)1&quot;</span>]))</a>
+<a class="sourceLine" id="cb13-18" data-line-number="18">  <span class="kw">return</span>(feature.anova.summary)</a>
+<a class="sourceLine" id="cb13-19" data-line-number="19">} </a>
+<a class="sourceLine" id="cb13-20" data-line-number="20"></a>
+<a class="sourceLine" id="cb13-21" data-line-number="21"></a>
+<a class="sourceLine" id="cb13-22" data-line-number="22"><span class="co">## Run ANOVA on each feature</span></a>
+<a class="sourceLine" id="cb13-23" data-line-number="23"><span class="kw">system.time</span>(</a>
+<a class="sourceLine" id="cb13-24" data-line-number="24">  anovaResult &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">t</span>(<span class="kw">apply</span>(<span class="dt">X =</span> x, <span class="dt">MARGIN =</span> <span class="dv">1</span>, <span class="dt">FUN =</span> featureANOVA, <span class="dt">group =</span> metadata<span class="op">$</span>condition)))</a>
+<a class="sourceLine" id="cb13-25" data-line-number="25">)</a></code></pre></div>
+<pre><code>   user  system elapsed 
+ 19.319   0.095  19.443 </code></pre>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1">anovaResult<span class="op">$</span>evalue &lt;-<span class="st"> </span>anovaResult<span class="op">$</span>pval <span class="op">*</span><span class="st"> </span><span class="kw">nrow</span>(anovaResult)</a></code></pre></div>
+<div id="p-value-distribution" class="section level3">
+<h3>P-value distribution</h3>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="co">#### P-value hisogram ####</span></a>
+<a class="sourceLine" id="cb16-2" data-line-number="2"><span class="kw">hist</span>(anovaResult<span class="op">$</span>pval, <span class="dt">breaks =</span> <span class="dv">20</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/pavkovic2019_pval_distrib-1.png" alt="P-value histogram of the feature-wise ANOVA. " width="80%" />
+<p class="caption">
+P-value histogram of the feature-wise ANOVA.
+</p>
+</div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
