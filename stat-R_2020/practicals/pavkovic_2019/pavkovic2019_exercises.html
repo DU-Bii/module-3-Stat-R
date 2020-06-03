@@ -295,64 +295,93 @@ div.tocify {
 </div>
 <div id="exercises" class="section level2">
 <h2>Exercises</h2>
-<ol style="list-style-type: decimal">
-<li><p>Choose one of the datasets and load the memory image</p></li>
-<li><p>Compute sample-wise and feature-wise descriptive statistics</p>
+<div id="data-loading-1" class="section level3">
+<h3>1. Data loading</h3>
+<p>Choose one of the datasets and load the memory image</p>
+</div>
+<div id="descriptive-statistics" class="section level3">
+<h3>2. Descriptive statistics</h3>
+<p>Compute sample-wise and feature-wise descriptive statistics</p>
 <ul>
-<li><p>mean,</p></li>
-<li><p>median,</p></li>
-<li><p>sd,</p></li>
-<li><p>var,</p></li>
-<li><p>IQR,</p></li>
-<li><p>some relevant percentiles (0, 05, 25, 50 , 75, 95, 100)</p>
-<p>Use different graphical representations to compare the values and get familiar with your data.</p></li>
+<li>mean,</li>
+<li>median,</li>
+<li>sd,</li>
+<li>var,</li>
+<li>IQR,</li>
+<li>some relevant percentiles (0, 05, 25, 50 , 75, 95, 100)</li>
 </ul>
-<p>For example :</p>
+<p>Use different graphical representations to compare the values and get familiar with your data. For example :</p>
 <ul>
 <li>histogram of all the values</li>
 <li>boxplot of the values per sample</li>
 <li>feature means versus medians</li>
 <li>feature standard deviation versus IQR</li>
 <li>mean versus variance plot</li>
-</ul></li>
-<li><p>Compute the mean value per condition (mean between the replicates)</p>
-<p>Draw a dot plot to compare the values between each time point and the control.</p></li>
-<li><p>Select the 500 top features according to two different criteria</p>
+</ul>
+<p>Solution by the teachers: [<a href="https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/pavkovic_2019/R/02_descriptive_stats.R">R</a>]</p>
+</div>
+<div id="summary-per-condition" class="section level3">
+<h3>3. Summary per condition</h3>
+<ul>
+<li>Compute the mean value per condition (mean between the replicates)</li>
+<li>Draw a dot plot to compare the values between each time point and the control.</li>
+</ul>
+</div>
+<div id="feature-selection" class="section level3">
+<h3>4. Feature selection</h3>
+<p>Select the 500 top features according to two different criteria</p>
 <ol style="list-style-type: lower-alpha">
 <li>highest variance</li>
 <li>differential analysis (will be provided by the teachers)</li>
-</ol></li>
-<li><p>Compute different matrices indicating the relations between samples (columns) of the log2-transformed values</p>
+</ol>
+</div>
+<div id="comparison-metrics" class="section level3">
+<h3>5. Comparison metrics</h3>
+<p>Compute different metrics indicating the relations between samples (columns) of the log2-transformed values</p>
 <ul>
-<li>covariance,</li>
-<li>Pearson correlation</li>
-<li>Spearman correlation</li>
+<li>covariance</li>
+<li>Pearson correlation + derived distance matrix</li>
+<li>Spearman correlation + derived distance matrix</li>
 <li>Euclidian distance</li>
 </ul>
-<p>Compute these on the commplete dataset and on the 500 matrix selections</p></li>
-<li><p>Use the hclust() method on the selected features</p>
+<p>Compute these on the commplete dataset and on the 500 matrix selections</p>
+<p>Draw graphical representations of the result with <code>corrplot()</code>.</p>
+<p>Comment the results</p>
+<ul>
+<li>differences between metrics</li>
+<li>differences between results with all the features and selected features</li>
+</ul>
+</div>
+<div id="clustering" class="section level3">
+<h3>6. Clustering</h3>
+<ul>
+<li><p>Run hierarchical clustering with <code>hclust()</code> to extract clusters from the dataset with selected variables.</p>
 <ul>
 <li>with different dissimlarity metrics (Euclidian, Pearson, Spearman)</li>
 <li>with different agglomeration rules (single, average, complete, ward)</li>
-</ul>
-<p>Plot the feature tree and compare the results obtained with the different choices.</p></li>
-<li><p>Draw heatmaps of the feature profiles (do not cluster the samples)</p></li>
-<li><p>Run principal component analysis</p>
-<ul>
-<li><p>Use the visualisation tools from Magali Berland’s course</p></li>
-<li><p>Generate PC plots with</p>
-<pre><code>- the whole dataset
-- the subset of features declared positive in the differential analysis (provided by the teachers)</code></pre></li>
-<li><p>Plot the sample positions on the 6 first components. Are they consistent with their time and status?</p></li>
 </ul></li>
-<li><p>Functionnal enrichment analysis</p>
+<li><p>Plot the feature trees and compare the results obtained with the different choices.</p></li>
+<li><p>Plot heatmpas with the different feature trees obtained before, and compare the results. Inactivate the individual clustering (default in the heatmap).</p></li>
+</ul>
+</div>
+<div id="principal-component-analysis-pca" class="section level3">
+<h3>8. Principal Component Analysis (PCA)</h3>
+<p>We provide hereby</p>
+<ul>
+<li><p>An R script with the principal component analysis of the expression set: [<a href="https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/pavkovic_2019/R/04_PCA.R">04_PCA.R</a>]</p></li>
+<li><p>An R markdown model of scientific report: [<a href="https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/templates/Rmarkdown_report_template.Rmd">Rmarkdown_report_template.Rmd</a>]</p></li>
+</ul>
+<p>Write a short report that will integrate some pieces of chunks from the R script in the R markdown notebook, add your interpretation of the results, and compile it as a self-contained HTML file.</p>
+</div>
+<div id="functionnal-enrichment-analysis" class="section level3">
+<h3>9. Functionnal enrichment analysis</h3>
 <ul>
 <li><p>analyse the features declared positive (provided by the teachers) to the gProfiler function profiling web tool (<a href="https://biit.cs.ut.ee/gprofiler/gost" class="uri">https://biit.cs.ut.ee/gprofiler/gost</a>)</p></li>
 <li><p>write a piece of R code that runs the same anlaysis with the <code>gProfileR</code> package</p></li>
 <li><p>analyse (with either R or the Web site) the different gene groups discovered by the hclust approach, and evaluate if the results are more relevant when you submit all the differentially expressed features at once, or when you submit them cluster per cluster</p></li>
-</ul></li>
-</ol>
+</ul>
 <hr />
+</div>
 </div>
 
 

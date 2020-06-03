@@ -118,75 +118,94 @@ Alternatively you can immediately write the code inside a R markdown document, a
 
 ## Exercises
 
-1. Choose one of the datasets and load the memory image
+### 1. Data loading
+
+Choose one of the datasets and load the memory image
 
 
-2. Compute sample-wise and feature-wise descriptive statistics 
+### 2. Descriptive statistics
 
-    - mean, 
-    - median, 
-    - sd, 
-    - var,
-    - IQR, 
-    - some relevant percentiles (0, 05, 25, 50 , 75, 95, 100)
+Compute sample-wise and feature-wise descriptive statistics 
 
-      Use different graphical representations to compare the values and get familiar with your data. 
+- mean, 
+- median, 
+- sd, 
+- var,
+- IQR, 
+- some relevant percentiles (0, 05, 25, 50 , 75, 95, 100)
 
-    For example : 
+Use different graphical representations to compare the values and get familiar with your data.  For example : 
     
-    - histogram of all the values
-    - boxplot of the values per sample
-    - feature means versus medians
-    - feature standard deviation versus IQR
-    - mean versus variance plot
+- histogram of all the values
+- boxplot of the values per sample
+- feature means versus medians
+- feature standard deviation versus IQR
+- mean versus variance plot
+
  
+Solution by the teachers: [[R](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/pavkovic_2019/R/02_descriptive_stats.R)]
 
-3. Compute the mean value per condition (mean between the replicates)
+### 3. Summary per condition
 
-    Draw a dot plot to compare the values between each time point and the control.   
+- Compute the mean value per condition (mean between the replicates)
+- Draw a dot plot to compare the values between each time point and the control.   
 
-4. Select the 500 top features according to two different criteria
+### 4. Feature selection
 
-      a. highest variance
-      b. differential analysis (will be provided by the teachers)
 
-5. Compute different matrices indicating the relations between samples (columns) of the log2-transformed values
+Select the 500 top features according to two different criteria
 
-    - covariance, 
-    - Pearson correlation
-    - Spearman correlation 
-    - Euclidian distance
+a. highest variance
+b. differential analysis (will be provided by the teachers)
 
-    Compute these on the commplete dataset and on the 500 matrix selections
+### 5. Comparison metrics
 
-6. Use the hclust() method on the selected features 
+Compute different metrics indicating the relations between samples (columns) of the log2-transformed values
+
+- covariance
+- Pearson correlation + derived distance matrix
+- Spearman correlation  + derived distance matrix
+- Euclidian distance
+
+Compute these on the commplete dataset and on the 500 matrix selections
+
+Draw graphical representations of the result with `corrplot()`.
+
+Comment the results
+
+- differences between metrics
+- differences between results with all the features and selected features
+
+### 6. Clustering
+
+- Run hierarchical clustering with `hclust()` to extract clusters from the dataset with selected variables. 
 
     - with different dissimlarity metrics (Euclidian, Pearson, Spearman)
     - with different agglomeration rules (single, average, complete, ward)
-    
-    Plot the feature tree and compare the results obtained with the different choices. 
+     
+- Plot the feature trees and compare the results obtained with the different choices. 
+- Plot heatmpas with the different feature trees obtained before, and compare the results. Inactivate the individual clustering (default in the heatmap). 
 
-7. Draw heatmaps of the feature profiles (do not cluster the samples)
-
-8. Run principal component analysis 
-
-    - Use the visualisation tools from Magali Berland's course
-
-    - Generate PC plots with 
-
-          - the whole dataset
-          - the subset of features declared positive in the differential analysis (provided by the teachers)
-    
-    - Plot the sample positions on the 6 first components. Are they consistent with their time and status?
+### 8. Principal Component Analysis (PCA)
 
 
-9. Functionnal enrichment analysis
+We provide hereby 
 
-    - analyse the features declared positive (provided by the teachers) to the gProfiler function profiling web tool (<https://biit.cs.ut.ee/gprofiler/gost>)
-    
-    - write a piece of R code that runs the same anlaysis with the `gProfileR` package
+- An R script with the principal component analysis of the expression set: [[04_PCA.R](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/pavkovic_2019/R/04_PCA.R)]
 
-    - analyse (with either R or the Web site) the different gene groups discovered by the hclust approach, and evaluate if the results are more relevant when you submit all the differentially expressed features at once, or when you submit them cluster per cluster
+- An R markdown model of scientific report: [[Rmarkdown_report_template.Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/templates/Rmarkdown_report_template.Rmd)]
+
+Write a short report that will integrate some pieces of chunks from the R script in the R markdown notebook, add your interpretation of the results, and compile it as a self-contained HTML file. 
+
+
+
+### 9. Functionnal enrichment analysis
+
+- analyse the features declared positive (provided by the teachers) to the gProfiler function profiling web tool (<https://biit.cs.ut.ee/gprofiler/gost>)
+
+- write a piece of R code that runs the same anlaysis with the `gProfileR` package
+
+- analyse (with either R or the Web site) the different gene groups discovered by the hclust approach, and evaluate if the results are more relevant when you submit all the differentially expressed features at once, or when you submit them cluster per cluster
     
 
 
