@@ -1,41 +1,72 @@
-#### Analyse the covariance, correlation and PCA ####
+#### Principal Component Analysis ####
 
 ## This script assumes that the script 01_reload_data.R has ben run to load the data from Pavkovic 2019
 
-# data.folder <- "./data/hbc-MouseKidneyFibrOmics-a39e55a/tables/puuo/results/counts"
-# uuo_prot.expr.file <- file.path(data.folder, "uuo_model_counts.csv")
-# uuo_prot.expr <- read.csv(file = uuo_prot.expr.file, header = TRUE)
-# uuo_prot.expr.transposed <- t(uuo_prot.expr)
+## Load libraries
+library("FactoMineR")
+library("factoextra")
+library("corrplot")
 
+## Check the parameters (should include the data type and dataset)
+print(as.data.frame(parameters))
 
 ## Choose the non-normalised filtered log2 data to play with
 x <- log2Filtered 
 dim(x) # Check the dimensions
 colnames(x) ## Check the sample names
 head(x)
-View(x)
 
-#### Compute the different between-sample (dis)similarity metrics  ####
-sampleDist <- dist(t(x), method = "euclidian")
-print(sampleDist)
-heatmap(as.matrix(sampleDist))
+#### Compute the components ####
+## Beware: the individuals should come as row --> we have to transpose the expression matrix
+res.pca <- PCA(t(x), scale.unit = FALSE, ncp = ncol(x), graph = FALSE)
 
-sampleCov <- cov(x)
-dim(sampleCov) ## Check the dimensions
+## Check the content of the resulting object
+names(res.pca)
 
-## Classical Pearson's correlation correlation between each pair of sample
-samplePearsonCor <- cor(x, method = "pearson")
-print(samplePearsonCor)
+## Eigen values
+res.pca$eig
 
-sampleSpearmanCor <- cor(x, method = "spearman")
-print(sampleSpearmanCor)
+## Variables versus components
+head(res.pca$var$coord) ## Coordinates
+head(res.pca$var$cor) ## Correlation
+head(res.pca$var$cos2) ## Cos2 (squared correlation)
+head(res.pca$var$contrib) ## Contribution of each variable to each component (loading ?)
 
-dim(sampleSpearmanCor)
+## Cos2 is just the square of the correlation
+head(res.pca$var$cos2) - head(res.pca$var$cor)^2
+
+## The sum of squared correlations per variable must be 1
+head(apply(res.pca$var$cos2, 1, sum))
 
 
-#### PCA ####
-library("FactoMineR")
-library("factoextra")
+## Individuals versus components
+res.pca$ind$coord ## Coordinates
+res.pca$ind$cos2 ## squared correlation
+res.pca$ind$contrib ## Contribution of each individual to each component (loading ?)
+res.pca$ind$dist  ## ?
 
-PCA(x, scale.unit = TRUE, ncp = 6, graph = TRUE)
+## The sum of cos2 per individual must be 1
+apply(res.pca$ind$cos2, 1, sum)
 
+
+#### Plot eigen values ####
+fviz_eig(res.pca, addlabels = TRUE, ylim = c(0, 50), main = paste(parameters$datatype, parameters$dataset))
+
+#### Plot projections of features on components 1 and 2 ####
+fviz_pca_var(res.pca, col.var = "black")
+
+
+#### Plot  projections of individuals on components 1 and 2 ####
+fviz_pca_ind(res.pca, col.var = "black")
+
+#### Correlation plot ####
+corrplot(res.pca$ind$cos2, is.corr=FALSE)
+
+## Question: do you see a relationship between the components and the day ?
+
+#### Plot individuals with cos2-proportional gradient ####
+fviz_pca_ind(res.pca, 
+             col.ind = "cos2",
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"), ## Color gradient
+             repel = TRUE # Avoid overlap between labels
+)
