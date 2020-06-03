@@ -55,6 +55,8 @@ output:
 font-import: http://fonts.googleapis.com/css?family=Risque
 font-family: Garamond
 transition: linear
+editor_options: 
+  chunk_output_type: console
 ---
 
 
@@ -78,9 +80,12 @@ knitr::opts_chunk$set(
   fig.path = 'images/enrichment_',
   fig.align = "center", 
   size = "tiny", 
-  echo = TRUE, eval = TRUE, 
-  warning = FALSE, message = FALSE, 
-  results = TRUE, comment = "")
+  echo = TRUE, 
+  eval = TRUE, 
+  warning = FALSE, 
+  message = FALSE, 
+  results = TRUE, 
+  comment = "")
 
 options(scipen = 12) ## Max number of digits for non-scientific notation
 ```
@@ -183,7 +188,10 @@ VennDiagram::venn.diagram(
     - interpret the resuls
 - What about a negative control ?
 
-![gProfiler site](images/gProfiler_site.png)
+```{r out.width="50%", echo=FALSE}
+include_graphics("images/gProfiler_site.png")
+```
+
 
 # Practical - DEG
 
@@ -203,19 +211,40 @@ VennDiagram::venn.diagram(
 
 - t0:
 
-![gProfiler t0](images/gProfiler_results_t0.png)
+```{r out.width="80%", echo=FALSE}
+include_graphics("images/gProfiler_results_t0.png")
+
+```
+
+
+# Practical - Results
 
 - t4:
 
-![gProfiler t0](images/gProfiler_results_t4.png)
+```{r out.width="80%", echo=FALSE}
+include_graphics("images/gProfiler_results_t4.png")
+
+```
+
+
 
 # Practical - detailled results t0
 
-![gProfiler t0](images/gProfiler_detailled_results_t0_all.png)
+```{r out.width="50%", echo=FALSE}
+include_graphics("images/gProfiler_detailled_results_t0_all.png")
+
+```
+
 
 # Practical - detailled results t4
 
-![gProfiler t0](images/gProfiler_detailled_results_t4_all.png)
+
+
+```{r out.width="80%", echo=FALSE}
+include_graphics("images/gProfiler_detailled_results_t4_all.png")
+
+```
+
 
 # gProfiler in R
 
