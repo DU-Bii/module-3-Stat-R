@@ -137,15 +137,17 @@ Contents: [clustering/](clustering/)
 
 | Topics | Type | Duration | Material |
 |--------------------------------|-------|-----|----------------|
-| Clustering: rappel de la séance précédente | Slides | 10'  | [[html](clustering/cours_clustering.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/clustering/cours_clustering.Rmd)] |
-| Analyse en composante principale | Diapos | 20' | [[html](PCA/PCA_PCoA_Intro.html)] [[Rmd]](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/PCA/PCA_PCoA_Intro.Rmd) |
-| Practical: data preparation (Pavkovic, 2019) | Notebook code |  | [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/pavkovic_2019/prepare-data_pavkovic_2019.Rmd)] |
-| Practical: data preparation (Pavkovic, 2019) - UUO proteome dataset | Notebook report | | [[html](practicals/pavkovic_2019/pavkovic2019_proteome_uuo.html)]  |
-| Practical: data preparation (Pavkovic, 2019) - UUO transcriptome dataset | Notebook report | | [[html](practicals/pavkovic_2019/pavkovic2019_transcriptome_uuo.html)]  |
-| Practical: data preparation (Pavkovic, 2019) - FA proteome dataset | Notebook report | | [[html](practicals/pavkovic_2019/pavkovic2019_proteome_fa.html)]  |
-| Practical: data preparation (Pavkovic, 2019) - FA transcriptome dataset | Notebook report | | [[html](practicals/pavkovic_2019/pavkovic2019_transcriptome_fa.html)]  |
-| Practical: data exploration (Pavkovic, 2019)  | Exercises | | [[html](practicals/pavkovic_2019/pavkovic2019_exercises.html)]  |
-| R scripts (click on script, then "Raw") | R scripts | | [[github](https://github.com/DU-Bii/module-3-Stat-R/tree/master/stat-R_2020/practicals/pavkovic_2019/R)]  |
+| Clustering: rappel de la séance précédente | Slides | [[html](clustering/cours_clustering.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/clustering/cours_clustering.Rmd)] |
+| Analyse en composante principale | Diapos | [[html](PCA/PCA_PCoA_Intro.html)] [[Rmd]](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/PCA/PCA_PCoA_Intro.Rmd) |
+| Practical: data preparation (Pavkovic, 2019) | Notebook code |   [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/pavkovic_2019/prepare-data_pavkovic_2019.Rmd)] |
+| Practical: data preparation (Pavkovic, 2019) - UUO proteome dataset | Notebook report |  [[html](practicals/pavkovic_2019/pavkovic2019_proteome_uuo.html)]  |
+| Practical: data preparation (Pavkovic, 2019) - UUO transcriptome dataset | Notebook report |  [[html](practicals/pavkovic_2019/pavkovic2019_transcriptome_uuo.html)]  |
+| Practical: data preparation (Pavkovic, 2019) - FA proteome dataset | Notebook report |  [[html](practicals/pavkovic_2019/pavkovic2019_proteome_fa.html)]  |
+| Practical: data preparation (Pavkovic, 2019) - FA transcriptome dataset | Notebook report |  [[html](practicals/pavkovic_2019/pavkovic2019_transcriptome_fa.html)]  |
+| Practical: data exploration (Pavkovic, 2019)  | Exercises | [[html](practicals/pavkovic_2019/pavkovic2019_exercises.html)]  |
+| R scripts (click on script, then "Raw") | R scripts | [[github](https://github.com/DU-Bii/module-3-Stat-R/tree/master/stat-R_2020/practicals/pavkovic_2019/R)]  |
+| Report template with nice yaml header  | Rmd | [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/templates/Rmarkdown_report_template.Rmd)] |
+
 
 
 ### Enrichment analysis
