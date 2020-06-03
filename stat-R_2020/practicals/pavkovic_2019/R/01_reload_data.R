@@ -1,7 +1,9 @@
 #### Reload the data from memory image ####
 
-datatype <- "proteome"
-dataset <- "fa"
+# Choose the dataset you would like to load
+
+datatype <- "proteome" # supported: transcriptome, proteome
+dataset <- "fa"        # supported: fa, uuo
 
 
 #### Define the path of the shared data dir ###
@@ -39,4 +41,16 @@ print(as.data.frame(parameters))
 # - log2Standardized: median-based centering and IQR-based scaling
 ## We will have to choose the appropriate data types depending on our purposes
 
+# Check the dimensions of the log-2 files before and after filtering
+dim(log2Values)
+dim(log2Filtered)
+names(log2Filtered)
+
+# Head ot the data file
+head(log2Filtered)
+
+# Histogram
+hist(unlist(log2Filtered), breaks=100)
+
+## If this displays a nice histogram you can start the next scripts
 

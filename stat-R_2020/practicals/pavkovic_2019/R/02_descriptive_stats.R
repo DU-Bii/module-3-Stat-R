@@ -35,7 +35,8 @@ class(meanPerFt)
 head(meanPerFt)
 hist(meanPerFt, 
      breaks = 100, 
-     main = "mean per feature", xlab = "log2(values)")
+     main = paste(parameters$datatype, parameters$dataset, "\n", "mean per feature"), 
+     xlab = "log2(values)")
 
 
 varPerFt <- apply(X = x, MARGIN = 1, FUN = var)
@@ -85,7 +86,7 @@ featureStat$max <- apply(X = x, MARGIN = 1, FUN = max)
 xmin <- floor(min(x))
 xmax <- ceiling(max(x))
 par(mfrow = c(3,2))
-hist(featureStat$mean, breaks = 100, main = "mean", xlab = "log2(value)", xlim = c(xmin, xmax))
+hist(featureStat$mean, breaks = 100, main = paste(parameters$datatype, parameters$dataset, "\n", "mean"), xlab = "log2(value)", xlim = c(xmin, xmax))
 hist(featureStat$median, breaks = 100, main = "median", xlab = "log2(value)", xlim = c(xmin, xmax))
 hist(featureStat$min, breaks = 100, main = "min", xlab = "log2(value)", xlim = c(xmin, xmax))
 hist(featureStat$max, breaks = 100, main = "max", xlab = "log2(value)", xlim = c(xmin, xmax))
@@ -102,9 +103,10 @@ plot(featureStat$mean, featureStat$median)
 ## We use the function densCols to color features according to the local density.
 plot(x = featureStat$mean, 
      y = featureStat$median,
+     las = 1,
      col = densCols(x = featureStat$mean, 
                     y = featureStat$median),
-     main = "Mean versus median",
+     main = paste(parameters$datatype, parameters$dataset, "\n", "Mean versus median"),
      xlab = "mean",
      ylab = "median")
 grid()
@@ -113,9 +115,10 @@ abline(a = 0, b = 1)
 #### Mean versus variance plot ####
 plot(x = featureStat$mean, 
      y = featureStat$var,
+     las = 1,
      col = densCols(x = featureStat$mean, 
                     y = featureStat$var),
-     main = "Mean versus var",
+     main = paste(parameters$datatype, parameters$dataset, "\n", "Mean versus var"),
      xlab = "mean",
      ylab = "var")
 grid()
@@ -124,9 +127,10 @@ grid()
 #### Mean versus standard deviation plot ####
 plot(x = featureStat$mean, 
      y = featureStat$sd,
+     las = 1,
      col = densCols(x = featureStat$mean, 
                     y = featureStat$sd),
-     main = "Mean versus standard deviation",
+     main = paste(parameters$datatype, parameters$dataset, "\n", "Mean versus standard deviation"),
      xlab = "mean",
      ylab = "sd")
 grid()
@@ -136,9 +140,10 @@ grid()
 ## This is trivial: the SD is the square root of the variance
 plot(x = featureStat$sd, 
      y = featureStat$var,
+     las = 1,
      col = densCols(x = featureStat$sd, 
                     y = featureStat$var),
-     main = "Standard deviation versus var",
+     main = paste(parameters$datatype, parameters$dataset, "\n", "Standard deviation versus var"),
      xlab = "sd",
      ylab = "var")
 grid()
@@ -148,9 +153,10 @@ grid()
 ## This is trivial: the SD is the square root of the variance
 plot(x = featureStat$sd, 
      y = featureStat$var,
+     las = 1,
      col = densCols(x = featureStat$sd, 
                     y = featureStat$var),
-     main = "Standard deviation versus var",
+     main = paste(parameters$datatype, parameters$dataset, "\n", "Standard deviation versus var"),
      xlab = "sd",
      ylab = "var")
 grid()
@@ -158,16 +164,34 @@ grid()
 #### Standard deviation versus IQR plot ####
 plot(x = featureStat$sd, 
      y = featureStat$IQR,
+     las = 1,
      col = densCols(x = featureStat$sd, 
                     y = featureStat$IQR),
-     main = "Standard deviation versus IQR",
+     main = paste(parameters$datatype, parameters$dataset, "\n", "Standard deviation versus IQR"),
      xlab = "sd",
      ylab = "IQR")
 grid()
 
-## Note: the IQR of a normal distribution is ~1.35
+## Note: the IQR of a normal distribution is ~1.35 whereas the standard dev is 1
 normIQR <- qnorm(p = 0.75) - qnorm(p = 0.25)
 message("Standard normal IQR = ", normIQR)
 abline(a = 0, b = normIQR)
 
 
+## Check what it gives with normal data
+z <- data.frame(matrix(nrow = 8000, ncol = 10, rnorm(800000)))
+zSD <- apply(z, 1, sd)
+zIQR <- apply(z, 1, IQR)
+
+#### Standard deviation versus IQR plot ####
+plot(x = zSD, 
+     y = zIQR,
+     las = 1,
+     col = densCols(x = zSD, 
+                    y = zIQR),
+     main = paste("rnorm data", "\n", "Standard deviation versus IQR"),
+     xlab = "sd",
+     ylab = "IQR")
+grid()
+abline(a = 0, b = normIQR)
+points(median(zSD), median(zIQR))
