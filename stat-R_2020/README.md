@@ -146,7 +146,7 @@ Contents: [clustering/](clustering/)
 | Practical: data preparation (Pavkovic, 2019) - FA transcriptome dataset | Notebook report |  [[html](practicals/pavkovic_2019/pavkovic2019_transcriptome_fa.html)]  |
 | Practical: data exploration (Pavkovic, 2019)  | Exercises | [[html](practicals/pavkovic_2019/pavkovic2019_exercises.html)]  |
 | R scripts (click on script, then "Raw") | R scripts | [[github](https://github.com/DU-Bii/module-3-Stat-R/tree/master/stat-R_2020/practicals/pavkovic_2019/R)]  |
-| Report template with nice yaml header  | Rmd | [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/templates/Rmarkdown_report_template.Rmd)] |
+| Report template with nice yaml header  | Rmd | [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/templates/YOUR-NAME_REPORT-TOPICS.Rmd)] [[html](templates/YOUR-NAME_REPORT-TOPICS.html)] |
 
 
 
