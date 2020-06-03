@@ -7,7 +7,7 @@
   <meta http-equiv="Content-Style-Type" content="text/css" />
   <meta name="generator" content="pandoc" />
   <meta name="author" content="Jacques van Helden &amp; Olivier Sand" />
-  <meta name="date" content="2020-06-01" />
+  <meta name="date" content="2020-06-03" />
   <title>Statistics with R</title>
   <style type="text/css">code{white-space: pre;}</style>
   <script src="cours_enrichment_files/jquery-1.11.3/jquery.min.js"></script>
@@ -19,6 +19,13 @@
   <link href="cours_enrichment_files/slidy-2/styles/slidy.css" rel="stylesheet" />
   <script src="cours_enrichment_files/slidy-2/scripts/slidy.js"></script>
   <script src="cours_enrichment_files/slidy_shiny-1/slidy_shiny.js"></script>
+  <script src="cours_enrichment_files/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+  <script src="cours_enrichment_files/plotly-binding-4.9.2.1/plotly.js"></script>
+  <script src="cours_enrichment_files/typedarray-0.1/typedarray.min.js"></script>
+  <link href="cours_enrichment_files/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
+  <script src="cours_enrichment_files/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
+  <link href="cours_enrichment_files/plotly-htmlwidgets-css-1.52.2/plotly-htmlwidgets.css" rel="stylesheet" />
+  <script src="cours_enrichment_files/plotly-main-1.52.2/plotly-latest.min.js"></script>
 </head>
 <body>
 <div class="slide titlepage">
@@ -27,7 +34,7 @@
   <p class="author">
 Jacques van Helden &amp; Olivier Sand
   </p>
-  <p class="date">2020-06-01</p>
+  <p class="date">2020-06-03</p>
 </div>
 <div id="two-main-approches" class="slide section level1">
 <h1>Two main approches</h1>
@@ -157,7 +164,7 @@ Jacques van Helden &amp; Olivier Sand
 <li>Multiple-test corrections
 <ul>
 <li>correction choice (adjusted P-values : Bonferroni correction, Benjamini-Hochberg FDR…)</li>
-<li>inter-test dependancies corrections</li>
+<li>inter-test dependancies corrections (gSCS in gProfiler)</li>
 </ul></li>
 </ul>
 </div>
@@ -188,16 +195,40 @@ Jacques van Helden &amp; Olivier Sand
 </div>
 <div id="practical---results" class="slide section level1">
 <h1>Practical - Results</h1>
-<p>Screenshots ?</p>
+<ul>
+<li>t0:</li>
+</ul>
+<p><img src="images/gProfiler_results_t0.png" alt="gProfiler t0" /></p>
+<ul>
+<li>t4:</li>
+</ul>
+<p><img src="images/gProfiler_results_t4.png" alt="gProfiler t0" /></p>
+</div>
+<div id="practical---detailled-results-t0" class="slide section level1">
+<h1>Practical - detailled results t0</h1>
+<p><img src="images/gProfiler_detailled_results_t0_all.png" alt="gProfiler t0" /></p>
+</div>
+<div id="practical---detailled-results-t4" class="slide section level1">
+<h1>Practical - detailled results t4</h1>
+<p><img src="images/gProfiler_detailled_results_t4_all.png" alt="gProfiler t0" /></p>
+</div>
+<div id="gprofiler-in-r" class="slide section level1">
+<h1>gProfiler in R</h1>
+<ul>
+<li>Package: <a href="https://cran.r-project.org/web/packages/gprofiler2/index.html" class="uri">https://cran.r-project.org/web/packages/gprofiler2/index.html</a></li>
+<li>Manual: <a href="https://cran.r-project.org/web/packages/gprofiler2/gprofiler2.pdf" class="uri">https://cran.r-project.org/web/packages/gprofiler2/gprofiler2.pdf</a></li>
+<li>Vignettes: <a href="https://cran.r-project.org/web/packages/gprofiler2/vignettes/gprofiler2.html" class="uri">https://cran.r-project.org/web/packages/gprofiler2/vignettes/gprofiler2.html</a></li>
+</ul>
 </div>
 <div id="gene-set-enrichment-analysis" class="slide section level1">
 <h1>Gene Set Enrichment Analysis</h1>
 <ul>
 <li>GSEA</li>
+<li>Broad Institute</li>
 <li>since 2006</li>
 <li>determines whether an a priori defined set of genes shows statistically significant, concordant differences between two biological states</li>
 <li><a href="http://software.broadinstitute.org/gsea/index.jsp" class="uri">http://software.broadinstitute.org/gsea/index.jsp</a></li>
-<li>MSigDB (The Molecular Signatures Database) : collection of annotated gene sets</li>
+<li>MSigDB (The Molecular Signatures Database) : collection of annotated gene sets (<a href="https://www.gsea-msigdb.org/gsea/msigdb/index.jsp" class="uri">https://www.gsea-msigdb.org/gsea/msigdb/index.jsp</a>)</li>
 <li>R package : <a href="https://bioconductor.org/packages/release/bioc/html/GSEABase.html" class="uri">https://bioconductor.org/packages/release/bioc/html/GSEABase.html</a></li>
 </ul>
 <p><img src="images/GSEA-homegraphic.gif" alt="GSEA" /></p>
@@ -211,9 +242,6 @@ Jacques van Helden &amp; Olivier Sand
 <li><p>The green curve estimates, at each level i, the degree of over-representation of the reference genes in the i top-ranking genes.</p></li>
 </ul>
 <p><img src="images/GSEA_screenshot_1.png" alt="GSEA screenshot" /></p>
-</div>
-<div id="practical" class="slide section level1">
-<h1>Practical</h1>
 </div>
 
   <!-- dynamically load mathjax for compatibility with self-contained -->

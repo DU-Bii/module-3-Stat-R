@@ -65,23 +65,9 @@ packages <- c("knitr", "kableExtra", "stringr", "limma", "gprofiler2")
 for (pkg in packages) {
   if (!require(pkg, character.only = TRUE)) {
     install.packages(pkg)
+    require(pkg, character.only = TRUE)
   }
 }
-
-library(gprofiler2)
-
-#if (!requireNamespace("BiocManager", quietly = TRUE))
-#    install.packages("BiocManager")
-
-#BiocManager::install("GSEABase")
-
-#library(GSEABase)
-
-#install.packages("msigdbr")
-
-#library(msigdbr)
-
-# library(formattable)
 
 options(width = 300)
 
@@ -89,7 +75,7 @@ options(width = 300)
 
 knitr::opts_chunk$set(
   fig.width = 5, fig.height = 5, 
-  fig.path = 'figures/irisDeFisher_',
+  fig.path = 'images/enrichment_',
   fig.align = "center", 
   size = "tiny", 
   echo = TRUE, eval = TRUE, 
@@ -119,6 +105,7 @@ options(scipen = 12) ## Max number of digits for non-scientific notation
 - How significant is this observation ? More precisely, what would be the probability to observe such a correspondence by chance alone ?
 
 ```{r venn_diagram, include=FALSE, results=TRUE, echo=FALSE, eval=TRUE, out.width="50%"}
+#### Venn diagram ####
 # Draw a venn diagram indicating the number of genes in a 
 # co-expression cluster that are involved in methionine metobolism
 VennDiagram::venn.diagram(
@@ -185,7 +172,7 @@ VennDiagram::venn.diagram(
 
 - Multiple-test corrections
   - correction choice (adjusted P-values : Bonferroni correction, Benjamini-Hochberg FDR...)
-  - inter-test dependancies corrections
+  - inter-test dependancies corrections (gSCS in gProfiler)
 
 # Practical - Annotating a group of differentially expressed genes (DEG)
 
@@ -230,7 +217,11 @@ VennDiagram::venn.diagram(
 
 ![gProfiler t0](images/gProfiler_detailled_results_t4_all.png)
 
-# In/Output directories
+# gProfiler in R
+
+- Package: https://cran.r-project.org/web/packages/gprofiler2/index.html
+- Manual: https://cran.r-project.org/web/packages/gprofiler2/gprofiler2.pdf
+- Vignettes: https://cran.r-project.org/web/packages/gprofiler2/vignettes/gprofiler2.html
 
 ```{r outdirs, include=FALSE, echo=FALSE, eval=TRUE}
 #### Output directories ####
@@ -243,66 +234,106 @@ outdirs$data <- file.path(outdirs$main, "data")
 
 ## Main result directory
 outdirs$results <- file.path(outdirs$main, "results")
+dir.create(outdirs$data, recursive = TRUE, showWarnings = FALSE)
 ```
-
-# Download DEG data
 
 ```{r download_deg, include=FALSE, echo=FALSE, eval=TRUE}
 #### Download DEG data ####
 t4_geneIDsFile <- "bdf1_Y187F_Y354F_mutant_4__vs__Wild_type_4_DESeq2_positive_geneIDs.txt"
 t4URL <- file.path("https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2019/seance_5/results", t4_geneIDsFile)
 
-localt4Data <- file.path(outdirs$data, t4_geneIDsFile)
+local_t4Data <- file.path(outdirs$data, t4_geneIDsFile)
 
-if (file.exists(localt4Data) & !parameters$forceDownload) {
-  message("t4 data already downloaded:\n\t", localt4Data)
+if (file.exists(local_t4Data)) {
+  message("t4 data already downloaded:\n\t", local_t4Data)
 } else {
   message("Downloading t4 data from github: ", t4URL)
-  download.file(url = t4URL, destfile =  localt4Data)
+  download.file(url = t4URL, destfile =  local_t4Data)
+}
+#### Download background data ####
+bkgdFile <- "bdf1_Y187F_Y354F_mutant_4__vs__Wild_type_4_DESeq2_all_genes.tsv"
+bkgdURL <- file.path("https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2019/seance_5/results", bkgdFile)
+
+local_bkgdData <- file.path(outdirs$data, bkgdFile)
+
+if (file.exists(local_bkgdData)) {
+  message("background data already downloaded:\n\t", local_bkgdData)
+} else {
+  message("Downloading background data from github: ", bkgdURL)
+  download.file(url = bkgdURL, destfile =  local_bkgdData)
 }
 ```
 
-# DEG in vector
-
-```{r deg, include=FALSE, echo=FALSE, eval=TRUE}
-t4degFile <- file.path(
-  outdirs$data,
-  "bdf1_Y187F_Y354F_mutant_4__vs__Wild_type_4_DESeq2_positive_geneIDs.txt")
-t4degValues <- scan(file = t4degFile,
+```{r data_vectors, include=FALSE, echo=FALSE, eval=TRUE}
+#### Data in vectors ####
+t4DEG <- scan(file = local_t4Data,   # puts file content in a vector
                     what = "character"
                     )
+bkgd_df <- read.table(local_bkgdData,
+                   header = TRUE
+                    )
+bkgd <- as.vector(bkgd_df$ID)  # puts column ID of dataframe in a vector
 ```
 
-# gProfiler in R
-
-```{r gprofiler, include=FALSE, echo=FALSE, eval=TRUE}
-
-
-query <- t4degValues
-
-gostres <- gost( query,
-organism = "scerevisiae",
-ordered_query = FALSE,
-multi_query = FALSE,
-significant = TRUE,
-exclude_iea = FALSE, measure_underrepresentation = FALSE, evcodes = FALSE,
-user_threshold = 0.05,
-correction_method = "bonferroni",
-domain_scope = "annotated", custom_bg = NULL,
-numeric_ns = "",
-sources = NULL,
-#sources = c("GO:BP", "KEGG", "REAC", "WP"),
-as_short_link = FALSE
-)
+```{r gost, include=FALSE, echo=FALSE, eval=TRUE}
+#### GOSt ####
+gostres <- gost( t4DEG,
+                organism = "scerevisiae",
+                ordered_query = FALSE,
+                multi_query = FALSE,
+                significant = TRUE,
+                exclude_iea = FALSE,
+                measure_underrepresentation = FALSE,
+                evcodes = FALSE,
+                user_threshold = 0.05,
+                correction_method = "fdr",
+                domain_scope = "annotated",
+                custom_bg = NULL,
+                numeric_ns = "",
+                sources = NULL,
+                #sources = c("GO:BP", "KEGG", "REAC", "WP"),
+                as_short_link = FALSE
+              )
 
 ```
 
-# Plot the results
 
-```{r gprofplot, include=FALSE, echo=FALSE, eval=TRUE}
+```{r gost_custom, include=FALSE, echo=FALSE, eval=TRUE}
+#### GOSt with custom background ####
+gostres2 <- gost( t4DEG,
+                organism = "scerevisiae",
+                ordered_query = FALSE,
+                multi_query = FALSE,
+                significant = TRUE,
+                exclude_iea = FALSE,
+                measure_underrepresentation = FALSE,
+                evcodes = FALSE,
+                user_threshold = 0.05,
+                correction_method = "fdr",
+                domain_scope = "custom_annotated",
+                custom_bg = bkgd,
+                numeric_ns = "",
+                sources = NULL,
+                as_short_link = FALSE
+              )
 
+```
+
+```{r gostplot, include=FALSE, echo=FALSE, eval=TRUE, fig.width=8, fig.height=6, out.width="80%", fig.cap = "blab bla"}
+#### Plot the results ####
+png(filename = "images/enrichment_gostplot.png")
 gostplot(gostres, capped = FALSE, interactive = TRUE)
+dev.off()
 
+## Include the saved file in the knitr-generated report
+#include_graphics(path = "images/enrichment_gostplot.png", auto_pdf = TRUE)
+
+png(filename = "images/enrichment_gostplot_2.png")
+gostplot(gostres2, capped = FALSE, interactive = TRUE)
+dev.off()
+
+## Include the saved file in the knitr-generated report
+#include_graphics(path = "images/enrichment_gostplot_2.png", auto_pdf = TRUE)
 ```
 
 
@@ -329,89 +360,3 @@ gostplot(gostres, capped = FALSE, interactive = TRUE)
 - The green curve estimates, at each level i, the degree of over-representation of the reference genes in the i top-ranking genes.
 
 ![GSEA screenshot](images/GSEA_screenshot_1.png)
-
-# Practical
-
-- Gene sets
-
-```{r genesets, include=FALSE, echo=FALSE, eval=TRUE}
-
-msigdbr_show_species()
-
-m_df = msigdbr(species = "Saccharomyces cerevisiae")
-
-#head(m_df)
-
-m_df %>% dplyr::distinct(gs_cat, gs_subcat) %>% dplyr::arrange(gs_cat, gs_subcat)
-
-
-```
-
-## In/Output directories
-
-```{r outdirs, include=FALSE, echo=FALSE, eval=TRUE}
-
-#### Output directories ####
-outdirs <- list()
-outdirs$main <- getwd()
-
-## Data directory, where the data will be downloaded and uncompressed
-outdirs$data <- file.path(outdirs$main, "data")
-dir.create(outdirs$data, recursive = TRUE, showWarnings = FALSE)
-
-## Main result directory
-outdirs$results <- file.path(outdirs$main, "results")
-
-# Transcriptome results
-#outdirs$transcriptome <- file.path(outdirs$main, "results/transcriptome")
-#dir.create(outdirs$transcriptome, recursive = TRUE, showWarnings = FALSE)
-```
-
-## Download DEG data
-
-```{r download_deg, include=FALSE, echo=FALSE, eval=TRUE}
-#### Download DEG data ####
-t0dataFile <- "bdf1_Y187F_Y354F_mutant_0__vs__Wild_type_0_DESeq2_positive.tsv"
-t4dataFile <- "bdf1_Y187F_Y354F_mutant_4__vs__Wild_type_4_DESeq2_positive.tsv"
-t0URL <- file.path("https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2019/seance_5/results", t0dataFile)
-t4URL <- file.path("https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2019/seance_5/results", t4dataFile)
-localt0Data <- file.path(outdirs$data, t0dataFile)
-localt4Data <- file.path(outdirs$data, t4dataFile)
-
-if (file.exists(localt0Data) & !parameters$forceDownload) {
-  message("t0 data already downloaded:\n\t", localt0Data)
-} else {
-  message("Downloading t0 data from github: ", t0URL)
-  download.file(url = t0URL, destfile =  localt0Data)
-}
-
-if (file.exists(localt4Data) & !parameters$forceDownload) {
-  message("t4 data already downloaded:\n\t", localt4Data)
-} else {
-  message("Downloading t4 data from github: ", t4URL)
-  download.file(url = t4URL, destfile =  localt4Data)
-}
-```
-
-# DEG in dataframe
-
-```{r deg, include=FALSE, echo=FALSE, eval=TRUE}
-t0degFile <- file.path(
-  outdirs$data,
-  "bdf1_Y187F_Y354F_mutant_0__vs__Wild_type_0_DESeq2_positive.tsv")
-t0degValues <- read.csv(file = t0degFile, header = 1, row.names = 1)
-t4degFile <- file.path(
-  outdirs$data,
-  "bdf1_Y187F_Y354F_mutant_4__vs__Wild_type_4_DESeq2_positive.tsv")
-t4degValues <- read.csv(file = t4degFile, header = 1, row.names = 1)
-```
-
-# Analysis
-
-```{r gsea_analysis, include=FALSE, echo=FALSE, eval=TRUE}
-
-m_t2g = m_df %>% dplyr::select(gs_name, gene_symbol) %>% as.data.frame()
-#enricher(gene = gene_symbols_vector, TERM2GENE = m_t2g, ...)
-
-
-```
