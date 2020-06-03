@@ -143,7 +143,7 @@ Use different graphical representations to compare the values and get familiar w
 - mean versus variance plot
 
  
-Solution by the teachers: [[R](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/pavkovic_2019/R/02_descriptive_stats.R)]
+Solution by the teachers: [[02_descriptive_stats.R](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/pavkovic_2019/R/02_descriptive_stats.R)]
 
 ### 3. Summary per condition
 
@@ -193,7 +193,7 @@ We provide hereby
 
 - An R script with the principal component analysis of the expression set: [[04_PCA.R](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/pavkovic_2019/R/04_PCA.R)]
 
-- An R markdown model of scientific report: [[Rmarkdown_report_template.Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/templates/Rmarkdown_report_template.Rmd)]
+- An R markdown model of scientific report: [[YOUR-NAME_REPORT-TOPICS.Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/templates/YOUR-NAME_REPORT-TOPICS.Rmd)]
 
 Write a short report that will integrate some pieces of chunks from the R script in the R markdown notebook, add your interpretation of the results, and compile it as a self-contained HTML file. 
 
