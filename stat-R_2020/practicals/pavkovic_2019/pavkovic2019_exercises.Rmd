@@ -180,7 +180,7 @@ Alternatively you can immediately write the code inside a R markdown document, a
     - Plot the sample positions on the 6 first components. Are they consistent with their time and status?
 
 
-9. Enrichment analysis
+9. Functionnal enrichment analysis
 
     - analyse the features declared positive (provided by the teachers) to the gProfiler function profiling web tool (<https://biit.cs.ut.ee/gprofiler/gost>)
     
