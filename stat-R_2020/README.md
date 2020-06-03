@@ -156,6 +156,11 @@ Contents: [clustering/](clustering/)
 - Date: 2020-06-03 PM
 - Videoconference
 
+| Topics | Type | Duration | Material |
+|--------------------------------|-------|-----|----------------|
+| What was not done yesterday |  |  |  |
+| Enrichment analysis | html | who knows | [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/enrichment/cours_enrichment.html)] |
+| Enrichment analysis | Rmd | who knows | [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/enrichment/cours_enrichment.Rmd)] |
 
 ### Supervised classification and learning
 
