@@ -53,7 +53,30 @@ apply(res.pca$ind$cos2, 1, sum)
 fviz_eig(res.pca, addlabels = TRUE, ylim = c(0, 50), main = paste(parameters$datatype, parameters$dataset))
 
 #### Plot projections of features on components 1 and 2 ####
+
+## This is ugly because the variable names are maskoing everything
 fviz_pca_var(res.pca, col.var = "black")
+
+## Just plot points for the variables (features)
+fviz_pca_var(res.pca, geom.var = "point")
+
+## Add density colors
+plot(x = res.pca$var$coord[,1], xlab = "PC1",
+     y = res.pca$var$coord[,2], ylab = "PC2", 
+     col = densCols(x = res.pca$var$coord[,1],
+                    y = res.pca$var$coord[,2]))
+grid()
+abline(h = 0)
+abline(v = 0)
+
+## Plot PC3 vs PC4
+plot(x = res.pca$var$coord[,3], xlab = "PC3",
+     y = res.pca$var$coord[,4], ylab = "PC4", 
+     col = densCols(x = res.pca$var$coord[,2],
+                    y = res.pca$var$coord[,3]))
+grid()
+abline(h = 0)
+abline(v = 0)
 
 
 #### Plot  projections of individuals on components 1 and 2 ####
@@ -70,3 +93,23 @@ fviz_pca_ind(res.pca,
              gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"), ## Color gradient
              repel = TRUE # Avoid overlap between labels
 )
+
+
+#### Plot PC1 vs PC2 with condition-specific colors ####
+fviz_pca_ind(res.pca, axes = c(1,2), 
+             col.ind = metadata$condition,
+             repel = TRUE # Avoid overlap between labels
+)
+
+#### Plot PC4 vs PC3 with condition-specific colors ####
+fviz_pca_ind(res.pca, axes = c(3,4), 
+             col.ind = metadata$condition,
+             repel = TRUE # Avoid overlap between labels
+)
+
+#### Plot PC5 vs PC6 with condition-specific colors ####
+fviz_pca_ind(res.pca, axes = c(5, 6), 
+             col.ind = metadata$condition,
+             repel = TRUE # Avoid overlap between labels
+)
+
