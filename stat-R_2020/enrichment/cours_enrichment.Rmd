@@ -60,7 +60,7 @@ transition: linear
 
 ```{r settings, include=FALSE, echo=FALSE, eval=TRUE}
 ## Install required packages
-packages <- c("knitr", "kableExtra", "stringr", "limma")
+packages <- c("knitr", "kableExtra", "stringr", "limma", "gprofiler2")
 
 for (pkg in packages) {
   if (!require(pkg, character.only = TRUE)) {
@@ -68,16 +68,16 @@ for (pkg in packages) {
   }
 }
 
-if (!requireNamespace("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
+#if (!requireNamespace("BiocManager", quietly = TRUE))
+#    install.packages("BiocManager")
 
-BiocManager::install("GSEABase")
+#BiocManager::install("GSEABase")
 
-library(GSEABase)
+#library(GSEABase)
 
-install.packages("msigdbr")
+#install.packages("msigdbr")
 
-library(msigdbr)
+#library(msigdbr)
 
 # library(formattable)
 
@@ -227,6 +227,76 @@ VennDiagram::venn.diagram(
 # Practical - detailled results t4
 
 ![gProfiler t0](images/gProfiler_detailled_results_t4_all.png)
+
+# In/Output directories
+
+```{r outdirs, include=FALSE, echo=FALSE, eval=TRUE}
+#### Output directories ####
+outdirs <- list()
+outdirs$main <- getwd()
+
+## Data directory, where the data will be downloaded and uncompressed
+outdirs$data <- file.path(outdirs$main, "data")
+#dir.create(outdirs$data, recursive = TRUE, showWarnings = FALSE)
+
+## Main result directory
+outdirs$results <- file.path(outdirs$main, "results")
+```
+
+# Download DEG data
+
+```{r download_deg, include=FALSE, echo=FALSE, eval=TRUE}
+#### Download DEG data ####
+t4_geneIDsFile <- "bdf1_Y187F_Y354F_mutant_4__vs__Wild_type_4_DESeq2_positive_geneIDs.txt"
+t4URL <- file.path("https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2019/seance_5/results", t4_geneIDsFile)
+
+localt4Data <- file.path(outdirs$data, t4_geneIDsFile)
+
+if (file.exists(localt4Data) & !parameters$forceDownload) {
+  message("t4 data already downloaded:\n\t", localt4Data)
+} else {
+  message("Downloading t4 data from github: ", t4URL)
+  download.file(url = t4URL, destfile =  localt4Data)
+}
+```
+
+# DEG in dataframe
+
+```{r deg, include=FALSE, echo=FALSE, eval=TRUE}
+t4degFile <- file.path(
+  outdirs$data,
+  "bdf1_Y187F_Y354F_mutant_4__vs__Wild_type_4_DESeq2_positive_geneIDs.txt")
+t4degValues <- scan(file = t4degFile,
+                    what = "character"
+                    )
+```
+
+# gProfiler in R
+
+```{r gprofiler, include=FALSE, echo=FALSE, eval=TRUE}
+library(gprofiler2)
+
+query <- t4degValues
+
+gostres <- gost( query,
+organism = "scerevisiae",
+ordered_query = FALSE,
+multi_query = FALSE,
+significant = TRUE,
+exclude_iea = FALSE, measure_underrepresentation = FALSE, evcodes = FALSE,
+user_threshold = 0.05,
+correction_method = "bonferroni",
+domain_scope = "annotated", custom_bg = NULL,
+numeric_ns = "",
+sources = NULL,
+#sources = c("GO:BP", "KEGG", "REAC", "WP"),
+as_short_link = FALSE
+)
+
+#gostplot(gostres, capped = TRUE, interactive = TRUE)
+
+```
+
 
 # Gene Set Enrichment Analysis
 
