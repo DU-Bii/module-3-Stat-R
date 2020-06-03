@@ -31,6 +31,8 @@ hist(unlist(log2Filtered), breaks=100)
 ## Compute the mean of each feature
 
 meanPerFt <- apply(X = x, MARGIN = 1, FUN = mean)
+length(meanPerFt)
+
 class(meanPerFt)
 head(meanPerFt)
 hist(meanPerFt, 
@@ -83,8 +85,9 @@ featureStat$p90 <- apply(X = x, MARGIN = 1, FUN = quantile, prob = 0.90)
 featureStat$max <- apply(X = x, MARGIN = 1, FUN = max)
 
 ## Some representative plots
-xmin <- floor(min(x))
+xmin <- floor(min(x))   # compute the limits of all the values
 xmax <- ceiling(max(x))
+
 par(mfrow = c(3,2))
 hist(featureStat$mean, breaks = 100, main = paste(parameters$datatype, parameters$dataset, "\n", "mean"), xlab = "log2(value)", xlim = c(xmin, xmax))
 hist(featureStat$median, breaks = 100, main = "median", xlab = "log2(value)", xlim = c(xmin, xmax))
@@ -148,19 +151,6 @@ plot(x = featureStat$sd,
      ylab = "var")
 grid()
 
-
-#### Standard deviation versus variance plot ####
-## This is trivial: the SD is the square root of the variance
-plot(x = featureStat$sd, 
-     y = featureStat$var,
-     las = 1,
-     col = densCols(x = featureStat$sd, 
-                    y = featureStat$var),
-     main = paste(parameters$datatype, parameters$dataset, "\n", "Standard deviation versus var"),
-     xlab = "sd",
-     ylab = "var")
-grid()
-
 #### Standard deviation versus IQR plot ####
 plot(x = featureStat$sd, 
      y = featureStat$IQR,
@@ -195,3 +185,8 @@ plot(x = zSD,
 grid()
 abline(a = 0, b = normIQR)
 points(median(zSD), median(zIQR))
+
+## TO DO 
+
+# - export featureStats in a tab-separate value file (.tsv)
+# - display the feature stat table with kable()
