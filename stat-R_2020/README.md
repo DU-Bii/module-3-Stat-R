@@ -147,8 +147,7 @@ Contents: [clustering/](clustering/)
 | Practical: data exploration (Pavkovic, 2019)  | Exercises |  | [[html](practicals/pavkovic_2019/pavkovic2019_exercises.html)]  |
 | R scripts (click on script, then "Raw") | R scripts |  | [[github](https://github.com/DU-Bii/module-3-Stat-R/tree/master/stat-R_2020/practicals/pavkovic_2019/R)]  |
 | Report template with nice yaml header  | Rmd |  | [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/templates/YOUR-NAME_REPORT-TOPICS.Rmd)] [[html](templates/YOUR-NAME_REPORT-TOPICS.html)] |
-| Report (partial): PCA of proteomics data | Practical |  | [[html](stat-R_2020/practicals/pavkovic_2019/pavkovic2019_PCA.html)]  
-[[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/pavkovic_2019/pavkovic2019_PCA.Rmd)] |
+| Report (partial): PCA of proteomics data | Practical |  | [[html](practicals/pavkovic_2019/pavkovic2019_PCA.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/pavkovic_2019/pavkovic2019_PCA.Rmd)] |
 
 Topics for 2020-06-03
 
