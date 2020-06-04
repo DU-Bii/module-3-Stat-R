@@ -159,7 +159,6 @@ feature.expr <- unlist(x[i,]) ## Select the expression profile for this feature
 
 feature.for.anova <- data.frame("expr" = feature.expr, "group" = metadata$condition)
 
-
 kable(feature.for.anova)
 
 ## Run the aov() method to check the warnings
@@ -228,9 +227,39 @@ anovaResult$evalue <- anovaResult$pval * nrow(anovaResult)
 
 ```{r pval_distrib, fig.width=7, fig.height=5, out.width="80%", fig.cap="P-value histogram of the feature-wise ANOVA. "}
 #### P-value hisogram ####
-hist(anovaResult$pval, breaks = 20)
+hist(anovaResult$pval, breaks = 20, 
+     main = "ANOVA - P-value histogram", 
+     clab = "Nominal p-value", 
+     ylab = "Number of features")
 
 ```
 
 
+## Summary of the results
+
+```{r}
+alpha <- 0.1
+anovaResult$positive <- (anovaResult$evalue < alpha)
+table(anovaResult$positive)
+
+min(anovaResult$evalue)
+
+# hist(anovaResult$evalue)
+
+```
+
+
+## Selection of the top-ranking features
+
+```{r}
+n <- 500
+
+selectedIndices <- order(anovaResult$pval, decreasing = FALSE)[1:n]
+selectedGenes <- rownames(x)[selectedIndices]
+write.table(x = "")
+
+```
+
+
+We arbitrarily select the 
 
