@@ -4,7 +4,7 @@ author: "Jacques van Helden"
 date: '`r Sys.Date()`'
 output:
   html_document:
-    self_contained: no
+    self_contained: yes
     fig_caption: yes
     highlight: zenburn
     theme: cerulean
@@ -14,7 +14,7 @@ output:
     code_folding: "hide"
   ioslides_presentation:
     slide_level: 2
-    self_contained: no
+    self_contained: yes
     colortheme: dolphin
     fig_caption: yes
     fig_height: 5
