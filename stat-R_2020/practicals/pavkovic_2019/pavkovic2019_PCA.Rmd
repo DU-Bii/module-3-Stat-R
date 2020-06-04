@@ -1,7 +1,7 @@
 ---
 title: "Principal Component Analysis of multi-omics data (Pavkovic 2019)"
 author: "Jacques van Helden"
-date: "`r Sys.Date()` `r Sys.time()`"
+date: "`r Sys.time()`"
 output:
   html_document:
     code_folding: hide
@@ -230,10 +230,21 @@ xShuffled <- matrix(
 table(xShuffled == x) ## the values match on average one time per permutation
 
 ## Check that the original expressio matrix has high correlation values betwen individuals
-kable(cor(x),  caption = "Correlation between columns (samples) of the original expression matrix. ")
+xCor <- cor(x)
+rownames(xCor) <- colnames(x)
+colnames(xCor) <- colnames(x)
+kable(cor(x),  
+      caption = "Correlation between columns (samples) of the original expression matrix. ",
+      row.names = TRUE)
 
 ## Check that the permuted matrix is not correlated anymore
-kable(cor(xShuffled), caption = "Correlation between columns of the shuffled expression matrix") ## Inter-sample correlations should be around 0 except in the diagonal
+## Inter-sample correlations should be around 0 except in the diagonal
+xShuffledCor <- cor(xShuffled)
+rownames(xShuffledCor) <- paste0("shufMat", 1:ncol(xShuffledCor)) 
+colnames(xShuffledCor) <- paste0("shufMat", 1:ncol(xShuffledCor)) 
+kable(xShuffledCor, 
+      caption = "Correlation between columns of the shuffled expression matrix",
+      row.names = TRUE)
 
 ## Compute the Principal Components on the shuffled 
 xShuffledPCA <- PCA(t(xShuffled), scale.unit = FALSE, ncp = ncol(x), graph = FALSE)
@@ -292,8 +303,14 @@ shuffledRowMeans <- apply(xShuffledRows, 1, mean)
 plot(xRowMeans, shuffledRowMeans)
 table(xRowMeans == shuffledRowMeans) ## TRUE for all the values (for each row of the table)
 
-## Check that the permuted matrix is not correlated anymore
-kable(cor(xShuffled), caption = "Correlation between columns of the shuffled expression matrix") ## Inter-sample correlations should be around 0 except in the diagonal
+## Check the correlation nbetween columns of the row-wise permuted matrix.
+## Note: values canbe high if the rows have very different ranges (which is the case here)
+xShuffledRowsCor <- cor(xShuffledRows)
+rownames(xShuffledRowsCor) <- paste("shufRow", 1:ncol(xShuffledRowsCor))
+colnames(xShuffledRowsCor) <- paste("shufRow", 1:ncol(xShuffledRowsCor))
+kable(xShuffledRowsCor, 
+      caption = "Correlation between columns of the row-wise shuffled expression matrix",
+      row.names = TRUE) ## Inter-sample correlations should be around 0 except in the diagonal
 
 ## Compute the Principal Components on the shuffled 
 xShuffledRowsPCA <- PCA(t(xShuffledRows), scale.unit = FALSE, ncp = ncol(x), graph = FALSE)

@@ -349,7 +349,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Principal Component Analysis of multi-omics data (Pavkovic 2019)</h1>
 <h4 class="author">Jacques van Helden</h4>
-<h4 class="date">2020-06-04 2020-06-04 06:42:56</h4>
+<h4 class="date">2020-06-04 06:57:45</h4>
 
 </div>
 
@@ -939,10 +939,15 @@ blabla
 <a class="sourceLine" id="cb20-9" data-line-number="9">  <span class="dt">nrow =</span> <span class="kw">nrow</span>(x), <span class="dt">ncol =</span> <span class="kw">ncol</span>(x))</a>
 <a class="sourceLine" id="cb20-10" data-line-number="10"><span class="kw">table</span>(xShuffled <span class="op">==</span><span class="st"> </span>x) <span class="co">## the values match on average one time per permutation</span></a></code></pre></div>
 <pre><code>
-FALSE 
-80440 </code></pre>
+FALSE  TRUE 
+80437     3 </code></pre>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="co">## Check that the original expressio matrix has high correlation values betwen individuals</span></a>
-<a class="sourceLine" id="cb22-2" data-line-number="2"><span class="kw">kable</span>(<span class="kw">cor</span>(x),  <span class="dt">caption =</span> <span class="st">&quot;Correlation between columns (samples) of the original expression matrix. &quot;</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb22-2" data-line-number="2">xCor &lt;-<span class="st"> </span><span class="kw">cor</span>(x)</a>
+<a class="sourceLine" id="cb22-3" data-line-number="3"><span class="kw">rownames</span>(xCor) &lt;-<span class="st"> </span><span class="kw">colnames</span>(x)</a>
+<a class="sourceLine" id="cb22-4" data-line-number="4"><span class="kw">colnames</span>(xCor) &lt;-<span class="st"> </span><span class="kw">colnames</span>(x)</a>
+<a class="sourceLine" id="cb22-5" data-line-number="5"><span class="kw">kable</span>(<span class="kw">cor</span>(x),  </a>
+<a class="sourceLine" id="cb22-6" data-line-number="6">      <span class="dt">caption =</span> <span class="st">&quot;Correlation between columns (samples) of the original expression matrix. &quot;</span>,</a>
+<a class="sourceLine" id="cb22-7" data-line-number="7">      <span class="dt">row.names =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <table>
 <caption>Correlation between columns (samples) of the original expression matrix.</caption>
 <thead>
@@ -1094,128 +1099,159 @@ FALSE
 </tbody>
 </table>
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="co">## Check that the permuted matrix is not correlated anymore</span></a>
-<a class="sourceLine" id="cb23-2" data-line-number="2"><span class="kw">kable</span>(<span class="kw">cor</span>(xShuffled), <span class="dt">caption =</span> <span class="st">&quot;Correlation between columns of the shuffled expression matrix&quot;</span>) <span class="co">## Inter-sample correlations should be around 0 except in the diagonal</span></a></code></pre></div>
+<a class="sourceLine" id="cb23-2" data-line-number="2"><span class="co">## Inter-sample correlations should be around 0 except in the diagonal</span></a>
+<a class="sourceLine" id="cb23-3" data-line-number="3">xShuffledCor &lt;-<span class="st"> </span><span class="kw">cor</span>(xShuffled)</a>
+<a class="sourceLine" id="cb23-4" data-line-number="4"><span class="kw">rownames</span>(xShuffledCor) &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;shufMat&quot;</span>, <span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(xShuffledCor)) </a>
+<a class="sourceLine" id="cb23-5" data-line-number="5"><span class="kw">colnames</span>(xShuffledCor) &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;shufMat&quot;</span>, <span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(xShuffledCor)) </a>
+<a class="sourceLine" id="cb23-6" data-line-number="6"><span class="kw">kable</span>(xShuffledCor, </a>
+<a class="sourceLine" id="cb23-7" data-line-number="7">      <span class="dt">caption =</span> <span class="st">&quot;Correlation between columns of the shuffled expression matrix&quot;</span>,</a>
+<a class="sourceLine" id="cb23-8" data-line-number="8">      <span class="dt">row.names =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <table>
 <caption>Correlation between columns of the shuffled expression matrix</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">shufMat1</th>
+<th align="right">shufMat2</th>
+<th align="right">shufMat3</th>
+<th align="right">shufMat4</th>
+<th align="right">shufMat5</th>
+<th align="right">shufMat6</th>
+<th align="right">shufMat7</th>
+<th align="right">shufMat8</th>
+<th align="right">shufMat9</th>
+<th align="right">shufMat10</th>
+</tr>
+</thead>
 <tbody>
 <tr class="odd">
+<td>shufMat1</td>
 <td align="right">1.0000000</td>
-<td align="right">-0.0230624</td>
-<td align="right">0.0044617</td>
-<td align="right">-0.0199269</td>
-<td align="right">0.0026861</td>
-<td align="right">-0.0217988</td>
-<td align="right">0.0056319</td>
-<td align="right">-0.0079684</td>
-<td align="right">0.0012602</td>
-<td align="right">0.0049590</td>
+<td align="right">0.0221626</td>
+<td align="right">-0.0064800</td>
+<td align="right">-0.0197969</td>
+<td align="right">-0.0023914</td>
+<td align="right">0.0016956</td>
+<td align="right">0.0010415</td>
+<td align="right">0.0050514</td>
+<td align="right">0.0030873</td>
+<td align="right">0.0079440</td>
 </tr>
 <tr class="even">
-<td align="right">-0.0230624</td>
+<td>shufMat2</td>
+<td align="right">0.0221626</td>
 <td align="right">1.0000000</td>
-<td align="right">-0.0145142</td>
-<td align="right">-0.0141044</td>
-<td align="right">-0.0112652</td>
-<td align="right">-0.0081730</td>
-<td align="right">0.0167147</td>
-<td align="right">0.0081195</td>
-<td align="right">-0.0006867</td>
-<td align="right">-0.0097992</td>
+<td align="right">-0.0095015</td>
+<td align="right">0.0190822</td>
+<td align="right">-0.0006160</td>
+<td align="right">0.0029866</td>
+<td align="right">-0.0056216</td>
+<td align="right">0.0073080</td>
+<td align="right">-0.0079764</td>
+<td align="right">0.0011582</td>
 </tr>
 <tr class="odd">
-<td align="right">0.0044617</td>
-<td align="right">-0.0145142</td>
+<td>shufMat3</td>
+<td align="right">-0.0064800</td>
+<td align="right">-0.0095015</td>
 <td align="right">1.0000000</td>
-<td align="right">0.0303350</td>
-<td align="right">-0.0155376</td>
-<td align="right">0.0042879</td>
-<td align="right">0.0017983</td>
-<td align="right">0.0127780</td>
-<td align="right">0.0029284</td>
-<td align="right">-0.0067250</td>
+<td align="right">0.0081577</td>
+<td align="right">-0.0030641</td>
+<td align="right">-0.0006920</td>
+<td align="right">-0.0013993</td>
+<td align="right">-0.0026034</td>
+<td align="right">0.0082645</td>
+<td align="right">-0.0023166</td>
 </tr>
 <tr class="even">
-<td align="right">-0.0199269</td>
-<td align="right">-0.0141044</td>
-<td align="right">0.0303350</td>
+<td>shufMat4</td>
+<td align="right">-0.0197969</td>
+<td align="right">0.0190822</td>
+<td align="right">0.0081577</td>
 <td align="right">1.0000000</td>
-<td align="right">-0.0012172</td>
-<td align="right">-0.0007752</td>
-<td align="right">0.0046835</td>
-<td align="right">0.0066002</td>
-<td align="right">-0.0285317</td>
-<td align="right">0.0140978</td>
+<td align="right">-0.0069869</td>
+<td align="right">0.0013235</td>
+<td align="right">-0.0082109</td>
+<td align="right">0.0129786</td>
+<td align="right">0.0013029</td>
+<td align="right">0.0129035</td>
 </tr>
 <tr class="odd">
-<td align="right">0.0026861</td>
-<td align="right">-0.0112652</td>
-<td align="right">-0.0155376</td>
-<td align="right">-0.0012172</td>
+<td>shufMat5</td>
+<td align="right">-0.0023914</td>
+<td align="right">-0.0006160</td>
+<td align="right">-0.0030641</td>
+<td align="right">-0.0069869</td>
 <td align="right">1.0000000</td>
-<td align="right">-0.0046320</td>
-<td align="right">-0.0008575</td>
-<td align="right">-0.0025401</td>
-<td align="right">0.0070426</td>
-<td align="right">0.0017513</td>
+<td align="right">0.0221353</td>
+<td align="right">-0.0017934</td>
+<td align="right">-0.0076091</td>
+<td align="right">-0.0171948</td>
+<td align="right">0.0016698</td>
 </tr>
 <tr class="even">
-<td align="right">-0.0217988</td>
-<td align="right">-0.0081730</td>
-<td align="right">0.0042879</td>
-<td align="right">-0.0007752</td>
-<td align="right">-0.0046320</td>
+<td>shufMat6</td>
+<td align="right">0.0016956</td>
+<td align="right">0.0029866</td>
+<td align="right">-0.0006920</td>
+<td align="right">0.0013235</td>
+<td align="right">0.0221353</td>
 <td align="right">1.0000000</td>
-<td align="right">0.0084020</td>
-<td align="right">-0.0154758</td>
-<td align="right">0.0146009</td>
-<td align="right">0.0071824</td>
+<td align="right">0.0222623</td>
+<td align="right">0.0001136</td>
+<td align="right">-0.0063629</td>
+<td align="right">0.0065304</td>
 </tr>
 <tr class="odd">
-<td align="right">0.0056319</td>
-<td align="right">0.0167147</td>
-<td align="right">0.0017983</td>
-<td align="right">0.0046835</td>
-<td align="right">-0.0008575</td>
-<td align="right">0.0084020</td>
+<td>shufMat7</td>
+<td align="right">0.0010415</td>
+<td align="right">-0.0056216</td>
+<td align="right">-0.0013993</td>
+<td align="right">-0.0082109</td>
+<td align="right">-0.0017934</td>
+<td align="right">0.0222623</td>
 <td align="right">1.0000000</td>
-<td align="right">-0.0009754</td>
-<td align="right">0.0073380</td>
-<td align="right">-0.0118769</td>
+<td align="right">-0.0043679</td>
+<td align="right">0.0124248</td>
+<td align="right">-0.0059058</td>
 </tr>
 <tr class="even">
-<td align="right">-0.0079684</td>
-<td align="right">0.0081195</td>
-<td align="right">0.0127780</td>
-<td align="right">0.0066002</td>
-<td align="right">-0.0025401</td>
-<td align="right">-0.0154758</td>
-<td align="right">-0.0009754</td>
+<td>shufMat8</td>
+<td align="right">0.0050514</td>
+<td align="right">0.0073080</td>
+<td align="right">-0.0026034</td>
+<td align="right">0.0129786</td>
+<td align="right">-0.0076091</td>
+<td align="right">0.0001136</td>
+<td align="right">-0.0043679</td>
 <td align="right">1.0000000</td>
-<td align="right">-0.0101452</td>
-<td align="right">0.0146790</td>
+<td align="right">-0.0101476</td>
+<td align="right">-0.0058867</td>
 </tr>
 <tr class="odd">
-<td align="right">0.0012602</td>
-<td align="right">-0.0006867</td>
-<td align="right">0.0029284</td>
-<td align="right">-0.0285317</td>
-<td align="right">0.0070426</td>
-<td align="right">0.0146009</td>
-<td align="right">0.0073380</td>
-<td align="right">-0.0101452</td>
+<td>shufMat9</td>
+<td align="right">0.0030873</td>
+<td align="right">-0.0079764</td>
+<td align="right">0.0082645</td>
+<td align="right">0.0013029</td>
+<td align="right">-0.0171948</td>
+<td align="right">-0.0063629</td>
+<td align="right">0.0124248</td>
+<td align="right">-0.0101476</td>
 <td align="right">1.0000000</td>
-<td align="right">-0.0154751</td>
+<td align="right">0.0011250</td>
 </tr>
 <tr class="even">
-<td align="right">0.0049590</td>
-<td align="right">-0.0097992</td>
-<td align="right">-0.0067250</td>
-<td align="right">0.0140978</td>
-<td align="right">0.0017513</td>
-<td align="right">0.0071824</td>
-<td align="right">-0.0118769</td>
-<td align="right">0.0146790</td>
-<td align="right">-0.0154751</td>
+<td>shufMat10</td>
+<td align="right">0.0079440</td>
+<td align="right">0.0011582</td>
+<td align="right">-0.0023166</td>
+<td align="right">0.0129035</td>
+<td align="right">0.0016698</td>
+<td align="right">0.0065304</td>
+<td align="right">-0.0059058</td>
+<td align="right">-0.0058867</td>
+<td align="right">0.0011250</td>
 <td align="right">1.0000000</td>
 </tr>
 </tbody>
@@ -1278,7 +1314,7 @@ Negative control 1: PC plots from a data matrix with shuffled values.
 <div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" data-line-number="1"><span class="kw">table</span>(xShuffledRows <span class="op">==</span><span class="st"> </span>x) <span class="co">## the values match on average one time per row</span></a></code></pre></div>
 <pre><code>
 FALSE  TRUE 
-72356  8084 </code></pre>
+72385  8055 </code></pre>
 <div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" data-line-number="1"><span class="co">## Check that therow-wise means are the same between</span></a>
 <a class="sourceLine" id="cb33-2" data-line-number="2">xRowMeans &lt;-<span class="st"> </span><span class="kw">apply</span>(x, <span class="dv">1</span>, mean)</a>
 <a class="sourceLine" id="cb33-3" data-line-number="3">shuffledRowMeans &lt;-<span class="st"> </span><span class="kw">apply</span>(xShuffledRows, <span class="dv">1</span>, mean)</a>
@@ -1293,129 +1329,160 @@ Negative control 2: PC plots of a matrix with row-wise shuffled values.
 <pre><code>
 TRUE 
 8044 </code></pre>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1"><span class="co">## Check that the permuted matrix is not correlated anymore</span></a>
-<a class="sourceLine" id="cb36-2" data-line-number="2"><span class="kw">kable</span>(<span class="kw">cor</span>(xShuffled), <span class="dt">caption =</span> <span class="st">&quot;Correlation between columns of the shuffled expression matrix&quot;</span>) <span class="co">## Inter-sample correlations should be around 0 except in the diagonal</span></a></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1"><span class="co">## Check the correlation nbetween columns of the row-wise permuted matrix.</span></a>
+<a class="sourceLine" id="cb36-2" data-line-number="2"><span class="co">## Note: values canbe high if the rows have very different ranges (which is the case here)</span></a>
+<a class="sourceLine" id="cb36-3" data-line-number="3">xShuffledRowsCor &lt;-<span class="st"> </span><span class="kw">cor</span>(xShuffledRows)</a>
+<a class="sourceLine" id="cb36-4" data-line-number="4"><span class="kw">rownames</span>(xShuffledRowsCor) &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="st">&quot;shufRow&quot;</span>, <span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(xShuffledRowsCor))</a>
+<a class="sourceLine" id="cb36-5" data-line-number="5"><span class="kw">colnames</span>(xShuffledRowsCor) &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="st">&quot;shufRow&quot;</span>, <span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(xShuffledRowsCor))</a>
+<a class="sourceLine" id="cb36-6" data-line-number="6"><span class="kw">kable</span>(xShuffledRowsCor, </a>
+<a class="sourceLine" id="cb36-7" data-line-number="7">      <span class="dt">caption =</span> <span class="st">&quot;Correlation between columns of the row-wise shuffled expression matrix&quot;</span>,</a>
+<a class="sourceLine" id="cb36-8" data-line-number="8">      <span class="dt">row.names =</span> <span class="ot">TRUE</span>) <span class="co">## Inter-sample correlations should be around 0 except in the diagonal</span></a></code></pre></div>
 <table>
-<caption>Correlation between columns of the shuffled expression matrix</caption>
+<caption>Correlation between columns of the row-wise shuffled expression matrix</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">shufRow 1</th>
+<th align="right">shufRow 2</th>
+<th align="right">shufRow 3</th>
+<th align="right">shufRow 4</th>
+<th align="right">shufRow 5</th>
+<th align="right">shufRow 6</th>
+<th align="right">shufRow 7</th>
+<th align="right">shufRow 8</th>
+<th align="right">shufRow 9</th>
+<th align="right">shufRow 10</th>
+</tr>
+</thead>
 <tbody>
 <tr class="odd">
+<td>shufRow 1</td>
 <td align="right">1.0000000</td>
-<td align="right">-0.0230624</td>
-<td align="right">0.0044617</td>
-<td align="right">-0.0199269</td>
-<td align="right">0.0026861</td>
-<td align="right">-0.0217988</td>
-<td align="right">0.0056319</td>
-<td align="right">-0.0079684</td>
-<td align="right">0.0012602</td>
-<td align="right">0.0049590</td>
+<td align="right">0.9654076</td>
+<td align="right">0.9665464</td>
+<td align="right">0.9654984</td>
+<td align="right">0.9663092</td>
+<td align="right">0.9670260</td>
+<td align="right">0.9655371</td>
+<td align="right">0.9661299</td>
+<td align="right">0.9661444</td>
+<td align="right">0.9651096</td>
 </tr>
 <tr class="even">
-<td align="right">-0.0230624</td>
+<td>shufRow 2</td>
+<td align="right">0.9654076</td>
 <td align="right">1.0000000</td>
-<td align="right">-0.0145142</td>
-<td align="right">-0.0141044</td>
-<td align="right">-0.0112652</td>
-<td align="right">-0.0081730</td>
-<td align="right">0.0167147</td>
-<td align="right">0.0081195</td>
-<td align="right">-0.0006867</td>
-<td align="right">-0.0097992</td>
+<td align="right">0.9668353</td>
+<td align="right">0.9667253</td>
+<td align="right">0.9676519</td>
+<td align="right">0.9695913</td>
+<td align="right">0.9672817</td>
+<td align="right">0.9670044</td>
+<td align="right">0.9657343</td>
+<td align="right">0.9654980</td>
 </tr>
 <tr class="odd">
-<td align="right">0.0044617</td>
-<td align="right">-0.0145142</td>
+<td>shufRow 3</td>
+<td align="right">0.9665464</td>
+<td align="right">0.9668353</td>
 <td align="right">1.0000000</td>
-<td align="right">0.0303350</td>
-<td align="right">-0.0155376</td>
-<td align="right">0.0042879</td>
-<td align="right">0.0017983</td>
-<td align="right">0.0127780</td>
-<td align="right">0.0029284</td>
-<td align="right">-0.0067250</td>
+<td align="right">0.9688506</td>
+<td align="right">0.9667601</td>
+<td align="right">0.9685290</td>
+<td align="right">0.9657456</td>
+<td align="right">0.9670801</td>
+<td align="right">0.9657487</td>
+<td align="right">0.9671581</td>
 </tr>
 <tr class="even">
-<td align="right">-0.0199269</td>
-<td align="right">-0.0141044</td>
-<td align="right">0.0303350</td>
+<td>shufRow 4</td>
+<td align="right">0.9654984</td>
+<td align="right">0.9667253</td>
+<td align="right">0.9688506</td>
 <td align="right">1.0000000</td>
-<td align="right">-0.0012172</td>
-<td align="right">-0.0007752</td>
-<td align="right">0.0046835</td>
-<td align="right">0.0066002</td>
-<td align="right">-0.0285317</td>
-<td align="right">0.0140978</td>
+<td align="right">0.9677497</td>
+<td align="right">0.9672696</td>
+<td align="right">0.9677721</td>
+<td align="right">0.9664212</td>
+<td align="right">0.9664665</td>
+<td align="right">0.9659556</td>
 </tr>
 <tr class="odd">
-<td align="right">0.0026861</td>
-<td align="right">-0.0112652</td>
-<td align="right">-0.0155376</td>
-<td align="right">-0.0012172</td>
+<td>shufRow 5</td>
+<td align="right">0.9663092</td>
+<td align="right">0.9676519</td>
+<td align="right">0.9667601</td>
+<td align="right">0.9677497</td>
 <td align="right">1.0000000</td>
-<td align="right">-0.0046320</td>
-<td align="right">-0.0008575</td>
-<td align="right">-0.0025401</td>
-<td align="right">0.0070426</td>
-<td align="right">0.0017513</td>
+<td align="right">0.9663816</td>
+<td align="right">0.9682309</td>
+<td align="right">0.9673038</td>
+<td align="right">0.9676441</td>
+<td align="right">0.9672254</td>
 </tr>
 <tr class="even">
-<td align="right">-0.0217988</td>
-<td align="right">-0.0081730</td>
-<td align="right">0.0042879</td>
-<td align="right">-0.0007752</td>
-<td align="right">-0.0046320</td>
+<td>shufRow 6</td>
+<td align="right">0.9670260</td>
+<td align="right">0.9695913</td>
+<td align="right">0.9685290</td>
+<td align="right">0.9672696</td>
+<td align="right">0.9663816</td>
 <td align="right">1.0000000</td>
-<td align="right">0.0084020</td>
-<td align="right">-0.0154758</td>
-<td align="right">0.0146009</td>
-<td align="right">0.0071824</td>
+<td align="right">0.9660307</td>
+<td align="right">0.9680419</td>
+<td align="right">0.9668334</td>
+<td align="right">0.9661435</td>
 </tr>
 <tr class="odd">
-<td align="right">0.0056319</td>
-<td align="right">0.0167147</td>
-<td align="right">0.0017983</td>
-<td align="right">0.0046835</td>
-<td align="right">-0.0008575</td>
-<td align="right">0.0084020</td>
+<td>shufRow 7</td>
+<td align="right">0.9655371</td>
+<td align="right">0.9672817</td>
+<td align="right">0.9657456</td>
+<td align="right">0.9677721</td>
+<td align="right">0.9682309</td>
+<td align="right">0.9660307</td>
 <td align="right">1.0000000</td>
-<td align="right">-0.0009754</td>
-<td align="right">0.0073380</td>
-<td align="right">-0.0118769</td>
+<td align="right">0.9656890</td>
+<td align="right">0.9651073</td>
+<td align="right">0.9650897</td>
 </tr>
 <tr class="even">
-<td align="right">-0.0079684</td>
-<td align="right">0.0081195</td>
-<td align="right">0.0127780</td>
-<td align="right">0.0066002</td>
-<td align="right">-0.0025401</td>
-<td align="right">-0.0154758</td>
-<td align="right">-0.0009754</td>
+<td>shufRow 8</td>
+<td align="right">0.9661299</td>
+<td align="right">0.9670044</td>
+<td align="right">0.9670801</td>
+<td align="right">0.9664212</td>
+<td align="right">0.9673038</td>
+<td align="right">0.9680419</td>
+<td align="right">0.9656890</td>
 <td align="right">1.0000000</td>
-<td align="right">-0.0101452</td>
-<td align="right">0.0146790</td>
+<td align="right">0.9658226</td>
+<td align="right">0.9668778</td>
 </tr>
 <tr class="odd">
-<td align="right">0.0012602</td>
-<td align="right">-0.0006867</td>
-<td align="right">0.0029284</td>
-<td align="right">-0.0285317</td>
-<td align="right">0.0070426</td>
-<td align="right">0.0146009</td>
-<td align="right">0.0073380</td>
-<td align="right">-0.0101452</td>
+<td>shufRow 9</td>
+<td align="right">0.9661444</td>
+<td align="right">0.9657343</td>
+<td align="right">0.9657487</td>
+<td align="right">0.9664665</td>
+<td align="right">0.9676441</td>
+<td align="right">0.9668334</td>
+<td align="right">0.9651073</td>
+<td align="right">0.9658226</td>
 <td align="right">1.0000000</td>
-<td align="right">-0.0154751</td>
+<td align="right">0.9654480</td>
 </tr>
 <tr class="even">
-<td align="right">0.0049590</td>
-<td align="right">-0.0097992</td>
-<td align="right">-0.0067250</td>
-<td align="right">0.0140978</td>
-<td align="right">0.0017513</td>
-<td align="right">0.0071824</td>
-<td align="right">-0.0118769</td>
-<td align="right">0.0146790</td>
-<td align="right">-0.0154751</td>
+<td>shufRow 10</td>
+<td align="right">0.9651096</td>
+<td align="right">0.9654980</td>
+<td align="right">0.9671581</td>
+<td align="right">0.9659556</td>
+<td align="right">0.9672254</td>
+<td align="right">0.9661435</td>
+<td align="right">0.9650897</td>
+<td align="right">0.9668778</td>
+<td align="right">0.9654480</td>
 <td align="right">1.0000000</td>
 </tr>
 </tbody>
