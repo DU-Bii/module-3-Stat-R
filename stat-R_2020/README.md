@@ -147,6 +147,7 @@ Contents: [clustering/](clustering/)
 | Practical: data exploration (Pavkovic, 2019)  | Exercises |  | [[html](practicals/pavkovic_2019/pavkovic2019_exercises.html)]  |
 | R scripts (click on script, then "Raw") | R scripts |  | [[github](https://github.com/DU-Bii/module-3-Stat-R/tree/master/stat-R_2020/practicals/pavkovic_2019/R)]  |
 | Report template with nice yaml header  | Rmd |  | [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/templates/YOUR-NAME_REPORT-TOPICS.Rmd)] [[html](templates/YOUR-NAME_REPORT-TOPICS.html)] |
+| Starter for a report: embedding PCA script in Rmd template  | Rmd |  | [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/templates/YOUR-NAME_REPORT-TOPICS.Rmd)] [[html](templates/YOUR-NAME_REPORT-TOPICS.html)] |
 
 Topics for 2020-06-03
 
