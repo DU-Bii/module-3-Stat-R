@@ -11,7 +11,6 @@
 
 <meta name="author" content="Jacques van Helden" />
 
-<meta name="date" content="2020-06-04" />
 
 <title>Principal Component Analysis of multi-omics data (Pavkovic 2019)</title>
 
@@ -350,7 +349,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Principal Component Analysis of multi-omics data (Pavkovic 2019)</h1>
 <h4 class="author">Jacques van Helden</h4>
-<h4 class="date">2020-06-04</h4>
+<h4 class="date">2020-06-04 2020-06-04 06:42:56</h4>
 
 </div>
 
@@ -940,8 +939,8 @@ blabla
 <a class="sourceLine" id="cb20-9" data-line-number="9">  <span class="dt">nrow =</span> <span class="kw">nrow</span>(x), <span class="dt">ncol =</span> <span class="kw">ncol</span>(x))</a>
 <a class="sourceLine" id="cb20-10" data-line-number="10"><span class="kw">table</span>(xShuffled <span class="op">==</span><span class="st"> </span>x) <span class="co">## the values match on average one time per permutation</span></a></code></pre></div>
 <pre><code>
-FALSE  TRUE 
-80439     1 </code></pre>
+FALSE 
+80440 </code></pre>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="co">## Check that the original expressio matrix has high correlation values betwen individuals</span></a>
 <a class="sourceLine" id="cb22-2" data-line-number="2"><span class="kw">kable</span>(<span class="kw">cor</span>(x),  <span class="dt">caption =</span> <span class="st">&quot;Correlation between columns (samples) of the original expression matrix. &quot;</span>)</a></code></pre></div>
 <table>
@@ -1101,122 +1100,122 @@ FALSE  TRUE
 <tbody>
 <tr class="odd">
 <td align="right">1.0000000</td>
-<td align="right">0.0067008</td>
-<td align="right">-0.0017115</td>
-<td align="right">-0.0012622</td>
-<td align="right">-0.0081475</td>
-<td align="right">-0.0056885</td>
-<td align="right">-0.0413935</td>
-<td align="right">0.0148964</td>
-<td align="right">-0.0076757</td>
-<td align="right">-0.0167416</td>
+<td align="right">-0.0230624</td>
+<td align="right">0.0044617</td>
+<td align="right">-0.0199269</td>
+<td align="right">0.0026861</td>
+<td align="right">-0.0217988</td>
+<td align="right">0.0056319</td>
+<td align="right">-0.0079684</td>
+<td align="right">0.0012602</td>
+<td align="right">0.0049590</td>
 </tr>
 <tr class="even">
-<td align="right">0.0067008</td>
+<td align="right">-0.0230624</td>
 <td align="right">1.0000000</td>
-<td align="right">0.0056297</td>
-<td align="right">0.0115032</td>
-<td align="right">-0.0088333</td>
-<td align="right">-0.0109739</td>
-<td align="right">-0.0113437</td>
-<td align="right">0.0003803</td>
-<td align="right">-0.0040920</td>
-<td align="right">-0.0032882</td>
+<td align="right">-0.0145142</td>
+<td align="right">-0.0141044</td>
+<td align="right">-0.0112652</td>
+<td align="right">-0.0081730</td>
+<td align="right">0.0167147</td>
+<td align="right">0.0081195</td>
+<td align="right">-0.0006867</td>
+<td align="right">-0.0097992</td>
 </tr>
 <tr class="odd">
-<td align="right">-0.0017115</td>
-<td align="right">0.0056297</td>
+<td align="right">0.0044617</td>
+<td align="right">-0.0145142</td>
 <td align="right">1.0000000</td>
-<td align="right">0.0083434</td>
-<td align="right">-0.0267141</td>
-<td align="right">0.0042352</td>
-<td align="right">-0.0023065</td>
-<td align="right">0.0095177</td>
-<td align="right">-0.0006676</td>
-<td align="right">-0.0127524</td>
+<td align="right">0.0303350</td>
+<td align="right">-0.0155376</td>
+<td align="right">0.0042879</td>
+<td align="right">0.0017983</td>
+<td align="right">0.0127780</td>
+<td align="right">0.0029284</td>
+<td align="right">-0.0067250</td>
 </tr>
 <tr class="even">
-<td align="right">-0.0012622</td>
-<td align="right">0.0115032</td>
-<td align="right">0.0083434</td>
+<td align="right">-0.0199269</td>
+<td align="right">-0.0141044</td>
+<td align="right">0.0303350</td>
 <td align="right">1.0000000</td>
-<td align="right">0.0164537</td>
-<td align="right">-0.0010736</td>
-<td align="right">0.0214677</td>
-<td align="right">-0.0111628</td>
-<td align="right">0.0034001</td>
-<td align="right">-0.0066003</td>
+<td align="right">-0.0012172</td>
+<td align="right">-0.0007752</td>
+<td align="right">0.0046835</td>
+<td align="right">0.0066002</td>
+<td align="right">-0.0285317</td>
+<td align="right">0.0140978</td>
 </tr>
 <tr class="odd">
-<td align="right">-0.0081475</td>
-<td align="right">-0.0088333</td>
-<td align="right">-0.0267141</td>
-<td align="right">0.0164537</td>
+<td align="right">0.0026861</td>
+<td align="right">-0.0112652</td>
+<td align="right">-0.0155376</td>
+<td align="right">-0.0012172</td>
 <td align="right">1.0000000</td>
-<td align="right">-0.0080564</td>
-<td align="right">-0.0093866</td>
-<td align="right">0.0165655</td>
-<td align="right">0.0050996</td>
-<td align="right">-0.0181119</td>
+<td align="right">-0.0046320</td>
+<td align="right">-0.0008575</td>
+<td align="right">-0.0025401</td>
+<td align="right">0.0070426</td>
+<td align="right">0.0017513</td>
 </tr>
 <tr class="even">
-<td align="right">-0.0056885</td>
-<td align="right">-0.0109739</td>
-<td align="right">0.0042352</td>
-<td align="right">-0.0010736</td>
-<td align="right">-0.0080564</td>
+<td align="right">-0.0217988</td>
+<td align="right">-0.0081730</td>
+<td align="right">0.0042879</td>
+<td align="right">-0.0007752</td>
+<td align="right">-0.0046320</td>
 <td align="right">1.0000000</td>
-<td align="right">-0.0079685</td>
-<td align="right">0.0096739</td>
-<td align="right">-0.0061058</td>
-<td align="right">0.0017713</td>
+<td align="right">0.0084020</td>
+<td align="right">-0.0154758</td>
+<td align="right">0.0146009</td>
+<td align="right">0.0071824</td>
 </tr>
 <tr class="odd">
-<td align="right">-0.0413935</td>
-<td align="right">-0.0113437</td>
-<td align="right">-0.0023065</td>
-<td align="right">0.0214677</td>
-<td align="right">-0.0093866</td>
-<td align="right">-0.0079685</td>
+<td align="right">0.0056319</td>
+<td align="right">0.0167147</td>
+<td align="right">0.0017983</td>
+<td align="right">0.0046835</td>
+<td align="right">-0.0008575</td>
+<td align="right">0.0084020</td>
 <td align="right">1.0000000</td>
-<td align="right">0.0004930</td>
-<td align="right">0.0017512</td>
-<td align="right">0.0109347</td>
+<td align="right">-0.0009754</td>
+<td align="right">0.0073380</td>
+<td align="right">-0.0118769</td>
 </tr>
 <tr class="even">
-<td align="right">0.0148964</td>
-<td align="right">0.0003803</td>
-<td align="right">0.0095177</td>
-<td align="right">-0.0111628</td>
-<td align="right">0.0165655</td>
-<td align="right">0.0096739</td>
-<td align="right">0.0004930</td>
+<td align="right">-0.0079684</td>
+<td align="right">0.0081195</td>
+<td align="right">0.0127780</td>
+<td align="right">0.0066002</td>
+<td align="right">-0.0025401</td>
+<td align="right">-0.0154758</td>
+<td align="right">-0.0009754</td>
 <td align="right">1.0000000</td>
-<td align="right">-0.0024570</td>
-<td align="right">-0.0056593</td>
+<td align="right">-0.0101452</td>
+<td align="right">0.0146790</td>
 </tr>
 <tr class="odd">
-<td align="right">-0.0076757</td>
-<td align="right">-0.0040920</td>
-<td align="right">-0.0006676</td>
-<td align="right">0.0034001</td>
-<td align="right">0.0050996</td>
-<td align="right">-0.0061058</td>
-<td align="right">0.0017512</td>
-<td align="right">-0.0024570</td>
+<td align="right">0.0012602</td>
+<td align="right">-0.0006867</td>
+<td align="right">0.0029284</td>
+<td align="right">-0.0285317</td>
+<td align="right">0.0070426</td>
+<td align="right">0.0146009</td>
+<td align="right">0.0073380</td>
+<td align="right">-0.0101452</td>
 <td align="right">1.0000000</td>
-<td align="right">0.0233555</td>
+<td align="right">-0.0154751</td>
 </tr>
 <tr class="even">
-<td align="right">-0.0167416</td>
-<td align="right">-0.0032882</td>
-<td align="right">-0.0127524</td>
-<td align="right">-0.0066003</td>
-<td align="right">-0.0181119</td>
-<td align="right">0.0017713</td>
-<td align="right">0.0109347</td>
-<td align="right">-0.0056593</td>
-<td align="right">0.0233555</td>
+<td align="right">0.0049590</td>
+<td align="right">-0.0097992</td>
+<td align="right">-0.0067250</td>
+<td align="right">0.0140978</td>
+<td align="right">0.0017513</td>
+<td align="right">0.0071824</td>
+<td align="right">-0.0118769</td>
+<td align="right">0.0146790</td>
+<td align="right">-0.0154751</td>
 <td align="right">1.0000000</td>
 </tr>
 </tbody>
@@ -1279,7 +1278,7 @@ Negative control 1: PC plots from a data matrix with shuffled values.
 <div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" data-line-number="1"><span class="kw">table</span>(xShuffledRows <span class="op">==</span><span class="st"> </span>x) <span class="co">## the values match on average one time per row</span></a></code></pre></div>
 <pre><code>
 FALSE  TRUE 
-72468  7972 </code></pre>
+72356  8084 </code></pre>
 <div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" data-line-number="1"><span class="co">## Check that therow-wise means are the same between</span></a>
 <a class="sourceLine" id="cb33-2" data-line-number="2">xRowMeans &lt;-<span class="st"> </span><span class="kw">apply</span>(x, <span class="dv">1</span>, mean)</a>
 <a class="sourceLine" id="cb33-3" data-line-number="3">shuffledRowMeans &lt;-<span class="st"> </span><span class="kw">apply</span>(xShuffledRows, <span class="dv">1</span>, mean)</a>
@@ -1301,122 +1300,122 @@ TRUE
 <tbody>
 <tr class="odd">
 <td align="right">1.0000000</td>
-<td align="right">0.0067008</td>
-<td align="right">-0.0017115</td>
-<td align="right">-0.0012622</td>
-<td align="right">-0.0081475</td>
-<td align="right">-0.0056885</td>
-<td align="right">-0.0413935</td>
-<td align="right">0.0148964</td>
-<td align="right">-0.0076757</td>
-<td align="right">-0.0167416</td>
+<td align="right">-0.0230624</td>
+<td align="right">0.0044617</td>
+<td align="right">-0.0199269</td>
+<td align="right">0.0026861</td>
+<td align="right">-0.0217988</td>
+<td align="right">0.0056319</td>
+<td align="right">-0.0079684</td>
+<td align="right">0.0012602</td>
+<td align="right">0.0049590</td>
 </tr>
 <tr class="even">
-<td align="right">0.0067008</td>
+<td align="right">-0.0230624</td>
 <td align="right">1.0000000</td>
-<td align="right">0.0056297</td>
-<td align="right">0.0115032</td>
-<td align="right">-0.0088333</td>
-<td align="right">-0.0109739</td>
-<td align="right">-0.0113437</td>
-<td align="right">0.0003803</td>
-<td align="right">-0.0040920</td>
-<td align="right">-0.0032882</td>
+<td align="right">-0.0145142</td>
+<td align="right">-0.0141044</td>
+<td align="right">-0.0112652</td>
+<td align="right">-0.0081730</td>
+<td align="right">0.0167147</td>
+<td align="right">0.0081195</td>
+<td align="right">-0.0006867</td>
+<td align="right">-0.0097992</td>
 </tr>
 <tr class="odd">
-<td align="right">-0.0017115</td>
-<td align="right">0.0056297</td>
+<td align="right">0.0044617</td>
+<td align="right">-0.0145142</td>
 <td align="right">1.0000000</td>
-<td align="right">0.0083434</td>
-<td align="right">-0.0267141</td>
-<td align="right">0.0042352</td>
-<td align="right">-0.0023065</td>
-<td align="right">0.0095177</td>
-<td align="right">-0.0006676</td>
-<td align="right">-0.0127524</td>
+<td align="right">0.0303350</td>
+<td align="right">-0.0155376</td>
+<td align="right">0.0042879</td>
+<td align="right">0.0017983</td>
+<td align="right">0.0127780</td>
+<td align="right">0.0029284</td>
+<td align="right">-0.0067250</td>
 </tr>
 <tr class="even">
-<td align="right">-0.0012622</td>
-<td align="right">0.0115032</td>
-<td align="right">0.0083434</td>
+<td align="right">-0.0199269</td>
+<td align="right">-0.0141044</td>
+<td align="right">0.0303350</td>
 <td align="right">1.0000000</td>
-<td align="right">0.0164537</td>
-<td align="right">-0.0010736</td>
-<td align="right">0.0214677</td>
-<td align="right">-0.0111628</td>
-<td align="right">0.0034001</td>
-<td align="right">-0.0066003</td>
+<td align="right">-0.0012172</td>
+<td align="right">-0.0007752</td>
+<td align="right">0.0046835</td>
+<td align="right">0.0066002</td>
+<td align="right">-0.0285317</td>
+<td align="right">0.0140978</td>
 </tr>
 <tr class="odd">
-<td align="right">-0.0081475</td>
-<td align="right">-0.0088333</td>
-<td align="right">-0.0267141</td>
-<td align="right">0.0164537</td>
+<td align="right">0.0026861</td>
+<td align="right">-0.0112652</td>
+<td align="right">-0.0155376</td>
+<td align="right">-0.0012172</td>
 <td align="right">1.0000000</td>
-<td align="right">-0.0080564</td>
-<td align="right">-0.0093866</td>
-<td align="right">0.0165655</td>
-<td align="right">0.0050996</td>
-<td align="right">-0.0181119</td>
+<td align="right">-0.0046320</td>
+<td align="right">-0.0008575</td>
+<td align="right">-0.0025401</td>
+<td align="right">0.0070426</td>
+<td align="right">0.0017513</td>
 </tr>
 <tr class="even">
-<td align="right">-0.0056885</td>
-<td align="right">-0.0109739</td>
-<td align="right">0.0042352</td>
-<td align="right">-0.0010736</td>
-<td align="right">-0.0080564</td>
+<td align="right">-0.0217988</td>
+<td align="right">-0.0081730</td>
+<td align="right">0.0042879</td>
+<td align="right">-0.0007752</td>
+<td align="right">-0.0046320</td>
 <td align="right">1.0000000</td>
-<td align="right">-0.0079685</td>
-<td align="right">0.0096739</td>
-<td align="right">-0.0061058</td>
-<td align="right">0.0017713</td>
+<td align="right">0.0084020</td>
+<td align="right">-0.0154758</td>
+<td align="right">0.0146009</td>
+<td align="right">0.0071824</td>
 </tr>
 <tr class="odd">
-<td align="right">-0.0413935</td>
-<td align="right">-0.0113437</td>
-<td align="right">-0.0023065</td>
-<td align="right">0.0214677</td>
-<td align="right">-0.0093866</td>
-<td align="right">-0.0079685</td>
+<td align="right">0.0056319</td>
+<td align="right">0.0167147</td>
+<td align="right">0.0017983</td>
+<td align="right">0.0046835</td>
+<td align="right">-0.0008575</td>
+<td align="right">0.0084020</td>
 <td align="right">1.0000000</td>
-<td align="right">0.0004930</td>
-<td align="right">0.0017512</td>
-<td align="right">0.0109347</td>
+<td align="right">-0.0009754</td>
+<td align="right">0.0073380</td>
+<td align="right">-0.0118769</td>
 </tr>
 <tr class="even">
-<td align="right">0.0148964</td>
-<td align="right">0.0003803</td>
-<td align="right">0.0095177</td>
-<td align="right">-0.0111628</td>
-<td align="right">0.0165655</td>
-<td align="right">0.0096739</td>
-<td align="right">0.0004930</td>
+<td align="right">-0.0079684</td>
+<td align="right">0.0081195</td>
+<td align="right">0.0127780</td>
+<td align="right">0.0066002</td>
+<td align="right">-0.0025401</td>
+<td align="right">-0.0154758</td>
+<td align="right">-0.0009754</td>
 <td align="right">1.0000000</td>
-<td align="right">-0.0024570</td>
-<td align="right">-0.0056593</td>
+<td align="right">-0.0101452</td>
+<td align="right">0.0146790</td>
 </tr>
 <tr class="odd">
-<td align="right">-0.0076757</td>
-<td align="right">-0.0040920</td>
-<td align="right">-0.0006676</td>
-<td align="right">0.0034001</td>
-<td align="right">0.0050996</td>
-<td align="right">-0.0061058</td>
-<td align="right">0.0017512</td>
-<td align="right">-0.0024570</td>
+<td align="right">0.0012602</td>
+<td align="right">-0.0006867</td>
+<td align="right">0.0029284</td>
+<td align="right">-0.0285317</td>
+<td align="right">0.0070426</td>
+<td align="right">0.0146009</td>
+<td align="right">0.0073380</td>
+<td align="right">-0.0101452</td>
 <td align="right">1.0000000</td>
-<td align="right">0.0233555</td>
+<td align="right">-0.0154751</td>
 </tr>
 <tr class="even">
-<td align="right">-0.0167416</td>
-<td align="right">-0.0032882</td>
-<td align="right">-0.0127524</td>
-<td align="right">-0.0066003</td>
-<td align="right">-0.0181119</td>
-<td align="right">0.0017713</td>
-<td align="right">0.0109347</td>
-<td align="right">-0.0056593</td>
-<td align="right">0.0233555</td>
+<td align="right">0.0049590</td>
+<td align="right">-0.0097992</td>
+<td align="right">-0.0067250</td>
+<td align="right">0.0140978</td>
+<td align="right">0.0017513</td>
+<td align="right">0.0071824</td>
+<td align="right">-0.0118769</td>
+<td align="right">0.0146790</td>
+<td align="right">-0.0154751</td>
 <td align="right">1.0000000</td>
 </tr>
 </tbody>
