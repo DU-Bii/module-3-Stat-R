@@ -174,14 +174,14 @@ kable(res.pca$ind$coord, caption = "Coordinates of the individuals in the variab
 
 ### Eigen values plot
 
-```{r eigen_values_plot, out.width="80%", fig.width=7, fig.height=5, fig.cap="Eigenvalues plot. "}
+```{r eigen_values_plot, out.width="50%", fig.width=7, fig.height=5, fig.cap="Eigenvalues plot. "}
 #### Plot eigen values ####
 fviz_eig(res.pca, addlabels = TRUE, ylim = c(0, 50), main = paste(parameters$datatype, parameters$dataset))
 
 ```
 
 
-```{r pc_plots, fig.width=5, fig.height=5, out.width="50%", fig.cap="blabla"}
+```{r pc_plots, fig.width=5, fig.height=5, out.width="50%", fig.cap=paste("PC plots of the dataset", parameters$datatype, parameters$dataset)}
 
 #### Plot PC1 vs PC2 with condition-specific colors ####
 fviz_pca_ind(res.pca, axes = c(1,2), 
@@ -288,7 +288,7 @@ A more refined appoach is to shuffle the values inside each row of the `x` data 
 Note that this approach will preserve a quite high correlation between the columns of the matrix, which will reflect the gene-specific level of expressions (some genes have very high levels across all conditons, and some others very low levels across all conditions). However the values will now be sampled independently of the studied factor (the impact of the time point). Consequently, the row-wise shuffled matrix will have data distributions  that better reflects those of biological data, so that this control can be considered as a more suitable than the whole matrix shuffling. 
 
 
-```{r shuffled_rows_PCA, out.width="50%", fig.width=5, fig.height=5, fig.cap="Negative control 2: PC plots of a matrix with row-wise shuffled values. "}
+```{r shuffled_rows_PCA, out.width="50%", fig.width=5, fig.height=5, fig.cap="Row-wise shuffling of the values removes the sample-specific information whilst  preserving the mean of each feature.  "}
 #### Negative control : row-wise permutations of the values ####
 
 ## Permute values inside each row of the matrix
