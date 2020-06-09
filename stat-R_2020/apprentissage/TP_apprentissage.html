@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Leslie REGAD and Frédéric GUYON (Université Paris Diderot), adapted by Jacques va Helden and Olivier Sand" />
+
+<meta name="date" content="2020-06-10" />
+
+<title>Module 3 - Analyse statistique avec R - Séance 7</title>
+
+<script src="TP_apprentissage_files/header-attrs-2.2/header-attrs.js"></script>
+<script src="TP_apprentissage_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="TP_apprentissage_files/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="TP_apprentissage_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="TP_apprentissage_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="TP_apprentissage_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="TP_apprentissage_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="TP_apprentissage_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="TP_apprentissage_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="TP_apprentissage_files/navigation-1.1/tabsets.js"></script>
+<script src="TP_apprentissage_files/navigation-1.1/codefolding.js"></script>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  { color: #cccccc; background-color: #303030; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ffcfaf; } /* Alert */
+code span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+code span.at { } /* Attribute */
+code span.bn { color: #dca3a3; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #f0dfaf; } /* ControlFlow */
+code span.ch { color: #dca3a3; } /* Char */
+code span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+code span.co { color: #7f9f7f; } /* Comment */
+code span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+code span.do { color: #7f9f7f; } /* Documentation */
+code span.dt { color: #dfdfbf; } /* DataType */
+code span.dv { color: #dcdccc; } /* DecVal */
+code span.er { color: #c3bf9f; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #c0bed1; } /* Float */
+code span.fu { color: #efef8f; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+code span.kw { color: #f0dfaf; } /* Keyword */
+code span.op { color: #f0efd0; } /* Operator */
+code span.ot { color: #efef8f; } /* Other */
+code span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+code span.sc { color: #dca3a3; } /* SpecialChar */
+code span.ss { color: #cc9393; } /* SpecialString */
+code span.st { color: #cc9393; } /* String */
+code span.va { } /* Variable */
+code span.vs { color: #cc9393; } /* VerbatimString */
+code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
+
+.sourceCode .row {
+  width: 100%;
+}
+.sourceCode {
+  overflow-x: auto;
+}
+.code-folding-btn {
+  margin-right: -30px;
+}
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Module 3 - Analyse statistique avec R - Séance 7</h1>
+<h3 class="subtitle">DUBii 2020</h3>
+<h4 class="author">Leslie REGAD and Frédéric GUYON (Université Paris Diderot), adapted by Jacques va Helden and Olivier Sand</h4>
+<h4 class="date">2020-06-10</h4>
+
+</div>
+
+
+<p>Le but de ce TP est de développer des modèles statistiques pour prédire le type de cancer en utilisant les données de l’étude TCGA (<em>The Cancer Genome Atlas</em>; <a href="https://cancergenome.nih.gov/" class="uri">https://cancergenome.nih.gov/</a>) qui regroupent des données RNA-seq de patients atteints du cancer du sein.</p>
+<p>Pour ce TP, vous utiliserez les mêmes données que celles que vous avez utilisées pour le TP clustering (séance 4) :</p>
+<ul>
+<li>fichier <code>BIC_log2-norm-counts_edgeR_DEG_top_1000.tsv.gz</code> qui correspond au fichier d’expression pour les 1000 gènes (lignes) les plus significatifs pour 819 échantillons (colonnes).<br />
+</li>
+<li>fichier <code>BIC_sample-classes.tsv.gz</code> qui contient les étiquettes des 819 échantillons.</li>
+</ul>
+<p>Sur le serveur Rstudio de l’IFB-core-cluster, les données sont dans le répertoire : <code>/shared/projects/du_bii_2019/data/module3/seance4/BIC/</code></p>
+<p>si vous travaillez sur une installation locale, vous pouvez télécharger un clone de ce cours</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">mkdir</span> -p ~/DUBii_clones</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="bu">cd</span> ~/DUBii_clones</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="fu">git</span> clone https://github.com/DU-Bii/module-3-Stat-R.git</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="bu">cd</span> module-3-Stat/</span></code></pre></div>
+<p>Au cours de ce TP, vous allez développer différents modèles statistiques :</p>
+<ul>
+<li>Dans un premier temps, vous construirez des modèles pour prédire si le cancer est du type “lumina.A” ou pas en utilisant :
+<ul>
+<li>un modèle CART,<br />
+</li>
+<li>un modèle de <em>random forest</em>,<br />
+</li>
+<li>un modèle de SVM,<br />
+</li>
+</ul></li>
+<li>Dans un second temps, vous construirez un modèle de <em>random forest</em> pour prédire un des 4 types de cancer : Basal.like, HER2pos, Luminal.A ou Luminal.B.</li>
+</ul>
+<div id="préparation-des-données" class="section level1" number="1">
+<h1 number="1"><span class="header-section-number">1</span> Préparation des données</h1>
+<ol style="list-style-type: decimal">
+<li>Ouvrez le fichier d’expression des gènes en utilisant la commande <code>read.table()</code>. Stockez ce data.frame dans l’objet <code>BIC.expr</code>. Vérifiez la taille du data.frame généré en utilisant la commande <code>dim()</code>.</li>
+</ol>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># data.folder &lt;- &quot;/shared/projects/du_bii_2019/data/module3/seance4/BIC&quot;</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a>data.folder &lt;-<span class="st"> &quot;data/BIC&quot;</span> </span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="co"># data.folder &lt;- &quot;/shared/projects/dubii2020/trainers/github_clones/study-cases/Homo_sapiens/TCGA_study-case/TCGA_AML_data&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>BIC.expr.file &lt;-<span class="st"> </span><span class="kw">file.path</span>(data.folder, <span class="st">&quot;BIC_log2-norm-counts_edgeR_DEG_top_1000.tsv.gz&quot;</span>)</span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="co">#BIC.expr.file &lt;- file.path(data.folder, &quot;AML_counts_filtered-genes.tsv.gz&quot;)</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a>BIC.expr &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="dt">file =</span> BIC.expr.file, <span class="dt">header =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="kw">dim</span>(BIC.expr)</span></code></pre></div>
+<pre><code>[1] 1000  819</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Ouvrez le fichier qui contient les étiquettes des échantillons en utilisant la commande <code>read.table()</code>. Stockez ce data.frame dans l’objet <code>BIC.sample.classes</code>.</li>
+</ol>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>BIC.sample.classes &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="kw">file.path</span>(data.folder, <span class="st">&quot;BIC_sample-classes.tsv.gz&quot;</span>),<span class="dt">header =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="co">#BIC.sample.classes &lt;- read.table(file.path(data.folder, &quot;AML_sample-classes.tsv.gz&quot;),header = TRUE)</span></span></code></pre></div>
+<ul>
+<li>Vérifiez le nombre d’échantillons disponibles dans ce jeu de données.</li>
+</ul>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">dim</span>(BIC.sample.classes)</span></code></pre></div>
+<pre><code>[1] 819   4</code></pre>
+<ul>
+<li>Déterminez le type de variables disponibles dans ce jeu de données en utilisant la fonction <code>summary()</code>.</li>
+</ul>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">summary</span>(BIC.sample.classes)</span></code></pre></div>
+<pre><code> cancer.type            ER1                PR1                Her2          
+ Length:819         Length:819         Length:819         Length:819        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  </code></pre>
+<p>La première colonne du data.frame <code>BIC.sample.classes</code> renseigne sur le type de cancer de chaque échantillon. Comme vous pouvez le voir, il y a 5 types de cancer, dont un type qui est <code>Unclassified</code>. Lors de la prédiction du type de cancer, ce type risque de biaiser les résultats. Vous allez supprimer ces échantillons des jeux de données.<br />
+A la fin du TP, vous utiliserez les modèles statistiques construits pour prédire le type de cancer de ces échantillons de type “Unclassified”.</p>
+<ol start="3" style="list-style-type: decimal">
+<li>Supprimez les échantillons correspondant au type <code>Unclassified</code> dans les deux data.frames.</li>
+</ol>
+<ul>
+<li>En utilisant la fonction <code>which()</code>, identifiez les lignes du data.frame <code>BIC.sample.classes</code> qui correspondent au type <code>Unclassified</code>. Vérifiez que vous avez bien sélectionné 107 individus.</li>
+</ul>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>ind.uncl &lt;-<span class="st"> </span><span class="kw">which</span>(BIC.sample.classes[,<span class="st">&quot;cancer.type&quot;</span>]<span class="op">==</span><span class="st">&quot;Unclassified&quot;</span>)</span>
+<span id="cb10-2"><a href="#cb10-2"></a><span class="kw">length</span>(ind.uncl)</span></code></pre></div>
+<pre><code>[1] 107</code></pre>
+<ul>
+<li>Supprimez ces individus dans le data.frame <code>BIC.sample.classes</code> en utilisant l’indexation négative. Vérifiez la taille du nouveau data.frame. Le nouveau data.frame se nommera <code>BIC.sample.classes.4</code>.</li>
+</ul>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>BIC.sample.classes<span class="fl">.4</span> &lt;-<span class="st"> </span>BIC.sample.classes[<span class="op">-</span>ind.uncl,]</span>
+<span id="cb12-2"><a href="#cb12-2"></a><span class="kw">dim</span>(BIC.sample.classes<span class="fl">.4</span>)</span></code></pre></div>
+<pre><code>[1] 712   4</code></pre>
+<ul>
+<li>Supprimez les échantillons correspondant au type <code>Unclassified</code> du data.frame <code>BIC.expr</code>. Attention, dans le data.frame <code>BIC.expr</code> les échantillons sont présentés en colonnes.</li>
+</ul>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>BIC.expr<span class="fl">.4</span> &lt;-<span class="st"> </span>BIC.expr[, <span class="op">-</span>ind.uncl] </span>
+<span id="cb14-2"><a href="#cb14-2"></a><span class="kw">dim</span>(BIC.expr<span class="fl">.4</span>)</span></code></pre></div>
+<pre><code>[1] 1000  712</code></pre>
+<ul>
+<li>Pour construire les premiers modèles, vous n’allez pas utiliser les quatre types de cancers, mais seulement deux :
+<ul>
+<li>Luminal.A,<br />
+</li>
+<li>non Luminal.A : qui correspondent aux autres types. Vous allez donc transformer la colonne <code>cancer.type</code> du data.frame <code>BIC.sample.classes.2</code> en une variable qualitative à deux classes : “Luminal.A” ou “no.Luminal.A”.</li>
+</ul></li>
+</ul>
+<ol style="list-style-type: lower-alpha">
+<li>Créez le vecteur <code>new.type</code> qui contient 712 fois (<code>nrow(BIC.sample.classes.2)</code>) la valeur “Luminal.A”.</li>
+</ol>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>new.type &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="st">&quot;Luminal.A&quot;</span>, <span class="dt">length =</span> <span class="kw">nrow</span>(BIC.sample.classes<span class="fl">.4</span>))</span></code></pre></div>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Identifiez les individus qui ne contiennent pas “Luminal.A” dans la première colonne (colonne <code>cancer.type</code>) du data.frame <code>BIC.sample.classes.4</code>.</li>
+</ol>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>ind.noLA &lt;-<span class="st"> </span><span class="kw">which</span>(BIC.sample.classes<span class="fl">.4</span>[,<span class="st">&quot;cancer.type&quot;</span>]<span class="op">!=</span><span class="st">&quot;Luminal.A&quot;</span>)</span></code></pre></div>
+<ol start="3" style="list-style-type: lower-alpha">
+<li>Pour ces individus, assignez la valeur “no.Luminal.A” au vecteur <code>new.type</code>.</li>
+</ol>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>new.type[ind.noLA] =<span class="st"> &quot;no.Luminal.A&quot;</span></span></code></pre></div>
+<ol start="4" style="list-style-type: lower-alpha">
+<li>Remplacez la colonne <code>cancer.type</code> du data.frame <code>BIC.sample.classes.2</code> par le vecteur <code>new.type</code> que vous aurez transformé en facteur (fonction <code>as.factor()</code>)</li>
+</ol>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>BIC.sample.classes<span class="fl">.2</span> &lt;-<span class="st"> </span>BIC.sample.classes<span class="fl">.4</span></span>
+<span id="cb19-2"><a href="#cb19-2"></a>BIC.sample.classes<span class="fl">.2</span>[,<span class="st">&quot;cancer.type&quot;</span>] =<span class="st"> </span><span class="kw">as.factor</span>(new.type)</span></code></pre></div>
+<ol start="4" style="list-style-type: decimal">
+<li>Suppression des variables corrélées</li>
+</ol>
+<p>Une des étapes du nettoyage du jeu de données correspond à supprimer les variables (ici les gènes) corrélées. Pour cela, vous allez utiliser la fonction <code>findCorrelation()</code> de la librairie <code>caret</code>. Cette fonction prend en entrée la matrice de corrélation entre les variables et le seuil de corrélation à partir duquel on considère que deux variables sont corrélées.</p>
+<ul>
+<li>Calculez la matrice de corrélation entre les gènes différentiellement exprimés. Comme dans le data.frame <code>BIC.expr.4</code> les gènes sont en lignes, pensez à transposer votre data.frame.</li>
+</ul>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>mat.cor &lt;-<span class="st"> </span><span class="kw">cor</span>(<span class="kw">t</span>(BIC.expr<span class="fl">.4</span>))</span>
+<span id="cb20-2"><a href="#cb20-2"></a><span class="kw">dim</span>(mat.cor)</span></code></pre></div>
+<pre><code>[1] 1000 1000</code></pre>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="co"># corrplot::corrplot(mat.cor)</span></span></code></pre></div>
+<ul>
+<li>Identifiez les gènes à supprimer en utilisant un seuil de corrléation de 0.8 et la fonction <code>findCorrelation()</code>. Combien de gènes allez vous supprimer.</li>
+</ul>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a>var.supp =<span class="st"> </span><span class="kw">findCorrelation</span>(mat.cor, <span class="dt">cutoff =</span> <span class="fl">0.8</span>)</span>
+<span id="cb23-2"><a href="#cb23-2"></a><span class="kw">length</span>(var.supp)</span></code></pre></div>
+<pre><code>[1] 36</code></pre>
+<ul>
+<li>Supprimez ces gènes du data.frame <code>BIC.expr.4</code>.</li>
+</ul>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a>BIC.expr<span class="fl">.4</span> &lt;-<span class="st"> </span>BIC.expr<span class="fl">.4</span>[<span class="op">-</span>var.supp,]</span>
+<span id="cb25-2"><a href="#cb25-2"></a><span class="kw">dim</span>(BIC.expr<span class="fl">.4</span>)</span></code></pre></div>
+<pre><code>[1] 964 712</code></pre>
+<ol start="5" style="list-style-type: decimal">
+<li>Pour créer les modèles de prédiction, il est nécessaire d’avoir un data.frame qui regroupe pour chaque échantillon les gènes et son type de cancer.</li>
+</ol>
+<ul>
+<li><p>Créez le data.frame <code>df.data</code> qui contient :</p>
+<ul>
+<li>en lignes ; les échantillons<br />
+</li>
+<li>en colonnes : les gènes et le type de cancer.<br />
+Pour cela, utilisez la commande <code>data.frame()</code>.<br />
+</li>
+<li>La première colonne de votre data.frame <code>df.data</code> doit correspondre aux types de cancer.<br />
+</li>
+<li>les colonnes 2 à 965 doivent correspondre aux gènes.</li>
+</ul></li>
+</ul>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a>df.data &lt;-<span class="st"> </span><span class="kw">data.frame</span>(BIC.sample.classes<span class="fl">.2</span>[,<span class="dv">1</span>], <span class="kw">t</span>(BIC.expr<span class="fl">.4</span>))</span>
+<span id="cb27-2"><a href="#cb27-2"></a><span class="kw">dim</span>(df.data)</span></code></pre></div>
+<pre><code>[1] 712 965</code></pre>
+<ul>
+<li>Assignez “cancer.type” comme nom de colonne à la première colonne de <code>df.data</code>.</li>
+</ul>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="kw">colnames</span>(df.data)[<span class="dv">1</span>] &lt;-<span class="st"> &quot;cancer.type&quot;</span></span>
+<span id="cb29-2"><a href="#cb29-2"></a><span class="co"># View(df.data)</span></span>
+<span id="cb29-3"><a href="#cb29-3"></a><span class="kw">kable</span>(df.data[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>])</span></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="left">cancer.type</th>
+<th align="right">ENSG00000000003.14</th>
+<th align="right">ENSG00000000419.12</th>
+<th align="right">ENSG00000000457.13</th>
+<th align="right">ENSG00000000460.16</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>X1AB92ADA.637E.4A42.A39A.70CEEEA41AE3</td>
+<td align="left">Luminal.A</td>
+<td align="right">16.52775</td>
+<td align="right">17.50349</td>
+<td align="right">17.96040</td>
+<td align="right">16.77151</td>
+</tr>
+<tr class="even">
+<td>X06CCFD0F.7FB8.471E.B823.C7876582D6FC</td>
+<td align="left">no.Luminal.A</td>
+<td align="right">18.67677</td>
+<td align="right">18.15315</td>
+<td align="right">17.51914</td>
+<td align="right">16.85386</td>
+</tr>
+<tr class="odd">
+<td>D021A258.8713.4383.9DCA.45E2F54A0411</td>
+<td align="left">Luminal.A</td>
+<td align="right">17.75758</td>
+<td align="right">16.58779</td>
+<td align="right">19.09800</td>
+<td align="right">18.15086</td>
+</tr>
+<tr class="even">
+<td>C705FA90.D9AA.4949.BACA.1C022A14CB03</td>
+<td align="left">Luminal.A</td>
+<td align="right">18.83214</td>
+<td align="right">17.81858</td>
+<td align="right">19.01201</td>
+<td align="right">17.85704</td>
+</tr>
+<tr class="odd">
+<td>X85380A2D.9951.4D4B.A2A4.6F5F2AFC54E3</td>
+<td align="left">Luminal.A</td>
+<td align="right">18.52097</td>
+<td align="right">17.30436</td>
+<td align="right">18.63385</td>
+<td align="right">17.61519</td>
+</tr>
+<tr class="even">
+<td>F53A9C63.1AF7.4CBC.B8B7.4AA7AAED3364</td>
+<td align="left">Luminal.A</td>
+<td align="right">16.26266</td>
+<td align="right">18.52012</td>
+<td align="right">17.55598</td>
+<td align="right">17.35059</td>
+</tr>
+<tr class="odd">
+<td>X13EF5323.EAD9.4BC7.8AC4.33875BF12E17</td>
+<td align="left">no.Luminal.A</td>
+<td align="right">17.38771</td>
+<td align="right">17.97410</td>
+<td align="right">18.22298</td>
+<td align="right">17.05569</td>
+</tr>
+<tr class="even">
+<td>X079EACA1.0319.4B54.B20B.673F4576C69D</td>
+<td align="left">no.Luminal.A</td>
+<td align="right">16.95062</td>
+<td align="right">17.75839</td>
+<td align="right">18.04384</td>
+<td align="right">17.74923</td>
+</tr>
+<tr class="odd">
+<td>X2E63B18E.FDC1.414C.9291.492D3D380232</td>
+<td align="left">no.Luminal.A</td>
+<td align="right">18.66658</td>
+<td align="right">17.17837</td>
+<td align="right">17.21481</td>
+<td align="right">16.00784</td>
+</tr>
+<tr class="even">
+<td>F5303C4B.7008.44AF.8D22.0BA38750DEA2</td>
+<td align="left">no.Luminal.A</td>
+<td align="right">18.52184</td>
+<td align="right">17.05632</td>
+<td align="right">17.93438</td>
+<td align="right">17.02691</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="préparation-des-échantillons-dapprentissage-et-de-test" class="section level1" number="2">
+<h1 number="2"><span class="header-section-number">2</span> Préparation des échantillons d’apprentissage et de test</h1>
+<ul>
+<li><p>L’<strong>échantillon d’apprentissage</strong> est l’échantillon qui va permettre d’apprendre les modèles. Il sera constitué de 2/3 des échantillons sélectionnés de manière aléatoire.</p></li>
+<li><p>L’<strong>échantillon de test</strong> est l’échantillon qui va permettre d’estimer les performances non biaisées des modèles. Il sera constitué du 1/3 des échantillons restant.</p></li>
+</ul>
+<ol style="list-style-type: decimal">
+<li>En utilisant la fonction <code>sample()</code> créez un vecteur qui contient le numéro d’indice de 2/3 des individus choisis aléatoirement. Ces individus vont constituter le jeu d’apprentissage.</li>
+</ol>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a>ind.app &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(df.data), <span class="dt">size =</span> <span class="dv">2</span><span class="op">/</span><span class="dv">3</span> <span class="op">*</span><span class="st"> </span><span class="kw">nrow</span>(df.data))</span></code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li>Créez le data.frame <code>mat.app</code> qui contient les valeurs d’expression des gènes et le type de cancer pour les individus choisis aléatoirement. Cette matrice correspond au jeu d’apprentissage.</li>
+</ol>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a>mat.app &lt;-<span class="st"> </span>df.data[ind.app,]</span>
+<span id="cb31-2"><a href="#cb31-2"></a><span class="kw">dim</span>(mat.app)</span></code></pre></div>
+<pre><code>[1] 474 965</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Créez le data.frame <code>mat.test</code> qui contient les valeurs d’expression de gènes et le type de cancer pour les individus restants (1/3). Cette matrice correspond au jeu test.</li>
+</ol>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a>mat.test &lt;-<span class="st"> </span>df.data[<span class="op">-</span>ind.app,]</span>
+<span id="cb33-2"><a href="#cb33-2"></a><span class="kw">dim</span>(mat.test)</span></code></pre></div>
+<pre><code>[1] 238 965</code></pre>
+</div>
+<div id="validation-des-deux-échantillons." class="section level1" number="3">
+<h1 number="3"><span class="header-section-number">3</span> Validation des deux échantillons.</h1>
+<ol style="list-style-type: decimal">
+<li>Calculez une analyse en composantes principale en utilisant le data.frame <code>df.data</code>. Pour cela, utilisez la fonction <code>PCA()</code> de la librairie <code>FactoMineR</code>. Pensez à ne pas prendre en compte la colonne renseignant sur le type de cancer car ce n’est pas une variable quantitative.</li>
+</ol>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a><span class="kw">library</span>(FactoMineR)</span>
+<span id="cb35-2"><a href="#cb35-2"></a>pca.res &lt;-<span class="st"> </span><span class="kw">PCA</span>(df.data[, <span class="dv">-1</span>], <span class="dt">graph =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li>Créez un vecteur <code>vcol.set</code> qui contiendra les couleurs associés à chaque indidivu suivant s’il appartient au jeu d’apprentissage (en magenta) ou au jeu test (en bleu). Pour cela, :</li>
+</ol>
+<ul>
+<li>Créez le vecteur <code>vcol.set</code> qui contient 712 fois (<code>nrow(df.data)</code>) la couleur bleu.<br />
+</li>
+<li>Dans ce vecteur, remplacez la valeur “bleu” des individus appartenant à l’échantillon d’apprentissage (<code>ind.app</code>) par la valeur “magenta”.</li>
+</ul>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a>vcol.set &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="st">&quot;blue&quot;</span>, <span class="dt">length =</span> <span class="kw">nrow</span>(df.data))</span>
+<span id="cb36-2"><a href="#cb36-2"></a>vcol.set[ind.app] &lt;-<span class="st"> &quot;magenta&quot;</span></span></code></pre></div>
+<ol start="3" style="list-style-type: decimal">
+<li>Représentez la projection des individus sur les 2 premières composantes principales en colorant les individus suivant l’échantillon auquel ils appartiennent.</li>
+</ol>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a><span class="co"># plot.new() # To do: check why we need to add this</span></span>
+<span id="cb37-2"><a href="#cb37-2"></a><span class="kw">plot</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">100</span>)</span></code></pre></div>
+<p><img src="figures/learning_unnamed-chunk-23-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a><span class="co">#plot(pca.res, habillage = &quot;ind&quot;, col.hab = vcol.set, label = &quot;none&quot;)</span></span>
+<span id="cb38-2"><a href="#cb38-2"></a><span class="co"># legend(&quot;topleft&quot;, </span></span>
+<span id="cb38-3"><a href="#cb38-3"></a><span class="co">#        legend = c(&quot;jeu d&#39;apprentissage&quot;, &quot;jeu test&quot;), </span></span>
+<span id="cb38-4"><a href="#cb38-4"></a><span class="co">#        col = c(&quot;blue&quot;,&quot;magenta&quot;), pch = 19)</span></span></code></pre></div>
+<ol start="4" style="list-style-type: decimal">
+<li>Déterminez la répartition des deux types de cancer dans les échantillons d’apprentissage et test.</li>
+</ol>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1"></a><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">1</span>))</span>
+<span id="cb39-2"><a href="#cb39-2"></a><span class="kw">barplot</span>(<span class="kw">table</span>(mat.app[,<span class="st">&quot;cancer.type&quot;</span>]), <span class="dt">main=</span><span class="st">&quot;jeu d&#39;apprentissage&quot;</span>)</span>
+<span id="cb39-3"><a href="#cb39-3"></a><span class="kw">barplot</span>(<span class="kw">table</span>(mat.test[,<span class="st">&quot;cancer.type&quot;</span>]), <span class="dt">main=</span><span class="st">&quot;jeu de test&quot;</span>)</span></code></pre></div>
+<p><img src="figures/learning_unnamed-chunk-24-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span></code></pre></div>
+<p>D’après les résultats obtenus, concluez sur la validité les échantillons d’apprentissage et test. Si vous concluez au fait que les deux échantillons ne sont pas valides, alors reprenez la procédure pour générer à nouveau des échantillons d’apprentissage et de test.</p>
+</div>
+<div id="prédiction-du-type-de-cancer-en-utilisant-une-approche-de-cart" class="section level1" number="4">
+<h1 number="4"><span class="header-section-number">4</span> Prédiction du type de cancer en utilisant une approche de CART</h1>
+<ol style="list-style-type: decimal">
+<li>A partir des données de l’échantillon d’apprentissage (<code>mat.app</code>), construisez un modèle de CART permettant de prédire le type de cancer (2 classes) en fonction de l’expression des gènes. Pour cela, utilisez la fonction <code>rpart()</code> de la librairie <code>rpart</code>.</li>
+</ol>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1"></a><span class="kw">library</span>(rpart)</span>
+<span id="cb41-2"><a href="#cb41-2"></a><span class="kw">library</span>(rpart.plot)</span>
+<span id="cb41-3"><a href="#cb41-3"></a>rpart.fit &lt;-<span class="st"> </span><span class="kw">rpart</span>(cancer.type <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> mat.app)</span>
+<span id="cb41-4"><a href="#cb41-4"></a>rpart.fit</span></code></pre></div>
+<pre><code>n= 474 
+
+node), split, n, loss, yval, (yprob)
+      * denotes terminal node
+
+  1) root 474 201 Luminal.A (0.57594937 0.42405063)  
+    2) ENSG00000029725.16&gt;=18.94251 374 109 Luminal.A (0.70855615 0.29144385)  
+      4) ENSG00000008838.18&lt; 20.03214 341  81 Luminal.A (0.76246334 0.23753666)  
+        8) ENSG00000007062.11&lt; 19.57612 297  54 Luminal.A (0.81818182 0.18181818)  
+         16) ENSG00000010704.18&lt; 17.85614 282  43 Luminal.A (0.84751773 0.15248227)  
+           32) ENSG00000010932.15&lt; 16.23007 222  21 Luminal.A (0.90540541 0.09459459) *
+           33) ENSG00000010932.15&gt;=16.23007 60  22 Luminal.A (0.63333333 0.36666667)  
+             66) ENSG00000070476.14&gt;=17.35393 37   6 Luminal.A (0.83783784 0.16216216)  
+              132) ENSG00000036672.15&lt; 15.73357 30   1 Luminal.A (0.96666667 0.03333333) *
+              133) ENSG00000036672.15&gt;=15.73357 7   2 no.Luminal.A (0.28571429 0.71428571) *
+             67) ENSG00000070476.14&lt; 17.35393 23   7 no.Luminal.A (0.30434783 0.69565217)  
+              134) ENSG00000053371.12&gt;=18.51281 8   2 Luminal.A (0.75000000 0.25000000) *
+              135) ENSG00000053371.12&lt; 18.51281 15   1 no.Luminal.A (0.06666667 0.93333333) *
+         17) ENSG00000010704.18&gt;=17.85614 15   4 no.Luminal.A (0.26666667 0.73333333) *
+        9) ENSG00000007062.11&gt;=19.57612 44  17 no.Luminal.A (0.38636364 0.61363636)  
+         18) ENSG00000064999.13&lt; 18.13103 7   0 Luminal.A (1.00000000 0.00000000) *
+         19) ENSG00000064999.13&gt;=18.13103 37  10 no.Luminal.A (0.27027027 0.72972973)  
+           38) ENSG00000008516.16&lt; 13.90863 10   3 Luminal.A (0.70000000 0.30000000) *
+           39) ENSG00000008516.16&gt;=13.90863 27   3 no.Luminal.A (0.11111111 0.88888889) *
+      5) ENSG00000008838.18&gt;=20.03214 33   5 no.Luminal.A (0.15151515 0.84848485)  
+       10) ENSG00000006747.14&lt; 13.64263 7   2 Luminal.A (0.71428571 0.28571429) *
+       11) ENSG00000006747.14&gt;=13.64263 26   0 no.Luminal.A (0.00000000 1.00000000) *
+    3) ENSG00000029725.16&lt; 18.94251 100   8 no.Luminal.A (0.08000000 0.92000000) *</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>En utilisant la fonction <code>prp()</code> de la librairie <code>rpart.plot()</code>, représentez le modèle obtenu.</li>
+</ol>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1"></a><span class="kw">prp</span>(rpart.fit, <span class="dt">extra =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="figures/learning_unnamed-chunk-26-1.png" width="672" style="display: block; margin: auto;" /></p>
+<ol start="3" style="list-style-type: decimal">
+<li>Sur les données de l’échantillon d’apprentissage calculez l’<em>accuracy</em> du modèle (=le taux de bien prédit) (<span class="math inline">\(Acc = \frac{VP+VN}{VP+VN+FP+FN}\)</span>) .</li>
+</ol>
+<ul>
+<li>En utilisant la fonction <code>predict()</code>, prédisez le type de cancer pour chaque individu de l’échantillon d’apprentissage. N’oubliez pas de préciser l’argument <code>type="class"</code> pour préciser que vous faites de la classification. Stockez ces valeurs prédites dans le vecteur <code>pred.app</code>.<br />
+Attention, la fonction <code>predict()</code>est une fonction générique. Dans ce cas, vous utilisez la fonction <code>predict()</code> appliquée à un objet <code>rpart</code>. Pour avoir plus d’informations sur les arguments de la fonction, vous devez utiliser l’aide de la fonction <code>predict.rpart()</code>.</li>
+</ul>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1"></a>pred.app &lt;-<span class="st"> </span><span class="kw">predict</span>(rpart.fit, <span class="dt">newdata =</span> mat.app, <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>)</span></code></pre></div>
+<ul>
+<li>A l’aide de la fonction <code>table()</code>, calculez la matrice de confusion entre les données prédites sur l’échantillon d’apprentissage (contenues dans le vecteur <code>pred.app</code>) et les vraies valeurs (contenues dans la colonne <code>cancer.type</code> du data.frame <code>mat.app</code>).</li>
+</ul>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1"></a>tc.rpart.app &lt;-<span class="st"> </span><span class="kw">table</span>(pred.app, mat.app[,<span class="st">&quot;cancer.type&quot;</span>])</span>
+<span id="cb45-2"><a href="#cb45-2"></a><span class="kw">kable</span>(tc.rpart.app, <span class="dt">caption =</span> <span class="st">&quot;Confusion table of the CART model for the predictions obtained with the training set (learning errors). &quot;</span>)</span></code></pre></div>
+<table>
+<caption>Confusion table of the CART model for the predictions obtained with the training set (learning errors).</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">Luminal.A</th>
+<th align="right">no.Luminal.A</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Luminal.A</td>
+<td align="right">255</td>
+<td align="right">29</td>
+</tr>
+<tr class="even">
+<td>no.Luminal.A</td>
+<td align="right">18</td>
+<td align="right">172</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Calculez l’<em>accuracy</em> du modèle sur les données de l’apprentissage</li>
+</ul>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1"></a>acc.rpart.app &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">diag</span>(tc.rpart.app))<span class="op">/</span><span class="kw">sum</span>(tc.rpart.app)</span>
+<span id="cb46-2"><a href="#cb46-2"></a>acc.rpart.app</span></code></pre></div>
+<pre><code>[1] 0.9008439</code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li>En utilisant la même procédure que celle utilisée pour calculer l’<em>accuracy</em> sur le jeu d’apprentissage, calculez l’<em>accuracy</em> du modèle sur l’échantillon test</li>
+</ol>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1"></a>pred.test &lt;-<span class="st"> </span><span class="kw">predict</span>(rpart.fit, <span class="dt">newdata =</span> mat.test, <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>)</span>
+<span id="cb48-2"><a href="#cb48-2"></a></span>
+<span id="cb48-3"><a href="#cb48-3"></a>tc.rpart.test &lt;-<span class="st"> </span><span class="kw">table</span>(pred.test, mat.test[,<span class="st">&quot;cancer.type&quot;</span>])</span>
+<span id="cb48-4"><a href="#cb48-4"></a><span class="kw">kable</span>(tc.rpart.test, <span class="dt">caption =</span> <span class="st">&quot;Confusion table for the predictions obtained from the testing set. &quot;</span>)</span></code></pre></div>
+<table>
+<caption>Confusion table for the predictions obtained from the testing set.</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">Luminal.A</th>
+<th align="right">no.Luminal.A</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Luminal.A</td>
+<td align="right">127</td>
+<td align="right">31</td>
+</tr>
+<tr class="even">
+<td>no.Luminal.A</td>
+<td align="right">22</td>
+<td align="right">58</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1"></a>acc.rpart.test &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">diag</span>(tc.rpart.test))<span class="op">/</span><span class="kw">sum</span>(tc.rpart.test)</span>
+<span id="cb49-2"><a href="#cb49-2"></a>acc.rpart.test</span></code></pre></div>
+<pre><code>[1] 0.7773109</code></pre>
+<p>En comparant les performances obtenues sur l’échantillon d’apprentissage et de test, vous constatez que les performances obtenues sur l’échantillon d’apprentissage (Acc=0.9) sont plus grandes que celles obtenues sur l’échantillon test (Acc=0.78). Ainsi, vous observez un <strong>phénomène de sur-apprentissage</strong>. Le modèle apprend très bien les données de l’échantillon d’apprentissage, mais prédit moins bien les données du jeu test.<br />
+Pour diminuer ce sur-apprentissage, une des solutions serait d’élaguer l’arbre, c’est-à-dire d’enlever certaines branches. Ainsi, le nouveau modèle obtenu serait moins performant sur les données d’apprentissage, mais plus performant sur les données du jeu test.</p>
+</div>
+<div id="prédiction-du-type-de-cancer-en-utilisant-une-approche-de-random-forest" class="section level1" number="5">
+<h1 number="5"><span class="header-section-number">5</span> Prédiction du type de cancer en utilisant une approche de <em>random forest</em></h1>
+<ol style="list-style-type: decimal">
+<li>A partir des données de l’échantillon d’apprentissage, construisez une forêt aléatoire permettant de prédire le type de cancer (2 types) en fonction de l’expression des gènes.</li>
+</ol>
+<ul>
+<li>Pour cela, utilisez la fonction <code>randomForest()</code> de la librairie <code>randomForest</code> avec les paramètres <code>mtry</code> et <code>mtree</code> par défaut. Stockez le modèle dans l’objet <code>rf.fit</code>.</li>
+</ul>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1"></a><span class="kw">library</span>(randomForest)</span>
+<span id="cb51-2"><a href="#cb51-2"></a>rf.fit &lt;-<span class="st"> </span><span class="kw">randomForest</span>(cancer.type <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> mat.app)</span></code></pre></div>
+<ul>
+<li>Affichez à l’écran le modèle créé.</li>
+</ul>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1"></a><span class="kw">print</span>(rf.fit)</span></code></pre></div>
+<pre><code>
+Call:
+ randomForest(formula = cancer.type ~ ., data = mat.app) 
+               Type of random forest: classification
+                     Number of trees: 500
+No. of variables tried at each split: 31
+
+        OOB estimate of  error rate: 21.52%
+Confusion matrix:
+             Luminal.A no.Luminal.A class.error
+Luminal.A          242           31   0.1135531
+no.Luminal.A        71          130   0.3532338</code></pre>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1"></a><span class="kw">kable</span>(<span class="kw">as.data.frame</span>(rf.fit<span class="op">$</span>confusion), </span>
+<span id="cb54-2"><a href="#cb54-2"></a>      <span class="dt">caption =</span> <span class="st">&quot;Confusion table obtained by Random Forest on the training set (learning errors).  &quot;</span>)</span></code></pre></div>
+<table>
+<caption>Confusion table obtained by Random Forest on the training set (learning errors).</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">Luminal.A</th>
+<th align="right">no.Luminal.A</th>
+<th align="right">class.error</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Luminal.A</td>
+<td align="right">242</td>
+<td align="right">31</td>
+<td align="right">0.1135531</td>
+</tr>
+<tr class="even">
+<td>no.Luminal.A</td>
+<td align="right">71</td>
+<td align="right">130</td>
+<td align="right">0.3532338</td>
+</tr>
+</tbody>
+</table>
+<ol start="2" style="list-style-type: decimal">
+<li>Choix de la valeur du paramètre <code>ntree</code>.</li>
+</ol>
+<ul>
+<li>L’objet <code>rf.fit</code> créé est une liste qui contient plusieurs éléments. L’élement <code>err.rate</code> contient les erreurs commises par le modèle contenant <span class="math inline">\(m\)</span> arbres Représentez le taux d’erreur (<em>Misclassification Rate</em>) en fonction du nombre d’arbres présentant dans la forêt.</li>
+</ul>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1"></a><span class="kw">plot</span>(rf.fit<span class="op">$</span>err.rate[,<span class="dv">1</span>], </span>
+<span id="cb55-2"><a href="#cb55-2"></a>     <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>, </span>
+<span id="cb55-3"><a href="#cb55-3"></a>     <span class="dt">main =</span> <span class="st">&quot;Random forest: impact of the number of trees&quot;</span>,</span>
+<span id="cb55-4"><a href="#cb55-4"></a>     <span class="dt">xlab =</span> <span class="st">&quot;Number of trees in the forest&quot;</span>, </span>
+<span id="cb55-5"><a href="#cb55-5"></a>     <span class="dt">ylab =</span> <span class="st">&quot;Misclassification error rate&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/learning_unnamed-chunk-30-1.png" alt="Random forest: impact of the number of tree on the misclassification error rate (MER)" width="60%" />
+<p class="caption">
+Random forest: impact of the number of tree on the misclassification error rate (MER)
+</p>
+</div>
+<ul>
+<li>A partir de ce graphique, choisissez le nombre d’arbres optimal, noté <span class="math inline">\(ntree_{opt}\)</span>.</li>
+</ul>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1"></a>ntree.opt &lt;-<span class="st"> </span><span class="dv">200</span></span></code></pre></div>
+<ol start="3" style="list-style-type: decimal">
+<li>Choix de la valeur optimale pour le paramètre <code>mtry</code>.</li>
+</ol>
+<p>Remarque : cette étape est coûteuse en temps de calculs.</p>
+<p>Pour trouver la valeur optimale de <code>mtry</code>, vous allez calculer plusieurs modèles en variant la valeur du paramètre <code>mtry</code>. Pour chaque modèle l’erreur commise par le modèle sera stockée dans un vecteur. La valeur optimale de <code>mtry</code> correspondra à la valeur du <code>mtry</code> du modèle donnant le plus faible taux d’erreur.</p>
+<ul>
+<li>Calculez les modèles pour des valeurs de <code>mtry</code> de 15, 30, 62, 124, 248, 350, 500, et la valeur de <code>ntree</code> optimale. Le taux d’erreur de chaque modèle sera stockée dans le vecteur <code>v.err</code>.</li>
+</ul>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1"></a>v.err &lt;-<span class="st">  </span><span class="ot">NULL</span></span>
+<span id="cb57-2"><a href="#cb57-2"></a>v.mtry &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">15</span>, <span class="dv">31</span>, <span class="dv">62</span>, <span class="dv">124</span>, <span class="dv">248</span>, <span class="dv">350</span>, <span class="dv">500</span>)</span>
+<span id="cb57-3"><a href="#cb57-3"></a><span class="cf">for</span>(i <span class="cf">in</span> v.mtry){</span>
+<span id="cb57-4"><a href="#cb57-4"></a>    <span class="kw">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb57-5"><a href="#cb57-5"></a>    rf.fit &lt;-<span class="st"> </span><span class="kw">randomForest</span>(cancer.type<span class="op">~</span>., <span class="dt">data =</span> mat.app, <span class="dt">ntree=</span>ntree.opt, <span class="dt">mtry=</span>i)</span>
+<span id="cb57-6"><a href="#cb57-6"></a>    v.err &lt;-<span class="st"> </span><span class="kw">c</span>(v.err, rf.fit<span class="op">$</span>err.rate[ntree.opt,<span class="dv">1</span>])</span>
+<span id="cb57-7"><a href="#cb57-7"></a>}</span></code></pre></div>
+<ul>
+<li>Représentez graphiquement les erreurs commises par les modèles en fonction de la valeur de <code>mtry</code>.</li>
+</ul>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1"></a><span class="kw">plot</span>(v.mtry, v.err, <span class="dt">type =</span><span class="st">&quot;b&quot;</span>, <span class="dt">xlab=</span><span class="st">&quot;mtry values&quot;</span>, <span class="dt">ylab=</span><span class="st">&quot;taux d&#39;erreur&quot;</span>, <span class="dt">xaxt=</span><span class="st">&quot;n&quot;</span>)</span>
+<span id="cb58-2"><a href="#cb58-2"></a><span class="kw">axis</span>(<span class="dv">1</span>, <span class="dt">at=</span>v.mtry, <span class="dt">labels=</span>v.mtry, <span class="dt">las=</span><span class="dv">2</span>)</span></code></pre></div>
+<p><img src="figures/learning_unnamed-chunk-33-1.png" width="672" style="display: block; margin: auto;" /></p>
+<ul>
+<li>A partir de ce graphique, déterminez la valeur optimale de <code>mtry</code>.</li>
+</ul>
+<ol start="4" style="list-style-type: decimal">
+<li>Calcul du modèle avec les paramètres optimaux.</li>
+</ol>
+<ul>
+<li>Calculez le modèle <em>random forest</em> sur l’échantillon d’apprentissage en utilisant les valeurs optimales des paramètres <code>mtry</code> et <code>ntree</code>. Dans la fonction <code>randomForest()</code>, ajouter l’argument <code>importance=TRUE</code>. Cet argument vous permettra de stocker l’importance des variables.</li>
+</ul>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1"></a>rf.fit &lt;-<span class="st"> </span><span class="kw">randomForest</span>(cancer.type<span class="op">~</span>., <span class="dt">data =</span> mat.app, <span class="dt">ntree=</span>ntree.opt, <span class="dt">mtry=</span><span class="dv">248</span>, <span class="dt">importance=</span><span class="ot">TRUE</span>)</span></code></pre></div>
+<ul>
+<li>Visualisez le modèle et la table de confusion obtenue sur les échantillons OOB.</li>
+</ul>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1"></a>rf.fit</span></code></pre></div>
+<pre><code>
+Call:
+ randomForest(formula = cancer.type ~ ., data = mat.app, ntree = ntree.opt,      mtry = 248, importance = TRUE) 
+               Type of random forest: classification
+                     Number of trees: 200
+No. of variables tried at each split: 248
+
+        OOB estimate of  error rate: 19.41%
+Confusion matrix:
+             Luminal.A no.Luminal.A class.error
+Luminal.A          246           27   0.0989011
+no.Luminal.A        65          136   0.3233831</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Calcul des performances du modèle <em>random forest</em></li>
+</ol>
+<p>Pour comparer les performances de ce modèle, avec le modèle CART calculé précédemment, il faut calculer l’<em>accuracy</em> du modèle <code>rf.fit</code> sur les données des échantillons d’apprentissage et de test.</p>
+<ul>
+<li>Calculez l’<em>accuracy</em> du modèle sur les données de l’apprentissage</li>
+</ul>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1"></a><span class="co"># Prédiction du type de cancer des individus du jeu d&#39;apprentissage</span></span>
+<span id="cb62-2"><a href="#cb62-2"></a>pred.app &lt;-<span class="st"> </span><span class="kw">predict</span>(rf.fit, <span class="dt">newdata =</span> mat.app, <span class="dt">type=</span><span class="st">&quot;class&quot;</span>)</span>
+<span id="cb62-3"><a href="#cb62-3"></a></span>
+<span id="cb62-4"><a href="#cb62-4"></a><span class="co"># matrice de confusion entre les données prédites sur l&#39;échantillon d&#39;apprentissage et les vraies valeurs.</span></span>
+<span id="cb62-5"><a href="#cb62-5"></a></span>
+<span id="cb62-6"><a href="#cb62-6"></a>tc.rf.app &lt;-<span class="st"> </span><span class="kw">table</span>(pred.app, mat.app[,<span class="st">&quot;cancer.type&quot;</span>])</span>
+<span id="cb62-7"><a href="#cb62-7"></a>tc.rf.app</span></code></pre></div>
+<pre><code>              
+pred.app       Luminal.A no.Luminal.A
+  Luminal.A          273            0
+  no.Luminal.A         0          201</code></pre>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1"></a><span class="co">#  accuracy* du modèle sur les données de l&#39;apprentissage</span></span>
+<span id="cb64-2"><a href="#cb64-2"></a>acc.rf.app &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">diag</span>(tc.rf.app))<span class="op">/</span><span class="kw">sum</span>(tc.rf.app)</span>
+<span id="cb64-3"><a href="#cb64-3"></a>acc.rf.app</span></code></pre></div>
+<pre><code>[1] 1</code></pre>
+<ul>
+<li>Calcul de l’<em>accuracy</em> sur l’échantillon test</li>
+</ul>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1"></a><span class="co"># prediction</span></span>
+<span id="cb66-2"><a href="#cb66-2"></a>pred.test &lt;-<span class="st"> </span><span class="kw">predict</span>(rf.fit, <span class="dt">newdata =</span> mat.test, <span class="dt">type=</span><span class="st">&quot;class&quot;</span>)</span>
+<span id="cb66-3"><a href="#cb66-3"></a></span>
+<span id="cb66-4"><a href="#cb66-4"></a><span class="co"># table de confusionr.fit</span></span>
+<span id="cb66-5"><a href="#cb66-5"></a>tc.rf.test &lt;-<span class="st"> </span><span class="kw">table</span>(pred.test, mat.test[,<span class="st">&quot;cancer.type&quot;</span>])</span>
+<span id="cb66-6"><a href="#cb66-6"></a>tc.rf.test</span></code></pre></div>
+<pre><code>              
+pred.test      Luminal.A no.Luminal.A
+  Luminal.A          140           27
+  no.Luminal.A         9           62</code></pre>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1"></a><span class="co">#accuracy</span></span>
+<span id="cb68-2"><a href="#cb68-2"></a>acc.rf.test &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">diag</span>(tc.rf.test))<span class="op">/</span><span class="kw">sum</span>(tc.rf.test)</span>
+<span id="cb68-3"><a href="#cb68-3"></a>acc.rf.test</span></code></pre></div>
+<pre><code>[1] 0.8487395</code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li><p>Comparez les performances des modèles de CART et de Random forest.</p></li>
+<li><p>Etude de l’importance des variables (ici les gènes) dans le modèle.</p></li>
+</ol>
+<ul>
+<li>Représentez graphiquement l’importance de chaque gène en utilisant la fonction <code>varImpPlot()</code></li>
+</ul>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1"></a><span class="kw">varImpPlot</span>(rf.fit, <span class="dt">n.var=</span><span class="dv">50</span>, <span class="dt">cex =</span> <span class="fl">0.7</span>, <span class="dt">type=</span><span class="dv">1</span>)</span></code></pre></div>
+<p><img src="figures/learning_unnamed-chunk-37-1.png" width="672" style="display: block; margin: auto;" /></p>
+<ul>
+<li><p>Identifiez les gènes qui permettent de différentier le cancer Luminal.A des autres cancers.</p></li>
+<li><p>Pour chaque gene sélectionné, tracez la distribution de l’expression du gène chez les patients atteints d’un cancer de type Luminal.A et chez les autres patients d’après les données d’apprentissage.</p></li>
+</ul>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1"></a>v.imp &lt;-<span class="st"> </span><span class="kw">importance</span>(rf.fit)[,<span class="st">&quot;MeanDecreaseAccuracy&quot;</span>]</span>
+<span id="cb71-2"><a href="#cb71-2"></a>gene.sel &lt;-<span class="st"> </span><span class="kw">names</span>(<span class="kw">which</span>(v.imp<span class="op">&gt;</span><span class="dv">4</span>))</span>
+<span id="cb71-3"><a href="#cb71-3"></a></span>
+<span id="cb71-4"><a href="#cb71-4"></a><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">3</span>))</span>
+<span id="cb71-5"><a href="#cb71-5"></a><span class="cf">for</span>(gene <span class="cf">in</span> gene.sel){</span>
+<span id="cb71-6"><a href="#cb71-6"></a>  <span class="kw">boxplot</span>(mat.app[,gene]<span class="op">~</span>mat.app[,<span class="dv">1</span>],<span class="dt">col=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">3</span>), <span class="dt">main=</span>gene)</span>
+<span id="cb71-7"><a href="#cb71-7"></a>}</span></code></pre></div>
+<p><img src="figures/learning_unnamed-chunk-38-1.png" width="672" style="display: block; margin: auto;" /></p>
+<ul>
+<li>Représentez la matrice des données en focalisant sur les gènes sélectionnées et en utilisant une heatmap.</li>
+</ul>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1"></a><span class="co">#Trier les individus par type de cancer</span></span>
+<span id="cb72-2"><a href="#cb72-2"></a>ind.app.lA &lt;-<span class="st"> </span><span class="kw">which</span>(mat.app[,<span class="st">&quot;cancer.type&quot;</span>]<span class="op">==</span><span class="st">&quot;Luminal.A&quot;</span>)</span>
+<span id="cb72-3"><a href="#cb72-3"></a>ind.tri &lt;-<span class="st"> </span><span class="kw">c</span>(ind.app.lA, <span class="kw">setdiff</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(mat.app), ind.app.lA))</span>
+<span id="cb72-4"><a href="#cb72-4"></a>mat.app.tri &lt;-<span class="st"> </span><span class="kw">t</span>(mat.app[ind.tri, gene.sel])</span>
+<span id="cb72-5"><a href="#cb72-5"></a></span>
+<span id="cb72-6"><a href="#cb72-6"></a><span class="co"># Compute mean value per gene</span></span>
+<span id="cb72-7"><a href="#cb72-7"></a>gene.means &lt;-<span class="st"> </span><span class="kw">apply</span>(mat.app.tri, <span class="dv">1</span>, mean)</span>
+<span id="cb72-8"><a href="#cb72-8"></a>gene.sd &lt;-<span class="st">  </span><span class="kw">apply</span>(mat.app.tri, <span class="dv">1</span>, sd)</span>
+<span id="cb72-9"><a href="#cb72-9"></a></span>
+<span id="cb72-10"><a href="#cb72-10"></a><span class="co"># Compute gene-wise centered expression values</span></span>
+<span id="cb72-11"><a href="#cb72-11"></a>BIC.expr.genes.centered &lt;-<span class="st"> </span>mat.app.tri <span class="op">-</span><span class="st"> </span>gene.means</span>
+<span id="cb72-12"><a href="#cb72-12"></a></span>
+<span id="cb72-13"><a href="#cb72-13"></a><span class="co"># Compute gene-wise centred + scaled expression values</span></span>
+<span id="cb72-14"><a href="#cb72-14"></a>BIC.expr.genes.standardized &lt;-<span class="st"> </span>BIC.expr.genes.centered <span class="op">/</span><span class="st"> </span>gene.sd</span>
+<span id="cb72-15"><a href="#cb72-15"></a></span>
+<span id="cb72-16"><a href="#cb72-16"></a><span class="co">## define a Blue - White - Red palette</span></span>
+<span id="cb72-17"><a href="#cb72-17"></a>frenchflag.palette &lt;-<span class="st"> </span><span class="kw">colorRampPalette</span>(<span class="kw">c</span>(<span class="st">&#39;dark blue&#39;</span>,<span class="st">&#39;white&#39;</span>,<span class="st">&#39;dark red&#39;</span>))</span>
+<span id="cb72-18"><a href="#cb72-18"></a></span>
+<span id="cb72-19"><a href="#cb72-19"></a><span class="co">## Define a green - black - red palette</span></span>
+<span id="cb72-20"><a href="#cb72-20"></a>GBR.palette &lt;-<span class="st"> </span><span class="kw">colorRampPalette</span>(<span class="kw">c</span>(<span class="st">&#39;green&#39;</span>,<span class="st">&#39;black&#39;</span>,<span class="st">&#39;red&#39;</span>))</span>
+<span id="cb72-21"><a href="#cb72-21"></a></span>
+<span id="cb72-22"><a href="#cb72-22"></a><span class="kw">heatmap</span>(<span class="kw">as.matrix</span>(BIC.expr.genes.standardized),</span>
+<span id="cb72-23"><a href="#cb72-23"></a>        <span class="dt">zlim =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">4</span>,<span class="dv">4</span>), <span class="dt">Colv=</span><span class="ot">NA</span>,</span>
+<span id="cb72-24"><a href="#cb72-24"></a>        <span class="dt">distfun =</span> <span class="cf">function</span>(x) <span class="kw">as.dist</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">cor</span>(<span class="kw">t</span>(x), <span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>)), </span>
+<span id="cb72-25"><a href="#cb72-25"></a>        <span class="dt">hclustfun =</span> <span class="cf">function</span>(x) <span class="kw">hclust</span>(x, <span class="dt">method =</span> <span class="st">&quot;ward.D2&quot;</span>),</span>
+<span id="cb72-26"><a href="#cb72-26"></a>        <span class="dt">labRow =</span> <span class="ot">NA</span>, <span class="dt">labCol =</span> <span class="ot">NA</span>,  <span class="co"># DO not print the labels (unreadable anyway)</span></span>
+<span id="cb72-27"><a href="#cb72-27"></a>        <span class="dt">col =</span> <span class="kw">GBR.palette</span>(<span class="dv">100</span>),</span>
+<span id="cb72-28"><a href="#cb72-28"></a>        <span class="dt">scale =</span> <span class="st">&quot;none&quot;</span>)</span></code></pre></div>
+<p><img src="figures/learning_standardize_genes-1.png" width="80%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="prédiction-du-type-de-cancer-en-utilisant-les-support-vecteur-machines" class="section level1" number="6">
+<h1 number="6"><span class="header-section-number">6</span> Prédiction du type de cancer en utilisant les Support Vecteur Machines</h1>
+<ul>
+<li>utilisation avec formule R</li>
+</ul>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1"></a><span class="kw">library</span>(e1071)</span>
+<span id="cb73-2"><a href="#cb73-2"></a>model=<span class="kw">svm</span>(cancer.type <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> mat.app)</span></code></pre></div>
+<ul>
+<li>utilisation classique</li>
+</ul>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1"></a>X=<span class="kw">subset</span>(mat.app, <span class="dt">select =</span> <span class="op">-</span>cancer.type)</span>
+<span id="cb74-2"><a href="#cb74-2"></a>y=mat.app<span class="op">$</span>cancer.type</span>
+<span id="cb74-3"><a href="#cb74-3"></a>model=<span class="kw">svm</span>(X,y)</span></code></pre></div>
+<ul>
+<li>erreur d’apprentissage avec les paramètres par défaut</li>
+</ul>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1"></a>pred=<span class="kw">predict</span>(model, X)</span>
+<span id="cb75-2"><a href="#cb75-2"></a><span class="kw">table</span>(pred, mat.app<span class="op">$</span>cancer.type)</span></code></pre></div>
+<ul>
+<li>surapprentissage avec gaussiennes très resserrées</li>
+</ul>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1"></a>model=<span class="kw">svm</span>(X,y,<span class="dt">gamma=</span><span class="fl">0.1</span>)</span>
+<span id="cb76-2"><a href="#cb76-2"></a>pred=<span class="kw">predict</span>(model, X)</span>
+<span id="cb76-3"><a href="#cb76-3"></a><span class="kw">table</span>(pred, mat.app<span class="op">$</span>cancer.type)</span></code></pre></div>
+<ul>
+<li>surapprentissage avec cost élevé</li>
+</ul>
+<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1"></a>model=<span class="kw">svm</span>(X,y,<span class="dt">cost=</span><span class="dv">100</span>)</span>
+<span id="cb77-2"><a href="#cb77-2"></a>pred=<span class="kw">predict</span>(model, X)</span>
+<span id="cb77-3"><a href="#cb77-3"></a><span class="kw">table</span>(pred, mat.app<span class="op">$</span>cancer.type)</span></code></pre></div>
+<ul>
+<li>évaluation d’erreur de test (en surapprentissage)</li>
+</ul>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1"></a>Xtest=<span class="kw">subset</span>(mat.test, <span class="dt">select =</span> <span class="op">-</span>cancer.type)</span>
+<span id="cb78-2"><a href="#cb78-2"></a>pred=<span class="kw">predict</span>(model, Xtest)</span>
+<span id="cb78-3"><a href="#cb78-3"></a><span class="kw">table</span>(pred, mat.test<span class="op">$</span>cancer.type)</span></code></pre></div>
+<ul>
+<li>évaluation d’erreur de test (avec paramètres par défaut)</li>
+</ul>
+<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1"></a>model=<span class="kw">svm</span>(X,y)</span>
+<span id="cb79-2"><a href="#cb79-2"></a>pred=<span class="kw">predict</span>(model, Xtest)</span>
+<span id="cb79-3"><a href="#cb79-3"></a><span class="kw">table</span>(pred, mat.test<span class="op">$</span>cancer.type)</span></code></pre></div>
+</div>
+<div id="prédiction-des-échantillons-classés-comme-unclassified" class="section level1" number="7">
+<h1 number="7"><span class="header-section-number">7</span> Prédiction des échantillons classés comme “Unclassified”</h1>
+<p>Lors de l’étude du jeu de données initial, vous avez déterminé que 107 échantillons avaient été classés comme “Unclassified”. En utilisant les modèles de <em>random forest</em> et de SVM, prédisez le type de cancer pour ces individus. Comparez les résultats obtenus avec les deux modèles.</p>
+<ul>
+<li>Prédiction du type de cancer en utilisant le modèle <em>random forest</em></li>
+</ul>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1"></a>mat.pred &lt;-<span class="st"> </span><span class="kw">t</span>(BIC.expr)</span>
+<span id="cb80-2"><a href="#cb80-2"></a>pred.uncl.rf &lt;-<span class="st"> </span><span class="kw">predict</span>(rf.fit, <span class="dt">newdata =</span> mat.pred[ind.uncl,])</span>
+<span id="cb80-3"><a href="#cb80-3"></a><span class="kw">table</span>(pred.uncl.rf)</span></code></pre></div>
+<pre><code>pred.uncl.rf
+   Luminal.A no.Luminal.A 
+          53           54 </code></pre>
+<ul>
+<li>Prédiction du type de cancer en utilisant le modèle SVM</li>
+</ul>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1"></a>model=<span class="kw">svm</span>(cancer.type<span class="op">~</span>., <span class="dt">data=</span>mat.app)</span>
+<span id="cb82-2"><a href="#cb82-2"></a>pred.uncl.svm &lt;-<span class="st"> </span><span class="kw">predict</span>(model, <span class="dt">newdata =</span> mat.pred[ind.uncl,])</span>
+<span id="cb82-3"><a href="#cb82-3"></a><span class="kw">table</span>(pred.uncl.svm)</span></code></pre></div>
+<pre><code>pred.uncl.svm
+   Luminal.A no.Luminal.A 
+          63           44 </code></pre>
+<ul>
+<li>Calcul de la table de confusion entre les deux vecteurs de prédiction.</li>
+</ul>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1"></a>tc &lt;-<span class="st"> </span><span class="kw">table</span>(pred.uncl.rf, pred.uncl.svm)</span>
+<span id="cb84-2"><a href="#cb84-2"></a>tc</span></code></pre></div>
+<pre><code>              pred.uncl.svm
+pred.uncl.rf   Luminal.A no.Luminal.A
+  Luminal.A           51            2
+  no.Luminal.A        12           42</code></pre>
+</div>
+<div id="prédiction-des-4-types-de-cancer" class="section level1" number="8">
+<h1 number="8"><span class="header-section-number">8</span> Prédiction des 4 types de cancer</h1>
+<ol style="list-style-type: decimal">
+<li>Préparation du jeu de données</li>
+</ol>
+<p>Créez un nouveau data.frame (<code>df.data.4</code>) qui contient les données d’expression de gènes contenu dans le data.frame <code>BIC.expr.4</code> et le type de cancer pour chaque échantillon (définit en 4 types).</p>
+<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1"></a>df.data<span class="fl">.4</span> &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">as.character</span>(BIC.sample.classes<span class="fl">.4</span>[,<span class="dv">1</span>]), <span class="kw">t</span>(BIC.expr<span class="fl">.4</span>))</span>
+<span id="cb86-2"><a href="#cb86-2"></a>df.data<span class="fl">.4</span>[,<span class="dv">1</span>] &lt;-<span class="st"> </span><span class="kw">as.factor</span>(df.data<span class="fl">.4</span>[,<span class="dv">1</span>])</span>
+<span id="cb86-3"><a href="#cb86-3"></a><span class="kw">colnames</span>(df.data<span class="fl">.4</span>)[<span class="dv">1</span>] &lt;-<span class="st"> &quot;cancer.type&quot;</span></span></code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li>Préparation des échantillons d’apprentissage et de test</li>
+</ol>
+<ul>
+<li>En reprenant les individus sélectionnés pour la création de l’échantillon d’apprentissage <code>ind.app</code>, créez les data.frames <code>mat.app.4</code> et <code>mat.test.4</code> qui contiennent les données de l’échantillon d’apprentissage et celui de test.</li>
+</ul>
+<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1"></a>mat.app<span class="fl">.4</span> &lt;-<span class="st"> </span>df.data<span class="fl">.4</span>[ind.app,]</span>
+<span id="cb87-2"><a href="#cb87-2"></a><span class="kw">dim</span>(mat.app<span class="fl">.4</span>)</span></code></pre></div>
+<pre><code>[1] 474 965</code></pre>
+<ul>
+<li>Préparez l’échantillon test</li>
+</ul>
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1"></a>mat.test<span class="fl">.4</span> &lt;-<span class="st"> </span>df.data<span class="fl">.4</span>[<span class="op">-</span>ind.app,]</span>
+<span id="cb89-2"><a href="#cb89-2"></a><span class="kw">dim</span>(mat.test<span class="fl">.4</span>)</span></code></pre></div>
+<pre><code>[1] 238 965</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Déterminez les paramètres <code>mtry</code> et <code>ntree</code> optimaux pour le random forest permettant de prédire les 4 types de cancer.</li>
+</ol>
+<ul>
+<li>Déterminez la valeur optimale du paramètre <code>ntree</code>.</li>
+</ul>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1"></a>rf.fit<span class="fl">.4</span> &lt;-<span class="st"> </span><span class="kw">randomForest</span>(cancer.type<span class="op">~</span>., <span class="dt">data=</span>mat.app<span class="fl">.4</span>)</span>
+<span id="cb91-2"><a href="#cb91-2"></a><span class="kw">plot</span>(rf.fit<span class="fl">.4</span><span class="op">$</span>err.rate[,<span class="dv">1</span>], <span class="dt">type=</span><span class="st">&quot;l&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;taux d&#39;erreur&quot;</span>, <span class="dt">xlab=</span><span class="st">&quot;nombre d&#39;arbres&quot;</span>)</span></code></pre></div>
+<p><img src="figures/learning_unnamed-chunk-52-1.png" width="672" style="display: block; margin: auto;" /></p>
+<ul>
+<li>Déterminez la valeur optimale du paramètre <code>mtry</code>.</li>
+</ul>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1"></a>v.err &lt;-<span class="st">  </span><span class="ot">NULL</span></span>
+<span id="cb92-2"><a href="#cb92-2"></a>v.mtry &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">15</span>, <span class="dv">31</span>, <span class="dv">62</span>, <span class="dv">124</span>, <span class="dv">248</span>, <span class="dv">350</span>, <span class="dv">500</span>)</span>
+<span id="cb92-3"><a href="#cb92-3"></a><span class="cf">for</span>(i <span class="cf">in</span> v.mtry){</span>
+<span id="cb92-4"><a href="#cb92-4"></a>    <span class="kw">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb92-5"><a href="#cb92-5"></a>    rf.fit &lt;-<span class="st"> </span><span class="kw">randomForest</span>(cancer.type<span class="op">~</span>., <span class="dt">data =</span> mat.app<span class="fl">.4</span>, <span class="dt">ntree=</span><span class="dv">150</span>, <span class="dt">mtry=</span>i)</span>
+<span id="cb92-6"><a href="#cb92-6"></a>    v.err &lt;-<span class="st"> </span><span class="kw">c</span>(v.err, rf.fit<span class="op">$</span>err.rate[<span class="dv">150</span>,<span class="dv">1</span>])</span>
+<span id="cb92-7"><a href="#cb92-7"></a>}</span>
+<span id="cb92-8"><a href="#cb92-8"></a></span>
+<span id="cb92-9"><a href="#cb92-9"></a><span class="kw">plot</span>(v.mtry, v.err, <span class="dt">type =</span><span class="st">&quot;b&quot;</span>, <span class="dt">xlab=</span><span class="st">&quot;mtry values&quot;</span>, <span class="dt">ylab=</span><span class="st">&quot;taux d&#39;erreur&quot;</span>, <span class="dt">xaxt=</span><span class="st">&quot;n&quot;</span>)</span>
+<span id="cb92-10"><a href="#cb92-10"></a><span class="kw">axis</span>(<span class="dv">1</span>, <span class="dt">at=</span>v.mtry, <span class="dt">labels=</span>v.mtry, <span class="dt">las=</span><span class="dv">2</span>)</span></code></pre></div>
+<p><img src="figures/learning_unnamed-chunk-53-1.png" width="672" style="display: block; margin: auto;" /></p>
+<ol start="4" style="list-style-type: decimal">
+<li>Calculez le modèle avec les paramètres optimaux.<br />
+Calculez à nouveau le modèle sur l’échantillon d’apprentissage en utilisant les valeurs optimales des paramètres <code>mtry</code> et <code>ntree</code>. Dans la fonction <code>randomForest()</code>, ajouter l’argument <code>importance=TRUE</code>.</li>
+</ol>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1"></a>rf.fit<span class="fl">.4</span> &lt;-<span class="st"> </span><span class="kw">randomForest</span>(cancer.type<span class="op">~</span>., <span class="dt">data =</span> mat.app<span class="fl">.4</span>, <span class="dt">ntree=</span><span class="dv">150</span>, <span class="dt">mtry=</span><span class="dv">124</span>, <span class="dt">importance=</span><span class="ot">TRUE</span>)</span></code></pre></div>
+<ul>
+<li>Visualisez le modèle et la table de confusion obtenue sur les échantillons OOB.</li>
+</ul>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1"></a>rf.fit<span class="fl">.4</span></span></code></pre></div>
+<pre><code>
+Call:
+ randomForest(formula = cancer.type ~ ., data = mat.app.4, ntree = 150,      mtry = 124, importance = TRUE) 
+               Type of random forest: classification
+                     Number of trees: 150
+No. of variables tried at each split: 124
+
+        OOB estimate of  error rate: 23.42%
+Confusion matrix:
+           Basal.like HER2pos Luminal.A Luminal.B class.error
+Basal.like         76       0        14         0  0.15555556
+HER2pos            11       2         7         6  0.92307692
+Luminal.A           4       0       262         7  0.04029304
+Luminal.B           0       0        62        23  0.72941176</code></pre>
+<ol start="5" style="list-style-type: decimal">
+<li>Calculez les performances du modèle <em>random forest</em> sur l’échantillon d’apprentissage et de test.</li>
+</ol>
+<ul>
+<li>Calcul de l’<em>accuracy</em> sur l’échantillon d’apprentissage.</li>
+</ul>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1"></a>pred.app<span class="fl">.4</span> &lt;-<span class="st"> </span><span class="kw">predict</span>(rf.fit<span class="fl">.4</span>, <span class="dt">newdata =</span> mat.app<span class="fl">.4</span>, <span class="dt">type=</span><span class="st">&quot;class&quot;</span>)</span>
+<span id="cb96-2"><a href="#cb96-2"></a>tc.rf4.app &lt;-<span class="st"> </span><span class="kw">table</span>(pred.app<span class="fl">.4</span>, mat.app<span class="fl">.4</span>[,<span class="st">&quot;cancer.type&quot;</span>])</span>
+<span id="cb96-3"><a href="#cb96-3"></a>tc.rf4.app</span></code></pre></div>
+<pre><code>            
+pred.app.4   Basal.like HER2pos Luminal.A Luminal.B
+  Basal.like         90       0         0         0
+  HER2pos             0      26         0         0
+  Luminal.A           0       0       273         0
+  Luminal.B           0       0         0        85</code></pre>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1"></a>acc.rf4.app &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">diag</span>(tc.rf4.app))<span class="op">/</span><span class="kw">sum</span>(tc.rf4.app)</span>
+<span id="cb98-2"><a href="#cb98-2"></a>acc.rf4.app</span></code></pre></div>
+<pre><code>[1] 1</code></pre>
+<ul>
+<li>Calcul de l’<em>accuracy</em> sur l’échantillon test</li>
+</ul>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1"></a>pred.test<span class="fl">.4</span> &lt;-<span class="st"> </span><span class="kw">predict</span>(rf.fit<span class="fl">.4</span>, <span class="dt">newdata =</span> mat.test<span class="fl">.4</span>, <span class="dt">type=</span><span class="st">&quot;class&quot;</span>)</span>
+<span id="cb100-2"><a href="#cb100-2"></a></span>
+<span id="cb100-3"><a href="#cb100-3"></a>tc.rf4.test &lt;-<span class="st"> </span><span class="kw">table</span>(pred.test<span class="fl">.4</span>, mat.test<span class="fl">.4</span>[,<span class="st">&quot;cancer.type&quot;</span>])</span>
+<span id="cb100-4"><a href="#cb100-4"></a>tc.rf4.test</span></code></pre></div>
+<pre><code>            
+pred.test.4  Basal.like HER2pos Luminal.A Luminal.B
+  Basal.like         35       5         0         1
+  HER2pos             0       1         0         0
+  Luminal.A           6       3       148        23
+  Luminal.B           0       6         1         9</code></pre>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1"></a>acc.rf4.test &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">diag</span>(tc.rf4.test))<span class="op">/</span><span class="kw">sum</span>(tc.rf4.test)</span>
+<span id="cb102-2"><a href="#cb102-2"></a>acc.rf4.test</span></code></pre></div>
+<pre><code>[1] 0.8109244</code></pre>
+<ol start="6" style="list-style-type: decimal">
+<li>Etude de l’importance des descripteurs dans le modèle.</li>
+</ol>
+<ul>
+<li>Représentez graphiquement la valeur d’importance des différents gènes en utilisant la fonction <code>varImpPlot()</code></li>
+</ul>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1"></a><span class="kw">varImpPlot</span>(rf.fit<span class="fl">.4</span>, <span class="dt">n.var=</span><span class="dv">50</span>, <span class="dt">cex =</span> <span class="fl">0.6</span>, <span class="dt">type=</span><span class="dv">1</span>)</span></code></pre></div>
+<p><img src="figures/learning_unnamed-chunk-57-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
