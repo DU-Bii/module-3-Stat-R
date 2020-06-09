@@ -22,15 +22,27 @@ font-import: http://fonts.googleapis.com/css?family=Risque
 subtitle: DUBii 2019
 font-family: Garamond
 transition: linear
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r include=FALSE, echo=FALSE, eval=TRUE}
-library(knitr)
-library(kableExtra)
-library(randomForest)
-library(FactoMineR)
-library(caret)
+# library(kableExtra)
 # library(formattable)
+requiredLib <- c(
+  "knitr",
+  "rpart",
+  "rpart.plot",
+  "randomForest", 
+  #                 "corrplot",
+  "FactoMineR", 
+  "caret")
+for (lib in requiredLib) {
+  if (!require(lib, character.only = TRUE)) {
+    install.packages(lib, )
+  }
+  require(lib, character.only = TRUE)
+}
 
 options(width = 300)
 # options(encoding = 'UTF-8')
@@ -39,9 +51,12 @@ knitr::opts_chunk$set(
   fig.path = 'figures/07_tests_multiples',
   fig.align = "center", 
   size = "tiny", 
-  echo = TRUE, eval = TRUE, 
-  warning = FALSE, message = FALSE, 
-  results = TRUE, comment = "")
+  echo = TRUE, 
+  eval = TRUE, 
+  warning = FALSE, 
+  message = FALSE, 
+  results = TRUE, 
+  comment = "")
 
 options(scipen = 12) ## Max number of digits for non-scientific notation
 # knitr::asis_output("\\footnotesize")
@@ -70,19 +85,16 @@ Au cours de ce TP, vous allez développer différents modèles statistiques :
 1. Ouvrez le fichier d'expression des gènes en utilisant la commande `read.table()`. Stockez ce data.frame dans l'objet `BIC.expr`. Vérifiez la taille du data.frame généré en utilisant la commande `dim()`.
 
 ```{r echo=TRUE, eval=FALSE}
-#data.folder<-"/shared/projects/du_bii_2019/data/module3/seance4/BIC/"
-data.folder<-"/shared/projects/dubii2020/trainers/github_clones/study-cases/Homo_sapiens/TCGA_study-case/TCGA_AML_data/"
-```
-
-```{r echo=FALSE, eval=TRUE}
+data.folder<-"/shared/projects/du_bii_2019/data/module3/seance4/BIC"
 #data.folder="data/BIC/" 
+#data.folder<-"/shared/projects/dubii2020/trainers/github_clones/study-cases/Homo_sapiens/TCGA_study-case/TCGA_AML_data"
 ```
 
 
 
 ```{r}
-#BIC.expr.file <- file.path(data.folder, "BIC_log2-norm-counts_edgeR_DEG_top_1000.tsv.gz")
-BIC.expr.file <- file.path(data.folder, "AML_counts_filtered-genes.tsv.gz")
+BIC.expr.file <- file.path(data.folder, "BIC_log2-norm-counts_edgeR_DEG_top_1000.tsv.gz")
+#BIC.expr.file <- file.path(data.folder, "AML_counts_filtered-genes.tsv.gz")
 BIC.expr <- read.table(file = BIC.expr.file, header = TRUE)
 dim(BIC.expr)
 ```
@@ -90,16 +102,18 @@ dim(BIC.expr)
 2. Ouvrez le fichier qui contient les étiquettes des échantillons en utilisant la commande `read.table()`. Stockez ce data.frame dans l'objet `BIC.sample.classes`. 
 
 ```{r}
-#BIC.sample.classes <- read.table(file.path(data.folder, "BIC_sample-classes.tsv.gz"),header = TRUE)
-BIC.sample.classes <- read.table(file.path(data.folder, "AML_sample-classes.tsv.gz"),header = TRUE)
+BIC.sample.classes <- read.table(file.path(data.folder, "BIC_sample-classes.tsv.gz"),header = TRUE)
+#BIC.sample.classes <- read.table(file.path(data.folder, "AML_sample-classes.tsv.gz"),header = TRUE)
 ```
 
-* Vérifiez le nombre d'échantillons disponibles dans ce jeu de données.  
+* Vérifiez le nombre d'échantillons disponibles dans ce jeu de données. 
+
 ```{r}
 dim(BIC.sample.classes)
 ```
 
 * Déterminez le type de variables disponibles dans ce jeu de données en utilisant la fonction `summary()`.
+
 ```{r}
 summary(BIC.sample.classes)
 ```
@@ -112,6 +126,7 @@ A la fin du TP, vous utiliserez les modèles statistiques construits pour prédi
 3. Supprimez les échantillons correspondant au type `Unclassified` dans les deux data.frames. 
 
 * En utilisant la fonction `which()`, identifiez les lignes du data.frame `BIC.sample.classes` qui correspondent au type `Unclassified`. Vérifiez que vous avez bien sélectionné 107 individus.
+
 ```{r}
 ind.uncl <- which(BIC.sample.classes[,"cancer.type"]=="Unclassified")
 length(ind.uncl)
@@ -125,6 +140,7 @@ dim(BIC.sample.classes.4)
 ```
 
 * Supprimez les échantillons correspondant au type `Unclassified` du data.frame `BIC.expr`. Attention, dans le data.frame `BIC.expr` les échantillons sont présentés en colonnes.
+
 ```{r}
 BIC.expr.4 <- BIC.expr[, -ind.uncl] 
 dim(BIC.expr.4)
@@ -142,23 +158,25 @@ new.type <- rep("Luminal.A", length = nrow(BIC.sample.classes.4))
 ```
     
 b. Identifiez les individus qui ne contiennent pas "Luminal.A" dans la première colonne (colonne `cancer.type`) du data.frame `BIC.sample.classes.4`.  
+
 ```{r}
 ind.noLA <- which(BIC.sample.classes.4[,"cancer.type"]!="Luminal.A")
 ```
 
 
 c. Pour ces individus, assignez la valeur "no.Luminal.A" au vecteur `new.type`.
+
 ```{r}
 new.type[ind.noLA] = "no.Luminal.A"
 ```
 
 d. Remplacez la colonne `cancer.type` du data.frame `BIC.sample.classes.2` par le vecteur `new.type` que vous aurez transformé en facteur (fonction `as.factor()`)
+
 ```{r}
 BIC.sample.classes.2 <- BIC.sample.classes.4
 BIC.sample.classes.2[,"cancer.type"] = as.factor(new.type)
 ```
 
- 
 4. Suppression des variables corrélées
 
 Une des étapes du nettoyage du jeu de données correspond à supprimer les variables (ici les gènes) corrélées. Pour cela, vous allez utiliser la fonction `findCorrelation()` de la librairie `caret`. Cette fonction prend en entrée la matrice de corrélation entre les variables et le seuil de corrélation à partir duquel on considère que deux variables sont corrélées.
@@ -167,12 +185,13 @@ Une des étapes du nettoyage du jeu de données correspond à supprimer les vari
 
 ```{r}
 mat.cor <- cor(t(BIC.expr.4))
+dim(mat.cor)
+# corrplot::corrplot(mat.cor)
 ```
 
 * Identifiez les gènes à supprimer en utilisant un seuil de corrléation de 0.8 et la fonction `findCorrelation()`. Combien de gènes allez vous supprimer.  
 
 ```{r}
-library(caret)
 var.supp = findCorrelation(mat.cor, cutoff = 0.8)
 length(var.supp)
 ```
@@ -186,6 +205,7 @@ dim(BIC.expr.4)
 5. Pour créer les modèles de prédiction, il est nécessaire d'avoir un data.frame qui regroupe pour chaque échantillon les gènes et son type de cancer. 
 
 * Créez le data.frame `df.data` qui contient : 
+
     + en lignes ; les échantillons  
     + en colonnes : les gènes et le type de cancer.  
 Pour cela, utilisez la commande `data.frame()`.   
@@ -194,12 +214,16 @@ Pour cela, utilisez la commande `data.frame()`.
     
 ```{r dataFrame}
 df.data <- data.frame(BIC.sample.classes.2[,1], t(BIC.expr.4))
+dim(df.data)
 ```
 
 
 *  Assignez "cancer.type" comme nom de colonne à la première colonne de `df.data`.
 ```{r}
 colnames(df.data)[1] <- "cancer.type"
+# View(df.data)
+kable(df.data[1:10, 1:5])
+
 ```
 
 
@@ -207,12 +231,12 @@ colnames(df.data)[1] <- "cancer.type"
 # Préparation des échantillons d'apprentissage et de test
 
 * L'**échantillon d'apprentissage** est l'échantillon qui va permettre d'apprendre les modèles. Il sera constitué de 2/3 des échantillons sélectionnés de manière aléatoire.  
+
 * L'**échantillon de test** est l'échantillon qui va permettre d'estimer les performances non biaisées des modèles. Il sera constitué du 1/3 des échantillons restant.  
 
 
 
-1. En utilisant la fonction `sample()` créez un vecteur qui contient le numéro d'indice de 2/3 des individus choisis aléatoirement. 
-Ces individus vont constituter les individus du jeu d'apprentissage.
+1. En utilisant la fonction `sample()` créez un vecteur qui contient le numéro d'indice de 2/3 des individus choisis aléatoirement.  Ces individus vont constituter le jeu d'apprentissage.
 
 ```{r}
 ind.app <- sample(1:nrow(df.data), size=2/3*nrow(df.data))
@@ -255,16 +279,19 @@ vcol.set[ind.app] <- "magenta"
 3. Représentez la projection des individus sur les 2 premières composantes principales en colorant les individus suivant l'échantillon auquel ils appartiennent.
 
 ```{r}
-plot.new()
+plot.new() # To do: check why we need to add this
 plot(pca.res, habillage = "ind", col.hab = vcol.set, label="none")
 legend("topleft", legend=c("jeu d'apprentissage", "jeu test"), col=c("blue","magenta"), pch=19)
 ```
 
 4. Déterminez la répartition des deux types de cancer dans les échantillons d'apprentissage et test.
+
 ```{r}
 par(mfrow=c(2,1))
 barplot(table(mat.app[,"cancer.type"]), main="jeu d'apprentissage")
 barplot(table(mat.test[,"cancer.type"]), main="jeu de test")
+par(mfrow=c(1,1))
+
 ```
 D'après les résultats obtenus, concluez sur la validité les échantillons d'apprentissage et test. Si vous concluez au fait que les deux échantillons ne sont pas valides, alors reprenez la procédure pour générer à nouveau des échantillons d'apprentissage et de test.
 
@@ -275,7 +302,6 @@ D'après les résultats obtenus, concluez sur la validité les échantillons d'a
 ```{r}
 library(rpart)
 library(rpart.plot)
-
 rpart.fit <-rpart(cancer.type~., data = mat.app)
 rpart.fit
 ```
@@ -300,10 +326,11 @@ pred.app <- predict(rpart.fit, newdata = mat.app, type="class")
 
 ```{r cart.tc}
 tc.rpart.app <- table(pred.app, mat.app[,"cancer.type"])
-tc.rpart.app
+kable(tc.rpart.app, caption = "Confusion matrix")
 ```
 
 * Calculez l'*accuracy* du modèle sur les données de l'apprentissage
+
 ```{r tbp.rpart.app}
 acc.rpart.app <- sum(diag(tc.rpart.app))/sum(tc.rpart.app)
 acc.rpart.app
@@ -340,6 +367,7 @@ rf.fit <- randomForest(cancer.type~., data = mat.app)
 
 
 * Affichez à l'écran le modèle créé.
+
 ```{r}
 rf.fit
 ```
@@ -356,12 +384,14 @@ plot(rf.fit$err.rate[,1], type="l", xlab="nombre d'arbre dans la foret", ylab="t
 
 
 * A partir de ce graphique, choisissez le nombre d'arbres optimal, noté $ntree_{opt}$.
+
 ```{r}
 ntree.opt <- 200
 ```
 
 
 3. Choix de la valeur optimale pour le paramètre `mtry`.   
+
 Remarque : cette étape est coûteuse en temps de calculs.
 
 Pour trouver la valeur optimale de `mtry`, vous allez calculer plusieurs modèles en variant la valeur du paramètre `mtry`. Pour chaque modèle l'erreur commise par le modèle sera stockée dans un vecteur. 
@@ -426,7 +456,7 @@ acc.rf.app
 # prediction
 pred.test <- predict(rf.fit, newdata = mat.test, type="class")
 
-# table de confusion
+# table de confusionr.fit
 tc.rf.test <- table(pred.test, mat.test[,"cancer.type"])
 tc.rf.test
 
@@ -500,12 +530,14 @@ heatmap(as.matrix(BIC.expr.genes.standardized),
 # Prédiction du type de cancer en utilisant les Support Vecteur Machines
 
 * utilisation avec formule R
+
 ```{r eval=TRUE}
 library(e1071)
 model=svm(cancer.type~., data=mat.app)
 ```
 
 * utilisation classique
+
 ```{r eval=FALSE}
 X=subset(mat.app, select = -cancer.type)
 y=mat.app$cancer.type
@@ -513,6 +545,7 @@ model=svm(X,y)
 ```
 
 * erreur d'apprentissage avec les paramètres par défaut
+
 ```{r eval=FALSE}
 pred=predict(model, X)
 table(pred, mat.app$cancer.type)
@@ -533,6 +566,7 @@ table(pred, mat.app$cancer.type)
 ```
 
 * évaluation d'erreur de test (en surapprentissage)
+
 ```{r eval=FALSE}
 Xtest=subset(mat.test, select = -cancer.type)
 pred=predict(model, Xtest)
@@ -540,12 +574,12 @@ table(pred, mat.test$cancer.type)
 ```
 
 * évaluation d'erreur de test (avec paramètres par défaut)
+
 ```{r eval=FALSE}
 model=svm(X,y)
 pred=predict(model, Xtest)
 table(pred, mat.test$cancer.type)
 ```
-
 
 
 # Prédiction des échantillons classés comme "Unclassified"
