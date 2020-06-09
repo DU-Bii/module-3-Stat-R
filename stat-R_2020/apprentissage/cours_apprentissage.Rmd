@@ -1,0 +1,293 @@
+----
+title: "Module 3 - Méthodes d'apprentissage avec R - Séance 7"
+author: "Frédéric Guyon,updated by Jacques van Helden"
+date: '`r Sys.Date()`'
+output:
+  beamer_presentation:
+    colortheme: dolphin
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    fonttheme: structurebold
+    highlight: tango
+    incremental: no
+    keep_tex: no
+    slide_level: 2
+    theme: Montpellier
+    toc: yes
+  html_document:
+    fig_caption: yes
+    highlight: zenburn
+    self_contained: no
+    theme: cerulean
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+  ioslides_presentation:
+    colortheme: dolphin
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    fonttheme: structurebold
+    highlight: tango
+    self_contained: no
+    slide_level: 2
+    smaller: yes
+    toc: yes
+    widescreen: yes
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
+  revealjs::revealjs_presentation:
+    css: ../slides.css
+    self_contained: yes
+    theme: night
+    transition: none
+  slidy_presentation:
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    highlight: tango
+    incremental: no
+    keep_md: yes
+    self_contained: yes
+    slide_level: 2
+    smaller: yes
+    smart: no
+    theme: cerulean
+    toc: yes
+    widescreen: yes
+font-import: http://fonts.googleapis.com/css?family=Risque
+subtitle: DUBii 2019
+font-family: Garamond
+transition: linear
+---
+
+```{r include=FALSE, echo=FALSE, eval=TRUE}
+library(knitr)
+library(kableExtra)
+library(png)
+library(grid)
+library(rpart.plot)
+library(rpart)
+library(randomForest)
+library(FactoMineR)
+library(corrplot)
+library(pheatmap)
+
+# library(formattable)
+
+options(width = 300)
+# options(encoding = 'UTF-8')
+knitr::opts_chunk$set(
+  fig.width = 7, fig.height = 5, 
+  fig.path = 'figures/07_tests_multiples',
+  fig.align = "center", 
+  size = "tiny", 
+  echo = TRUE, eval = TRUE, 
+  warning = FALSE, message = FALSE, 
+  results = TRUE, comment = "")
+
+options(scipen = 12) ## Max number of digits for non-scientific notation
+# knitr::asis_output("\\footnotesize")
+
+```
+
+## Deux classes a priori connues
+```{r 2_groups, echo=FALSE, out.width="50%", fig.cap="2 groupes"}
+include_graphics(path = "img/SepLin1.pdf")
+```
+
+## Séparation linéaire
+```{r 2_separated_groups, echo=FALSE, out.width="50%", fig.cap="2 groupes"}
+include_graphics(path = "img/SepLin2.pdf")
+```
+
+## Modèle d'apprentissage
+```{r model, echo=FALSE, out.width="50%", fig.cap="black-box model: SVM ou NN"}
+include_graphics(path = "img/model.pdf")
+```
+
+## Modèle d'apprentissage
+
+- les vecteurs d'apprentissage $x_i$: 
+      représentation de nos objets à classer
+
+- classe ou valeur attendue pour chaque objet: $y_i$
+
+- modèle = paramètres à identifier
+
+  	 - poids des réseaux de neurones
+	 - coefficients des hyperplan séparateurs pour les SVM
+	 - obtenus par minimisation d'une fonction d'écart (loss function)
+  
+- fonction de décision: classe=F(x,par)
+
+## Historique rapide
+
+- **1957** : Perceptron (Rosenblatt)
+- **1980** : Artificial Neural Network (K. Fukushima)
+- **1989** : Algorithme de Back-propagation du gradient
+appliqué à NN à plusieurs couches (ZIP codes)
+- Problème : apprentissage difficile et long (vanishing gradient)
+- **1990-2000** : Problèmes de convergence, lenteur ont favorisés
+l'émergence des SVM
+- **2007** : apparition du terme Deep Learning (Hinton)
+- Actuellement, méthodes les plus performantes sur benchmarks
+d'évaluation : TIMIT (Reconnaissance de la parole), MNIST
+(images de chiffres manuscrits)
+
+
+# Support Vecteur Machine
+
+## Séparation linéaire: deux classes
+
+```{r mult_separated_groups, echo=FALSE, out.width="50%", fig.cap="2 groupes, pas de séparation unique"}
+include_graphics(path = "img/SepLin3.pdf")
+```
+## Marge entre classes séparables
+
+ - Marge: distance au point le plus proche
+ - Recherche du plan qui maximise cette marge
+ - Marge large = plus grande stabilité des prédictions
+ - SVM = Séparateur à Vaste Marge
+ 
+```{r  echo=FALSE, out.width="50%",fig.cap="La Vaste Marge"}
+include_graphics(path = "img/SVMfigure5.pdf")
+```
+## Approche SVM dans le cas général
+
+- Plan séparateur trouvé par minimisation des erreurs de classification
+- On n'interdit pas les erreurs de classement, mais on les pénalise
+- Paramètre C ou cost = constante de pénalisation pour contrôler les erreurs de classement
+
+## Approche SVM dans le cas général
+
+- Souvent problèmes de classification plus faciles
+dans un espace plus grand (espace de redescription)
+- Plus de degrés de libertés pour trouver un modèle
+- Séparation linéaire possible dans l'espace de redescription
+- Cet espace est décrit par une fonction noyau
+
+```{r  echo=FALSE, out.width="40%",fig.cap="Espace des features"}
+include_graphics(path = "img/Phi.pdf")
+```
+## Exemples 
+```{r  echo=FALSE, out.width="35%",fig.cap="Séparation linéaire"}
+include_graphics(path="img/svm1.pdf")
+```
+\tiny The Elements of Statistical Learning: Data Mining, Inference, and Prediction.Second Edition.Trevor Hastie, Robert Tibshirani, Jerome Friedman.
+
+## Exemples
+
+```{r  echo=FALSE, out.width="35%",fig.cap="Séparation polynômiale et gaussienne"}
+include_graphics(path="img/svm2.pdf")
+```
+\tiny The Elements of Statistical Learning: Data Mining, Inference, and Prediction.Second Edition.Trevor Hastie, Robert Tibshirani, Jerome Friedman.
+
+## Exemple 1: iris avec Support Vector Machine
+
+```{r, results = FALSE}
+library(e1071)
+model=svm(Species~., data=iris)
+ypred=predict(model,iris[,1:4])
+table(ypred, iris[,5])
+```
+## Exemple 2: classification non séparable
+
+```{r, results = FALSE, out.width="50%", fig.width=7, fig.height=5}
+Data=read.table("data/cercles.dms")
+X=as.matrix(Data[,1:2])
+y=Data[,3]
+plot(X,col=y)
+```
+
+## Exemple 2: classification non séparable
+```{r, results = FALSE, out.width="50%"}
+result=svm(X,y, type="C-classification",kernel="radial", cost=1)
+ypred=predict(result,X)
+table(y, ypred)
+plot(X, col=y)
+points(X,col=ypred, pch="+")
+```
+
+## SVM: les caractéristiques générales
+
+- Un choix de noyau = forme des frontières
+- Le paramètre $C$ règle le nombre d'erreurs d'apprentissage
+- Plus $C$ est grand:
+
+       - moins les frontières sont régulières (smooth)
+       - plus le nombre d'erreurs d'apprentissage est faible (tendance)
+       - le nombre d'erreurs de test peut être plus faible
+
+- $C \longrightarrow \infty$ : aucun mauvais classement mais sur-apprentissage
+- En général l'algorithme renvoie les "support vectors"
+- support vecteurs: données (points) utilisées pour la séparation
+
+## Réseaux de neurones : le neurone
+
+```{r  echo=FALSE, out.width="25%",fig.cap="One single neurone"}
+include_graphics(path = "img/neurone.pdf")
+```
+$y= \sigma\left(w_0 +  w_1 x_1 + w_2 x_2 + \dots \right)$
+
+```{r  echo=FALSE, out.width="25%",fig.cap="A sigmoid function"}
+include_graphics(path = "img/sigmoid.pdf")
+```
+## Réseaux de neurones : le neurone
+```{r  echo=FALSE, out.width="50%",fig.cap="A neural network"}
+include_graphics(path = "img/NN2.pdf")
+```
+
+- couche d'entrée (input layer)
+- couches cachées (hidden layers)
+- couche de sortie (output layer)
+- package nnet
+
+  	  - une seule couche cachée
+	  - une couche de sortie avec fonction d'activation linéaire ou softmax
+
+## Fonction nnet: 1 couche cachée
+### Exemple iris avec réseau de neurones
+```{r, results = FALSE}
+library(nnet)
+X=as.matrix(iris[,1:4])
+y=as.integer(iris[,5])
+# une première façon
+Y=class.ind(y)
+model=nnet(X,Y, size=2, softmax=TRUE)
+ypred=max.col(predict(model,X))
+table(y, ypred)
+```
+## Ou bien
+```{r, results = FALSE}
+model=nnet(Species~.,data=iris, size=2)
+ypred=max.col(predict(model,X))
+table(y, ypred)
+```
+
+## Plus sérieusement, avec évaluation
+```{r, results = FALSE}
+ind_app=sample(1:nrow(iris),50)
+Xapp=iris[ind_app,1:4]
+yapp=iris[ind_app,5]
+Xtest=iris[-ind_app,1:4]
+ytest=iris[-ind_app,5]
+
+Yapp=class.ind(yapp)
+model=nnet(Xapp,Yapp, size=2, softmax=TRUE)
+```
+
+## Evaluation des erreurs
+```{r, results = FALSE}
+# erreur d'apprentissage
+ypred=max.col(predict(model,Xapp))
+table(yapp, ypred)
+
+# erreur de test
+ypred=max.col(predict(model,Xtest))
+table(ytest, ypred)
+```
