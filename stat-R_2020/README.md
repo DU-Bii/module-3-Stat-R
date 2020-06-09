@@ -184,5 +184,5 @@ Topics for 2020-06-03
 | Topics | Type | Material |
 |--------------------------------|-------|----------------|
 | Apprentissage automatique | Lecture |  |
-| TCGA Breast Invasive Cancer dataset| Practical  |  [html](apprentissage/TP_apprentissage.html) |
+| TCGA Breast Invasive Cancer dataset| Practical  |  [html](apprentissage/TP_apprentissage.html) [Rmd](apprentissage/TP_apprentissage.Rmd) |
 
