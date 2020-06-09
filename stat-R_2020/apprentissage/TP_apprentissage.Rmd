@@ -73,7 +73,14 @@ Pour ce TP, vous utiliserez les mêmes données que celles que vous avez utilis�
 
 Sur le serveur Rstudio de l'IFB-core-cluster, les données sont dans le répertoire : `/shared/projects/du_bii_2019/data/module3/seance4/BIC/`
 
-si vous travaillez sur une installation locale, vous pouvez les téléca
+si vous travaillez sur une installation locale, vous pouvez télécharger  un clone de ce cours
+
+```{bash eval=FALSE}
+mkdir -p ~/DUBii_clones
+cd ~/DUBii_clones
+git clone https://github.com/DU-Bii/module-3-Stat-R.git
+cd module-3-Stat/
+```
 
 Au cours de ce TP, vous allez développer différents modèles statistiques :  
 
@@ -89,8 +96,8 @@ Au cours de ce TP, vous allez développer différents modèles statistiques :
 1. Ouvrez le fichier d'expression des gènes en utilisant la commande `read.table()`. Stockez ce data.frame dans l'objet `BIC.expr`. Vérifiez la taille du data.frame généré en utilisant la commande `dim()`.
 
 ```{r echo=TRUE}
-data.folder <- "/shared/projects/du_bii_2019/data/module3/seance4/BIC"
-# data.folder <- "data/BIC" 
+# data.folder <- "/shared/projects/du_bii_2019/data/module3/seance4/BIC"
+data.folder <- "data/BIC" 
 # data.folder <- "/shared/projects/dubii2020/trainers/github_clones/study-cases/Homo_sapiens/TCGA_study-case/TCGA_AML_data"
 ```
 
@@ -283,11 +290,16 @@ vcol.set[ind.app] <- "magenta"
 3. Représentez la projection des individus sur les 2 premières composantes principales en colorant les individus suivant l'échantillon auquel ils appartiennent.
 
 ```{r}
-plot.new() # To do: check why we need to add this
-plot(pca.res, habillage = "ind", col.hab = vcol.set, label = "none")
-legend("topleft", 
-       legend = c("jeu d'apprentissage", "jeu test"), 
-       col = c("blue","magenta"), pch = 19)
+# plot.new() # To do: check why we need to add this
+#plot(1:100)
+plot(pca.res, 
+     habillage = "ind", 
+     col.hab = vcol.set, 
+     label = "none")
+# legend("topleft", 
+#        legend = c("jeu d'apprentissage", "jeu test"), 
+#        col = c("blue","magenta"), pch = 19)
+
 ```
 
 4. Déterminez la répartition des deux types de cancer dans les échantillons d'apprentissage et test.
@@ -375,7 +387,10 @@ rf.fit <- randomForest(cancer.type ~ ., data = mat.app)
 * Affichez à l'écran le modèle créé.
 
 ```{r}
-kable(rf.fit, caption = "Confusion table obtained by Random Forest on the training set (learning errors).  ")
+print(rf.fit)
+
+kable(as.data.frame(rf.fit$confusion), 
+      caption = "Confusion table obtained by Random Forest on the training set (learning errors).  ")
 ```
 
 
