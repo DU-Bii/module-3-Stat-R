@@ -96,8 +96,8 @@ Au cours de ce TP, vous allez développer différents modèles statistiques :
 1. Ouvrez le fichier d'expression des gènes en utilisant la commande `read.table()`. Stockez ce data.frame dans l'objet `BIC.expr`. Vérifiez la taille du data.frame généré en utilisant la commande `dim()`.
 
 ```{r echo=TRUE}
-# data.folder <- "/shared/projects/du_bii_2019/data/module3/seance4/BIC"
-data.folder <- "data/BIC" 
+data.folder <- "/shared/projects/du_bii_2019/data/module3/seance4/BIC"
+# data.folder <- "data/BIC"
 # data.folder <- "/shared/projects/dubii2020/trainers/github_clones/study-cases/Homo_sapiens/TCGA_study-case/TCGA_AML_data"
 ```
 
