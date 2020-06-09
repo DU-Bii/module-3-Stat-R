@@ -32,6 +32,7 @@ editor_options:
 requiredLib <- c(
   "knitr",
   "rpart",
+  "e1071",
   "rpart.plot",
   "randomForest", 
   #                 "corrplot",
@@ -89,8 +90,8 @@ Au cours de ce TP, vous allez développer différents modèles statistiques :
 
 ```{r echo=TRUE, eval=FALSE}
 data.folder <- "/shared/projects/du_bii_2019/data/module3/seance4/BIC"
-#data.folder <- "data/BIC" 
-#data.folder <- "/shared/projects/dubii2020/trainers/github_clones/study-cases/Homo_sapiens/TCGA_study-case/TCGA_AML_data"
+# data.folder <- "data/BIC" 
+# data.folder <- "/shared/projects/dubii2020/trainers/github_clones/study-cases/Homo_sapiens/TCGA_study-case/TCGA_AML_data"
 ```
 
 
@@ -242,7 +243,7 @@ kable(df.data[1:10, 1:5])
 1. En utilisant la fonction `sample()` créez un vecteur qui contient le numéro d'indice de 2/3 des individus choisis aléatoirement.  Ces individus vont constituter le jeu d'apprentissage.
 
 ```{r}
-ind.app <- sample(1:nrow(df.data), size=2/3*nrow(df.data))
+ind.app <- sample(1:nrow(df.data), size = 2/3 * nrow(df.data))
 ```
 
 2. Créez le data.frame `mat.app` qui contient les valeurs d'expression des gènes et le type de cancer pour les individus choisis aléatoirement. Cette matrice correspond au jeu d'apprentissage.
@@ -265,7 +266,7 @@ dim(mat.test)
 
 ```{r}
 library(FactoMineR)
-pca.res <- PCA(df.data[,-1], graph=FALSE)
+pca.res <- PCA(df.data[, -1], graph = FALSE)
 ```
 
 
@@ -283,8 +284,10 @@ vcol.set[ind.app] <- "magenta"
 
 ```{r}
 plot.new() # To do: check why we need to add this
-plot(pca.res, habillage = "ind", col.hab = vcol.set, label="none")
-legend("topleft", legend=c("jeu d'apprentissage", "jeu test"), col=c("blue","magenta"), pch=19)
+plot(pca.res, habillage = "ind", col.hab = vcol.set, label = "none")
+legend("topleft", 
+       legend = c("jeu d'apprentissage", "jeu test"), 
+       col = c("blue","magenta"), pch = 19)
 ```
 
 4. Déterminez la répartition des deux types de cancer dans les échantillons d'apprentissage et test.
@@ -305,7 +308,7 @@ D'après les résultats obtenus, concluez sur la validité les échantillons d'a
 ```{r}
 library(rpart)
 library(rpart.plot)
-rpart.fit <-rpart(cancer.type~., data = mat.app)
+rpart.fit <- rpart(cancer.type ~ ., data = mat.app)
 rpart.fit
 ```
 
@@ -313,7 +316,7 @@ rpart.fit
 2. En utilisant la fonction `prp()` de la librairie `rpart.plot()`, représentez le modèle obtenu.
 
 ```{r}
-prp(rpart.fit, extra=2)
+prp(rpart.fit, extra = 2)
 ```
 
 3. Sur les données de l'échantillon d'apprentissage calculez  l'*accuracy* du modèle (=le taux de bien prédit) ($Acc = \frac{VP+VN}{VP+VN+FP+FN}$) . 
@@ -322,14 +325,14 @@ prp(rpart.fit, extra=2)
 Attention, la fonction `predict()`est une fonction générique. Dans ce cas, vous utilisez la fonction `predict()` appliquée à un objet `rpart`. Pour avoir plus d'informations sur les arguments de la fonction, vous devez utiliser l'aide de la fonction `predict.rpart()`. 
 
 ```{r}
-pred.app <- predict(rpart.fit, newdata = mat.app, type="class")
+pred.app <- predict(rpart.fit, newdata = mat.app, type = "class")
 ```
 
 * A l'aide de la fonction `table()`, calculez la matrice de confusion entre les données prédites sur l'échantillon d'apprentissage (contenues dans le vecteur `pred.app`) et les vraies valeurs (contenues dans la colonne `cancer.type` du data.frame `mat.app`).
 
 ```{r cart.tc}
 tc.rpart.app <- table(pred.app, mat.app[,"cancer.type"])
-kable(tc.rpart.app, caption = "Confusion matrix")
+kable(tc.rpart.app, caption = "Confusion table of the CART model for the predictions obtained with the training set (learning errors). ")
 ```
 
 * Calculez l'*accuracy* du modèle sur les données de l'apprentissage
@@ -342,10 +345,10 @@ acc.rpart.app
 4. En utilisant la même procédure que celle utilisée pour calculer l'*accuracy* sur le jeu d'apprentissage, calculez l'*accuracy* du modèle sur l'échantillon test
 
 ```{r tc.cart.tes}
-pred.test <- predict(rpart.fit, newdata = mat.test, type="class")
+pred.test <- predict(rpart.fit, newdata = mat.test, type = "class")
 
 tc.rpart.test <- table(pred.test, mat.test[,"cancer.type"])
-tc.rpart.test
+kable(tc.rpart.test, caption = "Confusion table for the predictions obtained from the testing set. ")
 
 acc.rpart.test <- sum(diag(tc.rpart.test))/sum(tc.rpart.test)
 acc.rpart.test
@@ -365,14 +368,14 @@ Pour diminuer ce sur-apprentissage, une des solutions serait d'élaguer l'arbre,
  
 ```{r}
 library(randomForest)
-rf.fit <- randomForest(cancer.type~., data = mat.app)
+rf.fit <- randomForest(cancer.type ~ ., data = mat.app)
 ```
 
 
 * Affichez à l'écran le modèle créé.
 
 ```{r}
-rf.fit
+kable(rf.fit, caption = "Confusion table obtained by Random Forest on the training set (learning errors).  ")
 ```
 
 
@@ -381,8 +384,12 @@ rf.fit
 
 * L'objet `rf.fit` créé est une liste qui contient plusieurs éléments. L'élement `err.rate` contient les erreurs commises par le modèle contenant $m$ arbres Représentez le taux d'erreur (*Misclassification Rate*) en fonction du nombre d'arbres présentant dans la forêt.
 
-```{r}
-plot(rf.fit$err.rate[,1], type="l", xlab="nombre d'arbre dans la foret", ylab="taux d'erreur")
+```{r fig.width=7, fig.height=5, out.width="60%", fig.cap="Random forest: impact of the number of tree on the misclassification error rate (MER)"}
+plot(rf.fit$err.rate[,1], 
+     type = "l", 
+     main = "Random forest: impact of the number of trees",
+     xlab = "Number of trees in the forest", 
+     ylab = "Misclassification error rate")
 ```
 
 
@@ -536,7 +543,7 @@ heatmap(as.matrix(BIC.expr.genes.standardized),
 
 ```{r eval=TRUE}
 library(e1071)
-model=svm(cancer.type~., data=mat.app)
+model=svm(cancer.type ~ ., data = mat.app)
 ```
 
 * utilisation classique
