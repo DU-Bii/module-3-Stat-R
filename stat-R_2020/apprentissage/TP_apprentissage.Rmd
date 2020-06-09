@@ -1,6 +1,6 @@
 ---
 title: "Module 3 - Analyse statistique avec R - Séance 7"
-author: "Leslie REGAD et Frédéric GUYON (Université Paris Diderot)"
+author: "Leslie REGAD and Frédéric GUYON (Université Paris Diderot), adapted by Jacques va Helden and Olivier Sand"
 date: '`r Sys.Date()`'
 output:
   html_document:
@@ -19,7 +19,7 @@ output:
     toc: yes
     toc_depth: 3
 font-import: http://fonts.googleapis.com/css?family=Risque
-subtitle: DUBii 2019
+subtitle: DUBii 2020
 font-family: Garamond
 transition: linear
 editor_options: 
@@ -35,7 +35,8 @@ requiredLib <- c(
   "rpart.plot",
   "randomForest", 
   #                 "corrplot",
-  "FactoMineR", 
+  "FactoMineR",
+  "e1071",
   "caret")
 for (lib in requiredLib) {
   if (!require(lib, character.only = TRUE)) {
@@ -71,6 +72,8 @@ Pour ce TP, vous utiliserez les mêmes données que celles que vous avez utilis�
 
 Sur le serveur Rstudio de l'IFB-core-cluster, les données sont dans le répertoire : `/shared/projects/du_bii_2019/data/module3/seance4/BIC/`
 
+si vous travaillez sur une installation locale, vous pouvez les téléca
+
 Au cours de ce TP, vous allez développer différents modèles statistiques :  
 
 * Dans un premier temps, vous construirez des modèles pour prédire si le cancer est du type "lumina.A" ou pas en utilisant :  
@@ -85,9 +88,9 @@ Au cours de ce TP, vous allez développer différents modèles statistiques :
 1. Ouvrez le fichier d'expression des gènes en utilisant la commande `read.table()`. Stockez ce data.frame dans l'objet `BIC.expr`. Vérifiez la taille du data.frame généré en utilisant la commande `dim()`.
 
 ```{r echo=TRUE, eval=FALSE}
-data.folder<-"/shared/projects/du_bii_2019/data/module3/seance4/BIC"
-#data.folder="data/BIC/" 
-#data.folder<-"/shared/projects/dubii2020/trainers/github_clones/study-cases/Homo_sapiens/TCGA_study-case/TCGA_AML_data"
+data.folder <- "/shared/projects/du_bii_2019/data/module3/seance4/BIC"
+#data.folder <- "data/BIC" 
+#data.folder <- "/shared/projects/dubii2020/trainers/github_clones/study-cases/Homo_sapiens/TCGA_study-case/TCGA_AML_data"
 ```
 
 
