@@ -32,6 +32,7 @@ editor_options:
 requiredLib <- c(
   "knitr",
   "rpart",
+  "e1071",
   "rpart.plot",
   "randomForest", 
   #                 "corrplot",
@@ -85,8 +86,8 @@ Au cours de ce TP, vous allez développer différents modèles statistiques :
 1. Ouvrez le fichier d'expression des gènes en utilisant la commande `read.table()`. Stockez ce data.frame dans l'objet `BIC.expr`. Vérifiez la taille du data.frame généré en utilisant la commande `dim()`.
 
 ```{r echo=TRUE, eval=FALSE}
-data.folder<-"/shared/projects/du_bii_2019/data/module3/seance4/BIC"
-#data.folder="data/BIC/" 
+#data.folder<-"/shared/projects/du_bii_2019/data/module3/seance4/BIC"
+data.folder="data/BIC/" 
 #data.folder<-"/shared/projects/dubii2020/trainers/github_clones/study-cases/Homo_sapiens/TCGA_study-case/TCGA_AML_data"
 ```
 
@@ -262,7 +263,7 @@ dim(mat.test)
 
 ```{r}
 library(FactoMineR)
-pca.res <- PCA(df.data[,-1], graph=FALSE)
+pca.res <- PCA(df.data[, -1], graph = FALSE)
 ```
 
 
@@ -302,7 +303,7 @@ D'après les résultats obtenus, concluez sur la validité les échantillons d'a
 ```{r}
 library(rpart)
 library(rpart.plot)
-rpart.fit <-rpart(cancer.type~., data = mat.app)
+rpart.fit <- rpart(cancer.type ~ ., data = mat.app)
 rpart.fit
 ```
 
@@ -362,7 +363,7 @@ Pour diminuer ce sur-apprentissage, une des solutions serait d'élaguer l'arbre,
  
 ```{r}
 library(randomForest)
-rf.fit <- randomForest(cancer.type~., data = mat.app)
+rf.fit <- randomForest(cancer.type ~ ., data = mat.app)
 ```
 
 
@@ -533,7 +534,7 @@ heatmap(as.matrix(BIC.expr.genes.standardized),
 
 ```{r eval=TRUE}
 library(e1071)
-model=svm(cancer.type~., data=mat.app)
+model=svm(cancer.type ~ ., data = mat.app)
 ```
 
 * utilisation classique
