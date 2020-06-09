@@ -181,4 +181,8 @@ Topics for 2020-06-03
 - Date: 2020-06-11 PM
 - Videoconference
 
+| Topics | Type | Material |
+|--------------------------------|-------|----------------|
+| Apprentissage automatique | Lecture |  |
+| TCGA Breast Invasive Cancer dataset| Practical  |  [html](apprentissage/TP_apprentissage.html) |
 
