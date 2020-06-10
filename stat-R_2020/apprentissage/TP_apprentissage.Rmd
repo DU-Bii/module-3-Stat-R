@@ -114,6 +114,7 @@ dim(BIC.expr)
 
 ```{r class_file}
 BIC.sample.classes <- read.table(file.path(data.folder, "BIC_sample-classes.tsv.gz"),header = TRUE)
+#BIC.sample.classes <- read.table(file.path(data.folder, "BIC_sample-classes_simple.csv"),header = TRUE)
 #BIC.sample.classes <- read.table(file.path(data.folder, "AML_sample-classes.tsv.gz"),header = TRUE)
 ```
 
