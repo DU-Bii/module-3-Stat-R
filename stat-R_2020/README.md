@@ -185,6 +185,6 @@ Topics for 2020-06-03
 |--------------------------------|-------|----------------|
 | Starter: brain-learning exercise | Exercise | [[pdf](apprentissage/slides/01_brain-learning_exercise_study-cases.pdf)] [[Quizz](https://forms.gle/LD5hx5VyypQnYQ5x8)] |
 | Mutlivariate analysis - Intro | Lecture | [[pdf](apprentissage/slides/02_multivariate-analysis_intro.pdf)] |
-| Apprentissage automatique | Lecture |  |
+| Apprentissage automatique | Lecture | [[pdf](apprentissage/slides/03_machine-learning_DUBii_2020.pdf)] |
 | TCGA Breast Invasive Cancer dataset | Practical | [[html](apprentissage/TP_apprentissage.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/apprentissage/TP_apprentissage.Rmd)] |
 
