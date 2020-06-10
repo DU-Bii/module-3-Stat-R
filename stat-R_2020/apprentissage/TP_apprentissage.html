@@ -399,7 +399,8 @@ div.tocify {
 <li>Ouvrez le fichier qui contient les étiquettes des échantillons en utilisant la commande <code>read.table()</code>. Stockez ce data.frame dans l’objet <code>BIC.sample.classes</code>.</li>
 </ol>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">BIC.sample.classes &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="kw">file.path</span>(data.folder, <span class="st">&quot;BIC_sample-classes.tsv.gz&quot;</span>),<span class="dt">header =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="co">#BIC.sample.classes &lt;- read.table(file.path(data.folder, &quot;AML_sample-classes.tsv.gz&quot;),header = TRUE)</span></a></code></pre></div>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="co">#BIC.sample.classes &lt;- read.table(file.path(data.folder, &quot;BIC_sample-classes_simple.csv&quot;),header = TRUE)</span></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="co">#BIC.sample.classes &lt;- read.table(file.path(data.folder, &quot;AML_sample-classes.tsv.gz&quot;),header = TRUE)</span></a></code></pre></div>
 <ul>
 <li>Vérifiez le nombre d’échantillons disponibles dans ce jeu de données.</li>
 </ul>
@@ -692,33 +693,27 @@ Répartition des deux types de cancers dans les échantillons d’apprentissage 
 node), split, n, loss, yval, (yprob)
       * denotes terminal node
 
-   1) root 474 185 Luminal.A (0.60970464 0.39029536)  
-     2) ENSG00000029725.16&gt;=18.9759 372  95 Luminal.A (0.74462366 0.25537634)  
-       4) ENSG00000008838.18&lt; 20.67364 356  79 Luminal.A (0.77808989 0.22191011)  
-         8) ENSG00000043143.20&gt;=17.35661 333  62 Luminal.A (0.81381381 0.18618619)  
-          16) ENSG00000005020.12&lt; 18.73183 307  46 Luminal.A (0.85016287 0.14983713)  
-            32) ENSG00000006210.6&lt; 21.31453 295  37 Luminal.A (0.87457627 0.12542373)  
-              64) ENSG00000010318.20&gt;=13.2916 288  32 Luminal.A (0.88888889 0.11111111)  
-               128) ENSG00000010704.18&lt; 17.86318 278  26 Luminal.A (0.90647482 0.09352518)  
-                 256) ENSG00000055732.12&lt; 16.5967 268  21 Luminal.A (0.92164179 0.07835821)  
-                   512) ENSG00000003987.13&gt;=12.36775 232  11 Luminal.A (0.95258621 0.04741379) *
-                   513) ENSG00000003987.13&lt; 12.36775 36  10 Luminal.A (0.72222222 0.27777778)  
-                    1026) ENSG00000066117.14&gt;=18.32913 28   3 Luminal.A (0.89285714 0.10714286) *
-                    1027) ENSG00000066117.14&lt; 18.32913 8   1 no.Luminal.A (0.12500000 0.87500000) *
-                 257) ENSG00000055732.12&gt;=16.5967 10   5 Luminal.A (0.50000000 0.50000000) *
-               129) ENSG00000010704.18&gt;=17.86318 10   4 no.Luminal.A (0.40000000 0.60000000) *
-              65) ENSG00000010318.20&lt; 13.2916 7   2 no.Luminal.A (0.28571429 0.71428571) *
-            33) ENSG00000006210.6&gt;=21.31453 12   3 no.Luminal.A (0.25000000 0.75000000) *
-          17) ENSG00000005020.12&gt;=18.73183 26  10 no.Luminal.A (0.38461538 0.61538462)  
-            34) ENSG00000006125.16&gt;=20.67178 13   4 Luminal.A (0.69230769 0.30769231) *
-            35) ENSG00000006125.16&lt; 20.67178 13   1 no.Luminal.A (0.07692308 0.92307692) *
-         9) ENSG00000043143.20&lt; 17.35661 23   6 no.Luminal.A (0.26086957 0.73913043)  
-          18) ENSG00000010539.11&gt;=16.73581 9   3 Luminal.A (0.66666667 0.33333333) *
-          19) ENSG00000010539.11&lt; 16.73581 14   0 no.Luminal.A (0.00000000 1.00000000) *
-       5) ENSG00000008838.18&gt;=20.67364 16   0 no.Luminal.A (0.00000000 1.00000000) *
-     3) ENSG00000029725.16&lt; 18.9759 102  12 no.Luminal.A (0.11764706 0.88235294)  
-       6) ENSG00000068650.18&lt; 16.33274 9   2 Luminal.A (0.77777778 0.22222222) *
-       7) ENSG00000068650.18&gt;=16.33274 93   5 no.Luminal.A (0.05376344 0.94623656) *</code></pre>
+ 1) root 474 192 Luminal.A (0.59493671 0.40506329)  
+   2) ENSG00000029725.16&gt;=18.99438 371  99 Luminal.A (0.73315364 0.26684636)  
+     4) ENSG00000008838.18&lt; 20.0456 348  79 Luminal.A (0.77298851 0.22701149)  
+       8) ENSG00000004838.13&gt;=15.58835 229  31 Luminal.A (0.86462882 0.13537118)  
+        16) ENSG00000005448.16&gt;=15.18117 221  25 Luminal.A (0.88687783 0.11312217) *
+        17) ENSG00000005448.16&lt; 15.18117 8   2 no.Luminal.A (0.25000000 0.75000000) *
+       9) ENSG00000004838.13&lt; 15.58835 119  48 Luminal.A (0.59663866 0.40336134)  
+        18) ENSG00000066583.11&gt;=17.63246 70  16 Luminal.A (0.77142857 0.22857143)  
+          36) ENSG00000011275.18&gt;=17.96939 63  10 Luminal.A (0.84126984 0.15873016)  
+            72) ENSG00000028116.16&gt;=17.18781 51   3 Luminal.A (0.94117647 0.05882353) *
+            73) ENSG00000028116.16&lt; 17.18781 12   5 no.Luminal.A (0.41666667 0.58333333) *
+          37) ENSG00000011275.18&lt; 17.96939 7   1 no.Luminal.A (0.14285714 0.85714286) *
+        19) ENSG00000066583.11&lt; 17.63246 49  17 no.Luminal.A (0.34693878 0.65306122)  
+          38) ENSG00000070761.7&lt; 17.0525 21   7 Luminal.A (0.66666667 0.33333333)  
+            76) ENSG00000010404.17&gt;=19.87504 13   0 Luminal.A (1.00000000 0.00000000) *
+            77) ENSG00000010404.17&lt; 19.87504 8   1 no.Luminal.A (0.12500000 0.87500000) *
+          39) ENSG00000070761.7&gt;=17.0525 28   3 no.Luminal.A (0.10714286 0.89285714) *
+     5) ENSG00000008838.18&gt;=20.0456 23   3 no.Luminal.A (0.13043478 0.86956522) *
+   3) ENSG00000029725.16&lt; 18.99438 103  10 no.Luminal.A (0.09708738 0.90291262)  
+     6) ENSG00000071051.13&lt; 18.05041 15   6 Luminal.A (0.60000000 0.40000000) *
+     7) ENSG00000071051.13&gt;=18.05041 88   1 no.Luminal.A (0.01136364 0.98863636) *</code></pre>
 <ol start="2" style="list-style-type: decimal">
 <li>En utilisant la fonction <code>prp()</code> de la librairie <code>rpart.plot()</code>, représentez le modèle obtenu.</li>
 </ol>
@@ -754,13 +749,13 @@ Attention, la fonction <code>predict()</code>est une fonction générique. Dans 
 <tbody>
 <tr class="odd">
 <td>Luminal.A</td>
-<td align="right">273</td>
-<td align="right">28</td>
+<td align="right">266</td>
+<td align="right">34</td>
 </tr>
 <tr class="even">
 <td>no.Luminal.A</td>
 <td align="right">16</td>
-<td align="right">157</td>
+<td align="right">158</td>
 </tr>
 </tbody>
 </table>
@@ -769,7 +764,7 @@ Attention, la fonction <code>predict()</code>est une fonction générique. Dans 
 </ul>
 <div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" data-line-number="1">acc.rpart.app &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">diag</span>(tc.rpart.app))<span class="op">/</span><span class="kw">sum</span>(tc.rpart.app)</a>
 <a class="sourceLine" id="cb45-2" data-line-number="2">acc.rpart.app</a></code></pre></div>
-<pre><code>[1] 0.907173</code></pre>
+<pre><code>[1] 0.8945148</code></pre>
 <ol start="4" style="list-style-type: decimal">
 <li>En utilisant la même procédure que celle utilisée pour calculer l’<em>accuracy</em> sur le jeu d’apprentissage, calculez l’<em>accuracy</em> du modèle sur l’échantillon test</li>
 </ol>
@@ -789,20 +784,20 @@ Attention, la fonction <code>predict()</code>est une fonction générique. Dans 
 <tbody>
 <tr class="odd">
 <td>Luminal.A</td>
-<td align="right">114</td>
-<td align="right">35</td>
+<td align="right">107</td>
+<td align="right">32</td>
 </tr>
 <tr class="even">
 <td>no.Luminal.A</td>
-<td align="right">19</td>
-<td align="right">70</td>
+<td align="right">33</td>
+<td align="right">66</td>
 </tr>
 </tbody>
 </table>
 <div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb48-1" data-line-number="1">acc.rpart.test &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">diag</span>(tc.rpart.test))<span class="op">/</span><span class="kw">sum</span>(tc.rpart.test)</a>
 <a class="sourceLine" id="cb48-2" data-line-number="2">acc.rpart.test</a></code></pre></div>
-<pre><code>[1] 0.7731092</code></pre>
-<p>En comparant les performances obtenues sur l’échantillon d’apprentissage et de test, vous constatez que les performances obtenues sur l’échantillon d’apprentissage (Acc=0.91) sont plus grandes que celles obtenues sur l’échantillon test (Acc=0.77). Ainsi, vous observez un <strong>phénomène de sur-apprentissage</strong>. Le modèle apprend très bien les données de l’échantillon d’apprentissage, mais prédit moins bien les données du jeu test.<br />
+<pre><code>[1] 0.7268908</code></pre>
+<p>En comparant les performances obtenues sur l’échantillon d’apprentissage et de test, vous constatez que les performances obtenues sur l’échantillon d’apprentissage (Acc=0.89) sont plus grandes que celles obtenues sur l’échantillon test (Acc=0.73). Ainsi, vous observez un <strong>phénomène de sur-apprentissage</strong>. Le modèle apprend très bien les données de l’échantillon d’apprentissage, mais prédit moins bien les données du jeu test.<br />
 Pour diminuer ce sur-apprentissage, une des solutions serait d’élaguer l’arbre, c’est-à-dire d’enlever certaines branches. Ainsi, le nouveau modèle obtenu serait moins performant sur les données d’apprentissage, mais plus performant sur les données du jeu test.</p>
 </div>
 <div id="prédiction-du-type-de-cancer-en-utilisant-une-approche-de-random-forest" class="section level1">
@@ -826,11 +821,11 @@ Call:
                      Number of trees: 500
 No. of variables tried at each split: 31
 
-        OOB estimate of  error rate: 19.62%
+        OOB estimate of  error rate: 18.57%
 Confusion matrix:
              Luminal.A no.Luminal.A class.error
-Luminal.A          264           25  0.08650519
-no.Luminal.A        68          117  0.36756757</code></pre>
+Luminal.A          268           14  0.04964539
+no.Luminal.A        74          118  0.38541667</code></pre>
 <div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb53-1" data-line-number="1"><span class="kw">kable</span>(<span class="kw">as.data.frame</span>(rf.fit<span class="op">$</span>confusion), </a>
 <a class="sourceLine" id="cb53-2" data-line-number="2">      <span class="dt">caption =</span> <span class="st">&quot;Confusion table obtained by Random Forest on the training set (learning errors).  &quot;</span>)</a></code></pre></div>
 <table>
@@ -846,15 +841,15 @@ no.Luminal.A        68          117  0.36756757</code></pre>
 <tbody>
 <tr class="odd">
 <td>Luminal.A</td>
-<td align="right">264</td>
-<td align="right">25</td>
-<td align="right">0.0865052</td>
+<td align="right">268</td>
+<td align="right">14</td>
+<td align="right">0.0496454</td>
 </tr>
 <tr class="even">
 <td>no.Luminal.A</td>
-<td align="right">68</td>
-<td align="right">117</td>
-<td align="right">0.3675676</td>
+<td align="right">74</td>
+<td align="right">118</td>
+<td align="right">0.3854167</td>
 </tr>
 </tbody>
 </table>
@@ -924,8 +919,8 @@ No. of variables tried at each split: 248
         OOB estimate of  error rate: 18.14%
 Confusion matrix:
              Luminal.A no.Luminal.A class.error
-Luminal.A          264           25  0.08650519
-no.Luminal.A        61          124  0.32972973</code></pre>
+Luminal.A          260           22  0.07801418
+no.Luminal.A        64          128  0.33333333</code></pre>
 <ol start="3" style="list-style-type: decimal">
 <li>Calcul des performances du modèle <em>random forest</em></li>
 </ol>
@@ -942,8 +937,8 @@ no.Luminal.A        61          124  0.32972973</code></pre>
 <a class="sourceLine" id="cb61-7" data-line-number="7">tc.rf.app</a></code></pre></div>
 <pre><code>              
 pred.app       Luminal.A no.Luminal.A
-  Luminal.A          289            0
-  no.Luminal.A         0          185</code></pre>
+  Luminal.A          282            0
+  no.Luminal.A         0          192</code></pre>
 <div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb63-1" data-line-number="1"><span class="co">#  accuracy* du modèle sur les données de l&#39;apprentissage</span></a>
 <a class="sourceLine" id="cb63-2" data-line-number="2">acc.rf.app &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">diag</span>(tc.rf.app))<span class="op">/</span><span class="kw">sum</span>(tc.rf.app)</a>
 <a class="sourceLine" id="cb63-3" data-line-number="3">acc.rf.app</a></code></pre></div>
@@ -959,12 +954,12 @@ pred.app       Luminal.A no.Luminal.A
 <a class="sourceLine" id="cb65-6" data-line-number="6">tc.rf.test</a></code></pre></div>
 <pre><code>              
 pred.test      Luminal.A no.Luminal.A
-  Luminal.A          121           33
-  no.Luminal.A        12           72</code></pre>
+  Luminal.A          129           29
+  no.Luminal.A        11           69</code></pre>
 <div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb67-1" data-line-number="1"><span class="co">#accuracy</span></a>
 <a class="sourceLine" id="cb67-2" data-line-number="2">acc.rf.test &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">diag</span>(tc.rf.test))<span class="op">/</span><span class="kw">sum</span>(tc.rf.test)</a>
 <a class="sourceLine" id="cb67-3" data-line-number="3">acc.rf.test</a></code></pre></div>
-<pre><code>[1] 0.8109244</code></pre>
+<pre><code>[1] 0.8319328</code></pre>
 <ol start="4" style="list-style-type: decimal">
 <li><p>Comparez les performances des modèles de CART et de Random forest.</p></li>
 <li><p>Etude de l’importance des variables (ici les gènes) dans le modèle.</p></li>
@@ -1073,7 +1068,7 @@ pred.test      Luminal.A no.Luminal.A
 <a class="sourceLine" id="cb79-3" data-line-number="3"><span class="kw">table</span>(pred.uncl.rf)</a></code></pre></div>
 <pre><code>pred.uncl.rf
    Luminal.A no.Luminal.A 
-          55           52 </code></pre>
+          59           48 </code></pre>
 <ul>
 <li>Prédiction du type de cancer en utilisant le modèle SVM</li>
 </ul>
@@ -1082,7 +1077,7 @@ pred.test      Luminal.A no.Luminal.A
 <a class="sourceLine" id="cb81-3" data-line-number="3"><span class="kw">table</span>(pred.uncl.svm)</a></code></pre></div>
 <pre><code>pred.uncl.svm
    Luminal.A no.Luminal.A 
-          64           43 </code></pre>
+          68           39 </code></pre>
 <ul>
 <li>Calcul de la table de confusion entre les deux vecteurs de prédiction</li>
 </ul>
@@ -1090,8 +1085,8 @@ pred.test      Luminal.A no.Luminal.A
 <a class="sourceLine" id="cb83-2" data-line-number="2">tc</a></code></pre></div>
 <pre><code>              pred.uncl.svm
 pred.uncl.rf   Luminal.A no.Luminal.A
-  Luminal.A           53            2
-  no.Luminal.A        11           41</code></pre>
+  Luminal.A           56            3
+  no.Luminal.A        12           36</code></pre>
 </div>
 <div id="prédiction-des-4-types-de-cancer" class="section level1">
 <h1><span class="header-section-number">8</span> Prédiction des 4 types de cancer</h1>
@@ -1156,13 +1151,13 @@ Call:
                      Number of trees: 150
 No. of variables tried at each split: 124
 
-        OOB estimate of  error rate: 23.21%
+        OOB estimate of  error rate: 23.63%
 Confusion matrix:
            Basal.like HER2pos Luminal.A Luminal.B class.error
-Basal.like         66       0        13         2  0.18518519
-HER2pos             9       0         9         5  1.00000000
-Luminal.A           2       0       280         7  0.03114187
-Luminal.B           1       0        62        18  0.77777778</code></pre>
+Basal.like         74       1        11         0   0.1395349
+HER2pos             8       1         9        11   0.9655172
+Luminal.A           1       0       276         5   0.0212766
+Luminal.B           0       0        66        11   0.8571429</code></pre>
 <ol start="5" style="list-style-type: decimal">
 <li>Calculez les performances du modèle <em>random forest</em> sur l’échantillon d’apprentissage et de test.</li>
 </ol>
@@ -1174,10 +1169,10 @@ Luminal.B           1       0        62        18  0.77777778</code></pre>
 <a class="sourceLine" id="cb95-3" data-line-number="3">tc.rf4.app</a></code></pre></div>
 <pre><code>            
 pred.app.4   Basal.like HER2pos Luminal.A Luminal.B
-  Basal.like         81       0         0         0
-  HER2pos             0      23         0         0
-  Luminal.A           0       0       289         0
-  Luminal.B           0       0         0        81</code></pre>
+  Basal.like         86       0         0         0
+  HER2pos             0      29         0         0
+  Luminal.A           0       0       282         0
+  Luminal.B           0       0         0        77</code></pre>
 <div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb97-1" data-line-number="1">acc.rf4.app &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">diag</span>(tc.rf4.app))<span class="op">/</span><span class="kw">sum</span>(tc.rf4.app)</a>
 <a class="sourceLine" id="cb97-2" data-line-number="2">acc.rf4.app</a></code></pre></div>
 <pre><code>[1] 1</code></pre>
@@ -1190,13 +1185,13 @@ pred.app.4   Basal.like HER2pos Luminal.A Luminal.B
 <a class="sourceLine" id="cb99-4" data-line-number="4">tc.rf4.test</a></code></pre></div>
 <pre><code>            
 pred.test.4  Basal.like HER2pos Luminal.A Luminal.B
-  Basal.like         43       3         0         0
-  HER2pos             0       0         0         0
-  Luminal.A           7       5       130        25
-  Luminal.B           0      10         3        12</code></pre>
+  Basal.like         37       2         3         1
+  HER2pos             0       3         0         0
+  Luminal.A           7       3       134        30
+  Luminal.B           1       4         3        10</code></pre>
 <div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb101-1" data-line-number="1">acc.rf4.test &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">diag</span>(tc.rf4.test))<span class="op">/</span><span class="kw">sum</span>(tc.rf4.test)</a>
 <a class="sourceLine" id="cb101-2" data-line-number="2">acc.rf4.test</a></code></pre></div>
-<pre><code>[1] 0.7773109</code></pre>
+<pre><code>[1] 0.7731092</code></pre>
 <ol start="6" style="list-style-type: decimal">
 <li>Etude de l’importance des descripteurs dans le modèle.</li>
 </ol>
