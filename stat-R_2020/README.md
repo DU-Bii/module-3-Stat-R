@@ -183,6 +183,7 @@ Topics for 2020-06-03
 
 | Topics | Type | Material |
 |--------------------------------|-------|----------------|
+| Mutlivariate analysis - Intro | Lecture | [[pdf](apprentissage/slides/01_multivariate-analysis_intro.pdf)] |
 | Apprentissage automatique | Lecture |  |
 | TCGA Breast Invasive Cancer dataset | Practical | [[html](apprentissage/TP_apprentissage.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/apprentissage/TP_apprentissage.Rmd)] |
 
