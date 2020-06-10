@@ -42,7 +42,7 @@ Link to the prerequisites:
 | Anne Badel | Teacher |
 | Magali Berland | Teacher |
 | [Antoine Bridier-Nahmias](https://orcid.org/0000-0002-0376-6840) | Teacher |
-| Olivier Sand | Teacher |
+| [Olivier Sand](https://orcid.org/0000-0003-1465-1640) | Teacher |
 | Natacha Cerisier | Helper |
 
 
@@ -174,15 +174,17 @@ Topics for 2020-06-03
 | Enrichment analysis | html | who knows | [[html](enrichment/cours_enrichment.html)] |
 | Enrichment analysis | Rmd | who knows | [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/enrichment/cours_enrichment.Rmd)] |
 
-### Supervised classification and learning
+### Machine learning – Supervised classification
 
 
-- Teachers: Olivier Sand & Jacques van Helden
-- Date: 2020-06-11 PM
+- Teachers: Jacques van Helden & Olivier Sand
+- Date: 2020-06-10 PM
 - Videoconference
 
 | Topics | Type | Material |
 |--------------------------------|-------|----------------|
+| Starter: brain-learning exercise | Exercise | [[pdf](apprentissage/slides/01_brain-learning_exercise_study-cases.pdf)] [[Quizz](https://forms.gle/LD5hx5VyypQnYQ5x8)] |
+| Mutlivariate analysis - Intro | Lecture | [[pdf](apprentissage/slides/02_multivariate-analysis_intro.pdf)] |
 | Apprentissage automatique | Lecture |  |
-| TCGA Breast Invasive Cancer dataset| Practical  |  [[html](apprentissage/TP_apprentissage.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/apprentissage/TP_apprentissage.Rmd)] |
+| TCGA Breast Invasive Cancer dataset | Practical | [[html](apprentissage/TP_apprentissage.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/apprentissage/TP_apprentissage.Rmd)] |
 
