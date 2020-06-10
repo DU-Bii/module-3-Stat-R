@@ -303,7 +303,7 @@ legend("topleft",
 
 4. Déterminez la répartition des deux types de cancer dans les échantillons d'apprentissage et test.
 
-```{r barplot_types}
+```{r barplot_types, fig.width=5, fig.height=5, out.width="60%", fig.cap="Répartition des deux types de cancers dans les échantillons d'apprentissage et de test"}
 par(mfrow=c(2,1))
 barplot(table(mat.app[,"cancer.type"]), main="jeu d'apprentissage")
 barplot(table(mat.test[,"cancer.type"]), main="jeu de test")
@@ -326,7 +326,7 @@ rpart.fit
 
 2. En utilisant la fonction `prp()` de la librairie `rpart.plot()`, représentez le modèle obtenu.
 
-```{r model_plot}
+```{r model_plot, fig.width=5, fig.height=5, out.width="60%", fig.cap="Model"}
 prp(rpart.fit, extra = 2)
 ```
 
