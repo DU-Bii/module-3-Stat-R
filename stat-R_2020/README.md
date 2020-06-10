@@ -42,7 +42,7 @@ Link to the prerequisites:
 | Anne Badel | Teacher |
 | Magali Berland | Teacher |
 | [Antoine Bridier-Nahmias](https://orcid.org/0000-0002-0376-6840) | Teacher |
-| Olivier Sand | Teacher |
+| [Olivier Sand](https://orcid.org/0000-0003-1465-1640) | Teacher |
 | Natacha Cerisier | Helper |
 
 
