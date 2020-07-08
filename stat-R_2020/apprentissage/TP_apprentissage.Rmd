@@ -96,9 +96,10 @@ Au cours de ce TP, vous allez développer différents modèles statistiques :
 1. Ouvrez le fichier d'expression des gènes en utilisant la commande `read.table()`. Stockez ce data.frame dans l'objet `BIC.expr`. Vérifiez la taille du data.frame généré en utilisant la commande `dim()`.
 
 ```{r data_folder, echo=TRUE}
-#data.folder <- "/shared/projects/du_bii_2019/data/module3/seance4/BIC"
 data.folder <- "/shared/projects/dubii2020/data/module3/seance7/BIC"
 # data.folder <- "data/BIC"
+
+## THIS DATA SET WILL BE TESTED FOR A FUTURE PRACTICAL
 # data.folder <- "/shared/projects/dubii2020/trainers/github_clones/study-cases/Homo_sapiens/TCGA_study-case/TCGA_AML_data"
 ```
 
@@ -125,7 +126,10 @@ BIC.sample.classes <- read.table(file.path(data.folder, "BIC_sample-classes.tsv.
 dim(BIC.sample.classes)
 ```
 
-* Le tableau contient non seulement les classes (colonne `cancer.type`) mais également les valeurs positive/negative pour trois gènes utilisés comme marqueurs pour diagnostiquer le type de cancer. 
+Le fichier contient `r nrow(BIC.sample.classes)` lignes et `r ncol(BIC.sample.classes)` colonnes. Chaque ligne correspond à un échantillon. 
+
+
+* Le tableau contient non seulement les classes (colonne `cancer.type`) mais également les valeurs positive/negative pour trois gènes utilisés comme marqueurs pour diagnostiquer le type de cancer, indiqués dans les en-têtes de colonnes: *ER1*, *PR1* et *Her2*. 
 
 ```{r}
 head(BIC.sample.classes)
@@ -139,22 +143,31 @@ summary(BIC.sample.classes)
 ```
 
 La première colonne du data.frame `BIC.sample.classes` renseigne sur le type de cancer de chaque échantillon. 
-Comme vous pouvez le voir, il y a 5 types de cancer, dont un type qui est `Unclassified`.
-Lors de la prédiction du type de cancer, ce type risque de biaiser les résultats. Vous allez supprimer ces échantillons des jeux de données.  
-A la fin du TP, vous utiliserez les modèles statistiques construits pour prédire le type de cancer de ces échantillons de type "Unclassified".
+
+Comme vous pouvez le voir, il y a 5 types de cancer, dont un "Unclassified". Lors de la prédiction du type de cancer, ce type risque de biaiser les résultats. Nous allons donc temporairement supprimer ces échantillons des jeux de données, mais nous reviendrons dessus à la fin du TP, car ils constituent une excellente application de l'apprentissage automatique. En effet, si un modèle (classifieur entraîné) s'avère donner de bons résultats lors de l'évaluation (training / testing), nous pourrons l'utiliser pour prédire le type de cancer de ces échantillons de type "Unclassified".
 
 3. Supprimez les échantillons correspondant au type `Unclassified` dans les deux data.frames. 
 
 * En utilisant la fonction `which()`, identifiez les lignes du data.frame `BIC.sample.classes` qui correspondent au type `Unclassified`. Vérifiez que vous avez bien sélectionné 107 individus.
 
 ```{r unclassified_samples}
-ind.uncl <- which(BIC.sample.classes[,"cancer.type"]=="Unclassified")
+## Generate a Boolean vector indicating which samples are unclassfied
+unclassified <- BIC.sample.classes$cancer.type == "Unclassified"
+
+## Count the number of genes having or not the unclassified label
+table(unclassified)
+
+## Get the indices of the corresponding rowss
+ind.uncl <- which(unclassified)
+
+## Count
 length(ind.uncl)
 ```
 
 * Supprimez ces individus dans le data.frame `BIC.sample.classes` en utilisant l'indexation négative. Vérifiez la taille du nouveau data.frame. Le nouveau data.frame se nommera `BIC.sample.classes.4`. 
 
 ```{r remove_unclassified_from_classes}
+## Create a separate data frame 
 BIC.sample.classes.4 <- BIC.sample.classes[-ind.uncl,]
 dim(BIC.sample.classes.4)
 ```
@@ -212,8 +225,10 @@ dim(mat.cor)
 * Identifiez les gènes à supprimer en utilisant un seuil de corrléation de 0.8 et la fonction `findCorrelation()`. Combien de gènes allez vous supprimer.  
 
 ```{r correlated_number}
-var.supp = findCorrelation(mat.cor, cutoff = 0.8)
+dim(mat.cor)
+var.supp <- findCorrelation(mat.cor, cutoff = 0.8)
 length(var.supp)
+print(var.supp)
 ```
 
 * Supprimez ces gènes du data.frame `BIC.expr.4`.
@@ -228,6 +243,7 @@ dim(BIC.expr.4)
 
     + en lignes ; les échantillons  
     + en colonnes : les gènes et le type de cancer.  
+    
 Pour cela, utilisez la commande `data.frame()`.   
     + La première colonne de votre data.frame `df.data` doit correspondre aux types de cancer.  
     + les colonnes 2 à 965 doivent correspondre aux gènes.  
