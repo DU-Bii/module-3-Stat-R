@@ -15,7 +15,7 @@
     - [Session 4. Clustering](#clustering)
     - [Session 5. Data exploration](#data-exploration)
     - [Session 6. Enrichment analysis](#enrichment-analysis)
-    - [Session 7. Supervised classification and learning](#supervised-classification-and-learning)
+    - [Session 7. Supervised classification](#supervised-classification)
 
 ## Goals
 
@@ -174,7 +174,7 @@ Topics for 2020-06-03
 | Enrichment analysis | html | who knows | [[html](enrichment/cours_enrichment.html)] |
 | Enrichment analysis | Rmd | who knows | [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/enrichment/cours_enrichment.Rmd)] |
 
-### Machine learning – Supervised classification
+### Supervised classification
 
 
 - Teachers: Jacques van Helden & Olivier Sand
