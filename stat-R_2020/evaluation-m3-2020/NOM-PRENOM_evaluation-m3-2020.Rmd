@@ -91,6 +91,12 @@ You will then use your model to assign each sample to one of the 4 cancer types:
 
 ### Evaluation criteria
 
+Réutilisabilité du code
+Clarté du code
+Structuration du code
+Documentation du code
+Pertinence statistique
+
 ... TO BE COMPLETED ...
 
 ## Data set
@@ -233,6 +239,9 @@ Your task:
 
 ```{r top_deg}
 ## TO DO: sort the expression table by decreasing value of expression
+BIC.deg.filtered <- subset(BIC.deg, row.names(BIC.deg) %in% row.names(BIC.expr.filtered))
+BIC.expr.filtered.matched <- BIC.expr.filtered(match(row.names(BIC.expr.filtered), row.names(BIC.deg.filtered)))
+BIC_expr.filtered.sorted <- BIC.expr.filtered.matched[order(BIC.deg.filtered$F)]
 
 ```
 
@@ -331,7 +340,7 @@ Run hierarchical clustering on the
 
 
 
-# Préparation des échantillons d'apprentissage et de test
+# Preparation of the learning and testing sample sets
 
 * L'**échantillon d'apprentissage** est l'échantillon qui va permettre d'apprendre les modèles. Il sera constitué de 2/3 des échantillons sélectionnés de manière aléatoire.  
 
