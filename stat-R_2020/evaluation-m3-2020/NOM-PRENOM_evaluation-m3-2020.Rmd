@@ -91,11 +91,11 @@ You will then use your model to assign each sample to one of the 4 cancer types:
 
 ### Evaluation criteria
 
-Réutilisabilité du code
-Clarté du code
-Structuration du code
-Documentation du code
-Pertinence statistique
+- Réutilisabilité du code
+- Clarté du code
+- Structuration du code
+- Documentation du code
+- Pertinence statistique
 
 ... TO BE COMPLETED ...
 
@@ -107,8 +107,9 @@ You will use the following data :
 
 * file `BIC_log2-norm-counts_edgeR_DEG_top_1000.tsv.gz` corresponds to expressions for the 1000 most significant genes (lines) for 819 samples (columns).   
 * file `BIC_sample-classes.tsv.gz` contains the tags of the 819 samples.
+* file `BIC_edgeR_DEG_table.tsv.gz`  contains the edgeR results of differential expression analysis
 
-On the IFB-core-cluster RStudio server, the data is in the directory : `/shared/projects/du_bii_2019/data/module3/seance4/BIC/`
+On the IFB-core-cluster RStudio server, the data is in the directory : `/shared/projects/dubii2020/data/module3/seance7/BIC`
 
 If you work on a local instance, you can download a clone of this course with
 
@@ -119,8 +120,23 @@ git clone https://github.com/DU-Bii/module-3-Stat-R.git
 cd module-3-Stat/
 ```
 
+Or just the files you need with
 
+```{r download_data eval=FALSE}
 
+dataFiles <- c("BIC_log2-norm-counts_edgeR_DEG_top_1000.tsv.gz","BIC_edgeR_DEG_table.tsv.gz","BIC_sample-classes.tsv.gz")
+localDataDir <- "/shared/projects/dubii2020/trainers/github_clones/module-3-Stat-R/stat-R_2020/data/TCGA_BIC_subset"  # Adapt to yours
+for (dataFile in dataFiles) {
+  localFile <- file.path(localDataDir, dataFile)
+  if (file.exists(localFile)) {
+    message("File already there, not downloading ", localFile)
+  } else {
+    githubURL <- file.path("https://github.com/DU-Bii/module-3-Stat-R/raw/master/stat-R_2020/data/TCGA_BIC_subset/", dataFile)
+    message("Downloading data files from github: ", githubURL)
+    download.file(url = githubURL, destfile = localFile)
+  }
+}
+```
 
 
 ## Data preprocessing
@@ -235,13 +251,13 @@ BIC.expr.filtered <- BIC.expr[, -ind.uncl]
 
 Your task: 
 
-1. Sort the expression table by increasing values of the FDR column found in the differential expression table (variable `BIC.deg`). Note that DEG table contains `r nrow(BIC.deg)` genes, whereas the expression table was restricted to `r nrow(BIC.expr.filtered)` genes. You will thus have to use a trick to select the right genes and sort them. The result should be a table with `r nrow(BIC.expr.filtered)` rows (genes) and `r ncol(BIC.expr.filtered)` columns (samples), sorted by increasing FDR (not in the table). 
+1. Sort the expression table by increasing values of the FDR (padj) column found in the differential expression table (variable `BIC.deg`). Note that DEG table contains `r nrow(BIC.deg)` genes, whereas the expression table was restricted to `r nrow(BIC.expr.filtered)` genes. You will thus have to use a trick to select the right genes and sort them. The result should be a table with `r nrow(BIC.expr.filtered)` rows (genes) and `r ncol(BIC.expr.filtered)` columns (samples), sorted by increasing FDR (not in the table). 
 
 ```{r top_deg}
-## TO DO: sort the expression table by decreasing value of expression
+## Sort the expression table by decreasing value of expression
 BIC.deg.filtered <- subset(BIC.deg, row.names(BIC.deg) %in% row.names(BIC.expr.filtered))
-BIC.expr.filtered.matched <- BIC.expr.filtered(match(row.names(BIC.expr.filtered), row.names(BIC.deg.filtered)))
-BIC_expr.filtered.sorted <- BIC.expr.filtered.matched[order(BIC.deg.filtered$F)]
+BIC.expr.filtered.merged <- merge(BIC.expr.filtered, BIC.deg.filtered, by=0)
+BIC.expr.filtered.sorted <- BIC.expr.filtered.merged[order(BIC.expr.filtered.merged$padj), ]
 
 ```
 
@@ -342,9 +358,9 @@ Run hierarchical clustering on the
 
 # Preparation of the learning and testing sample sets
 
-* L'**échantillon d'apprentissage** est l'échantillon qui va permettre d'apprendre les modèles. Il sera constitué de 2/3 des échantillons sélectionnés de manière aléatoire.  
+* The **learning set** is the set which will allow to train the models. It will be made of 2/3 of the samples randomly selected.  
 
-* L'**échantillon de test** est l'échantillon qui va permettre d'estimer les performances non biaisées des modèles. Il sera constitué du 1/3 des échantillons restant.  
+* The **testing set** is the set which will allow to estimate the unbiased performances of the models. It will be made of the remaining 1/3 of the samples.  
 
 
 
