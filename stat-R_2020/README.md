@@ -17,6 +17,9 @@
     - [Session 6. Enrichment analysis](#enrichment-analysis)
     - [Session 7. Supervised classification](#supervised-classification)
 
+- [Evaluation](#evaluation)
+
+
 ## Goals
 
 The aim of this module is to provide you with the bases of R programming and to present you some statistical concepts for high-throuput data.
@@ -188,3 +191,10 @@ Topics for 2020-06-03
 | Apprentissage automatique | Lecture | [[pdf](apprentissage/slides/03_machine-learning_DUBii_2020.pdf)] |
 | TCGA Breast Invasive Cancer dataset | Practical | [[html](apprentissage/TP_apprentissage.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/apprentissage/TP_apprentissage.Rmd)] |
 
+### Evaluation
+
+
+1. Quiz: <https://moodlesupd.script.univ-paris-diderot.fr/mod/quiz/view.php?id=249268>
+
+2. Personal work (report template): [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/evaluation-m3-2020/NOM-PRENOM_evaluation-m3-2020.Rmd)]
+ [[html](stat-R_2020/evaluation-m3-2020/NOM-PRENOM_evaluation-m3-2020.html)]
