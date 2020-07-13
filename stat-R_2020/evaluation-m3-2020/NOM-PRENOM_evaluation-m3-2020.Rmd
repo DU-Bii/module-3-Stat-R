@@ -3,20 +3,16 @@ title: 'Report: supervised classification of cancer data'
 author: "Prénom NOM"
 date: "`r Sys.Date()`"
 output:
-  html_notebook:
+  html_document:
     code_folding: hide
     fig_caption: yes
     highlight: zenburn
-    number_sections: yes
+    number_sections: no
     self_contained: no
     theme: cerulean
     toc: yes
     toc_depth: 3
     toc_float: yes
-  html_document:
-    df_print: paged
-    toc: yes
-    toc_depth: '3'
   pdf_document:
     fig_caption: yes
     highlight: zenburn
@@ -91,14 +87,17 @@ You will then use your model to assign each sample to one of the 4 cancer types:
 
 ### Evaluation criteria
 
-- Réutilisabilité du code
-- Clarté du code
-- Structuration du code
-- Documentation du code
-- Pertinence statistique
+- **Reusability of the code**: the trainers should be able to run your R markdown on their instance of RStudio
 
-... TO BE COMPLETED ...
+- **Clarity of the code**: the code should be understandable by someone familiar with R programming. Variable names should indicate their content. 
 
+- **Code structuration**: the code should be well-structured. If you need to run several times the same code, try to encapsulate it in a function rather than duplicating pieces of code. 
+
+- **Code documentation**: the code should be documented by explaining what each piece of code aims at. The implementation choices should be documented. 
+
+- **Relevance of the statistical approaches**: the markdown should use the appropriate methods to address the biological questions. Don't hesitate to comment the basic assumptions underlying the different methods, and the adequacy of your data to these assumption. 
+
+- **Interpretation of the results**: for each task, we will ask you to interpret the results and to highlight their biological relevance. 
 
 
 ## Goals of the analysis
@@ -213,14 +212,14 @@ Additional details and the full code used for preprocessing can be found on the 
 
 We propose three methods to reduce the data dimensions. 
 
-    a. **Differentially Expressed Genes** (**DEG**). Selection of the most signficant genes reported by DESeq2 (multi-group differential analysis)
-    b. **Variance-ordered**: genes were sorted by decreasing variance (unsupervised criterion)
-    c. **PCs** Principal components. 
+a. **Differentially Expressed Genes** (**DEG**). Selection of the most signficant genes reported by DESeq2 (multi-group differential analysis)
+b. **Variance-ordered**: genes were sorted by decreasing variance (unsupervised criterion)
+c. **PCs** Principal components. 
 
 You will use these respective datasets at different stages of your report. 
 
 
-# Data loading
+## Data loading
 
 
 
@@ -288,8 +287,6 @@ BIC.expr.filtered <- BIC.expr[, -ind.uncl]
 
 ## Data reduction
 
-Your task: 
-
 1. Sort the expression table by increasing values of the FDR (padj) column found in the differential expression table (variable `BIC.deg`). Note that DEG table contains `r nrow(BIC.deg)` genes, whereas the expression table was restricted to `r nrow(BIC.expr.filtered)` genes. You will thus have to use a trick to select the right genes and sort them. The result should be a table with `r nrow(BIC.expr.filtered)` rows (genes) and `r ncol(BIC.expr.filtered)` columns (samples), sorted by increasing FDR (not in the table). 
 
 ```{r top_deg}
@@ -313,6 +310,26 @@ BIC.expr.DEGsorted <- BIC.expr.filtered[geneOrder, ]
 2. Create another table with the filtered expression table sorted by decreasing variance. 
 
 3. Run principal component analysis on the filtered expression table and create a separate table named `BIC.expr.PCs` with the coordinates of each sample in the principal component space.
+
+## Principal component analysis
+
+Generate PC plots wiht the following components. Label the samples according to their annotated class.
+
+- PC2 vs PC1
+- PC4 vs PC3
+- PC6 vs PC5
+
+```{r pca}
+
+## YOUR CODE SHOULD COME HERE
+
+```
+
+
+### Your interpretation
+
+
+
 
 ## Clustering
 
@@ -360,5 +377,77 @@ Is there a good correspondence between sample clusters and  annotated cancer typ
 
 
 ## Supervised classification
+
+### Preparation of training and testing subsets
+
+* The **learning set** is the set which will allow to train the models. It will be made of 2/3 of the samples randomly selected.  
+
+* The **testing set** is the set which will allow to estimate the unbiased performances of the models. It will be made of the remaining 1/3 of the samples.  
+
+1. Split the filtered data set into training (2/3) and a testing (1/3) subsets with a balanced representation of the cancer types (stratified subsampling). 
+
+
+### Evaluation of the performances
+
+In this section, we will perform here a manual evaluation of the classifier in order to make sure we master the different steps. In the next section we will use the  `tune()` utilities in order to identify the optimal parameter values. 
+
+1. Use the training subset to train a classifier of your choice (KNN, SVM, Random Forest or an other one if you feel adventurous). 
+
+2. Use the resulting model to predict the cancer type for the samples of the testing set. 
+
+3. Build a confusion matrix to compare the predicted classes and annotated classes for the testing set. 
+
+4. Compute the misclassification error rate (MER). 
+
+
+```{r classifier_evaluation}
+
+## YOUR CODE SHOULD COME HERE
+
+```
+
+
+#### Your interpretation
+
+Interpret the results: how well does the classifier perform? Is there a bias towards some cancer types?
+
+
+### Tuning of the parametes
+
+Test the impact of a parameter on the performances by repeating the steps above with different values of this parameter. The parameter to be tested will depend on the algorithm you chose. 
+
+    - `svm()`: test each one of the 4 supported kernels
+    - `knn()`: test the impact of the number of neighbors
+    - `randomForest()`: test the impact of the `mtry`parameter 
+
+Tips: `tuneRF()` or `tune.randomForest()`, `tune.knn()`, `tune.svm()`
+
+```{r classifier_tuning}
+
+## YOUR CODE SHOULD COME HERE
+
+```
+
+
+#### Your interpretation
+
+Interpret the results: do the tested parameters affect a lot the performances (are the results robust or sensitive to the choice of the parmeter value)? Do you see a rationale for the optimal values returned by the tune functions?
+
+### Prediction
+
+1. Train the classifier with all the samples of the filtered data set
+2. Use the resulting model to predict the cancer type for the unclassified samples. 
+
+```{r prediction}
+
+## YOUR CODE SHOULD COME HERE
+
+```
+
+
+
+#### Your interpretation
+
+Comment the general assignment of the unclassified samples to the different classes.  Analyse the relationship between the immuno markers and the predicted classes. 
 
 
