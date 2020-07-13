@@ -196,4 +196,5 @@ Topics for 2020-06-03
 
 1. Quiz: <https://moodlesupd.script.univ-paris-diderot.fr/mod/quiz/view.php?id=249268>
 
-2. Personal work (report template): [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/evaluation-m3-2020/NOM-PRENOM_evaluation-m3-2020.Rmd)]
+2. Personal work (report template): [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/evaluation-m3-2020/NOM-PRENOM_evaluation-m3-2020.Rmd)] [[html](stat-R_2020/evaluation-m3-2020/NOM-PRENOM_evaluation-m3-2020.html)]
+
