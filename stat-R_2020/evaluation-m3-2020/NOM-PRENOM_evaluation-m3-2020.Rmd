@@ -70,7 +70,7 @@ options(scipen = 12) ## Max number of digits for non-scientific notation
 #### Just for the trainer: if the solution file exists, load it ####
 solutionFile <- "van-Helden-Jacques_evlaluation-m3_solutions.R"
 if (file.exists(solutionFile)) {
-  read_chunk(solutionFile)
+  # read_chunk(solutionFile)
 }
 
 ```
@@ -304,7 +304,7 @@ The expression file contains `r nrow(BIC.expr)`  rows (genes) x `r ncol(BIC.expr
 The sample description table contains `r nrow(BIC.sample.classes)`  rows (samples) x `r ncol(BIC.sample.classes)`  columns (description fields). The first column indicates the cancer type, and the three following one indicate the values (positive/negative) for three marker genes used as diagnostic markers for the cancer type (*ER1*, *PR1* et *Her2*). 
 
 ```{r}
-kable(head(BIC.sample.classes, n = 10), caption = "First rows of the sample description table. ")
+kable(head(BIC.sample.classes, n = 5), caption = "First rows of the sample description table. ")
 ```
 
 
@@ -559,7 +559,8 @@ Interpret the results: do the tested parameters affect a lot the performances (a
 
 Comment the general assignment of the unclassified samples to the different classes.  Analyse the relationship between the immuno markers and the predicted classes. 
 
-## A general conclusion and perspectives
+****************************************************************
+## General conclusion and perspectives
 
 (a few sentences, no more)
 
