@@ -1,20 +1,22 @@
-----
+---
 title: "Module 3 - Méthodes d'apprentissage avec R - Séance 7"
-author: "Frédéric Guyon,updated by Jacques van Helden"
+author: "Frédéric Guyon, updated by Jacques van Helden"
 date: '`r Sys.Date()`'
 output:
-  beamer_presentation:
-    colortheme: dolphin
-    fig_caption: yes
-    fig_height: 6
-    fig_width: 7
-    fonttheme: structurebold
-    highlight: tango
+  slidy_presentation:
+    highlight: default
     incremental: no
-    keep_tex: no
+    smart: no
     slide_level: 2
-    theme: Montpellier
+    self_contained: no
+    fig_caption: no
+    fig_height: 5
+    fig_width: 5
+    keep_md: yes
+    smaller: yes
+    theme: cerulean
     toc: yes
+    widescreen: yes
   html_document:
     fig_caption: yes
     highlight: zenburn
@@ -23,51 +25,42 @@ output:
     toc: yes
     toc_depth: 3
     toc_float: yes
-  ioslides_presentation:
-    colortheme: dolphin
-    fig_caption: yes
-    fig_height: 6
-    fig_width: 7
-    fonttheme: structurebold
-    highlight: tango
-    self_contained: no
+  beamer_presentation:
+    theme: Hannover #Montpellier
+    colortheme: beaver
+    fonttheme: professionalfonts #structurebold
+    highlight: pygments #default
+    fig_caption: no
+    fig_height: 4
+    fig_width: 5
+    incremental: no
+    keep_tex: no
     slide_level: 2
-    smaller: yes
     toc: yes
-    widescreen: yes
   pdf_document:
     fig_caption: yes
     highlight: zenburn
     toc: yes
     toc_depth: 3
   revealjs::revealjs_presentation:
-    css: ../slides.css
-    self_contained: yes
     theme: night
     transition: none
-  slidy_presentation:
-    fig_caption: yes
-    fig_height: 6
-    fig_width: 7
-    highlight: tango
-    incremental: no
-    keep_md: yes
-    self_contained: yes
+    self_contained: true
     slide_level: 2
-    smaller: yes
-    smart: no
-    theme: cerulean
-    toc: yes
-    widescreen: yes
+    css: ../slides.css
+  ioslides_presentation:
+    highlight: zenburn
+    incremental: no
 font-import: http://fonts.googleapis.com/css?family=Risque
-subtitle: DUBii 2019
 font-family: Garamond
 transition: linear
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r include=FALSE, echo=FALSE, eval=TRUE}
 library(knitr)
-library(kableExtra)
+# library(kableExtra)
 library(png)
 library(grid)
 library(rpart.plot)
@@ -83,7 +76,7 @@ options(width = 300)
 # options(encoding = 'UTF-8')
 knitr::opts_chunk$set(
   fig.width = 7, fig.height = 5, 
-  fig.path = 'figures/07_tests_multiples',
+  fig.path = 'figures/cours_apprentissage_',
   fig.align = "center", 
   size = "tiny", 
   echo = TRUE, eval = TRUE, 
@@ -140,14 +133,15 @@ d'évaluation : TIMIT (Reconnaissance de la parole), MNIST
 (images de chiffres manuscrits)
 
 
-# Support Vecteur Machine
+## Support Vecteur Machines (SVM)
 
-## Séparation linéaire: deux classes
+Séparation linéaire: deux classes
 
 ```{r mult_separated_groups, echo=FALSE, out.width="50%", fig.cap="2 groupes, pas de séparation unique"}
 include_graphics(path = "img/SepLin3.pdf")
 ```
-## Marge entre classes séparables
+
+## SVM - Marge entre classes séparables
 
  - Marge: distance au point le plus proche
  - Recherche du plan qui maximise cette marge
@@ -198,7 +192,7 @@ table(ypred, iris[,5])
 ## Exemple 2: classification non séparable
 
 ```{r, results = FALSE, out.width="50%", fig.width=7, fig.height=5}
-Data=read.table("data/cercles.dms")
+Data <- read.table("data/cercles.dms")
 X=as.matrix(Data[,1:2])
 y=Data[,3]
 plot(X,col=y)
@@ -237,6 +231,7 @@ $y= \sigma\left(w_0 +  w_1 x_1 + w_2 x_2 + \dots \right)$
 ```{r  echo=FALSE, out.width="25%",fig.cap="A sigmoid function"}
 include_graphics(path = "img/sigmoid.pdf")
 ```
+
 ## Réseaux de neurones : le neurone
 ```{r  echo=FALSE, out.width="50%",fig.cap="A neural network"}
 include_graphics(path = "img/NN2.pdf")
@@ -251,7 +246,9 @@ include_graphics(path = "img/NN2.pdf")
 	  - une couche de sortie avec fonction d'activation linéaire ou softmax
 
 ## Fonction nnet: 1 couche cachée
-### Exemple iris avec réseau de neurones
+
+## Exemple iris avec réseau de neurones
+
 ```{r, results = FALSE}
 library(nnet)
 X=as.matrix(iris[,1:4])
@@ -262,7 +259,9 @@ model=nnet(X,Y, size=2, softmax=TRUE)
 ypred=max.col(predict(model,X))
 table(y, ypred)
 ```
+
 ## Ou bien
+
 ```{r, results = FALSE}
 model=nnet(Species~.,data=iris, size=2)
 ypred=max.col(predict(model,X))
@@ -270,6 +269,7 @@ table(y, ypred)
 ```
 
 ## Plus sérieusement, avec évaluation
+
 ```{r, results = FALSE}
 ind_app=sample(1:nrow(iris),50)
 Xapp=iris[ind_app,1:4]
@@ -282,6 +282,7 @@ model=nnet(Xapp,Yapp, size=2, softmax=TRUE)
 ```
 
 ## Evaluation des erreurs
+
 ```{r, results = FALSE}
 # erreur d'apprentissage
 ypred=max.col(predict(model,Xapp))
