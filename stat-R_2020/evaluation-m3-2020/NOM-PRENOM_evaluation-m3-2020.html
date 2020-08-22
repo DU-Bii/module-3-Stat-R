@@ -11,7 +11,7 @@
 
 <meta name="author" content="Prénom NOM" />
 
-<meta name="date" content="2020-07-24" />
+<meta name="date" content="2020-08-22" />
 
 <title>Report: supervised classification of cancer data</title>
 
@@ -351,7 +351,7 @@ div.tocify {
 <h1 class="title toc-ignore">Report: supervised classification of cancer data</h1>
 <h3 class="subtitle">DUBii 2020 - Module 3 - Analyse statistique avec R - Evaluation</h3>
 <h4 class="author">Prénom NOM</h4>
-<h4 class="date">2020-07-24</h4>
+<h4 class="date">2020-08-22</h4>
 
 </div>
 
@@ -538,7 +538,7 @@ div.tocify {
 <a class="sourceLine" id="cb5-23" data-line-number="23"></a>
 <a class="sourceLine" id="cb5-24" data-line-number="24"><span class="co">## Define sample colors and 1-letter symbols</span></a>
 <a class="sourceLine" id="cb5-25" data-line-number="25">class.symbols &lt;-<span class="st"> </span><span class="kw">c</span>(</a>
-<a class="sourceLine" id="cb5-26" data-line-number="26">  <span class="st">&quot;Basal.like&quot;</span> =<span class="st"> &quot;B&quot;</span>,</a>
+<a class="sourceLine" id="cb5-26" data-line-number="26">  <span class="st">&quot;Basal.like&quot;</span> =<span class="st"> &quot;L&quot;</span>,</a>
 <a class="sourceLine" id="cb5-27" data-line-number="27">  <span class="st">&quot;HER2pos&quot;</span> =<span class="st"> &quot;H&quot;</span>,</a>
 <a class="sourceLine" id="cb5-28" data-line-number="28">  <span class="st">&quot;Luminal.A&quot;</span> =<span class="st"> &quot;A&quot;</span>,</a>
 <a class="sourceLine" id="cb5-29" data-line-number="29">  <span class="st">&quot;Luminal.B&quot;</span> =<span class="st"> &quot;B&quot;</span>,</a>
@@ -547,8 +547,8 @@ div.tocify {
 <a class="sourceLine" id="cb5-32" data-line-number="32">BIC.sample.classes<span class="op">$</span>symbol &lt;-<span class="st"> </span>class.symbols[BIC.sample.classes<span class="op">$</span>cancer.type]</a>
 <a class="sourceLine" id="cb5-33" data-line-number="33"><span class="kw">table</span>(BIC.sample.classes<span class="op">$</span>symbol)</a></code></pre></div>
 <pre><code>
-  A   B   H   U 
-422 249  41 107 </code></pre>
+  A   B   H   L   U 
+422 118  41 131 107 </code></pre>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="co">## Define a color for each cancer class and assign colors to samples accordingly.</span></a>
 <a class="sourceLine" id="cb7-2" data-line-number="2">class.colors &lt;-<span class="st">  </span><span class="kw">c</span>(</a>
 <a class="sourceLine" id="cb7-3" data-line-number="3">  <span class="st">&quot;Basal.like&quot;</span> =<span class="st"> &quot;brown&quot;</span>,</a>
@@ -598,7 +598,7 @@ div.tocify {
 </table>
 <p>The expression file contains 1000 rows (genes) x 819 columns (samples).</p>
 <p>The sample description table contains 819 rows (samples) x 6 columns (description fields). The first column indicates the cancer type, and the three following one indicate the values (positive/negative) for three marker genes used as diagnostic markers for the cancer type (<em>ER1</em>, <em>PR1</em> et <em>Her2</em>).</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">kable</span>(<span class="kw">head</span>(BIC.sample.classes, <span class="dt">n =</span> <span class="dv">10</span>), <span class="dt">caption =</span> <span class="st">&quot;First rows of the sample description table. &quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">kable</span>(<span class="kw">head</span>(BIC.sample.classes, <span class="dt">n =</span> <span class="dv">5</span>), <span class="dt">caption =</span> <span class="st">&quot;First rows of the sample description table. &quot;</span>)</a></code></pre></div>
 <table>
 <caption>First rows of the sample description table.</caption>
 <colgroup>
@@ -628,7 +628,7 @@ div.tocify {
 <td align="left">Negative</td>
 <td align="left">Negative</td>
 <td align="left">Negative</td>
-<td align="left">B</td>
+<td align="left">L</td>
 <td align="left">brown</td>
 </tr>
 <tr class="even">
@@ -637,7 +637,7 @@ div.tocify {
 <td align="left">Negative</td>
 <td align="left">Negative</td>
 <td align="left">Negative</td>
-<td align="left">B</td>
+<td align="left">L</td>
 <td align="left">brown</td>
 </tr>
 <tr class="odd">
@@ -646,7 +646,7 @@ div.tocify {
 <td align="left">Negative</td>
 <td align="left">Negative</td>
 <td align="left">Negative</td>
-<td align="left">B</td>
+<td align="left">L</td>
 <td align="left">brown</td>
 </tr>
 <tr class="even">
@@ -655,7 +655,7 @@ div.tocify {
 <td align="left">Negative</td>
 <td align="left">Negative</td>
 <td align="left">Negative</td>
-<td align="left">B</td>
+<td align="left">L</td>
 <td align="left">brown</td>
 </tr>
 <tr class="odd">
@@ -664,52 +664,7 @@ div.tocify {
 <td align="left">Negative</td>
 <td align="left">Negative</td>
 <td align="left">Negative</td>
-<td align="left">B</td>
-<td align="left">brown</td>
-</tr>
-<tr class="even">
-<td align="left">E08283CA-68E0-4171-B8B9-51AEE0B1E0EF</td>
-<td align="left">Basal.like</td>
-<td align="left">Negative</td>
-<td align="left">Negative</td>
-<td align="left">Negative</td>
-<td align="left">B</td>
-<td align="left">brown</td>
-</tr>
-<tr class="odd">
-<td align="left">C0FF6201-9BFD-4C95-9770-B122D8206C3D</td>
-<td align="left">Basal.like</td>
-<td align="left">Negative</td>
-<td align="left">Negative</td>
-<td align="left">Negative</td>
-<td align="left">B</td>
-<td align="left">brown</td>
-</tr>
-<tr class="even">
-<td align="left">4C49EE0B-5040-47B2-8E78-28ABFA0969CD</td>
-<td align="left">Basal.like</td>
-<td align="left">Negative</td>
-<td align="left">Negative</td>
-<td align="left">Negative</td>
-<td align="left">B</td>
-<td align="left">brown</td>
-</tr>
-<tr class="odd">
-<td align="left">6588314E-69E9-44DC-B7D0-0966C1833608</td>
-<td align="left">Basal.like</td>
-<td align="left">Negative</td>
-<td align="left">Negative</td>
-<td align="left">Negative</td>
-<td align="left">B</td>
-<td align="left">brown</td>
-</tr>
-<tr class="even">
-<td align="left">6B960A87-C9E2-4F37-BBB8-116A776FD26A</td>
-<td align="left">Basal.like</td>
-<td align="left">Negative</td>
-<td align="left">Negative</td>
-<td align="left">Negative</td>
-<td align="left">B</td>
+<td align="left">L</td>
 <td align="left">brown</td>
 </tr>
 </tbody>

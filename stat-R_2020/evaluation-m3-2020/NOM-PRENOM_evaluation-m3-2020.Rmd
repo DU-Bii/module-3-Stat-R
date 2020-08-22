@@ -263,7 +263,7 @@ BIC.sample.classes <- read.table(
 
 ## Define sample colors and 1-letter symbols
 class.symbols <- c(
-  "Basal.like" = "B",
+  "Basal.like" = "L",
   "HER2pos" = "H",
   "Luminal.A" = "A",
   "Luminal.B" = "B",
