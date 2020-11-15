@@ -319,7 +319,7 @@ kable(sort(table(BIC.sample.classes$cancer.type), decreasing = TRUE),
 There are `r length(unique(BIC.sample.classes$cancer.type))` cancer types, including a "Unclassified", for the samples having a combination of markers inconsistent with the defined subtypes. This might bias the result since this "class" is likely to contain a mixture of different cancer types. We will thus temporarily suppress these samples from the dataset, but we will come back to it at the end of the work, since they provide an excellent opportunity to run the classifier for predictive purpuses (assign unclassified samples to one of the training classes). 
 
 
-The code below creates a data set from which the `Unclassified` samples has been suppressed. 
+The code below creates a data set from which the `Unclassified` samples have been suppressed. 
 
 
 ```{r remove_unclassified_samples}
