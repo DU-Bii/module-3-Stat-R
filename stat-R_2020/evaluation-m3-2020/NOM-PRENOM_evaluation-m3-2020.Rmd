@@ -352,7 +352,7 @@ We propose three methods to reduce the data dimensions.
 
 a. **Differentially Expressed Genes** (**DEG**). Selection of the most signficant genes reported by DESeq2 (multi-group differential analysis). This has already been done for you, we provide the table with the 1000 top significant genes.
 
-b. **Variance-ordered**: genes were sorted by decreasing variance (unsupervised criterion). To avoid handling big files, we will apply a re-ordering of the 1000 top-ranking DEG genes, and see whether the genes wiht the highest variance provide good classifiers. 
+b. **Variance-ordered**: we will sort the genes by decreasing variance (unsupervised criterion). To avoid handling big files, we will apply a re-ordering of the 1000 top-ranking DEG genes, and see whether the genes with the highest variance provide good classifiers. 
 
 c. **PCs** Principal components. We will use a restricted number of principal components and see if they capture a sufficient information to train a classifier. 
 
