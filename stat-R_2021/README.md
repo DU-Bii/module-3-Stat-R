@@ -5,14 +5,10 @@
 
 1. R de base en explorant des données omiques
 2. Renforcement de R
-3.1. Statistiques pour les données à haut-débit
-3.2. RStudio et rapport Rmarkdown
-4.1. Régresion linéaire multivariée
-4.2. Corrélation
-4.3. Exploration des données multidimensionelles
+3. Statistiques pour les données à haut-débit / RStudio et rapport Rmarkdown
+4. Régresion linéaire multivariée / Corrélation / Exploration des données multidimensionelles
 5. Classification supervisée et apprentissage
-6.1. Classification non-supervisée
-6.2. Analyse d'enrichissement
+6. Classification non-supervisée / Analyse d'enrichissement
 
 
 ## Intervenants
