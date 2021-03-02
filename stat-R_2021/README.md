@@ -47,3 +47,22 @@ Link to the prerequisites:
 | Tutorial | Tutorial for Beginners by E. Paradis - French version | <https://cran.r-project.org/doc/contrib/Paradis-rdebuts_fr.pdf> |
 | R style guide | Google’s R Style Guide  | <https://google.github.io/styleguide/Rguide.html> |
 
+## Teaching material
+
+### R de base en explorant des données omiques
+
+
+### Renforcement de R
+
+
+### Statistiques pour les données à haut-débit / RStudio et rapport Rmarkdown
+
+
+### Régresion linéaire multivariée / Corrélation / Exploration des données multidimensionelles
+
+
+### Classification supervisée et apprentissage
+
+
+### Classification non-supervisée / Analyse d'enrichissement
+
