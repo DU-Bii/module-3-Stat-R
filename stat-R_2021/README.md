@@ -61,16 +61,16 @@ To follow this course, prior knowledge is expected on:
 #### Supports de cours
 
 - Slides: [Slides for the whole session](slides/DUBii_R_Session1_2021.pdf) 
+- Questions: [lien wooclap](<https://www.wooclap.com/AIFGO>) et [proposition de solution](scripts/session1_live.R) 
 - Tutorial: [Tutorial on dataframes](tutorials/Rsession1_tuto_dataframes.ipynb), 
 - Practical: [Practical on dataframes applied to omics data](practicals/Rsession1_practicals_dataframes.ipynb)
 - Data: [File Temperatures.txt](data/Tempartures.txt)
-- Questions: [lien wooclap](<https://www.wooclap.com/AIFGO>) et [proposition de solution](scripts/session1_live.R)  
-
-*To do:**
+ 
+**=> To do:**
 - finir le tutorial pour demain jeudi après-midi -> poser des questions sur slack si des points sont obscurs
 - faire le practical dans vos séances de travail personnel du vendredi des 2 1ères semaines -> les données serviront de Fil Rouge tout au long du module
 
-*Friday 05/03/2021 personnal work:** TBA
+**Friday 05/03/2021 personnal work:** TBA
 
 ### Session 2. Renforcement de R
 
