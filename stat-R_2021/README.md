@@ -1,15 +1,25 @@
 # Statistics with R -- 2021 session
 
+## Goals
+
+The aim of this module is to provide you with the bases of R programming and to present you some statistical concepts for high-throuput data.
+
+To follow this course, prior knowledge is expected on: 
+
+- R environment, 
+- getting help in R,
+- types of variables (particularly on vectors).
+
+[Link to the prerequisites](<https://du-bii.github.io/accueil/activites_preparatoires/>)
 
 ## Programme
 
-1. [R base en explorant des données omiques](#Session 1. R base en explorant des données omiques)
+1. [R base en explorant des données omiques](#session-1.-r-base-en-explorant-des-données-omiques)
 2. Renforcement de R
 3. Statistiques pour les données à haut-débit / RStudio et rapport Rmarkdown
 4. Régresion linéaire multivariée / Corrélation / Exploration des données multidimensionelles
 5. Classification supervisée et apprentissage
 6. Classification non-supervisée / Analyse d'enrichissement
-
 
 ## Intervenants
 
@@ -24,18 +34,6 @@
 9. Yves Clément (<https://orcid.org/0000-0002-5932-9412>)
 10. Olivier Taboureau (<https://orcid.org/0000-0001-7081-2491>)
 
-## Goals
-
-The aim of this module is to provide you with the bases of R programming and to present you some statistical concepts for high-throuput data.
-
-To follow this course, prior knowledge is expected on: 
-
-- R environment, 
-- getting help in R,
-- types of variables (particularly on vectors).
-
-[Link to the prerequisites](<https://du-bii.github.io/accueil/activites_preparatoires/>)
-
 ## Course links
 
 | Doc | Description |URL |
@@ -45,19 +43,6 @@ To follow this course, prior knowledge is expected on:
 | Serveur Jupyter Hub IFB | Python but also R! | <https://jupyterhub.cluster.france-bioinformatique.fr/> |
 | RStudio at IFB cluster | link to RStudio on th IFB cluster | <https://rstudio.cluster.france-bioinformatique.fr/> |
 | Slack | forum pour échanges et discussions | <https://dubii.slack.com> |
-
-
-
-## R tutorials and good practice
-
-| Doc | Description |URL |
-|------------|-------------------------------|---------------------------------------|
-| Cheet sheats | RStudio Cheet sheats | <https://rstudio.com/resources/cheatsheets/> |
-| Tutorial | Tutorial for Beginners by E. Paradis - English version | <https://cran.r-project.org/doc/contrib/Paradis-rdebuts_en.pdf> |
-| Tutorial | Tutorial for Beginners by E. Paradis - French version | <https://cran.r-project.org/doc/contrib/Paradis-rdebuts_fr.pdf> |
-| R style guide | Google’s R Style Guide  | <https://google.github.io/styleguide/Rguide.html> |
-| Another reference for R style guide | tidyversesStyle Guide  | <https://style.tidyverse.org/> |
-
 
 ## Teaching material
 
@@ -88,6 +73,18 @@ Slides: [Slides for the whole session](slides/DUBii_R_Session1_2021.pdf) - Tutor
 
 
 ### Session 6. Classification non-supervisée / Analyse d'enrichissement
+
+
+## R tutorials and good practice
+
+| Doc | Description |URL |
+|------------|-------------------------------|---------------------------------------|
+| Cheet sheats | RStudio Cheet sheats | <https://rstudio.com/resources/cheatsheets/> |
+| Tutorial | Tutorial for Beginners by E. Paradis - English version | <https://cran.r-project.org/doc/contrib/Paradis-rdebuts_en.pdf> |
+| Tutorial | Tutorial for Beginners by E. Paradis - French version | <https://cran.r-project.org/doc/contrib/Paradis-rdebuts_fr.pdf> |
+| R style guide | Google’s R Style Guide  | <https://google.github.io/styleguide/Rguide.html> |
+| Another reference for R style guide | tidyversesStyle Guide  | <https://style.tidyverse.org/> |
+
 
 ## Licence
 
