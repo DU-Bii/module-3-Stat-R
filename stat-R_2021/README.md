@@ -3,7 +3,7 @@
 
 ## Programme
 
-1. R base en explorant des données omiques
+1. [R base en explorant des données omiques](#Session 1. R de base en explorant des données omiques)
 2. Renforcement de R
 3. Statistiques pour les données à haut-débit / RStudio et rapport Rmarkdown
 4. Régresion linéaire multivariée / Corrélation / Exploration des données multidimensionelles
@@ -34,9 +34,7 @@ To follow this course, prior knowledge is expected on:
 - getting help in R,
 - types of variables (particularly on vectors).
 
-Link to the prerequisites: 
-
-<https://du-bii.github.io/accueil/activites_preparatoires/>
+[Link to the prerequisites](<https://du-bii.github.io/accueil/activites_preparatoires/>)
 
 ## Course links
 
@@ -44,7 +42,6 @@ Link to the prerequisites:
 |---------|---------------------------|---------------------------------------|
 | **Git pages** | **Web site of the course**  (to see the supports) | <https://du-bii.github.io/module-3-Stat-R/stat-R_2021/> | 
 | Git repo | Repository enabling to download or clone the teaching material on your computer | <https://github.com/DU-Bii/module-3-Stat-R> |
-| IFB core cluster | Calculs intensifs (accès ligne de commande) | ssh [login]@core.cluster.france-bioinformatique.fr |
 | Serveur Jupyter Hub IFB | Python but also R! | <https://jupyterhub.cluster.france-bioinformatique.fr/> |
 | RStudio at IFB cluster | link to RStudio on th IFB cluster | <https://rstudio.cluster.france-bioinformatique.fr/> |
 | Slack | forum pour échanges et discussions | <https://dubii.slack.com> |
@@ -59,38 +56,38 @@ Link to the prerequisites:
 | Tutorial | Tutorial for Beginners by E. Paradis - English version | <https://cran.r-project.org/doc/contrib/Paradis-rdebuts_en.pdf> |
 | Tutorial | Tutorial for Beginners by E. Paradis - French version | <https://cran.r-project.org/doc/contrib/Paradis-rdebuts_fr.pdf> |
 | R style guide | Google’s R Style Guide  | <https://google.github.io/styleguide/Rguide.html> |
+| Another reference for R style guide | tidyversesStyle Guide  | <https://style.tidyverse.org/> |
+
 
 ## Teaching material
 
-### R de base en explorant des données omiques
+### Session 1. R de base en explorant des données omiques
 
 Instructeurs : Claire Vandiedonck & Anne Badel  
 Helpers : Antoine Bridier-Nahmias, Clémence Réda, Bruno Toupance, Jacques van Helden 
 
-objetcifs:
+Objectifs:
 
-1. verification et consolidation des prerequis: session R, vecteurs, matrices
+1. vérification et consolidation des prerequis: session R, vecteurs, matrices
 2. dataframes: création, extraction de données, manipulation
 
-[Slides for the whole session](slides/DUBii_R_Session1_2021.pdf)
-[Tutorial on dataframes](tutorials/Rsession1_tuto_dataframes.ipynb)
-[Pratical on dataframes applied on omics data](practicals/Rsession1_practicals_dataframes.ipynb)
+[Slides for the whole session](slides/DUBii_R_Session1_2021.pdf), [Tutorial on dataframes](tutorials/Rsession1_tuto_dataframes.ipynb), [Practical on dataframes applied to omics data](practicals/Rsession1_practicals_dataframes.ipynb)
 
 *Personnal work: TBA*
 
-### Renforcement de R
+### Session 2. Renforcement de R
 
 
-### Statistiques pour les données à haut-débit / RStudio et rapport Rmarkdown
+### Session 3. Statistiques pour les données à haut-débit / RStudio et rapport Rmarkdown
 
 
-### Régresion linéaire multivariée / Corrélation / Exploration des données multidimensionelles
+### Session 4. Régresion linéaire multivariée / Corrélation / Exploration des données multidimensionelles
 
 
-### Classification supervisée et apprentissage
+### Session 5. Classification supervisée et apprentissage
 
 
-### Classification non-supervisée / Analyse d'enrichissement
+### Session 6. Classification non-supervisée / Analyse d'enrichissement
 
 ## Licence
 
