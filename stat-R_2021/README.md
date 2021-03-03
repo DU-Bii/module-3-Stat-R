@@ -6,7 +6,7 @@
 
 [Session 2. Renforcement de R](#session-2-renforcement-de-r)
 
-[Session 3. Statistiques pour les données à haut-débit] / RStudio et rapport Rmarkdown](#session-3-statistiques-pour-les-données-à-haut-débit-/-rstudio-et-rapport-rmarkdown)
+[Session 3. Statistiques pour les données à haut-débit / RStudio et rapport Rmarkdown](#session-3-statistiques-pour-les-données-à-haut-débit-/-rstudio-et-rapport-rmarkdown)
 
 [Session 4. Régresion linéaire multivariée / Corrélation / Exploration des données multidimensionelles](#session-4-régresion-linéaire-multivariée-/-corrélation-/-exploration-des-données-multidimensionelles)
 
