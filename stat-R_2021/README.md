@@ -3,11 +3,17 @@
 ## Programme
 
 [Session 1. R base en explorant des données omiques](#session-1.-r-base-en-explorant-des-données-omiques)
+
 [Session 2. Renforcement de R](#session-2.-renforcement-de-r)
+
 [Session 3. Statistiques pour les données à haut-débit] / RStudio et rapport Rmarkdown
+
 [Session 4. Régresion linéaire multivariée / Corrélation / Exploration des données multidimensionelles]
+
 [Session 5. Classification supervisée et apprentissage]
+
 [Session 6. Classification non-supervisée / Analyse d'enrichissement]
+
 
 ## Goals
 
