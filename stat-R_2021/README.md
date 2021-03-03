@@ -3,7 +3,7 @@
 ## Programme
 
 1. [R base en explorant des données omiques](#session-1.-r-base-en-explorant-des-données-omiques)
-2. Renforcement de R(#session-2.-renforcement-de-r)
+2. [Renforcement de R](#session-2.-renforcement-de-r)
 3. Statistiques pour les données à haut-débit / RStudio et rapport Rmarkdown
 4. Régresion linéaire multivariée / Corrélation / Exploration des données multidimensionelles
 5. Classification supervisée et apprentissage
@@ -61,6 +61,7 @@ Slides: [Slides for the whole session](slides/DUBii_R_Session1_2021.pdf) - Tutor
 
 *Personnal work: TBA*
 
+<!--
 ### Session 2. Renforcement de R
 
 
@@ -75,6 +76,7 @@ Slides: [Slides for the whole session](slides/DUBii_R_Session1_2021.pdf) - Tutor
 
 ### Session 6. Classification non-supervisée / Analyse d'enrichissement
 
+-->
 
 ## R tutorials and good practice
 
