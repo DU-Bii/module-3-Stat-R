@@ -1,0 +1,13 @@
+Month	Mean_Temp
+January	2.0
+February	2.6
+March	7.9
+April	11.2
+May	15.3
+June	22.2
+July	22.9
+August	22.5
+September	17.3
+October	11.7
+November	5.2
+December	2.8
