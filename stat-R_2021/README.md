@@ -6,13 +6,13 @@
 
 [Session 2. Renforcement de R](#session-2-renforcement-de-r)
 
-[Session 3. Statistiques pour les données à haut-débit] / RStudio et rapport Rmarkdown
+[Session 3. Statistiques pour les données à haut-débit] / RStudio et rapport Rmarkdown](#session-3-statistiques-pour-les-données-à-haut-débit-/-rstudio-et-rapport-rmarkdown)
 
-[Session 4. Régresion linéaire multivariée / Corrélation / Exploration des données multidimensionelles]
+[Session 4. Régresion linéaire multivariée / Corrélation / Exploration des données multidimensionelles](#session-4-régresion-linéaire-multivariée-/-corrélation-/-exploration-des-données-multidimensionelles)
 
-[Session 5. Classification supervisée et apprentissage]
+[Session 5. Classification supervisée et apprentissage](#session-5-classification-supervisée-et-apprentissage)
 
-[Session 6. Classification non-supervisée / Analyse d'enrichissement]
+[Session 6. Classification non-supervisée / Analyse d'enrichissement](#session-6-classification-non-supervisée-/-analyse-d'enrichissement)
 
 
 ## Goals
