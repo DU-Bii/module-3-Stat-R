@@ -47,10 +47,11 @@ To follow this course, prior knowledge is expected on:
 
 ## Teaching material
 
-### Session 1. R base en explorant des données omiques (03/03/2021)
+### Session 1. R base en explorant des données omiques
 
-Instructeurs : Claire Vandiedonck & Anne Badel  
-Helpers : Antoine Bridier-Nahmias, Clémence Réda, Bruno Toupance, Jacques van Helden 
+- Date:  03/03/2021 de 9h30 à 12h30
+- Instructeurs : Claire Vandiedonck & Anne Badel  
+- Helpers : Antoine Bridier-Nahmias, Clémence Réda, Bruno Toupance, Jacques van Helden 
 
 Objectifs:
 
@@ -61,8 +62,11 @@ Slides: [Slides for the whole session](slides/DUBii_R_Session1_2021.pdf) - Tutor
 
 *Personnal work: TBA*
 
-<!--
 ### Session 2. Renforcement de R
+
+A compléter
+
+<!--
 
 
 ### Session 3. Statistiques pour les données à haut-débit / RStudio et rapport Rmarkdown
