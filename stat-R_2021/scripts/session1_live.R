@@ -7,7 +7,7 @@
 #1. Créer un vecteur avec: 5 4 3 2 1 et 0. J’attends 3 façons possibles.
 5:0
 rev(0:5)
-seq(0,5,1)
+seq(5,0,-1)
 c(5,4,3,2,1,0)
 
 
@@ -34,7 +34,7 @@ sum(is.na(x))
 length(which(is.na(x))
 
 #8. Calculez la moyenne sur les 80 1ères valeurs
-mean(x, na.rm=TRUE)
+mean(x[80], na.rm=TRUE)
 
 
 ## exercices sur les matrices
