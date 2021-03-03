@@ -53,12 +53,16 @@ To follow this course, prior knowledge is expected on:
 - Instructeurs : Claire Vandiedonck & Anne Badel  
 - Helpers : Antoine Bridier-Nahmias, Clémence Réda, Bruno Toupance, Jacques van Helden 
 
-Objectifs:
+#### Objectifs
 
 1. vérification et consolidation des prerequis: session R, vecteurs, matrices
 2. dataframes: création, extraction de données, manipulation
 
-Slides: [Slides for the whole session](slides/DUBii_R_Session1_2021.pdf) - Tutorial: [Tutorial on dataframes](tutorials/Rsession1_tuto_dataframes.ipynb), Practical: [Practical on dataframes applied to omics data](practicals/Rsession1_practicals_dataframes.ipynb)
+#### Supports de cours
+
+- Slides: [Slides for the whole session](slides/DUBii_R_Session1_2021.pdf) 
+- Tutorial: [Tutorial on dataframes](tutorials/Rsession1_tuto_dataframes.ipynb), 
+- Practical: [Practical on dataframes applied to omics data](practicals/Rsession1_practicals_dataframes.ipynb)
 
 *Personnal work: TBA*
 
