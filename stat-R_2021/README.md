@@ -1,5 +1,14 @@
 # Statistics with R -- 2021 session
 
+## Programme
+
+1. [R base en explorant des données omiques](#session-1.-r-base-en-explorant-des-données-omiques)
+2. Renforcement de R(#session-2.-renforcement-de-r)
+3. Statistiques pour les données à haut-débit / RStudio et rapport Rmarkdown
+4. Régresion linéaire multivariée / Corrélation / Exploration des données multidimensionelles
+5. Classification supervisée et apprentissage
+6. Classification non-supervisée / Analyse d'enrichissement
+
 ## Goals
 
 The aim of this module is to provide you with the bases of R programming and to present you some statistical concepts for high-throuput data.
@@ -12,14 +21,6 @@ To follow this course, prior knowledge is expected on:
 
 [Link to the prerequisites](<https://du-bii.github.io/accueil/activites_preparatoires/>)
 
-## Programme
-
-1. [R base en explorant des données omiques](#session-1.-r-base-en-explorant-des-données-omiques)
-2. Renforcement de R
-3. Statistiques pour les données à haut-débit / RStudio et rapport Rmarkdown
-4. Régresion linéaire multivariée / Corrélation / Exploration des données multidimensionelles
-5. Classification supervisée et apprentissage
-6. Classification non-supervisée / Analyse d'enrichissement
 
 ## Intervenants
 
