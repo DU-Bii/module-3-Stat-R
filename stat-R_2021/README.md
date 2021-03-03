@@ -47,7 +47,7 @@ To follow this course, prior knowledge is expected on:
 
 ## Teaching material
 
-### Session 1. R base en explorant des données omiques (03/03/2020)
+### Session 1. R base en explorant des données omiques (03/03/2021)
 
 Instructeurs : Claire Vandiedonck & Anne Badel  
 Helpers : Antoine Bridier-Nahmias, Clémence Réda, Bruno Toupance, Jacques van Helden 
