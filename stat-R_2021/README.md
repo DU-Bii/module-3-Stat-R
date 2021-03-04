@@ -90,7 +90,7 @@ To follow this course, prior knowledge is expected on:
 2. fonctions: implémentation
 3. paquets/librairies: installation et troubleshooting, chargement, utilisation
 4. figures à façon avec R base
-5. introduction à Tidyverse: tidyr, dplyr, gglot2
+5. introduction au Tidyverse: ggplot2, dplyr, tidyr
 
 #### Supports de cours
 
@@ -98,8 +98,9 @@ To follow this course, prior knowledge is expected on:
 - Tutorial: [Tutorial on functions](tutorials/Rsession2_tuto_functions.ipynb), 
 - Practical: [optional on loops, conditions and functions](practicals/Rsession2_practical_loops_conditions_functions.ipynb) - [on packages](practicals/Rsession2_practicals_packages.ipynb) - [on figures](practicals/Rsession2_practicals_figures.ipynb)
 
-
-
+- Slides: [Introduction au tidyverse](slides/2021-03-04-Intro-tidyverse.pdf)
+- Tutorial: [TD introduction au tidyverse](tutorials/2021-03-04-TD-Intro-tidyverse.html)
+ 
 <!--
 
 
