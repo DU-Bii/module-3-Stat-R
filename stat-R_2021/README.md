@@ -94,12 +94,9 @@ To follow this course, prior knowledge is expected on:
 
 #### Supports de cours
 
-- Slides: [Slides for part 1 to 4](slides/DUBii_R_Session2_2021.pdf) - [Slides for part 5]()
-- Tutorial: [Tutorial on functions](tutorials/Rsession2_tuto_functions.ipynb), 
-- Practical: [optional on loops, conditions and functions](practicals/Rsession2_practical_loops_conditions_functions.ipynb) - [on packages](practicals/Rsession2_practicals_packages.ipynb) - [on figures](practicals/Rsession2_practicals_figures.ipynb)
-
-- Slides: [Introduction au tidyverse](slides/2021-03-04-Intro-tidyverse.pdf)
-- Tutorial: [TD introduction au tidyverse](tutorials/2021-03-04-TD-Intro-tidyverse.html). Visualisation du sujet du TD [ici](https://htmlpreview.github.io/?https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2021/tutorials/2021-03-04-TD-Intro-tidyverse.html)
+- Slides: [Slides for part 1 to 4](slides/DUBii_R_Session2_2021.pdf) - [Introduction au tidyverse](slides/2021-03-04-Intro-tidyverse.pdf)
+- Tutorial: [Tutorial on functions](tutorials/Rsession2_tuto_functions.ipynb) - [on packages](practicals/Rsession2_tuto_packages.ipynb) 
+- Practical: [optional on loops, conditions and functions](practicals/Rsession2_practical_loops_conditions_functions.ipynb)  - [on figures](practicals/Rsession2_practicals_figures.ipynb) - [TD introduction au tidyverse](tutorials/2021-03-04-TD-Intro-tidyverse.html) et visualisation du sujet du TD [ici](https://htmlpreview.github.io/?https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2021/tutorials/2021-03-04-TD-Intro-tidyverse.html)
 <!--
 
 
