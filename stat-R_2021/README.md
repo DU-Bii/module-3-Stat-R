@@ -100,7 +100,7 @@ To follow this course, prior knowledge is expected on:
 
 - Slides: [Introduction au tidyverse](slides/2021-03-04-Intro-tidyverse.pdf)
 - Tutorial: [TD introduction au tidyverse](tutorials/2021-03-04-TD-Intro-tidyverse.html)
- 
+Visualisation ici : https://htmlpreview.github.io/?https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2021/tutorials/2021-03-04-TD-Intro-tidyverse.html 
 <!--
 
 
