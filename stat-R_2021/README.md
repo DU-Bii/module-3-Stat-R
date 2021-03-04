@@ -67,7 +67,7 @@ To follow this course, prior knowledge is expected on:
 #### Supports de cours
 
 - Slides: [Slides for the whole session](slides/DUBii_R_Session1_2021.pdf) 
-- Questions: [lien wooclap](<https://www.wooclap.com/AIFGO>) et [proposition de solution](scripts/session1_live.R) 
+- Questions: [lien wooclap](<https://www.wooclap.com/AIFGCO>) et [proposition de solution](scripts/session1_live.R) 
 - Tutorial: [Tutorial on dataframes](tutorials/Rsession1_tuto_dataframes.ipynb), 
 - Practical: [Practical on dataframes applied to omics data](practicals/Rsession1_practicals_dataframes.ipynb)
 - Data: [File Temperatures.txt](data/Tempartures.txt)
@@ -80,7 +80,25 @@ To follow this course, prior knowledge is expected on:
 
 ### Session 2. Renforcement de R
 
-A compléter
+- Date:  04/03/2021 de 13h30 à 16h30
+- Instructeurs : Claire Vandiedonck & Magali Berland  
+- Helpers : Antoine Bridier-Nahmias, Yves Clément, Bruno Toupance, Jacques van Helden 
+
+#### Objectifs
+
+1. contrôles de flux: boucles versus vectorisation, excutions conditionnelles
+2. fonctions: implémentation
+3. paquets/librairies: installation et troubleshooting, chargement, utilisation
+4. figures à façon avec R base
+5. introduction à Tidyverse: tidyr, dplyr, gglot2
+
+#### Supports de cours
+
+- Slides: [Slides for part 1 to 4](slides/DUBii_R_Session2_2021.pdf) - [Slides for part 5]()
+- Tutorial: [Tutorial on functions](tutorials/Rsession1_tuto_functions.ipynb), 
+- Practical: [optional on loops, conditions and functions](practicals/Rsession2_practicals_loops_conditions_functions.ipynb) - [on packages](practicals/Rsession2_practicals_packages.ipynb) - [on figures](practicals/Rsession2_practicals_figures.ipynb)
+
+
 
 <!--
 
