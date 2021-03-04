@@ -76,7 +76,7 @@ To follow this course, prior knowledge is expected on:
 - finir le tutorial pour demain jeudi après-midi -> poser des questions sur slack si des points sont obscurs
 - faire le practical dans vos séances de travail personnel du vendredi des 2 1ères semaines -> les données serviront de Fil Rouge tout au long du module
 
-**Friday 05/03/2021 personnal work:** TBA
+*Friday 05/03/2021 personnal work:* TBA
 
 ### Session 2. Renforcement de R
 
@@ -95,7 +95,7 @@ To follow this course, prior knowledge is expected on:
 #### Supports de cours
 
 - Slides: [Slides for part 1 to 4](slides/DUBii_R_Session2_2021.pdf) - [Slides for part 5]()
-- Tutorial: [Tutorial on functions](tutorials/Rsession1_tuto_functions.ipynb), 
+- Tutorial: [Tutorial on functions](tutorials/Rsession2_tuto_functions.ipynb), 
 - Practical: [optional on loops, conditions and functions](practicals/Rsession2_practicals_loops_conditions_functions.ipynb) - [on packages](practicals/Rsession2_practicals_packages.ipynb) - [on figures](practicals/Rsession2_practicals_figures.ipynb)
 
 
