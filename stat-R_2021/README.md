@@ -96,7 +96,7 @@ To follow this course, prior knowledge is expected on:
 
 - Slides: [Slides for part 1 to 4](slides/DUBii_R_Session2_2021.pdf) - [Slides for part 5]()
 - Tutorial: [Tutorial on functions](tutorials/Rsession2_tuto_functions.ipynb), 
-- Practical: [optional on loops, conditions and functions](practicals/Rsession2_practicals_loops_conditions_functions.ipynb) - [on packages](practicals/Rsession2_practicals_packages.ipynb) - [on figures](practicals/Rsession2_practicals_figures.ipynb)
+- Practical: [optional on loops, conditions and functions](practicals/Rsession2_practical_loops_conditions_functions.ipynb) - [on packages](practicals/Rsession2_practicals_packages.ipynb) - [on figures](practicals/Rsession2_practicals_figures.ipynb)
 
 
 
