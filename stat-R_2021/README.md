@@ -144,7 +144,9 @@ To follow this course, prior knowledge is expected on:
 
 ## Ressources
 |  Topic | Title | Description | Link|
+|------------|----------------|---------------------------------------|-----------------------------------------------------------------------------------------|
 | Functions | R Documentation | List of R packages and functions   |<https://www.rdocumentation.org/> |
+| Functions | QuickR | List R functions for stats and plotting |<https://www.rdocumentation.org/> |
 | Statistics and DataViz| STDHA | Statistical tools for high-throughput data analysis  |<http://www.sthda.com/english/> |
 | DataViz | R Graph gallery | How to display your data  |<http://www.r-graph-gallery.com/all-graphs/> |
 | DataViz | DEFAKATOR | Détecter des graphiques trompeurs  |<https://www.youtube.com/watch?v=crTt-QIyS-o> |
