@@ -95,7 +95,7 @@ To follow this course, prior knowledge is expected on:
 
 - Slides: [Slides for part 1 to 4](slides/DUBii_R_Session2_2021.pdf) - [Introduction au tidyverse](slides/2021-03-04-Intro-tidyverse.pdf)
 - Tutorial: [on functions](tutorials/Rsession2_tuto_functions.ipynb) - [on packages](tutorials/Rsession2_tuto_packages.ipynb) 
-- Practical: [optional on loops, conditions and functions](practicals/Rsession2_practical_loops_conditions_functions.ipynb) et [son corrigé](practicals/Rsession2_practical_loops_conditions_functions.html) - [on figures](practicals/Rsession2_practicals_figures.ipynb) et [son corrigé](practicals/Rsession2_practicals_figures_correction.html)- [TD introduction au tidyverse au format html](practicals/2021-03-04-TD-Intro-tidyverse.html), [au format ipynb](practicals/TD-tidyverse-dplyr-tidyr-sujet.ipynb) et [son corrigé pour ggplot au format .ipynb](practicals/TD-tidyverse-ggplot-corrigé.ipynb)
+- Practical: [optional on loops, conditions and functions](practicals/Rsession2_practical_loops_conditions_functions.ipynb) et [son corrigé](practicals/Rsession2_practical_loops_conditions_functions_correction.html) - [on figures](practicals/Rsession2_practicals_figures.ipynb) et [son corrigé](practicals/Rsession2_practicals_figures_correction.html)- [TD introduction au tidyverse au format html](practicals/2021-03-04-TD-Intro-tidyverse.html), [au format ipynb](practicals/TD-tidyverse-dplyr-tidyr-sujet.ipynb) et [son corrigé pour ggplot au format .ipynb](practicals/Corrigé du [TD sur ggplot au format JupyterLab](tutorials/TD-tidyverse-ggplot-corrigé.ipynb)
 
 **=> To do:**
 - finir le practical sur tidyverse pour jeudi 11/03/2021 
