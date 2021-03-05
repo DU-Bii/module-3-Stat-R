@@ -70,7 +70,7 @@ To follow this course, prior knowledge is expected on:
 - Questions: [lien wooclap](<https://www.wooclap.com/AIFGCO>) et [proposition de solution](scripts/session1_live.R) 
 - Tutorial: [Tutorial on dataframes](tutorials/Rsession1_tuto_dataframes.ipynb)et [sa version exécutée en html](tutorials/Rsession1_tuto_dataframes_correction.html)
 - Practical: [Practical on dataframes applied to omics data](practicals/Rsession1_practicals_dataframes.ipynb) -> corrigé fourni plus tard, on vous laisse encore un peu de refexion sur celui-ci
-- Data: [File Temperatures.txt](data/Tempartures.txt),[rawData](data/pavkovic2019_transcriptome_uuo_metadata.tsv
+- Data: [Temperatures.txt](data/Temperatures.txt),[rawData](data/pavkovic2019_transcriptome_uuo_metadata.tsv
 ), [metadata](data/pavkovic2019_transcriptome_uuo_rawData.tsv) ou dans `shared/projects/dubii2021/trainers/module3/data/pavkovic/1.datainit`
  
 **=> To do:**
@@ -94,17 +94,14 @@ To follow this course, prior knowledge is expected on:
 #### Supports de cours
 
 - Slides: [Slides for part 1 to 4](slides/DUBii_R_Session2_2021.pdf) - [Introduction au tidyverse](slides/2021-03-04-Intro-tidyverse.pdf)
-- Tutorial: [Tutorial on functions](tutorials/Rsession2_tuto_functions.ipynb) - [on packages](tutorials/Rsession2_tuto_packages.ipynb) 
-- Practical: [optional on loops, conditions and functions](practicals/Rsession2_practical_loops_conditions_functions.ipynb)  et [son corrigé](practicals/Rsession2_practical_loops_conditions_functions.html)- [on figures](practicals/Rsession2_practicals_figures.ipynb) et [son corrigé](practicals/Rsession2_practicals_figures_correction.html)- [TD introduction au tidyverse au format html](practicals/2021-03-04-TD-Intro-tidyverse.html), [au format ipynb](practicals/TD-tidyverse-dplyr-tidyr-sujet.ipynb) et [son corrigé pour ggplot au format .ipynb](practicals/TD-tidyverse-ggplot-corrigé.ipynb)
+- Tutorial: [on functions](tutorials/Rsession2_tuto_functions.ipynb) - [on packages](tutorials/Rsession2_tuto_packages.ipynb) 
+- Practical: [optional on loops, conditions and functions](practicals/Rsession2_practical_loops_conditions_functions.ipynb) et [son corrigé](practicals/Rsession2_practical_loops_conditions_functions.html) - [on figures](practicals/Rsession2_practicals_figures.ipynb) et [son corrigé](practicals/Rsession2_practicals_figures_correction.html)- [TD introduction au tidyverse au format html](practicals/2021-03-04-TD-Intro-tidyverse.html), [au format ipynb](practicals/TD-tidyverse-dplyr-tidyr-sujet.ipynb) et [son corrigé pour ggplot au format .ipynb](practicals/TD-tidyverse-ggplot-corrigé.ipynb)
 
 **=> To do:**
 - finir le practical sur tidyverse pour jeudi 11/03/2021 
 - fnir le practical sur les figures avec R base (correction disponible)
 - faire le practical sur les paquets (correction disponible)
 - ***facultatif***: faire le practical sur les contrôles de flux et fonctions (correction disponible) 
-
-
-<!--
 
 ### Session 3. Statistiques pour les données à haut-débit / RStudio et rapport Rmarkdown
 
@@ -120,6 +117,7 @@ To follow this course, prior knowledge is expected on:
     1.c. Tests multiples
 2. RStudio & Rapport Rmarkdown
 
+<!--
 
 ### Session 4. Régresion linéaire multivariée / Corrélation / Exploration des données multidimensionelles
 
