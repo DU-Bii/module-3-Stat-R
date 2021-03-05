@@ -98,10 +98,23 @@ To follow this course, prior knowledge is expected on:
 - Tutorial: [Tutorial on functions](tutorials/Rsession2_tuto_functions.ipynb) - [on packages](tutorials/Rsession2_tuto_packages.ipynb) 
 - Practical: [optional on loops, conditions and functions](practicals/Rsession2_practical_loops_conditions_functions.ipynb)  - [on figures](practicals/Rsession2_practicals_figures.ipynb) - [TD introduction au tidyverse](tutorials/2021-03-04-TD-Intro-tidyverse.html) et visualisation du sujet du TD [ici](https://htmlpreview.github.io/?https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2021/tutorials/2021-03-04-TD-Intro-tidyverse.html)
 
+
 <!--
 
-
 ### Session 3. Statistiques pour les données à haut-débit / RStudio et rapport Rmarkdown
+
+- Date:  09/03/2021 de 14h30 à 17h30
+- Instructeurs : Claire Vandiedonck & Antoine Bridier-Nahmias  
+- Helpers : Anne Badel, Clémence Réda, Jacques van Helden, Olivier Sand
+
+#### Objectifs
+
+1. Problème de la dimensionalité
+2. Estimation des paramètres
+3. Tests multiples
+4. Analyse différentielle de données omiques
+5. RStudio
+6. Rapport Rmarkdown
 
 
 ### Session 4. Régresion linéaire multivariée / Corrélation / Exploration des données multidimensionelles
