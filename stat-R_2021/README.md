@@ -143,17 +143,18 @@ To follow this course, prior knowledge is expected on:
 | Another reference for R style guide | tidyversesStyle Guide  | <https://style.tidyverse.org/> |
 
 ## Ressources
-|  Topic | Title | Description | Link|
-|------------|----------------|---------------------------------------|-----------------------------------------------------------------------------------------|
-| Functions | R Documentation | List of R packages and functions   | <https://www.rdocumentation.org/> |
-| Functions | QuickR | List R functions for stats and plotting | <https://www.rdocumentation.org/> |
-| Statistics and DataViz| STDHA | Statistical tools for high-throughput data analysis  | <http://www.sthda.com/english/> |
-| Basic stats explained to biologists | Points of Significance |Nature Methods collection  | <https://www.nature.com/collections/qghhqm/pointsofsignificance> |
-| DataViz | R Graph gallery | How to display your data  | <http://www.r-graph-gallery.com/all-graphs/> |
-| DataViz | DEFAKATOR | Détecter des graphiques trompeurs  | <https://www.youtube.com/watch?v=crTt-QIyS-o> |
-| DataViz | Using color sin R| Explains available packages for colors in R  | <https://www.stat.ubc.ca/~jenny/STAT545A/block14_colors.html#using-colors-in-r> |
-| DataViz | Using color sin R| How to do a high resolution figure with R base  | <https://www.stat.ubc.ca/~jenny/STAT545A/block14_colors.html#using-colors-in-r> |
-| DataViz | DataViz | link tto the book | <https://clauswilke.com/dataviz/> |
+| Topic                               	| Title                  	| Description                                         	| Link 	                                        |
+|-------------------------------------	|------------------------	|-----------------------------------------------------	|-------------------------------------------	|
+| Functions                           	| R Documentation        	| List of R packages and functions                    	| <https://www.rdocumentation.org/>	|
+| Functions                           	| QuickR                 	| List R functions for stats and plotting             	| <https://www.rdocumentation.org/>	|
+| Statistics and DataViz              	| STDHA                  	| Statistical tools for high-throughput data analysis 	| <http://www.sthda.com/english/> |
+| Basic stats explained to biologists 	| Points of Significance 	| Nature Methods collection                           	| <https://www.nature.com/collections/qghhqm/pointsofsignificance>  |
+| DataViz                             	| R Graph gallery        	| How to display your data                            	| <http://www.r-graph-gallery.com/all-graphs/> |
+| DataViz                             	| DEFAKATOR              	| Détecter des graphiques trompeurs                   	| <https://www.youtube.com/watch?v=crTt-QIyS-o> |
+| DataViz                             	| Using color sin R      	| Explains available packages for colors in R         	| <https://www.stat.ubc.ca/~jenny/STAT545A/block14_colors.html#using-colors-in-r> |
+| DataViz                             	| Using color sin R      	| How to do a high resolution figure with R base      	| <https://www.stat.ubc.ca/~jenny/STAT545A/block14_colors.html#using-colors-in-r> |
+| DataViz                             	| DataViz                	| link tto the book                                   	| <https://clauswilke.com/dataviz/>|
+
 
 ## Licence
 
