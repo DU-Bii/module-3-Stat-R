@@ -97,8 +97,7 @@ To follow this course, prior knowledge is expected on:
 - Slides: [Slides for part 1 to 4](slides/DUBii_R_Session2_2021.pdf) - [Introduction au tidyverse](slides/2021-03-04-Intro-tidyverse.pdf)
 - Tutorial: [Tutorial on functions](tutorials/Rsession2_tuto_functions.ipynb) - [on packages](tutorials/Rsession2_tuto_packages.ipynb) 
 - Practical: [optional on loops, conditions and functions](practicals/Rsession2_practical_loops_conditions_functions.ipynb)  - [on figures](practicals/Rsession2_practicals_figures.ipynb) - [TD introduction au tidyverse](tutorials/2021-03-04-TD-Intro-tidyverse.html) et visualisation du sujet du TD [ici](https://htmlpreview.github.io/?https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2021/tutorials/2021-03-04-TD-Intro-tidyverse.html)
-Corrigé du [TD sur ggplot au format JupyterLab](TD-tidyverse-ggplot-corrigé.ipynb)
-
+Corrigé du [TD sur ggplot au format JupyterLab](TD-tidyverse-ggplot-corrigé.ipynb) / 
 Sujet du [TD sur dplyr et tidyr au format JupyterLab](TD-tidyverse-dplyr-tidyr-sujet.ipynb)
 
 <!--
