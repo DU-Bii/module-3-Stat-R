@@ -97,6 +97,7 @@ To follow this course, prior knowledge is expected on:
 - Tutorial: [on functions](tutorials/Rsession2_tuto_functions.ipynb) - [on packages](tutorials/Rsession2_tuto_packages.ipynb) 
 - Practical: [optional on loops, conditions and functions](practicals/Rsession2_practical_loops_conditions_functions.ipynb) et [son corrigé](practicals/Rsession2_practical_loops_conditions_functions_correction.html) - [on figures](practicals/Rsession2_practicals_figures.ipynb) et [son corrigé](practicals/Rsession2_practicals_figures_correction.html)- [TD introduction au tidyverse au format html](practicals/2021-03-04-TD-Intro-tidyverse.html), [au format ipynb](practicals/TD-tidyverse-dplyr-tidyr-sujet.ipynb) et [son corrigé pour ggplot au format ipynb](practicals/TD-tidyverse-ggplot-correction.ipynb)
 
+
 **=> To do:**
 - finir le practical sur tidyverse pour jeudi 11/03/2021 
 - fnir le practical sur les figures avec R base (correction disponible)
@@ -141,6 +142,15 @@ To follow this course, prior knowledge is expected on:
 | R style guide | Google’s R Style Guide  | <https://google.github.io/styleguide/Rguide.html> |
 | Another reference for R style guide | tidyversesStyle Guide  | <https://style.tidyverse.org/> |
 
+## Ressources
+|  Topic | Title | Description | Link|
+| Functions | R Documentation | List of R packages and functions   |<https://www.rdocumentation.org/> |
+| Statistics and DataViz| STDHA | Statistical tools for high-throughput data analysis  |<http://www.sthda.com/english/> |
+| DataViz | R Graph gallery | How to display your data  |<http://www.r-graph-gallery.com/all-graphs/> |
+| DataViz | DEFAKATOR | Détecter des graphiques trompeurs  |<https://www.youtube.com/watch?v=crTt-QIyS-o> |
+| DataViz | Using color sin R| Explains available packages for colors in R  |<https://www.stat.ubc.ca/~jenny/STAT545A/block14_colors.html#using-colors-in-r> |
+| DataViz | Using color sin R| How to do a high resolution figure with R base  |<https://www.stat.ubc.ca/~jenny/STAT545A/block14_colors.html#using-colors-in-r> |
+| DataViz | DataViz | link tto the book |https://clauswilke.com/dataviz/ |
 
 ## Licence
 
