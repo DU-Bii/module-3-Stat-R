@@ -73,9 +73,7 @@ To follow this course, prior knowledge is expected on:
 - Data: [Temperatures.txt](data/Temperatures.txt),[rawData](data/pavkovic2019_transcriptome_uuo_metadata.tsv
 ), [metadata](data/pavkovic2019_transcriptome_uuo_rawData.tsv) ou dans `shared/projects/dubii2021/trainers/module3/data/pavkovic/1.datainit`
  
-**=> To do:**
-- finir le tutorial des dataframes pour demain jeudi après-midi -> poser des questions sur slack si des points sont obscurs
-- faire le practical dans vos séances de travail personnel du vendredi des 2 1ères semaines -> les données serviront de Fil Rouge tout au long du module
+
 
 ### Session 2. Renforcement de R
 
@@ -98,7 +96,12 @@ To follow this course, prior knowledge is expected on:
 - Practical: [optional on loops, conditions and functions](practicals/Rsession2_practical_loops_conditions_functions.ipynb) et [son corrigé](practicals/Rsession2_practical_loops_conditions_functions_correction.html) - [on figures](practicals/Rsession2_practicals_figures.ipynb) et [son corrigé](practicals/Rsession2_practicals_figures_correction.html)- [TD introduction au tidyverse au format html](practicals/2021-03-04-TD-Intro-tidyverse.html), [au format ipynb](practicals/TD-tidyverse-dplyr-tidyr-sujet.ipynb) et [son corrigé pour ggplot au format ipynb](practicals/TD-tidyverse-ggplot-correction.ipynb)
 
 
-**=> To do:**
+#### Personnal work:
+1. Après la Session 1
+- finir le tutorial des dataframes pour demain jeudi après-midi -> poser des questions sur slack si des points sont obscurs
+- faire le practical dans vos séances de travail personnel du vendredi des 2 1ères semaines -> les données serviront de Fil Rouge tout au long du module
+- faire le tutorial sur les factors pendant le temps de travail personnel
+2. Après la Session 2
 - finir le practical sur tidyverse pour jeudi 11/03/2021 
 - fnir le practical sur les figures avec R base (correction disponible)
 - faire le practical sur les paquets (correction disponible)
