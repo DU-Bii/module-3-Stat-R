@@ -68,7 +68,7 @@ To follow this course, prior knowledge is expected on:
 
 - Slides: [Slides for the whole session](slides/DUBii_R_Session1_2021.pdf) 
 - Questions: [lien wooclap](<https://www.wooclap.com/AIFGCO>) et [proposition de solution](scripts/session1_live.R) 
-- Tutorial: [Tutorial on dataframes](tutorials/Rsession1_tuto_dataframes.ipynb)et [sa version exécutée en html](tutorials/Rsession1_tuto_dataframes_correction.html)
+- Tutorial: [Tutorial on dataframes](tutorials/Rsession1_tuto_dataframes.ipynb)et [sa version exécutée en html](tutorials/Rsession1_tuto_dataframes_correction.html) - [Tutorial on factors](tutorials/Rsession1_tuto_facorts.ipynb) et [sa version exécutée en html](tutorials/Rsession1_tuto_factors.html)
 - Practical: [Practical on dataframes applied to omics data](practicals/Rsession1_practicals_dataframes.ipynb) -> corrigé fourni plus tard, on vous laisse encore un peu de refexion sur celui-ci
 - Data: [Temperatures.txt](data/Temperatures.txt),[rawData](data/pavkovic2019_transcriptome_uuo_metadata.tsv
 ), [metadata](data/pavkovic2019_transcriptome_uuo_rawData.tsv) ou dans `shared/projects/dubii2021/trainers/module3/data/pavkovic/1.datainit`
