@@ -99,11 +99,15 @@ To follow this course, prior knowledge is expected on:
 
 #### Objectifs
 
-1. contrôles de flux: boucles versus vectorisation, excutions conditionnelles
-2. fonctions: implémentation
-3. paquets/librairies: installation et troubleshooting, chargement, utilisation
-4. figures à façon avec R base
-5. introduction au Tidyverse: ggplot2, dplyr, tidyr
+1. Contrôles de flux: boucles versus vectorisation, excutions conditionnelles
+
+2. Fonctions: implémentation
+
+3. Paquets/librairies: installation et troubleshooting, chargement, utilisation
+
+4. Figures à façon avec R base
+
+5. Introduction au Tidyverse: ggplot2, dplyr, tidyr
 
 #### Supports de cours
 
