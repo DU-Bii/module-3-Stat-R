@@ -74,8 +74,8 @@ To follow this course, prior knowledge is expected on:
 
 - Tutorial: 
 
-    - on **dataframes** [notebook ipynb](tutorials/Rsession1_tuto_dataframes.ipynb) et [sa version exécutée en html](tutorials/Rsession1_tuto_dataframes_correction.html) 
-    - on **factors** [notebook ipynb](tutorials/Rsession1_tuto_factors.ipynb) et [sa version exécutée en html](tutorials/Rsession1_tuto_factors.html)
+    - on **dataframes** ([notebook ipynb](tutorials/Rsession1_tuto_dataframes.ipynb) et [sa version exécutée en html](tutorials/Rsession1_tuto_dataframes_correction.html)) 
+    - on **factors** ([notebook ipynb](tutorials/Rsession1_tuto_factors.ipynb) et [sa version exécutée en html](tutorials/Rsession1_tuto_factors.html))
 
 - Practical: 
 
@@ -118,14 +118,14 @@ To follow this course, prior knowledge is expected on:
 
 - Tutorial: 
 
-    - on **functions** [notebook ipynb](tutorials/Rsession2_tuto_functions.ipynb) 
-    - on **packages** [notebook ipynb](tutorials/Rsession2_tuto_packages.ipynb) 
+    - on **functions** ([notebook ipynb](tutorials/Rsession2_tuto_functions.ipynb))
+    - on **packages** ([notebook ipynb](tutorials/Rsession2_tuto_packages.ipynb))
 
 - Practical: 
 
-    - optional on **loops, conditions and functions** [notebook ipynb](practicals/Rsession2_practical_loops_conditions_functions.ipynb) et [son corrigé](practicals/Rsession2_practical_loops_conditions_functions_correction.html) 
-    - on **figures**[notebook ipynb]](practicals/Rsession2_practicals_figures.ipynb) et [son corrigé](practicals/Rsession2_practicals_figures_correction.html)
-    - TD **introduction au tidyverse** [format html](practicals/2021-03-04-TD-Intro-tidyverse.html), [au format ipynb](practicals/TD-tidyverse-dplyr-tidyr-sujet.ipynb) et [son corrigé pour ggplot au format ipynb](practicals/TD-tidyverse-ggplot-correction.ipynb)
+    - optional on **loops, conditions and functions** ([notebook ipynb](practicals/Rsession2_practical_loops_conditions_functions.ipynb) et [son corrigé](practicals/Rsession2_practical_loops_conditions_functions_correction.html))
+    - on **figures** ([notebook ipynb](practicals/Rsession2_practicals_figures.ipynb) et [son corrigé](practicals/Rsession2_practicals_figures_correction.html))
+    - TD **introduction au tidyverse** ([format html](practicals/2021-03-04-TD-Intro-tidyverse.html), [format ipynb](practicals/TD-tidyverse-dplyr-tidyr-sujet.ipynb) et [son corrigé pour ggplot au format ipynb](practicals/TD-tidyverse-ggplot-correction.ipynb))
 
 
 ### Travail personnel
