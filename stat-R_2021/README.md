@@ -156,9 +156,11 @@ To follow this course, prior knowledge is expected on:
 #### Objectifs
 
 1. Statistiques pour les omiques:
+
     1.a. Problème de la dimensionalité
     1.b. Estimation des paramètres
     1.c. Tests multiples
+
 2. RStudio & Rapport Rmarkdown
 
 
