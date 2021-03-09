@@ -149,7 +149,7 @@ To follow this course, prior knowledge is expected on:
 
 - Slides: [Slides for part 1](slides/DUBii_R_Session3_2021.pdf) 
 - Practical:
-    - links: [shiny app to simualte distributions](<http://shiny.calpoly.sh/Sampling_Distribution/>) - [dabestr](<https://github.com/ACCLAB/dabestr>)
+    - links: [shiny app to stimulate distributions](<http://shiny.calpoly.sh/Sampling_Distribution/>) - [dabestr](<https://github.com/ACCLAB/dabestr>)
     - live on **statistics** [notebook ipynb](practicals/Rsession3_practical_statomics.ipynb)
     - optional on **statistics** [[mean-comparison-test_random-numbers.html](practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.html)] ou [mean-comparison-test_random-numbers.pdf](practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.pdf)] ou [[mean-comparison-test_random-numbers.Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.Rmd)]
 
