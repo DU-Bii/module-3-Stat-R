@@ -190,6 +190,7 @@ To follow this course, prior knowledge is expected on:
 | Another reference for R style guide | tidyversesStyle Guide  | <https://style.tidyverse.org/> |
 
 ## Ressources
+
 | Topic                               	| Title                  	| Description                                         	| Link 	                                        |
 |-------------------------------------	|------------------------	|-----------------------------------------------------	|-------------------------------------------	|
 | Functions                           	| R Documentation        	| List of R packages and functions                    	| <https://www.rdocumentation.org/>	|
@@ -199,7 +200,7 @@ To follow this course, prior knowledge is expected on:
 | DataViz                             	| R Graph gallery        	| How to display your data                            	| <http://www.r-graph-gallery.com/all-graphs/> |
 | DataViz                             	| DEFAKATOR              	| Détecter des graphiques trompeurs                   	| <https://www.youtube.com/watch?v=crTt-QIyS-o> |
 | DataViz                             	| Using color sin R      	| Explains available packages for colors in R         	| <https://www.stat.ubc.ca/~jenny/STAT545A/block14_colors.html#using-colors-in-r> |
-| DataViz                             	| Using color sin R      	| How to do a high resolution figure with R base      	| https://danieljhocking.wordpress.com/2013/03/12/high-resolution-figures-in-r/ |
+| DataViz                             	| Using colors in R      	| How to do a high resolution figure with R base      	| https://danieljhocking.wordpress.com/2013/03/12/high-resolution-figures-in-r/ |
 | DataViz                             	| DataViz                	| link tto the book                                   	| <https://clauswilke.com/dataviz/>|
 
 
