@@ -2,17 +2,17 @@
 
 ## Programme
 
-[Session 1. R base en explorant des données omiques](#session-1-r-base-en-explorant-des-données-omiques)
+- [Session 1. R base en explorant des données omiques](#session-1)
 
-[Session 2. Renforcement de R](#session-2-renforcement-de-r)
+- [Session 2. Renforcement de R](#session-2)
 
-[Session 3. Statistiques pour les données à haut-débit / RStudio et rapport Rmarkdown](#session-3-statistiques-pour-les-données-à-haut-débit-/-rstudio-et-rapport-rmarkdown)
+- Session 3. Statistiques pour les données à haut-débit / RStudio et rapport Rmarkdown
 
-[Session 4. Régresion linéaire multivariée / Corrélation / Exploration des données multidimensionelles](#session-4-régresion-linéaire-multivariée-/-corrélation-/-exploration-des-données-multidimensionelles)
+- Session 4. Régresion linéaire multivariée / Corrélation / Exploration des données multidimensionelles
 
-[Session 5. Classification supervisée et apprentissage](#session-5-classification-supervisée-et-apprentissage)
+- Session 5. Classification supervisée et apprentissage
 
-[Session 6. Classification non-supervisée / Analyse d'enrichissement](#session-6-classification-non-supervisée-/-analyse-d'enrichissement)
+- Session 6. Classification non-supervisée / Analyse d'enrichissement
 
 
 ## Goals
@@ -53,6 +53,8 @@ To follow this course, prior knowledge is expected on:
 
 ## Teaching material
 
+<a name="session-1"></a>
+
 ### Session 1. R base en explorant des données omiques
 
 - Date:  03/03/2021 de 9h30 à 12h30
@@ -73,7 +75,7 @@ To follow this course, prior knowledge is expected on:
 - Data: [Temperatures.txt](data/Temperatures.txt),[rawData](data/pavkovic2019_transcriptome_uuo_metadata.tsv
 ), [metadata](data/pavkovic2019_transcriptome_uuo_rawData.tsv) ou dans `shared/projects/dubii2021/trainers/module3/data/pavkovic/1.datainit`
  
-
+<a name="session-2"></a>
 
 ### Session 2. Renforcement de R
 
@@ -109,6 +111,8 @@ To follow this course, prior knowledge is expected on:
 
 <!--
 
+<a name="session-3"></a>
+
 ### Session 3. Statistiques pour les données à haut-débit / RStudio et rapport Rmarkdown
 
 - Date:  09/03/2021 de 14h30 à 17h30
@@ -124,12 +128,16 @@ To follow this course, prior knowledge is expected on:
 2. RStudio & Rapport Rmarkdown
 
 
+<a name="session-4"></a>
 
 ### Session 4. Régresion linéaire multivariée / Corrélation / Exploration des données multidimensionelles
 
 
+<a name="session-5"></a>
+
 ### Session 5. Classification supervisée et apprentissage
 
+<a name="session-6"></a>
 
 ### Session 6. Classification non-supervisée / Analyse d'enrichissement
 
