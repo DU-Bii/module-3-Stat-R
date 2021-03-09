@@ -63,17 +63,31 @@ To follow this course, prior knowledge is expected on:
 
 #### Objectifs
 
-1. vérification et consolidation des prerequis: session R, vecteurs, matrices
-2. dataframes: création, extraction de données, manipulation
+1. Vérification et consolidation des prerequis: session R, vecteurs, matrices.
+2. Dataframes: création, extraction de données, manipulation.
 
 #### Supports de cours
 
 - Slides: [Slides for the whole session](slides/DUBii_R_Session1_2021.pdf) 
+
 - Questions: [lien wooclap](<https://www.wooclap.com/AIFGCO>) et [proposition de solution](scripts/session1_live.R) 
-- Tutorial: [on dataframes](tutorials/Rsession1_tuto_dataframes.ipynb)et [sa version exécutée en html](tutorials/Rsession1_tuto_dataframes_correction.html) - [on factors](tutorials/Rsession1_tuto_factors.ipynb) et [sa version exécutée en html](tutorials/Rsession1_tuto_factors.html)
-- Practical: [Practical on dataframes applied to omics data](practicals/Rsession1_practicals_dataframes.ipynb) -> corrigé fourni plus tard, on vous laisse encore un peu de refexion sur celui-ci
-- Data: [Temperatures.txt](data/Temperatures.txt),[rawData](data/pavkovic2019_transcriptome_uuo_metadata.tsv
-), [metadata](data/pavkovic2019_transcriptome_uuo_rawData.tsv) ou dans `shared/projects/dubii2021/trainers/module3/data/pavkovic/1.datainit`
+
+- Tutorial: 
+
+    - on **dataframes** [notebook ipynb](tutorials/Rsession1_tuto_dataframes.ipynb) et [sa version exécutée en html](tutorials/Rsession1_tuto_dataframes_correction.html) 
+    - on **factors** [notebook ipynb](tutorials/Rsession1_tuto_factors.ipynb) et [sa version exécutée en html](tutorials/Rsession1_tuto_factors.html)
+
+- Practical: 
+
+    - [Practical on dataframes applied to omics data](practicals/Rsession1_practicals_dataframes.ipynb) 
+    - Corrigé fourni plus tard, on vous laisse encore un peu de refexion sur celui-ci
+
+- Data: 
+
+    - [Temperatures.txt](data/Temperatures.txt),[rawData](data/pavkovic2019_transcriptome_uuo_metadata.tsv
+), 
+    - [metadata](data/pavkovic2019_transcriptome_uuo_rawData.tsv)
+    - Accès local (pour usagers du cluster IFB-core):  `shared/projects/dubii2021/trainers/module3/data/pavkovic/1.datainit`
  
 <a name="session-2"></a>
 
