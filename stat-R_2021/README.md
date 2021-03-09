@@ -143,7 +143,7 @@ To follow this course, prior knowledge is expected on:
     - faire le practical sur les paquets (correction disponible)
     - ***facultatif***: faire le practical sur les contrôles de flux et fonctions (correction disponible) 
 
-<!--
+
 
 <a name="session-3"></a>
 
@@ -157,12 +157,20 @@ To follow this course, prior knowledge is expected on:
 
 1. Statistiques pour les omiques:
 
-    1.a. Problème de la dimensionalité
-    1.b. Estimation des paramètres
-    1.c. Tests multiples
+    1.a. Rappels de statistiques de base: flutuation d'échantillonage, théorie des tests
+    1.b. Problème de la dimensionalité: Estimation des paramètres et tests multiples
 
 2. RStudio & Rapport Rmarkdown
 
+#### Supports de cours
+
+- Slides: [Slides for part 1](slides/DUBii_R_Session3_2021.pdf) 
+- Practical:
+    - links: [shiny app to simualte distributions](<http://shiny.calpoly.sh/Sampling_Distribution/>) - [dabestr](>https://github.com/ACCLAB/dabestr>)
+    - live on **statistics** ([notebook ipynb](practicals/Rsession3_practical_statomics.ipynb)
+    - optional on **statistics** [[mean-comparison-test_random-numbers.html](practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.html)] [[mean-comparison-test_random-numbers.pdf](practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.pdf)]  [[mean-comparison-test_random-numbers.Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.Rmd)] |
+
+<!--
 
 <a name="session-4"></a>
 
