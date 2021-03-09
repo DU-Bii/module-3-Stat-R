@@ -111,21 +111,37 @@ To follow this course, prior knowledge is expected on:
 
 #### Supports de cours
 
-- Slides: [Slides for part 1 to 4](slides/DUBii_R_Session2_2021.pdf) - [Introduction au tidyverse](slides/2021-03-04-Intro-tidyverse.pdf)
-- Tutorial: [on functions](tutorials/Rsession2_tuto_functions.ipynb) - [on packages](tutorials/Rsession2_tuto_packages.ipynb) 
-- Practical: [optional on loops, conditions and functions](practicals/Rsession2_practical_loops_conditions_functions.ipynb) et [son corrigé](practicals/Rsession2_practical_loops_conditions_functions_correction.html) - [on figures](practicals/Rsession2_practicals_figures.ipynb) et [son corrigé](practicals/Rsession2_practicals_figures_correction.html)- [TD introduction au tidyverse au format html](practicals/2021-03-04-TD-Intro-tidyverse.html), [au format ipynb](practicals/TD-tidyverse-dplyr-tidyr-sujet.ipynb) et [son corrigé pour ggplot au format ipynb](practicals/TD-tidyverse-ggplot-correction.ipynb)
+- Slides: 
+
+    - [Slides for part 1 to 4](slides/DUBii_R_Session2_2021.pdf) 
+    - [Introduction au tidyverse](slides/2021-03-04-Intro-tidyverse.pdf)
+
+- Tutorial: 
+
+    - on **functions** [notebook ipynb](tutorials/Rsession2_tuto_functions.ipynb) 
+    - on **packages** [notebook ipynb](tutorials/Rsession2_tuto_packages.ipynb) 
+
+- Practical: 
+
+    - optional on **loops, conditions and functions** [notebook ipynb](practicals/Rsession2_practical_loops_conditions_functions.ipynb) et [son corrigé](practicals/Rsession2_practical_loops_conditions_functions_correction.html) 
+    - on **figures**[notebook ipynb]](practicals/Rsession2_practicals_figures.ipynb) et [son corrigé](practicals/Rsession2_practicals_figures_correction.html)
+    - TD **introduction au tidyverse** [format html](practicals/2021-03-04-TD-Intro-tidyverse.html), [au format ipynb](practicals/TD-tidyverse-dplyr-tidyr-sujet.ipynb) et [son corrigé pour ggplot au format ipynb](practicals/TD-tidyverse-ggplot-correction.ipynb)
 
 
-### Personnal work:
+### Travail personnel
+
 1. Après la Session 1
-- finir le tutorial des dataframes pour demain jeudi après-midi -> poser des questions sur slack si des points sont obscurs
-- faire le practical dans vos séances de travail personnel du vendredi des 2 1ères semaines -> les données serviront de Fil Rouge tout au long du module
-- faire le tutorial sur les factors pendant le temps de travail personnel
+
+    - finir le tutorial des dataframes pour demain jeudi après-midi -> poser des questions sur slack si des points sont obscurs
+    - faire le practical dans vos séances de travail personnel du vendredi des 2 1ères semaines -> les données serviront de Fil Rouge tout au long du module
+    - faire le tutorial sur les factors pendant le temps de travail personnel
+
 2. Après la Session 2
-- finir le practical sur tidyverse pour jeudi 11/03/2021 
-- fnir le practical sur les figures avec R base (correction disponible)
-- faire le practical sur les paquets (correction disponible)
-- ***facultatif***: faire le practical sur les contrôles de flux et fonctions (correction disponible) 
+
+    - finir le practical sur tidyverse pour jeudi 11/03/2021 
+    - fnir le practical sur les figures avec R base (correction disponible)
+    - faire le practical sur les paquets (correction disponible)
+    - ***facultatif***: faire le practical sur les contrôles de flux et fonctions (correction disponible) 
 
 <!--
 
