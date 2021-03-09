@@ -128,6 +128,33 @@ To follow this course, prior knowledge is expected on:
     - TD **introduction au tidyverse** ([format html](practicals/2021-03-04-TD-Intro-tidyverse.html), [format ipynb](practicals/TD-tidyverse-dplyr-tidyr-sujet.ipynb) et [son corrigé pour ggplot au format ipynb](practicals/TD-tidyverse-ggplot-correction.ipynb))
 
 
+<a name="session-3"></a>
+
+### Session 3. Statistiques pour les données à haut-débit / RStudio et rapport Rmarkdown
+
+- Date:  09/03/2021 de 14h30 à 17h30
+- Instructeurs : Claire Vandiedonck & Antoine Bridier-Nahmias  
+- Helpers : Anne Badel, Clémence Réda, Jacques van Helden, Olivier Sand
+
+#### Objectifs
+
+1. Statistiques pour les omiques:
+
+- Rappels de statistiques de base: flutuation d'échantillonage, théorie des tests
+- Problème de la dimensionalité: Estimation des paramètres et tests multiples
+
+2. RStudio & Rapport Rmarkdown
+
+#### Supports de cours
+
+- Slides: [Slides for part 1](slides/DUBii_R_Session3_2021.pdf) 
+- Practical:
+    - links: [shiny app to simualte distributions](<http://shiny.calpoly.sh/Sampling_Distribution/>) - [dabestr](<https://github.com/ACCLAB/dabestr>)
+    - live on **statistics** [notebook ipynb](practicals/Rsession3_practical_statomics.ipynb)
+    - optional on **statistics** [[mean-comparison-test_random-numbers.html](practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.html)] ou [mean-comparison-test_random-numbers.pdf](practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.pdf)] ou [[mean-comparison-test_random-numbers.Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.Rmd)]
+
+
+
 ### Travail personnel
 
 1. Après la Session 1
@@ -145,30 +172,6 @@ To follow this course, prior knowledge is expected on:
 
 
 
-<a name="session-3"></a>
-
-### Session 3. Statistiques pour les données à haut-débit / RStudio et rapport Rmarkdown
-
-- Date:  09/03/2021 de 14h30 à 17h30
-- Instructeurs : Claire Vandiedonck & Antoine Bridier-Nahmias  
-- Helpers : Anne Badel, Clémence Réda, Jacques van Helden, Olivier Sand
-
-#### Objectifs
-
-1. Statistiques pour les omiques:
-
-    1.a. Rappels de statistiques de base: flutuation d'échantillonage, théorie des tests
-    1.b. Problème de la dimensionalité: Estimation des paramètres et tests multiples
-
-2. RStudio & Rapport Rmarkdown
-
-#### Supports de cours
-
-- Slides: [Slides for part 1](slides/DUBii_R_Session3_2021.pdf) 
-- Practical:
-    - links: [shiny app to simualte distributions](<http://shiny.calpoly.sh/Sampling_Distribution/>) - [dabestr](>https://github.com/ACCLAB/dabestr>)
-    - live on **statistics** ([notebook ipynb](practicals/Rsession3_practical_statomics.ipynb)
-    - optional on **statistics** [[mean-comparison-test_random-numbers.html](practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.html)] [[mean-comparison-test_random-numbers.pdf](practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.pdf)]  [[mean-comparison-test_random-numbers.Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.Rmd)] |
 
 <!--
 
