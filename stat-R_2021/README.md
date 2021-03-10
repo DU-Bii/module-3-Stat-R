@@ -185,6 +185,25 @@ To follow this course, prior knowledge is expected on:
 
 ### Session 4. Régresion linéaire multivariée / Corrélation / Exploration des données multidimensionelles
 
+Date:  11/03/2021 de 9h00 à 12h00
+- Instructeurs : Magali Berland & Jacques van Helden
+- Helpers : Anne Badel, Clémence Réda, Claire Vandiedonck, Olivier Taboureau
+
+#### Objectifs
+
+1. 
+
+- 
+- 
+
+2. 
+
+#### Supports de cours
+
+- Slides: [Slides for part 1](slides/DUBii_R_Session4_2021.pdf) 
+- Practical:
+    - links: []()
+    - live on **???** []() et [son corrigé en html]() ou [en Rmd]()
 
 <a name="session-5"></a>
 
