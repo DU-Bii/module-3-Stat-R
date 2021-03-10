@@ -201,15 +201,15 @@ Date:  11/03/2021 de 9h00 à 12h00
 
 3. Exploration des données multidimensionelles
 
-    -
-    - 
+    - Comprendre le principe de base de l'analyse en composantes principales, ainsi que les objectifs de cette méthodes
+    - Réaliser une ACP avec R, obtenir des visualisations graphiques pour aider à l'interprétation (cercle des corrélations, biplot, contribution des variables)
 
 
 #### Supports de cours
 
-- Slides: [Slides for part 1](slides/DUBii_R_Session4_2021.pdf) 
+- Slides: [Slides for part 1](slides/DUBii_R_Session4_2021.pdf) [Cours sur l'ACP](slides/2021-03-11-ACP.html)
 - Practical:
-    - links: []()
+    - [TD sur l'ACP](practicals/2021-03-11-TD-ACP.html)
     - live on **???** []() et [son corrigé en html]() ou [en Rmd]()
 
 <a name="session-5"></a>
