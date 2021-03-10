@@ -8,7 +8,7 @@
 
 - [Session 3. Statistiques pour les données à haut-débit / RStudio et rapport Rmarkdown](#session-3)
 
-- Session 4. Régression linéaire multivariée / Corrélation / Exploration des données multidimensionelles
+- [Session 4. Régression linéaire multivariée / Corrélation / Exploration des données multidimensionelles](#session-4)
 
 - Session 5. Classification supervisée et apprentissage
 
@@ -173,17 +173,15 @@ To follow this course, prior knowledge is expected on:
 
 3. Après la Session 3
 
-    - revoir calmement le practical sur les statistiques
-    - revoir calmement l'exemple de notebook Rmd sur Rstudio: Antoine l'a un peu complété
+    - revoir à tête reposée le practical sur les statistiques
+    - revoir à tête reposée l'exemple de notebook Rmd sur Rstudio: Antoine l'a un peu complété
     - ***facultatif***: pour les plus avancés, voir un exemple de notebook .rmd  avec le notebook  optionnel sur les statistiques 
 
     L'activité atelier vous sera communiquée rapidement.
 
-<!--
-
 <a name="session-4"></a>
 
-### Session 4. Régresion linéaire multivariée / Corrélation / Exploration des données multidimensionelles
+### Session 4. Exploration des données multidimensionelles : corrélation et ACP
 
 Date:  11/03/2021 de 9h00 à 12h00
 - Instructeurs : Magali Berland & Jacques van Helden
@@ -193,12 +191,19 @@ Date:  11/03/2021 de 9h00 à 12h00
 
 1. Régression linéaire multivariée
 
-- 
-- 
+    - help
+    - me
 
 2. Corrélation
 
+    -
+    - 
+
 3. Exploration des données multidimensionelles
+
+    -
+    - 
+
 
 #### Supports de cours
 
@@ -208,6 +213,11 @@ Date:  11/03/2021 de 9h00 à 12h00
     - live on **???** []() et [son corrigé en html]() ou [en Rmd]()
 
 <a name="session-5"></a>
+
+<!--
+
+<a name="session-4"></a>
+
 
 ### Session 5. Classification supervisée et apprentissage
 
