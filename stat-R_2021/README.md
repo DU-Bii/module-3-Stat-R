@@ -152,6 +152,7 @@ To follow this course, prior knowledge is expected on:
     - links: [shiny app to simulate distributions](<http://shiny.calpoly.sh/Sampling_Distribution/>) - [dabestr](<https://github.com/ACCLAB/dabestr>)
     - live on **statistics** [notebook ipynb](practicals/Rsession3_practical_statomics.ipynb) et [son corrigé en html](practicals/Rsession3_practical_statomics_correction.html) ou [en ipynb](practicals/Rsession3_practical_statomics_correction.ipynb)
     - optional on **statistics** [[mean-comparison-test_random-numbers.html](practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.html)] ou [mean-comparison-test_random-numbers.pdf](practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.pdf)] ou [[mean-comparison-test_random-numbers.Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/mean-comparison-test_random-numbers/mean-comparison-test_random-numbers.Rmd)]
+    - live on **Rmd** [R markdown demo au format .Rmd](practicals/Rsession3_Rnotebook_demo.rmd) et le [rapport généré au format html](practicals/Rsession3_Rnotebook_demo.html)
 
 
 
@@ -170,8 +171,13 @@ To follow this course, prior knowledge is expected on:
     - faire le practical sur les paquets (correction disponible)
     - ***facultatif***: faire le practical sur les contrôles de flux et fonctions (correction disponible) 
 
+3. Après la Session 3
 
+    - revoir calmement le practical sur les statistiques
+    - revoir calmement l'exemple de notebook Rmd sur Rstudio: Antoine l'a un peu complété
+    - ***facultatif***: pour les plus avancés, voir un exemple de notebook .rmd  avec le notebook  optionnel sur les statistiques 
 
+    L'activité atelier vous sera communiquée rapidement.
 
 <!--
 
