@@ -209,7 +209,7 @@ Date:  11/03/2021 de 9h00 à 12h00
 
 - Slides: [Slides for part 1](slides/DUBii_R_Session4_2021.pdf) | [Cours sur l'ACP](slides/2021-03-11-ACP.html) visualisable [ici](https://htmlpreview.github.io/?https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2021/slides/2021-03-11-ACP.html)
 - Practical:
-    - [TD sur l'ACP](practicals/2021-03-11-TD-ACP.html) visualisable [ici](https://htmlpreview.github.io/?https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2021/practicals/2021-03-11-TD-ACP.html)
+    - [TD sur l'ACP](practicals/2021-03-11-TD-ACP.html) visualisable [ici](https://htmlpreview.github.io/?https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2021/practicals/2021-03-11-TD-ACP.html) a réaliser sur ces données : data/metadata.RDS et data/microbiota.abundance.log.RDS
     - live on **???** []() et [son corrigé en html]() ou [en Rmd]()
 
 <a name="session-5"></a>
