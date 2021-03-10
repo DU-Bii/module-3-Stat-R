@@ -8,7 +8,7 @@
 
 - [Session 3. Statistiques pour les données à haut-débit / RStudio et rapport Rmarkdown](#session-3)
 
-- Session 4. Régresion linéaire multivariée / Corrélation / Exploration des données multidimensionelles
+- Session 4. Régression linéaire multivariée / Corrélation / Exploration des données multidimensionelles
 
 - Session 5. Classification supervisée et apprentissage
 
@@ -191,12 +191,14 @@ Date:  11/03/2021 de 9h00 à 12h00
 
 #### Objectifs
 
-1. 
+1. Régression linéaire multivariée
 
 - 
 - 
 
-2. 
+2. Corrélation
+
+3. Exploration des données multidimensionelles
 
 #### Supports de cours
 
