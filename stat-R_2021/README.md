@@ -159,7 +159,7 @@ To follow this course, prior knowledge is expected on:
 
 <a name="session-4"></a>
 
-### Session 4. Exploration des données multidimensionelles : corrélation et ACP
+### Session 4. Analyse en composantes principales et exploration des données multi-omiques 
 
 - Date:  11/03/2021 de 9h00 à 12h00
 
