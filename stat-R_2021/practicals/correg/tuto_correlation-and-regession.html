@@ -278,8 +278,8 @@ div.tocify {
 <p>As study case for this tutorial, we will use multi-omics data from a study published by <a href="https://doi.org/10.1038/s41597-019-0095-5">Pavkovic et al. (2019)</a>, which combines transctiptomics (RNA-seq) and proteomics approaches to understand the molecular mechanisms underlying the kidney fibrosis pathology.</p>
 <p>The authors applied two commonly used treatments to induce kidney fibrosis in mouse:</p>
 <ul>
-<li><p>a reversible chemical-induced injury model, denoted as <strong>FA</strong> for folic acid induced nephropathy;</p></li>
-<li><p>an irreversible surgically-induced fibrosis model, denoted as <strong>UUO</strong> for unilateral ureteral obstruction.</p></li>
+<li><p>a reversible chemical-induced injury model, denoted as <strong>FA</strong> for <strong>folic acid</strong> induced nephropathy;</p></li>
+<li><p>an irreversible surgically-induced fibrosis model, denoted as <strong>UUO</strong> for <strong>unilateral uretral obstruction</strong>.</p></li>
 </ul>
 </div>
 <div id="references-and-data-sources" class="section level2">
@@ -302,6 +302,28 @@ div.tocify {
 <li>storing the results in a memory image.</li>
 </ul>
 </div>
+<div id="data-file-naming" class="section level2">
+<h2>Data file naming</h2>
+<p>We prepared the data from Pavkovic as a text file with tab-separated values (<strong>tsv</strong> files).</p>
+<p>All the files are available on github: - <a href="https://github.com/DU-Bii/module-3-Stat-R/tree/master/stat-R_2021/data/pavkovic_2019" class="uri">https://github.com/DU-Bii/module-3-Stat-R/tree/master/stat-R_2021/data/pavkovic_2019</a></p>
+<p>The files are named according to the following convention:</p>
+<ul>
+<li><p>the prefix indicate the data type</p>
+<ul>
+<li><strong>fa</strong>: folic acid induced nephropathy (reversible), transcriptome data</li>
+<li><strong>pfa</strong>: folic acid induced nephropathy, proteome data</li>
+<li><strong>uuo</strong>: unilateral uretral obstruction (irreversible), transcriptome data</li>
+<li><strong>puuo</strong>: unilateral uretral obstruction, proteome data</li>
+</ul></li>
+<li><p>The suffix indicates the data normalisation</p>
+<ul>
+<li><strong>raw</strong>: transcriptome counts provided by the authors (note: not integer, because their raw data was already somehow normalized)</li>
+<li><strong>normalized¨</strong>: transcriptome counts standardized to achieve the same third quartile for each sample</li>
+<li><strong>log2</strong>: log2 transformation for proteome data</li>
+</ul></li>
+<li><p>the <strong>metadata</strong> files contain a short description of each sample (one row per sample). Note that the last column contains a sample-specific color specification in <a href="https://en.wikipedia.org/wiki/Web_colors#Hex_triplet">hexadecimal web color code</a> to facilitate the drawings. Don’t hesitate to chose <a href="https://htmlcolorcodes.com/">other colors</a> according to your personal taste.</p></li>
+</ul>
+</div>
 <div id="approach-for-this-tutorial" class="section level2">
 <h2>Approach for this tutorial</h2>
 <p>This tutorial will consist of exercises that can be realised in a stepwise way, with alternance of working sessions and live demos of the solutions, in order to make sure that all the trainees acquire each step.</p>
@@ -311,6 +333,7 @@ div.tocify {
 <p>Before computing any descriptive parameter on a dataset, I generallyi attempt to get a picture of the whole distribution.</p>
 <div id="exercise-data-loading" class="section level3">
 <h3>Exercise : data loading</h3>
+<p>The data tables (tab-separated value files) are available on the github repository, in the following folder.</p>
 </div>
 <div id="histogram" class="section level3">
 <h3>Histogram</h3>
