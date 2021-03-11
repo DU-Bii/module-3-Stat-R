@@ -215,6 +215,9 @@ if (!require("data.table")) {
 library(data.table)
 
 pfa <- fread(url, header = TRUE, sep = "\t")
+dim(pfa)
+names(pfa)
+kable(head(pfa))
 
 ```
 
@@ -247,9 +250,21 @@ if (!file.exists(localFile)) {
 
 ### Loading the local copy of your data file
 
+
+We will now load the proteome file, with the following parameters
+
+- the first row contains the column headers
+- the first columnt contains the protein IDs, and we would like to have them as row.names for the loaded data frame. This is a bit tricky because some protein names are diplicated. We use the **very** convenient function `make.names(x, unique = TRUE)`.
+
+
 ```{r load_local_file}
 ## Load the data from the local file
 pfa <- read.delim(file = localFile, header = TRUE, sep = "\t")
+
+## Convert the first colum to row names
+row.names(pfa) <- make.names(as.vector(pfa$id), unique = TRUE)
+pfa <- pfa[, -1]
+View(head(pfa))
 
 ```
 
@@ -284,7 +299,7 @@ downloadOnlyOnce <- function(urlBase,
 
   ## Define the source URL  
   url <- file.path(urlBase, fileName)
-  message("Source URL: ",  url)
+  message("Source URL\n\t",  url)
 
   ## Define the local file
   localFile <- file.path(localFolder, fileName)
@@ -294,7 +309,7 @@ downloadOnlyOnce <- function(urlBase,
   
   ## Download the file ONLY if it is not already there
   if (!file.exists(localFile)) {
-    message("Downloading file from github to local file\n\t", 
+    message("Downloading file from source URL to local file\n\t", 
             localFile)
     download.file(url = url, destfile = localFile)
   } else {
@@ -337,6 +352,13 @@ protMetadataFile <- downloadOnlyOnce(
   localFolder =  pavkovicFolder
 )
 
+## Metadata
+transMetadataFile <- downloadOnlyOnce(
+  urlBase = pavkovicBase, 
+  fileName = "transcriptome_metadata.tsv",
+  localFolder =  pavkovicFolder
+)
+
 
 ```
 
@@ -360,6 +382,14 @@ dim(pfa)
 ## Check the first lines of the loaded file
 kable(head(pfa))
 
+## Load proteome metadata
+protMeta <- read.delim(file = protMetadataFile, sep = "\t", header = TRUE)
+kable(protMeta, caption = "Metadata for the proteome dataset")
+
+
+## Load transcriptome metadata
+transMeta <- read.delim(file = transMetadataFile, sep = "\t", header = TRUE)
+kable(transMeta, caption = "Metadata for the transcriptome dataset")
 
 ```
 
@@ -372,10 +402,16 @@ We can now use this function to download and load the different data files.
 
 ### Histogram
 
-Draw an histogram of the **puuo** data, all samples together. 
+Draw histograms of the transcriptome and proteom data, all samples together. 
 
-```{r puuo_hist_all-samples}
+```{r fa_hist_ugly}
+hist(unlist(as.vector(pfa)))
 
+head(pfa)
+```
+
+```{r fa_hist_nice}
+hist(pfa)
 ```
 
 
