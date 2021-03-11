@@ -398,13 +398,19 @@ We can now load the data that from our local folder.
 
 ## Load transcriptome data
 fa <- read.delim(file = localFAfile, sep = "\t", header = TRUE)
+
+## Check the first lines of the loaded file
+dim(fa)
+kable(head(fa), caption = "Loaded with read.delim()")
+
+## Load same data with myEasyLoad
 fa <- myEasyLoad(file = localFAfile, rownames.col = 1)
 dim(fa)
-## Check the first lines of the loaded file
-View(head(fa))
+kable(head(fa), caption = "Loaded with myEasyLad()")
+hist(unlist(fa), breaks = 100)
 
 ## Load proteome data
-pfa <- read.delim(file = localPFAfile, sep = "\t", header = TRUE)
+pfa <- myEasyLoad(file = localPFAfile, rownames.col = 1)
 dim(pfa)
 
 ## Check the first lines of the loaded file
@@ -413,7 +419,6 @@ kable(head(pfa))
 ## Load proteome metadata
 protMeta <- read.delim(file = protMetadataFile, sep = "\t", header = TRUE)
 kable(protMeta, caption = "Metadata for the proteome dataset")
-
 
 ## Load transcriptome metadata
 transMeta <- read.delim(file = transMetadataFile, sep = "\t", header = TRUE)
@@ -433,15 +438,20 @@ We can now use this function to download and load the different data files.
 Draw histograms of the transcriptome and proteom data, all samples together. 
 
 ```{r fa_hist_ugly}
-hist(unlist(as.vector(pfa)))
-
-head(pfa)
+pfaValues <- unlist(as.vector(pfa))
+hist(pfaValues)
 ```
 
-```{r fa_hist_nice}
-hist(pfa)
+Let us now improve the histogram in order to get an intuition of our data. 
+
+```{r fa_hist_breaks}
+hist(pfaValues, breaks = 200)
 ```
 
+
+```{r fa_hist_log2}
+hist(log2(pfaValues), breaks = 100)
+```
 
 
 ### Box plot
