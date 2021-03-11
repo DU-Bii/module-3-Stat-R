@@ -441,20 +441,44 @@ div.tocify {
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Choose a specific data file</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>dataPrefix <span class="ot">&lt;-</span> <span class="st">&quot;pfa&quot;</span> <span class="do">## proteome data of folic-acid treated mouse</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>dataSuffix <span class="ot">&lt;-</span> <span class="st">&quot;raw&quot;</span> <span class="do">## no prior normalisation</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>dataFile <span class="ot">&lt;-</span> <span class="fu">paste0</span>(dataPrefix, <span class="st">&quot;_&quot;</span>, dataSuffix, <span class="st">&quot;_counts.tsv.gz&quot;</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>dataSuffix <span class="ot">&lt;-</span> <span class="st">&quot;model&quot;</span> <span class="do">## no normalization</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>fileName <span class="ot">&lt;-</span> <span class="fu">paste0</span>(dataPrefix, <span class="st">&quot;_&quot;</span>, dataSuffix, <span class="st">&quot;_counts.tsv.gz&quot;</span>)</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="do">## Compose the URL to download the file from github</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="fu">file.path</span>(urlBase, dataFile)</span></code></pre></div>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="fu">file.path</span>(urlBase, fileName)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span>(<span class="st">&quot;URL: &quot;</span>,  url)</span></code></pre></div>
 </div>
 <div id="loading-a-data-file-directly-from-github" class="section level3">
 <h3>Loading a data file directly from github</h3>
+<p>Now we defined the URL, we can easily load the file directly from github to a data frame in our R environement.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="do">### THIS DOES NOT WORK </span><span class="al">###</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>pfa <span class="ot">&lt;-</span> <span class="fu">read.delim</span>(<span class="at">file =</span> url, <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>)</span></code></pre></div>
 </div>
 <div id="downloading-a-data-file-and-storing-it-locally-once-forever" class="section level3">
 <h3>Downloading a data file and storing it locally once forever</h3>
+<p>We can now download the data file to a local folder, but we would like to do this only once.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Specify the path relative to your home directory (~)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>localFolder <span class="ot">&lt;-</span> <span class="st">&quot;~/DUBii-m3_data/pavkovic_2019&quot;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>localFile <span class="ot">&lt;-</span> <span class="fu">file.path</span>(localFolder, fileName)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Create the local data folder if it does not exist</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(localFolder, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="do">## Download the file ONLY if it is not already there</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(localFile)) {</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">&quot;Downloading file from github to local file</span><span class="sc">\n\t</span><span class="st">&quot;</span>, </span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>          localFile)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">download.file</span>(<span class="at">url =</span> url, <span class="at">destfile =</span> localFile)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">&quot;Local file already exists, no need to download</span><span class="sc">\n\t</span><span class="st">&quot;</span>, </span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>          localFile)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 </div>
 <div id="loading-the-local-copy-of-your-data-file" class="section level3">
 <h3>Loading the local copy of your data file</h3>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Load the data from the local file</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>pfa <span class="ot">&lt;-</span> <span class="fu">read.delim</span>(<span class="at">file =</span> localFile, <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>)</span></code></pre></div>
 </div>
 <div id="exercise-writing-a-function-to-download-and-load-a-data-file" class="section level3">
 <h3>Exercise: writing a function to download and load a data file</h3>
@@ -479,7 +503,7 @@ div.tocify {
 <div id="save-your-session-info" class="section level2">
 <h2>Save your session info</h2>
 <p>As usual</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
 <pre><code>R version 4.0.2 (2020-06-22)
 Platform: x86_64-apple-darwin17.0 (64-bit)
 Running under: macOS Mojave 10.14.6

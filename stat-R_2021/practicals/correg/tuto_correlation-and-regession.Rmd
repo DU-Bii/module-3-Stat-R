@@ -208,7 +208,7 @@ message("URL: ",  url)
 
 Now we defined the URL, we can easily load the file directly from github to a data frame in our R environement. 
 
-```{r load_from_github eval=FALSE}
+```{r load_from_github, eval=FALSE}
 ### THIS DOES NOT WORK ###
 pfa <- read.delim(file = url, header = TRUE, sep = "\t")
 
