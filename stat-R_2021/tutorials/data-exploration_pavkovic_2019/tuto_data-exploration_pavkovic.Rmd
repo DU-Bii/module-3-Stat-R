@@ -1,5 +1,5 @@
 ---
-title: "Tutorial : correlation and regression"
+title: "Tutorial: exploration of multi-omics data"
 author: "Jacques van Helden"
 date: '`r Sys.Date()`'
 output:
