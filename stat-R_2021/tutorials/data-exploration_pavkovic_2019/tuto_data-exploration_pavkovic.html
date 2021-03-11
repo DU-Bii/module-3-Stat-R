@@ -525,6 +525,331 @@ div.tocify {
 <span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(localFile)</span>
 <span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>We can now use our new function <code>downloadOnlyOnce()</code> to download the folic acid dataset and store it in a local folder.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Specify the basic parameters</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>pavkovicBase <span class="ot">&lt;-</span> <span class="st">&quot;https://github.com/DU-Bii/module-3-Stat-R/raw/master/stat-R_2021/data/pavkovic_2019&quot;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>pavkovicFolder <span class="ot">&lt;-</span> <span class="st">&quot;~/DUBii-m3_data/pavkovic_2019&quot;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="do">#### Dowload folic acid data and metadata ####</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Transcriptome file</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>localFAfile <span class="ot">&lt;-</span> <span class="fu">downloadOnlyOnce</span>(</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">urlBase =</span> pavkovicBase, </span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">fileName =</span> <span class="st">&quot;fa_raw_counts.tsv.gz&quot;</span>,</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">localFolder =</span>  pavkovicFolder</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="do">## Proteome file</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>localPFAfile <span class="ot">&lt;-</span> <span class="fu">downloadOnlyOnce</span>(</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">urlBase =</span> pavkovicBase, </span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">fileName =</span> <span class="st">&quot;pfa_model_counts.tsv.gz&quot;</span>,</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">localFolder =</span>  pavkovicFolder</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="do">## Metadata</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>protMetadataFile <span class="ot">&lt;-</span> <span class="fu">downloadOnlyOnce</span>(</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">urlBase =</span> pavkovicBase, </span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">fileName =</span> <span class="st">&quot;proteome_metadata.tsv&quot;</span>,</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">localFolder =</span>  pavkovicFolder</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p>After having run the chunk of code above, try to re-run it. In principle, you should just receive messages telling you that the files are already there.</p>
+<p>We can now load the data that from our local folder.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Load transcriptome data</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>fa <span class="ot">&lt;-</span> <span class="fu">read.delim</span>(<span class="at">file =</span> localFAfile, <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(fa)</span></code></pre></div>
+<pre><code>[1] 46679    19</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Check the first lines of the loaded file</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(fa))</span></code></pre></div>
+<table style="width:100%;">
+<colgroup>
+<col width="8%" />
+<col width="4%" />
+<col width="5%" />
+<col width="5%" />
+<col width="4%" />
+<col width="4%" />
+<col width="5%" />
+<col width="5%" />
+<col width="4%" />
+<col width="4%" />
+<col width="5%" />
+<col width="5%" />
+<col width="5%" />
+<col width="5%" />
+<col width="5%" />
+<col width="5%" />
+<col width="5%" />
+<col width="4%" />
+<col width="4%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">rowname</th>
+<th align="right">day1_1</th>
+<th align="right">day1_2</th>
+<th align="right">day1_3</th>
+<th align="right">day14_1</th>
+<th align="right">day14_2</th>
+<th align="right">day14_3</th>
+<th align="right">day2_1</th>
+<th align="right">day2_2</th>
+<th align="right">day2_3</th>
+<th align="right">day3_1</th>
+<th align="right">day3_2</th>
+<th align="right">day3_3</th>
+<th align="right">day7_1</th>
+<th align="right">day7_2</th>
+<th align="right">day7_3</th>
+<th align="right">normal_1</th>
+<th align="right">normal_2</th>
+<th align="right">normal_3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">ENSMUSG00000000001</td>
+<td align="right">2278.80022</td>
+<td align="right">1786.498848</td>
+<td align="right">2368.618959</td>
+<td align="right">627.758017</td>
+<td align="right">559.156031</td>
+<td align="right">611.4338605</td>
+<td align="right">2145.223456</td>
+<td align="right">262.454849</td>
+<td align="right">745.843632</td>
+<td align="right">987.1850529</td>
+<td align="right">1077.645231</td>
+<td align="right">1335.116771</td>
+<td align="right">1096.075988</td>
+<td align="right">1035.8458456</td>
+<td align="right">1090.0375905</td>
+<td align="right">483.2298191</td>
+<td align="right">1842.14841</td>
+<td align="right">475.696800</td>
+</tr>
+<tr class="even">
+<td align="left">ENSMUSG00000000003</td>
+<td align="right">0.00000</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.00000</td>
+<td align="right">0.000000</td>
+</tr>
+<tr class="odd">
+<td align="left">ENSMUSG00000000028</td>
+<td align="right">36.27547</td>
+<td align="right">22.147861</td>
+<td align="right">39.484949</td>
+<td align="right">14.470759</td>
+<td align="right">10.167813</td>
+<td align="right">31.6910193</td>
+<td align="right">300.558779</td>
+<td align="right">4.771672</td>
+<td align="right">123.896184</td>
+<td align="right">51.8555945</td>
+<td align="right">8.434511</td>
+<td align="right">69.936866</td>
+<td align="right">6.665195</td>
+<td align="right">6.9552273</td>
+<td align="right">42.5783251</td>
+<td align="right">7.3515305</td>
+<td align="right">11.19676</td>
+<td align="right">1.034465</td>
+</tr>
+<tr class="even">
+<td align="left">ENSMUSG00000000031</td>
+<td align="right">13.18853</td>
+<td align="right">7.151932</td>
+<td align="right">1.115304</td>
+<td align="right">0.867429</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">1.711944</td>
+<td align="right">0.000000</td>
+<td align="right">5.260747</td>
+<td align="right">0.8022308</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.8489214</td>
+<td align="right">1.7106814</td>
+<td align="right">0.8603067</td>
+<td align="right">0.00000</td>
+<td align="right">0.000000</td>
+</tr>
+<tr class="odd">
+<td align="left">ENSMUSG00000000037</td>
+<td align="right">0.00000</td>
+<td align="right">27.903213</td>
+<td align="right">6.897842</td>
+<td align="right">5.692254</td>
+<td align="right">1.901719</td>
+<td align="right">0.6549762</td>
+<td align="right">57.382077</td>
+<td align="right">0.000000</td>
+<td align="right">38.898261</td>
+<td align="right">8.9308534</td>
+<td align="right">6.966606</td>
+<td align="right">0.000000</td>
+<td align="right">7.939323</td>
+<td align="right">101.6481244</td>
+<td align="right">0.6500858</td>
+<td align="right">32.0575944</td>
+<td align="right">10.42322</td>
+<td align="right">0.000000</td>
+</tr>
+<tr class="even">
+<td align="left">ENSMUSG00000000049</td>
+<td align="right">30.86001</td>
+<td align="right">4.861367</td>
+<td align="right">51.466810</td>
+<td align="right">26.152649</td>
+<td align="right">1.968290</td>
+<td align="right">55.8319868</td>
+<td align="right">10.796186</td>
+<td align="right">2.747397</td>
+<td align="right">1.805883</td>
+<td align="right">0.9468345</td>
+<td align="right">26.954566</td>
+<td align="right">7.666032</td>
+<td align="right">32.235700</td>
+<td align="right">6.7001171</td>
+<td align="right">33.9132330</td>
+<td align="right">27.7647071</td>
+<td align="right">38.42445</td>
+<td align="right">15.903837</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Load proteome data</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>pfa <span class="ot">&lt;-</span> <span class="fu">read.delim</span>(<span class="at">file =</span> localPFAfile, <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(pfa)</span></code></pre></div>
+<pre><code>[1] 8044   11</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Check the first lines of the loaded file</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(pfa))</span></code></pre></div>
+<table>
+<colgroup>
+<col width="16%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="7%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">id</th>
+<th align="right">normal_1</th>
+<th align="right">normal_2</th>
+<th align="right">day1_1</th>
+<th align="right">day1_2</th>
+<th align="right">day2_1</th>
+<th align="right">day2_2</th>
+<th align="right">day7_1</th>
+<th align="right">day7_2</th>
+<th align="right">day14_1</th>
+<th align="right">day14_2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">ENSMUSG00000037686</td>
+<td align="right">531.2680</td>
+<td align="right">651.7200</td>
+<td align="right">335.5910</td>
+<td align="right">334.8460</td>
+<td align="right">197.1740</td>
+<td align="right">307.194</td>
+<td align="right">123.2060</td>
+<td align="right">272.6190</td>
+<td align="right">93.7247</td>
+<td align="right">196.1590</td>
+</tr>
+<tr class="even">
+<td align="left">ENSMUSG00000027831</td>
+<td align="right">221.6020</td>
+<td align="right">266.3590</td>
+<td align="right">175.4090</td>
+<td align="right">159.4190</td>
+<td align="right">234.8080</td>
+<td align="right">256.927</td>
+<td align="right">149.9380</td>
+<td align="right">315.0590</td>
+<td align="right">110.5880</td>
+<td align="right">126.3600</td>
+</tr>
+<tr class="odd">
+<td align="left">ENSMUSG00000039201</td>
+<td align="right">26.0723</td>
+<td align="right">29.1331</td>
+<td align="right">57.7329</td>
+<td align="right">45.8475</td>
+<td align="right">81.6009</td>
+<td align="right">88.870</td>
+<td align="right">29.8560</td>
+<td align="right">44.5586</td>
+<td align="right">13.6292</td>
+<td align="right">27.6568</td>
+</tr>
+<tr class="even">
+<td align="left">ENSMUSG00000031095</td>
+<td align="right">4363.0500</td>
+<td align="right">4784.0800</td>
+<td align="right">4064.4800</td>
+<td align="right">3917.2900</td>
+<td align="right">4599.0300</td>
+<td align="right">5957.030</td>
+<td align="right">2806.5200</td>
+<td align="right">6792.0900</td>
+<td align="right">2022.5100</td>
+<td align="right">3226.7500</td>
+</tr>
+<tr class="odd">
+<td align="left">ENSMUSG00000034931</td>
+<td align="right">879.2790</td>
+<td align="right">1065.3900</td>
+<td align="right">914.2870</td>
+<td align="right">928.2760</td>
+<td align="right">1000.1000</td>
+<td align="right">1264.270</td>
+<td align="right">738.3520</td>
+<td align="right">1362.0700</td>
+<td align="right">466.4440</td>
+<td align="right">714.5870</td>
+</tr>
+<tr class="even">
+<td align="left">ENSMUSG00000038208</td>
+<td align="right">68.2225</td>
+<td align="right">89.8871</td>
+<td align="right">57.9041</td>
+<td align="right">76.3510</td>
+<td align="right">84.8474</td>
+<td align="right">105.245</td>
+<td align="right">72.8696</td>
+<td align="right">138.9810</td>
+<td align="right">40.8101</td>
+<td align="right">59.2117</td>
+</tr>
+</tbody>
+</table>
 <p>We can now use this function to download and load the different data files.</p>
 </div>
 </div>
@@ -541,10 +866,14 @@ div.tocify {
 <h3>Scatter plot</h3>
 </div>
 </div>
+<div id="save-a-memory-image-of-your-session" class="section level2">
+<h2>Save a memory image of your session</h2>
+<p>Use the finction save() to store an image of your sessionn, in an Rdata file? Tthis file will contain all the data that you loaded during this session, and enable you to reload everything without having to re-execute all the steps.</p>
+</div>
 <div id="save-your-session-info" class="section level2">
 <h2>Save your session info</h2>
 <p>As usual</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
 <pre><code>R version 4.0.2 (2020-06-22)
 Platform: x86_64-apple-darwin17.0 (64-bit)
 Running under: macOS Mojave 10.14.6
@@ -563,7 +892,7 @@ other attached packages:
 [1] knitr_1.30
 
 loaded via a namespace (and not attached):
- [1] compiler_4.0.2  magrittr_1.5    tools_4.0.2     htmltools_0.5.0 yaml_2.2.1      stringi_1.5.3   rmarkdown_2.5   stringr_1.4.0   xfun_0.19       digest_0.6.27   rlang_0.4.8     evaluate_0.14  </code></pre>
+ [1] compiler_4.0.2  magrittr_1.5    tools_4.0.2     htmltools_0.5.0 yaml_2.2.1      stringi_1.5.3   rmarkdown_2.5   highr_0.8       stringr_1.4.0   xfun_0.19       digest_0.6.27   rlang_0.4.8     evaluate_0.14  </code></pre>
 </div>
 
 
