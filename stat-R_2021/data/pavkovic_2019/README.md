@@ -1,11 +1,13 @@
 ## Data file naming
 
-We prepared the data from Pavkovic as a text file with tab-separated values (**tsv** files). 
+This folder contains data and metadata files from the following study. 
 
-All the files are available on github:
-- <https://github.com/DU-Bii/module-3-Stat-R/tree/master/stat-R_2021/data/pavkovic_2019>
+- Pavkovic, M., Pantano, L., Gerlach, C.V. et al. Multi omics analysis of fibrotic kidneys in two mouse models. Sci Data 6, 92 (2019) <https://doi.org/10.1038/s41597-019-0095-5>
 
-The files are named according to the following convention:
+The original data was downloaded from Zenodo (<https://zenodo.org/record/2592516>).
+
+
+The files are formated as tab-separated values (tsv) and named according to the following convention:
 
 - the prefix indicate the data type
 
