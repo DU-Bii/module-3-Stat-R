@@ -3,11 +3,15 @@ title: "Tutorial: exploration of multi-omics data"
 author: "Jacques van Helden"
 date: '`r Sys.Date()`'
 output:
-  pdf_document:
+  html_document:
+    self_contained: no
     fig_caption: yes
     highlight: zenburn
+    theme: cerulean
     toc: yes
     toc_depth: 3
+    toc_float: yes
+    code_folding: "hide"
   ioslides_presentation:
     slide_level: 2
     self_contained: no
@@ -51,15 +55,11 @@ output:
     transition: none
     self_contained: true
     css: ../slides.css
-  html_document:
-    self_contained: no
+  pdf_document:
     fig_caption: yes
     highlight: zenburn
-    theme: cerulean
     toc: yes
     toc_depth: 3
-    toc_float: yes
-    code_folding: "hide"
   powerpoint_presentation:
     slide_level: 2
     fig_caption: yes
