@@ -171,7 +171,7 @@ To follow this course, prior knowledge is expected on:
 1. Exploration de données multi-omiques
 
     - Maîtriser les téléchargements et chargements de fichiers de données et métadonnées
-    - Charger des fichiers de donn
+    - Charger des fichiers de données
     - Rappel des concepts de base de corrélation entre deux variables
     - Extension à la corrélation entre $n$ variables
     - Applications à des jeux de données de multi-omiques
@@ -193,17 +193,14 @@ To follow this course, prior knowledge is expected on:
 #### Supports de cours
 
 
-- Slides: [Slides for part 1](slides/DUBii_R_Session4_2021.pdf) | [Cours sur l'ACP](slides/2021-03-11-ACP.html) visualisable [ici](https://htmlpreview.github.io/?https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2021/slides/2021-03-11-ACP.html)
+- Slides: [Cours sur l'ACP](slides/2021-03-11-ACP.html) visualisable [ici](https://htmlpreview.github.io/?https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2021/slides/2021-03-11-ACP.html)
 
 - Practicals:
 
     - [**TD sur l'ACP**](practicals/2021-03-11-TD-ACP.html) visualisable [ici](https://htmlpreview.github.io/?https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2021/practicals/2021-03-11-TD-ACP.html) a réaliser sur ces données : [metadata](data/metadata.RDS) et [microbiota.abundance.log](data/microbiota.abundance.log.RDS)
 
     - **Tutoriel: exploration des données multi-omiques** [[html](tutorials/data-exploration_pavkovic_2019/tuto_data-exploration_pavkovic.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2021/tutorials/data-exploration_pavkovic_2019/tuto_data-exploration_pavkovic.Rmd)]
-    
-<!--
-- live on **???** []() et [son corrigé en html]() ou [en Rmd]()
--->
+
 
 <a name="session-5"></a>
 
