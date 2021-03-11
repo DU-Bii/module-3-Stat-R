@@ -8,7 +8,7 @@
 
 - [Session 3. Statistiques pour les données à haut-débit / RStudio et rapport Rmarkdown](#session-3)
 
-- [Session 4. Régression linéaire multivariée / Corrélation / Exploration des données multidimensionelles](#session-4)
+- [Session 4. Analyse en composantes principales / Exploration des données multidimensionelles](#session-4)
 
 - Session 5. Classification supervisée et apprentissage
 
@@ -168,7 +168,7 @@ To follow this course, prior knowledge is expected on:
 
 #### Objectifs
 
-1. Analyse en composants principales (**ACP**)
+1. Analyse en composantes principales (**ACP**)
 
     - Comprendre le principe de base de l'analyse en composantes principales, ainsi que les objectifs de cette méthode.
   
