@@ -114,8 +114,7 @@ for (lib in requiredLib) {
 
 ## Goals of this tutorial
 
-This tutorial provides a quick reminder of the basic concepts of correlation and regression analysis, illustrated by an empirical study of a multi-omics dataset. 
-
+This tutorial aims at using the methods taught in the previous courses in order to apply them to an illustrative dataset combining proteome and transcriptome data. 
 
 ## Study case : mouse kidney 
 
