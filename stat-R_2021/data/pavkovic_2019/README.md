@@ -1,4 +1,5 @@
-## Data file naming
+
+## Data source
 
 This folder contains data and metadata files from the following study. 
 
@@ -6,6 +7,7 @@ This folder contains data and metadata files from the following study.
 
 The original data was downloaded from Zenodo (<https://zenodo.org/record/2592516>).
 
+## Data file naming
 
 The files are formated as tab-separated values (tsv) and named according to the following convention:
 
