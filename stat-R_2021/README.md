@@ -168,8 +168,13 @@ To follow this course, prior knowledge is expected on:
 
 #### Objectifs
 
+1. Analyse en composants principales (**ACP**)
 
-1. Exploration de données multi-omiques
+    - Comprendre le principe de base de l'analyse en composantes principales, ainsi que les objectifs de cette méthode.
+  
+    - Réaliser une ACP avec R, obtenir des visualisations graphiques pour aider à l'interprétation (cercle des corrélations, biplot, contribution des variables et des individus). 
+
+2. Exploration de données multi-omiques
 
     - Maîtriser les téléchargements et chargements de fichiers de données et métadonnées
     - Charger des fichiers de données
@@ -184,11 +189,6 @@ To follow this course, prior knowledge is expected on:
     - Application à des jeux de données multi-omiques
 -->
 
-2. Analyse en composants principales (ACP)
-
-    - Comprendre le principe de base de l'analyse en composantes principales (**ACP**), ainsi que les objectifs de cette méthodes.
-    
-    - Réaliser une ACP avec R, obtenir des visualisations graphiques pour aider à l'interprétation (cercle des corrélations, biplot, contribution des variables). 
 
 
 #### Supports de cours
@@ -199,6 +199,7 @@ To follow this course, prior knowledge is expected on:
 - Practicals:
 
     - [**TD sur l'ACP**](practicals/2021-03-11-TD-ACP.html) visualisable [ici](https://htmlpreview.github.io/?https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2021/practicals/2021-03-11-TD-ACP.html) a réaliser sur ces données : [metadata](data/metadata.RDS) et [microbiota.abundance.log](data/microbiota.abundance.log.RDS)
+    - La correction du TD sur l'ACP sera fournie **jeudi 18 mars**
 
     - **Tutoriel: exploration des données multi-omiques** [[html](tutorials/data-exploration_pavkovic_2019/tuto_data-exploration_pavkovic.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2021/tutorials/data-exploration_pavkovic_2019/tuto_data-exploration_pavkovic.Rmd)]
 
