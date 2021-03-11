@@ -159,7 +159,7 @@ To follow this course, prior knowledge is expected on:
 
 <a name="session-4"></a>
 
-### Session 4. Analyse en composantes principales et exploration des données multi-omiques 
+### Session 4. Analyse en composantes principales et exploration des données multidimensionelles 
 
 - Date:  11/03/2021 de 9h00 à 12h00
 
@@ -174,7 +174,7 @@ To follow this course, prior knowledge is expected on:
   
     - Réaliser une ACP avec R, obtenir des visualisations graphiques pour aider à l'interprétation (cercle des corrélations, biplot, contribution des variables et des individus). 
 
-2. Exploration de données multi-omiques
+2. Exploration de données multi-omiques multidimensionelles
 
     - Maîtriser les téléchargements et chargements de fichiers de données et métadonnées
     - Charger des fichiers de données
