@@ -123,9 +123,9 @@ As study case for this tutorial, we will use multi-omics data from a study publi
 
 The authors applied two commonly used treatments to induce kidney fibrosis in mouse: 
 
-- a reversible chemical-induced injury model, denoted as **FA** for folic acid induced nephropathy;  
+- a reversible chemical-induced injury model, denoted as **FA** for **folic acid** induced nephropathy;  
 
-- an irreversible surgically-induced fibrosis model, denoted as **UUO** for unilateral ureteral obstruction.
+- an irreversible surgically-induced fibrosis model, denoted as **UUO** for **unilateral uretral obstruction**.
 
 ## References and data sources
 
@@ -148,6 +148,24 @@ We also provide there a detailed explanation of the [data preparation steps](htt
 - pre-processing,
 - storing the results in a memory image. 
 
+
+## Data file naming
+
+We prepared the data from Pavkovic as a text file with tab-separated values (**tsv** files), with the following convention:
+
+- the prefix indicate the data type
+
+    - **fa**: folic acid induced nephropathy (reversible), transcriptome data
+    - **pfa**: folic acid induced nephropathy, proteome data
+    - **uuo**: unilateral uretral obstruction (irreversible), transcriptome data
+    - **puuo**: unilateral uretral obstruction, proteome data
+
+- The suffix indicates the data  normalisation
+
+    - **raw**: transcriptome counts provided by the authors (note: not integer, because their raw data was already somehow normalized)
+    - **normalized¨**: transcriptome counts standardized to achieve the same third quartile for each sample
+    - **log2**: log2 transformation for proteome data
+
 ## Approach for this tutorial
 
 This tutorial will consist of exercises that can be realised in a stepwise way, with alternance of working sessions and live demos of the solutions, in order to make sure that all the trainees acquire each step.
@@ -158,6 +176,7 @@ Before computing any descriptive parameter on a dataset, I generallyi attempt to
 
 
 ### Exercise : data loading
+
 
 ```{r data_loading}
 
