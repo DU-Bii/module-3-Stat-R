@@ -184,32 +184,39 @@ To follow this course, prior knowledge is expected on:
 ### Session 4. Exploration des données multidimensionelles : corrélation et ACP
 
 Date:  11/03/2021 de 9h00 à 12h00
+
 - Instructeurs : Magali Berland & Jacques van Helden
 - Helpers : Anne Badel, Clémence Réda, Claire Vandiedonck, Olivier Taboureau
 
 #### Objectifs
 
-1. Régression linéaire multivariée
 
-    - help
-    - me
+1. Corrélation
 
-2. Corrélation
+    - Rappel des concepts de base de corrélation entre deux variables
+    - Extension à la corrélation entre $n$ variables
+    - Applications à des jeux de données de multi-omiques
 
-    -
-    - 
+2. Régression
+
+    - Rappel des principes de la régression d'une variable en une autre
+    - Extension à la régression multidimensionnelle
+    - Application à des jeux de données multi-omiques
 
 3. Exploration des données multidimensionelles
 
-    - Comprendre le principe de base de l'analyse en composantes principales, ainsi que les objectifs de cette méthodes
-    - Réaliser une ACP avec R, obtenir des visualisations graphiques pour aider à l'interprétation (cercle des corrélations, biplot, contribution des variables)
+    - Comprendre le principe de base de l'analyse en composantes principales (**ACP**), ainsi que les objectifs de cette méthodes.
+    
+    - Réaliser une ACP avec R, obtenir des visualisations graphiques pour aider à l'interprétation (cercle des corrélations, biplot, contribution des variables). 
 
 
 #### Supports de cours
 
 - Slides: [Slides for part 1](slides/DUBii_R_Session4_2021.pdf) | [Cours sur l'ACP](slides/2021-03-11-ACP.html) visualisable [ici](https://htmlpreview.github.io/?https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2021/slides/2021-03-11-ACP.html)
+
 - Practical:
     - [TD sur l'ACP](practicals/2021-03-11-TD-ACP.html) visualisable [ici](https://htmlpreview.github.io/?https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2021/practicals/2021-03-11-TD-ACP.html) a réaliser sur ces données : data/metadata.RDS et data/microbiota.abundance.log.RDS
+    
     - live on **???** []() et [son corrigé en html]() ou [en Rmd]()
 
 <a name="session-5"></a>
