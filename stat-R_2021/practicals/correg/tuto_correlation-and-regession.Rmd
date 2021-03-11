@@ -209,8 +209,13 @@ message("URL: ",  url)
 Now we defined the URL, we can easily load the file directly from github to a data frame in our R environement. 
 
 ```{r load_from_github, eval=FALSE}
-### THIS DOES NOT WORK ###
-pfa <- read.delim(file = url, header = TRUE, sep = "\t")
+## this requires to load a specific package
+if (!require("data.table")) {
+  install.packages("data.table")
+}
+library(data.table)
+
+pfa <- fread(url, header = TRUE, sep = "\t")
 
 ```
 
@@ -250,9 +255,60 @@ pfa <- read.delim(file = localFile, header = TRUE, sep = "\t")
 ```
 
 
-### Exercise: writing a function to download and load a data file
+### Exercise: writing functions to download and load a data file
 
-### Solution: a function to automagically download and load a data file
+Write two functions that will respectively download a file from a remote location to a local folder, but do this only if the local file is not yet present there. 
+
+Use this function to load 
+- the raw proteome data from folic acid treatment
+- the proteome metadata
+
+
+```{r exercise_download-load_function}
+## Your turn to program
+
+```
+
+
+### Solution: implement functions to automagically download and load a data file
+
+```{r solution_download-load_functions}
+#' @title Download a file only if it is not yet here
+#' @author Jacques van Helden
+#' @param urlBase base of the URL, that will be prepended to the file name
+#' @param fileNAme name of the file (should not contain any path)
+#' @param localFolder path of a local folder where the file should be stored
+#' @return the function returns the path of the local file, built from localFolder and fileName
+downloadOnlyOnce <- function(urlBase, 
+                             fileName,
+                             localFolder) {
+
+  ## Define the source URL  
+  url <- file.path(urlBase, fileName)
+  message("Source URL: ",  url)
+
+  ## Define the local file
+  localFile <- file.path(localFolder, fileName)
+  
+  ## Create the local data folder if it does not exist
+  dir.create(localFolder, showWarnings = FALSE, recursive = TRUE)
+  
+  ## Download the file ONLY if it is not already there
+  if (!file.exists(localFile)) {
+    message("Downloading file from github to local file\n\t", 
+            localFile)
+    download.file(url = url, destfile = localFile)
+  } else {
+    message("Local file already exists, no need to download\n\t", 
+            localFile)
+  }
+  
+  return(localFile)
+}
+```
+
+We can now use this function to download and load the different data files. 
+
 
 ## Graphical exploration of the data
 
