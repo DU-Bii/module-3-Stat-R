@@ -306,6 +306,65 @@ downloadOnlyOnce <- function(urlBase,
 }
 ```
 
+We can now use our new function `downloadOnlyOnce()` to download the folic acid dataset and store it in a local folder. 
+
+
+```{r download_fa}
+## Specify the basic parameters
+pavkovicBase <- "https://github.com/DU-Bii/module-3-Stat-R/raw/master/stat-R_2021/data/pavkovic_2019"
+pavkovicFolder <- "~/DUBii-m3_data/pavkovic_2019"
+
+#### Dowload folic acid data and metadata ####
+
+## Transcriptome file
+localFAfile <- downloadOnlyOnce(
+  urlBase = pavkovicBase, 
+  fileName = "fa_raw_counts.tsv.gz",
+  localFolder =  pavkovicFolder
+)
+
+## Proteome file
+localPFAfile <- downloadOnlyOnce(
+  urlBase = pavkovicBase, 
+  fileName = "pfa_model_counts.tsv.gz",
+  localFolder =  pavkovicFolder
+)
+
+## Metadata
+protMetadataFile <- downloadOnlyOnce(
+  urlBase = pavkovicBase, 
+  fileName = "proteome_metadata.tsv",
+  localFolder =  pavkovicFolder
+)
+
+
+```
+
+
+After having run the chunk of code above, try to re-run it. In principle, you should just receive messages telling you that the files are already there. 
+
+We can now load the data that from our local folder. 
+
+```{r load_fa}
+
+## Load transcriptome data
+fa <- read.delim(file = localFAfile, sep = "\t", header = TRUE)
+dim(fa)
+## Check the first lines of the loaded file
+kable(head(fa))
+
+## Load proteome data
+pfa <- read.delim(file = localPFAfile, sep = "\t", header = TRUE)
+dim(pfa)
+
+## Check the first lines of the loaded file
+kable(head(pfa))
+
+
+```
+
+
+
 We can now use this function to download and load the different data files. 
 
 
@@ -325,6 +384,15 @@ Draw an histogram of the **puuo** data, all samples together.
 
 
 ### Scatter plot
+
+## Save a memory image of your session
+
+Use the finction save() to store an image of your sessionn, in an Rdata file? Tthis file will contain all the data that you loaded during this session, and enable you to reload everything without having to re-execute all the steps. 
+
+```{r memory_image}
+
+```
+
 
 
 ## Save your session info
