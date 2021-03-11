@@ -240,9 +240,9 @@ To follow this course, prior knowledge is expected on:
 
     - revoir à tête reposée le practical sur les statistiques
     - revoir à tête reposée l'exemple de notebook Rmd sur Rstudio: Antoine l'a un peu complété
-    - ***facultatif***: pour les plus avancés, voir un exemple de notebook .rmd  avec le notebook  optionnel sur les statistiques 
+    - ***facultatif***: pour les plus avancés, voir l'exemple du notebook .rmd  optionnel sur les statistiques 
 
-    L'activité atelier vous sera communiquée rapidement.
+   **L'activité atelier est annulée due à la charge de travail déjà importante.**
 
 
 ## R tutorials and good practice
