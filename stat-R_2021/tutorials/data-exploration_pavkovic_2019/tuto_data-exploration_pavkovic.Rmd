@@ -261,10 +261,13 @@ We will now load the proteome file, with the following parameters
 ## Load the data from the local file
 pfa <- read.delim(file = localFile, header = TRUE, sep = "\t")
 
+kable(head(pfa), caption = "Data frame just after loading")
+
+
 ## Convert the first colum to row names
 row.names(pfa) <- make.names(as.vector(pfa$id), unique = TRUE)
-pfa <- pfa[, -1]
-View(head(pfa))
+pfa <- pfa[, -1] ## Suppress the ID colimn
+kable(head(pfa), caption = "Data frame with row names")
 
 ```
 
@@ -363,7 +366,31 @@ transMetadataFile <- downloadOnlyOnce(
 ```
 
 
+### Loading the files
+
 After having run the chunk of code above, try to re-run it. In principle, you should just receive messages telling you that the files are already there. 
+
+```{r my_easy_load_function}
+#' @title Load a tab-separated value file and manually set row ames after having forced them to unique values
+#' @param file file path
+#' @param header=1 Header is set to 1 by default
+#' @param sep="\t" Column separator is set to tab by default
+#' @param rownames.col=1 Column containing the row names
+#' @param ... all other parameters are passed to read.delim()
+#' @return a data frame with the loaded data
+myEasyLoad <- function(file, 
+                       header = 1, 
+                       sep = "\t",
+                       rownames.col = 1, 
+                       ...) {
+  x <- read.delim(file = file, ...)
+  rownames(x) <- make.names(x[, rownames.col], unique = TRUE)
+  x <- x[, -rownames.col]
+  return(x)
+}
+
+```
+
 
 We can now load the data that from our local folder. 
 
@@ -371,9 +398,10 @@ We can now load the data that from our local folder.
 
 ## Load transcriptome data
 fa <- read.delim(file = localFAfile, sep = "\t", header = TRUE)
+fa <- myEasyLoad(file = localFAfile, rownames.col = 1)
 dim(fa)
 ## Check the first lines of the loaded file
-kable(head(fa))
+View(head(fa))
 
 ## Load proteome data
 pfa <- read.delim(file = localPFAfile, sep = "\t", header = TRUE)
