@@ -8,7 +8,7 @@
 
 - [Session 3. Statistiques pour les données à haut-débit / RStudio et rapport Rmarkdown](#session-3)
 
-- [Session 4. Régression linéaire multivariée / Corrélation / Exploration des données multidimensionelles](#session-4)
+- [Session 4. Analyse en composantes principales / Exploration des données multidimensionelles](#session-4)
 
 - Session 5. Classification supervisée et apprentissage
 
@@ -125,7 +125,8 @@ To follow this course, prior knowledge is expected on:
 
     - optional on **loops, conditions and functions** ([notebook ipynb](practicals/Rsession2_practical_loops_conditions_functions.ipynb) et [son corrigé](practicals/Rsession2_practical_loops_conditions_functions_correction.html))
     - on **figures** ([notebook ipynb](practicals/Rsession2_practicals_figures.ipynb) et [son corrigé](practicals/Rsession2_practicals_figures_correction.html))
-    - TD **introduction au tidyverse** ([format html](practicals/2021-03-04-TD-Intro-tidyverse.html), [format ipynb](practicals/TD-tidyverse-dplyr-tidyr-sujet.ipynb) et [son corrigé pour ggplot au format ipynb](practicals/TD-tidyverse-ggplot-correction.ipynb))
+    - TD **introduction au tidyverse** ([format html](practicals/2021-03-04-TD-Intro-tidyverse.html), [format ipynb](practicals/TD-tidyverse-dplyr-tidyr-sujet.ipynb))
+    - Corrigé du TD **introduction au tidyverse** : [partie 1 sur ggplot au format ipynb](practicals/TD-tidyverse-ggplot-correction.ipynb) et [partie 2 & 3 pour dplyr et tidyr au format ipynb](practicals/TD-tidyverse-dplyr-tidyr-correction.ipynb)
 
 
 <a name="session-3"></a>
@@ -158,7 +159,7 @@ To follow this course, prior knowledge is expected on:
 
 <a name="session-4"></a>
 
-### Session 4. Exploration des données multidimensionelles : corrélation et ACP
+### Session 4. Analyse en composantes principales et exploration des données multidimensionelles 
 
 - Date:  11/03/2021 de 9h00 à 12h00
 
@@ -167,8 +168,13 @@ To follow this course, prior knowledge is expected on:
 
 #### Objectifs
 
+1. Analyse en composantes principales (**ACP**)
 
-1. Exploration de données multi-omiques
+    - Comprendre le principe de base de l'analyse en composantes principales, ainsi que les objectifs de cette méthode.
+  
+    - Réaliser une ACP avec R, obtenir des visualisations graphiques pour aider à l'interprétation (cercle des corrélations, biplot, contribution des variables et des individus). 
+
+2. Exploration de données multi-omiques multidimensionelles
 
     - Maîtriser les téléchargements et chargements de fichiers de données et métadonnées
     - Charger des fichiers de données
@@ -183,11 +189,6 @@ To follow this course, prior knowledge is expected on:
     - Application à des jeux de données multi-omiques
 -->
 
-2. Analyse en composants principales (ACP)
-
-    - Comprendre le principe de base de l'analyse en composantes principales (**ACP**), ainsi que les objectifs de cette méthodes.
-    
-    - Réaliser une ACP avec R, obtenir des visualisations graphiques pour aider à l'interprétation (cercle des corrélations, biplot, contribution des variables). 
 
 
 #### Supports de cours
@@ -198,6 +199,7 @@ To follow this course, prior knowledge is expected on:
 - Practicals:
 
     - [**TD sur l'ACP**](practicals/2021-03-11-TD-ACP.html) visualisable [ici](https://htmlpreview.github.io/?https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2021/practicals/2021-03-11-TD-ACP.html) a réaliser sur ces données : [metadata](data/metadata.RDS) et [microbiota.abundance.log](data/microbiota.abundance.log.RDS)
+    - La correction du TD sur l'ACP sera fournie **jeudi 18 mars**
 
     - **Tutoriel: exploration des données multi-omiques** [[html](tutorials/data-exploration_pavkovic_2019/tuto_data-exploration_pavkovic.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2021/tutorials/data-exploration_pavkovic_2019/tuto_data-exploration_pavkovic.Rmd)]
 
