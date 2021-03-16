@@ -11,7 +11,7 @@
 
 <meta name="author" content="Jacques van Helden" />
 
-<meta name="date" content="2021-03-11" />
+<meta name="date" content="2021-03-16" />
 
 <title>Tutorial: exploration of multi-omics data</title>
 
@@ -365,7 +365,7 @@ div.tocify {
 <h1 class="title toc-ignore">Tutorial: exploration of multi-omics data</h1>
 <h3 class="subtitle">DUBii 2020</h3>
 <h4 class="author">Jacques van Helden</h4>
-<h4 class="date">2021-03-11</h4>
+<h4 class="date">2021-03-16</h4>
 
 </div>
 
@@ -425,6 +425,10 @@ div.tocify {
 <li><p>the <strong>metadata</strong> files contain a short description of each sample (one row per sample). Note that the last column contains a sample-specific color specification in <a href="https://en.wikipedia.org/wiki/Web_colors#Hex_triplet">hexadecimal web color code</a> to facilitate the drawings. Don’t hesitate to chose <a href="https://htmlcolorcodes.com/">other colors</a> according to your personal taste.</p></li>
 </ul>
 </div>
+<div id="r-style" class="section level2">
+<h2>R style</h2>
+<p>The R code belows follows the tidyverse styling guide (<a href="https://style.tidyverse.org/" class="uri">https://style.tidyverse.org/</a>).</p>
+</div>
 <div id="approach-for-this-tutorial" class="section level2">
 <h2>Approach for this tutorial</h2>
 <p>This tutorial will consist of exercises that can be realised in a stepwise way, with alternance of working sessions and live demos of the solutions, in order to make sure that all the trainees acquire each step.</p>
@@ -436,16 +440,16 @@ div.tocify {
 <h3>Finding a data file on github</h3>
 <p>We will provide here a magic recipe to download the data from the github repository to your local folder, and to load it in R.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">## specify the base URL from which data files can be downloaded </span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>urlBase <span class="ot">&lt;-</span> <span class="st">&quot;https://github.com/DU-Bii/module-3-Stat-R/raw/master/stat-R_2021/data/pavkovic_2019&quot;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>url_base <span class="ot">&lt;-</span> <span class="st">&quot;https://github.com/DU-Bii/module-3-Stat-R/raw/master/stat-R_2021/data/pavkovic_2019&quot;</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Choose a specific data file</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>dataPrefix <span class="ot">&lt;-</span> <span class="st">&quot;pfa&quot;</span> <span class="do">## proteome data of folic-acid treated mouse</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>dataSuffix <span class="ot">&lt;-</span> <span class="st">&quot;model&quot;</span> <span class="do">## no normalization</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>fileName <span class="ot">&lt;-</span> <span class="fu">paste0</span>(dataPrefix, <span class="st">&quot;_&quot;</span>, dataSuffix, <span class="st">&quot;_counts.tsv.gz&quot;</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>data_prefix <span class="ot">&lt;-</span> <span class="st">&quot;pfa&quot;</span> <span class="do">## proteome data of folic-acid treated mouse</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>data_suffix <span class="ot">&lt;-</span> <span class="st">&quot;model&quot;</span> <span class="do">## no normalization</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>file_name <span class="ot">&lt;-</span> <span class="fu">paste0</span>(data_prefix, <span class="st">&quot;_&quot;</span>, data_suffix, <span class="st">&quot;_counts.tsv.gz&quot;</span>)</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="do">## Compose the URL to download the file from github</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="fu">file.path</span>(urlBase, fileName)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="fu">file.path</span>(url_base, file_name)</span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span>(<span class="st">&quot;URL: &quot;</span>,  url)</span></code></pre></div>
 </div>
@@ -467,20 +471,20 @@ div.tocify {
 <h3>Downloading a data file and storing it locally once forever</h3>
 <p>We can now download the data file to a local folder, but we would like to do this only once.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Specify the path relative to your home directory (~)</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>localFolder <span class="ot">&lt;-</span> <span class="st">&quot;~/DUBii-m3_data/pavkovic_2019&quot;</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>localFile <span class="ot">&lt;-</span> <span class="fu">file.path</span>(localFolder, fileName)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>local_folder <span class="ot">&lt;-</span> <span class="st">&quot;~/DUBii-m3_data/pavkovic_2019&quot;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>local_file <span class="ot">&lt;-</span> <span class="fu">file.path</span>(local_folder, file_name)</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Create the local data folder if it does not exist</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(localFolder, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(local_folder, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="do">## Download the file ONLY if it is not already there</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(localFile)) {</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(local_file)) {</span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">&quot;Downloading file from github to local file</span><span class="sc">\n\t</span><span class="st">&quot;</span>, </span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>          localFile)</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">download.file</span>(<span class="at">url =</span> url, <span class="at">destfile =</span> localFile)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>          local_file)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">download.file</span>(<span class="at">url =</span> url, <span class="at">destfile =</span> local_file)</span>
 <span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
 <span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">&quot;Local file already exists, no need to download</span><span class="sc">\n\t</span><span class="st">&quot;</span>, </span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>          localFile)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>          local_file)</span>
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 </div>
 <div id="loading-the-local-copy-of-your-data-file" class="section level3">
@@ -491,7 +495,7 @@ div.tocify {
 <li>the first columnt contains the protein IDs, and we would like to have them as row.names for the loaded data frame. This is a bit tricky because some protein names are diplicated. We use the <strong>very</strong> convenient function <code>make.names(x, unique = TRUE)</code>.</li>
 </ul>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Load the data from the local file</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>pfa <span class="ot">&lt;-</span> <span class="fu">read.delim</span>(<span class="at">file =</span> localFile, <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>pfa <span class="ot">&lt;-</span> <span class="fu">read.delim</span>(<span class="at">file =</span> local_file, <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(pfa), <span class="at">caption =</span> <span class="st">&quot;Data frame just after loading&quot;</span>)</span></code></pre></div>
 <table>
@@ -721,109 +725,116 @@ div.tocify {
 </tbody>
 </table>
 </div>
-<div id="exercise-writing-functions-to-download-and-load-a-data-file" class="section level3">
-<h3>Exercise: writing functions to download and load a data file</h3>
-<p>Write two functions that will respectively download a file from a remote location to a local folder, but do this only if the local file is not yet present there.</p>
-<p>Use this function to load - the raw proteome data from folic acid treatment - the proteome metadata</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Your turn to program</span></span></code></pre></div>
-</div>
-<div id="solution-implement-functions-to-automagically-download-and-load-a-data-file" class="section level3">
-<h3>Solution: implement functions to automagically download and load a data file</h3>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @title Download a file only if it is not yet here</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @author Jacques van Helden</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param urlBase base of the URL, that will be prepended to the file name</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param fileNAme name of the file (should not contain any path)</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param localFolder path of a local folder where the file should be stored</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @return the function returns the path of the local file, built from localFolder and fileName</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>downloadOnlyOnce <span class="ot">&lt;-</span> <span class="cf">function</span>(urlBase, </span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>                             fileName,</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>                             localFolder) {</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Define the source URL  </span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  url <span class="ot">&lt;-</span> <span class="fu">file.path</span>(urlBase, fileName)</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">&quot;Source URL</span><span class="sc">\n\t</span><span class="st">&quot;</span>,  url)</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Define the local file</span></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  localFile <span class="ot">&lt;-</span> <span class="fu">file.path</span>(localFolder, fileName)</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Create the local data folder if it does not exist</span></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dir.create</span>(localFolder, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Download the file ONLY if it is not already there</span></span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(localFile)) {</span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">message</span>(<span class="st">&quot;Downloading file from source URL to local file</span><span class="sc">\n\t</span><span class="st">&quot;</span>, </span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>            localFile)</span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">download.file</span>(<span class="at">url =</span> url, <span class="at">destfile =</span> localFile)</span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">message</span>(<span class="st">&quot;Local file already exists, no need to download</span><span class="sc">\n\t</span><span class="st">&quot;</span>, </span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>            localFile)</span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(localFile)</span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<p>We can now use our new function <code>downloadOnlyOnce()</code> to download the folic acid dataset and store it in a local folder.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Specify the basic parameters</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>pavkovicBase <span class="ot">&lt;-</span> <span class="st">&quot;https://github.com/DU-Bii/module-3-Stat-R/raw/master/stat-R_2021/data/pavkovic_2019&quot;</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>pavkovicFolder <span class="ot">&lt;-</span> <span class="st">&quot;~/DUBii-m3_data/pavkovic_2019&quot;</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="do">#### Dowload folic acid data and metadata ####</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Transcriptome file</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>localFAfile <span class="ot">&lt;-</span> <span class="fu">downloadOnlyOnce</span>(</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">urlBase =</span> pavkovicBase, </span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">fileName =</span> <span class="st">&quot;fa_raw_counts.tsv.gz&quot;</span>,</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">localFolder =</span>  pavkovicFolder</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="do">## Proteome file</span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>localPFAfile <span class="ot">&lt;-</span> <span class="fu">downloadOnlyOnce</span>(</span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">urlBase =</span> pavkovicBase, </span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">fileName =</span> <span class="st">&quot;pfa_model_counts.tsv.gz&quot;</span>,</span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">localFolder =</span>  pavkovicFolder</span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="do">## Metadata</span></span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>protMetadataFile <span class="ot">&lt;-</span> <span class="fu">downloadOnlyOnce</span>(</span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">urlBase =</span> pavkovicBase, </span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">fileName =</span> <span class="st">&quot;proteome_metadata.tsv&quot;</span>,</span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">localFolder =</span>  pavkovicFolder</span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a><span class="do">## Metadata</span></span>
-<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>transMetadataFile <span class="ot">&lt;-</span> <span class="fu">downloadOnlyOnce</span>(</span>
-<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">urlBase =</span> pavkovicBase, </span>
-<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">fileName =</span> <span class="st">&quot;transcriptome_metadata.tsv&quot;</span>,</span>
-<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">localFolder =</span>  pavkovicFolder</span>
-<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div id="writing-a-function-to-download-a-file-only-once" class="section level3">
+<h3>Writing a function to download a file only once</h3>
+<p>Write a functions that will download a file from a remote location to a local folder, but do this only if the local file is not yet present there.</p>
+<p>Note that we use the <a href="https://kbroman.org/pkg_primer/pages/docs.html">roxygen2</a> format to write the documentation of this function. In any programming language, a function should always be documented in order to enable other people to use it, and the doc is also very useful for a developer to reuse her/his own code. The documentation becomes particularly interesting when you start building your own R packages, since it will automatically generate the help pages.</p>
+<p>The documentation of a function should include - a description of what it does - the author name and a way to contact her/him - a description of each parameter (argument) of the function - a description of the return value</p>
+<p>Roxygen2 provides is a very convenient way of documenting a function, because - the formalism is very simple - the doc comes together with the code of the function (by default, R functions are documented in a separate file)</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @title Download a file only if it is not yet here</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @author Jacques van Helden email{Jacques.van-Helden@@france-bioinformatique.fr}</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param url_base base of the URL, that will be prepended to the file name</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param file_name name of the file (should not contain any path)</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param local_folder path of a local folder where the file should be stored</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @return the function returns the path of the local file, built from local_folder and file_name</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>downloadOnlyOnce <span class="ot">&lt;-</span> <span class="cf">function</span>(url_base, </span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>                             file_name,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>                             local_folder) {</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Define the source URL  </span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  url <span class="ot">&lt;-</span> <span class="fu">file.path</span>(url_base, file_name)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">&quot;Source URL</span><span class="sc">\n\t</span><span class="st">&quot;</span>,  url)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Define the local file</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  local_file <span class="ot">&lt;-</span> <span class="fu">file.path</span>(local_folder, file_name)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Create the local data folder if it does not exist</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dir.create</span>(local_folder, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Download the file ONLY if it is not already there</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(local_file)) {</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">message</span>(<span class="st">&quot;Downloading file from source URL to local file</span><span class="sc">\n\t</span><span class="st">&quot;</span>, </span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>            local_file)</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">download.file</span>(<span class="at">url =</span> url, <span class="at">destfile =</span> local_file)</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">message</span>(<span class="st">&quot;Local file already exists, no need to download</span><span class="sc">\n\t</span><span class="st">&quot;</span>, </span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>            local_file)</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(local_file)</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>We can now use our new function <code>downloadOnlyOnce()</code> to download the files from the folic acid dataset and store them in a local folder. We will download successively :</p>
+<ul>
+<li>transcriptome data (<code>fa</code>)</li>
+<li>transcriptome medata</li>
+<li>proteome data (<code>pfa</code>)</li>
+<li>proteome medata</li>
+</ul>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Specify the basic parameters</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>pavkovic_base <span class="ot">&lt;-</span> <span class="st">&quot;https://github.com/DU-Bii/module-3-Stat-R/raw/master/stat-R_2021/data/pavkovic_2019&quot;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>pavkovic_folder <span class="ot">&lt;-</span> <span class="st">&quot;~/DUBii-m3_data/pavkovic_2019&quot;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="do">#### Dowload folic acid data and metadata ####</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Transcriptome data table</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>local_fa_file <span class="ot">&lt;-</span> <span class="fu">downloadOnlyOnce</span>(</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">url_base =</span> pavkovic_base, </span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">file_name =</span> <span class="st">&quot;fa_raw_counts.tsv.gz&quot;</span>,</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">local_folder =</span>  pavkovic_folder</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="do">## Transcriptome metadata</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>trans_metadata_file <span class="ot">&lt;-</span> <span class="fu">downloadOnlyOnce</span>(</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">url_base =</span> pavkovic_base, </span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">file_name =</span> <span class="st">&quot;transcriptome_metadata.tsv&quot;</span>,</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">local_folder =</span>  pavkovic_folder</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="do">## Proteome data table</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>local_pfa_file <span class="ot">&lt;-</span> <span class="fu">downloadOnlyOnce</span>(</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">url_base =</span> pavkovic_base, </span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">file_name =</span> <span class="st">&quot;pfa_model_counts.tsv.gz&quot;</span>,</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">local_folder =</span>  pavkovic_folder</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="do">## Proteome metadata</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>prot_metadata_file <span class="ot">&lt;-</span> <span class="fu">downloadOnlyOnce</span>(</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">url_base =</span> pavkovic_base, </span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">file_name =</span> <span class="st">&quot;proteome_metadata.tsv&quot;</span>,</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">local_folder =</span>  pavkovic_folder</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p>After having run the chunk of code above, try to re-run it. In principle, you should just receive messages telling you that the files are already there.</p>
 </div>
 <div id="loading-the-files" class="section level3">
 <h3>Loading the files</h3>
-<p>After having run the chunk of code above, try to re-run it. In principle, you should just receive messages telling you that the files are already there.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @title Load a tab-separated value file and manually set row ames after having forced them to unique values</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param file file path</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param header=1 Header is set to 1 by default</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param sep=&quot;\t&quot; Column separator is set to tab by default</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param rownames.col=1 Column containing the row names</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param ... all other parameters are passed to read.delim()</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @return a data frame with the loaded data</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>myEasyLoad <span class="ot">&lt;-</span> <span class="cf">function</span>(file, </span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>                       <span class="at">header =</span> <span class="dv">1</span>, </span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>                       <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>,</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>                       <span class="at">rownames.col =</span> <span class="dv">1</span>, </span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>                       ...) {</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">read.delim</span>(<span class="at">file =</span> file, ...)</span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames</span>(x) <span class="ot">&lt;-</span> <span class="fu">make.names</span>(x[, rownames.col], <span class="at">unique =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> x[, <span class="sc">-</span>rownames.col]</span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(x)</span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>We now write a function <code>load_fix_row_names()</code> that loads a data file and takes a specified column as row names, whilst automatically fixing potential problems due to duplicate labels in this column.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @title Load a tab-separated value file and manually set row ames after having forced them to unique values</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @author Jacques van Helden email{Jacques.van-Helden@@france-bioinformatique.fr}</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param file file path</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param header=1 Header is set to 1 by default</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param sep=&quot;\t&quot; Column separator is set to tab by default</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param rownames.col=1 Column containing the row names</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param ... all other parameters are passed to read.delim()</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @return a data frame with the loaded data</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>load_fix_row_names <span class="ot">&lt;-</span> <span class="cf">function</span>(file, </span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>                       <span class="at">header =</span> <span class="dv">1</span>, </span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>                       <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>,</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>                       <span class="at">rownames.col =</span> <span class="dv">1</span>, </span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>                       ...) {</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">read.delim</span>(<span class="at">file =</span> file, ...)</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames</span>(x) <span class="ot">&lt;-</span> <span class="fu">make.names</span>(x[, rownames.col], <span class="at">unique =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> x[, <span class="sc">-</span>rownames.col]</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(x)</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>We can now load the data that from our local folder.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Load transcriptome data</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>fa <span class="ot">&lt;-</span> <span class="fu">read.delim</span>(<span class="at">file =</span> localFAfile, <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Check the first lines of the loaded file</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(fa)</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Load transcriptome data</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>fa <span class="ot">&lt;-</span> <span class="fu">read.delim</span>(<span class="at">file =</span> local_fa_file, <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Check the first lines of the loaded file</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(fa)</span></code></pre></div>
 <pre><code>[1] 46679    19</code></pre>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(fa), <span class="at">caption =</span> <span class="st">&quot;Loaded with read.delim()&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(fa), <span class="at">caption =</span> <span class="st">&quot;Loaded with read.delim()&quot;</span>)</span></code></pre></div>
 <table style="width:100%;">
 <caption>Loaded with read.delim()</caption>
 <colgroup>
@@ -999,11 +1010,11 @@ div.tocify {
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Load same data with myEasyLoad</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>fa <span class="ot">&lt;-</span> <span class="fu">myEasyLoad</span>(<span class="at">file =</span> localFAfile, <span class="at">rownames.col =</span> <span class="dv">1</span>)</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(fa)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Load same data with load_fix_row_names</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>fa <span class="ot">&lt;-</span> <span class="fu">load_fix_row_names</span>(<span class="at">file =</span> local_fa_file, <span class="at">rownames.col =</span> <span class="dv">1</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(fa)</span></code></pre></div>
 <pre><code>[1] 46679    18</code></pre>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(fa), <span class="at">caption =</span> <span class="st">&quot;Loaded with myEasyLad()&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(fa), <span class="at">caption =</span> <span class="st">&quot;Loaded with myEasyLad()&quot;</span>)</span></code></pre></div>
 <table style="width:100%;">
 <caption>Loaded with myEasyLad()</caption>
 <colgroup>
@@ -1179,14 +1190,14 @@ div.tocify {
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">unlist</span>(fa), <span class="at">breaks =</span> <span class="dv">100</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">unlist</span>(fa), <span class="at">breaks =</span> <span class="dv">100</span>)</span></code></pre></div>
 <p><img src="figures/pavkovic2019_load_fa-1.png" width="672" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Load proteome data</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>pfa <span class="ot">&lt;-</span> <span class="fu">myEasyLoad</span>(<span class="at">file =</span> localPFAfile, <span class="at">rownames.col =</span> <span class="dv">1</span>)</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(pfa)</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Load proteome data</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>pfa <span class="ot">&lt;-</span> <span class="fu">load_fix_row_names</span>(<span class="at">file =</span> local_pfa_file, <span class="at">rownames.col =</span> <span class="dv">1</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(pfa)</span></code></pre></div>
 <pre><code>[1] 8044   10</code></pre>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Check the first lines of the loaded file</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(pfa))</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Check the first lines of the loaded file</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(pfa))</span></code></pre></div>
 <table>
 <colgroup>
 <col width="16%" />
@@ -1297,9 +1308,9 @@ div.tocify {
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Load proteome metadata</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>protMeta <span class="ot">&lt;-</span> <span class="fu">read.delim</span>(<span class="at">file =</span> protMetadataFile, <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(protMeta, <span class="at">caption =</span> <span class="st">&quot;Metadata for the proteome dataset&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Load proteome metadata</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>proteome_metadata <span class="ot">&lt;-</span> <span class="fu">read.delim</span>(<span class="at">file =</span> prot_metadata_file, <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(proteome_metadata, <span class="at">caption =</span> <span class="st">&quot;Metadata for the proteome dataset&quot;</span>)</span></code></pre></div>
 <table>
 <caption>Metadata for the proteome dataset</caption>
 <thead>
@@ -1384,9 +1395,9 @@ div.tocify {
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Load transcriptome metadata</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>transMeta <span class="ot">&lt;-</span> <span class="fu">read.delim</span>(<span class="at">file =</span> transMetadataFile, <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(transMeta, <span class="at">caption =</span> <span class="st">&quot;Metadata for the transcriptome dataset&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Load transcriptome metadata</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>transcriptome_metadata <span class="ot">&lt;-</span> <span class="fu">read.delim</span>(<span class="at">file =</span> trans_metadata_file, <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(transcriptome_metadata, <span class="at">caption =</span> <span class="st">&quot;Metadata for the transcriptome dataset&quot;</span>)</span></code></pre></div>
 <table>
 <caption>Metadata for the transcriptome dataset</caption>
 <thead>
@@ -1514,13 +1525,13 @@ div.tocify {
 <div id="histogram" class="section level3">
 <h3>Histogram</h3>
 <p>Draw histograms of the transcriptome and proteom data, all samples together.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>pfaValues <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">as.vector</span>(pfa))</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(pfaValues)</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>pfa_vector <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">as.vector</span>(pfa))</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(pfa_vector)</span></code></pre></div>
 <p><img src="figures/pavkovic2019_fa_hist_ugly-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Let us now improve the histogram in order to get an intuition of our data.</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(pfaValues, <span class="at">breaks =</span> <span class="dv">200</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(pfa_vector, <span class="at">breaks =</span> <span class="dv">200</span>)</span></code></pre></div>
 <p><img src="figures/pavkovic2019_fa_hist_breaks-1.png" width="672" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">log2</span>(pfaValues), <span class="at">breaks =</span> <span class="dv">100</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">log2</span>(pfa_vector), <span class="at">breaks =</span> <span class="dv">100</span>)</span></code></pre></div>
 <p><img src="figures/pavkovic2019_fa_hist_log2-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="box-plot" class="section level3">
@@ -1532,11 +1543,22 @@ div.tocify {
 </div>
 <div id="save-a-memory-image-of-your-session" class="section level2">
 <h2>Save a memory image of your session</h2>
-<p>Use the finction save() to store an image of your sessionn, in an Rdata file? Tthis file will contain all the data that you loaded during this session, and enable you to reload everything without having to re-execute all the steps.</p>
+<p>Use the finction <code>save.image()</code> to store an image of your session, in a file <code>pavkovic_memory_image.Rdata</code> in the local folder specified above. This file will contain all the data that you loaded during this session, and enable you to reload everything without having to re-execute all the steps.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Define the path to the memory image file</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>memory_image_file <span class="ot">&lt;-</span> <span class="fu">file.path</span>(local_folder, <span class="st">&quot;pavkovic_memory_image.Rdata&quot;</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Save the memory image</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="fu">save.image</span>(<span class="at">file =</span> memory_image_file)</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span>(<span class="st">&quot;Memory image saved in file</span><span class="sc">\n\t</span><span class="st">&quot;</span>, memory_image_file)</span></code></pre></div>
+<p>For a future session, you will be able to reload all the data with a single command:</p>
+<p><code>load([path_to_your_memory_image])</code></p>
+<p>You will need to replace <code>[path_to_your_memory_image]</code> by your actual path. In my case, the command becomes:</p>
+<p><code>load("~/DUBii-m3_data/pavkovic_2019/pavkovic_memory_image.Rdata")</code></p>
 </div>
 <div id="save-your-session-info" class="section level2">
 <h2>Save your session info</h2>
-<p>As usual</p>
+<p>For the sake of traceability, store the specifications of your R environment in the report, with the command <code>sessionInfo()</code>. This will indicate the version of R as wella sof all the libraries used in this notebook.</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
 <pre><code>R version 4.0.2 (2020-06-22)
 Platform: x86_64-apple-darwin17.0 (64-bit)

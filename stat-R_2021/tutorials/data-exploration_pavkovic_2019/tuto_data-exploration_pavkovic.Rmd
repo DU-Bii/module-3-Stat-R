@@ -172,6 +172,10 @@ The files are named according to the following convention:
     
 - the  **metadata** files contain a short description of each sample (one row per sample). Note that the last column contains a sample-specific color specification in [hexadecimal web color code](https://en.wikipedia.org/wiki/Web_colors#Hex_triplet) to facilitate the drawings. Don't hesitate to chose [other colors](https://htmlcolorcodes.com/) according to your personal taste. 
 
+## R style
+
+The R code belows follows the tidyverse styling guide (<https://style.tidyverse.org/>).
+
 ## Approach for this tutorial
 
 This tutorial will consist of exercises that can be realised in a stepwise way, with alternance of working sessions and live demos of the solutions, in order to make sure that all the trainees acquire each step.
@@ -188,16 +192,16 @@ We will provide here a magic recipe to download the data from the github reposit
 
 ```{r data_loading}
 ## specify the base URL from which data files can be downloaded 
-urlBase <- "https://github.com/DU-Bii/module-3-Stat-R/raw/master/stat-R_2021/data/pavkovic_2019"
+url_base <- "https://github.com/DU-Bii/module-3-Stat-R/raw/master/stat-R_2021/data/pavkovic_2019"
 
 
 ## Choose a specific data file
-dataPrefix <- "pfa" ## proteome data of folic-acid treated mouse
-dataSuffix <- "model" ## no normalization
-fileName <- paste0(dataPrefix, "_", dataSuffix, "_counts.tsv.gz")
+data_prefix <- "pfa" ## proteome data of folic-acid treated mouse
+data_suffix <- "model" ## no normalization
+file_name <- paste0(data_prefix, "_", data_suffix, "_counts.tsv.gz")
 
 ## Compose the URL to download the file from github
-url <- file.path(urlBase, fileName)
+url <- file.path(url_base, file_name)
 
 message("URL: ",  url)
 
@@ -229,20 +233,20 @@ We can now download the data file to a local folder, but we would like to do thi
 
 ```{r download_only_once}
 ## Specify the path relative to your home directory (~)
-localFolder <- "~/DUBii-m3_data/pavkovic_2019"
-localFile <- file.path(localFolder, fileName)
+local_folder <- "~/DUBii-m3_data/pavkovic_2019"
+local_file <- file.path(local_folder, file_name)
 
 ## Create the local data folder if it does not exist
-dir.create(localFolder, showWarnings = FALSE, recursive = TRUE)
+dir.create(local_folder, showWarnings = FALSE, recursive = TRUE)
 
 ## Download the file ONLY if it is not already there
-if (!file.exists(localFile)) {
+if (!file.exists(local_file)) {
   message("Downloading file from github to local file\n\t", 
-          localFile)
-  download.file(url = url, destfile = localFile)
+          local_file)
+  download.file(url = url, destfile = local_file)
 } else {
   message("Local file already exists, no need to download\n\t", 
-          localFile)
+          local_file)
 }
 
 ```
@@ -259,7 +263,7 @@ We will now load the proteome file, with the following parameters
 
 ```{r load_local_file}
 ## Load the data from the local file
-pfa <- read.delim(file = localFile, header = TRUE, sep = "\t")
+pfa <- read.delim(file = local_file, header = TRUE, sep = "\t")
 
 kable(head(pfa), caption = "Data frame just after loading")
 
@@ -272,113 +276,125 @@ kable(head(pfa), caption = "Data frame with row names")
 ```
 
 
-### Exercise: writing functions to download and load a data file
+### Writing a function to download a file only once
 
-Write two functions that will respectively download a file from a remote location to a local folder, but do this only if the local file is not yet present there. 
+Write a functions that will download a file from a remote location to a local folder, but do this only if the local file is not yet present there. 
 
-Use this function to load 
-- the raw proteome data from folic acid treatment
-- the proteome metadata
+Note that we use the [roxygen2](https://kbroman.org/pkg_primer/pages/docs.html) format to write the documentation of this function. In any programming language, a function should always be documented in order to enable other people to use it, and the doc is also very useful for a developer to reuse her/his own code. The documentation becomes particularly interesting when you start building your own R packages, since it will automatically generate the help pages. 
 
+The documentation of a function should include
+- a description of what it does
+- the author name and a way to contact her/him
+- a description of each parameter (argument) of the function
+- a description of the return value
 
-```{r exercise_download-load_function}
-## Your turn to program
+Roxygen2 provides is a very convenient way of documenting a function, because 
+- the formalism is very simple
+- the doc comes together with the code of the function (by default, R functions are documented in a separate file)
 
-```
-
-
-### Solution: implement functions to automagically download and load a data file
 
 ```{r solution_download-load_functions}
 #' @title Download a file only if it is not yet here
-#' @author Jacques van Helden
-#' @param urlBase base of the URL, that will be prepended to the file name
-#' @param fileNAme name of the file (should not contain any path)
-#' @param localFolder path of a local folder where the file should be stored
-#' @return the function returns the path of the local file, built from localFolder and fileName
-downloadOnlyOnce <- function(urlBase, 
-                             fileName,
-                             localFolder) {
+#' @author Jacques van Helden email{Jacques.van-Helden@@france-bioinformatique.fr}
+#' @param url_base base of the URL, that will be prepended to the file name
+#' @param file_name name of the file (should not contain any path)
+#' @param local_folder path of a local folder where the file should be stored
+#' @return the function returns the path of the local file, built from local_folder and file_name
+#' @export
+downloadOnlyOnce <- function(url_base, 
+                             file_name,
+                             local_folder) {
 
   ## Define the source URL  
-  url <- file.path(urlBase, fileName)
+  url <- file.path(url_base, file_name)
   message("Source URL\n\t",  url)
 
   ## Define the local file
-  localFile <- file.path(localFolder, fileName)
+  local_file <- file.path(local_folder, file_name)
   
   ## Create the local data folder if it does not exist
-  dir.create(localFolder, showWarnings = FALSE, recursive = TRUE)
+  dir.create(local_folder, showWarnings = FALSE, recursive = TRUE)
   
   ## Download the file ONLY if it is not already there
-  if (!file.exists(localFile)) {
+  if (!file.exists(local_file)) {
     message("Downloading file from source URL to local file\n\t", 
-            localFile)
-    download.file(url = url, destfile = localFile)
+            local_file)
+    download.file(url = url, destfile = local_file)
   } else {
     message("Local file already exists, no need to download\n\t", 
-            localFile)
+            local_file)
   }
   
-  return(localFile)
+  return(local_file)
 }
 ```
 
-We can now use our new function `downloadOnlyOnce()` to download the folic acid dataset and store it in a local folder. 
 
+
+We can now use our new function `downloadOnlyOnce()` to download the files from the folic acid dataset and store them in a local folder. We will download successively :
+
+- transcriptome data (`fa`)
+- transcriptome medata
+- proteome data (`pfa`)
+- proteome medata
 
 ```{r download_fa}
 ## Specify the basic parameters
-pavkovicBase <- "https://github.com/DU-Bii/module-3-Stat-R/raw/master/stat-R_2021/data/pavkovic_2019"
-pavkovicFolder <- "~/DUBii-m3_data/pavkovic_2019"
+pavkovic_base <- "https://github.com/DU-Bii/module-3-Stat-R/raw/master/stat-R_2021/data/pavkovic_2019"
+pavkovic_folder <- "~/DUBii-m3_data/pavkovic_2019"
 
 #### Dowload folic acid data and metadata ####
 
-## Transcriptome file
-localFAfile <- downloadOnlyOnce(
-  urlBase = pavkovicBase, 
-  fileName = "fa_raw_counts.tsv.gz",
-  localFolder =  pavkovicFolder
+## Transcriptome data table
+local_fa_file <- downloadOnlyOnce(
+  url_base = pavkovic_base, 
+  file_name = "fa_raw_counts.tsv.gz",
+  local_folder =  pavkovic_folder
 )
 
-## Proteome file
-localPFAfile <- downloadOnlyOnce(
-  urlBase = pavkovicBase, 
-  fileName = "pfa_model_counts.tsv.gz",
-  localFolder =  pavkovicFolder
+## Transcriptome metadata
+trans_metadata_file <- downloadOnlyOnce(
+  url_base = pavkovic_base, 
+  file_name = "transcriptome_metadata.tsv",
+  local_folder =  pavkovic_folder
 )
 
-## Metadata
-protMetadataFile <- downloadOnlyOnce(
-  urlBase = pavkovicBase, 
-  fileName = "proteome_metadata.tsv",
-  localFolder =  pavkovicFolder
+## Proteome data table
+local_pfa_file <- downloadOnlyOnce(
+  url_base = pavkovic_base, 
+  file_name = "pfa_model_counts.tsv.gz",
+  local_folder =  pavkovic_folder
 )
 
-## Metadata
-transMetadataFile <- downloadOnlyOnce(
-  urlBase = pavkovicBase, 
-  fileName = "transcriptome_metadata.tsv",
-  localFolder =  pavkovicFolder
+## Proteome metadata
+prot_metadata_file <- downloadOnlyOnce(
+  url_base = pavkovic_base, 
+  file_name = "proteome_metadata.tsv",
+  local_folder =  pavkovic_folder
 )
+
 
 
 ```
+
+After having run the chunk of code above, try to re-run it. In principle, you should just receive messages telling you that the files are already there. 
 
 
 ### Loading the files
 
-After having run the chunk of code above, try to re-run it. In principle, you should just receive messages telling you that the files are already there. 
+
+We now write a function `load_fix_row_names()` that loads a data file and takes a specified column as row names, whilst automatically fixing potential problems due to duplicate labels in this column. 
 
 ```{r my_easy_load_function}
 #' @title Load a tab-separated value file and manually set row ames after having forced them to unique values
+#' @author Jacques van Helden email{Jacques.van-Helden@@france-bioinformatique.fr}
 #' @param file file path
 #' @param header=1 Header is set to 1 by default
 #' @param sep="\t" Column separator is set to tab by default
 #' @param rownames.col=1 Column containing the row names
 #' @param ... all other parameters are passed to read.delim()
 #' @return a data frame with the loaded data
-myEasyLoad <- function(file, 
+load_fix_row_names <- function(file, 
                        header = 1, 
                        sep = "\t",
                        rownames.col = 1, 
@@ -397,32 +413,32 @@ We can now load the data that from our local folder.
 ```{r load_fa}
 
 ## Load transcriptome data
-fa <- read.delim(file = localFAfile, sep = "\t", header = TRUE)
+fa <- read.delim(file = local_fa_file, sep = "\t", header = TRUE)
 
 ## Check the first lines of the loaded file
 dim(fa)
 kable(head(fa), caption = "Loaded with read.delim()")
 
-## Load same data with myEasyLoad
-fa <- myEasyLoad(file = localFAfile, rownames.col = 1)
+## Load same data with load_fix_row_names
+fa <- load_fix_row_names(file = local_fa_file, rownames.col = 1)
 dim(fa)
 kable(head(fa), caption = "Loaded with myEasyLad()")
 hist(unlist(fa), breaks = 100)
 
 ## Load proteome data
-pfa <- myEasyLoad(file = localPFAfile, rownames.col = 1)
+pfa <- load_fix_row_names(file = local_pfa_file, rownames.col = 1)
 dim(pfa)
 
 ## Check the first lines of the loaded file
 kable(head(pfa))
 
 ## Load proteome metadata
-protMeta <- read.delim(file = protMetadataFile, sep = "\t", header = TRUE)
-kable(protMeta, caption = "Metadata for the proteome dataset")
+proteome_metadata <- read.delim(file = prot_metadata_file, sep = "\t", header = TRUE)
+kable(proteome_metadata, caption = "Metadata for the proteome dataset")
 
 ## Load transcriptome metadata
-transMeta <- read.delim(file = transMetadataFile, sep = "\t", header = TRUE)
-kable(transMeta, caption = "Metadata for the transcriptome dataset")
+transcriptome_metadata <- read.delim(file = trans_metadata_file, sep = "\t", header = TRUE)
+kable(transcriptome_metadata, caption = "Metadata for the transcriptome dataset")
 
 ```
 
@@ -438,19 +454,19 @@ We can now use this function to download and load the different data files.
 Draw histograms of the transcriptome and proteom data, all samples together. 
 
 ```{r fa_hist_ugly}
-pfaValues <- unlist(as.vector(pfa))
-hist(pfaValues)
+pfa_vector <- unlist(as.vector(pfa))
+hist(pfa_vector)
 ```
 
 Let us now improve the histogram in order to get an intuition of our data. 
 
 ```{r fa_hist_breaks}
-hist(pfaValues, breaks = 200)
+hist(pfa_vector, breaks = 200)
 ```
 
 
 ```{r fa_hist_log2}
-hist(log2(pfaValues), breaks = 100)
+hist(log2(pfa_vector), breaks = 100)
 ```
 
 
@@ -461,17 +477,32 @@ hist(log2(pfaValues), breaks = 100)
 
 ## Save a memory image of your session
 
-Use the finction save() to store an image of your sessionn, in an Rdata file? Tthis file will contain all the data that you loaded during this session, and enable you to reload everything without having to re-execute all the steps. 
+Use the finction `save.image()` to store an image of your session, in a file `pavkovic_memory_image.Rdata` in the  local folder specified above. 
+This file will contain all the data that you loaded during this session, and enable you to reload everything without having to re-execute all the steps. 
 
 ```{r memory_image}
 
+## Define the path to the memory image file
+memory_image_file <- file.path(local_folder, "pavkovic_memory_image.Rdata")
+
+## Save the memory image
+save.image(file = memory_image_file)
+
+message("Memory image saved in file\n\t", memory_image_file)
 ```
 
+For a future session, you will be able to reload all the data with a single command:
 
+`load([path_to_your_memory_image])`
+
+ You will need to replace `[path_to_your_memory_image]` by your actual path. 
+ In my case, the command becomes:
+ 
+ `load("`r memory_image_file`")`
 
 ## Save your session info
 
-As usual
+For the sake of traceability, store the specifications of your R environment in the report, with the command `sessionInfo()`. This will indicate the version of R as wella sof all the libraries used in this notebook. 
 
 ```{r session_info}
 sessionInfo()
