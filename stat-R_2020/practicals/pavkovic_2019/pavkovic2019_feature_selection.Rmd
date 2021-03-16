@@ -1,0 +1,265 @@
+---
+title: "Analysis of omics data from Pavkovic 2019 - Feature selection"
+author: "Jacques van Helden and Denis Puthier"
+date: '`r Sys.Date()`'
+output:
+  html_document:
+    self_contained: no
+    fig_caption: yes
+    highlight: zenburn
+    theme: cerulean
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+    code_folding: "hide"
+  ioslides_presentation:
+    slide_level: 2
+    self_contained: no
+    colortheme: dolphin
+    fig_caption: yes
+    fig_height: 5
+    fig_width: 7
+    fonttheme: structurebold
+    highlight: tango
+    smaller: yes
+    toc: yes
+    widescreen: yes
+  slidy_presentation:
+    smart: no
+    slide_level: 2
+    self_contained: yes
+    fig_caption: yes
+    fig_height: 5
+    fig_width: 7
+    highlight: tango
+    incremental: no
+    keep_md: yes
+    smaller: yes
+    theme: cerulean
+    toc: yes
+    widescreen: yes
+  beamer_presentation:
+    colortheme: dolphin
+    fig_caption: yes
+    fig_height: 5
+    fig_width: 7
+    fonttheme: structurebold
+    highlight: tango
+    incremental: no
+    keep_tex: no
+    slide_level: 2
+    theme: Montpellier
+    toc: yes
+  revealjs::revealjs_presentation:
+    theme: night
+    transition: none
+    self_contained: true
+    css: ../slides.css
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
+  powerpoint_presentation:
+    slide_level: 2
+    fig_caption: yes
+    fig_height: 5
+    fig_width: 7
+    toc: yes
+font-import: http://fonts.googleapis.com/css?family=Risque
+subtitle: DUBii 2020
+font-family: Garamond
+transition: linear
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+
+```{r settings, include=FALSE, echo=FALSE, eval=TRUE}
+
+options(width = 300)
+# options(encoding = 'UTF-8')
+knitr::opts_chunk$set(
+  fig.width = 7, fig.height = 5, 
+  fig.path = 'figures/pavkovic2019_',
+  fig.align = "center", 
+  size = "tiny", 
+  echo = TRUE, 
+  eval = TRUE, 
+  warning = FALSE, 
+  message = FALSE, 
+  results = TRUE, 
+  comment = "")
+
+options(scipen = 12) ## Max number of digits for non-scientific notation
+# knitr::asis_output("\\footnotesize")
+
+```
+
+
+
+```{r libraries, echo=FALSE, eval=TRUE}
+requiredLib <- c("knitr")
+for (lib in requiredLib) {
+  if (!require(lib, character.only = TRUE)) {
+    install.packages(lib, )
+  }
+  require(lib, character.only = TRUE)
+}
+
+```
+
+## Reloading the data
+
+```{r data_reload}
+source('R/01_reload_data.R')
+```
+
+
+## ANOVA-based variable ordering (multiple subtypes)
+
+The **ANOVA** test allows to select genes whose inter-group variance is significantly higher than the so-called **residual variance**, i.e. the variance remaining after removing the inter-group variance from the todal variance.  
+
+In the context of detection of differentially expressed genes, ANOVA can be thought of as generalization of the Welch test. Indeed, Welch and Student tests were conceived to test the equality of the mean between two groups (for example one subtype of interest and all the other subtypes), whereas ANOVA simultaneously tests the equality of the mean for multiple groups. 
+
+
+$$H_0= \mu_1 = \mu_2= \cdots = \mu_g$$
+
+We could thus use ANOVA to establish a general ranking criterion that would select the genes showing higest differences between ALL subtypes, without specifying a priori which particular subtypes have to be different. 
+
+In a first time, we will apply the ANOVA test to one arbitrarily selected gene. We will then see how to run this test on each row of the expression matrix.
+
+
+Some remarks about the implementation.
+
+1. In contrast with the Welch test, which was a 2-groups test, ANOVA can be used to compare multiple groups in a single analysis. For ANOVA, we will use the original sample labels (with all the ALL subtypes explicitly named), rather than the `one.vs.other` vector that we created for 2-groups analysis.
+
+2. We will run a  single-factor ANOVA, with gene expression as values, and sample labels as groupinfeature.
+
+3. The R methods `aov()` and `anova()` take as input a data frame with the values (gene expression values) in the first column, and the groupings (sample labels) in the second one.
+
+4. **R** proposes two methods for the ANOVA test. The `aov()` function automatically fits a linear model and runs the anova test. However it is conceived for balanced groups (all groups should have smiliar effectives), which is not our case (some of the ALL subtypes have very few samples). With our data, it returns a warning *"Estimated effects must be unbalanced"*. Hereafter we will run both approaches to illustrate their implementation., but the second one (`anova()`) is the most flexible.
+
+5. Even though `anova()` can handle unbalanced groups, we should keep in mind that the power of the test depends on the fact that we dispose of a sufficient number of samples per group. It might thus be wise to restrict the analysis to the groups containing a minimum number of samples (for example at least 8). 
+
+
+```{r}
+
+x <- log2Filtered
+
+
+i <- 123 ## Select an arbitrary feature
+
+
+## Build a data frame with gene expression values in the first column, 
+## and sample labels in the second column.
+feature.expr <- unlist(x[i,]) ## Select the expression profile for this feature
+
+feature.for.anova <- data.frame("expr" = feature.expr, "group" = metadata$condition)
+
+kable(feature.for.anova)
+
+## Run the aov() method to check the warnings
+feature.aov.result <- aov(formula = expr ~ group, data = feature.for.anova)
+print(feature.aov.result)
+
+
+## We thus try the indirect approach: fit a linear model and run anova on it.
+feature.anova.result <- anova(lm(formula = expr ~ group, data = feature.for.anova))
+print(feature.anova.result)
+
+## Extract the p-value from the ANOVA result
+# attributes(feature.anova.result)
+pval <- as.numeric(unlist(feature.anova.result)["Pr(>F)1"])
+print(pval)
+
+## Compute the e-value from this p-value
+eval <- pval * nrow(x)
+print(eval)
+
+## Summarise the result in a vector
+feature.anova.summary <- data.frame("g" = i, 
+                                    "name"=row.names(x[i,]),
+                                    "pval"=pval,
+                                    "eval"=eval,
+                                    "sig"=-log(eval, base=10))
+kable(feature.anova.summary, caption = "Anova result for an aribtrary gene. ")
+```
+
+
+
+```{r feature_anova_function}
+#' @title run ANOVA and retunr relevant statistics
+featureANOVA <- function(expr, group) {
+  feature.for.anova <- data.frame("expr" = expr, "group" = group)
+  
+  ## aov() method
+  # feature.aov.result <- aov(formula = expr ~ group, data = feature.for.anova)
+  
+  ## Alternative: fit a linear model and run anova on it.
+  feature.anova.result <- anova(lm(formula = expr ~ group, data = feature.for.anova))
+  
+  ## Extract the p-value from the ANOVA result
+  # attributes(feature.anova.result)
+
+  ## Summarise the result in a vector
+  feature.anova.summary <- c(
+    "F" = as.numeric(unlist(feature.anova.result)["F value1"]),
+    "pval" = as.numeric(unlist(feature.anova.result)["Pr(>F)1"]))
+  return(feature.anova.summary)
+} 
+
+
+## Run ANOVA on each feature
+system.time(
+  anovaResult <- data.frame(t(apply(X = x, MARGIN = 1, FUN = featureANOVA, group = metadata$condition)))
+)
+
+anovaResult$evalue <- anovaResult$pval * nrow(anovaResult)
+
+
+```
+
+
+### P-value distribution
+
+```{r pval_distrib, fig.width=7, fig.height=5, out.width="80%", fig.cap="P-value histogram of the feature-wise ANOVA. "}
+#### P-value hisogram ####
+hist(anovaResult$pval, breaks = 20, 
+     main = "ANOVA - P-value histogram", 
+     clab = "Nominal p-value", 
+     ylab = "Number of features")
+
+```
+
+
+## Summary of the results
+
+```{r}
+alpha <- 0.1
+anovaResult$positive <- (anovaResult$evalue < alpha)
+table(anovaResult$positive)
+
+min(anovaResult$evalue)
+
+# hist(anovaResult$evalue)
+
+```
+
+
+## Selection of the top-ranking features
+
+```{r}
+n <- 500
+
+selectedIndices <- order(anovaResult$pval, decreasing = FALSE)[1:n]
+selectedGenes <- rownames(x)[selectedIndices]
+write.table(x = "")
+
+```
+
+
+We arbitrarily select the 
+

@@ -1,0 +1,567 @@
+---
+title: 'Report: supervised classification of cancer data'
+author: "Prénom NOM"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    code_folding: hide
+    fig_caption: yes
+    highlight: zenburn
+    number_sections: no
+    self_contained: no
+    theme: cerulean
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
+font-import: http://fonts.googleapis.com/css?family=Risque
+font-family: Garamond
+subtitle: DUBii 2020 - Module 3 - Analyse statistique avec R - Evaluation
+editor_options:
+  chunk_output_type: console
+transition: linear
+---
+
+```{r settings, include=FALSE, echo=FALSE, eval=TRUE}
+message("Loading required libraries")
+
+requiredLib <- c(
+  "knitr",
+  "rpart",
+  "e1071",
+  "rpart.plot",
+  "randomForest", 
+  "grDevices", ## For densCols
+  #                 "corrplot",
+  "FactoMineR",
+  "e1071",
+  "caret")
+for (lib in requiredLib) {
+  if (!require(lib, character.only = TRUE)) {
+    install.packages(lib, )
+  }
+  require(lib, character.only = TRUE)
+}
+
+options(width = 300)
+# options(encoding = 'UTF-8')
+knitr::opts_chunk$set(
+  fig.width = 7, fig.height = 5, 
+  fig.path = 'figures/learning_',
+  fig.align = "center", 
+  size = "tiny", 
+  echo = TRUE, 
+  eval = TRUE, 
+  warning = FALSE, 
+  message = FALSE, 
+  results = TRUE, 
+  comment = "")
+
+options(scipen = 12) ## Max number of digits for non-scientific notation
+# knitr::asis_output("\\footnotesize")
+
+```
+
+```{r load_solutions}
+#### Just for the trainer: if the solution file exists, load it ####
+solutionFile <- "van-Helden-Jacques_evlaluation-m3_solutions.R"
+if (file.exists(solutionFile)) {
+  # read_chunk(solutionFile)
+}
+
+```
+
+
+## Principle of the evaluation
+
+We propose here a structure of scientific report for the final evaluation of the third module "Analyse statistique with R". 
+
+The report is conceived in order to be compiled as is. 
+
+To ease your task and ensure everyone starts on the same basis,the notebook already inculdes the following basic tasks: 
+
+- data loading
+- pre-processing: normalisation, dimension reduction
+
+We ask everyone to fill in the missing parts with personnaly written code.
+
+Each trainee will choose a given machine learning method (SVM, KNN, Random Forest, or any other one of your choice), tune its parameters and evaluate its performances. The results will be collected in a comparative table in order to gain a general insight on the respective merits of the methods, based on the individual results. 
+
+You will then use your model to assign each sample to one of the 4 cancer types:  Basal.like, HER2pos, Luminal.A ou Luminal.B.
+
+
+### Evaluation criteria
+
+- **Reusability of the code**: the trainers should be able to run your R markdown on their instance of RStudio
+
+- **Clarity of the code**: the code should be understandable for someone familiar with R programming. Variable names should indicate their content. 
+
+- **Code structuration**: the code should be well structured. For example, if a given piece of code has to run at several places in your script, try to encapsulate it in a function rather than duplicating the code. 
+
+- **Code documentation**: the code should be documented by explaining what each piece of code aims at. The implementation choices should be documented. 
+
+- **Relevance of the statistical approaches**: the markdown should explain why a given statistical method is appropriate to the addressed biological question. Don't hesitate to comment the basic assumptions underlying the different methods, and the adequacy of your data to these assumption. 
+
+- **Interpretation of the results**: for each task, we will ask you to interpret the results and to highlight their biological relevance. 
+
+
+## Goals of the analysis
+
+Your work will include the following tasks. 
+
+1. **Data exploration**: compute descriptive statistics and use different graphical representations to grab general properties of the data distribution. 
+
+
+    - histogram of the data
+    - dot plot of the gene-wise variance versus mean
+    - PC plots
+
+
+2. **Gene clustering**: 
+
+    - run some clustering algorithm in order to identify groups of genes having similar expression profiles across the samples
+    - cluster the samples in order to see if a non-supervised approach reveals subsets of cancer types, and compare the clusters with the annotated cancer types. 
+
+
+3. **Supervised classification**
+
+    - choose a supervised classification method among KNN, SVM, Random Forest, or any other method if you feel adventurous.
+
+
+## Specification of the working directories
+
+We propose hereafter a piece of code to instantiate the working directories for this analysis in your account. In principle this code should work on any Unix-like operating system (Linux, Mac OX X), it might require some slight adaptation for Windows operating systems. 
+
+```{r directories}
+## Create a vector with all the user-specific directories, which can be exported in the report afterwards
+dir <- vector()
+
+## Specify your home directory
+dir["home"] <- "~" # This should probably be modified for Windows OS. 
+
+## Specify the local directory for the personal work
+## Don't hesitate to modify this according to your own file organisation
+dir["base"] <- file.path(dir["home"], "DUBii", "m3-stat-R", "personal-work")  
+
+## Directory with the results of all analyses
+dir["results"] <- file.path(dir["base"], "results")
+dir.create(dir["results"], showWarnings = FALSE, recursive = TRUE)
+
+## Specify a local directory to download the data
+dir["BICdata"] <- file.path(dir["base"], "data", "BIC")
+message("Local data directory for BIC data\t", dir["BICdata"])
+dir.create(dir["BICdata"], showWarnings = FALSE, recursive = TRUE)
+
+## Print out a table with the working directories
+kable(data.frame(dir), col.names = "Directory", caption = "Directories")
+
+```
+
+
+
+## Data set
+
+In this work we will develop statistical models to predict cancer types using data from the TCGA study (*The Cancer Genome Atlas*; https://cancergenome.nih.gov/) which includes RNA-seq data from breast cancer patients (**Breast Invasice Cancer** or **BIC**). There are two invasive cancer types involved: ductal and lobular carcinomas. 
+
+Original papers for these studies are here: 
+
+- <https://www.nature.com/articles/nature11412>
+- <https://www.cell.com/cell/fulltext/S0092-8674(15)01195-2>
+
+We prepared the files containing the BIC transcriptome profiles, and selected a subset of 1000 genes to reduce the size of the data files.  
+
+* file `BIC_log2-norm-counts_edgeR_DEG_top_1000.tsv.gz` corresponds to the RNA quantification  in 819 samples (columns), for the 1000 most significant genes (lines) returned by differential analysis.
+* file `BIC_sample-classes.tsv.gz` contains the tags of the 819 samples.
+* file `BIC_edgeR_DEG_table.tsv.gz`  contains the edgeR results of differential expression analysis.
+
+
+The code below enables you to download the data and install it on your own computer. Note tht th data will be downloaded only once. 
+
+
+```{r download_data}
+## Files required for the analyses
+message("Downloading BIC data")
+
+dataFiles <- c(
+  "expression" = "BIC_log2-norm-counts_edgeR_DEG_top_1000.tsv.gz", ## Expression values
+  "sample classes" = "BIC_sample-classes.tsv.gz", ## Sample descriptions
+  "DEG table"  = "BIC_edgeR_DEG_table.tsv.gz"  ## edgeR results of differential expression analysis
+)
+
+
+for (dataFile in dataFiles) {
+  localFile <- file.path(dir["BICdata"], dataFile)
+  if (file.exists(localFile)) {
+    message("File already here, not downloading\n\t", localFile, "\n")
+  } else {
+    githubURL <- file.path("https://github.com/DU-Bii/module-3-Stat-R/raw/master/stat-R_2020/data/TCGA_BIC_subset/", dataFile)
+    message("Downloading data file from github:\n\t", githubURL)
+    download.file(url = githubURL, destfile = localFile)
+  }
+}
+```
+
+
+
+
+
+## Data preprocessing
+
+The data was pre-processed in order to provide you with a dataset ready-to-use for the multivariate analysis tasks. 
+
+In short, the pre-processing included the following steps. 
+
+1. Download of the raw counts per gene from the ReCount database
+
+2. Selection of the subset of samples belonging to the **Breast Invasive Cancer** (**BIC**) study. 
+
+3. Assignment of a cancer type, based on three immuno markers (documented in the sample description table).
+
+4. Filtering out of the "undetected" genes, i.e. genes having either zero counts in more than 95% of the samples, or a mean count $\se 10$ across all the BIC samples. 
+
+5. Count standardisation. To compensate for difference in sequencing depth, we applied a sample-wise standardisation with `DESeq2::estimateSizeFactors()`. 
+
+6. Log2 transformation. Standardised counts were log2-transformed in order to normalise the values. Log2-transformed data are more appropriate for clustering and supervised classification. 
+
+7. Feature selection. In order to select relevant subset of genes, we ran multi-group differential analysis with edgeR. Note that this analysis was led with the raw counts (edgeR and DESeq2 have their own built-in normalisation procedure, and should never be fed with normalised data). 
+
+Additional details and the full code used for preprocessing can be found on the DUBii study case repository: <https://du-bii.github.io/study-cases/Homo_sapiens/TCGA_study-case/import_TCGA_from_Recount.html>
+
+
+
+## Data loading
+
+The data were loaded from the folder `r dir["BICdata"]`. 
+
+```{r data_loading}
+## Load expression data
+## Note: we use the option check.name=FALSE to avoid converting 
+## hyphens to dot in the sample IDs (column names)
+BIC.expr <- read.table(
+  file = file.path(dir["BICdata"], dataFiles["expression"]), 
+  check.names = FALSE, # Added by JvH 2020-07-24
+  header = TRUE)
+# dim(BIC.expr)
+# colnames(BIC.expr)
+
+
+## Load sample description table, whichb includes cancer class + immuno markers
+## Note: we set the option stringsAsFactor=FALSE to facilitate 
+## subsequent use of the cancer.type column.
+BIC.sample.classes <- read.table(
+  file.path(dir["BICdata"], dataFiles["sample classes"]), 
+  stringsAsFactors = FALSE, # Added by JvH 2020-07-24
+  header = TRUE)
+# dim(BIC.sample.classes)
+# names(BIC.sample.classes)
+# head(BIC.sample.classes)
+# class(BIC.sample.classes$cancer.type)
+
+## Define sample colors and 1-letter symbols
+class.symbols <- c(
+  "Basal.like" = "L",
+  "HER2pos" = "H",
+  "Luminal.A" = "A",
+  "Luminal.B" = "B",
+  "Unclassified" = "U"
+)
+BIC.sample.classes$symbol <- class.symbols[BIC.sample.classes$cancer.type]
+table(BIC.sample.classes$symbol)
+
+## Define a color for each cancer class and assign colors to samples accordingly.
+class.colors <-  c(
+  "Basal.like" = "brown",
+  "HER2pos" = "darkgreen",
+  "Luminal.A" = "blue",
+  "Luminal.B" = "violet",
+  "Unclassified" = "grey"
+)
+BIC.sample.classes$color <- class.colors[BIC.sample.classes$cancer.type]
+
+
+## Load differential expression analysis results from DESeq2
+BIC.deg <- read.table(file.path(dir["BICdata"], dataFiles["DEG table"]),
+                      header = TRUE)
+# head(BIC.deg)
+
+#### Reorder samples in order to group them by class ####
+sampleNamesByClass <- rownames(BIC.sample.classes)[order(BIC.sample.classes$cancer.type)]
+length(sampleNamesByClass)
+BIC.expr <- BIC.expr[, sampleNamesByClass]
+BIC.sample.classes <- BIC.sample.classes[sampleNamesByClass, ]
+
+kable(dataFiles, col.names = "File", caption = "Data files")
+
+```
+
+
+The expression file contains `r nrow(BIC.expr)`  rows (genes) x `r ncol(BIC.expr)`  columns (samples). 
+
+The sample description table contains `r nrow(BIC.sample.classes)`  rows (samples) x `r ncol(BIC.sample.classes)`  columns (description fields). The first column indicates the cancer type, and the three following one indicate the values (positive/negative) for three marker genes used as diagnostic markers for the cancer type (*ER1*, *PR1* et *Her2*). 
+
+```{r}
+kable(head(BIC.sample.classes, n = 5), caption = "First rows of the sample description table. ")
+```
+
+
+We can count the number of samples per cancer type
+
+```{r class_summary}
+kable(sort(table(BIC.sample.classes$cancer.type), decreasing = TRUE), 
+      col.names = c("Cancer type" , "Nb samples"))
+```
+
+
+There are `r length(unique(BIC.sample.classes$cancer.type))` cancer types, including a "Unclassified", for the samples having a combination of markers inconsistent with the defined subtypes. This might bias the result since this "class" is likely to contain a mixture of different cancer types. We will thus temporarily suppress these samples from the dataset, but we will come back to it at the end of the work, since they provide an excellent opportunity to run the classifier for predictive purpuses (assign unclassified samples to one of the training classes). 
+
+
+The code below creates a data set from which the `Unclassified` samples have been suppressed. 
+
+
+```{r remove_unclassified_samples}
+## Generate a Boolean vector indicating which samples are unclassfied
+unclassified <- BIC.sample.classes$cancer.type == "Unclassified"
+
+## Count the number of genes having or not the unclassified label
+# table(unclassified)
+
+## Get the indices of the corresponding rowss
+ind.uncl <- which(unclassified)
+
+## Count the number of unclassified samples
+# length(ind.uncl)
+
+## Create a separate data frame 
+BIC.sample.classes.filtered <- BIC.sample.classes[-ind.uncl,]
+# dim(BIC.sample.classes.filtered)
+
+BIC.expr.filtered <- BIC.expr[, -ind.uncl] 
+# dim(BIC.expr.filtered)
+```
+
+
+
+## Data reduction
+
+
+We propose three methods to reduce the data dimensions.
+
+a. **Differentially Expressed Genes** (**DEG**). Selection of the most signficant genes reported by DESeq2 (multi-group differential analysis). This has already been done for you, we provide the table with the 1000 top significant genes.
+
+b. **Variance-ordered**: we will sort the genes by decreasing variance (unsupervised criterion). To avoid handling big files, we will apply a re-ordering of the 1000 top-ranking DEG genes, and see whether the genes with the highest variance provide good classifiers. 
+
+c. **PCs** Principal components. We will use a restricted number of principal components and see if they capture a sufficient information to train a classifier. 
+
+You will use these respective datasets at different stages of your report.
+
+
+### DEG selection
+
+The code below sorts the expression table by increasing values of the FDR (column `padj` of the table `BIC.deg`) found in the differential expression table (variable `BIC.deg`). 
+
+Note that DEG table contains `r nrow(BIC.deg)` genes, whereas the expression table was restricted to `r nrow(BIC.expr.filtered)` genes. We thus used a trick to select the right genes and sort them. The result is a table with `r nrow(BIC.expr.filtered)` rows (genes) and `r ncol(BIC.expr.filtered)` columns (samples), sorted by increasing FDR (not in the table). 
+
+```{r top_deg}
+## Select in the DEG table (that contains ~20,000 genes) the subset that is found in the expression table (1000 genes)
+BIC.deg.filtered <- subset(
+  BIC.deg, 
+  row.names(BIC.deg) %in% row.names(BIC.expr.filtered))
+# dim(BIC.deg.filtered)
+# View(BIC.deg.filtered)
+
+## Sort gene names by increasing value of edgeR padj
+geneOrder <- rownames(BIC.deg.filtered)[order(BIC.deg.filtered$padj, decreasing = FALSE)]
+# head(geneOrder)
+
+## Sort the expression table according to the DEG gene order
+BIC.expr.DEGsorted <- BIC.expr.filtered[geneOrder, ]
+# View(BIC.expr.DEGsorted)
+
+```
+
+### Variance-based ordering
+
+It is now your turn to process the data. Create another table with the filtered expression table sorted by decreasing variance. 
+
+```{r variance_ordering, eval=TRUE}
+
+```
+
+
+### Principal components
+
+
+Run principal component analysis on the filtered expression table and create a separate table named `BIC.expr.PCs` with the coordinates of each sample in the principal component space.
+
+```{r pc_computation}
+
+```
+
+
+## PC plots
+
+Generate PC plots with the following components. Label the samples according to their annotated class.
+
+- PC2 vs PC1
+- PC4 vs PC3
+- PC6 vs PC5
+
+```{r pc_plots}
+
+## YOUR CODE SHOULD COME HERE
+
+```
+
+
+### Your interpretation
+
+
+
+
+## Clustering
+
+
+### Gene clustering
+
+Select the 500 most significant genes based on the adjusted p-value and run hierarchical clustering using the following dissimilarity metrics
+
+- Euclidian distance ($d_E$)
+- Pearson's correlation-derived  ($d_P = 1 - c_P$) where $c_P$ is Pearson's correlation)
+- Spearman's correlation-derived  ($d_S = 1 - c_S$) where $c_S$ is Spearman's correlation)
+
+Draw the results in a heatmap, where the rows correspond to genes and colums to samples. Make sure that the heatmap reflects the gene tree, but leaves the samples in their original order (to keep together the samples of the same cancer type). 
+
+Tips: `cor()`, `hclust()`, `heatmap()`,`heatmap.2()` or the other heatmap functions seen in the practicals. 
+
+
+```{r gene_clustering}
+
+## YOUR CODE SHOULD COME HERE
+
+```
+
+#### Gene clusètering: your interpretation
+
+Interpret the results (1 or 2 paragraphs): do you see a correspondence between the gene expression profiles and cancer classes? 
+
+
+### Sample clustering
+
+Apply the same 3 metrics to cluster samples based on the expression levels. 
+
+For each metrics, prune the tree to obtain 4 clusters, and compare them with the annotated cancer class (tips: `cutree()`, `table()`, `kable()`). 
+
+```{r sample_clustering}
+
+## YOUR CODE SHOULD COME HERE
+
+```
+
+#### Sample clustering: your interpretation
+
+Is there a good correspondence between sample clusters and  annotated cancer types? Is there a strong impact of the dissimilarity metrics? Which one performs best?
+
+
+
+## Supervised classification
+
+### Preparation of training and testing subsets
+
+* The **learning set** is the set which will allow to train the models. It will be made of 2/3 of the samples randomly selected.  
+
+* The **testing set** is the set which will allow to estimate the unbiased performances of the models. It will be made of the remaining 1/3 of the samples.  
+
+Split the filtered data set into training (2/3) and a testing (1/3) subsets with a balanced representation of the cancer types (stratified subsampling). 
+
+```{r train_test_sets}
+
+```
+
+### Evaluation of the performances
+
+In this section, we will perform here a manual evaluation of the classifier in order to make sure we master the different steps. In the next section we will use the  `tune()` utilities in order to identify the optimal parameter values. 
+
+1. Use the training subset to train a classifier of your choice (KNN, SVM, Random Forest or an other one if you feel adventurous). 
+
+```{r training}
+
+```
+
+
+2. Use the resulting model to predict the cancer type for the samples of the testing set. 
+
+```{r testing}
+
+```
+
+
+3. Build a confusion matrix to compare the predicted classes and annotated classes for the testing set. 
+
+```{r confusion_matrix}
+
+```
+
+
+4. Compute the misclassification error rate (MER). 
+
+
+```{r classifier_evaluation}
+
+## YOUR CODE SHOULD COME HERE
+
+```
+
+
+#### Your interpretation
+
+Interpret the results: how well does the classifier perform? Is there a bias towards some cancer types?
+
+
+### Tuning of the parameters
+
+Test the impact of a parameter on the performances by repeating the steps above with different values of this parameter. The parameter to be tested will depend on the algorithm you chose. 
+
+- `svm()`: test each one of the 4 supported kernels
+- `knn()`: test the impact of the number of neighbors
+- `randomForest()`: test the impact of the `mtry`parameter 
+
+Tips: `tuneRF()` or `tune.randomForest()`, `tune.knn()`, `tune.svm()`
+
+```{r classifier_tuning}
+
+## YOUR CODE SHOULD COME HERE
+
+```
+
+
+#### Your interpretation
+
+Interpret the results: do the tested parameters affect a lot the performances (are the results robust or sensitive to the choice of the parmeter value)? Do you see a rationale for the optimal values returned by the tune functions?
+
+### Prediction
+
+1. Train the classifier with all the samples of the filtered data set
+2. Use the resulting model to predict the cancer type for the unclassified samples. 
+
+```{r prediction}
+
+## YOUR CODE SHOULD COME HERE
+
+```
+
+
+
+#### Your interpretation
+
+Comment the general assignment of the unclassified samples to the different classes.  Analyse the relationship between the immuno markers and the predicted classes. 
+
+****************************************************************
+## General conclusion and perspectives
+
+(a few sentences, no more)
+
+

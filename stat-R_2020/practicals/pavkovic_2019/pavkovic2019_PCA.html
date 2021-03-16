@@ -1,0 +1,1621 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Jacques van Helden" />
+
+
+<title>Principal Component Analysis of multi-omics data (Pavkovic 2019)</title>
+
+<script src="pavkovic2019_PCA_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="pavkovic2019_PCA_files/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="pavkovic2019_PCA_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="pavkovic2019_PCA_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="pavkovic2019_PCA_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="pavkovic2019_PCA_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="pavkovic2019_PCA_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="pavkovic2019_PCA_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="pavkovic2019_PCA_files/navigation-1.1/tabsets.js"></script>
+<script src="pavkovic2019_PCA_files/navigation-1.1/codefolding.js"></script>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  { color: #cccccc; background-color: #303030; }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ffcfaf; } /* Alert */
+code span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+code span.at { } /* Attribute */
+code span.bn { color: #dca3a3; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #f0dfaf; } /* ControlFlow */
+code span.ch { color: #dca3a3; } /* Char */
+code span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+code span.co { color: #7f9f7f; } /* Comment */
+code span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+code span.do { color: #7f9f7f; } /* Documentation */
+code span.dt { color: #dfdfbf; } /* DataType */
+code span.dv { color: #dcdccc; } /* DecVal */
+code span.er { color: #c3bf9f; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #c0bed1; } /* Float */
+code span.fu { color: #efef8f; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+code span.kw { color: #f0dfaf; } /* Keyword */
+code span.op { color: #f0efd0; } /* Operator */
+code span.ot { color: #efef8f; } /* Other */
+code span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+code span.sc { color: #dca3a3; } /* SpecialChar */
+code span.ss { color: #cc9393; } /* SpecialString */
+code span.st { color: #cc9393; } /* String */
+code span.va { } /* Variable */
+code span.vs { color: #cc9393; } /* VerbatimString */
+code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
+
+.sourceCode .row {
+  width: 100%;
+}
+.sourceCode {
+  overflow-x: auto;
+}
+.code-folding-btn {
+  margin-right: -30px;
+}
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Principal Component Analysis of multi-omics data (Pavkovic 2019)</h1>
+<h4 class="author">Jacques van Helden</h4>
+<h4 class="date">2020-06-04 09:05:22</h4>
+
+</div>
+
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co">## Load libraries</span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">library</span>(<span class="st">&quot;knitr&quot;</span>)</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw">library</span>(<span class="st">&quot;FactoMineR&quot;</span>)</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="kw">library</span>(<span class="st">&quot;factoextra&quot;</span>)</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="kw">library</span>(<span class="st">&quot;corrplot&quot;</span>)</a></code></pre></div>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>La valeur de 2 + 2 est 4.</p>
+<p>On peut aussi insérer du bash:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co">#### Example of bash code running in an R notebook ####</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="bu">echo</span> Hello World</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co">## Run the Linux command whoami</span></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="fu">whoami</span></a>
+<a class="sourceLine" id="cb2-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co">## Run echo with an embedded result of the whoami command</span></a>
+<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="bu">echo</span> <span class="st">&quot;I am </span><span class="kw">`</span><span class="fu">whoami</span><span class="kw">`</span><span class="st">&quot;</span></a></code></pre></div>
+<pre><code>Hello World
+jvanhelden
+I am jvanhelden</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co">#### Example of R chunk: I assign the value here ####</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">a &lt;-<span class="st"> </span><span class="dv">7</span></a></code></pre></div>
+</div>
+<div id="material-and-methods" class="section level2">
+<h2>Material and methods</h2>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co">#### Example of R chunk ####</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="co">## The variable defined in the previous chunk s still in the environment for the next chunks</span></a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="kw">print</span>(a)</a></code></pre></div>
+<div id="data" class="section level3">
+<h3>Data</h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="co">##### Load the data ####</span></a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="co">## Note: this path is only valid if you are working on the IFB core cluster. </span></a>
+<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="co">## If not, it should point to the folder where you downloaded the memory image from the github repository</span></a>
+<a class="sourceLine" id="cb6-5" data-line-number="5"><span class="co">#load(&#39;/shared/projects/dubii2020/data/module3/seance5/pavkovic2019_proteome_uuo_memimage.Rdata&#39;)</span></a>
+<a class="sourceLine" id="cb6-6" data-line-number="6"><span class="co">#load(&#39;/shared/projects/dubii2020/data/module3/seance5/pavkovic2019_transcriptome_fa_memimage.Rdata&#39;)</span></a>
+<a class="sourceLine" id="cb6-7" data-line-number="7"><span class="kw">load</span>(<span class="st">&#39;/shared/projects/dubii2020/data/module3/seance5/pavkovic2019_proteome_fa_memimage.Rdata&#39;</span>)</a>
+<a class="sourceLine" id="cb6-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb6-9" data-line-number="9"><span class="kw">kable</span>(<span class="kw">t</span>(<span class="kw">as.data.frame</span>(parameters)), </a>
+<a class="sourceLine" id="cb6-10" data-line-number="10">      <span class="dt">col.names =</span> <span class="st">&quot;Parameter&quot;</span>, </a>
+<a class="sourceLine" id="cb6-11" data-line-number="11">      <span class="dt">caption =</span> <span class="st">&quot;Parameters used for this analysis&quot;</span>)</a></code></pre></div>
+<table>
+<caption>Parameters used for this analysis</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th align="left">Parameter</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>datatype</td>
+<td align="left">proteome</td>
+</tr>
+<tr class="even">
+<td>dataset</td>
+<td align="left">fa</td>
+</tr>
+<tr class="odd">
+<td>epsilon</td>
+<td align="left">0.1</td>
+</tr>
+<tr class="even">
+<td>forceDownload</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td>undetectedLimit</td>
+<td align="left">100</td>
+</tr>
+<tr class="even">
+<td>filePrefix</td>
+<td align="left">pavkovic2019_proteome_fa_</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="co">#### Choose the non-normalised filtered log2 data to play with ####</span></a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="co"># x &lt;- log2MedianCentered </span></a>
+<a class="sourceLine" id="cb7-3" data-line-number="3">x &lt;-<span class="st"> </span>log2Standardized </a>
+<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="kw">dim</span>(x) <span class="co"># Check the dimensions</span></a></code></pre></div>
+<pre><code>[1] 8044   10</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">colnames</span>(x) <span class="co">## Check the sample names</span></a></code></pre></div>
+<pre><code> [1] &quot;normal_1&quot; &quot;normal_2&quot; &quot;day1_1&quot;   &quot;day1_2&quot;   &quot;day2_1&quot;   &quot;day2_2&quot;   &quot;day7_1&quot;   &quot;day7_2&quot;   &quot;day14_1&quot;  &quot;day14_2&quot; </code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="co">## Print the first rows of the data matrix to check the content</span></a>
+<a class="sourceLine" id="cb11-2" data-line-number="2"><span class="kw">kable</span>(<span class="kw">head</span>(x), <span class="dt">caption =</span> <span class="st">&quot;First rows of the data matrix&quot;</span>)</a></code></pre></div>
+<table>
+<caption>First rows of the data matrix</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">normal_1</th>
+<th align="right">normal_2</th>
+<th align="right">day1_1</th>
+<th align="right">day1_2</th>
+<th align="right">day2_1</th>
+<th align="right">day2_2</th>
+<th align="right">day7_1</th>
+<th align="right">day7_2</th>
+<th align="right">day14_1</th>
+<th align="right">day14_2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ENSMUSG00000037686</td>
+<td align="right">9.074107</td>
+<td align="right">9.004221</td>
+<td align="right">8.396524</td>
+<td align="right">8.460642</td>
+<td align="right">7.543358</td>
+<td align="right">7.898095</td>
+<td align="right">7.408463</td>
+<td align="right">7.611362</td>
+<td align="right">7.594110</td>
+<td align="right">7.924550</td>
+</tr>
+<tr class="even">
+<td>ENSMUSG00000027831</td>
+<td align="right">7.867928</td>
+<td align="right">7.784098</td>
+<td align="right">7.459918</td>
+<td align="right">7.428059</td>
+<td align="right">7.799405</td>
+<td align="right">7.640674</td>
+<td align="right">7.697335</td>
+<td align="right">7.819737</td>
+<td align="right">7.833291</td>
+<td align="right">7.280241</td>
+</tr>
+<tr class="odd">
+<td>ENSMUSG00000039201</td>
+<td align="right">4.919638</td>
+<td align="right">4.769868</td>
+<td align="right">5.856594</td>
+<td align="right">5.695505</td>
+<td align="right">6.250616</td>
+<td align="right">6.111805</td>
+<td align="right">5.325407</td>
+<td align="right">5.004578</td>
+<td align="right">4.812991</td>
+<td align="right">5.057171</td>
+</tr>
+<tr class="even">
+<td>ENSMUSG00000031095</td>
+<td align="right">11.979430</td>
+<td align="right">11.722994</td>
+<td align="right">11.998335</td>
+<td align="right">11.883829</td>
+<td align="right">12.161338</td>
+<td align="right">12.170381</td>
+<td align="right">12.009147</td>
+<td align="right">12.243316</td>
+<td align="right">12.037636</td>
+<td align="right">12.029025</td>
+</tr>
+<tr class="odd">
+<td>ENSMUSG00000034931</td>
+<td align="right">9.769235</td>
+<td align="right">9.674498</td>
+<td align="right">9.843766</td>
+<td align="right">9.879726</td>
+<td align="right">9.923981</td>
+<td align="right">9.936608</td>
+<td align="right">10.043512</td>
+<td align="right">9.928562</td>
+<td align="right">9.915093</td>
+<td align="right">9.819190</td>
+</tr>
+<tr class="even">
+<td>ENSMUSG00000038208</td>
+<td align="right">6.243681</td>
+<td align="right">6.303451</td>
+<td align="right">5.860863</td>
+<td align="right">6.404236</td>
+<td align="right">6.307760</td>
+<td align="right">6.355272</td>
+<td align="right">6.636115</td>
+<td align="right">6.641220</td>
+<td align="right">6.392972</td>
+<td align="right">6.170323</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="results" class="section level2">
+<h2>Results</h2>
+<div id="pca" class="section level3">
+<h3>PCA</h3>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="co">#### Compute the components ####</span></a>
+<a class="sourceLine" id="cb12-2" data-line-number="2"><span class="co">## Beware: the individuals should come as row --&gt; we have to transpose the expression matrix</span></a>
+<a class="sourceLine" id="cb12-3" data-line-number="3">res.pca &lt;-<span class="st"> </span><span class="kw">PCA</span>(<span class="kw">t</span>(x), <span class="dt">scale.unit =</span> <span class="ot">FALSE</span>, <span class="dt">ncp =</span> <span class="kw">ncol</span>(x), <span class="dt">graph =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb12-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb12-5" data-line-number="5"><span class="co">## Check the content of the resulting object</span></a>
+<a class="sourceLine" id="cb12-6" data-line-number="6"><span class="co"># names(res.pca)</span></a>
+<a class="sourceLine" id="cb12-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb12-8" data-line-number="8"><span class="co">## Eigen values</span></a>
+<a class="sourceLine" id="cb12-9" data-line-number="9"><span class="kw">kable</span>(res.pca<span class="op">$</span>eig, <span class="dt">caption =</span> <span class="st">&quot;Eigen values of the PCs&quot;</span>)</a></code></pre></div>
+<table>
+<caption>Eigen values of the PCs</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">eigenvalue</th>
+<th align="right">percentage of variance</th>
+<th align="right">cumulative percentage of variance</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>comp 1</td>
+<td align="right">606.51636</td>
+<td align="right">56.306102</td>
+<td align="right">56.30610</td>
+</tr>
+<tr class="even">
+<td>comp 2</td>
+<td align="right">251.71246</td>
+<td align="right">23.367791</td>
+<td align="right">79.67389</td>
+</tr>
+<tr class="odd">
+<td>comp 3</td>
+<td align="right">67.43145</td>
+<td align="right">6.260016</td>
+<td align="right">85.93391</td>
+</tr>
+<tr class="even">
+<td>comp 4</td>
+<td align="right">44.90736</td>
+<td align="right">4.168986</td>
+<td align="right">90.10290</td>
+</tr>
+<tr class="odd">
+<td>comp 5</td>
+<td align="right">26.20929</td>
+<td align="right">2.433146</td>
+<td align="right">92.53604</td>
+</tr>
+<tr class="even">
+<td>comp 6</td>
+<td align="right">24.37324</td>
+<td align="right">2.262696</td>
+<td align="right">94.79874</td>
+</tr>
+<tr class="odd">
+<td>comp 7</td>
+<td align="right">22.35638</td>
+<td align="right">2.075460</td>
+<td align="right">96.87420</td>
+</tr>
+<tr class="even">
+<td>comp 8</td>
+<td align="right">18.43731</td>
+<td align="right">1.711632</td>
+<td align="right">98.58583</td>
+</tr>
+<tr class="odd">
+<td>comp 9</td>
+<td align="right">15.23312</td>
+<td align="right">1.414170</td>
+<td align="right">100.00000</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="co">## Variables versus components</span></a>
+<a class="sourceLine" id="cb13-2" data-line-number="2"><span class="kw">kable</span>(<span class="kw">head</span>(res.pca<span class="op">$</span>var<span class="op">$</span>coord), <span class="dt">caption =</span> <span class="st">&quot;Coordonates of the features in the PC space&quot;</span>) </a></code></pre></div>
+<table>
+<caption>Coordonates of the features in the PC space</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">Dim.1</th>
+<th align="right">Dim.2</th>
+<th align="right">Dim.3</th>
+<th align="right">Dim.4</th>
+<th align="right">Dim.5</th>
+<th align="right">Dim.6</th>
+<th align="right">Dim.7</th>
+<th align="right">Dim.8</th>
+<th align="right">Dim.9</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ENSMUSG00000037686</td>
+<td align="right">0.5602567</td>
+<td align="right">-0.0695260</td>
+<td align="right">0.0829844</td>
+<td align="right">0.0230604</td>
+<td align="right">-0.0244854</td>
+<td align="right">-0.0529326</td>
+<td align="right">0.0175894</td>
+<td align="right">-0.0545825</td>
+<td align="right">0.0312909</td>
+</tr>
+<tr class="even">
+<td>ENSMUSG00000027831</td>
+<td align="right">-0.0268473</td>
+<td align="right">-0.0428831</td>
+<td align="right">0.1005814</td>
+<td align="right">0.1174449</td>
+<td align="right">-0.0299994</td>
+<td align="right">-0.0266777</td>
+<td align="right">0.0007058</td>
+<td align="right">0.0157059</td>
+<td align="right">-0.0949374</td>
+</tr>
+<tr class="odd">
+<td>ENSMUSG00000039201</td>
+<td align="right">-0.0638299</td>
+<td align="right">0.5087985</td>
+<td align="right">-0.0664831</td>
+<td align="right">0.0348704</td>
+<td align="right">0.0387480</td>
+<td align="right">0.0533996</td>
+<td align="right">-0.0583329</td>
+<td align="right">0.0239771</td>
+<td align="right">0.0220538</td>
+</tr>
+<tr class="even">
+<td>ENSMUSG00000031095</td>
+<td align="right">-0.1030284</td>
+<td align="right">0.0446238</td>
+<td align="right">-0.0159905</td>
+<td align="right">0.0159499</td>
+<td align="right">0.0210804</td>
+<td align="right">-0.0439426</td>
+<td align="right">-0.0188236</td>
+<td align="right">-0.0548504</td>
+<td align="right">-0.0362927</td>
+</tr>
+<tr class="odd">
+<td>ENSMUSG00000034931</td>
+<td align="right">-0.0852404</td>
+<td align="right">0.0316188</td>
+<td align="right">0.0253286</td>
+<td align="right">-0.0069091</td>
+<td align="right">0.0108797</td>
+<td align="right">0.0140832</td>
+<td align="right">-0.0025666</td>
+<td align="right">-0.0032059</td>
+<td align="right">0.0128727</td>
+</tr>
+<tr class="even">
+<td>ENSMUSG00000038208</td>
+<td align="right">-0.1338140</td>
+<td align="right">-0.0516643</td>
+<td align="right">0.0725614</td>
+<td align="right">0.0786191</td>
+<td align="right">-0.0445291</td>
+<td align="right">-0.0110313</td>
+<td align="right">0.0894065</td>
+<td align="right">-0.0079813</td>
+<td align="right">0.0574955</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="co"># head(res.pca$var$cor) ## Correlation</span></a>
+<a class="sourceLine" id="cb14-2" data-line-number="2"><span class="co"># head(res.pca$var$cos2) ## Cos2 (squared correlation)</span></a>
+<a class="sourceLine" id="cb14-3" data-line-number="3"><span class="co"># head(res.pca$var$contrib) ## Contribution of each variable to each component (loading ?)</span></a>
+<a class="sourceLine" id="cb14-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb14-5" data-line-number="5"><span class="co">## Check that Cos2 is just the square of the correlation</span></a>
+<a class="sourceLine" id="cb14-6" data-line-number="6"><span class="co"># head(res.pca$var$cos2) - head(res.pca$var$cor)^2</span></a>
+<a class="sourceLine" id="cb14-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb14-8" data-line-number="8"><span class="co">## The sum of squared correlations per variable must be 1</span></a>
+<a class="sourceLine" id="cb14-9" data-line-number="9"><span class="co"># head(apply(res.pca$var$cos2, 1, sum))</span></a>
+<a class="sourceLine" id="cb14-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb14-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb14-12" data-line-number="12"><span class="co">## Individuals versus components</span></a>
+<a class="sourceLine" id="cb14-13" data-line-number="13"><span class="kw">kable</span>(res.pca<span class="op">$</span>ind<span class="op">$</span>coord, <span class="dt">caption =</span> <span class="st">&quot;Coordinates of the individuals in the variable space&quot;</span>) <span class="co">## Coordinates</span></a></code></pre></div>
+<table>
+<caption>Coordinates of the individuals in the variable space</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">Dim.1</th>
+<th align="right">Dim.2</th>
+<th align="right">Dim.3</th>
+<th align="right">Dim.4</th>
+<th align="right">Dim.5</th>
+<th align="right">Dim.6</th>
+<th align="right">Dim.7</th>
+<th align="right">Dim.8</th>
+<th align="right">Dim.9</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>normal_1</td>
+<td align="right">34.420376</td>
+<td align="right">-10.595090</td>
+<td align="right">9.6091387</td>
+<td align="right">6.2102260</td>
+<td align="right">5.6634490</td>
+<td align="right">0.6509477</td>
+<td align="right">-1.2740605</td>
+<td align="right">-7.1291849</td>
+<td align="right">-2.145107</td>
+</tr>
+<tr class="even">
+<td>normal_2</td>
+<td align="right">37.996171</td>
+<td align="right">-16.459654</td>
+<td align="right">-2.4550846</td>
+<td align="right">5.6725013</td>
+<td align="right">-8.4996304</td>
+<td align="right">-0.7169252</td>
+<td align="right">0.0193776</td>
+<td align="right">5.9068331</td>
+<td align="right">1.014266</td>
+</tr>
+<tr class="odd">
+<td>day1_1</td>
+<td align="right">20.160709</td>
+<td align="right">17.358313</td>
+<td align="right">1.0450993</td>
+<td align="right">-13.4644331</td>
+<td align="right">-2.6142332</td>
+<td align="right">0.2919571</td>
+<td align="right">-6.9089453</td>
+<td align="right">-0.0249585</td>
+<td align="right">-3.218958</td>
+</tr>
+<tr class="even">
+<td>day1_2</td>
+<td align="right">16.470097</td>
+<td align="right">15.509316</td>
+<td align="right">3.6790390</td>
+<td align="right">-5.7959211</td>
+<td align="right">1.7879874</td>
+<td align="right">1.2732947</td>
+<td align="right">10.8538757</td>
+<td align="right">0.5453522</td>
+<td align="right">4.229374</td>
+</tr>
+<tr class="odd">
+<td>day2_1</td>
+<td align="right">-12.892119</td>
+<td align="right">22.418951</td>
+<td align="right">-7.7540613</td>
+<td align="right">9.2511401</td>
+<td align="right">-0.5073773</td>
+<td align="right">5.9126144</td>
+<td align="right">1.9212908</td>
+<td align="right">0.6999172</td>
+<td align="right">-5.913915</td>
+</tr>
+<tr class="even">
+<td>day2_2</td>
+<td align="right">-8.627622</td>
+<td align="right">19.783561</td>
+<td align="right">-0.2922252</td>
+<td align="right">6.7979005</td>
+<td align="right">3.7748811</td>
+<td align="right">-8.3590432</td>
+<td align="right">-4.8463322</td>
+<td align="right">1.9211309</td>
+<td align="right">4.984201</td>
+</tr>
+<tr class="odd">
+<td>day7_1</td>
+<td align="right">-33.508194</td>
+<td align="right">-6.391523</td>
+<td align="right">10.0724149</td>
+<td align="right">0.3733335</td>
+<td align="right">-2.9401694</td>
+<td align="right">8.5632004</td>
+<td align="right">-3.6773246</td>
+<td align="right">-0.0612934</td>
+<td align="right">4.836156</td>
+</tr>
+<tr class="even">
+<td>day7_2</td>
+<td align="right">-30.738656</td>
+<td align="right">-6.669942</td>
+<td align="right">0.9637777</td>
+<td align="right">-1.3423506</td>
+<td align="right">-7.6873175</td>
+<td align="right">-7.3442106</td>
+<td align="right">3.5574998</td>
+<td align="right">-5.8294952</td>
+<td align="right">-2.257436</td>
+</tr>
+<tr class="odd">
+<td>day14_1</td>
+<td align="right">-21.118523</td>
+<td align="right">-18.444311</td>
+<td align="right">4.5701275</td>
+<td align="right">-3.6995666</td>
+<td align="right">7.0523093</td>
+<td align="right">-2.2516599</td>
+<td align="right">1.3980362</td>
+<td align="right">7.0997749</td>
+<td align="right">-4.571015</td>
+</tr>
+<tr class="even">
+<td>day14_2</td>
+<td align="right">-2.162239</td>
+<td align="right">-16.509621</td>
+<td align="right">-19.4382259</td>
+<td align="right">-4.0028299</td>
+<td align="right">3.9701011</td>
+<td align="right">1.9798247</td>
+<td align="right">-1.0434173</td>
+<td align="right">-3.1280762</td>
+<td align="right">3.042433</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="co"># res.pca$ind$cos2 ## squared correlation</span></a>
+<a class="sourceLine" id="cb15-2" data-line-number="2"><span class="co"># res.pca$ind$contrib ## Contribution of each individual to each component (loading ?)</span></a>
+<a class="sourceLine" id="cb15-3" data-line-number="3"><span class="co"># res.pca$ind$dist  ## ?</span></a>
+<a class="sourceLine" id="cb15-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb15-5" data-line-number="5"><span class="co">## The sum of cos2 per individual must be 1</span></a>
+<a class="sourceLine" id="cb15-6" data-line-number="6"><span class="co"># apply(res.pca$ind$cos2, 1, sum)</span></a></code></pre></div>
+</div>
+<div id="eigen-values-plot" class="section level3">
+<h3>Eigen values plot</h3>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="co">#### Plot eigen values ####</span></a>
+<a class="sourceLine" id="cb16-2" data-line-number="2"><span class="kw">fviz_eig</span>(res.pca, <span class="dt">addlabels =</span> <span class="ot">TRUE</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">50</span>), <span class="dt">main =</span> <span class="kw">paste</span>(parameters<span class="op">$</span>datatype, parameters<span class="op">$</span>dataset))</a></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/pavkovic2019_PCA_eigen_values_plot-1.png" alt="Eigenvalues plot. " width="50%" />
+<p class="caption">
+Eigenvalues plot.
+</p>
+</div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="co">#### Plot PC1 vs PC2 with condition-specific colors ####</span></a>
+<a class="sourceLine" id="cb17-2" data-line-number="2"><span class="kw">fviz_pca_ind</span>(res.pca, <span class="dt">axes =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), </a>
+<a class="sourceLine" id="cb17-3" data-line-number="3">             <span class="dt">col.ind =</span> metadata<span class="op">$</span>condition,</a>
+<a class="sourceLine" id="cb17-4" data-line-number="4">             <span class="dt">repel =</span> <span class="ot">TRUE</span> <span class="co"># Avoid overlap between labels</span></a>
+<a class="sourceLine" id="cb17-5" data-line-number="5">)</a></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/pavkovic2019_PCA_pc_plots-1.png" alt="PC plots of the dataset proteome fa" width="50%" />
+<p class="caption">
+PC plots of the dataset proteome fa
+</p>
+</div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="co">#### Plot PC4 vs PC3 with condition-specific colors ####</span></a>
+<a class="sourceLine" id="cb18-2" data-line-number="2"><span class="kw">fviz_pca_ind</span>(res.pca, <span class="dt">axes =</span> <span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">4</span>), </a>
+<a class="sourceLine" id="cb18-3" data-line-number="3">             <span class="dt">col.ind =</span> metadata<span class="op">$</span>condition,</a>
+<a class="sourceLine" id="cb18-4" data-line-number="4">             <span class="dt">repel =</span> <span class="ot">TRUE</span> <span class="co"># Avoid overlap between labels</span></a>
+<a class="sourceLine" id="cb18-5" data-line-number="5">)</a></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/pavkovic2019_PCA_pc_plots-2.png" alt="PC plots of the dataset proteome fa" width="50%" />
+<p class="caption">
+PC plots of the dataset proteome fa
+</p>
+</div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="co">#### Plot PC5 vs PC6 with condition-specific colors ####</span></a>
+<a class="sourceLine" id="cb19-2" data-line-number="2"><span class="kw">fviz_pca_ind</span>(res.pca, <span class="dt">axes =</span> <span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">6</span>), </a>
+<a class="sourceLine" id="cb19-3" data-line-number="3">             <span class="dt">col.ind =</span> metadata<span class="op">$</span>condition,</a>
+<a class="sourceLine" id="cb19-4" data-line-number="4">             <span class="dt">repel =</span> <span class="ot">TRUE</span> <span class="co"># Avoid overlap between labels</span></a>
+<a class="sourceLine" id="cb19-5" data-line-number="5">)</a></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/pavkovic2019_PCA_pc_plots-3.png" alt="PC plots of the dataset proteome fa" width="50%" />
+<p class="caption">
+PC plots of the dataset proteome fa
+</p>
+</div>
+<ul>
+<li><p>Nous observons une excellente cohérence entre répliques.</p></li>
+<li><p>Les 2 premières composantes capturent visiblement une progression temporelle, qui se manifeste par une répartition cyclique.</p></li>
+</ul>
+</div>
+</div>
+<div id="negative-control" class="section level2">
+<h2>Negative control</h2>
+<p>We would like to check that the structuration of differs from what would be expected by chance. For this, we can use an empirical approach: randomise the dataset by shuffling its values, and run the PCA again.</p>
+<div id="shuffled-matrix" class="section level3">
+<h3>Shuffled matrix</h3>
+<p>The simplest wway to do this is to shufle all the values of the table, by applying the command <code>sample()</code> on the data frame <code>x</code>.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="co">#### Negatve control: permute all the values of the data matrix ####</span></a>
+<a class="sourceLine" id="cb20-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb20-3" data-line-number="3"><span class="co">## Shuffle all the values of the data matrix</span></a>
+<a class="sourceLine" id="cb20-4" data-line-number="4">shuffledValues &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="kw">unlist</span>(x) , <span class="dt">size =</span> <span class="kw">prod</span>(<span class="kw">dim</span>(x)), <span class="dt">replace =</span> <span class="ot">FALSE</span>) <span class="co"># This gives a vector</span></a>
+<a class="sourceLine" id="cb20-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb20-6" data-line-number="6"><span class="co">## Place the shuffled values in a matrix of the same dimensions as the oroginal data matrix</span></a>
+<a class="sourceLine" id="cb20-7" data-line-number="7">xShuffled &lt;-<span class="st"> </span><span class="kw">matrix</span>(</a>
+<a class="sourceLine" id="cb20-8" data-line-number="8">  <span class="dt">data =</span> shuffledValues, </a>
+<a class="sourceLine" id="cb20-9" data-line-number="9">  <span class="dt">nrow =</span> <span class="kw">nrow</span>(x), <span class="dt">ncol =</span> <span class="kw">ncol</span>(x))</a>
+<a class="sourceLine" id="cb20-10" data-line-number="10"><span class="kw">table</span>(xShuffled <span class="op">==</span><span class="st"> </span>x) <span class="co">## the values match on average one time per permutation</span></a></code></pre></div>
+<pre><code>
+FALSE  TRUE 
+80437     3 </code></pre>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="co">## Check that the original expressio matrix has high correlation values betwen individuals</span></a>
+<a class="sourceLine" id="cb22-2" data-line-number="2">xCor &lt;-<span class="st"> </span><span class="kw">cor</span>(x)</a>
+<a class="sourceLine" id="cb22-3" data-line-number="3"><span class="kw">rownames</span>(xCor) &lt;-<span class="st"> </span><span class="kw">colnames</span>(x)</a>
+<a class="sourceLine" id="cb22-4" data-line-number="4"><span class="kw">colnames</span>(xCor) &lt;-<span class="st"> </span><span class="kw">colnames</span>(x)</a>
+<a class="sourceLine" id="cb22-5" data-line-number="5"><span class="kw">kable</span>(<span class="kw">cor</span>(x),  </a>
+<a class="sourceLine" id="cb22-6" data-line-number="6">      <span class="dt">caption =</span> <span class="st">&quot;Correlation between columns (samples) of the original expression matrix. &quot;</span>,</a>
+<a class="sourceLine" id="cb22-7" data-line-number="7">      <span class="dt">row.names =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<table>
+<caption>Correlation between columns (samples) of the original expression matrix.</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">normal_1</th>
+<th align="right">normal_2</th>
+<th align="right">day1_1</th>
+<th align="right">day1_2</th>
+<th align="right">day2_1</th>
+<th align="right">day2_2</th>
+<th align="right">day7_1</th>
+<th align="right">day7_2</th>
+<th align="right">day14_1</th>
+<th align="right">day14_2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>normal_1</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9919038</td>
+<td align="right">0.9779548</td>
+<td align="right">0.9796817</td>
+<td align="right">0.9471940</td>
+<td align="right">0.9564886</td>
+<td align="right">0.9328708</td>
+<td align="right">0.9347125</td>
+<td align="right">0.9513990</td>
+<td align="right">0.9668757</td>
+</tr>
+<tr class="even">
+<td>normal_2</td>
+<td align="right">0.9919038</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9726016</td>
+<td align="right">0.9728881</td>
+<td align="right">0.9395325</td>
+<td align="right">0.9471756</td>
+<td align="right">0.9234387</td>
+<td align="right">0.9284722</td>
+<td align="right">0.9453908</td>
+<td align="right">0.9685007</td>
+</tr>
+<tr class="odd">
+<td>day1_1</td>
+<td align="right">0.9779548</td>
+<td align="right">0.9726016</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9935187</td>
+<td align="right">0.9747140</td>
+<td align="right">0.9801014</td>
+<td align="right">0.9474768</td>
+<td align="right">0.9507433</td>
+<td align="right">0.9542045</td>
+<td align="right">0.9682995</td>
+</tr>
+<tr class="even">
+<td>day1_2</td>
+<td align="right">0.9796817</td>
+<td align="right">0.9728881</td>
+<td align="right">0.9935187</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9793634</td>
+<td align="right">0.9835448</td>
+<td align="right">0.9541723</td>
+<td align="right">0.9570625</td>
+<td align="right">0.9605813</td>
+<td align="right">0.9708474</td>
+</tr>
+<tr class="odd">
+<td>day2_1</td>
+<td align="right">0.9471940</td>
+<td align="right">0.9395325</td>
+<td align="right">0.9747140</td>
+<td align="right">0.9793634</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9933910</td>
+<td align="right">0.9753701</td>
+<td align="right">0.9772008</td>
+<td align="right">0.9691986</td>
+<td align="right">0.9710011</td>
+</tr>
+<tr class="even">
+<td>day2_2</td>
+<td align="right">0.9564886</td>
+<td align="right">0.9471756</td>
+<td align="right">0.9801014</td>
+<td align="right">0.9835448</td>
+<td align="right">0.9933910</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9756376</td>
+<td align="right">0.9779807</td>
+<td align="right">0.9727696</td>
+<td align="right">0.9720635</td>
+</tr>
+<tr class="odd">
+<td>day7_1</td>
+<td align="right">0.9328708</td>
+<td align="right">0.9234387</td>
+<td align="right">0.9474768</td>
+<td align="right">0.9541723</td>
+<td align="right">0.9753701</td>
+<td align="right">0.9756376</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9932936</td>
+<td align="right">0.9901542</td>
+<td align="right">0.9715261</td>
+</tr>
+<tr class="even">
+<td>day7_2</td>
+<td align="right">0.9347125</td>
+<td align="right">0.9284722</td>
+<td align="right">0.9507433</td>
+<td align="right">0.9570625</td>
+<td align="right">0.9772008</td>
+<td align="right">0.9779807</td>
+<td align="right">0.9932936</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9906668</td>
+<td align="right">0.9772792</td>
+</tr>
+<tr class="odd">
+<td>day14_1</td>
+<td align="right">0.9513990</td>
+<td align="right">0.9453908</td>
+<td align="right">0.9542045</td>
+<td align="right">0.9605813</td>
+<td align="right">0.9691986</td>
+<td align="right">0.9727696</td>
+<td align="right">0.9901542</td>
+<td align="right">0.9906668</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9841713</td>
+</tr>
+<tr class="even">
+<td>day14_2</td>
+<td align="right">0.9668757</td>
+<td align="right">0.9685007</td>
+<td align="right">0.9682995</td>
+<td align="right">0.9708474</td>
+<td align="right">0.9710011</td>
+<td align="right">0.9720635</td>
+<td align="right">0.9715261</td>
+<td align="right">0.9772792</td>
+<td align="right">0.9841713</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="co">## Check that the permuted matrix is not correlated anymore</span></a>
+<a class="sourceLine" id="cb23-2" data-line-number="2"><span class="co">## Inter-sample correlations should be around 0 except in the diagonal</span></a>
+<a class="sourceLine" id="cb23-3" data-line-number="3">xShuffledCor &lt;-<span class="st"> </span><span class="kw">cor</span>(xShuffled)</a>
+<a class="sourceLine" id="cb23-4" data-line-number="4"><span class="kw">rownames</span>(xShuffledCor) &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;shufMat&quot;</span>, <span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(xShuffledCor)) </a>
+<a class="sourceLine" id="cb23-5" data-line-number="5"><span class="kw">colnames</span>(xShuffledCor) &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;shufMat&quot;</span>, <span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(xShuffledCor)) </a>
+<a class="sourceLine" id="cb23-6" data-line-number="6"><span class="kw">kable</span>(xShuffledCor, </a>
+<a class="sourceLine" id="cb23-7" data-line-number="7">      <span class="dt">caption =</span> <span class="st">&quot;Correlation between columns of the shuffled expression matrix&quot;</span>,</a>
+<a class="sourceLine" id="cb23-8" data-line-number="8">      <span class="dt">row.names =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<table>
+<caption>Correlation between columns of the shuffled expression matrix</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">shufMat1</th>
+<th align="right">shufMat2</th>
+<th align="right">shufMat3</th>
+<th align="right">shufMat4</th>
+<th align="right">shufMat5</th>
+<th align="right">shufMat6</th>
+<th align="right">shufMat7</th>
+<th align="right">shufMat8</th>
+<th align="right">shufMat9</th>
+<th align="right">shufMat10</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>shufMat1</td>
+<td align="right">1.0000000</td>
+<td align="right">-0.0248187</td>
+<td align="right">-0.0005062</td>
+<td align="right">0.0167536</td>
+<td align="right">0.0078892</td>
+<td align="right">-0.0068962</td>
+<td align="right">-0.0176948</td>
+<td align="right">0.0167558</td>
+<td align="right">-0.0043146</td>
+<td align="right">0.0017627</td>
+</tr>
+<tr class="even">
+<td>shufMat2</td>
+<td align="right">-0.0248187</td>
+<td align="right">1.0000000</td>
+<td align="right">-0.0129004</td>
+<td align="right">0.0022150</td>
+<td align="right">0.0020933</td>
+<td align="right">-0.0065190</td>
+<td align="right">0.0013577</td>
+<td align="right">-0.0039026</td>
+<td align="right">-0.0062836</td>
+<td align="right">0.0056548</td>
+</tr>
+<tr class="odd">
+<td>shufMat3</td>
+<td align="right">-0.0005062</td>
+<td align="right">-0.0129004</td>
+<td align="right">1.0000000</td>
+<td align="right">-0.0075904</td>
+<td align="right">-0.0167126</td>
+<td align="right">0.0047331</td>
+<td align="right">-0.0194989</td>
+<td align="right">-0.0009989</td>
+<td align="right">-0.0058640</td>
+<td align="right">-0.0128864</td>
+</tr>
+<tr class="even">
+<td>shufMat4</td>
+<td align="right">0.0167536</td>
+<td align="right">0.0022150</td>
+<td align="right">-0.0075904</td>
+<td align="right">1.0000000</td>
+<td align="right">-0.0105706</td>
+<td align="right">-0.0264597</td>
+<td align="right">-0.0013484</td>
+<td align="right">0.0015994</td>
+<td align="right">0.0034866</td>
+<td align="right">-0.0036453</td>
+</tr>
+<tr class="odd">
+<td>shufMat5</td>
+<td align="right">0.0078892</td>
+<td align="right">0.0020933</td>
+<td align="right">-0.0167126</td>
+<td align="right">-0.0105706</td>
+<td align="right">1.0000000</td>
+<td align="right">-0.0090114</td>
+<td align="right">0.0188795</td>
+<td align="right">0.0128834</td>
+<td align="right">0.0116799</td>
+<td align="right">-0.0077141</td>
+</tr>
+<tr class="even">
+<td>shufMat6</td>
+<td align="right">-0.0068962</td>
+<td align="right">-0.0065190</td>
+<td align="right">0.0047331</td>
+<td align="right">-0.0264597</td>
+<td align="right">-0.0090114</td>
+<td align="right">1.0000000</td>
+<td align="right">0.0008281</td>
+<td align="right">0.0068692</td>
+<td align="right">-0.0122195</td>
+<td align="right">-0.0039007</td>
+</tr>
+<tr class="odd">
+<td>shufMat7</td>
+<td align="right">-0.0176948</td>
+<td align="right">0.0013577</td>
+<td align="right">-0.0194989</td>
+<td align="right">-0.0013484</td>
+<td align="right">0.0188795</td>
+<td align="right">0.0008281</td>
+<td align="right">1.0000000</td>
+<td align="right">0.0136776</td>
+<td align="right">0.0038547</td>
+<td align="right">0.0169533</td>
+</tr>
+<tr class="even">
+<td>shufMat8</td>
+<td align="right">0.0167558</td>
+<td align="right">-0.0039026</td>
+<td align="right">-0.0009989</td>
+<td align="right">0.0015994</td>
+<td align="right">0.0128834</td>
+<td align="right">0.0068692</td>
+<td align="right">0.0136776</td>
+<td align="right">1.0000000</td>
+<td align="right">0.0045827</td>
+<td align="right">-0.0113638</td>
+</tr>
+<tr class="odd">
+<td>shufMat9</td>
+<td align="right">-0.0043146</td>
+<td align="right">-0.0062836</td>
+<td align="right">-0.0058640</td>
+<td align="right">0.0034866</td>
+<td align="right">0.0116799</td>
+<td align="right">-0.0122195</td>
+<td align="right">0.0038547</td>
+<td align="right">0.0045827</td>
+<td align="right">1.0000000</td>
+<td align="right">-0.0031171</td>
+</tr>
+<tr class="even">
+<td>shufMat10</td>
+<td align="right">0.0017627</td>
+<td align="right">0.0056548</td>
+<td align="right">-0.0128864</td>
+<td align="right">-0.0036453</td>
+<td align="right">-0.0077141</td>
+<td align="right">-0.0039007</td>
+<td align="right">0.0169533</td>
+<td align="right">-0.0113638</td>
+<td align="right">-0.0031171</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="co">## Compute the Principal Components on the shuffled </span></a>
+<a class="sourceLine" id="cb24-2" data-line-number="2">xShuffledPCA &lt;-<span class="st"> </span><span class="kw">PCA</span>(<span class="kw">t</span>(xShuffled), <span class="dt">scale.unit =</span> <span class="ot">FALSE</span>, <span class="dt">ncp =</span> <span class="kw">ncol</span>(x), <span class="dt">graph =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="co">#### Eigen values ####</span></a>
+<a class="sourceLine" id="cb25-2" data-line-number="2"><span class="kw">fviz_eig</span>(xShuffledPCA, <span class="dt">addlabels =</span> <span class="ot">TRUE</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">50</span>), </a>
+<a class="sourceLine" id="cb25-3" data-line-number="3">         <span class="dt">main =</span> <span class="kw">paste</span>(<span class="st">&quot;Shuffled matrix from&quot;</span>, parameters<span class="op">$</span>datatype, parameters<span class="op">$</span>dataset))</a></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/pavkovic2019_PCA_shuffled_matrix_eigenvalues-1.png" alt="Negative control 1: eigen values of PCs from a data matrix with shuffled values. " width="50%" />
+<p class="caption">
+Negative control 1: eigen values of PCs from a data matrix with shuffled values.
+</p>
+</div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="co">#### Plot PC1 vs PC2 with condition-specific colors ####</span></a>
+<a class="sourceLine" id="cb26-2" data-line-number="2"><span class="kw">fviz_pca_ind</span>(xShuffledPCA, <span class="dt">axes =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), </a>
+<a class="sourceLine" id="cb26-3" data-line-number="3">             <span class="dt">col.ind =</span> metadata<span class="op">$</span>condition,</a>
+<a class="sourceLine" id="cb26-4" data-line-number="4">             <span class="dt">repel =</span> <span class="ot">TRUE</span> <span class="co"># Avoid overlap between labels</span></a>
+<a class="sourceLine" id="cb26-5" data-line-number="5">)</a></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/pavkovic2019_PCA_shuffled_matrix_pc_plots-1.png" alt="Negative control 1: PC plots from a data matrix with shuffled values. " width="50%" />
+<p class="caption">
+Negative control 1: PC plots from a data matrix with shuffled values.
+</p>
+</div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="co">#### Plot PC4 vs PC3 with condition-specific colors ####</span></a>
+<a class="sourceLine" id="cb27-2" data-line-number="2"><span class="kw">fviz_pca_ind</span>(xShuffledPCA, <span class="dt">axes =</span> <span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">4</span>), </a>
+<a class="sourceLine" id="cb27-3" data-line-number="3">             <span class="dt">col.ind =</span> metadata<span class="op">$</span>condition,</a>
+<a class="sourceLine" id="cb27-4" data-line-number="4">             <span class="dt">repel =</span> <span class="ot">TRUE</span> <span class="co"># Avoid overlap between labels</span></a>
+<a class="sourceLine" id="cb27-5" data-line-number="5">)</a></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/pavkovic2019_PCA_shuffled_matrix_pc_plots-2.png" alt="Negative control 1: PC plots from a data matrix with shuffled values. " width="50%" />
+<p class="caption">
+Negative control 1: PC plots from a data matrix with shuffled values.
+</p>
+</div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1"><span class="co">#### Plot PC5 vs PC6 with condition-specific colors ####</span></a>
+<a class="sourceLine" id="cb28-2" data-line-number="2"><span class="kw">fviz_pca_ind</span>(xShuffledPCA, <span class="dt">axes =</span> <span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">6</span>), </a>
+<a class="sourceLine" id="cb28-3" data-line-number="3">             <span class="dt">col.ind =</span> metadata<span class="op">$</span>condition,</a>
+<a class="sourceLine" id="cb28-4" data-line-number="4">             <span class="dt">repel =</span> <span class="ot">TRUE</span> <span class="co"># Avoid overlap between labels</span></a>
+<a class="sourceLine" id="cb28-5" data-line-number="5">)</a></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/pavkovic2019_PCA_shuffled_matrix_pc_plots-3.png" alt="Negative control 1: PC plots from a data matrix with shuffled values. " width="50%" />
+<p class="caption">
+Negative control 1: PC plots from a data matrix with shuffled values.
+</p>
+</div>
+</div>
+<div id="row-wise-shuffled-matrix" class="section level3">
+<h3>Row-wise shuffled matrix</h3>
+<p>A more refined appoach is to shuffle the values inside each row of the <code>x</code> data frame, by cmbining <code>apply()</code> and <code>sample()</code>.</p>
+<p>Note that this approach will preserve a quite high correlation between the columns of the matrix, which will reflect the gene-specific level of expressions (some genes have very high levels across all conditons, and some others very low levels across all conditions). However the values will now be sampled independently of the studied factor (the impact of the time point). Consequently, the row-wise shuffled matrix will have data distributions that better reflects those of biological data, so that this control can be considered as a more suitable than the whole matrix shuffling.</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1"><span class="co">#### Negative control : row-wise permutations of the values ####</span></a>
+<a class="sourceLine" id="cb29-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb29-3" data-line-number="3"><span class="co">## Permute values inside each row of the matrix</span></a>
+<a class="sourceLine" id="cb29-4" data-line-number="4">xShuffledRows &lt;-<span class="st"> </span><span class="kw">t</span>(<span class="kw">apply</span>(x, <span class="dv">1</span>, sample))</a>
+<a class="sourceLine" id="cb29-5" data-line-number="5"><span class="kw">dim</span>(xShuffledRows)</a></code></pre></div>
+<pre><code>[1] 8044   10</code></pre>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" data-line-number="1"><span class="kw">table</span>(xShuffledRows <span class="op">==</span><span class="st"> </span>x) <span class="co">## the values match on average one time per row</span></a></code></pre></div>
+<pre><code>
+FALSE  TRUE 
+72317  8123 </code></pre>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" data-line-number="1"><span class="co">## Check that therow-wise means are the same between</span></a>
+<a class="sourceLine" id="cb33-2" data-line-number="2">xRowMeans &lt;-<span class="st"> </span><span class="kw">apply</span>(x, <span class="dv">1</span>, mean)</a>
+<a class="sourceLine" id="cb33-3" data-line-number="3">shuffledRowMeans &lt;-<span class="st"> </span><span class="kw">apply</span>(xShuffledRows, <span class="dv">1</span>, mean)</a>
+<a class="sourceLine" id="cb33-4" data-line-number="4"><span class="kw">plot</span>(xRowMeans, shuffledRowMeans)</a></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/pavkovic2019_PCA_shuffled_rows_PCA-1.png" alt="Row-wise shuffling of the values removes the sample-specific information whilst  preserving the mean of each feature.  " width="50%" />
+<p class="caption">
+Row-wise shuffling of the values removes the sample-specific information whilst preserving the mean of each feature.
+</p>
+</div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1"><span class="kw">table</span>(xRowMeans <span class="op">==</span><span class="st"> </span>shuffledRowMeans) <span class="co">## TRUE for all the values (for each row of the table)</span></a></code></pre></div>
+<pre><code>
+TRUE 
+8044 </code></pre>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1"><span class="co">## Check the correlation nbetween columns of the row-wise permuted matrix.</span></a>
+<a class="sourceLine" id="cb36-2" data-line-number="2"><span class="co">## Note: values canbe high if the rows have very different ranges (which is the case here)</span></a>
+<a class="sourceLine" id="cb36-3" data-line-number="3">xShuffledRowsCor &lt;-<span class="st"> </span><span class="kw">cor</span>(xShuffledRows)</a>
+<a class="sourceLine" id="cb36-4" data-line-number="4"><span class="kw">rownames</span>(xShuffledRowsCor) &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="st">&quot;shufRow&quot;</span>, <span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(xShuffledRowsCor))</a>
+<a class="sourceLine" id="cb36-5" data-line-number="5"><span class="kw">colnames</span>(xShuffledRowsCor) &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="st">&quot;shufRow&quot;</span>, <span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(xShuffledRowsCor))</a>
+<a class="sourceLine" id="cb36-6" data-line-number="6"><span class="kw">kable</span>(xShuffledRowsCor, </a>
+<a class="sourceLine" id="cb36-7" data-line-number="7">      <span class="dt">caption =</span> <span class="st">&quot;Correlation between columns of the row-wise shuffled expression matrix&quot;</span>,</a>
+<a class="sourceLine" id="cb36-8" data-line-number="8">      <span class="dt">row.names =</span> <span class="ot">TRUE</span>) <span class="co">## Inter-sample correlations should be around 0 except in the diagonal</span></a></code></pre></div>
+<table>
+<caption>Correlation between columns of the row-wise shuffled expression matrix</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">shufRow 1</th>
+<th align="right">shufRow 2</th>
+<th align="right">shufRow 3</th>
+<th align="right">shufRow 4</th>
+<th align="right">shufRow 5</th>
+<th align="right">shufRow 6</th>
+<th align="right">shufRow 7</th>
+<th align="right">shufRow 8</th>
+<th align="right">shufRow 9</th>
+<th align="right">shufRow 10</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>shufRow 1</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9662502</td>
+<td align="right">0.9662541</td>
+<td align="right">0.9655092</td>
+<td align="right">0.9646211</td>
+<td align="right">0.9658989</td>
+<td align="right">0.9657678</td>
+<td align="right">0.9653788</td>
+<td align="right">0.9651178</td>
+<td align="right">0.9656101</td>
+</tr>
+<tr class="even">
+<td>shufRow 2</td>
+<td align="right">0.9662502</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9680615</td>
+<td align="right">0.9668726</td>
+<td align="right">0.9653749</td>
+<td align="right">0.9658288</td>
+<td align="right">0.9662572</td>
+<td align="right">0.9678591</td>
+<td align="right">0.9663942</td>
+<td align="right">0.9668575</td>
+</tr>
+<tr class="odd">
+<td>shufRow 3</td>
+<td align="right">0.9662541</td>
+<td align="right">0.9680615</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9684497</td>
+<td align="right">0.9665600</td>
+<td align="right">0.9659214</td>
+<td align="right">0.9660011</td>
+<td align="right">0.9671768</td>
+<td align="right">0.9673919</td>
+<td align="right">0.9676081</td>
+</tr>
+<tr class="even">
+<td>shufRow 4</td>
+<td align="right">0.9655092</td>
+<td align="right">0.9668726</td>
+<td align="right">0.9684497</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9672470</td>
+<td align="right">0.9683681</td>
+<td align="right">0.9652249</td>
+<td align="right">0.9674407</td>
+<td align="right">0.9667318</td>
+<td align="right">0.9689265</td>
+</tr>
+<tr class="odd">
+<td>shufRow 5</td>
+<td align="right">0.9646211</td>
+<td align="right">0.9653749</td>
+<td align="right">0.9665600</td>
+<td align="right">0.9672470</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9664240</td>
+<td align="right">0.9664619</td>
+<td align="right">0.9662762</td>
+<td align="right">0.9670899</td>
+<td align="right">0.9680278</td>
+</tr>
+<tr class="even">
+<td>shufRow 6</td>
+<td align="right">0.9658989</td>
+<td align="right">0.9658288</td>
+<td align="right">0.9659214</td>
+<td align="right">0.9683681</td>
+<td align="right">0.9664240</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9653366</td>
+<td align="right">0.9667213</td>
+<td align="right">0.9658113</td>
+<td align="right">0.9673918</td>
+</tr>
+<tr class="odd">
+<td>shufRow 7</td>
+<td align="right">0.9657678</td>
+<td align="right">0.9662572</td>
+<td align="right">0.9660011</td>
+<td align="right">0.9652249</td>
+<td align="right">0.9664619</td>
+<td align="right">0.9653366</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9660601</td>
+<td align="right">0.9661718</td>
+<td align="right">0.9685299</td>
+</tr>
+<tr class="even">
+<td>shufRow 8</td>
+<td align="right">0.9653788</td>
+<td align="right">0.9678591</td>
+<td align="right">0.9671768</td>
+<td align="right">0.9674407</td>
+<td align="right">0.9662762</td>
+<td align="right">0.9667213</td>
+<td align="right">0.9660601</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9667838</td>
+<td align="right">0.9676198</td>
+</tr>
+<tr class="odd">
+<td>shufRow 9</td>
+<td align="right">0.9651178</td>
+<td align="right">0.9663942</td>
+<td align="right">0.9673919</td>
+<td align="right">0.9667318</td>
+<td align="right">0.9670899</td>
+<td align="right">0.9658113</td>
+<td align="right">0.9661718</td>
+<td align="right">0.9667838</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9676061</td>
+</tr>
+<tr class="even">
+<td>shufRow 10</td>
+<td align="right">0.9656101</td>
+<td align="right">0.9668575</td>
+<td align="right">0.9676081</td>
+<td align="right">0.9689265</td>
+<td align="right">0.9680278</td>
+<td align="right">0.9673918</td>
+<td align="right">0.9685299</td>
+<td align="right">0.9676198</td>
+<td align="right">0.9676061</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" data-line-number="1"><span class="co">## Compute the Principal Components on the shuffled </span></a>
+<a class="sourceLine" id="cb37-2" data-line-number="2">xShuffledRowsPCA &lt;-<span class="st"> </span><span class="kw">PCA</span>(<span class="kw">t</span>(xShuffledRows), <span class="dt">scale.unit =</span> <span class="ot">FALSE</span>, <span class="dt">ncp =</span> <span class="kw">ncol</span>(x), <span class="dt">graph =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" data-line-number="1"><span class="co">#### Eigen values ####</span></a>
+<a class="sourceLine" id="cb38-2" data-line-number="2"><span class="kw">fviz_eig</span>(xShuffledRowsPCA, <span class="dt">addlabels =</span> <span class="ot">TRUE</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">50</span>), <span class="dt">main =</span> <span class="kw">paste</span>(parameters<span class="op">$</span>datatype, parameters<span class="op">$</span>dataset))</a></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/pavkovic2019_PCA_shuffled_rows_eigenvalues-1.png" alt="Negative control 2: eigen values of PCs from a data matrix with row-wise shuffled values. " width="50%" />
+<p class="caption">
+Negative control 2: eigen values of PCs from a data matrix with row-wise shuffled values.
+</p>
+</div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" data-line-number="1"><span class="co">#### Plot PC1 vs PC2 with condition-specific colors ####</span></a>
+<a class="sourceLine" id="cb39-2" data-line-number="2"><span class="kw">fviz_pca_ind</span>(xShuffledRowsPCA, <span class="dt">axes =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), </a>
+<a class="sourceLine" id="cb39-3" data-line-number="3">             <span class="dt">col.ind =</span> metadata<span class="op">$</span>condition,</a>
+<a class="sourceLine" id="cb39-4" data-line-number="4">             <span class="dt">repel =</span> <span class="ot">TRUE</span> <span class="co"># Avoid overlap between labels</span></a>
+<a class="sourceLine" id="cb39-5" data-line-number="5">)</a></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/pavkovic2019_PCA_shuffled_rows_pc_plots-1.png" alt="Negative control 2: PC plots from a data matrix with row-wise shuffled values. " width="50%" />
+<p class="caption">
+Negative control 2: PC plots from a data matrix with row-wise shuffled values.
+</p>
+</div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" data-line-number="1"><span class="co">#### Plot PC4 vs PC3 with condition-specific colors ####</span></a>
+<a class="sourceLine" id="cb40-2" data-line-number="2"><span class="kw">fviz_pca_ind</span>(xShuffledRowsPCA, <span class="dt">axes =</span> <span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">4</span>), </a>
+<a class="sourceLine" id="cb40-3" data-line-number="3">             <span class="dt">col.ind =</span> metadata<span class="op">$</span>condition,</a>
+<a class="sourceLine" id="cb40-4" data-line-number="4">             <span class="dt">repel =</span> <span class="ot">TRUE</span> <span class="co"># Avoid overlap between labels</span></a>
+<a class="sourceLine" id="cb40-5" data-line-number="5">)</a></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/pavkovic2019_PCA_shuffled_rows_pc_plots-2.png" alt="Negative control 2: PC plots from a data matrix with row-wise shuffled values. " width="50%" />
+<p class="caption">
+Negative control 2: PC plots from a data matrix with row-wise shuffled values.
+</p>
+</div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" data-line-number="1"><span class="co">#### Plot PC5 vs PC6 with condition-specific colors ####</span></a>
+<a class="sourceLine" id="cb41-2" data-line-number="2"><span class="kw">fviz_pca_ind</span>(xShuffledRowsPCA, <span class="dt">axes =</span> <span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">6</span>), </a>
+<a class="sourceLine" id="cb41-3" data-line-number="3">             <span class="dt">col.ind =</span> metadata<span class="op">$</span>condition,</a>
+<a class="sourceLine" id="cb41-4" data-line-number="4">             <span class="dt">repel =</span> <span class="ot">TRUE</span> <span class="co"># Avoid overlap between labels</span></a>
+<a class="sourceLine" id="cb41-5" data-line-number="5">)</a></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/pavkovic2019_PCA_shuffled_rows_pc_plots-3.png" alt="Negative control 2: PC plots from a data matrix with row-wise shuffled values. " width="50%" />
+<p class="caption">
+Negative control 2: PC plots from a data matrix with row-wise shuffled values.
+</p>
+</div>
+</div>
+</div>
+<div id="conclusions-et-perspectives" class="section level2">
+<h2>Conclusions et perspectives</h2>
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

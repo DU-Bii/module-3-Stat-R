@@ -14,8 +14,8 @@
 
 | Contenu | HTML | pdf | Rmd |
 |-----------------------------|------|-----|-----|
-| Cours |  [[html](cours_clustering.html)] |  [[pdf](cours_clustering.pdf)] | [[Rmd](cours_clustering.Rmd)] |
-| Travaux pratiques | [[html](TP_clustering.html)]  | [[pdf](TP_clustering.pdf)] | [[TP_correction.Rmd]()] |
+| Cours |  [[html](cours_clustering.html)] |  [[pdf](cours_clustering.pdf)] | [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/clustering/cours_clustering.Rmd)] |
+| Travaux pratiques | [[html](TP_clustering.html)]  | [[pdf](TP_clustering.pdf)] | [[TP_correction.Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/clustering/TP_clustering.Rmd)] |
 
 
 

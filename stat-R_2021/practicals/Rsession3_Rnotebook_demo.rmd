@@ -1,0 +1,138 @@
+---
+title: "Hong Kong infectious diseases"
+author: "antoine.bridier-nahmias@inserm.fr"
+date: '2021-09-03'
+output:
+  html_notebook:
+    toc: yes
+  pdf_document:
+    toc: yes
+  html_document:
+    df_print: paged
+    toc: yes
+---
+
+
+Little reminder about what text really is:
+Text is text. That's it.
+Forget about:
+
+- `fonts`
+- **bold**
+- <span style="color: red;"> colors </span>
+- _italic_
+- no ^superscript^ either
+
+You will notice if you look at the Rmarkdown file that there is no elegant way to use colored text, it is plain ugly html.
+
+# Loading 
+
+## loading libraries
+
+```{r, setup}
+library(tidyverse)
+```
+
+## Loading data
+
+```{r, data}
+HK_2019_link <- 
+  'https://www.chp.gov.hk/files/misc/nid2019en.csv'
+
+HK_2019_wd <- read_csv(file = HK_2019_link)
+```
+
+## Tidying data
+
+The data is in wide format, we want in in a long format (one col per variable).
+```{r, lengthen}
+HK_2019_wd %>%
+  select(-c('Total')) %>% 
+  pivot_longer(cols = -c('Disease'), 
+               names_to = c('Month'), 
+               values_to = c('Count')) -> HK_2019_lg
+HK_2019_lg
+```
+
+# EDA
+
+Let's compute the Total again!
+YAY !
+
+```{r, total}
+HK_2019_lg %>% 
+  group_by(Disease) %>% 
+  mutate(Total = sum(Count)) %>%
+  select(-c('Month', 'Count')) %>% 
+  slice(1) -> HK_2019_tot
+HK_2019_tot
+```
+
+## plot
+
+```{r, plot}
+min_cases <- 1e2
+
+cut_names <- 
+  function(string, n_letters_max) {
+  if (nchar(string) < n_letters_max) {
+    return(string)
+  }  
+  new_string <- paste0(strsplit(x = string, 
+                  split = '')[[1]][1:n_letters_max], 
+         collapse = '')  
+  return(new_string)
+}
+  
+
+HK_2019_tot %>%
+  filter(Total > min_cases) %>%
+  mutate(Disease_small = cut_names(string = Disease, n_letters_max = 20)) -> HK_2019_tot_forplot
+
+ggplot(HK_2019_tot_forplot) +
+  geom_col(aes(x = Disease, y = Total)) +
+  scale_y_log10() +
+  scale_x_discrete(label = HK_2019_tot_forplot$Disease_small) +
+  ylab('Total')+
+  xlab('Disease') +
+  coord_flip() +
+  theme_classic()
+
+```
+
+```{r}
+HK_2019_lg %>% 
+  group_by(Month) %>% 
+  mutate(Total = sum(Count)) %>%
+  select(-c(Disease, Count)) %>% 
+  slice(1) %>% 
+  ggplot() +
+    geom_col(aes(x = Month, y = Total), fill = '#FAE1FF') +
+    geom_line(aes(x = Month, y = Total, group = 1), colour = '#007D75', size = 1.5) +
+    theme_classic() 
+```
+
+
+Do you think you could do the same for the year 2020 ?
+
+And then make a plot comparing the two year in terms of infectious diseases case count ?
+
+Hey one last thing, you can insert images in markdown...
+
+![ceci est une image](https://www.chp.gov.hk/files/jpg/hand_hygiene_hospital.jpg)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

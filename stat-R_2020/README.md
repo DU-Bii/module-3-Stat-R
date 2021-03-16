@@ -9,12 +9,16 @@
 - [R tutorials and good practice](#r-tutorials-and-good-practice)
 - [Teaching material](#teaching-material)
 
-    - [Session 1. R and Rmd basics](#session-1-r-and-rmd-basics)
-    - [Session 2. Statistical analysis with R](#session-2-statistical-analysis-with-r)
-    - [Session 3. Statistics for omics data](#session-3-statistics-for-omics-data)
-    - [Session 4. Clustering](clustering/)
-    - [Session 5. Data exploration and enrichment analysis](#session-5-data-exploration-and-enrichment-analysis)
-    - [Session 6. Supervised classification and learning](#session-6-supervised-classification-and-learning)
+    - [Session 1. R and Rmd basics](#r-and-rmd-basics)
+    - [Session 2. Statistical analysis with R](#statistical-analysis-with-r)
+    - [Session 3. Statistics for omics data](#statistics-for-omics-data)
+    - [Session 4. Clustering](#clustering)
+    - [Session 5. Data exploration](#data-exploration)
+    - [Session 6. Enrichment analysis](#enrichment-analysis)
+    - [Session 7. Supervised classification](#supervised-classification)
+
+- [Evaluation](#evaluation)
+
 
 ## Goals
 
@@ -41,7 +45,7 @@ Link to the prerequisites:
 | Anne Badel | Teacher |
 | Magali Berland | Teacher |
 | [Antoine Bridier-Nahmias](https://orcid.org/0000-0002-0376-6840) | Teacher |
-| Olivier Sand | Teacher |
+| [Olivier Sand](https://orcid.org/0000-0003-1465-1640) | Teacher |
 | Natacha Cerisier | Helper |
 
 
@@ -49,7 +53,7 @@ Link to the prerequisites:
 
 | Doc | Description |URL |
 |---------|---------------------------|---------------------------------------|
-| **Git pages** | **Web site of the course**  (to see the supports) | <https://du-bii.github.io/module-3-Stat-R/> | 
+| **Git pages** | **Web site of the course**  (to see the supports) | <https://du-bii.github.io/module-3-Stat-R/stat-R_2020/> | 
 | Git repo | Repository enabling to download or clone the teaching material on your computer | <https://github.com/DU-Bii/module-3-Stat-R> |
 | RStudio at IFB cluster | link to RStudio on th IFB cluster | <https://rstudio.cluster.france-bioinformatique.fr/> |
 | Moodle | link to the Moddle web page of the DUBii with your ENT account] | <https://moodlesupd.script.univ-paris-diderot.fr/course/view.php?id=10629> |
@@ -67,7 +71,7 @@ Link to the prerequisites:
 
 ## Teaching material
 
-### Session 1. R and Rmd basics
+### R and Rmd basics
 
 
 | Topics |  Duration | Material |
@@ -83,7 +87,7 @@ Link to the prerequisites:
 | R markdown | 45' | Demo and [[COVID-19_HK.nb.html](practicals/Rmarkdown_demo/COVID-19_HK.nb.html)] |
 
 
-### Session 2. Statistical analysis with R
+### Statistical analysis with R
 
 
 | Type |  Description | Links |
@@ -109,7 +113,7 @@ Link to the prerequisites:
 
 
 
-### Session 3. Statistics for omics data
+### Statistics for omics data
 
 | Topics | Description | Duration | Material |
 |----------------------|-------------------------------------|-----|-----------------------------------------------|
@@ -123,14 +127,74 @@ Link to the prerequisites:
 | Statistics on omics data - part II | parameters estimation issue | 15' | [[pdf](slides/DUBii_R_Session_3.pdf)] |
 
 
-
-### Session 4. Clustering
+### Clustering
 
 Contents: [clustering/](clustering/)
 
-### Session 5. Data exploration and enrichment analysis
+### Data exploration
 
-### Session 6. Supervised classification and learning
+- Teachers:  Jacques van Helden & Olivier Sand
+- Date: 2020-06-02 PM
+- Videoconference
 
 
+| Topics | Type | Duration | Material |
+|--------------------------------|-------|-----|----------------|
+| Clustering: rappel de la séance précédente | Slides |  | [[html](clustering/cours_clustering.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/clustering/cours_clustering.Rmd)] |
+| Analyse en composante principale | Diapos |  | [[html](PCA/PCA_PCoA_Intro.html)] [[Rmd]](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/PCA/PCA_PCoA_Intro.Rmd) |
+| Practical: data preparation (Pavkovic, 2019) | Notebook code |  |   [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/pavkovic_2019/prepare-data_pavkovic_2019.Rmd)] |
+| Practical: data preparation (Pavkovic, 2019) - UUO proteome dataset | Notebook report |  |  [[html](practicals/pavkovic_2019/pavkovic2019_proteome_uuo.html)]  |
+| Practical: data preparation (Pavkovic, 2019) - UUO transcriptome dataset | Notebook report |  |  [[html](practicals/pavkovic_2019/pavkovic2019_transcriptome_uuo.html)]  |
+| Practical: data preparation (Pavkovic, 2019) - FA proteome dataset | Notebook report |  |  [[html](practicals/pavkovic_2019/pavkovic2019_proteome_fa.html)]  |
+| Practical: data preparation (Pavkovic, 2019) - FA transcriptome dataset | Notebook report |  |  [[html](practicals/pavkovic_2019/pavkovic2019_transcriptome_fa.html)]  |
+| Practical: data exploration (Pavkovic, 2019)  | Exercises |  | [[html](practicals/pavkovic_2019/pavkovic2019_exercises.html)]  |
+| R scripts (click on script, then "Raw") | R scripts |  | [[github](https://github.com/DU-Bii/module-3-Stat-R/tree/master/stat-R_2020/practicals/pavkovic_2019/R)]  |
+| Report template with nice yaml header  | Rmd |  | [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/templates/YOUR-NAME_REPORT-TOPICS.Rmd)] [[html](templates/YOUR-NAME_REPORT-TOPICS.html)] |
+| Report (partial): PCA of proteomics data | Practical |  | [[html](practicals/pavkovic_2019/pavkovic2019_PCA.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/practicals/pavkovic_2019/pavkovic2019_PCA.Rmd)] |
+
+Topics for 2020-06-03
+
+
+- Descriptive statistics: commented solutions of yesterday's exercise (15')
+
+    - Split in rooms depending on level of completion of the exercise
+
+- PCA: slides (15')
+
+- Embedding your script in an R markdown report: demo (20')
+
+- Practicals : clustering (20')
+
+### Enrichment analysis
+
+- Teachers: Olivier Sand & Jacques van Helden
+- Date: 2020-06-03 PM
+- Videoconference
+
+| Topics | Type | Duration | Material |
+|--------------------------------|-------|-----|----------------|
+| What was not done yesterday | mixed | who knows | see previous course |
+| Enrichment analysis | html | who knows | [[html](enrichment/cours_enrichment.html)] |
+| Enrichment analysis | Rmd | who knows | [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/enrichment/cours_enrichment.Rmd)] |
+
+### Supervised classification
+
+
+- Teachers: Jacques van Helden & Olivier Sand
+- Date: 2020-06-10 PM
+- Videoconference
+
+| Topics | Type | Material |
+|--------------------------------|-------|----------------|
+| Starter: brain-learning exercise | Exercise | [[pdf](apprentissage/slides/01_brain-learning_exercise_study-cases.pdf)] [[Quizz](https://forms.gle/LD5hx5VyypQnYQ5x8)] |
+| Mutlivariate analysis - Intro | Lecture | [[pdf](apprentissage/slides/02_multivariate-analysis_intro.pdf)] |
+| Apprentissage automatique | Lecture | [[pdf](apprentissage/slides/03_machine-learning_DUBii_2020.pdf)] |
+| TCGA Breast Invasive Cancer dataset | Practical | [[html](apprentissage/TP_apprentissage.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/apprentissage/TP_apprentissage.Rmd)] |
+
+### Evaluation
+
+
+1. Quiz: <https://moodlesupd.script.univ-paris-diderot.fr/mod/quiz/view.php?id=249268>
+
+2. Personal work (report template): [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2020/evaluation-m3-2020/NOM-PRENOM_evaluation-m3-2020.Rmd)] [[html](evaluation-m3-2020/NOM-PRENOM_evaluation-m3-2020.html)]
 

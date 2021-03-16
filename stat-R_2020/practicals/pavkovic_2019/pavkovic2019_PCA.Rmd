@@ -1,0 +1,354 @@
+---
+title: "Principal Component Analysis of multi-omics data (Pavkovic 2019)"
+author: "Jacques van Helden"
+date: "`r Sys.time()`"
+output:
+  html_document:
+    code_folding: hide
+    fig_caption: yes
+    highlight: zenburn
+    self_contained: no
+    theme: cerulean
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
+  html_notebook: 
+    code_folding: hide
+    fig_caption: yes
+    fig_height: 5
+    fig_width: 7
+    highlight: zenburn
+    self_contained: yes
+    theme: cerulean
+    toc: yes
+    toc_float: yes
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+```{r settings, include=FALSE, echo=FALSE, eval=TRUE}
+
+options(width = 300)
+# options(encoding = 'UTF-8')
+knitr::opts_chunk$set(
+  fig.width = 7, fig.height = 5, 
+  fig.path = 'figures/pavkovic2019_PCA_',
+  fig.align = "center", 
+  size = "tiny", 
+  echo = TRUE, 
+  eval = TRUE, 
+  warning = FALSE, 
+  message = FALSE, 
+  results = TRUE, 
+  comment = "")
+
+options(scipen = 12) ## Max number of digits for non-scientific notation
+# knitr::asis_output("\\footnotesize")
+
+```
+
+```{r load_libraries}
+
+## Load libraries
+library("knitr")
+library("FactoMineR")
+library("factoextra")
+library("corrplot")
+
+```
+
+
+## Introduction
+
+La valeur de 2 + 2 est `r 2 + 2`.
+
+On peut aussi insérer du bash: 
+
+```{bash}
+#### Example of bash code running in an R notebook ####
+
+echo Hello World
+
+## Run the Linux command whoami
+whoami
+
+## Run echo with an embedded result of the whoami command
+echo "I am `whoami`"
+
+```
+
+```{r}
+#### Example of R chunk: I assign the value here ####
+a <- 7
+```
+
+
+## Material and methods
+
+```{r eval = TRUE, results=FALSE}
+#### Example of R chunk ####
+
+## The variable defined in the previous chunk s still in the environment for the next chunks
+print(a)
+```
+
+
+
+### Data 
+
+
+```{r}
+##### Load the data ####
+
+## Note: this path is only valid if you are working on the IFB core cluster. 
+## If not, it should point to the folder where you downloaded the memory image from the github repository
+#load('/shared/projects/dubii2020/data/module3/seance5/pavkovic2019_proteome_uuo_memimage.Rdata')
+#load('/shared/projects/dubii2020/data/module3/seance5/pavkovic2019_transcriptome_fa_memimage.Rdata')
+load('/shared/projects/dubii2020/data/module3/seance5/pavkovic2019_proteome_fa_memimage.Rdata')
+
+kable(t(as.data.frame(parameters)), 
+      col.names = "Parameter", 
+      caption = "Parameters used for this analysis")
+```
+
+
+```{r choose_dataset}
+
+#### Choose the non-normalised filtered log2 data to play with ####
+# x <- log2MedianCentered 
+x <- log2Standardized 
+dim(x) # Check the dimensions
+colnames(x) ## Check the sample names
+
+## Print the first rows of the data matrix to check the content
+kable(head(x), caption = "First rows of the data matrix")
+
+
+```
+
+
+## Results
+
+
+### PCA
+
+```{r run_pca}
+#### Compute the components ####
+## Beware: the individuals should come as row --> we have to transpose the expression matrix
+res.pca <- PCA(t(x), scale.unit = FALSE, ncp = ncol(x), graph = FALSE)
+
+## Check the content of the resulting object
+# names(res.pca)
+
+## Eigen values
+kable(res.pca$eig, caption = "Eigen values of the PCs")
+
+## Variables versus components
+kable(head(res.pca$var$coord), caption = "Coordonates of the features in the PC space") 
+# head(res.pca$var$cor) ## Correlation
+# head(res.pca$var$cos2) ## Cos2 (squared correlation)
+# head(res.pca$var$contrib) ## Contribution of each variable to each component (loading ?)
+
+## Check that Cos2 is just the square of the correlation
+# head(res.pca$var$cos2) - head(res.pca$var$cor)^2
+
+## The sum of squared correlations per variable must be 1
+# head(apply(res.pca$var$cos2, 1, sum))
+
+
+## Individuals versus components
+kable(res.pca$ind$coord, caption = "Coordinates of the individuals in the variable space") ## Coordinates
+# res.pca$ind$cos2 ## squared correlation
+# res.pca$ind$contrib ## Contribution of each individual to each component (loading ?)
+# res.pca$ind$dist  ## ?
+
+## The sum of cos2 per individual must be 1
+# apply(res.pca$ind$cos2, 1, sum)
+
+```
+
+### Eigen values plot
+
+```{r eigen_values_plot, out.width="50%", fig.width=7, fig.height=5, fig.cap="Eigenvalues plot. "}
+#### Plot eigen values ####
+fviz_eig(res.pca, addlabels = TRUE, ylim = c(0, 50), main = paste(parameters$datatype, parameters$dataset))
+
+```
+
+
+```{r pc_plots, fig.width=5, fig.height=5, out.width="50%", fig.cap=paste("PC plots of the dataset", parameters$datatype, parameters$dataset)}
+
+#### Plot PC1 vs PC2 with condition-specific colors ####
+fviz_pca_ind(res.pca, axes = c(1,2), 
+             col.ind = metadata$condition,
+             repel = TRUE # Avoid overlap between labels
+)
+
+#### Plot PC4 vs PC3 with condition-specific colors ####
+fviz_pca_ind(res.pca, axes = c(3,4), 
+             col.ind = metadata$condition,
+             repel = TRUE # Avoid overlap between labels
+)
+
+#### Plot PC5 vs PC6 with condition-specific colors ####
+fviz_pca_ind(res.pca, axes = c(5, 6), 
+             col.ind = metadata$condition,
+             repel = TRUE # Avoid overlap between labels
+)
+
+
+```
+
+- Nous observons une excellente cohérence entre répliques. 
+
+- Les 2 premières composantes capturent visiblement une progression temporelle, qui se manifeste par une répartition cyclique. 
+
+## Negative control
+
+We would like to check that the structuration of differs from what would be expected by chance. 
+For this, we can use an empirical approach: randomise the dataset by shuffling its values, and run the PCA again.
+
+### Shuffled matrix
+
+The simplest wway to do this is to shufle all the values of the table, by applying the command `sample()` on the data frame `x`.
+
+```{r shuffled_matrix_PCA}
+#### Negatve control: permute all the values of the data matrix ####
+
+## Shuffle all the values of the data matrix
+shuffledValues <- sample(unlist(x) , size = prod(dim(x)), replace = FALSE) # This gives a vector
+
+## Place the shuffled values in a matrix of the same dimensions as the oroginal data matrix
+xShuffled <- matrix(
+  data = shuffledValues, 
+  nrow = nrow(x), ncol = ncol(x))
+table(xShuffled == x) ## the values match on average one time per permutation
+
+## Check that the original expressio matrix has high correlation values betwen individuals
+xCor <- cor(x)
+rownames(xCor) <- colnames(x)
+colnames(xCor) <- colnames(x)
+kable(cor(x),  
+      caption = "Correlation between columns (samples) of the original expression matrix. ",
+      row.names = TRUE)
+
+## Check that the permuted matrix is not correlated anymore
+## Inter-sample correlations should be around 0 except in the diagonal
+xShuffledCor <- cor(xShuffled)
+rownames(xShuffledCor) <- paste0("shufMat", 1:ncol(xShuffledCor)) 
+colnames(xShuffledCor) <- paste0("shufMat", 1:ncol(xShuffledCor)) 
+kable(xShuffledCor, 
+      caption = "Correlation between columns of the shuffled expression matrix",
+      row.names = TRUE)
+
+## Compute the Principal Components on the shuffled 
+xShuffledPCA <- PCA(t(xShuffled), scale.unit = FALSE, ncp = ncol(x), graph = FALSE)
+```
+
+```{r shuffled_matrix_eigenvalues, out.width="50%", fig.width=5, fig.height=5, fig.cap="Negative control 1: eigen values of PCs from a data matrix with shuffled values. "}
+
+#### Eigen values ####
+fviz_eig(xShuffledPCA, addlabels = TRUE, ylim = c(0, 50), 
+         main = paste("Shuffled matrix from", parameters$datatype, parameters$dataset))
+
+```
+
+```{r shuffled_matrix_pc_plots, out.width="50%", fig.width=5, fig.height=5, fig.cap="Negative control 1: PC plots from a data matrix with shuffled values. "}
+
+#### Plot PC1 vs PC2 with condition-specific colors ####
+fviz_pca_ind(xShuffledPCA, axes = c(1,2), 
+             col.ind = metadata$condition,
+             repel = TRUE # Avoid overlap between labels
+)
+
+#### Plot PC4 vs PC3 with condition-specific colors ####
+fviz_pca_ind(xShuffledPCA, axes = c(3,4), 
+             col.ind = metadata$condition,
+             repel = TRUE # Avoid overlap between labels
+)
+
+#### Plot PC5 vs PC6 with condition-specific colors ####
+fviz_pca_ind(xShuffledPCA, axes = c(5, 6), 
+             col.ind = metadata$condition,
+             repel = TRUE # Avoid overlap between labels
+)
+
+```
+
+
+### Row-wise shuffled matrix
+
+A more refined appoach is to shuffle the values inside each row of the `x` data frame, by cmbining `apply()` and `sample()`. 
+
+Note that this approach will preserve a quite high correlation between the columns of the matrix, which will reflect the gene-specific level of expressions (some genes have very high levels across all conditons, and some others very low levels across all conditions). However the values will now be sampled independently of the studied factor (the impact of the time point). Consequently, the row-wise shuffled matrix will have data distributions  that better reflects those of biological data, so that this control can be considered as a more suitable than the whole matrix shuffling. 
+
+
+```{r shuffled_rows_PCA, out.width="50%", fig.width=5, fig.height=5, fig.cap="Row-wise shuffling of the values removes the sample-specific information whilst  preserving the mean of each feature.  "}
+#### Negative control : row-wise permutations of the values ####
+
+## Permute values inside each row of the matrix
+xShuffledRows <- t(apply(x, 1, sample))
+dim(xShuffledRows)
+table(xShuffledRows == x) ## the values match on average one time per row
+
+
+## Check that therow-wise means are the same between
+xRowMeans <- apply(x, 1, mean)
+shuffledRowMeans <- apply(xShuffledRows, 1, mean)
+plot(xRowMeans, shuffledRowMeans)
+table(xRowMeans == shuffledRowMeans) ## TRUE for all the values (for each row of the table)
+
+## Check the correlation nbetween columns of the row-wise permuted matrix.
+## Note: values canbe high if the rows have very different ranges (which is the case here)
+xShuffledRowsCor <- cor(xShuffledRows)
+rownames(xShuffledRowsCor) <- paste("shufRow", 1:ncol(xShuffledRowsCor))
+colnames(xShuffledRowsCor) <- paste("shufRow", 1:ncol(xShuffledRowsCor))
+kable(xShuffledRowsCor, 
+      caption = "Correlation between columns of the row-wise shuffled expression matrix",
+      row.names = TRUE) ## Inter-sample correlations should be around 0 except in the diagonal
+
+## Compute the Principal Components on the shuffled 
+xShuffledRowsPCA <- PCA(t(xShuffledRows), scale.unit = FALSE, ncp = ncol(x), graph = FALSE)
+```
+
+
+
+```{r shuffled_rows_eigenvalues, out.width="50%", fig.width=5, fig.height=5, fig.cap="Negative control 2: eigen values of PCs from a data matrix with row-wise shuffled values. "}
+
+#### Eigen values ####
+fviz_eig(xShuffledRowsPCA, addlabels = TRUE, ylim = c(0, 50), main = paste(parameters$datatype, parameters$dataset))
+
+```
+
+```{r shuffled_rows_pc_plots, out.width="50%", fig.width=5, fig.height=5, fig.cap="Negative control 2: PC plots from a data matrix with row-wise shuffled values. "}
+
+#### Plot PC1 vs PC2 with condition-specific colors ####
+fviz_pca_ind(xShuffledRowsPCA, axes = c(1,2), 
+             col.ind = metadata$condition,
+             repel = TRUE # Avoid overlap between labels
+)
+
+#### Plot PC4 vs PC3 with condition-specific colors ####
+fviz_pca_ind(xShuffledRowsPCA, axes = c(3,4), 
+             col.ind = metadata$condition,
+             repel = TRUE # Avoid overlap between labels
+)
+
+#### Plot PC5 vs PC6 with condition-specific colors ####
+fviz_pca_ind(xShuffledRowsPCA, axes = c(5, 6), 
+             col.ind = metadata$condition,
+             repel = TRUE # Avoid overlap between labels
+)
+
+```
+
+
+## Conclusions et perspectives
+
+## References
+

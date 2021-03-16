@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content="Jacques van Helden &amp; Olivier Sand" />
+  <meta name="date" content="2020-06-03" />
+  <title>Statistics with R</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <script src="cours_enrichment_files/jquery-1.11.3/jquery.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="cours_enrichment_files/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+  <script src="cours_enrichment_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+  <script src="cours_enrichment_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+  <script src="cours_enrichment_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+  <link href="cours_enrichment_files/slidy-2/styles/slidy.css" rel="stylesheet" />
+  <script src="cours_enrichment_files/slidy-2/scripts/slidy.js"></script>
+  <script src="cours_enrichment_files/slidy_shiny-1/slidy_shiny.js"></script>
+  <script src="cours_enrichment_files/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+  <script src="cours_enrichment_files/plotly-binding-4.9.2.1/plotly.js"></script>
+  <script src="cours_enrichment_files/typedarray-0.1/typedarray.min.js"></script>
+  <link href="cours_enrichment_files/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
+  <script src="cours_enrichment_files/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
+  <link href="cours_enrichment_files/plotly-htmlwidgets-css-1.52.2/plotly-htmlwidgets.css" rel="stylesheet" />
+  <script src="cours_enrichment_files/plotly-main-1.52.2/plotly-latest.min.js"></script>
+</head>
+<body>
+<div class="slide titlepage">
+  <h1 class="title">Statistics with R</h1>
+  <h1 class="subtitle">Gene set comparison and enrichment analysis</h1>
+  <p class="author">
+Jacques van Helden &amp; Olivier Sand
+  </p>
+  <p class="date">2020-06-03</p>
+</div>
+<div id="two-main-approches" class="slide section level1">
+<h1>Two main approches</h1>
+<ul>
+<li>Gene set comparison or over-representation analysis (ORA)
+<ul>
+<li>Input: a set of functionally related genes</li>
+<li>Reference: a database of annotated gene functions (GO, pathways, TF targets…)</li>
+<li>Approach: evaluate the significance of the intersection (over-represented?)</li>
+<li>Stat: hypergeometric test</li>
+</ul></li>
+<li>Gene Set Enrichment analysis
+<ul>
+<li>Input: a sorted list of genes</li>
+<li>Reference: a database of annotated gene functions (GO, pathways, TF targets…)</li>
+<li>Approach: evaluate the significance of the rank of the genes belonging to a reference class in the ordered list.</li>
+<li>Stat: enrichment scores (alternative)</li>
+</ul></li>
+</ul>
+</div>
+<div id="gene-set-comparison-over-representation-of-the-intersection" class="slide section level1">
+<h1>Gene set comparison (over-representation of the intersection)</h1>
+<ul>
+<li>A given organism has 6000 genes, 40 of which are involved in methionine metabolism.</li>
+<li>A set of 10 genes were reported as co-expressed in an RNAseq experiment. Among them, 6 are related to methionine metabolism.</li>
+<li>How significant is this observation ? More precisely, what would be the probability to observe such a correspondence by chance alone ?</li>
+</ul>
+<p><img src="images/venn_yeast_methionine.png" alt="Venn diagram" /></p>
+</div>
+<div id="the-hypergeometric-test" class="slide section level1">
+<h1>The hypergeometric test</h1>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Symbol</th>
+<th align="left">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(g = 6000\)</span></td>
+<td align="left">number of genes</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(m = 40\)</span></td>
+<td align="left">genes involved in methionine metabolism</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(n = 5960\)</span></td>
+<td align="left">genes not involved in methionine metabolism</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(k = 10\)</span></td>
+<td align="left">number of genes in the cluster</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(x = 6\)</span></td>
+<td align="left">number of methionine genes in the cluster</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>We calculate the number of possibilities for the following selections</li>
+</ul>
+<table>
+<colgroup>
+<col width="13%" />
+<col width="34%" />
+<col width="51%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Symbol</th>
+<th align="left">Meaning</th>
+<th align="left">Formula</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(C_1\)</span></td>
+<td align="left">choose 10 distinct genes among 6000</td>
+<td align="left"><span class="math inline">\(C_1 = C_{m+n}^{k} = \frac{6000!}{10!5990!} = 1.65e^{31}\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(C_2\)</span></td>
+<td align="left">choose 6 distinct genes among the 40 involved in methionine</td>
+<td align="left"><span class="math inline">\(C_2 = C_{m}^{x} = \frac{40!}{6!34!} = 3.8e^{6}\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(C_3\)</span></td>
+<td align="left">choose 4 genes among the 5960 which are not involved in methionine</td>
+<td align="left"><span class="math inline">\(C_3 = C_{n}^{k-x} = \frac{5960!}{4!5956!} = 5.2e^{13}\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(C_4\)</span></td>
+<td align="left">choose 6 methionine and 4 non-methionine genes</td>
+<td align="left"><span class="math inline">\(C_4 = C2 \cdot C3 = C_{m}^{x}C_{n}^{k-x} = 2.0e^{20}\)</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="the-hypergeometric-test---probabilities" class="slide section level1">
+<h1>The hypergeometric test - probabilities</h1>
+<ul>
+<li><p>Probability to have exactly 6 methionine genes within a selection of 10</p>
+<p><span class="math display">\[P(X=6) = \frac{C4}{C1} = \frac{C_{m}^{x}C_{n}^{k-x}}{C_{m+n}^{k}} = \frac{C_{40}^{6}C_{5960}^{4}}{C_{6000}^{10}} = 1.219e^{-11}\]</span></p></li>
+<li><p>Probability to have at least 6 methionine genes within a selection of 10</p>
+<p><span class="math display">\[P(X \ge 6) = \sum_{i=x}^{k}\frac{C_{m}^{i}C_{n}^{k-i}}{C_{m+n}^{k}} = 1.222e^{-11}\]</span></p></li>
+</ul>
+</div>
+<div id="ora---precautions-to-take" class="slide section level1">
+<h1>ORA - precautions to take</h1>
+<ul>
+<li>Define your universe (background)
+<ul>
+<li>set with all the genes susceptible to be part of your analysis</li>
+</ul></li>
+<li>Not so simple
+<ul>
+<li>all genes in genomic annotations ?</li>
+<li>all genes with at least one annotation in the ontology you used ?</li>
+<li>all coding genes ?</li>
+<li>genes on a biochip ?</li>
+<li>genes / proteins detected by an experimental approach (RNAseq, proteomics)</li>
+<li>genes reachable by your approach (ex : miRNA targets, Godard et al., 2015)</li>
+</ul></li>
+<li>Multiple-test corrections
+<ul>
+<li>correction choice (adjusted P-values : Bonferroni correction, Benjamini-Hochberg FDR…)</li>
+<li>inter-test dependancies corrections (gSCS in gProfiler)</li>
+</ul></li>
+</ul>
+</div>
+<div id="practical---annotating-a-group-of-differentially-expressed-genes-deg" class="slide section level1">
+<h1>Practical - Annotating a group of differentially expressed genes (DEG)</h1>
+<ul>
+<li>tool: g:GOSt from gProfiler <a href="https://biit.cs.ut.ee/gprofiler/gost" class="uri">https://biit.cs.ut.ee/gprofiler/gost</a></li>
+<li>documentation: <a href="https://biit.cs.ut.ee/gprofiler/page/docs" class="uri">https://biit.cs.ut.ee/gprofiler/page/docs</a></li>
+<li>Goal:
+<ul>
+<li>detect functions (biological process, pathways, regulation…) associated with the set of DEG</li>
+<li>interpret the resuls</li>
+</ul></li>
+<li>What about a negative control ?</li>
+</ul>
+<p><img src="images/gProfiler_site.png" width="50%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="practical---deg" class="slide section level1">
+<h1>Practical - DEG</h1>
+<ul>
+<li><p>Organism: <em>Saccharomyces cerevisiae</em></p></li>
+<li><p>Data source: <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE89530" class="uri">https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE89530</a></p></li>
+<li><p>The aim of this study is to compare NGS-derived yeast transcriptome profiling (RNA-seq) of wild-type and bdf1-Y187F-Y354F mutant strains after sporulation induction (time points: 0h 4h and 8h)</p></li>
+<li><p>design: <em>S. cerevisiae</em> wild-type and bdf1-Y187F-Y354F mutant strains were collected 0h, 4h and 8h after sporulation induction in triplicates. mRNA were purified, prepared and sequenced using Illumina HiSeq 2000 sequencer</p></li>
+<li><p>WT vs mutant at 0h: <a href="https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2019/seance_5/results/bdf1_Y187F_Y354F_mutant_0__vs__Wild_type_0_DESeq2_positive_geneIDs.txt">bdf1_Y187F_Y354F_mutant_0__vs__Wild_type_0_DESeq2_positive_geneIDs.txt</a></p></li>
+<li><p>WT vs mutant at 4h: <a href="https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2019/seance_5/results/bdf1_Y187F_Y354F_mutant_4__vs__Wild_type_4_DESeq2_positive_geneIDs.txt">bdf1_Y187F_Y354F_mutant_4__vs__Wild_type_4_DESeq2_positive_geneIDs.txt</a></p></li>
+</ul>
+</div>
+<div id="practical---results" class="slide section level1">
+<h1>Practical - Results</h1>
+<ul>
+<li>t0:</li>
+</ul>
+<p><img src="images/gProfiler_results_t0.png" width="80%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="practical---results-1" class="slide section level1">
+<h1>Practical - Results</h1>
+<ul>
+<li>t4:</li>
+</ul>
+<p><img src="images/gProfiler_results_t4.png" width="80%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="practical---detailled-results-t0" class="slide section level1">
+<h1>Practical - detailled results t0</h1>
+<p><img src="images/gProfiler_detailled_results_t0_all.png" width="50%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="practical---detailled-results-t4" class="slide section level1">
+<h1>Practical - detailled results t4</h1>
+<p><img src="images/gProfiler_detailled_results_t4_all.png" width="80%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="gprofiler-in-r" class="slide section level1">
+<h1>gProfiler in R</h1>
+<ul>
+<li>Package: <a href="https://cran.r-project.org/web/packages/gprofiler2/index.html" class="uri">https://cran.r-project.org/web/packages/gprofiler2/index.html</a></li>
+<li>Manual: <a href="https://cran.r-project.org/web/packages/gprofiler2/gprofiler2.pdf" class="uri">https://cran.r-project.org/web/packages/gprofiler2/gprofiler2.pdf</a></li>
+<li>Vignettes: <a href="https://cran.r-project.org/web/packages/gprofiler2/vignettes/gprofiler2.html" class="uri">https://cran.r-project.org/web/packages/gprofiler2/vignettes/gprofiler2.html</a></li>
+</ul>
+</div>
+<div id="gene-set-enrichment-analysis" class="slide section level1">
+<h1>Gene Set Enrichment Analysis</h1>
+<ul>
+<li>GSEA</li>
+<li>Broad Institute</li>
+<li>since 2006</li>
+<li>determines whether an a priori defined set of genes shows statistically significant, concordant differences between two biological states</li>
+<li><a href="http://software.broadinstitute.org/gsea/index.jsp" class="uri">http://software.broadinstitute.org/gsea/index.jsp</a></li>
+<li>MSigDB (The Molecular Signatures Database) : collection of annotated gene sets (<a href="https://www.gsea-msigdb.org/gsea/msigdb/index.jsp" class="uri">https://www.gsea-msigdb.org/gsea/msigdb/index.jsp</a>)</li>
+<li>R package : <a href="https://bioconductor.org/packages/release/bioc/html/GSEABase.html" class="uri">https://bioconductor.org/packages/release/bioc/html/GSEABase.html</a></li>
+</ul>
+<p><img src="images/GSEA-homegraphic.gif" alt="GSEA" /></p>
+</div>
+<div id="gsea-principle" class="slide section level1">
+<h1>GSEA principle</h1>
+<ul>
+<li><p>All genes are sorted according to some criterion (e.g. differential expression p-value, correlation of expression with other variables, …).</p></li>
+<li><p>Each graph compares the ranked gene list with one reference class (e.g. one biological process).</p></li>
+<li><p>Black bars denote genes belonging to the reference class.</p></li>
+<li><p>The green curve estimates, at each level i, the degree of over-representation of the reference genes in the i top-ranking genes.</p></li>
+</ul>
+<p><img src="images/GSEA_screenshot_1.png" alt="GSEA screenshot" /></p>
+</div>
+
+  <!-- dynamically load mathjax for compatibility with self-contained -->
+  <script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script>
+
+</body>
+</html>
