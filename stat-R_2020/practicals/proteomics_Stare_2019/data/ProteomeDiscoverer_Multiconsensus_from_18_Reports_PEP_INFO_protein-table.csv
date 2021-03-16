@@ -1,0 +1,339 @@
+﻿Accession,Description,sumProteins,sumUniquePeptides,sumPSMs,pool1,pool1C,pool2,pool2C,pool3,pool3C,pool4,pool4C,pool5,pool5C,pool6,pool6C,pool7,pool8,pool9,pool10,pool11,pool12
+TC194720,"UniRef100_P25079 Cluster: Ribulose bisphosphate carboxylase large chain precursor; n=1; Solanum tuberosum Rep: Ribulose bisphosphate carboxylase large chain precursor - Solanum tuberosum (Potato), complete_rframe6",3,27,4785,183,469,259,265,152,200,274,265,224,119,333,168,208,330,318,345,163,510
+Sotub10g028070.1.1;PGSC0003DMP400033265,"Ribulose-1 5-bisphosphate carboxylase/oxygenase activase 1 (AHRD V1 **** Q9AXG1_GOSHI); contains Interpro domain(s)  IPR003959  ATPase, AAA-type, core_rframe6",8,1,4074,204,350,151,318,234,297,249,326,213,277,145,266,220,195,171,173,98,187
+Sotub02g032940.1.1;PGSC0003DMP400017746,Oxygen-evolving enhancer protein 1 of photosystem II (AHRD V1 ***- A8J0E4_CHLRE); contains Interpro domain(s)  IPR002628  Photosystem II manganese-stabilizing protein PsbO_rframe6,13,6,2488,151,236,99,196,123,198,139,176,130,138,85,168,114,120,115,138,44,118
+Sotub04g008750.1.1;PGSC0003DMP400020414,Glyceraldehyde-3-phosphate dehydrogenase (AHRD V1 ***- D7UNZ5_BRARC); contains Interpro domain(s)  IPR000173  Glyceraldehyde 3-phosphate dehydrogenase_rframe6,9,12,2305,126,168,107,172,140,161,159,172,142,123,81,132,151,115,105,112,43,96
+TC218359,"homologue to UniRef100_A2Q5A3 Cluster: H+-transporting two-sector ATPase, alpha/beta subunit, central region; H+-transporting two-sector ATPase, delta/epsilon subunit; n=1; Medicago truncatula Rep: H+-transporting two-sector ATPase, alpha/beta subunit, central region; H+-transporting two-sector ATPase, delta/epsilon subunit - Medicago truncatula (Barrel medic), complete_rframe6",5,28,1898,121,139,100,124,102,112,123,119,123,99,74,104,103,120,100,96,47,92
+Sotub07g016970.1.1,"Oxygen-evolving enhancer protein 2, chloroplastic (AHRD V1 ***- PSBP_SOLTU); contains Interpro domain(s)  IPR002683  Photosystem II oxygen evolving complex protein PsbP_rframe6",7,14,1568,84,99,70,109,85,120,86,106,88,95,94,118,76,65,73,86,27,87
+PGSC0003DMP400004990;Sotub02g012180.1.1,PGSC0003DMT400007189 Protein,6,5,1490,92,152,54,125,69,113,85,108,85,85,45,98,71,61,55,87,24,81
+Sotub02g029110.1.1;PGSC0003DMP400022435;Sotub02g029160.1.1,"Ribulose bisphosphate carboxylase small chain (AHRD V1 ***- A9YTZ7_SOLTU); contains Interpro domain(s)  IPR000894  Ribulose bisphosphate carboxylase, small chain_rframe6",23,1,1488,82,80,67,95,66,76,83,77,78,60,76,90,81,94,72,84,21,206
+Sotub02g023000.1.1;PGSC0003DMP400037659,Oxygen-evolving enhancer protein 3 (AHRD V1 ***- Q7Y1T5_PEA); contains Interpro domain(s)  IPR008797  Photosystem II oxygen evolving complex protein PsbQ_rframe6,6,9,1451,99,132,60,103,77,93,80,99,92,102,46,81,73,64,71,70,28,81
+Sotub06g018020.1.1;PGSC0003DMP400020951,Photosystem I reaction center subunit II (AHRD V1 ***- B4FAW3_MAIZE); contains Interpro domain(s)  IPR003685  Photosystem I protein PsaD_rframe6,5,7,1364,88,88,81,94,61,71,70,98,108,80,51,83,67,73,61,108,24,58
+TC201354,"homologue to UniRef100_O49074 Cluster: Ribulose bisphosphate carboxylase/oxygenase activase, chloroplast precursor; n=1; Solanum pennellii Rep: Ribulose bisphosphate carboxylase/oxygenase activase, chloroplast precursor - Solanum pennellii (Tomato) (Lycopersicon pennellii), partial (95%)_rframe6",6,1,1346,67,116,50,104,76,97,82,109,70,91,48,86,73,68,57,57,33,62
+Sotub01g047810.1.1;PGSC0003DMP400005640,"Fructose-bisphosphate aldolase (AHRD V1 **** B0FPD8_SOLTU); contains Interpro domain(s)  IPR000741  Fructose-bisphosphate aldolase, class-I_rframe6",5,7,1310,90,103,80,83,87,83,96,88,90,67,26,64,75,80,69,58,26,45
+PGSC0003DMP400038185;Sotub10g012590.1.1,PGSC0003DMT400056799 Protein,9,24,1249,78,92,62,86,86,67,86,73,73,61,38,55,88,81,44,75,32,72
+PGSC0003DMP400017652;PGSC0003DMC400017652,PGSC0003DMT400025881 Protein,4,4,1230,82,72,53,96,72,91,96,103,81,82,34,60,85,61,30,57,17,58
+PGSC0003DMP400051216;PGSC0003DMC400051216,PGSC0003DMT400075611 Protein,21,17,1205,64,102,57,88,60,73,56,71,82,69,52,76,72,49,60,90,32,52
+Sotub01g022730.1.1;PGSC0003DMP400007746,"Glutamine synthetase (AHRD V1 ***- Q9FPU0_SOLTU); contains Interpro domain(s)  IPR008146  Glutamine synthetase, catalytic region_rframe6",3,12,1166,61,72,69,86,72,95,79,100,77,87,42,61,62,50,59,45,23,26
+Sotub02g010010.1.1;PGSC0003DMP400021255,"Fructose-bisphosphate aldolase (AHRD V1 **** Q9SXX4_NICPA); contains Interpro domain(s)  IPR000741  Fructose-bisphosphate aldolase, class-I_rframe6",5,1,1141,75,103,69,89,63,84,87,76,63,53,35,63,57,60,51,51,23,39
+PGSC0003DMP400006368;Sotub02g027160.1.1,PGSC0003DMT400009192 Protein,4,16,1135,81,67,61,83,66,68,70,83,68,48,54,55,74,70,56,66,17,48
+PGSC0003DMP400041818;Sotub02g010840.1.1,PGSC0003DMT400062138 Protein,10,1,1062,62,59,47,68,46,56,60,60,61,45,59,54,54,77,40,49,18,147
+PGSC0003DMP400053311;PGSC0003DMC400053311,PGSC0003DMT400078666 Protein,11,23,1002,66,93,39,62,56,69,77,75,63,69,22,59,63,51,34,52,4,48
+Sotub08g022090.1.1;PGSC0003DMP400016435,Phosphoribulokinase/uridine kinase (AHRD V1 ***- B7KI62_CYAP7); contains Interpro domain(s)  IPR006083  Phosphoribulokinase/uridine kinase_rframe6,6,10,987,70,81,57,57,57,60,74,69,57,59,27,52,73,64,23,56,,51
+Sotub05g025260.1.1;PGSC0003DMP400047117,"Fructose-1 6-bisphosphatase class 1 (AHRD V1 ***- B9M1N3_GEOSF); contains Interpro domain(s)  IPR000146  Fructose-1,6-bisphosphatase_rframe6",6,14,963,46,87,17,76,63,81,56,70,46,83,42,68,32,41,29,38,30,58
+Sotub06g005130.1.1;PGSC0003DMP400003838,cDNA clone 002-143-C11 full insert sequence (AHRD V1 *--- B7F1B2_ORYSJ); contains Interpro domain(s)  IPR016040  NAD(P)-binding domain_rframe6,7,17,906,61,60,24,79,62,75,42,65,38,72,36,75,58,41,24,49,6,39
+Sotub01g040390.1.1;PGSC0003DMP400043144,Chaperone DnaK (AHRD V1 ***- Q1SKX2_MEDTR); contains Interpro domain(s)  IPR012725  Chaperone DnaK_rframe6,6,11,862,47,52,32,86,65,90,60,82,38,51,36,59,48,42,22,30,4,18
+Sotub03g026100.1.1;PGSC0003DMP400031700,"Elongation factor Tu (AHRD V1 ***- B9GKN8_POPTR); contains Interpro domain(s)  IPR004541  Translation elongation factor EFTu/EF1A, bacterial and organelle_rframe6",4,7,853,34,112,27,73,52,66,65,74,59,46,30,47,33,18,13,52,,52
+PGSC0003DMP400034002;Sotub03g009830.1.1,PGSC0003DMT400050381 Protein,14,2,846,54,59,40,58,44,47,50,50,39,41,47,58,36,67,42,37,22,55
+PGSC0003DMP400053197;Sotub05g009270.1.1,PGSC0003DMT400078507 Protein,8,4,842,52,56,54,59,34,58,45,47,54,51,47,52,35,54,40,50,5,49
+PGSC0003DMP400063871;PGSC0003DMC400063871,PGSC0003DMT400092196 Protein,3,2,842,39,89,26,69,46,64,65,66,47,56,26,49,42,28,22,52,4,52
+Sotub02g026140.1.1;PGSC0003DMP400002845,Catalase (AHRD V1 ***- O24511_TOBAC); contains Interpro domain(s)  IPR018028  Catalase related subgroup_rframe6,6,11,814,51,69,39,46,33,36,72,34,66,41,18,33,78,67,30,67,,34
+TC221870,"homologue to UniRef100_Q5NE20 Cluster: Carbonic anhydrase; n=1; Solanum lycopersicum Rep: Carbonic anhydrase - Solanum lycopersicum (Tomato) (Lycopersicon esculentum), partial (98%)_rframe6",9,1,782,50,64,30,56,37,50,57,52,50,32,28,49,44,50,31,42,22,38
+MICRO.4170.C4,nseq=88_rframe6,8,1,758,48,62,28,53,37,49,54,49,47,32,28,49,44,50,30,40,22,36
+PGSC0003DMP400063724;Sotub04g035400.1.1,PGSC0003DMT400092049 Protein,4,2,725,40,54,42,50,,48,40,46,50,30,36,52,42,62,46,44,,43
+TC195527,"UniRef100_O81394 Cluster: Phosphoglycerate kinase; n=1; Solanum tuberosum Rep: Phosphoglycerate kinase - Solanum tuberosum (Potato), complete_rframe6",4,1,723,51,64,38,43,40,40,50,44,45,34,33,38,45,48,27,41,15,27
+MICRO.98.C5,"ABB86255: phosphoglycerate kinase precursor-like [Solanum tuberosum]_phosphoglycerate kinase precursor [Solanum tuberosum] pir__T07014 phosphoglycerate kinase (EC 2.7.2.3) precursor, chloroplast - potato_rframe6",4,1,713,50,63,37,43,40,41,49,44,44,33,33,38,44,46,27,40,16,25
+Sotub04g011150.1.1;PGSC0003DMP400040823,14-3-3-like protein GF14 epsilon (AHRD V1 **-- 14310_ARATH); contains Interpro domain(s)  IPR000308  14-3-3 protein_rframe6,51,4,701,71,36,26,49,54,61,45,58,49,35,33,36,36,37,32,36,4,3
+TC195366,"homologue to UniRef100_A7QPE5 Cluster: Chromosome chr18 scaffold_137, whole genome shotgun sequence; n=1; Vitis vinifera Rep: Chromosome chr18 scaffold_137, whole genome shotgun sequence - Vitis vinifera (Grape), partial (96%)_rframe6",3,5,693,43,45,31,53,39,50,53,56,45,45,23,36,45,33,21,36,9,30
+Sotub10g026080.1.1;PGSC0003DMP400049086,Peroxiredoxin (AHRD V1 **-- Q9FE12_PHAVU); contains Interpro domain(s)  IPR000866  Alkyl hydroperoxide reductase/ Thiol specific antioxidant/ Mal allergen_rframe6,6,1,644,47,42,37,48,40,43,55,31,45,41,25,25,39,32,38,26,15,15
+Sotub07g017980.1.1;PGSC0003DMP400010908,"Chlorophyll a-b binding protein 4, chloroplastic (AHRD V1 **** CB24_SOLLC); contains Interpro domain(s)  IPR001344  Chlorophyll A-B binding protein_rframe6",10,3,622,51,45,45,45,42,30,36,27,39,21,36,36,30,45,30,28,15,21
+Sotub09g009340.1.1;PGSC0003DMP400015694,heat shock protein (AHRD V1 ***- B2D2G5_CAPSN); contains Interpro domain(s)  IPR013126  Heat shock protein 70_rframe6,32,6,573,36,52,18,41,39,57,30,45,31,39,24,57,27,15,11,27,,24
+Sotub06g027720.1.1,NAD-dependent epimerase/dehydratase (AHRD V1 **-- C7QWY4_CYAP0); contains Interpro domain(s)  IPR016040  NAD(P)-binding domain_rframe6,8,16,571,49,58,37,32,26,28,53,25,47,30,19,17,42,53,,23,6,26
+Sotub06g032560.1.1;PGSC0003DMP400052971,Unknown Protein (AHRD V1)_rframe6,2,5,558,34,36,30,46,26,51,44,54,39,27,33,30,17,28,18,21,,24
+Sotub08g014650.1.1;PGSC0003DMP400052154,"Glycine dehydrogenase P protein (AHRD V1 ***- Q6V9T1_ORYSJ); contains Interpro domain(s)  IPR015421  Pyridoxal phosphate-dependent transferase, major region, subdomain 1  IPR003437  Glycine cleavage system P-protein_rframe6",4,17,556,37,64,21,30,43,37,33,33,29,45,11,28,38,26,27,24,10,20
+TC194704,ATP synthase CF0 subunit I [Solanum tuberosum]_rframe6,3,18,550,41,42,30,34,39,31,46,34,39,24,25,26,19,43,29,10,9,29
+Sotub12g025710.1.1;PGSC0003DMP400031028,14-3-3-like protein GF14 epsilon (AHRD V1 **-- 14310_ARATH); contains Interpro domain(s)  IPR000308  14-3-3 protein_rframe6,5,1,529,47,30,18,35,45,43,35,39,38,22,27,30,26,30,24,33,4,3
+Sotub04g028420.1.1;PGSC0003DMP400053710,L-ascorbate peroxidase (AHRD V1 ***- A8JG56_CHLRE); contains Interpro domain(s)  IPR002207  Plant ascorbate peroxidase_rframe6,6,8,521,42,39,16,59,13,53,42,35,42,43,30,33,,,28,16,,30
+Sotub01g017120.1.1,"Photosystem II CP47 chlorophyll apoprotein (AHRD V1 ***- D3WCE7_NEROL); contains Interpro domain(s)  IPR017486  Photosystem II, PsbB_rframe6",5,9,496,27,20,24,22,28,20,24,18,70,12,30,8,76,22,27,40,6,22
+Sotub09g018400.1.1;PGSC0003DMP400038088,Photosystem I reaction center subunit IV A (AHRD V1 *-*- B6TH55_MAIZE); contains Interpro domain(s)  IPR003375  Photosystem I reaction centre subunit IV/PsaE_rframe6,5,1,486,30,35,12,37,28,30,39,44,28,42,,42,23,30,24,21,,21
+PGSC0003DMP400030463;PGSC0003DMC400030463,PGSC0003DMT400044944 Protein,22,8,474,23,44,8,47,31,46,21,38,21,39,22,36,15,14,16,21,,32
+Sotub09g019880.1.1;PGSC0003DMP400022826,NAD-dependent epimerase/dehydratase (AHRD V1 **-- B7K7X4_CYAP7); contains Interpro domain(s)  IPR016040  NAD(P)-binding domain_rframe6,6,13,473,39,50,24,33,19,40,42,27,33,30,,18,39,38,15,15,,11
+Sotub11g025970.1.1,"Elongation factor 1-alpha (AHRD V1 ***- Q2XTC2_SOLTU); contains Interpro domain(s)  IPR004539  Translation elongation factor EF1A, eukaryotic and archaeal_rframe6",62,14,439,31,46,21,22,23,24,32,19,40,31,,14,33,23,15,33,4,28
+Sotub04g010110.1.1;PGSC0003DMP400048247,Triosephosphate isomerase (AHRD V1 ***- Q38JI4_SOLTU); contains Interpro domain(s)  IPR000652  Triosephosphate isomerase_rframe6,4,1,432,45,28,26,27,24,30,36,24,36,15,21,33,9,30,15,24,,9
+PGSC0003DMC400009292;PGSC0003DMP400009292,Peptidyl-prolyl cis-trans isomerase_rframe6,6,1,425,18,36,24,46,24,27,18,27,18,38,24,36,18,21,18,27,,5
+Sotub02g010700.1.1;PGSC0003DMP400041832,14-3-3-like protein GF14 epsilon (AHRD V1 **-- 14310_ARATH); contains Interpro domain(s)  IPR000308  14-3-3 protein_rframe6,25,1,407,41,24,8,29,33,36,24,32,31,24,12,21,23,21,20,24,4,
+Sotub07g016220.1.1;PGSC0003DMP400023988,Alkyl hydroperoxide reductase/ Thiol specific antioxidant/ Mal allergen (AHRD V1 **-- Q097J8_STIAD); contains Interpro domain(s)  IPR000866  Alkyl hydroperoxide reductase/ Thiol specific antioxidant/ Mal allergen_rframe6,3,5,404,36,28,27,36,24,28,27,33,28,26,,30,30,21,,30,,
+Sotub07g026130.1.1;PGSC0003DMP400060824,Polyubiquitin (AHRD V1 **-- Q653X6_ORYSJ); contains Interpro domain(s)  IPR000626  Ubiquitin_rframe6,79,5,396,25,27,18,42,28,37,27,32,30,28,,19,20,20,,20,,23
+MICRO.541.C2,BAA77604: plastidic aldolase NPALDP1 [Nicotiana paniculata]_plastidic aldolase NPALDP1 [Nicotiana paniculata]_rframe6,4,1,384,25,35,23,30,21,28,30,26,21,18,12,21,19,20,17,17,8,13
+PGSC0003DMP400000783;PGSC0003DMC400000783,PGSC0003DMT400001058 Protein,21,4,383,22,37,12,29,26,26,24,30,22,28,18,40,18,10,7,18,,16
+TC195151,"homologue to UniRef100_Q43364 Cluster: Elongation factor TuB, chloroplast precursor; n=1; Nicotiana sylvestris Rep: Elongation factor TuB, chloroplast precursor - Nicotiana sylvestris (Wood tobacco), partial (96%)_rframe6",3,1,379,17,41,11,31,17,30,30,31,22,26,13,18,19,13,9,24,2,25
+PGSC0003DMP400036655;Sotub02g015690.1.1,PGSC0003DMT400054480 Protein,5,7,370,33,20,22,24,23,22,20,26,21,21,18,20,28,18,18,18,4,14
+MICRO.4618.C1,"P29790: ATP synthase gamma chain, chloroplast precursor_ATP synthase (gamma subunit) [Nicotiana tabacum] sp_P29790_ATPG_TOBAC ATP synthase gamma chain, chloroplast precursor pir__PWNTG H+-transporting two-sector ATPase (EC 3.6.3.14) gamma chain precursor, chloroplast - common tobacco_rframe6",4,13,368,26,41,33,25,10,14,28,17,26,18,10,15,17,28,12,22,5,21
+TC207060,"UniRef100_P54260 Cluster: Aminomethyltransferase, mitochondrial precursor; n=1; Solanum tuberosum Rep: Aminomethyltransferase, mitochondrial precursor - Solanum tuberosum (Potato), complete_rframe6",3,14,367,22,32,12,25,20,21,20,20,20,20,17,24,24,26,20,25,7,12
+MICRO.541.C4,nseq=24_rframe6,3,7,357,24,21,20,28,22,26,33,29,24,18,5,15,22,19,20,14,7,10
+Sotub01g036350.1.1;PGSC0003DMP400049779,"UPF0603 protein At1g54780, chloroplastic (AHRD V1 **-- U603_ARATH); contains Interpro domain(s)  IPR007621  Protein of unknown function DUF477_rframe6",2,8,349,39,21,21,27,33,27,15,30,24,30,15,33,,15,6,,,13
+Sotub02g035980.1.1;PGSC0003DMP400001053,"Peptidyl-prolyl cis-trans isomerase cyclophilin-type (AHRD V1 ***- A8IRU6_CHLRE); contains Interpro domain(s)  IPR002130  Peptidyl-prolyl cis-trans isomerase, cyclophilin-type_rframe6",8,9,346,19,12,12,48,18,27,12,42,12,15,19,44,12,15,15,18,6,
+PGSC0003DMP400000951;Sotub02g036190.1.1,PGSC0003DMT400001282 Protein,9,1,344,26,24,15,30,29,35,32,34,17,24,12,25,,23,11,,,7
+MICRO.505.C2,"P17614: ATP synthase subunit beta, mitochondrial precursor_ATP synthase beta subunit [Nicotiana plumbaginifolia] sp_P17614_ATP2_NICPL ATP synthase beta chain, mitochondrial precursor pir__A24355 H+-transporting two-sector ATPase (EC 3.6.3.14) beta-1 chain, mitochondrial - curled-leaved tobacco_rframe6",6,1,334,21,25,23,22,14,23,19,15,25,18,17,19,14,22,17,20,,20
+Sotub06g021210.1.1;PGSC0003DMP400003772,"Glycine cleavage system H protein 1 (AHRD V1 ***- B6UHJ7_MAIZE); contains Interpro domain(s)  IPR017453  Glycine cleavage H-protein, subgroup_rframe6",6,3,325,18,30,,33,18,27,24,21,24,,,25,27,33,18,27,,
+Sotub09g011260.1.1;PGSC0003DMP400004893,Enolase (AHRD V1 ***- C5J0G6_TOBAC); contains Interpro domain(s)  IPR000941  Enolase_rframe6,12,8,320,21,16,9,31,24,36,12,30,15,21,21,36,15,,24,,,9
+Sotub08g010190.1.1;PGSC0003DMP400040123,Cysteine synthase (AHRD V1 ***- Q9FS26_SOLTU); contains Interpro domain(s)  IPR005859  Cysteine synthase A_rframe6,3,9,318,21,48,15,27,18,27,27,9,21,,27,6,6,18,18,,,30
+Sotub05g025970.1.1;PGSC0003DMP400047193,Dihydrolipoyl dehydrogenase (AHRD V1 ***- Q8GT30_SOLLC); contains Interpro domain(s)  IPR006258  Dihydrolipoamide dehydrogenase_rframe6,8,13,314,22,20,9,33,24,24,14,20,12,38,6,27,18,16,6,12,,13
+Sotub10g006560.1.1;PGSC0003DMP400020007,Salt stress root protein RS1 (AHRD V1 **-- SRS1_ORYSJ); contains Interpro domain(s)  IPR008469  DREPP plasma membrane polypeptide_rframe6,7,9,301,27,15,18,36,21,15,15,9,27,15,12,21,20,11,9,14,,16
+Sotub05g014250.1.1;PGSC0003DMP400032448,"Alanine aminotransferase 2 (AHRD V1 **** A8IKE5_SOYBN); contains Interpro domain(s)  IPR004839  Aminotransferase, class I and II_rframe6",13,11,296,16,27,12,21,26,16,23,21,18,21,14,14,24,23,6,,,14
+PGSC0003DMP400002952;Sotub01g048580.1.1,PGSC0003DMT400004125 Protein,10,7,291,14,22,8,12,14,43,25,31,20,12,8,23,13,22,8,16,,
+MICRO.817.C4,CAC84143: thioredoxin peroxidase [Nicotiana tabacum]_thioredoxin peroxidase [Nicotiana tabacum]_rframe6,8,1,291,19,22,16,20,16,19,24,15,20,18,12,12,17,16,17,14,4,10
+PGSC0003DMP400038231;Sotub07g027110.1.1,PGSC0003DMT400056871 Protein,5,4,287,24,24,10,12,14,16,23,20,32,12,10,14,26,18,8,24,,
+PGSC0003DMP400026589;PGSC0003DMC400026589,PGSC0003DMT400039196 Protein,4,8,284,18,21,6,29,13,22,22,24,23,19,8,20,22,14,,21,,2
+Sotub05g013120.1.1;PGSC0003DMP400053992,"Alcohol dehydrogenase zinc-containing (AHRD V1 ***- Q6HFT1_BACHK); contains Interpro domain(s)  IPR002085  Alcohol dehydrogenase superfamily, zinc-containing_rframe6",5,11,283,14,48,20,25,11,36,35,25,24,12,,,,18,,15,,
+PGSC0003DMP400015464;PGSC0003DMC400015464,PGSC0003DMT400022698 Protein,44,0,283,17,16,21,31,17,18,16,14,17,10,26,16,13,18,13,9,,11
+TC220151,"homologue to UniRef100_Q9LRR9 Cluster: Probable peroxisomal (S)-2-hydroxy-acid oxidase 2; n=2; Arabidopsis thaliana Rep: Probable peroxisomal (S)-2-hydroxy-acid oxidase 2 - Arabidopsis thaliana (Mouse-ear cress), partial (98%)_rframe6",20,16,283,19,25,13,27,20,16,25,15,6,12,21,5,4,27,24,,7,17
+Sotub09g005160.1.1;PGSC0003DMP400014894,"Chlorophyll a-b binding protein 6, chloroplastic (AHRD V1 **** CAB6_ARATH); contains Interpro domain(s)  IPR001344  Chlorophyll A-B binding protein_rframe6",9,7,278,22,33,12,15,21,15,24,18,24,,27,,14,29,15,,,9
+PGSC0003DMP400031997;PGSC0003DMC400031997,PGSC0003DMT400047280 Protein,5,7,276,19,22,9,26,14,28,19,27,18,21,,28,12,8,4,13,,8
+Sotub01g049040.1.1;PGSC0003DMP400010972,"Glyoxylate/hydroxypyruvate reductase B (AHRD V1 ***- GHRB_YERPS); contains Interpro domain(s)  IPR006140  D-isomer specific 2-hydroxyacid dehydrogenase, NAD-binding_rframe6",3,4,269,15,22,15,18,15,15,27,21,18,12,19,6,12,24,21,,,9
+Sotub01g025660.1.1;PGSC0003DMP400012128,"50S ribosomal protein L1 (AHRD V1 ***- A8YGI8_MICAE); contains Interpro domain(s)  IPR005878  Ribosomal protein L1, bacterial-type_rframe6",3,9,269,15,31,6,20,6,31,21,25,20,24,,14,9,11,9,12,,15
+Sotub07g022420.1.1,"ATP-dependent zinc metalloprotease FtsH 4 (AHRD V1 ***- A0YZM4_LYNSP); contains Interpro domain(s)  IPR005936  Peptidase M41, FtsH_rframe6",7,16,267,22,25,9,21,11,12,18,20,21,11,8,13,20,12,12,19,2,11
+PGSC0003DMP400007100;Sotub11g006340.1.1,PGSC0003DMT400010174 Protein,21,3,266,24,18,16,13,14,12,24,17,23,18,,,35,15,9,19,,9
+Sotub06g022580.1.1;PGSC0003DMP400046029,"Chlorophyll a-b binding protein, chloroplastic (AHRD V1 ***- CB23_APIGR); contains Interpro domain(s)  IPR001344  Chlorophyll A-B binding protein_rframe6",7,2,262,30,30,14,9,27,,29,12,11,,18,9,13,27,9,,,24
+Sotub09g024030.1.1;PGSC0003DMP400055475,Cysteine synthase (AHRD V1 ***- Q3LAG5_TOBAC); contains Interpro domain(s)  IPR005859  Cysteine synthase A_rframe6,5,8,259,12,18,18,21,21,21,27,21,17,,30,18,6,20,,9,,
+TC194861,"UniRef100_Q2MI87 Cluster: Apocytochrome f precursor; n=3; Solanum Rep: Apocytochrome f precursor - Solanum lycopersicum (Tomato) (Lycopersicon esculentum), complete_rframe6",2,10,258,19,15,17,19,17,14,18,19,22,13,8,16,16,13,10,10,3,9
+PGSC0003DMP400029566;Sotub03g016600.1.1,PGSC0003DMT400043578 Protein,25,0,246,22,19,7,9,18,21,17,23,22,4,,27,18,17,,17,,5
+Sotub01g043670.1.1;PGSC0003DMP400009092,"Malate dehydrogenase (AHRD V1 ***- A5BEJ8_VITVI); contains Interpro domain(s)  IPR010097  Malate dehydrogenase, NAD-dependent, eukaryotes and gamma proteobacteria_rframe6",3,7,226,17,12,,15,21,18,21,20,6,15,,9,6,19,14,9,9,15
+Sotub12g008750.1.1,chaperonin (AHRD V1 *-*- E6VW39_DESAO); contains Interpro domain(s)  IPR001476  Chaperonin Cpn10_rframe6,7,9,222,16,26,6,19,14,25,18,14,14,20,,15,12,8,,6,,9
+MICRO.66.C4,nseq=170_rframe6,19,16,221,12,15,12,19,9,8,18,13,14,13,11,14,13,11,14,14,,11
+PGSC0003DMP400038314;Sotub07g027990.1.1,PGSC0003DMT400057003 Protein,34,15,220,18,6,8,18,24,16,14,14,14,20,10,8,15,6,6,7,4,12
+Sotub11g010080.1.1;PGSC0003DMP400028271,"Phosphoglycolate phosphatase (AHRD V1 **-* C1FHY2_MICSR); contains Interpro domain(s)  IPR006349  2-phosphoglycolate phosphatase, eukaryotic_rframe6",4,5,218,10,18,14,21,19,17,13,18,12,,17,15,12,15,,6,,11
+MICRO.201.C1,"AAB39827: chaperonin-60 beta subunit_probable chaperonin 60 beta chain precursor, chloroplast (clone potbchap1) - potato gb_AAB39827.1_ chaperonin-60 beta subunit_rframe6",11,16,218,13,17,7,19,11,18,18,19,11,11,6,15,13,9,7,10,5,9
+PGSC0003DMP400005581;Sotub01g043620.1.1,PGSC0003DMT400008028 Protein,5,7,208,22,18,,12,8,14,20,16,20,10,,12,18,14,,16,,8
+PGSC0003DMP400025512;Sotub12g020950.1.1,PGSC0003DMT400037527 Protein,16,4,207,13,16,4,31,16,10,19,13,12,8,4,4,21,20,,6,,10
+PGSC0003DMP400047581;Sotub11g010770.1.1,PGSC0003DMT400070382 Protein,12,1,206,22,19,7,9,14,8,16,16,20,,,20,16,17,,17,,5
+PGSC0003DMP400012699;Sotub06g030870.1.1,PGSC0003DMT400018456 Protein,12,2,205,22,11,4,10,12,17,17,19,21,4,,21,20,11,,13,,3
+Sotub10g005350.1.1,"Chlorophyll a-b binding protein 7, chloroplastic (AHRD V1 ***- CB12_SOLLC); contains Interpro domain(s)  IPR001344  Chlorophyll A-B binding protein_rframe6",6,2,196,,20,,20,19,18,10,20,,,22,14,,11,22,,,20
+PGSC0003DMP400015506;PGSC0003DMC400015506,PGSC0003DMT400022763 Protein,4,6,195,7,21,8,21,6,24,9,18,15,10,11,9,,6,9,5,,16
+PGSC0003DMP400052911;Sotub04g010230.1.1,PGSC0003DMT400078155 Protein,19,5,195,15,18,11,18,16,8,11,14,18,8,6,10,11,12,4,9,,6
+Sotub06g025030.1.1;PGSC0003DMP400035552,"ATP synthase subunit b' (AHRD V1 ***- D8G4T7_9CYAN); contains Interpro domain(s)  IPR002146  ATPase, F0 complex, subunit B/B', bacterial and chloroplast_rframe6",7,5,194,30,15,9,18,19,12,22,10,12,4,6,,4,15,9,,,9
+Sotub12g025320.1.1;PGSC0003DMP400029632,"ATP synthase delta subunit (AHRD V1 ***- Q7XYM8_BIGNA); contains Interpro domain(s)  IPR000711  ATPase, F1 complex, OSCP/delta subunit_rframe6",1,2,194,,31,21,,30,21,36,15,,,,,,40,,,,
+TC209684,"homologue to UniRef100_Q41229 Cluster: Photosystem I reaction center subunit IV B, chloroplast precursor (PSI-E B) [Contains: Photosystem I reaction center subunit IV B isoform 2]; n=3; Nicotiana sylvestris Rep: Photosystem I reaction center subunit IV B, chloroplast precursor (PSI-E B) [Contains: Photosystem I reaction center subunit IV B isoform 2] - Nicotiana sylvestris (Wood tobacco), partial (90%)_rframe6",7,1,193,13,15,,16,12,11,15,18,11,15,,15,10,13,11,10,,8
+Sotub03g031780.1.1;PGSC0003DMP400025093,"ATP-dependent clp protease ATP-binding subunit (AHRD V1 **-- Q85G08_CYAME); contains Interpro domain(s)  IPR013093  ATPase associated with various cellular activities, AAA-2_rframe6",12,1,192,14,14,,40,23,15,10,15,6,9,6,6,20,14,,,,
+Sotub01g047060.1.1,"Glycine-rich RNA-binding protein (AHRD V1 *-** B2YKT9_TOBAC); contains Interpro domain(s)  IPR015465  RNA recognition motif, glycine rich protein_rframe6",34,1,189,12,,6,26,12,26,12,20,10,20,,,9,6,12,12,,6
+BM407115,"weakly similar to UniRef100_UPI00001C6FA7 Cluster: sterile alpha motif domain containing 4B; n=1; Rattus norvegicus Rep: sterile alpha motif domain containing 4B - Rattus norvegicus, partial (4%)_rframe6",12,3,182,12,19,5,13,14,16,9,17,15,17,,16,10,5,3,7,,4
+Sotub03g027900.1.1;PGSC0003DMP400042391,Extracellular calcium sensing receptor (AHRD V1 ***- C7BCU7_LIQFO); contains Interpro domain(s)  IPR001763  Rhodanese-like_rframe6,4,6,180,12,9,,18,27,18,9,18,15,,6,,15,15,9,9,,
+PGSC0003DMP400046827;Sotub06g029090.1.1,PGSC0003DMT400069357 Protein,5,2,180,11,18,4,17,10,17,5,17,9,17,8,14,5,,5,14,,9
+PGSC0003DMP400014577;Sotub02g017170.1.1,PGSC0003DMT400021422 Protein,6,0,179,10,10,14,18,16,12,10,14,14,,18,10,10,15,8,,,
+Sotub06g014190.1.1;PGSC0003DMP400027398,"50S ribosomal protein L3 (AHRD V1 ***- D7LJX0_ARALY); contains Interpro domain(s)  IPR019927  Ribosomal protein L3, bacterial/organelle-type_rframe6",2,6,174,6,27,6,27,9,21,4,20,12,15,,15,,6,,6,,
+Sotub05g009130.1.1;PGSC0003DMP400053207,"Fructose-bisphosphate aldolase (AHRD V1 **** B9SJY9_RICCO); contains Interpro domain(s)  IPR000741  Fructose-bisphosphate aldolase, class-I_rframe6",4,1,173,12,12,,12,13,14,12,9,12,15,,13,10,12,13,3,2,9
+PGSC0003DMC400007881;PGSC0003DMP400007881,"Triosephosphate isomerase, chloroplastic_rframe6",5,3,172,18,37,18,14,,12,15,9,9,12,,12,3,,,4,,9
+Sotub07g024580.1.1;PGSC0003DMP400021915,"Malate dehydrogenase (AHRD V1 ***- Q8L5C9_SOLTU); contains Interpro domain(s)  IPR010097  Malate dehydrogenase, NAD-dependent, eukaryotes and gamma proteobacteria_rframe6",12,6,171,6,18,6,12,34,17,15,21,,,18,,,9,15,,,
+Sotub01g048530.1.1,Triosephosphate isomerase (AHRD V1 ***- D6N3G7_GOSHI); contains Interpro domain(s)  IPR000652  Triosephosphate isomerase_rframe6,10,3,171,18,30,14,9,2,8,16,6,10,10,,8,8,10,,12,,10
+TC210021,"weakly similar to UniRef100_Q84VZ7 Cluster: At2g03440; n=1; Arabidopsis thaliana Rep: At2g03440 - Arabidopsis thaliana (Mouse-ear cress), partial (35%)_rframe6",1,1,171,10,14,6,14,14,17,8,15,13,17,,15,10,6,3,5,,4
+MICRO.645.C3,"BAE71311: putative rubisco subunit binding-protein alpha subunit [Trifolium pratense]_RuBisCO subunit binding-protein alpha subunit, chloroplast precursor (60 kDa chaperonin alpha subunit) (CPN-60 alpha) gb_AAA87731.1_ alphacpn60 precursor [Pisum sativum] pir__T06518 chaperonin 60 alpha chain precursor, chloroplast - garden pea_rframe6",6,16,170,7,32,6,14,15,15,14,16,7,10,6,8,3,7,4,,,6
+Sotub08g025040.1.1;PGSC0003DMP400008398,Elongation factor G (AHRD V1 ***- Q9SI75_ARATH); contains Interpro domain(s)  IPR004540  Translation elongation factor EFG/EF2_rframe6,2,4,170,,21,,12,,9,18,12,12,,9,,9,9,20,6,,33
+MICRO.538.C2,NP_001054392: Os05g0103200 [Oryza sativa (japonica cultivar-group)]_putative peptidylprolyl isomerase (EC 5.2.1.8) [Oryza sativa (japonica cultivar-group)] gb_AAS88825.1_ putative peptidylprolyl isomerase (EC 5.2.1.8) [Oryza sativa (japonica cultivar-group)]_rframe6,9,2,165,8,12,8,16,11,13,7,11,8,15,8,12,7,8,7,9,3,2
+Sotub02g020850.1.1;PGSC0003DMP400051744,"30S ribosomal protein S5 (AHRD V1 ***- B6TT32_MAIZE); contains Interpro domain(s)  IPR005712  Ribosomal protein S5, bacterial-type_rframe6",4,5,163,,17,,15,15,21,11,14,9,16,,12,6,9,6,,,12
+MICRO.331.C76,"P07369: Chlorophyll a-b binding protein 3C, chloroplast precursor (LHCII type I CAB-3C) (LHCP)_Chlorophyll a-b binding protein 3C, chloroplast precursor (LHCII type I CAB-3C) (LHCP) pir__CDTO3C chlorophyll a/b-binding protein 3C precursor - tomato prf__1204205G protein 3C,chlorophyll binding_rframe6",60,1,162,12,13,14,14,6,9,12,6,12,5,13,9,8,12,6,5,,6
+Sotub09g025640.1.1;PGSC0003DMP400029977,Harpin binding protein 1 (AHRD V1 **-- Q5QJA7_SOLTU); contains Interpro domain(s)  IPR006843  PAP fibrillin_rframe6,2,6,159,9,18,,30,18,18,,15,,21,9,15,6,,,,,
+Sotub03g028450.1.1;PGSC0003DMP400042440,"Photosystem II oxygen evolving complex protein PsbP (AHRD V1 ***- B2J6P7_NOSP7); contains Interpro domain(s)  IPR016123  Mog1/PsbP, alpha/beta/alpha sandwich_rframe6",4,7,153,9,,,25,12,33,,20,9,10,9,9,2,,15,,,
+PGSC0003DMP400004144;PGSC0003DMC400004144,PGSC0003DMT400005977 Protein,6,11,152,14,26,8,18,10,13,10,8,7,10,4,8,10,,,,,6
+PGSC0003DMP400012908;Sotub06g007930.1.1,PGSC0003DMT400018798 Protein,4,4,152,16,20,14,6,,,14,,14,9,,12,16,15,,10,,6
+Sotub07g024020.1.1;PGSC0003DMP400021964,Thioredoxin (AHRD V1 ***- A7LNX7_9CARY); contains Interpro domain(s)  IPR005746  Thioredoxin_rframe6,3,4,151,9,21,,12,11,10,9,12,10,16,,15,10,10,,6,,
+Sotub12g005610.1.1;PGSC0003DMP400026927,Thioredoxin (AHRD V1 ***- A7LNX7_9CARY); contains Interpro domain(s)  IPR005746  Thioredoxin_rframe6,3,3,149,18,,,10,,16,15,15,15,15,,,12,18,,15,,
+Sotub04g014230.1.1;PGSC0003DMP400042192,V-type proton ATPase subunit G 1 (AHRD V1 ***- VATG1_TOBAC); contains Interpro domain(s)  IPR005124  Vacuolar (H+)-ATPase G subunit_rframe6,4,5,147,16,,,18,12,18,13,27,17,4,,4,,3,,6,,9
+MICRO.3240.C6,nseq=2_rframe6,7,1,147,12,9,4,11,13,18,14,16,6,9,5,11,,10,5,,,4
+MICRO.5866.C1,"ABE79560: Chaperone DnaK [Medicago truncatula]_Psst70 (stress 70 protein) [Pisum sativum] pir__S32818 dnaK-type molecular chaperone CSS1 precursor, chloroplast - garden pea sp_Q02028_HS7S_PEA Stromal 70 kDa heat shock-related protein, chloroplast precursor gb_AAA33637.1_ 70 kDa heat shock protein_rframe6",4,1,142,11,8,5,12,9,16,13,12,8,5,3,9,9,7,5,7,,3
+PGSC0003DMP400029983;PGSC0003DMC400029983,PGSC0003DMT400044217 Protein,8,8,141,8,10,8,14,7,22,6,14,6,8,,14,6,6,,6,,6
+Sotub03g031340.1.1;PGSC0003DMP400025033,"Unknown protein DS12 from 2D-PAGE of leaf, chloroplastic (AHRD V1 **-- UP12_ORYSJ)_rframe6",6,6,138,11,15,,15,12,15,9,11,10,9,,9,6,4,,6,,6
+Sotub01g049150.1.1,"V-type ATP synthase beta chain (AHRD V1 ***- VATB_PYRHO); contains Interpro domain(s)  IPR005723  ATPase, V1 complex, subunit B_rframe6",14,10,135,12,16,,8,12,6,6,6,10,10,6,14,8,6,,6,,9
+Sotub06g027880.1.1;PGSC0003DMP400046919,Ribosomal subunit interface protein (AHRD V1 ***- Q2JIS4_SYNJB); contains Interpro domain(s)  IPR003489  Ribosomal protein S30Ae/sigma 54 modulation protein_rframe6,3,6,129,,18,,11,19,17,2,21,,6,12,17,,,,,,6
+Sotub12g022070.1.1;PGSC0003DMP400013391,"Photosystem I reaction center subunit VI, chloroplastic (AHRD V1 ***- PSAH_SPIOL); contains Interpro domain(s)  IPR004928  Photosystem I reaction centre subunit VI_rframe6",7,2,129,,24,,24,12,18,,,,,27,,,,,,,24
+TC216515,"UniRef100_Q6T379 Cluster: Triosephosphate isomerase; n=1; Solanum chacoense Rep: Triosephosphate isomerase - Solanum chacoense (Chaco potato), partial (87%)_rframe6",1,1,128,13,6,7,9,8,10,10,8,10,5,7,9,5,9,5,4,,3
+Sotub03g018550.1.1;PGSC0003DMP400009318,Superoxide dismutase (AHRD V1 ***- B9RA25_RICCO); contains Interpro domain(s)  IPR001189  Manganese/iron superoxide dismutase_rframe6,5,1,126,6,12,,9,9,9,9,9,9,9,,6,,6,9,9,,15
+Sotub01g037560.1.1,"Translationally-controlled tumor protein homolog (AHRD V1 ***- B5XDL0_SALSA); contains Interpro domain(s)  IPR018103  Translationally controlled tumour protein, conserved site_rframe6",14,3,126,4,,,16,18,8,,16,10,6,14,16,,,,6,,12
+PGSC0003DMP400017481;Sotub04g035910.1.1,PGSC0003DMT400025653 Protein,1,1,125,14,10,,6,,4,16,6,14,8,,,14,11,,14,,8
+PGSC0003DMP400004499;PGSC0003DMC400004499,PGSC0003DMT400006501 Protein,4,1,124,12,8,,11,,7,10,10,8,7,,10,10,11,,12,,8
+PGSC0003DMP400055235;PGSC0003DMC400055235,PGSC0003DMT400081790 Protein,10,7,124,12,8,,10,6,10,12,12,,10,,,10,6,2,12,4,10
+PGSC0003DMP400024308;PGSC0003DMC400024308,PGSC0003DMT400035747 Protein,5,5,123,,20,,8,8,20,10,8,,12,10,,10,17,,,,
+Sotub01g034840.1.1;PGSC0003DMP400033822,NAD-dependent epimerase/dehydratase family protein-like protein (AHRD V1 ***- Q2XPW6_SOLTU); contains Interpro domain(s)  IPR016040  NAD(P)-binding domain_rframe6,6,4,123,,,6,12,18,14,12,12,,16,,12,12,9,,,,
+Sotub06g015020.1.1,Superoxide dismutase (AHRD V1 ***- Q7YK44_SOLLC); contains Interpro domain(s)  IPR001189  Manganese/iron superoxide dismutase_rframe6,10,3,118,7,20,,13,10,8,9,10,10,6,,6,,6,,4,,9
+Sotub07g012740.1.1;PGSC0003DMP400005664,"Elongation factor Ts (AHRD V1 **** Q9SZD6_ARATH); contains Interpro domain(s)  IPR014039  Translation elongation factor EFTs/EF1B, dimerisation_rframe6",2,9,116,14,,,,13,15,22,17,12,9,,,14,,,,,
+Sotub01g022430.1.1;PGSC0003DMP400043844,Histone H3 (AHRD V1 ***- D8L9K7_WHEAT); contains Interpro domain(s)  IPR000164  Histone H3_rframe6,21,1,112,12,10,10,,4,4,2,3,17,5,,7,12,3,,16,,7
+Sotub04g035690.1.1,"ATP-dependent zinc metalloprotease FtsH 1 (AHRD V1 ***- A2BP24_PROMS); contains Interpro domain(s)  IPR005936  Peptidase M41, FtsH_rframe6",5,9,110,10,12,,12,10,,6,,16,,6,,14,6,,8,,10
+Sotub09g012120.1.1;PGSC0003DMP400035369,"Fructose-1 6-bisphosphatase class 1 (AHRD V1 ***- D0MHZ8_RHOM4); contains Interpro domain(s)  IPR000146  Fructose-1,6-bisphosphatase_rframe6",6,5,109,13,12,,,,,9,,12,,,,20,19,,9,,15
+Sotub01g041180.1.1;PGSC0003DMP400041114,Ankyrin repeat domain-containing protein 2 (AHRD V1 **-- B6TNC0_MAIZE); contains Interpro domain(s)  IPR002110  Ankyrin_rframe6,8,8,109,2,6,,9,12,24,,17,,18,,14,7,,,,,
+MICRO.1036.C8,"Q41228: Photosystem I reaction center subunit IV A, chloroplast precursor (PSI-E A) [Contains: Photosystem I reaction center subunit IV A isoform 2]_Photosystem I reaction center subunit IV A, chloroplast precursor (PSI-E A) pir__T16962 photosystem I chain PSI-E - wood tobacco gb_AAB31704.1_ photosystem I subunit PSI-E [Nicotiana sylvestris]_rframe6",5,2,106,6,10,,11,8,12,7,12,7,8,,8,6,6,5,,,
+TC195013,"homologue to UniRef100_Q3I5C4 Cluster: Cytosolic ascorbate peroxidase 1; n=1; Solanum lycopersicum Rep: Cytosolic ascorbate peroxidase 1 - Solanum lycopersicum (Tomato) (Lycopersicon esculentum), complete_rframe6",16,7,105,7,16,5,5,,7,11,7,8,8,,7,8,4,3,4,,5
+Sotub03g029310.1.1;PGSC0003DMP400033925,Ribulose-5-phosphate-3-epimerase (AHRD V1 ***- Q8S4X2_PEA); contains Interpro domain(s)  IPR000056  Ribulose-phosphate 3-epimerase_rframe6,6,5,103,,12,,10,12,14,6,11,,12,9,6,,2,9,,,
+PGSC0003DMP400002234;Sotub01g012840.1.1,PGSC0003DMT400003101 Protein,7,6,102,4,8,,17,10,14,12,15,4,8,,6,,4,,,,
+MICRO.331.C11,#NAME?,14,1,102,8,6,9,9,,6,8,,6,5,9,7,5,8,5,5,,6
+Sotub12g008320.1.1,Thylakoid lumenal protein (AHRD V1 ***- B6SU36_MAIZE)_rframe6,3,7,101,14,12,6,10,,9,,10,8,14,,9,,6,,3,,
+PGSC0003DMP400012777;Sotub10g019410.1.1,PGSC0003DMT400018569 Protein,25,1,101,,6,6,11,14,15,,16,,12,9,12,,,,,,
+Sotub12g007820.1.1;PGSC0003DMP400013799,"Eukaryotic translation initiation factor 5A (AHRD V1 **** Q207T7_GYMCO); contains Interpro domain(s)  IPR019769  Translation elongation factor, IF5A, hypusine site_rframe6",17,2,96,6,,,12,16,15,,14,6,15,,12,,,,,,
+MICRO.4177.C3,nseq=125_rframe6,9,1,95,10,11,6,3,9,,11,4,5,,6,3,6,9,3,,,9
+MICRO.2346.C10,#NAME?,11,4,94,12,6,,4,8,,,8,4,12,,18,6,6,,10,,
+PGSC0003DMP400037385;Sotub09g007400.1.1,PGSC0003DMT400055527 Protein,5,5,91,,,,2,,22,21,12,15,,,,15,4,,,,
+TC212240,"UniRef100_Q2MIB4 Cluster: ATP synthase B chain; n=3; Solanum Rep: ATP synthase B chain - Solanum lycopersicum (Tomato) (Lycopersicon esculentum), complete_rframe6",3,9,90,10,8,4,6,6,3,7,7,11,4,,4,3,6,2,4,,5
+Sotub04g009130.1.1;PGSC0003DMP400055596,"Glutamate-1-semialdehyde-2 1-aminomutase (AHRD V1 ***- D7MPQ2_ARALY); contains Interpro domain(s)  IPR004639  Tetrapyrrole biosynthesis, glutamate-1-semialdehyde aminotransferase_rframe6",2,2,89,12,,,6,,,15,12,15,9,,11,,9,,,,
+Sotub07g016410.1.1;PGSC0003DMP400004255,"chaperonin (AHRD V1 *-*- B4WMS9_9SYNE); contains Interpro domain(s)  IPR017416  Chaperonin 21, chloroplast_rframe6",5,3,88,,12,,15,9,15,8,9,,9,,,,2,,9,,
+PGSC0003DMP400012499;PGSC0003DMC400012499,PGSC0003DMT400018162 Protein,4,3,87,6,8,,9,6,8,6,8,6,,6,10,,8,,6,,
+Sotub09g008890.1.1,Ribulose bisphosphate carboxylase/oxygenase activase 1 (AHRD V1 ***- E5GC77_CUCME)_rframe6,1,1,87,7,8,,6,7,9,4,8,6,6,,4,6,5,,4,,7
+Sotub09g009890.1.1;PGSC0003DMP400015574,30S ribosomal protein S11 (AHRD V1 ***- RS11_CAUSK); contains Interpro domain(s)  IPR001971  Ribosomal protein S11_rframe6,7,5,84,,15,,6,,15,9,15,,15,,9,,,,,,
+PGSC0003DMP400048869;PGSC0003DMC400048869,PGSC0003DMT400072279 Protein,9,7,83,10,,6,,10,,16,,,,8,,14,8,,4,,7
+Sotub03g012960.1.1;PGSC0003DMP400032278,Pentapeptide repeat protein (AHRD V1 *-*- B4WQI2_9SYNE); contains Interpro domain(s)  IPR001646  Pentapeptide repeat_rframe6,3,5,83,,9,,18,12,12,,9,,12,,9,,,,,,2
+CV430355,"similar to UniRef100_Q40425 Cluster: RNA-binding gricine-rich protein-1; n=1; Nicotiana sylvestris Rep: RNA-binding gricine-rich protein-1 - Nicotiana sylvestris (Wood tobacco), partial (95%)_rframe-3",31,1,82,5,,3,11,4,12,4,10,5,8,,,4,3,4,6,,3
+TC226364,"homologue to UniRef100_P55312 Cluster: Catalase isozyme 2; n=1; Solanum tuberosum Rep: Catalase isozyme 2 - Solanum tuberosum (Potato), partial (58%)_rframe6",1,1,82,4,7,3,6,4,5,4,5,5,10,,6,4,5,5,9,,
+MICRO.2650.C1,P30173: Actin-101_actin [Solanum tuberosum] pir__S20093 actin 101 - potato sp_P30173_ACTD_SOLTU ACTIN 101_rframe6,11,1,81,8,6,3,4,5,4,8,6,6,6,,,12,,,9,,4
+TC208916,"homologue to UniRef100_Q6RUF6 Cluster: Fructose-bisphosphate aldolase; n=1; Glycine max Rep: Fructose-bisphosphate aldolase - Glycine max (Soybean), complete_rframe6",13,8,80,4,8,3,4,8,13,6,10,4,7,,5,3,5,,,,
+Sotub04g026480.1.1;PGSC0003DMP400043492,Alcohol dehydrogenase (Fragment) (AHRD V1 ***- Q6R4X9_ZEAMM); contains Interpro domain(s)  IPR002347  Glucose/ribitol dehydrogenase_rframe6,1,2,80,,,,,,18,21,20,21,,,,,,,,,
+Sotub06g029050.1.1;PGSC0003DMP400046824,"Nucleoside diphosphate kinase (AHRD V1 ***- C6TA28_SOYBN); contains Interpro domain(s)  IPR001564  Nucleoside diphosphate kinase, core_rframe6",5,3,78,,9,,14,,14,9,9,,12,,11,,,,,,
+Sotub11g008510.1.1;PGSC0003DMP400027526,"Chloride intracellular channel 6 (AHRD V1 **-- B6UCX2_MAIZE); contains Interpro domain(s)  IPR017933  Glutathione S-transferase/chloride channel, C-terminal_rframe6",4,5,77,6,9,,15,6,9,,4,,9,9,6,,4,,,,
+Sotub03g005450.1.1;PGSC0003DMP400023780,Histone H2A (AHRD V1 ***- B9MZP0_POPTR); contains Interpro domain(s)  IPR002119  Histone H2A_rframe6,11,1,75,,12,9,,,,9,6,15,,,,,12,,12,,
+PGSC0003DMP400048033;PGSC0003DMC400048033,PGSC0003DMT400071037 Protein,6,7,74,6,6,4,8,6,6,9,6,,7,4,,6,6,,,,
+Sotub02g024280.1.1;PGSC0003DMP400029248,"Plastid-lipid-associated protein, chloroplastic (AHRD V1 **-- PAP_CITUN); contains Interpro domain(s)  IPR006843  PAP fibrillin_rframe6",5,5,73,12,,,12,12,9,,12,,7,,,9,,,,,
+TC207210,"homologue to UniRef100_Q9SXX4 Cluster: Fructose-bisphosphate aldolase; n=1; Nicotiana paniculata Rep: Fructose-bisphosphate aldolase - Nicotiana paniculata, partial (46%)_rframe6",2,1,73,7,7,3,9,5,8,6,7,4,5,,5,3,,,,,4
+Sotub03g012340.1.1;PGSC0003DMP400016824,"Kunitz-type protease inhibitor (AHRD V1 **** Q3S481_SOLTU); contains Interpro domain(s)  IPR002160  Proteinase inhibitor I3, Kunitz legume_rframe6",13,2,71,15,,,,16,,12,,,,,,,12,16,,,
+Sotub02g036090.1.1;PGSC0003DMP400000966,"Serine protease (AHRD V1 ***- E2SYW0_9RALS); contains Interpro domain(s)  IPR001254  Peptidase S1 and S6, chymotrypsin/Hap_rframe6",2,4,71,7,7,6,12,7,2,,4,,11,,3,,6,,6,,
+MICRO.331.C18,"P07370: Chlorophyll a-b binding protein 1B, chloroplast precursor (LHCII type I CAB-1B) (LHCP)_Chlorophyll a-b binding protein 1B, chloroplast precursor (LHCII type I CAB-1B) (LHCP) pir__CDTO1B chlorophyll a/b-binding protein 1B precursor - tomato gb_AAA34147.1_ chlorophyll a/b-binding protein Cab-1B_rframe6",8,0,70,,7,5,8,6,6,4,6,5,,9,5,,5,4,,,
+PGSC0003DMP400006732;Sotub04g028380.1.1,PGSC0003DMT400009656 Protein,19,1,69,8,9,,,4,,2,3,10,5,,3,8,3,,12,,2
+Sotub09g026920.1.1;PGSC0003DMP400002693,Major allergen Mal d 1.06A02 (AHRD V1 ***- Q4VPK5_MALDO); contains Interpro domain(s)  IPR000916  Bet v I allergen_rframe6,14,3,69,,21,,,,12,,12,,,,15,,,,9,,
+Sotub03g019370.1.1;PGSC0003DMP400017124,"Glutamate synthase (Ferredoxin) (AHRD V1 ***- B8HTZ7_CYAP4); contains Interpro domain(s)  IPR002932  Glutamate synthase, central-C_rframe6",3,8,69,,,,,7,,6,6,,,,,32,,6,,6,6
+TC201915,"homologue to UniRef100_P32980 Cluster: ATP synthase delta chain, chloroplast precursor; n=1; Nicotiana tabacum Rep: ATP synthase delta chain, chloroplast precursor - Nicotiana tabacum (Common tobacco), complete_rframe6",2,3,69,,13,4,,6,6,13,3,,,,,,16,2,,,6
+Sotub07g016990.1.1;PGSC0003DMP400001780,"2 3-bisphosphoglycerate-independent phosphoglycerate mutase (AHRD V1 ***- B9S1V6_RICCO); contains Interpro domain(s)  IPR005995  Phosphoglycerate mutase, 2,3-bisphosphoglycerate-independent_rframe6",2,4,69,,12,,,9,9,9,6,6,,12,6,,,,,,
+PGSC0003DMP400007386;Sotub05g012770.1.1,PGSC0003DMT400010575 Protein,6,0,68,,8,,14,5,7,,8,2,7,,8,,,5,4,,
+TC201617,#NAME?,2,7,64,8,4,,4,5,2,5,5,2,,5,,4,5,8,2,,5
+PGSC0003DMC400000820,Superoxide dismutase [Cu-Zn]_rframe6,4,3,61,6,5,,6,,5,4,6,5,9,,,6,9,,,,
+Sotub06g028480.1.1;PGSC0003DMP400046774,50S ribosomal protein L29 (AHRD V1 ***- B6TS58_MAIZE); contains Interpro domain(s)  IPR001854  Ribosomal protein L29_rframe6,4,2,60,9,,9,6,,,12,12,12,,,,,,,,,
+Sotub12g026810.1.1,"Cathepsin B-like cysteine proteinase (AHRD V1 **-* CYSP_SCHMA); contains Interpro domain(s)  IPR013128  Peptidase C1A, papain_rframe6",8,4,60,10,,,9,,,6,,9,11,,,6,9,,,,
+PGSC0003DMC400010344;PGSC0003DMP400010344,Vacuolar proton ATPase subunit E_rframe6,6,2,60,4,9,,2,4,2,,4,4,8,4,10,4,5,,,,
+Sotub03g032510.1.1;PGSC0003DMP400009959,"Guanine nucleotide-binding protein beta subunit-like protein (AHRD V1 **-* B6SJ21_MAIZE); contains Interpro domain(s)  IPR017986  WD40 repeat, region_rframe6",13,2,60,,,6,9,9,,,,,6,12,,9,,9,,,
+Sotub11g026560.1.1;PGSC0003DMP400055987,Ribosomal protein L12 (AHRD V1 ***- A8J597_CHLRE); contains Interpro domain(s)  IPR000911  Ribosomal protein L11_rframe6,9,3,57,,15,,9,,6,,12,,9,,6,,,,,,
+PGSC0003DMP400033644;PGSC0003DMC400033644,PGSC0003DMT400049841 Protein,4,4,57,,8,4,4,4,8,,6,4,7,,6,6,,,,,
+PGSC0003DMP400035260;PGSC0003DMC400035260,PGSC0003DMT400052308 Protein,4,3,55,6,6,,8,,8,,6,4,11,,6,,,,,,
+PGSC0003DMP400036884;Sotub10g007480.1.1,PGSC0003DMT400054836 Protein,3,3,55,,,,,4,,12,,,,20,,,19,,,,
+PGSC0003DMP400033537;PGSC0003DMC400033537,PGSC0003DMT400049686 Protein,8,2,54,6,,,,6,10,8,8,10,,6,,,,,,,
+Sotub10g026970.1.1,Calmodulin-2 (AHRD V1 ***- D7LFI7_ARALY); contains Interpro domain(s)  IPR011992  EF-Hand type_rframe6,11,1,54,2,3,3,4,7,9,,8,,8,4,6,,,,,,
+PGSC0003DMP400043407;Sotub10g006730.1.1,PGSC0003DMT400064379 Protein,9,2,53,,12,4,,,,6,3,8,,,,4,8,,8,,
+Sotub12g006240.1.1;PGSC0003DMP400015035,"Chlorophyll a-b binding protein 13, chloroplastic (AHRD V1 ***- CB23_SOLLC); contains Interpro domain(s)  IPR001344  Chlorophyll A-B binding protein_rframe6",6,3,50,15,,,14,,,12,,,,3,,,,6,,,
+Sotub10g026890.1.1;PGSC0003DMP400048843,Protein grpE (AHRD V1 *-*- B0CAY8_ACAM1); contains Interpro domain(s)  IPR000740  GrpE nucleotide exchange factor_rframe6,5,5,50,,6,,12,8,12,,6,,6,,,,,,,,
+PGSC0003DMP400041249;PGSC0003DMC400041249,PGSC0003DMT400061282 Protein,5,5,50,,8,,14,,11,,7,,7,,3,,,,,,
+Sotub04g035360.1.1;PGSC0003DMP400017580,Thioredoxin (AHRD V1 ***- D8U146_VOLCA); contains Interpro domain(s)  IPR013766  Thioredoxin domain_rframe6,4,3,49,,15,,,,,,,,16,,18,,,,,,
+Sotub03g023460.1.1;PGSC0003DMP400026606,HAD-superfamily hydrolase subfamily IA variant 3 containing protein expressed (AHRD V1 **-- Q10I42_ORYSJ); contains Interpro domain(s)  IPR005834  Haloacid dehalogenase-like hydrolase_rframe6,3,5,48,,6,,6,,15,,15,,,6,,,,,,,
+Sotub11g024240.1.1;PGSC0003DMP400000901,50S ribosomal protein L9 (AHRD V1 ***- B4FU53_MAIZE); contains Interpro domain(s)  IPR000244  Ribosomal protein L9_rframe6,1,4,46,,,,6,,12,,9,,4,,9,,,,,,6
+Sotub01g037610.1.1;PGSC0003DMP400042806,60S ribosomal protein L22-2 (AHRD V1 ***- D7L3W0_ARALY); contains Interpro domain(s)  IPR002671  Ribosomal protein L22e_rframe6,4,2,45,,6,,,,15,,9,,9,,,,,,,,6
+Sotub04g034030.1.1;PGSC0003DMP400006591,50S ribosomal protein L31 (AHRD V1 ***- A5AHS8_VITVI); contains Interpro domain(s)  IPR002150  Ribosomal protein L31_rframe6,3,2,45,,9,,12,,12,,12,,,,,,,,,,
+Sotub03g020460.1.1;PGSC0003DMP400054600,40S ribosomal protein S18 (AHRD V1 ***- B4G286_MAIZE); contains Interpro domain(s)  IPR001892  Ribosomal protein S13_rframe6,9,4,44,6,6,,9,,6,,,,11,,6,,,,,,
+PGSC0003DMP400027280;Sotub11g030200.1.1,PGSC0003DMT400040216 Protein,4,3,43,,12,10,,,,,3,8,,,,,,,10,,
+Sotub03g012990.1.1;PGSC0003DMP400032316,Heat shock protein 5 (AHRD V1 ***- E4W3Z2_HAELO); contains Interpro domain(s)  IPR013126  Heat shock protein 70_rframe6,5,3,41,,12,,,,11,,,,14,,,,,4,,,
+PGSC0003DMP400051205;PGSC0003DMC400051205,PGSC0003DMT400075598 Protein,4,3,41,,,,8,8,7,,6,,,6,6,,,,,,
+Sotub07g020450.1.1,Protein thf1 (AHRD V1 ***- A0YRG1_LYNSP)_rframe6,7,8,40,4,,,9,8,,,,,6,6,4,,3,,,,
+PGSC0003DMP400055325;Sotub01g007030.1.1,PGSC0003DMT400081909 Protein,7,9,40,,,,,4,,8,,,,,,16,,,,,12
+PGSC0003DMP400013800;PGSC0003DMC400013800,PGSC0003DMT400020254 Protein,6,3,39,,,,4,16,,,,,,,,,,10,,,9
+Sotub01g045870.1.1;PGSC0003DMP400044761,Nitrite reductase (AHRD V1 ***- Q76KB0_TOBAC); contains Interpro domain(s)  IPR006067  Nitrite and sulphite reductase 4Fe-4S region_rframe6,4,4,39,,,,12,,12,6,9,,,,,,,,,,
+Sotub04g009480.1.1;PGSC0003DMP400055635,50S ribosomal protein L10 (AHRD V1 ***- B6SUJ0_MAIZE); contains Interpro domain(s)  IPR001790  Ribosomal protein L10_rframe6,3,4,37,,,,15,,9,2,9,,2,,,,,,,,
+PGSC0003DMP400050240;Sotub12g023750.1.1,PGSC0003DMT400074197 Protein,5,8,36,8,,6,,12,,,,,,6,,,,,4,,
+PGSC0003DMP400043561;Sotub05g007200.1.1,PGSC0003DMT400064608 Protein,3,3,36,,10,,4,6,8,,,,4,,,,,4,,,
+MICRO.854.C2,"P31427: Leucine aminopeptidase, chloroplast precursor (LAP) (Leucyl aminopeptidase) (Proline aminopeptidase) (Prolyl aminopeptidase)_leucine aminopeptidase [Solanum tuberosum] pir__S41376 leucyl aminopeptidase (EC 3.4.11.1) - potato sp_P31427_AMPL_SOLTU Aminopeptidase, chloroplast precursor (Leucine aminopeptidase) (LAP) (Leucyl aminopeptidase) (Proline aminopeptidase) (Prolyl ..._rframe6",3,8,35,5,,,,13,,,,,,,,,,11,,,6
+PGSC0003DMP400029503;PGSC0003DMC400029502,PGSC0003DMT400043485 Protein,4,5,35,,,,,6,10,,8,,4,,7,,,,,,
+Sotub02g016090.1.1;PGSC0003DMP400036738,40S ribosomal protein S25-1 (AHRD V1 ***- B4FG22_MAIZE); contains Interpro domain(s)  IPR004977  Ribosomal protein S25_rframe6,4,3,34,4,7,,9,,,,,,12,,,,2,,,,
+Sotub01g037240.1.1;PGSC0003DMP400042879,Histone H2A (AHRD V1 ***- Q8H0G7_TOBAC); contains Interpro domain(s)  IPR002119  Histone H2A_rframe6,3,2,33,,18,,,,,,3,12,,,,,,,,,
+PGSC0003DMP400056248;Sotub05g022450.1.1,PGSC0003DMT400084201 Protein,3,5,32,4,,4,,2,,4,,4,,,,4,,2,8,,
+Sotub03g027530.1.1;PGSC0003DMP400042353,Aldehyde dehydrogenase 1 (AHRD V1 ***- Q84V96_LOTCO); contains Interpro domain(s)  IPR015590  Aldehyde dehydrogenase_rframe6,4,7,32,,6,,,,2,,,,12,,6,,,,6,,
+Sotub08g027900.1.1;PGSC0003DMP400021731,"Nucleoside diphosphate kinase (AHRD V1 ***- D5ILC3_SOLTU); contains Interpro domain(s)  IPR001564  Nucleoside diphosphate kinase, core_rframe6",5,2,30,6,,,6,,,,,,6,,,,6,,6,,
+Sotub03g036360.1.1;PGSC0003DMP400004525,"30S ribosomal protein S17 (AHRD V1 *-*- E5UMI3_NEIMU); contains Interpro domain(s)  IPR019984  Ribosomal protein S17, bacterial-type_rframe6",3,2,30,,,,6,,9,,,,9,,,,,,,,6
+TC194725,"homologue to UniRef100_Q3V538 Cluster: PSII 43 kDa protein; n=3; Liliopsida Rep: PSII 43 kDa protein - Acorus calamus (Sweet flag), complete_rframe6",1,6,30,,,2,,,,,,14,,,,12,2,,,,
+Sotub02g014160.1.1;PGSC0003DMP400012365,"30S ribosomal protein S21, chloroplastic (Fragment) (AHRD V1 *--- RR21_SPIOL); contains Interpro domain(s)  IPR001911  Ribosomal protein S21_rframe6",4,3,30,,,,9,,12,,9,,,,,,,,,,
+Sotub02g028250.1.1;PGSC0003DMP400006263,"Aldose 1-epimerase family protein (AHRD V1 ***- D7MMG0_ARALY); contains Interpro domain(s)  IPR014718  Glycoside hydrolase-type carbohydrate-binding, subgroup_rframe6",3,2,30,,,,6,6,6,,6,,,,6,,,,,,
+Sotub06g017290.1.1;PGSC0003DMP400028467,Aldo/keto reductase family protein (AHRD V1 ***- D7KDE3_ARALY); contains Interpro domain(s)  IPR020471  Aldo/keto reductase subgroup_rframe6,1,2,30,,,,9,12,9,,,,,,,,,,,,
+MICRO.318.C12,nseq=2_rframe6,9,4,29,2,,,3,3,5,3,3,4,3,,,,,,,,3
+TC202431,"homologue to UniRef100_Q43779 Cluster: Superoxide dismutase [Cu-Zn] 2; n=1; Solanum lycopersicum Rep: Superoxide dismutase [Cu-Zn] 2 - Solanum lycopersicum (Tomato) (Lycopersicon esculentum), complete_rframe6",8,3,29,3,4,,4,,4,3,3,4,4,,,,,,,,
+TC210562,"homologue to UniRef100_A7PWE1 Cluster: Chromosome chr8 scaffold_34, whole genome shotgun sequence; n=2; Vitis vinifera Rep: Chromosome chr8 scaffold_34, whole genome shotgun sequence - Vitis vinifera (Grape), partial (46%)_rframe6",1,1,29,4,,3,,3,,,4,4,,,,4,,3,4,,
+PGSC0003DMP400041362;Sotub09g005660.1.1,PGSC0003DMT400061484 Protein,4,3,28,,,,10,4,4,,2,,8,,,,,,,,
+STMIZ92TV,"P06183: Photosystem II 10 kDa polypeptide, chloroplast precursor (Light-inducible tissue-specific ST-LS1 protein)_ST-LS1 protein [Solanum tuberosum] sp_P06183_PSBR_SOLTU Photosystem II 10 kDa polypeptide, chloroplast precursor (Light inducible tissue-specific ST-LS1 protein) pir__S00411 photosystem II 10K protein precursor - potato_rframe6",3,2,26,4,,,3,4,4,,4,3,,,,4,,,,,
+MICRO.1036.C5,"Q41228: Photosystem I reaction center subunit IV A, chloroplast precursor (PSI-E A) [Contains: Photosystem I reaction center subunit IV A isoform 2]_Photosystem I reaction center subunit IV B, chloroplast precursor (PSI-E B) pir__T16963 photosystem I chain PSI-E, isoform b - wood tobacco gb_AAB31705.1_ photosystem I subunit PSI-E [Nicotiana sylvestris]_rframe6",1,1,25,4,,,,,,8,,6,,,,4,3,,,,
+Sotub07g006500.1.1;PGSC0003DMP400019661,"Eukaryotic translation initiation factor 5A (AHRD V1 ***- D6N3G5_GOSHI); contains Interpro domain(s)  IPR001884  Translation elongation factor, IF5A_rframe6",11,1,25,,,,,10,,,6,,,,9,,,,,,
+PGSC0003DMP400013707;Sotub12g006400.1.1,PGSC0003DMT400020100 Protein,2,1,25,,,,,3,,6,,,,9,,,7,,,,
+Sotub07g024360.1.1;PGSC0003DMP400021930,30S ribosomal protein S20 (AHRD V1 *-*- RS20_THEEB); contains Interpro domain(s)  IPR002583  Ribosomal protein S20_rframe6,4,2,24,,9,,9,,,,,,,,6,,,,,,
+Sotub06g022920.1.1;PGSC0003DMP400028846,"Acid phosphatase (AHRD V1 **-- O49855_SOYBN); contains Interpro domain(s)  IPR010028  Acid phosphatase, plant_rframe6",3,4,24,,,,,12,,,,,,,,,9,3,,,
+Sotub03g024130.1.1,"Nucleoside diphosphate kinase (AHRD V1 ***- B9RAM1_RICCO); contains Interpro domain(s)  IPR001564  Nucleoside diphosphate kinase, core_rframe6",2,1,23,,6,,3,,8,,6,,,,,,,,,,
+PGSC0003DMP400052472;PGSC0003DMC400052472,PGSC0003DMT400077454 Protein,3,2,22,4,,8,,,,,,10,,,,,,,,,
+Sotub06g015200.1.1;PGSC0003DMP400037788,50S ribosomal protein L2 (AHRD V1 ***- RL2_MYCAP); contains Interpro domain(s)  IPR002171  Ribosomal protein L2_rframe6,3,3,22,,9,,,,,,,,9,,,,,,4,,
+PGSC0003DMP400013127;Sotub11g024920.1.1,PGSC0003DMT400019150 Protein,5,2,22,,8,6,,,,,,,,,,,,,8,,
+Sotub01g026460.1.1;PGSC0003DMP400012177,"Thylakoid lumenal 19 kDa protein, chloroplastic (AHRD V1 ***- TL19_ARATH); contains Interpro domain(s)  IPR016123  Mog1/PsbP, alpha/beta/alpha sandwich_rframe6",4,3,22,,,,7,,,,,,6,,9,,,,,,
+PGSC0003DMP400016183;PGSC0003DMC400016183,PGSC0003DMT400023727 Protein,12,6,20,4,,,,,,4,,4,2,,,2,,,4,,
+Sotub11g007290.1.1;PGSC0003DMP400023600,"UTP-glucose 1 phosphate uridylyltransferase (AHRD V1 **** B3VDY8_EUCGR); contains Interpro domain(s)  IPR016267  UTP--glucose-1-phosphate uridylyltransferase, subgroup_rframe6",8,3,20,,,,,2,,,,,12,,,,,,,,6
+Sotub02g013340.1.1;PGSC0003DMP400012204,"Porin/voltage-dependent anion-selective channel protein (AHRD V1 **** A9P802_POPTR); contains Interpro domain(s)  IPR001925  Porin, eukaryotic type_rframe6",3,3,18,,,,6,,,,,,6,,6,,,,,,
+Sotub10g007190.1.1;PGSC0003DMP400043445,Thioredoxin m (AHRD V1 ***- B9HZV8_POPTR); contains Interpro domain(s)  IPR005746  Thioredoxin_rframe6,5,4,17,,,,6,,11,,,,,,,,,,,,
+Sotub01g034090.1.1,"30S ribosomal protein S10 (AHRD V1 ***- RS10_CAMFF); contains Interpro domain(s)  IPR005729  Ribosomal protein S10, eukaryotic/archaeal_rframe6",9,2,17,,,,3,,4,,4,,6,,,,,,,,
+PGSC0003DMC400040197;PGSC0003DMP400040197,Sn-2 protein_rframe6,3,2,16,,,,,,,,,,,,,,,,,,16
+Sotub01g020840.1.1,"Photosystem I iron-sulfur center (AHRD V1 ***- E5KUE5_CORLA); contains Interpro domain(s)  IPR017491  Photosystem I,  PsaC_rframe6",2,2,16,,,,,,,7,9,,,,,,,,,,
+Sotub01g024100.1.1;PGSC0003DMP400015875,Glucose-1-phosphate adenylyltransferase (AHRD V1 **** P93230_SOLLC); contains Interpro domain(s)  IPR011831  Glucose-1-phosphate adenylyltransferase_rframe6,1,3,15,6,,,,,,,,,,,,9,,,,,
+PGSC0003DMC400021497,Translation initiation factor IF-2_rframe6,5,1,15,2,3,,,,,,2,,3,,3,,2,,,,
+MICRO.4054.C13,nseq=3_rframe6,2,2,15,4,,,,4,3,,4,,,,,,,,,,
+Sotub12g030260.1.1;PGSC0003DMP400008076,Adenosylhomocysteinase (AHRD V1 ***- A1KYB0_TOBAC); contains Interpro domain(s)  IPR000043  S-adenosyl-L-homocysteine hydrolase_rframe6,9,3,15,,,,,6,,,,,,,,9,,,,,
+Sotub04g019610.1.1;PGSC0003DMP400018910,Violaxanthin de-epoxidase (Fragment) (AHRD V1 *-** Q6B9X0_HORVU); contains Interpro domain(s)  IPR010788  Violaxanthin de-epoxidase_rframe6,4,3,15,,,,,,,,6,,9,,,,,,,,
+Sotub04g013370.1.1;PGSC0003DMP400026402,"Peptidyl-prolyl cis-trans isomerase (AHRD V1 ***- C1FEU4_MICSR); contains Interpro domain(s)  IPR001179  Peptidyl-prolyl cis-trans isomerase, FKBP-type_rframe6",3,2,15,,,,,,,,,,9,,6,,,,,,
+AM907804,"homologue to UniRef100_P14831 Cluster: Superoxide dismutase [Cu-Zn], chloroplast precursor; n=1; Solanum lycopersicum Rep: Superoxide dismutase [Cu-Zn], chloroplast precursor - Solanum lycopersicum (Tomato) (Lycopersicon esculentum), partial (78%)_rframe6",3,1,14,3,,2,,,,,,,,,,4,5,,,,
+Sotub08g028900.1.1;PGSC0003DMP400021804,Reductase (AHRD V1 ***- B5HVX9_9ACTO); contains Interpro domain(s)  IPR013027  FAD-dependent pyridine nucleotide-disulphide oxidoreductase_rframe6,1,2,14,,,,,,,14,,,,,,,,,,,
+Sotub12g030800.1.1;PGSC0003DMP400008292,"50S ribosomal protein L18 (AHRD V1 ***- B6TYR5_MAIZE); contains Interpro domain(s)  IPR004389  Ribosomal protein L18, bacterial_rframe6",3,3,14,,,,,,,7,,7,,,,,,,,,
+TC194626,"UniRef100_Q2MIA0 Cluster: Photosystem I P700 chlorophyll a apoprotein A1; n=3; Solanum Rep: Photosystem I P700 chlorophyll a apoprotein A1 - Solanum lycopersicum (Tomato) (Lycopersicon esculentum), complete_rframe6",1,5,14,,,,,,,,,6,,,,8,,,,,
+TC215826,"similar to UniRef100_A7P0A9 Cluster: Chromosome chr6 scaffold_3, whole genome shotgun sequence; n=1; Vitis vinifera Rep: Chromosome chr6 scaffold_3, whole genome shotgun sequence - Vitis vinifera (Grape), partial (78%)_rframe6",4,6,13,,7,,,3,,,3,,,,,,,,,,
+Sotub02g030930.1.1;PGSC0003DMP400037125,"Ribosomal protein L26 (AHRD V1 ***- A8HMG7_CHLRE); contains Interpro domain(s)  IPR005756  Ribosomal protein L26, eukaryotic/archaeal_rframe6",6,2,12,,,,6,,6,,,,,,,,,,,,
+TC222165,"homologue to UniRef100_Q8W214 Cluster: Single-stranded DNA binding protein precursor; n=1; Solanum tuberosum Rep: Single-stranded DNA binding protein precursor - Solanum tuberosum (Potato), partial (85%)_rframe6",1,1,12,,,,,,3,4,,2,,,,3,,,,,
+MICRO.14036.C2,nseq=22_rframe6,1,2,12,,,,,,6,,6,,,,,,,,,,
+Sotub10g005530.1.1;PGSC0003DMP400025323,40S ribosomal protein S8 (AHRD V1 ***- Q2XPV9_SOLTU); contains Interpro domain(s)  IPR001047  Ribosomal protein S8e_rframe6,16,3,12,,,,,,,,,,12,,,,,,,,
+Sotub09g024400.1.1,Aldo/keto reductase family protein (AHRD V1 ***- D7KWQ6_ARALY); contains Interpro domain(s)  IPR001395  Aldo/keto reductase_rframe6,10,3,12,,,,,,,,,,8,,4,,,,,,
+Sotub02g011240.1.1;PGSC0003DMP400018361,"Malate dehydrogenase (AHRD V1 ***- B9S7S1_RICCO); contains Interpro domain(s)  IPR010097  Malate dehydrogenase, NAD-dependent, eukaryotes and gamma proteobacteria_rframe6",4,1,12,,,,,,,,,,,,,,,12,,,
+CV499619,"UniRef100_O81394 Cluster: Phosphoglycerate kinase; n=1; Solanum tuberosum Rep: Phosphoglycerate kinase - Solanum tuberosum (Potato), partial (7%)_rframe6",1,1,11,3,,,,,,,,,,,,4,4,,,,
+Sotub01g030280.1.1,Agmatinase (AHRD V1 ***- Q1IPT1_ACIBL); contains Interpro domain(s)  IPR006035  Ureohydrolase_rframe6,3,4,11,2,,,,3,,,,,,,,2,,2,,,2
+Sotub10g005560.1.1;PGSC0003DMP400025319,"30S ribosomal protein S10-like (AHRD V1 ***- A1YMX4_BRACM); contains Interpro domain(s)  IPR005731  Ribosomal protein S10, bacterial_rframe6",3,3,11,,9,,,,,,,,,,,,2,,,,
+Sotub08g025080.1.1;PGSC0003DMP400008394,Homology to unknown gene (AHRD V1 *-*- Q01GV2_OSTTA)_rframe6,3,2,11,,,,,,,9,,2,,,,,,,,,
+PGSC0003DMP400051855;Sotub01g041630.1.1,PGSC0003DMT400076546 Protein,14,2,10,,,,,6,,,,,4,,,,,,,,
+PGSC0003DMP400054976;Sotub02g020720.1.1,PGSC0003DMT400081247 Protein,6,4,10,,,,,6,,,,,,,,,,4,,,
+PGSC0003DMP400006519;Sotub02g026930.1.1,PGSC0003DMT400009380 Protein,1,1,10,,,,,,6,,4,,,,,,,,,,
+PGSC0003DMP400030948;Sotub04g026790.1.1,PGSC0003DMT400045665 Protein,4,3,10,,,,,,4,,6,,,,,,,,,,
+Sotub05g028310.1.1;PGSC0003DMP400040452,40S ribosomal protein S17-like protein (AHRD V1 ***- Q3HRX4_SOLTU); contains Interpro domain(s)  IPR001210  Ribosomal protein S17e_rframe6,2,2,9,,7,,,,,,,2,,,,,,,,,
+Sotub05g012700.1.1;PGSC0003DMP400007366,"30S ribosomal protein S13 (AHRD V1 ***- B6TG65_MAIZE); contains Interpro domain(s)  IPR019980  Ribosomal protein S13, bacterial-type_rframe6",4,2,9,,,,9,,,,,,,,,,,,,,
+Sotub04g023350.1.1;PGSC0003DMP400041680,Thioredoxin y (AHRD V1 ***- A9PGA7_POPTR); contains Interpro domain(s)  IPR005746  Thioredoxin_rframe6,4,2,9,,,,9,,,,,,,,,,,,,,
+Sotub11g008040.1.1,"Glutamine synthetase (AHRD V1 ***- Q9FPT9_SOLTU); contains Interpro domain(s)  IPR008146  Glutamine synthetase, catalytic region_rframe6",5,1,9,,,,,,,,,,9,,,,,,,,
+Sotub04g024990.1.1;PGSC0003DMP400043049,"30S ribosomal protein S5 (AHRD V1 *-*- RS5_LACSS); contains Interpro domain(s)  IPR005711  Ribosomal protein S5, eukaryotic/archaeal_rframe6",4,1,9,,,,,,,,,,,,,9,,,,,
+PGSC0003DMP400013443;PGSC0003DMC400013442,PGSC0003DMT400019656 Protein,1,1,8,,8,,,,,,,,,,,,,,,,
+Sotub04g007790.1.1;PGSC0003DMP400051414,1-aminocyclopropane-1-carboxylate oxidase (AHRD V1 **-* B6SUN2_MAIZE); contains Interpro domain(s)  IPR005123  Oxoglutarate and iron-dependent oxygenase_rframe6,5,2,8,,,,8,,,,,,,,,,,,,,
+CV429427,"weakly similar to UniRef100_Q3HTK6 Cluster: Pherophorin-C1 protein precursor; n=1; Chlamydomonas reinhardtii Rep: Pherophorin-C1 protein precursor - Chlamydomonas reinhardtii, partial (14%)_rframe6",7,3,8,,,,,,,,3,3,,,,2,,,,,
+Sotub10g019910.1.1;PGSC0003DMP400020280,60S ribosomal protein L21-like protein (AHRD V1 ***- Q3HVK5_SOLTU); contains Interpro domain(s)  IPR001147  Ribosomal protein L21e_rframe6,3,2,8,,,,,,,,,8,,,,,,,,,
+Sotub09g010820.1.1,Monodehydroascorbate reductase (AHRD V1 ***- D2CGM8_IPOBA); contains Interpro domain(s)  IPR013027  FAD-dependent pyridine nucleotide-disulphide oxidoreductase_rframe6,4,3,8,,,,,,,,,,4,,,4,,,,,
+PGSC0003DMP400031773;PGSC0003DMC400031773,PGSC0003DMT400046956 Protein,3,2,8,,,,,,,,,,4,,4,,,,,,
+Sotub03g009790.1.1,"Photosystem II D2 protein (AHRD V1 ***- C0JWW5_9CHLO); contains Interpro domain(s)  IPR000484  Photosynthetic reaction centre, L/M_rframe6",1,2,7,,,,,3,,,,,,,,4,,,,,
+Sotub03g014380.1.1;PGSC0003DMP400025263,"Remorin 1 (AHRD V1 ***- Q9XEX8_SOLLC); contains Interpro domain(s)  IPR005516  Remorin, C-terminal region_rframe6",5,2,7,,,,,,,,,,,,7,,,,,,
+Sotub06g013090.1.1;PGSC0003DMP400029118,Superoxide dismutase (AHRD V1 ***- A5BR41_VITVI); contains Interpro domain(s)  IPR001189  Manganese/iron superoxide dismutase_rframe6,2,2,6,6,,,,,,,,,,,,,,,,,
+Sotub10g025500.1.1;PGSC0003DMP400049140,Peroxiredoxin ahpC/TSA family (AHRD V1 **-- Q1YGN4_MOBAS); contains Interpro domain(s)  IPR013740  Redoxin_rframe6,3,2,6,,6,,,,,,,,,,,,,,,,
+Sotub09g007160.1.1;PGSC0003DMP400003131,50S ribosomal protein L5 (AHRD V1 ***- B5TV71_CAMSI); contains Interpro domain(s)  IPR002132  Ribosomal protein L5_rframe6,3,2,6,,6,,,,,,,,,,,,,,,,
+TC212566,"weakly similar to UniRef100_Q42393 Cluster: Sn-1 protein; n=1; Capsicum annuum Rep: Sn-1 protein - Capsicum annuum (Bell pepper), partial (52%)_rframe6",4,4,6,,3,,,,,,,,,,3,,,,,,
+PGSC0003DMP400033974;Sotub07g014640.1.1,PGSC0003DMT400050335 Protein,10,3,6,,,4,,2,,,,,,,,,,,,,
+Sotub08g007770.1.1;PGSC0003DMP400045639,"Peptidyl-prolyl cis-trans isomerase (AHRD V1 *-*- B1XHQ5_SYNP2); contains Interpro domain(s)  IPR001179  Peptidyl-prolyl cis-trans isomerase, FKBP-type_rframe6",4,2,6,,,,6,,,,,,,,,,,,,,
+Sotub06g024520.1.1;PGSC0003DMP400045327,"PsbP domain-containing protein 6, chloroplastic (AHRD V1 **-- PPD6_ARATH); contains Interpro domain(s)  IPR016123  Mog1/PsbP, alpha/beta/alpha sandwich_rframe6",3,2,6,,,,6,,,,,,,,,,,,,,
+Sotub01g038470.1.1,"NHL repeat-containing protein 2 (AHRD V1 **-- E6ZHB2_DICLA); contains Interpro domain(s)  IPR011042  Six-bladed beta-propeller, TolB-like_rframe6",1,2,6,,,,6,,,,,,,,,,,,,,
+Sotub01g034970.1.1;PGSC0003DMP400033807,Ribose-5-phosphate isomerase (AHRD V1 ***- A8IRQ1_CHLRE); contains Interpro domain(s)  IPR004788  Ribose 5-phosphate isomerase_rframe6,2,2,6,,,,,6,,,,,,,,,,,,,
+Sotub10g020380.1.1;PGSC0003DMP400014649,40S ribosomal protein S28 (AHRD V1 ***- B6T1V2_MAIZE); contains Interpro domain(s)  IPR000289  Ribosomal protein S28e_rframe6,6,2,6,,,,,6,,,,,,,,,,,,,
+Sotub08g015950.1.1;PGSC0003DMP400050666,Os01g0611000 protein (Fragment) (AHRD V1 ***- Q0JLB5_ORYSJ); contains Interpro domain(s)  IPR006946  Protein of unknown function DUF642_rframe6,3,2,6,,,,,6,,,,,,,,,,,,,
+PGSC0003DMP400059680;Sotub02g032890.1.1,PGSC0003DMT400088005 Protein,2,2,6,,,,,6,,,,,,,,,,,,,
+bf_mxlfxxxx_0029c06.t3m.scf,MICRO.cl.1520.singlet_rframe6,2,3,6,,,,,2,2,,,,2,,,,,,,,
+Sotub04g028360.1.1;PGSC0003DMP400053673,"Cytochrome c oxidase subunit VIb (AHRD V1 *-*- B4R7T3_DROSI); contains Interpro domain(s)  IPR003213  Cytochrome c oxidase, subunit VIb_rframe6",3,2,6,,,,,,6,,,,,,,,,,,,
+PGSC0003DMP400017263;PGSC0003DMC400017263,PGSC0003DMT400025323 Protein,11,2,6,,,,,,,,,6,,,,,,,,,
+Sotub02g029410.1.1;PGSC0003DMP400013843,50S ribosomal protein L5 (AHRD V1 ***- RL5_XANP2); contains Interpro domain(s)  IPR002132  Ribosomal protein L5_rframe6,8,2,6,,,,,,,,,,6,,,,,,,,
+Sotub05g027000.1.1;PGSC0003DMP400014822,60S ribosomal protein L6 (AHRD V1 ***- B9RHH3_RICCO); contains Interpro domain(s)  IPR000915  Ribosomal protein L6E_rframe6,8,2,6,,,,,,,,,,,,6,,,,,,
+Sotub10g014780.1.1,NAD dependent epimerase/dehydratase family protein (AHRD V1 *--- B0CAN3_ACAM1); contains Interpro domain(s)  IPR016040  NAD(P)-binding domain_rframe6,9,2,6,,,,,,,,,,,,6,,,,,,
+Sotub06g035320.1.1;PGSC0003DMP400048111,"60S ribosomal protein L5-1 (AHRD V1 ***- B6THG9_MAIZE); contains Interpro domain(s)  IPR005485  Ribosomal protein L5, eukaryotic_rframe6",9,2,6,,,,,,,,,,,,,6,,,,,
+PGSC0003DMP400035467;PGSC0003DMC400035467,PGSC0003DMT400052608 Protein,2,2,6,,,,,,,,,,,,,6,,,,,
+DN922889,"UniRef100_Q7M242 Cluster: Glutamate synthase (Ferredoxin) (EC 1.4.7.1) (Clone C(35)); n=1; Nicotiana tabacum Rep: Glutamate synthase (Ferredoxin) (EC 1.4.7.1) (Clone C(35)) - Nicotiana tabacum (Common tobacco), partial (23%)_rframe6",1,1,5,,,,,,,2,,,,,,3,,,,,
+Sotub07g019480.1.1,3-isopropylmalate dehydratase large subunit (AHRD V1 *--- LEUC_SYNP2); contains Interpro domain(s)  IPR006249  Aconitase/iron regulatory protein 2_rframe6,2,2,4,,,,,,,,,,,,,,,,,,4
+Sotub08g006460.1.1,Patatin-like phospholipase family protein (AHRD V1 **** Q2QNW3_ORYSJ); contains Interpro domain(s)  IPR002641  Patatin_rframe6,8,1,4,,,,,4,,,,,,,,,,,,,
+PGSC0003DMP400036456;PGSC0003DMC400036456,PGSC0003DMT400054153 Protein,10,2,4,,,,,,4,,,,,,,,,,,,
+PGSC0003DMP400004822,PGSC0003DMT400006945 Protein,2,2,4,,,,,,,4,,,,,,,,,,,
+PGSC0003DMP400046714;Sotub06g027680.1.1,PGSC0003DMT400069185 Protein,4,2,4,,,,,,,,,,4,,,,,,,,
+PGSC0003DMP400026740;PGSC0003DMC400026740,PGSC0003DMT400039421 Protein,5,2,4,,,,,,,,,,,,,4,,,,,
+MICRO.4187.C1,#NAME?,3,2,4,,,,,,,,,,,,,2,2,,,,
+Sotub07g017160.1.1,"Phosphoglucomutase (AHRD V1 **** Q9AUQ4_ORYSA); contains Interpro domain(s)  IPR016055  Alpha-D-phosphohexomutase, alpha/beta/alpha I, II and III_rframe6",3,2,4,,,,,,,,,,,,,,,4,,,
+TC223320,"UniRef100_Q2MIB8 Cluster: Chloroplast 30S ribosomal protein S16; n=3; Solanum Rep: Chloroplast 30S ribosomal protein S16 - Solanum lycopersicum (Tomato) (Lycopersicon esculentum), complete_rframe6",1,2,3,,3,,,,,,,,,,,,,,,,
+MICRO.13020.C3,nseq=3_rframe6,1,1,3,,3,,,,,,,,,,,,,,,,
+MICRO.7055.C2,ABD65296: thioredoxin [Solanum berthaultii]_thioredoxin [Nicotiana tabacum] sp_P29449_THH1_TOBAC Thioredoxin H-type 1 (TRX-H1) pir__S16590 thioredoxin h1 - common tobacco_rframe6,1,2,3,,,,,3,,,,,,,,,,,,,
+TC214074,"similar to UniRef100_A7P386 Cluster: Chromosome chr1 scaffold_5, whole genome shotgun sequence; n=1; Vitis vinifera Rep: Chromosome chr1 scaffold_5, whole genome shotgun sequence - Vitis vinifera (Grape), partial (71%)_rframe6",2,2,3,,,,,,3,,,,,,,,,,,,
+Sotub08g020710.1.1,"60S ribosomal protein L13 (AHRD V1 ***- Q3HRY7_SOLTU); contains Interpro domain(s)  IPR018256  Ribosomal protein L13e, conserved site  IPR001380  Ribosomal protein L13e_rframe6",1,2,3,,,,,,,,,,3,,,,,,,,
+cSTB37O5TH,CAK24966: chlorophyll a/b binding protein [Solanum tuberosum]_chlorophyll a/b-binding protein (cab-11) - tomato_rframe6,7,2,3,,,,,,,,,,,,,,3,,,,
+MICRO.5368.C1,AAR87711: salicylic acid-binding protein 2 [Nicotiana tabacum]_salicylic acid-binding protein 2 [Nicotiana tabacum]_rframe6,1,2,2,2,,,,,,,,,,,,,,,,,
+cSTB49G22TH,CAE22480: superoxide dismutase [Fe] [Solanum lycopersicum]_superoxide dismutase [Fe] [Lycopersicon esculentum]_rframe6,1,1,2,,,,,,,,,,,,,,,,,,2
+PGSC0003DMP400017088,PGSC0003DMT400025043 Protein,1,1,2,,,2,,,,,,,,,,,,,,,
+Sotub09g008410.1.1,"Peptidyl-prolyl cis-trans isomerase (AHRD V1 ***- B8HUH5_CYAP4); contains Interpro domain(s)  IPR001179  Peptidyl-prolyl cis-trans isomerase, FKBP-type_rframe6",3,2,2,,,,2,,,,,,,,,,,,,,
+Sotub08g011890.1.1,Unknown Protein (AHRD V1)_rframe6,2,2,2,,,,,,2,,,,,,,,,,,,
+PGSC0003DMP400050772,PGSC0003DMT400074969 Protein,1,2,2,,,,,,,2,,,,,,,,,,,
+Sotub04g034950.1.1,"Chaperone protein htpG (AHRD V1 **-- HTPG_MYXXD); contains Interpro domain(s)  IPR015566  Molecular chaperone, heat shock protein, endoplasmin_rframe6",1,2,2,,,,,,,,,,2,,,,,,,,
+PGSC0003DMP400036706,PGSC0003DMT400054540 Protein,2,2,2,,,,,,,,,,2,,,,,,,,
+TC213509,"homologue to UniRef100_Q7Y1A0 Cluster: 25 kDa protein dehydrin; n=1; Solanum sogarandinum Rep: 25 kDa protein dehydrin - Solanum sogarandinum, partial (95%)_rframe6",4,2,2,,,,,,,,,,,,,2,,,,,
+Sotub02g025290.1.1,Ectonucleoside triphosphate diphosphohydrolase 6 (AHRD V1 **-- Q6YHK4_CAVPO); contains Interpro domain(s)  IPR000407  Nucleoside phosphatase GDA1/CD39_rframe6,2,2,2,,,,,,,,,,,,,,,2,,,

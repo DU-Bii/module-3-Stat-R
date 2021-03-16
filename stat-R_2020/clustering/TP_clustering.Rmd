@@ -1,0 +1,823 @@
+---
+title: "TP de la séance 4, Clustering"
+author: "Anne Badel,  Frederic Guyon & Jacques van Helden"
+date: '`r Sys.Date()`'
+output:
+  html_document:
+    self_contained: no
+    fig_caption: yes
+    highlight: zenburn
+    theme: cerulean
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+    code_folding: "hide"
+  beamer_presentation:
+    colortheme: dolphin
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    fonttheme: structurebold
+    highlight: tango
+    incremental: no
+    keep_tex: no
+    slide_level: 2
+    theme: Montpellier
+    toc: yes
+  revealjs::revealjs_presentation:
+    theme: night
+    transition: none
+    self_contained: true
+    css: ../slides.css
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
+  slidy_presentation:
+    smart: no
+    slide_level: 2
+    self_contained: yes
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    highlight: tango
+    incremental: no
+    keep_md: yes
+    smaller: yes
+    theme: cerulean
+    toc: yes
+    widescreen: yes
+  ioslides_presentation:
+    slide_level: 2
+    self_contained: no
+    colortheme: dolphin
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    fonttheme: structurebold
+    highlight: tango
+    smaller: yes
+    toc: yes
+    widescreen: yes
+font-import: http://fonts.googleapis.com/css?family=Risque
+subtitle: "Diplôme Interuniversitaire en Bioinformatique intégrative (DU-Bii 2019)"
+font-family: Garamond
+transition: linear
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+```{r knitr_options, echo=FALSE, include=FALSE, eval=TRUE}
+
+## Define options for the R markdown output
+options(width = 300)
+# options(encoding = 'UTF-8')
+knitr::opts_chunk$set(
+  fig.width = 5, fig.height = 5, 
+  fig.path = 'figures/TP_',
+  fig.align = "center", 
+  size = "tiny", 
+  echo = TRUE, 
+  eval = TRUE, 
+  warning = FALSE, 
+  message = FALSE, 
+  results = TRUE, 
+  comment = "")
+
+## Max number of digits for non-scientific notation
+options(scipen = 12) 
+```
+
+
+
+```{r custom_parameters}
+## Location of the shared folder on the current install
+data.folder <- "~/TCGA_import/data/BIC/" # Just for preparation
+#data.folder <- "/shared/projects/du_bii_2019/data/module3/seance4/BIC/" # on the IFB-cluster-core
+
+```
+
+
+```{r load_libraries}
+## Load libraries
+message("Loading libraries")
+library(knitr)
+#library(kableExtra) ## Note: kableExtra has some side effect on kable: column padding is null, so all numbers seem to be mixed up
+library(FactoMineR)
+library(clues)
+library(RColorBrewer)
+library(ComplexHeatmap)
+
+# library(corrplot)
+library(FactoMineR)
+library(ClassDiscovery)
+# library(formattable)
+
+```
+
+## Introduction
+
+### But de ce TP
+
+Le tutoriel ci-dessous vous guidera pas-à-pas dans l'utilisation de fonctions **R** pour effectuer un clustering sur des profils transcriptomiques RNA-seq.
+
+### Source des données
+
+Les données sont issues de la base Recount2 (https://jhubiostatistics.shinyapps.io/recount/). 
+Nous avons sélectionné l'étude **TCGA** (The Cancer Genome Atlas; <https://cancergenome.nih.gov/>), regroupant des données RNA-seq pour plus de 12.000 patients souffrant de différents types de cancer. Nous nous intéressons ici uniquement aux données **Breast Invasive Cancer** (**BIC**) concernant le cancer du sein.
+
+Les données ont été préparées pour vous, selon la procédure détaillée au cours sur l'analyse différentielle de données RNA-seq.
+
+1. Filtrage des gènes à variance nulle et de ceux ccontenant trop de zéros.
+
+2. Normalisation (méthode robuste aux outliers)
+
+3. Analyse différentielle multi-groupes (en utilisant le package Bioconductor `edgeR`).
+
+4. Correction des P-valeurs pour tenir compte des tests multiples (nous avons testé ici ~20.000 gènes). Nous estimons le False Discovery Rate (FDR) selon la méthode de Benjamini-Hochberg (fonction R `p.adjust(all.pvalues, method="fdr")`). 
+
+5. Sélection de gènes différentiellement exprimés sur base d'un seuil $\alpha = 0.05$ appliqué au FDR.
+
+
+
+## Choisir son environnement de travail
+
+
+Les données seront analysées sur le [**serveur RStudio de l'IFB**](https://rstudio.cluster.france-bioinformatique.fr/). Ouvrez serveur RStudio <https://rstudio.cluster.france-bioinformatique.fr/> et identifiez-vous.
+
+
+## Dossier partagé contenant les données
+
+Les données sont dans un répertoire partagé `/shared/projects/du_bii_2019/data/module3/seance4/BIC/`.
+
+Nous allons définir une variable `data.folder` qui indiquera le chemin de ce dossier partagé, en fonction du serveur. 
+
+```{r data_folder_ifb, eval=FALSE}
+## Liste des fichiers de données
+data.folder <- "/shared/projects/du_bii_2019/data/module3/seance4/BIC/"
+```
+
+## Contenu du dossier de données
+
+Utilisez les commandes R suivantes:
+
+- `list.files()` pour vérifier le contenu du dosser `data.folder`, 
+- `file.size()` pour calculer la taille de ces fichiers.
+
+Astuces: 
+
+- `list.files()` retourne par défaut le nom de fichier, mais avec l'option `full.names=TRUE` vous obtiendrez le chemin complet. 
+- Calculez la taille des fichiers en bytes et en Megabytes ($1Mb = 1024 \cot 1024 \cdot b$), sachant que pour chaque conversion il faut diviser par 1024. 
+- Vous pouvez consulter notre solution à l'aide du code suivant (cliquer sur ***Code*** pour l'afficher).
+
+
+```{r list_data_files}
+# Return file sizes (in bytes)
+message("Listing files in data folder: ", data.folder)
+
+data.files <- list.files(path = data.folder) # List the data files
+print(data.files)
+
+## Full path
+data.path <- list.files(path = data.folder, full.names = TRUE) # List the data files
+print(data.files)
+
+data.file.sizes <- file.size(data.path) # Get the size of the data files, in bytes
+
+## Add file names 
+## (for some strange reason, file.size returns a vector
+## with no names, which is not very convenient)
+names(data.file.sizes) <- data.files
+
+## Compute file sizes in megabytes
+data.file.Mb <- signif(digits = 2, data.file.sizes / (1024^2))
+kable(data.frame(data.file.Mb))
+```
+
+
+
+## Lire le tableau de valeurs d'expression
+
+
+Nous allons maintenant lire le fichier d'expression. Pour cela, nous concaténons le chemin du dossier de données et le nom du fichier d'expressiion (`BIC_log2-norm-counts_edgeR_DEG_top_1000.tsv.gz`). 
+
+Ce fichier contient le comptages de lectures RNA-seq par gène, avec une sélection des gènes déclarés positifs pour le test de comparaison de moyennes multiples (voir-ci-dessus). Par ailleurs, nous avons arbitrairement appliqué un seuil supplémentaire en n'exportant que les 1000 gènes les plus significatifs, pour éviter de passer trop de temps sur le clustering hiérachique (complexité quadratique). 
+
+```{r file_path}
+
+# Define the path of the expression file, by concatenating the data folder and the file name
+# Note that file.path is convenient because it automatically used the appropriate parameter to separate the elements of a path (/ on Unix, \\ on Windows)
+BIC.expr.file <- file.path(data.folder, "BIC_log2-norm-counts_edgeR_DEG_top_1000.tsv.gz")
+
+# Load expression
+message("Loading expression file\t", BIC.expr.file)
+BIC.expr <- read.table(file = BIC.expr.file, header = TRUE)
+
+```
+
+
+## Mesure de la taille des données
+
+Prenez le temps d'identifier
+  
++ la taille du jeu de données
++ le nombre d'individus
++ le nombre de variables
+
+**Remarque :** Classiquement, en analyse de données, les individus sont les lignes du tableau de données, les colonnes sont les variables. 
+
+Pour des raisons historiques, en analyse transcriptomique les données sont toujours fournies avec
+
+- 1 ligne = 1 gène
+- 1 échantillon biologique = 1 colonne
+
+Cette convention a été établie en 1997, lors des toutes premières publications sur le transcriptome de la levure. Dans ces études, l'objet d'intérêt (l'"éindividu") était le gène, et les variables étaient ses mesures d'expression dans les différentes conditions testées.
+
+Pour l'anlayse de tissus cancéreux, on considère au contraire que l'"objet" d'intérêt  est l'échantillon prélevé sur le patient, et les variables sont les mesures d'expression des différents gènes chez un patient.
+
+Ce qui implique de faire attention, et éventuellement de travailler sur la matrice transposée (fonction `t()` en R) pour utiliser correctement les fonctions classiques.
+
+```{r}
+## Les données d'expression
+dim(BIC.expr)
+
+## Les noms des lignes correspondent à des gènes
+head(rownames(BIC.expr))
+
+## Les noms des colonnes correspondent à des échantillons
+head(colnames(BIC.expr))
+
+## transposons la table d'expression
+message("Transcribing expression matrix")
+BIC.expr.transposed <- t(BIC.expr)
+
+```
+
+
+## Charger les étiquettes de classes des échantillons
+
+Le fichier `BIC_sample-classes.tsv.gz`contient les étiquettes de classes des échantillons. 
+
+```{r}
+BIC.sample.classes <- read.table(
+  file.path(data.folder, "BIC_sample-classes.tsv.gz"),
+  header = TRUE)
+
+kable(BIC.sample.classes[1:10,])
+```
+
+Chaque échantillon a été assigné à une classe selon la combinaison de 3 marqueurs immunologiques: 
+
+- Estrogen Receptor 1 (ER1)
+- Progesterone Receptor 1 (PR1)
+- Human epidermal growth factor receptor 2 (Her2)
+
+Utilisez 
+
+
+- La fonction R `summary()` pour compter le nombre de patientes positives / négatives pour chacun de ces trois marqueurs.
+
+- La fonction R `table()` pour calculer  le nombre d'échantillons de chaque type de cancer.
+
+- La fonction R `table()` pour calculer  une table de contiingence des marqueurs ER1 et PR1
+
+
+
+```{r}
+summary(BIC.sample.classes)
+
+table(BIC.sample.classes$cancer.type)
+
+table(BIC.sample.classes$ER1, BIC.sample.classes$PR1)
+
+table(BIC.sample.classes$ER1, 
+      BIC.sample.classes$PR1, 
+      BIC.sample.classes$Her2)
+```
+
+
+## Projection ACP des échantillons
+
+Nous allons réaliser une ACP sans mise à l'échelle. 
+
+```{r pca_var, out.width="80%", fig.width=10, fig.height=4}
+## Transformation ACP
+BIC.prcomp <- prcomp(BIC.expr.transposed, center = FALSE, scale. = FALSE)
+names(BIC.prcomp) # check the name of the fields of the PCA object
+
+par(mfrow = c(1,2))
+## Plot de l'écart-type sur les premières composantes
+barplot(BIC.prcomp$sdev[1:10], col = "#FFEEDD",
+        main = "Standard deviation per PC")
+
+## Visualisation des données
+plot(BIC.prcomp, main = "Variance per PC", col="#BBDDFF")
+
+par(mfrow=c(1,1))
+
+```
+
+Définissez une couleur pour chaque classe, et assignez à chaque échantillon la couleur correspondant à sa classe. Dessinez ensuite un nuage de points avec les coordonnées de chaque échantillon dans les 1ère et 2ème composantes (PC2 vs PC1)
+
+```{r PCplots, out.width="80%", fig.width=10, fig.height=7}
+
+# Assign a color to each cancer type
+classes <- unique(BIC.sample.classes$cancer.type)
+class.colors <- rainbow(n = length(classes))
+names(class.colors) <- classes
+data.frame(class.colors)
+
+# Associate a color to each sample accordinig to its cancer type
+sample.colors <- class.colors[BIC.sample.classes$cancer.type]
+table(BIC.sample.classes$cancer.type, sample.colors)
+
+
+
+```
+
+
+**Question: ** comment interprétez-vous les barplots des écarts-types et variances pour les premières comosantes ? A discuter pendant le cours. 
+
+## Clustering hiérarchique
+
+### Calcul de la matrice de distance
+
+Nous allons maintenant calculer la distance entre chaque paire d'échantillon, en utilsiant comme métrique le **coefficient de corrélation de Spearman**, plus adapté à ce type de données que la distance euclidienne utilisée sur les données iris durant le cours 
+
+1. Lisez l'aide de la fonction `cor`, et utilisez cette fonction pour calculer la matrice de corrélation entre échantillons.
+
+2. transformation du corrélation de Spearman en une distance à l'aide de la transformation : $d = 1 - r$
+
+```{r}
+## Compute Spearman correlation coefficient
+BIC.cor <- cor(BIC.expr, method = "spearman")
+
+# Check the dimensions of the correlation matrix
+# (should be N x N, where N is the number of samples)
+dim(BIC.cor)
+
+## Derive a dissimilarity value from the corrrelation
+BIC.dist <- as.dist(1 - BIC.cor)
+```
+
+### hclust
+
+Faites un premier clustering hiérarchique, avec le critère d'aggrégation par défaut (lisez l'aide de la fonction `hclust()` pour savoir quelle est ce critère par défaut). 
+  
+```{r}
+## Run hierarchical clustering on the expression data
+## (use default parameters)
+BIC.hclust.complete <- hclust(BIC.dist)
+
+## Plot the resulting tree
+plot(BIC.hclust.complete, labels = F, hang = -1, las = 1, col = "grey",
+     main = "Spearman dissimilarity, complete linkage")
+```
+
+2. faire un deuxième clustering hiérarchique, avec le critère d'aggrégation de Ward
+
+```{r}
+##  Run hierarchical clustering with Ward agglomeration
+BIC.hclust.ward <- hclust(BIC.dist, method = "ward.D2")
+
+## Plot the resulting tree
+plot(BIC.hclust.ward, labels = F, hang = -1, las = 1, col = "#88BB66", 
+     main = "Spearman dissimilarity, Ward linkage")
+```
+
+
+3. Redessiner les arbres de ces deux résultats de clustering en colorant les échantillons selon la classe de cancer. 
+
+
+ 
+```{r tree_colored_labels}
+ClassDiscovery::plotColoredClusters(
+  BIC.hclust.ward, 
+  labs=BIC.sample.classes$cancer.type, col = "grey",
+  cols=sample.colors, cex=0.2)
+
+legend("topright",
+       legend=sort(classes), 
+       col = class.colors,
+       text.col = class.colors, cex=0.9)
+```
+ 
+3. Comparer les classifications obtenues avec les règles d'agglomératioin complète et Ward, respectivement, en étudiant l'impact du nombre de clusters.
+  
+**Astuces:**
+
+- Cous pouvez utiliser les commandes `rect.hclust` et `cutree` pour visualiser les clusters sur le dendrogramme, puis récupérer les clusters.
+
+### Combinaison d'un arbre et d'une carte de température
+
+La fonction R `heatmap()` permet de représenter à la fois les arbres produit par le clustering hiérarchique, et les profils d'expression. 
+
+Par défaut, elle effectue simultanément un clustering hiérarchique sur les lignes et sur les colonnes, ce qui permet de distinguer non seulement les groupes d'échantillons biologiques, mais également ceux de gènes. 
+
+**Attention:** la fonction `heatmap()` effectue par défaut un clustering hiérarchique sur les lignes et colonnes de votre matrice d'expression. 
+
+```{r heatmap, out.width="80%", fig.width=10, fig.height=10, fig.cap="Heat map of the expression matrix clustered by genes (rows) and samples (columns)."} 
+
+heatmap(as.matrix(BIC.expr), 
+        distfun = function(x) as.dist(1 - cor(t(x), method = "spearman")), 
+        hclustfun = function(x) hclust(x, method = "ward.D2"),
+        labRow = NA, labCol = NA)
+```
+
+
+```{r standardize_genes, out.width="80%", fig.width=7, fig.height=5, fig.cap="Histogram of expression values after gene-wise standardization (centering and scaling)."} 
+
+# Compute mean value per gene
+gene.means <- apply(BIC.expr, 1, mean)
+gene.sd <-  apply(BIC.expr, 1, sd)
+
+# Compute gene-wise centered expression values
+BIC.expr.genes.centered <- BIC.expr - gene.means
+
+# Compute gene-wise centred + scaled expression values
+BIC.expr.genes.standardized <- BIC.expr.genes.centered / gene.sd
+
+summary(unlist(BIC.expr.genes.standardized))
+hist(unlist(BIC.expr.genes.standardized), breaks = 100,
+     main = "Gene-wise standardized expression values",
+     xlab = "z-score", ylab = "Number of measures", 
+     col = "#DDEEFF", xlim = c(-7,7))
+
+# Draw a vertical grid
+abline(v = -7:7, col = "#BBBBBB", lty = "dotted")
+
+#Mark center
+abline(v = 0, col = "#008800", lwd = 2)
+
+# Mark dispersion (mean +- 1 sdev)
+arrows(x0 = -1, y0 = 50000, x1 = 1, y1 = 50000, length = 0.05, angle = 30, code = 3, lwd = 2, col = "#008800")
+
+```
+
+```{r heatmap_frenchflag_palette, out.width="80%", fig.width=10, fig.height=10, fig.cap="Heat map of the expression matrix clustered by genes (rows) and samples (columns)."} 
+
+## define a Blue - White - Red palette
+frenchflag.palette <- colorRampPalette(c('dark blue','white','dark red'))
+
+## Define a green - black - red palette
+GBR.palette <- colorRampPalette(c('green','black','red'))
+
+heatmap(as.matrix(BIC.expr.genes.standardized),
+        zlim = c(-4,4),
+        distfun = function(x) as.dist(1 - cor(t(x), method = "spearman")), 
+        hclustfun = function(x) hclust(x, method = "ward.D2"),
+        labRow = NA, labCol = NA,  # DO not print the labels (unreadable anyway)
+        col = GBR.palette(100),
+        scale = "none")
+
+```
+
+
+### Draw a tree with heatmap.2()
+
+The function `heatmap.2()` is derived from `heatmap()` but offers nice additional formatting options.
+
+```{r complex_heatmap, out.width="95%", fig.width=21, fig.height=8}
+# Define a color for the heatmap
+expr.colors <- heat.colors(n = 100)
+
+# Compute dendrogram with the hclust() function
+# Choose a custom dissimilirity measure
+# and agglomeration rule
+
+# compute dissimilarity between samples
+sample.dist <- as.dist(1 - cor(BIC.expr, method = "spearman")) 
+
+# Run hierarchical clustering on samples
+sample.clust = hclust(sample.dist, method = "complete")
+
+# Convert the clustering result in a tree object that can be used with plot() and / or heatmap()
+sample.tree <- as.dendrogram(sample.clust)
+
+# Define colors for the cancer type
+cancer.type <- unique(BIC.sample.classes$cancer.type)
+type.cancer.colors <- rainbow(n = length(cancer.type))
+names(type.cancer.colors) <- cancer.type
+
+# Define colors for ER1 marker
+ER1.classes <- unique(BIC.sample.classes$ER1)
+ER1.colors <- rainbow(n = length(ER1.classes))
+names(ER1.colors) <- ER1.classes
+print(ER1.colors)
+
+# Define colors for PR1 marker
+PR1.classes <- unique(BIC.sample.classes$PR1)
+PR1.colors <- heat.colors(n = length(PR1.classes))
+names(PR1.colors) <- PR1.classes
+print(PR1.colors)
+
+# Define colors for Her2 marker
+Her2.classes <- unique(BIC.sample.classes$Her2)
+Her2.colors <- topo.colors(n = length(Her2.classes))
+names(Her2.colors) <- Her2.classes
+
+## Detiine annotations for the heatmap
+## combining the 3 markers + cancer type
+annot.tumeur.column = HeatmapAnnotation(
+  df = BIC.sample.classes,
+  col = list(cancer.type = type.cancer.colors,
+             ER1 = ER1.colors, 
+             PR1 = PR1.colors,
+             Her2 = Her2.colors)
+)
+
+# A first heatmap
+my.heatmap <- ComplexHeatmap::Heatmap(
+  as.matrix(BIC.expr.genes.standardized), 
+  name = "TCGA Breast Invasive Cancer", 
+  # col = frenchflag.palette(100),
+  col = brewer.pal(11,"RdBu"),
+  column_title = "Samples",
+  row_title = "Genes",
+  cluster_columns = sample.tree,
+  show_column_names = FALSE, 
+  show_row_names = FALSE,
+  bottom_annotation = annot.tumeur.column
+)
+draw(my.heatmap)
+```
+
+
+### kmeans
+
+1. faire un premier kmeans, par exemple, en prenant le nombre de groupe trouvé sur le `hclust`
+
+2. faire une boucle pour trouver le nombre optimal de cluster, en calculant l'inertie intra totale en fonction du nombre de groupe `kmeans()$totss` [faire une boucle pour i allant de 1 à 10 `for (i in 1:10) {}`]
+
+3. refaire le kmeans avec ce nombre optimal
+
+4. visualiser ces groupes par exemple sur une projection des données dans le plan par PCA, à l'aide de la fonction `prcomp()`.
+
+**Astuce:** dans le résultat de `prcomp()`, les coordonnées des points se trouvent dans le champs `x`
+.
+
+```{r intra_cluster_variance, fig.width=8, fig.height=5, fig.cap="Intra-cluster variance plot. for a series of k-mean clustering with increasing values of k.  "}
+## Run k-means clustering with 20 centers
+BIC.kmeans <- kmeans(BIC.expr.transposed, centers=20)
+
+## Report the table of the clusters
+table(BIC.kmeans$cluster)
+
+T1 = Sys.time() # take time at the beginning of the task
+I.intra = numeric(length=20)
+I.intra[1] = kmeans(BIC.expr.transposed, centers=2)$totss
+for (i in 2:20) {
+  message("Running k-means with ", i, " centers")
+  kmi <- kmeans(BIC.expr.transposed, centers=i)
+  I.intra[i] <- kmi$tot.withinss
+}
+
+# Plot a curve showint the intra-cluster variance as a function of the number of clusters 
+plot((1:20)-0.5, I.intra, type="h", lwd=2, col = "blue", 
+     xlab = "k", ylab = "Intra-cluster variance",
+     main = "k-mean: impact of k on the intra-cluster variance")
+
+# Measure elapsed time
+T2 = Sys.time()
+Tdiff = difftime(T2,T1) ## Measure elapsed time
+
+## Run k-means clustering with 2 clusters
+BIC.kmeans2 <- kmeans(BIC.expr.transposed, centers = 2)
+table(BIC.kmeans2$cluster) ## Cluster sizes
+
+## Run k-means clustering with 3 clusters
+BIC.kmeans3 <- kmeans(BIC.expr.transposed, centers = 3)
+table(BIC.kmeans3$cluster) ## Cluster sizes
+
+## Run k-means clustering with 10 clusters
+BIC.kmeans10 <- kmeans(BIC.expr.transposed, centers = 10)
+table(BIC.kmeans10$cluster) ## Cluster sizes
+
+
+## Cut the tree at some arbitrary levels to get clusters
+
+## 2 clusters to see if the first subdivision corresponds to one of the 3 markers (ER1, PR1, Her2)
+BIC.cutree2 <- cutree(BIC.hclust.ward, k = 2) 
+
+## 5 clusters to see if the match the cancer types defined by biologists
+BIC.cutree5 <- cutree(BIC.hclust.ward, k = 5)
+
+
+## Define sample colors reflecting the cluster membership
+hclust.k2.colors <- BIC.cutree2
+kmeans.k2.colors <- BIC.kmeans2$cluster
+kmeans.k10.colors <- BIC.kmeans10$cluster
+
+## Define characters reflecting markers
+pch.cancer.type <- as.numeric(BIC.sample.classes$cancer.type)
+pch.er1 <- as.numeric(BIC.sample.classes$ER1)
+pch.pr1 <- as.numeric(BIC.sample.classes$PR1)
+pch.her2 <- as.numeric(BIC.sample.classes$Her2)
+
+## Compare clusters and markers on the PC plot, to evaluate whether 
+## the components capture relevant information
+par(mfrow=c(1,2))
+plot(BIC.prcomp$x[,1:2], 
+     col = hclust.k2.colors, 
+     pch = pch.er1,
+     las = 1, cex = 0.7, 
+     main = "Hclust 2 clusters versus markers")
+legend("topright", cex = 0.8, legend = c("ER1+", "ER1-"), pch = )
+
+plot(BIC.prcomp$x[,1:2], 
+     col = kmeans.k10.colors, 
+     pch = pch.er1,
+     las = 1, cex = 0.7, 
+     main = "K-means 10 clusters versus markers")
+
+```
+
+### Comparaisons 
+
+#### kmeans versus hclust
+
+Nous allons maintenant comparer les résultats de ces deux méthodes de clustering.
+
+1. à l'aide de la fonction `table`, calculez la matrice de confusion de vos deux clustering. Commentez.
+
+2. à l'aide de la fonction `adjustedRand(clues)` calculez le RI et le ARI de vos clustering. Commentez.
+  
+```{r}
+par(mfrow=c(1,2))
+plot(BIC.hclust.ward, labels=FALSE, hang=-1, main = "Ward")
+
+rect.hclust(BIC.hclust.ward, k=3)
+
+BIC.cutree3 <- cutree(BIC.hclust.ward, k=3)
+
+plot(BIC.hclust.ward, labels = F, hang = -1, main = "complete")
+
+rect.hclust(BIC.hclust.ward, k = 10)
+
+BIC.cutree10 <- cutree(BIC.hclust.ward, k = 10)
+
+table(BIC.cutree3, BIC.kmeans$cluster)
+table(BIC.cutree10, BIC.kmeans$cluster)
+par(mfrow = c(1,1))
+
+clues::adjustedRand(BIC.cutree3, BIC.kmeans3$cluster)
+clues::adjustedRand(BIC.cutree10, BIC.kmeans10$cluster)
+clues::adjustedRand(BIC.cutree3, BIC.kmeans10$cluster)
+clues::adjustedRand(BIC.cutree10, BIC.kmeans3$cluster)
+```
+
+#### clustering versus statut
+
+Nous connaissons les types de cancer des différentes tumeurs, définis en combinant trois marqueurs immunologiques :
+
+- HER2,
+- ER1 (récepteur d'œstrogène)
+- PR1 (récepteur de progestérone)
+
+et nous obtenons les classes suivantes :
+  
+- Basal.like
+- HER2pos
+- Luminal.A
+- Luminal.B
+
+Quelques tumeurs sont non classées.
+
+Vous pouvez lire les données concernant le type de cancer grâce à la fonction `read.table`, la ligne de commande est : `mes.classes <- read.table("../../xxxx/BIC_sample-classes.tsv", h=T)`.
+A l'aide de la fonction `summary`, déterminez le nombre de tumeurs pour chaque type de cancer.
+
+  1. comparez vos résultats de clustering avec la réalité
+    - par des visualisations
+    - le calcul de la matrice de confusion
+    - le calcul des rand index et adjusted rand index
+    
+
+  2. Interprétez les résultats suivants (cliquez sur "code" pour afficher le code, et exécutez-le)
+
+```{r er1_vs_pr1, result  = TRUE}
+## Correspondence between markers
+kable(table(BIC.sample.classes$ER1, BIC.sample.classes$PR1))
+fisher.test(table(BIC.sample.classes$ER1, BIC.sample.classes$PR1))
+
+```
+
+  
+```{r markers_vs_clusters}
+# cut the tree at different levels (2, 5)
+plot(BIC.hclust.ward, labels = FALSE, hang = -1)
+rect.hclust(BIC.hclust.ward, k = 5, border = "blue")
+rect.hclust(BIC.hclust.ward, k = 2, border = "red")
+legend("topright", 
+       legend = c("2 clusters", "5 clusters"), 
+       col = c("red", "blue"), lwd = 2, cex = 0.7)
+
+## hclust 2 clusters versus each marker
+table(BIC.cutree2, BIC.sample.classes$Her2)
+table(BIC.cutree2, BIC.sample.classes$ER1)
+table(BIC.cutree2, BIC.sample.classes$PR1)
+
+## K-means 2 clusters versus each marker
+table(BIC.kmeans2$cluster, BIC.sample.classes$ER1)
+table(BIC.kmeans2$cluster, BIC.sample.classes$PR1)
+table(BIC.kmeans2$cluster, BIC.sample.classes$Her2)
+
+## 5 clusters
+table(BIC.cutree5, BIC.sample.classes$Her2)
+table(BIC.cutree5, BIC.sample.classes$ER1)
+table(BIC.cutree5, BIC.sample.classes$cancer.type)
+
+cluster.vs.cancertype <- table(
+  BIC.cutree5, 
+  BIC.sample.classes$cancer.type)
+
+kable(cluster.vs.cancertype, caption = "Hierarchical clusters (c = 5) versus cancer type. ")
+
+```
+
+
+```{r}
+## clustering versus cancer.type
+## Compute the confusion table and adjusted RAND index (ARI)
+
+## 2 clusters versus each marker
+table(BIC.cutree2, BIC.sample.classes$ER1)
+clues::adjustedRand(
+  BIC.cutree2, 
+  as.numeric(BIC.sample.classes$ER1))
+
+table(BIC.cutree2, BIC.sample.classes$PR1)
+clues::adjustedRand(
+  BIC.cutree2, 
+  as.numeric(BIC.sample.classes$PR1))
+
+table(BIC.cutree2, BIC.sample.classes$Her2)
+clues::adjustedRand(
+  BIC.cutree2, 
+  as.numeric(BIC.sample.classes$Her2))
+
+
+## 5 clusters versus cancer type
+table(BIC.cutree5, BIC.sample.classes$cancer.type)
+clues::adjustedRand(
+  BIC.cutree5, 
+  as.numeric(BIC.sample.classes$cancer.type))
+
+## Negative control: compute the same stat with randomly permuted values
+table(BIC.cutree5, BIC.sample.classes$cancer.type)
+clues::adjustedRand(
+  sample(BIC.cutree5), 
+  as.numeric(BIC.sample.classes$cancer.type))
+
+table(BIC.kmeans3$cluster, BIC.sample.classes$cancer.type)
+clues::adjustedRand(
+  BIC.kmeans3$cluster,
+  as.numeric(BIC.sample.classes$cancer.type))
+
+table(BIC.kmeans10$cluster, BIC.sample.classes[,1])
+clues::adjustedRand(BIC.kmeans10$cluster,
+                    as.numeric(BIC.sample.classes[,1]))
+```
+
+
+```{r out.width="80%", fig.width=8, fig.height=8}
+# Visualisation
+
+
+## hclust (2 groupes) et HER2+/-
+plot(BIC.prcomp$x[,1:2], 
+     col = hclust.k2.colors,
+     pch = as.numeric(BIC.sample.classes$ER1), # character indicates ER1 status
+     las = 1, cex = 0.7, 
+     main = "Clusters versus markers")
+grid()
+texte.legend <- c("ER1-", "ER1+", "gr1", "gr2")
+legend("topright", texte.legend, 
+       col = c(1, 1, 1, 2), 
+       pch = c(1, 2, NA, NA), 
+       text.col = c(1, 1, 1, 2))
+
+```
+
+```{r clusters_vs_markers}
+## Draw a confusion table of cluster versus ER1
+kable(table(BIC.cutree2, BIC.sample.classes$ER1), caption = "hclust clusters versus ER1 marker")
+
+
+```
+
+
+## Lister son environnement
+
+A la fin de tout travail d'analyse, il est important de conserver une trace précise et complète de l'environnement précis utilisé pour produire les résultats. 
+
+
+```{r session_info, result=TRUE}
+## Print the complete list of libraries + versions used in this session
+sessionInfo()
+
+```
+
+

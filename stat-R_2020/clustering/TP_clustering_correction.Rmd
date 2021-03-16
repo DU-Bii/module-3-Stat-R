@@ -1,0 +1,301 @@
+---
+title: "Le TP de la séance 4, Clustering"
+author: "Anne Badel & Frederic Guyon"
+date: ""
+output: 
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: no
+    toc_depth: 3
+  html_document:
+    fig_caption: yes
+    highlight: zenburn
+    self_contained: no
+    theme: cerulean
+    toc: no
+    toc_depth: 3
+    toc_float: yes
+---
+
+```{r include=FALSE, echo=FALSE, eval=TRUE}
+library(knitr)
+library(kableExtra)
+library(FactoMineR)
+library(clues)
+library(RColorBrewer)
+library(corrplot)
+library(FactoMineR)
+library(ClassDiscovery)
+# library(formattable)
+
+options(width = 300)
+
+# options(encoding = 'UTF-8')
+
+knitr::opts_chunk$set(
+  fig.width = 5, fig.height = 5, 
+  fig.path = 'figures/irisDeFisher_',
+  fig.align = "center", 
+  size = "tiny", 
+  echo = T, eval = T, 
+  warning = FALSE, message = FALSE, 
+  results = T, comment = "")
+
+options(scipen = 12) ## Max number of digits for non-scientific notation
+```
+
+
+### Choisir son environnement de travail
+
+  1. vous pouvez choisir de travail sur le cluster de l'IFB, [ici](https://rstudio.cluster.france-bioinformatique.fr/auth-sign-in)
+    - les données sont dans le répertoire :
+  2. ou en local, sur nos machines
+    - les données sont dans le répertoire :
+    - vous devez avoir la commande suivante dans votre `.bashrc` : `. /opt/sdv/anaconda/etc/profile.d/conda.sh`
+    - puis vous devez lancer l'environnement `conda` adéquat : `conda activate`
+    - et enfin lancer `rstudio` : `rstudio`
+    
+### Lire les données
+
+Les données sont issues de la base Recount2 (https://jhubiostatistics.shinyapps.io/recount/). Nous nous intéressons à la base TCGA, regroupant des données RNA-seq pour différents types de cancer. Nous nous intéressons ici uniquement aux données BIC concernant le cancer du sein.
+
+Les données ont été préparées pour vous, filtrage des données, normalisation, extraction des gènes différentiellement exprimés (à l'aide d'une analyse de la variance (anova) et du calcul des *p.value* ajustées par une méthode de FDR (fonction `aov` et `p.adjust(, method="fdr")`).
+
+Vous pouvez lire les données à l'aide de la fonction `read.table`, prenez patience c'est un gros fichiers. La ligne de commande est : `read.table("", h=T)`.
+
+Sur le serveur de l'IFB, les données sont dans le répertoire `../../projects/du_bii_2019/data/module3/seance4/`. Vous pouvez donc les lire à l'aide de la commande : `mes.expr <- read.table("../../projects/du_bii_2019/data/module3/seance4/BIC_diff_exp.tsv", h=T)`
+
+En local, les données sont dans le répertoire `../../dubii/data-m3/s4`. Vous pouvez donc les lire à l'aide de la commande : `mes.expr <- read.table("../../dubii/data-m3/s4/BIC_diff_exp.tsv", h=T)`
+
+
+1. dans un premier temps, je lis les données extraites de Recount2 et remaniées par Jacques van Helden
+```{r}
+## Les données d'expression, en local sur ma machine
+dt1 <- read.table("data_R4/BIC_log2-norm-counts_filtered-genes.tsv", h=T)
+dt1.read <- dt1
+dt1 <- t(dt1)
+```
+
+2. ensuite, je lis les classes des tumeurs
+```{r}
+## Les classes
+dt1.classes <- read.table("data_R4/BIC_sample-classes.tsv", h=T)
+```
+
+3. et de je visualise les données sur une ACP
+```{r}
+## Visualisation des données
+dt1.pca <- FactoMineR::PCA(dt1, graph=F, scale.unit=F)
+barplot(dt1.pca$eig[1:100,1])
+plot(dt1.pca, choix="ind", label="none")
+save(dt1.pca, file="data_R4/dt1.pca.RData")
+```
+
+
+**rq** : ces manipulations (lecture et calcul de la PCA) sont longues. Donc patience.
+
+4. je réduis le nombre de données en sélectionnant grâce à une analyse de la variance les gènes différentiellement exprimés entre les types de cancer. 
+  1. calcul des *p.value*
+```{r}
+# Réduction des données, anova
+dt2 <- data.frame(dt1, dt1.classes[,1])
+p.value <- numeric(length=ncol(dt1))
+for (i in 1:ncol(dt1)) {
+  p.value[i] <- summary(aov(dt2[,i] ~ dt2[,20250]))[[1]][1,5]
+}
+```
+
+  2. ajustement par FDR
+```{r}
+p.fdr <- p.adjust(p.value, method="fdr")
+p.bh <- p.adjust(p.value, method="BH")
+p.bonf <- p.adjust(p.value, method="bonferroni")
+par(mfrow=c(2,2))
+hist(p.value)
+hist(p.fdr)
+hist(p.bh)
+hist(p.bonf)
+par(mfrow=c(1,1))
+sum(p.value < 0.05) ; sum(p.value < 0.01)
+sum(p.fdr < 0.05) ; sum(p.fdr < 0.01)
+sum(p.bh < 0.05) ; sum(p.bh < 0.01)
+sum(p.bonf < 0.05) ; sum(p.bonf < 0.01)
+dt1.all <- dt1
+dt1 <- dt1[, which(p.fdr < 0.05)]
+```
+
+  3. et sauvegarde
+  
+```{r}
+write.table(dt1, "data_R4/BIC_diff_exp.tsv", sep="\t")
+```
+
+C'est sur ce fichier que vous travaillez en TP.
+
+### Calcul de la matrice de distance
+
+Nous allons utiliser comme métrique le coefficient de corrélation de Spearman, plus adapté à ce type de données que la distance euclidienne utilisée en cours. 
+
+  1. calcul de la matrice de corrélation de Spearman à l'aide de la fonction `cor` avec l'option `method="spearman"`
+  2. transformation du corrélation de Spearman en une distance à l'aide de la trnsformation : $d = 1 - r^2$
+  
+```{r}
+load("data_R4/dt1.pca.RData")
+dt1 <- read.table("data_R4/BIC_diff_exp.tsv", h=T)
+dt1.classes <- read.table("data_R4/BIC_sample-classes.tsv", h=T)
+```
+
+```{r}
+dt1.cor <- cor(t(dt1), method="spearman")
+dim(dt1.cor)
+dt1.dist <- as.dist(1-dt1.cor^2)
+```
+
+### hclust
+
+  1. faire un premier clustering hiérarchique, avec le critère d'aggrégation par défaut
+```{r}
+dt1.hclust <- hclust(dt1.dist)
+plot(dt1.hclust, labels=F, hang=0)
+```
+
+  2. faire un deuxième clustering hiérarchique, avec le critère d'aggrégation de Ward
+```{r}
+dt1.hclust.ward <- hclust(dt1.dist, method="ward.D2")
+plot(dt1.hclust.ward, labels=F, hang=0)
+```
+ 
+ 
+```{r, echo=F, eval=F}
+plot(dt1.hclust.ward, labels=dt1.classes$cancer.type, hang=0)
+plot(dt1.hclust.ward, labels=dt1.classes$xml_lab_proc_her2_neu_immunohistochemistry_receptor_status, hang=0, cex=0.5)
+ClassDiscovery::plotColoredClusters(dt1.hclust.ward, labs=dt1.classes$cancer.type, 
+                                    cols=as.numeric(dt1.classes$cancer.type), cex=0.5)
+legend(700, 3, legend=sort(unique(dt1.classes$cancer.type)), col=as.numeric(sort(unique(dt1.classes$cancer.type))),
+       text.col=as.numeric(sort(unique(dt1.classes$cancer.type))), cex=0.5)
+```
+ 
+  3. Comparer les classifications obtenues
+  
+    - en particulier sur les nombres de cluster
+    - utiliser les commandes `rect.hclust` et `cutree` pour visualiser les clusters sur le dendrogramme, puis récupérer les clusters.
+
+### kmeans
+
+  1. faire un premier kmeans, par exemple, en prenant le nombre de groupe trouvé sur le `hclust`
+  2. faire une boucle pour trouver le nombre optimal de cluster, en calculant l'inertie intra totale en fonction du nombre de groupe `kmeans()$totss` [faire une boucle pour i allant de 1 à 10 `for (i in 1:10) {}`]
+  3. refaire le kmeans avec ce nombre optimal
+  3. visualiser ces groupes par exemple sur une projection des données dans le plan par PCA, à l'aide de la fonction `plot(PCA(mon.data.frame, choix="ind", col.ind=mon.kmeans$cluster)).
+  
+```{r}
+dt1.kmeans <- kmeans(dt1, centers=20)
+table(dt1.kmeans$cluster)
+T1 = Sys.time()
+I.intra = numeric(length=20)
+I.intra[1] = kmeans(dt1, centers=2)$totss
+for (i in 2:20) {
+  kmi <- kmeans(dt1, centers=i)
+  I.intra[i] <- kmi$tot.withinss
+}
+plot(1:20, I.intra, type="l")
+T2 = Sys.time()
+Tdiff = difftime(T2,T1)
+par(mfrow=c(1,2))
+dt1.kmeans10 <- kmeans(dt1, centers=10)
+table(dt1.kmeans10$cluster)
+plot(dt1.pca, choix="ind", label="none", col.ind=dt1.kmeans10$cluster)
+dt1.kmeans3 <- kmeans(dt1, centers=3)
+table(dt1.kmeans3$cluster)
+plot(dt1.pca, choix="ind", label="none", col.ind=dt1.kmeans3$cluster)
+par(mfrow=c(1,1))
+dt1.kmeans2 <- kmeans(dt1, centers=2)
+table(dt1.kmeans2$cluster)
+plot(dt1.pca, choix="ind", label="none", col.ind=dt1.kmeans2$cluster)
+```
+
+### Comparaisons 
+
+#### kmeans versus hclust
+
+Nous allons maintenant comparer les résultats de ces deux méthodes de clustering.
+
+  1. à l'aide de la fonction `table`, calculer la matrice de confusion de vos deux clustering. Commentez.
+  2. à l'aide de la fonction `adjustedRand(clues)` calculez le RI et le ARI de vos clustering. Commentez.
+  
+```{r}
+par(mfrow=c(1,2))
+plot(dt1.hclust.ward, labels=F, hang=0)
+rect.hclust(dt1.hclust.ward, k=3)
+dt1.cutree3 <- cutree(dt1.hclust.ward, k=3)
+plot(dt1.hclust.ward, labels=F, hang=0)
+rect.hclust(dt1.hclust.ward, k=10)
+dt1.cutree10 <- cutree(dt1.hclust.ward, k=10)
+table(dt1.cutree3, dt1.kmeans$cluster)
+table(dt1.cutree10, dt1.kmeans$cluster)
+par(mfrow=c(1,1))
+clues::adjustedRand(dt1.cutree3, dt1.kmeans3$cluster)
+clues::adjustedRand(dt1.cutree10, dt1.kmeans10$cluster)
+clues::adjustedRand(dt1.cutree3, dt1.kmeans10$cluster)
+clues::adjustedRand(dt1.cutree10, dt1.kmeans3$cluster)
+```
+
+#### clustering versus Her2 status
+
+Nous connaissons les types de cancer des différentes tumeurs, définie en combinant trois marqueurs immunologiques :
+
+  - HER2,
+  - ER (récepteur d'œstrogène)
+  - Pr (récepteur de progestérone)
+
+et nous obtenons les classes suivantes :
+  
+  - Basal.like
+  - HER2pos
+  - Luminal.A
+  - Luminal.B
+
+qqs tumeurs sont non classées
+
+Vous pouvez lire les données concernant le type de cancer grâce à la fonction `read.table`, la ligne de commande est : `mes.classes <- read.table("data_R4/BIC_sample-classes.tsv", h=T)`.
+A l'aide de la fonction `summary`, déterminez le nombre de tumeurs pour chaque type de cancer
+
+  1. comparez vos résultats de clustering avec la réalité
+    - par des visualisations
+    - le calcul de la matrice de confusion
+    - le calcul des rand index et adjusted rand index
+  2. commentez
+  
+```{r}
+plot(dt1.hclust.ward, labels=F, hang=0)
+rect.hclust(dt1.hclust.ward, k=2)
+dt1.cutree2 <- cutree(dt1.hclust.ward, k=2)
+table(dt1.cutree2, dt1.classes[,4])
+table(dt1.kmeans2$cluster, dt1.classes[,4])
+```
+
+```{r}
+# clustering versus cancer.type
+table(dt1.cutree3, dt1.classes[,1])
+clues::adjustedRand(dt1.cutree3, as.numeric(dt1.classes[,1]))
+table(dt1.kmeans3$cluster, dt1.classes[,1])
+clues::adjustedRand(dt1.kmeans3$cluster, as.numeric(dt1.classes[,1]))
+table(dt1.cutree10, dt1.classes[,1])
+clues::adjustedRand(dt1.cutree10, as.numeric(dt1.classes[,1]))
+table(dt1.kmeans10$cluster, dt1.classes[,1])
+clues::adjustedRand(dt1.kmeans10$cluster, as.numeric(dt1.classes[,1]))
+```
+
+
+```{r}
+# visualisation
+
+## hclust (2 groupes) et HER2+/-
+mycol=dt1.cutree2
+mypch=as.numeric(dt1.classes[,4])
+pointsToPlot <- dt1.pca$ind$coord[,1:2]
+plot(dt1.pca, choix="ind", label="none", col.ind="white")
+points(pointsToPlot, col=mycol, pch=mypch)
+texte.legend=c("HER2-", "HER2+", "gr1", "gr2")
+legend(x=-400, y=100, texte.legend, col=c(1, 1, 1, 2), pch=c(1, 2, NA, NA), text.col=c(1, 1, 1, 2))
+```

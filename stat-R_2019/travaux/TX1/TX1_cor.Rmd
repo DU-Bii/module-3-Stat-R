@@ -1,0 +1,245 @@
+---
+title: "Devoir n°1"
+author: "Anne Badel"
+date: "`r Sys.Date()`"
+output:
+  pdf_document:
+    fig_caption: yes
+    highlight: pygments
+    toc: yes
+    toc_depth: 2
+    number_sections: true
+  html_document: default
+  fontsize: 13pt
+---
+
+# Quelques paramètres
+```{r settings, include=FALSE, echo=FALSE, eval=TRUE}
+library(knitr)
+
+options(width = 300)
+# options(encoding = 'UTF-8')
+knitr::opts_chunk$set(
+  fig.width = 7, fig.height = 5, 
+  fig.path = 'figures/TX1_',
+  fig.align = "center", 
+  size = "tiny", 
+  echo = TRUE, 
+  eval = TRUE, 
+  warning = FALSE, 
+  message = FALSE, 
+  results = TRUE, 
+  comment = "")
+
+options(scipen = 2) 
+```
+
+```{r libraries, include=FALSE, echo=FALSE, eval=TRUE}
+library(knitr)
+library(FactoMineR)
+library(factoextra)
+library(cowplot)
+```
+
+```{r parametres}
+alpha <- 0.05
+```
+
+```{r}
+workdir <- getwd()
+message("Working directory\t", workdir)
+```
+
+```{r load_expression_table}
+data.folder <- "/Volumes/Data/badel/Documents/Git/DUBII/module-3-Stat-R/seance_2/data"
+
+meta.file <- "metadata.RDS" # 
+abond.file <- "microbiota.abundance.log.RDS" 
+meta.path <- file.path(data.folder, meta.file) 
+abond.path <- file.path(data.folder, abond.file) 
+
+## Load expression table
+meta.table <- readRDS(meta.path)
+abond.table <- readRDS(abond.path)
+```
+
+Le `data.frame` `meta.table` contient les données physiologiques des `r nrow(meta.table)` patients, le `data.frame` `abond.table` contient les données de métagénomiques de ces mêmes patients.
+
+# Exercice 1 : comparaison de l'âge moyen des patients malades et sains
+
+## identification de la variable aléatoire étudiée
+La variable étudiée est l'âge des patients `Age` en fonction du facteur `être ou non malade` 
+
+### La variable `Age`
+```{r age}
+summary(meta.table$Age)
+par(mfrow=c(1,2))
+hist(meta.table$Age, main = "histogramme de la variable \"Age\"")
+boxplot(meta.table$Age, main = "boxplot de la variable \"Age\"")
+par(mfrow=c(1,1))
+```
+Les individus étudiés ont entre 18 et 78 ans, avec une moyenne de 46,5 ans et une médiane très proche.
+Il n'y a pas de données manquantes
+
+### Le facteur `status`
+```{r ent}
+summary(meta.table$status)
+plot(meta.table$status, main = "histogramme du facteur \"status\"")
+```
+
+## identification du test à utiliser
+La variable étudiée, l'`Age` est une variable quantitative de paramètre $\mu$ et $\sigma^2$ inconnues. Le facteur `status`est un qualitatif à deux niveaux. Nous allons donc faire un test de comparaison de deux moyennes, dont les hypothèses sont les suivantes :
+
+- $H_0 : \mu_{healthy} = \mu_{liver}$
+- $H_1 : \mu_{healthy} \neq \mu_{liver}$
+
+Etant donné que nous sommes dans le cas de comparaison de moyennes dans le cas de grands échantillons (n > 30), nous pouvons faire le test directement, sans nous inquiéter des conditions d'application de ce test.
+
+## `Age` versus `status`
+```{r age-enterotype}
+boxplot(Age ~ status, data = meta.table, main = "\"Age\" versus \"status\"")
+```
+
+## calcul de la moyenne et de l'écart-type
+Pour calculer moyennes et écart-type dans chacun des groupes, on peut utiliser la fonction `by()` qui renvoit un objet de classe `by`, donc une liste.
+```{r age_by_status}
+mean.by <- by(meta.table$Age, meta.table$status, mean)
+sd.by <- by(meta.table$Age, meta.table$status, sd)
+```
+ou la fonction `aggregate()` qui renvoit un `dataa.frame`
+```{r age_aggregate_status}
+mean.agg <- aggregate(Age ~ status, data = meta.table, FUN = mean)
+sd.agg <- aggregate(Age ~ status, data = meta.table, FUN = sd)
+```
+
+Pour afficher les résultats, on peut utiliser la fonction `kable()`
+```{r age_kable_status}
+res <- data.frame(mean.agg[,2], sd.agg[,2])
+colnames(res) <- c("moyenne", "écart-type")
+rownames(res) <- c("healthy", "liver")
+kable(res)
+```
+
+## intervalles de confiance
+On sait calculer l'intervalle de confiance d'une moyenne grâce à la formule suivante : 
+```{r IC}
+IC = matrix(nrow = 2, ncol = 2)
+rownames(IC) <- c("healthy", "liver")
+colnames(IC) <- c("m.inf", "m.sup")
+```
+$$IC_{1-\alpha}(\mu) = \Bigg[m - z_{1-{\alpha \over 2}} \sqrt {s^2 \over n} \Bigg]$$
+soit, pour les individus sains
+```{r IC_mean_healthy}
+nb.ind <- table(meta.table$status)
+m.inf <- res[1,1] - qnorm((1-alpha/2) * sqrt(res[1,2]^2/nb.ind[1]))
+m.sup <- res[1,1] + qnorm((1-alpha/2) * sqrt(res[1,2]^2/nb.ind[1]))
+IC[1,] <- c(m.inf, m.sup)
+```
+IC($\mu$) = [`r m.inf`, `r m.sup`]
+
+et pour les individus malades
+```{r IC_mean_liver}
+nb.ind <- table(meta.table$status)
+m.inf <- res[2,1] - qnorm((1-alpha/2) * sqrt(res[2,2]^2/nb.ind[2]))
+m.sup <- res[2,1] + qnorm((1-alpha/2) * sqrt(res[2,2]^2/nb.ind[2]))
+IC[2,] <- c(m.inf, m.sup)
+```
+IC($\mu$) = [`r m.inf`, `r m.sup`]
+
+Les deux intervalles de confiance sont dans le tableau suivant : `r kable(IC)`
+
+## le test statistique
+```{r test}
+(mon.test <- t.test(Age ~ status, data = meta.table, var.equal =T))
+ma.pvalue <- mon.test$p.value
+```
+
+Au risque $\alpha$ = `r alpha`, le test est significatif en effet la p.value,`r sprintf("%3.8f", ma.pvalue)`, est inférieure à `r alpha`. On peut donc considérer que l'âge des individus est différent de celui des malades. En moyenne, les individus malades sont plus agés que les individus sains.
+
+# Exercice 2 : ACP sur le jeu de données `microbiota.abudance`
+
+```{r acp}
+ma.pca <- PCA(abond.table, graph = F)
+ma.pca.nonscale <- PCA(abond.table, graph = F, scale.unit = FALSE)
+```
+
+## part de variabilité
+
+Le premier plan factoriel, les deux premières composantes principales, représente `r ma.pca$eig[2,3]` \% de la variabilité de nos données. Ce n'est pas énorme, et lorsqu'on fait le plot des valeurs propres,
+```{r acp_barplot}
+par(mfrow=c(1,2))
+barplot(ma.pca.nonscale$eig[,2])
+barplot(ma.pca$eig[,2])
+par(mfrow=c(1,1))
+```
+on voit qu'on pourrait aller jusqu'à prendre au moins `r sum(ma.pca$eig[, 1]>1)` composantes (valeurs propres > 1).
+
+```{r acp_status_var1}
+par(mfrow=c(1,2))
+plot(ma.pca.nonscale, choix = "var", label = "none")
+plot(ma.pca, choix = "var", label = "none")
+par(mfrow=c(1,1))
+```
+
+Au vu du nombre important de descripteurs (`r ncol(abond.table)`), il est normal qu'on ne distingue pas grand chose. Si ce n'est qu'aucune des variables n'est bien représentée, ni n'a une contribution importante.
+
+On peut essayer de représenter seulement les variables les mieux représentées (cos2 élevés).
+```{r acp_status_var_cos2}
+cos2.p1 <- fviz_pca_var(ma.pca, col.var="cos2",
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+             repel = TRUE, # Avoid text overlapping
+             select.var = list(cos2 = 0.4)
+             )
+cos2.cp1 <- fviz_cos2(ma.pca, choice = "var", axes = 1, top = 5)
+cos2.cp2 <- fviz_cos2(ma.pca, choice = "var", axes = 2, top = 5)
+```
+
+Et les descripteurs ayant la meilleure contribution
+```{r acp_status_contrib}
+contrib.p1 <- fviz_pca_var(ma.pca, col.var="contrib",
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+             repel = TRUE, # Avoid text overlapping
+             select.var = list(contrib = 1)
+             )
+plot_grid(cos2.p1, contrib.p1, cos2.cp1, cos2.cp2, ncol = 2, nrow = 1)
+contrib.cp1 <- fviz_contrib(ma.pca, choice = "var", axes = 1, top = 5)
+c.cp1 <- contrib.cp1$data
+c.cp1 <- c.cp1$contrib
+names(c.cp1) <- contrib.cp1$data$name
+c.cp1 <- sort(c.cp1, decreasing = TRUE)
+contrib.cp2 <- fviz_contrib(ma.pca, choice = "var", axes = 2, top = 5)
+c.cp2 <- contrib.cp2$data
+c.cp2 <- c.cp2$contrib
+names(c.cp2) <- contrib.cp1$data$name
+c.cp2 <- sort(c.cp2, decreasing = TRUE)
+plot_grid(contrib.cp1, contrib.cp2, cos2.cp1, cos2.cp2, ncol = 2, nrow = 2)
+```
+
+Les descripteurs contribuant le plus à la première composante (CP1) sont : `r names(c.cp1[1:5])`. Les individus à droite de l'ACP auront des valeurs plus élevées que la moyenne de `r names(c.cp1[1])`, les individus à gauche de l'ACP auront des plus élevées que la moyenne de `r names(c.cp1[2])`.
+Les descripteurs contribuant le plus à la deuxième composante (CP2) sont : `r names(c.cp2[1])`. Et c'est pas grand chose.
+
+
+## les individus en fonction du statut
+D'après ce que nous avons dit précédemment, les individus sains ont en moyenne des valeurs de `r names(c.cp1[1:5])` plus élevées, alors que les individus malades ont en moyenne des valeurs de `r names(c.cp1[2])` plus élevées.
+
+```{r acp_status_ind}
+plot(ma.pca, choix = "ind", col.ind = meta.table$status)
+legend(-20, 15, legend = c("healthy", "liver"), text.col= 1:2)
+```
+
+
+## les individus en fonction de l'enterotype
+Attention : il y a des données manquantes
+```{r acp_enterotype1}
+plot(ma.pca, choix = "ind", col.ind = meta.table$Enterotype, cex = 0.5)
+legend(-20, 15, legend = 1:3, text.col= 1:3)
+```
+
+Il semble que les variables indentifiées précédemment `r names(c.cp1[1:2])` permettent de différencier les individus de type 2 et 3. Les individus de type 1 sont répartis sur l'ensemble du premier plan factoriel.
+
+```{r acp_enterotype2}
+plot(ma.pca, choix = "ind", col.ind = meta.table$Enterotype, cex = 0.5, axes = c(3,4))
+legend(-20, 15, legend = 1:3, text.col= 1:3)
+```
+Le plan factoriel (3,4) pour seulement 3% de la variabilité semble distingué les types "1", à gauche des deux autres types.
+

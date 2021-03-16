@@ -1,0 +1,2138 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Jacques van Helden" />
+
+<meta name="date" content="2020-03-12" />
+
+<title>Tutorial – Comparing means under controlled conditions</title>
+
+<script src="mean-comparison-test_random-numbers_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="mean-comparison-test_random-numbers_files/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="mean-comparison-test_random-numbers_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="mean-comparison-test_random-numbers_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="mean-comparison-test_random-numbers_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="mean-comparison-test_random-numbers_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="mean-comparison-test_random-numbers_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="mean-comparison-test_random-numbers_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="mean-comparison-test_random-numbers_files/navigation-1.1/tabsets.js"></script>
+<script src="mean-comparison-test_random-numbers_files/navigation-1.1/codefolding.js"></script>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  { color: #cccccc; background-color: #303030; }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ffcfaf; } /* Alert */
+code span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+code span.at { } /* Attribute */
+code span.bn { color: #dca3a3; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #f0dfaf; } /* ControlFlow */
+code span.ch { color: #dca3a3; } /* Char */
+code span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+code span.co { color: #7f9f7f; } /* Comment */
+code span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+code span.do { color: #7f9f7f; } /* Documentation */
+code span.dt { color: #dfdfbf; } /* DataType */
+code span.dv { color: #dcdccc; } /* DecVal */
+code span.er { color: #c3bf9f; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #c0bed1; } /* Float */
+code span.fu { color: #efef8f; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+code span.kw { color: #f0dfaf; } /* Keyword */
+code span.op { color: #f0efd0; } /* Operator */
+code span.ot { color: #efef8f; } /* Other */
+code span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+code span.sc { color: #dca3a3; } /* SpecialChar */
+code span.ss { color: #cc9393; } /* SpecialString */
+code span.st { color: #cc9393; } /* String */
+code span.va { } /* Variable */
+code span.vs { color: #cc9393; } /* VerbatimString */
+code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
+
+.sourceCode .row {
+  width: 100%;
+}
+.sourceCode {
+  overflow-x: auto;
+}
+.code-folding-btn {
+  margin-right: -30px;
+}
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Tutorial – Comparing means under controlled conditions</h1>
+<h3 class="subtitle">Diplôme Universitaire en Bioinformatique Intégrative (DUBii)</h3>
+<h4 class="author">Jacques van Helden</h4>
+<h4 class="date">2020-03-12</h4>
+
+</div>
+
+
+<div id="required-libraries" class="section level2">
+<h2>Required libraries</h2>
+<p>Load the following libraries or install them if required.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">require</span>(knitr)</a></code></pre></div>
+</div>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>This tutorial aims at providing an empirical introduction to the application of mean comparison tests to omics data.</p>
+<p>The goals include</p>
+<ul>
+<li>revisiting the <strong>basic underlying concepts</strong> (sampling, estimation, hypothesis testing, risks…);</li>
+<li>perceiving the problems that arise when a test of hypothesis is applied on several thousand of features (<strong>multiple testing</strong>);</li>
+<li>introducing some methods to circumvent these problems (<strong>multiple testing corrections</strong>);</li>
+<li><p>using graphical representations in order to grasp the results of several thousand tests in a winkle of an eye:</p>
+<ul>
+<li>p-value histogram</li>
+<li>MA plot</li>
+<li>volcano plot</li>
+</ul></li>
+</ul>
+<p>The whole tutorial will rely on artificial data generated by drawing random numbers that follow a given distribution of probabilities (in this case, the normal distribution, but other choices could be made afterwards).</p>
+<p>The tutorial will proceed progressively:</p>
+<ol style="list-style-type: decimal">
+<li><p>Generate a multivariate table (with <em>individuals</em> in columns and <em>features</em> in rows) and fill it with random data following a given distribution of probability.</p></li>
+<li><p>Measure different descriptive parameters on the sampled data.</p></li>
+<li><p>Use different graphical representations to visualise the data distribution.</p></li>
+<li><p>Run a test of hypothesis on a given feature.</p></li>
+<li><p>Run the same test of hypothesis on all the features.</p></li>
+<li><p>Use different graphical representations to summarize the results of all the tests.</p></li>
+<li><p>Apply different corrections for multiple testing (Bonferroni, Benjamini-Hochberg, Storey-Tibshirani q-value).</p></li>
+<li><p>Compare the performances of the test depending on the chosen multiple testing correction.</p></li>
+</ol>
+</div>
+<div id="experimental-setting" class="section level2">
+<h2>Experimental setting</h2>
+<p>Well, by “experimental” we mean here that we will perform <em>in silico</em> experiments.</p>
+<p>Let us define the parameters of our analysis. We will generate data tables of artificial data following normal distributions, with either different means (tests under <span class="math inline">\(H_1\)</span>) or equal means (tests under <span class="math inline">\(H_0\)</span>).</p>
+<p>We will do this for a number of features <span class="math inline">\(m_0=10,000\)</span> (number of rows in the “<span class="math inline">\(H_0\)</span>” data table), which could be considered as replicates to study the impact of sampling fluctuations.</p>
+<p>In a second time (not seen here) we could refine the script by running a sampling with a different mean for each feature, in order to mimic the behaviour of omics datasets (where genes have different levels of expression, proteins and metabolite different concentrations).</p>
+<div id="parameters" class="section level3">
+<h3>Parameters</h3>
+<table>
+<colgroup>
+<col width="29%" />
+<col width="41%" />
+<col width="29%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Parameter</th>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(n_1\)</span></td>
+<td><span class="math inline">\({2, 3, 4, 8, 16, 32, 64}\)</span></td>
+<td>size of the sample from the first population. individual choice. Each participant will choose a given sample size</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(n_2\)</span></td>
+<td><span class="math inline">\(= n_1\)</span></td>
+<td>size of the sample from the second population</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\mu_1\)</span></td>
+<td>10 or 7</td>
+<td>mean of the first population. each participant will chose one value</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\mu_2\)</span></td>
+<td>10</td>
+<td>mean of the second population</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\sigma_1\)</span></td>
+<td>2</td>
+<td>Standard deviation of the first population</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\sigma_2\)</span></td>
+<td>3</td>
+<td>Standard deviation of the second population</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(m_0\)</span>$</td>
+<td><span class="math inline">\(10,000\)</span></td>
+<td>number of features under null hypothesis</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="sample-sizes" class="section level3">
+<h3>Sample sizes</h3>
+<p>Each participant will choose a different sample size among the following values: <span class="math inline">\(n \in {2, 3, 4, 5, 8, 16, 64}\)</span>. Noteowrthy, many omics studies are led with a very small number of replicates (frequently 3), so that it will be relevant to evaluate thee impact of the statistical sample size (number of replicates) on the sensibility (proportion of cases declared positive under <span class="math inline">\(H_1\)</span>).</p>
+</div>
+</div>
+<div id="performances-of-the-tests" class="section level2">
+<h2>Performances of the tests</h2>
+<p>We will measure the performances of a test by running <span class="math inline">\(r = 10,000\)</span> times under <span class="math inline">\(H_0\)</span>, and <span class="math inline">\(r = 10,000\)</span> times under <span class="math inline">\(H_1\)</span>.</p>
+<ul>
+<li>count the number of <span class="math inline">\(FP\)</span>, <span class="math inline">\(TP\)</span>, <span class="math inline">\(FN\)</span>, <span class="math inline">\(TN\)</span></li>
+<li>compute the derived statistics: <span class="math inline">\(FPR\)</span>, <span class="math inline">\(FDR\)</span> and <span class="math inline">\(Sn\)</span></li>
+</ul>
+<p><span class="math display">\[FPR = \frac{FP}{m_0} = \frac{FP}{FP + TN} \]</span></p>
+<p><span class="math display">\[FDR = \frac{FP}{\text{Positive}} = \frac{FP}{FP + TP} \]</span></p>
+<p><span class="math display">\[Sn = \frac{TP}{m_1} = \frac{TP}{TP + FN} \]</span> <span class="math display">\[PPV = \frac{TP}{\text{Positive}} = \frac{TP}{TP + FP}\]</span></p>
+</div>
+<div id="recommendations" class="section level2">
+<h2>Recommendations</h2>
+<div id="coding-recommendations" class="section level3">
+<h3>Coding recommendations</h3>
+<ol style="list-style-type: decimal">
+<li><p>Choose a consistent coding style, consistent with a reference style guide (e.g. <a href="https://google.github.io/styleguide/Rguide.html">Google R Syle Guide</a>). In particular:</p>
+<ul>
+<li>For variable names, use the camel back notation with a leading lowercase (e.g. <code>myDataTable</code>) rather than the dot separator (<code>my.data.table</code>)</li>
+<li>For variable names, use the camel back notation with a leading uppercase (e.g. <code>MyMeanCompaTest</code>).</li>
+</ul></li>
+<li><p>Define your variables with explicit names (sigma, mu rather than a, b, c, …).</p></li>
+<li><p>Comment your code</p>
+<ul>
+<li>indicate what each variable represents</li>
+<li>before each segment of code, explain what it will do</li>
+</ul></li>
+<li><p>Ensure consistency between the code and the report <span class="math inline">\(\rightarrow\)</span> inject the actual values of the R variables in the markdown.</p></li>
+</ol>
+</div>
+<div id="scientific-recommendations" class="section level3">
+<h3>Scientific recommendations</h3>
+<ol style="list-style-type: decimal">
+<li><p>Explicitly formulate the statistical hypotheses before running a test.</p></li>
+<li><p>Discuss the assumptions underlying the test: are they all fulfilled? If not explain why (e.g. because we want to test the impact of this parameter, …) .</p></li>
+</ol>
+</div>
+</div>
+<div id="tutorial" class="section level2">
+<h2>Tutorial</h2>
+<div id="part-1-generating-random-datasets" class="section level3">
+<h3>Part 1: generating random datasets</h3>
+<div id="define-your-parameters" class="section level4">
+<h4>Define your parameters</h4>
+<p>Write a block of code to define the parameters specified aboce.</p>
+<p>Note that each participant will have a different value for the sample sizes (<span class="math inline">\(n_1, n_2\)</span>).</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co">#### Defining the parameters ####</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="co">## Sample sizes. </span></a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co">## This parameter should be defined individually for each participant</span></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">n1 &lt;-<span class="st"> </span><span class="dv">16</span> <span class="co"># sample size for the first group</span></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">n2 &lt;-<span class="st"> </span><span class="dv">16</span> <span class="co"># ssample size for second group</span></a>
+<a class="sourceLine" id="cb2-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co">## First data table</span></a>
+<a class="sourceLine" id="cb2-9" data-line-number="9">m &lt;-<span class="st"> </span><span class="dv">1000</span> <span class="co"># Number of features</span></a>
+<a class="sourceLine" id="cb2-10" data-line-number="10">mu1 &lt;-<span class="st"> </span><span class="dv">7</span> <span class="co"># mean of the first population</span></a>
+<a class="sourceLine" id="cb2-11" data-line-number="11">mu2 &lt;-<span class="st"> </span><span class="dv">10</span> <span class="co"># mean of the second population</span></a>
+<a class="sourceLine" id="cb2-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb2-13" data-line-number="13"><span class="co">## Standard deviations</span></a>
+<a class="sourceLine" id="cb2-14" data-line-number="14">sigma1 &lt;-<span class="st"> </span><span class="dv">2</span> <span class="co"># standard deviation of the first population</span></a>
+<a class="sourceLine" id="cb2-15" data-line-number="15">sigma2 &lt;-<span class="st"> </span><span class="dv">3</span> <span class="co"># standard deviation of the second population</span></a>
+<a class="sourceLine" id="cb2-16" data-line-number="16"></a>
+<a class="sourceLine" id="cb2-17" data-line-number="17"><span class="co">## Significance threshold. </span></a>
+<a class="sourceLine" id="cb2-18" data-line-number="18"><span class="co">## Note: will be applied successively on the different p-values</span></a>
+<a class="sourceLine" id="cb2-19" data-line-number="19"><span class="co">## (nominal, corrected) to evaluate the impact</span></a>
+<a class="sourceLine" id="cb2-20" data-line-number="20">alpha &lt;-<span class="st"> </span><span class="fl">0.05</span></a></code></pre></div>
+<p>The table below lists the actual values for my parameters (your values for <span class="math inline">\(n_i\)</span> will be different).</p>
+<table>
+<thead>
+<tr class="header">
+<th>Parameter</th>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(\mu_1\)</span></td>
+<td>7</td>
+<td>Mean of the first population</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\mu_2\)</span></td>
+<td>10</td>
+<td>Mean of the second population</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\sigma_1\)</span></td>
+<td>2</td>
+<td>Standard deviation of the first population</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\sigma_2\)</span></td>
+<td>2</td>
+<td>Standard deviation of the second population</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(n_1\)</span></td>
+<td>16</td>
+<td>Sample size for the first group</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(n_2\)</span></td>
+<td>16</td>
+<td>Sample size for the second group</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="generate-random-data-sets" class="section level4">
+<h4>Generate random data sets</h4>
+<p>Exercise:</p>
+<ul>
+<li><p>Generate an data frame named <code>group1</code> which with <span class="math inline">\(m_0\)</span> rows (the number of features under <span class="math inline">\(H_0\)</span>, defined above) and <span class="math inline">\(n_1\)</span> columns (sample size for the first population), filled with random numbers drawn from the first population.</p></li>
+<li><p>Name the columns with labels indicating the group and sample number: <code>g1s1</code>, , <code>g1s2</code> … with indices from 1 <span class="math inline">\(n_1\)</span>.</p></li>
+<li><p>Name the rows to denote the feature numbers: <code>ft1</code>, <code>ft2</code>, … with indices from 1 to <span class="math inline">\(m_0\)</span>.</p></li>
+<li><p>Check the dimensions of <code>group1</code>.</p></li>
+<li><p>Print its first and last rows to check its content and the row and column names.</p></li>
+<li><p>Generate a second data frame named <code>group2</code> for the samples drawn from the second population with the appropriate size, and name the columns and rows consistently.</p></li>
+</ul>
+<p><strong>Useful functions</strong></p>
+<ul>
+<li><code>rnorm()</code></li>
+<li><code>matrix()</code></li>
+<li><code>data.frame()</code></li>
+<li><code>paste()</code></li>
+<li><code>paste0()</code></li>
+<li><code>colnames()</code></li>
+<li><code>rownames()</code></li>
+<li><code>dim()</code></li>
+</ul>
+<p><strong>Trick</strong>:</p>
+<ul>
+<li>the funciton <code>matrix()</code> enables us to define the number of columns and the number of rows,</li>
+<li>the function <code>data.frames()</code> does not enable this, but it can take as input a matrix, from which it will inherit the dimensions</li>
+</ul>
+<p><strong>Solution</strong> (click on the “code” button to check the solution).</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="co">#### Generate two tables (one per population) with the random samples ####</span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="co">## Info: for didactiv purpose we will use a progressive approach to generate </span></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">## the data the first group,  and a more compact formulation (in one command) </span></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="co">## for the second group.</span></a>
+<a class="sourceLine" id="cb3-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="co">## Dataset under H0, with a progressive approach</span></a>
+<a class="sourceLine" id="cb3-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb3-9" data-line-number="9"><span class="co">## Generate a vector of size m*n1 with all the random values </span></a>
+<a class="sourceLine" id="cb3-10" data-line-number="10"><span class="co">## for each feature and each infividual</span></a>
+<a class="sourceLine" id="cb3-11" data-line-number="11">normVector &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dt">n =</span> m <span class="op">*</span><span class="st"> </span>n1, <span class="dt">mean =</span> mu1, <span class="dt">sd =</span> sigma1)</a>
+<a class="sourceLine" id="cb3-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb3-13" data-line-number="13"><span class="co">## Wrap the vector in an m x n1 matrix</span></a>
+<a class="sourceLine" id="cb3-14" data-line-number="14">normMatrix &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dt">data =</span> normVector,</a>
+<a class="sourceLine" id="cb3-15" data-line-number="15">                     <span class="dt">nrow =</span> m, </a>
+<a class="sourceLine" id="cb3-16" data-line-number="16">                     <span class="dt">ncol =</span> n1)</a>
+<a class="sourceLine" id="cb3-17" data-line-number="17"></a>
+<a class="sourceLine" id="cb3-18" data-line-number="18"><span class="co">## Create a data frame with the content of this matrix</span></a>
+<a class="sourceLine" id="cb3-19" data-line-number="19">group1 &lt;-<span class="st"> </span><span class="kw">data.frame</span>(normMatrix)</a>
+<a class="sourceLine" id="cb3-20" data-line-number="20"></a>
+<a class="sourceLine" id="cb3-21" data-line-number="21"><span class="co">## Set the column and row names</span></a>
+<a class="sourceLine" id="cb3-22" data-line-number="22"><span class="kw">colnames</span>(group1) &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="dt">sep =</span> <span class="st">&quot;&quot;</span>, <span class="st">&quot;g1s&quot;</span>, <span class="dv">1</span><span class="op">:</span>n1)</a>
+<a class="sourceLine" id="cb3-23" data-line-number="23"><span class="kw">rownames</span>(group1) &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="dt">sep =</span> <span class="st">&quot;&quot;</span>, <span class="st">&quot;ft&quot;</span>, <span class="dv">1</span><span class="op">:</span>m)</a>
+<a class="sourceLine" id="cb3-24" data-line-number="24"></a>
+<a class="sourceLine" id="cb3-25" data-line-number="25"><span class="co">## Dataset under H1: use a more direct approach, compact the 3 steps in a single command</span></a>
+<a class="sourceLine" id="cb3-26" data-line-number="26">group2 &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</a>
+<a class="sourceLine" id="cb3-27" data-line-number="27">  <span class="kw">matrix</span>(<span class="dt">data =</span> <span class="kw">rnorm</span>(<span class="dt">n =</span> m <span class="op">*</span><span class="st"> </span>n2, <span class="dt">mean =</span> mu2, <span class="dt">sd =</span> sigma2),</a>
+<a class="sourceLine" id="cb3-28" data-line-number="28">         <span class="dt">nrow =</span> m, </a>
+<a class="sourceLine" id="cb3-29" data-line-number="29">         <span class="dt">ncol =</span> n2))</a>
+<a class="sourceLine" id="cb3-30" data-line-number="30"><span class="kw">colnames</span>(group2) &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="dt">sep =</span> <span class="st">&quot;&quot;</span>, <span class="st">&quot;g2s&quot;</span>, <span class="dv">1</span><span class="op">:</span>n2)</a>
+<a class="sourceLine" id="cb3-31" data-line-number="31"><span class="kw">rownames</span>(group2) &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="dt">sep =</span> <span class="st">&quot;&quot;</span>, <span class="st">&quot;ft&quot;</span>, <span class="dv">1</span><span class="op">:</span>m)</a></code></pre></div>
+<p>Check the content of the data table from the first group.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">dim</span>(group1)</a></code></pre></div>
+<pre><code>[1] 1000   16</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">kable</span>(<span class="kw">head</span>(group1))</a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">g1s1</th>
+<th align="right">g1s2</th>
+<th align="right">g1s3</th>
+<th align="right">g1s4</th>
+<th align="right">g1s5</th>
+<th align="right">g1s6</th>
+<th align="right">g1s7</th>
+<th align="right">g1s8</th>
+<th align="right">g1s9</th>
+<th align="right">g1s10</th>
+<th align="right">g1s11</th>
+<th align="right">g1s12</th>
+<th align="right">g1s13</th>
+<th align="right">g1s14</th>
+<th align="right">g1s15</th>
+<th align="right">g1s16</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ft1</td>
+<td align="right">8.941285</td>
+<td align="right">6.065904</td>
+<td align="right">6.865641</td>
+<td align="right">4.859670</td>
+<td align="right">4.512642</td>
+<td align="right">6.895100</td>
+<td align="right">6.958049</td>
+<td align="right">6.571121</td>
+<td align="right">6.346707</td>
+<td align="right">9.316831</td>
+<td align="right">2.405495</td>
+<td align="right">7.560588</td>
+<td align="right">5.237921</td>
+<td align="right">7.455899</td>
+<td align="right">9.150481</td>
+<td align="right">7.584783</td>
+</tr>
+<tr class="even">
+<td>ft2</td>
+<td align="right">6.341780</td>
+<td align="right">5.572643</td>
+<td align="right">6.225146</td>
+<td align="right">7.607175</td>
+<td align="right">7.916639</td>
+<td align="right">9.159623</td>
+<td align="right">5.848137</td>
+<td align="right">3.714532</td>
+<td align="right">5.690572</td>
+<td align="right">8.518993</td>
+<td align="right">7.721817</td>
+<td align="right">8.796947</td>
+<td align="right">8.394252</td>
+<td align="right">5.201240</td>
+<td align="right">5.078987</td>
+<td align="right">5.059495</td>
+</tr>
+<tr class="odd">
+<td>ft3</td>
+<td align="right">7.256030</td>
+<td align="right">5.609690</td>
+<td align="right">5.085780</td>
+<td align="right">6.251178</td>
+<td align="right">6.185095</td>
+<td align="right">5.746095</td>
+<td align="right">5.426706</td>
+<td align="right">5.937105</td>
+<td align="right">3.509892</td>
+<td align="right">9.136032</td>
+<td align="right">6.853375</td>
+<td align="right">6.274303</td>
+<td align="right">7.318755</td>
+<td align="right">4.817723</td>
+<td align="right">10.016098</td>
+<td align="right">8.024319</td>
+</tr>
+<tr class="even">
+<td>ft4</td>
+<td align="right">7.306063</td>
+<td align="right">9.761042</td>
+<td align="right">6.510410</td>
+<td align="right">2.995976</td>
+<td align="right">7.084978</td>
+<td align="right">9.170946</td>
+<td align="right">5.843874</td>
+<td align="right">7.777505</td>
+<td align="right">6.699460</td>
+<td align="right">7.871503</td>
+<td align="right">4.288901</td>
+<td align="right">11.089438</td>
+<td align="right">7.985812</td>
+<td align="right">6.003219</td>
+<td align="right">2.376816</td>
+<td align="right">7.505029</td>
+</tr>
+<tr class="odd">
+<td>ft5</td>
+<td align="right">7.377395</td>
+<td align="right">5.728367</td>
+<td align="right">7.502510</td>
+<td align="right">6.681304</td>
+<td align="right">5.280177</td>
+<td align="right">4.125594</td>
+<td align="right">10.377625</td>
+<td align="right">2.956254</td>
+<td align="right">4.353912</td>
+<td align="right">8.138003</td>
+<td align="right">9.110175</td>
+<td align="right">8.887401</td>
+<td align="right">8.325482</td>
+<td align="right">5.321332</td>
+<td align="right">6.616982</td>
+<td align="right">4.688656</td>
+</tr>
+<tr class="even">
+<td>ft6</td>
+<td align="right">8.138350</td>
+<td align="right">7.867051</td>
+<td align="right">7.211847</td>
+<td align="right">9.442536</td>
+<td align="right">3.512614</td>
+<td align="right">7.266573</td>
+<td align="right">5.658330</td>
+<td align="right">7.845747</td>
+<td align="right">9.028672</td>
+<td align="right">7.819257</td>
+<td align="right">10.218765</td>
+<td align="right">4.371628</td>
+<td align="right">6.856506</td>
+<td align="right">6.572069</td>
+<td align="right">4.021843</td>
+<td align="right">5.959517</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">kable</span>(<span class="kw">tail</span>(group1))</a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">g1s1</th>
+<th align="right">g1s2</th>
+<th align="right">g1s3</th>
+<th align="right">g1s4</th>
+<th align="right">g1s5</th>
+<th align="right">g1s6</th>
+<th align="right">g1s7</th>
+<th align="right">g1s8</th>
+<th align="right">g1s9</th>
+<th align="right">g1s10</th>
+<th align="right">g1s11</th>
+<th align="right">g1s12</th>
+<th align="right">g1s13</th>
+<th align="right">g1s14</th>
+<th align="right">g1s15</th>
+<th align="right">g1s16</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ft995</td>
+<td align="right">9.605869</td>
+<td align="right">5.740994</td>
+<td align="right">7.952485</td>
+<td align="right">6.786263</td>
+<td align="right">8.301584</td>
+<td align="right">5.963019</td>
+<td align="right">8.111063</td>
+<td align="right">3.566636</td>
+<td align="right">8.257055</td>
+<td align="right">6.686423</td>
+<td align="right">9.280676</td>
+<td align="right">9.945114</td>
+<td align="right">7.836719</td>
+<td align="right">5.139963</td>
+<td align="right">6.322468</td>
+<td align="right">3.879234</td>
+</tr>
+<tr class="even">
+<td>ft996</td>
+<td align="right">8.049430</td>
+<td align="right">8.322572</td>
+<td align="right">9.308645</td>
+<td align="right">6.249635</td>
+<td align="right">6.517046</td>
+<td align="right">6.945753</td>
+<td align="right">10.476903</td>
+<td align="right">8.258785</td>
+<td align="right">9.631009</td>
+<td align="right">5.271014</td>
+<td align="right">8.183092</td>
+<td align="right">4.636647</td>
+<td align="right">7.828096</td>
+<td align="right">4.856097</td>
+<td align="right">7.808470</td>
+<td align="right">4.576391</td>
+</tr>
+<tr class="odd">
+<td>ft997</td>
+<td align="right">7.713957</td>
+<td align="right">8.750733</td>
+<td align="right">9.170241</td>
+<td align="right">6.859514</td>
+<td align="right">5.216096</td>
+<td align="right">8.194377</td>
+<td align="right">8.951150</td>
+<td align="right">7.481994</td>
+<td align="right">6.736394</td>
+<td align="right">5.140652</td>
+<td align="right">10.301499</td>
+<td align="right">5.520028</td>
+<td align="right">8.206613</td>
+<td align="right">4.289319</td>
+<td align="right">6.971314</td>
+<td align="right">8.807768</td>
+</tr>
+<tr class="even">
+<td>ft998</td>
+<td align="right">9.826277</td>
+<td align="right">5.728074</td>
+<td align="right">7.169590</td>
+<td align="right">9.398133</td>
+<td align="right">6.224335</td>
+<td align="right">6.586678</td>
+<td align="right">10.960816</td>
+<td align="right">4.886410</td>
+<td align="right">9.327067</td>
+<td align="right">10.245310</td>
+<td align="right">5.790441</td>
+<td align="right">3.356992</td>
+<td align="right">7.388533</td>
+<td align="right">6.234348</td>
+<td align="right">6.130373</td>
+<td align="right">4.776949</td>
+</tr>
+<tr class="odd">
+<td>ft999</td>
+<td align="right">10.307381</td>
+<td align="right">8.634587</td>
+<td align="right">7.994570</td>
+<td align="right">8.684634</td>
+<td align="right">3.655567</td>
+<td align="right">7.106540</td>
+<td align="right">5.869480</td>
+<td align="right">5.938656</td>
+<td align="right">8.157128</td>
+<td align="right">7.209484</td>
+<td align="right">5.526127</td>
+<td align="right">2.734005</td>
+<td align="right">6.518238</td>
+<td align="right">8.962575</td>
+<td align="right">6.742045</td>
+<td align="right">7.910900</td>
+</tr>
+<tr class="even">
+<td>ft1000</td>
+<td align="right">6.695509</td>
+<td align="right">8.701822</td>
+<td align="right">10.610700</td>
+<td align="right">9.227807</td>
+<td align="right">5.761689</td>
+<td align="right">9.165080</td>
+<td align="right">6.451053</td>
+<td align="right">6.774868</td>
+<td align="right">7.586023</td>
+<td align="right">10.825243</td>
+<td align="right">6.221651</td>
+<td align="right">7.521273</td>
+<td align="right">6.485664</td>
+<td align="right">6.469598</td>
+<td align="right">3.654353</td>
+<td align="right">7.192678</td>
+</tr>
+</tbody>
+</table>
+<p>Check the content of the data table from the second group.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">dim</span>(group2)</a></code></pre></div>
+<pre><code>[1] 1000   16</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">kable</span>(<span class="kw">head</span>(group2))</a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">g2s1</th>
+<th align="right">g2s2</th>
+<th align="right">g2s3</th>
+<th align="right">g2s4</th>
+<th align="right">g2s5</th>
+<th align="right">g2s6</th>
+<th align="right">g2s7</th>
+<th align="right">g2s8</th>
+<th align="right">g2s9</th>
+<th align="right">g2s10</th>
+<th align="right">g2s11</th>
+<th align="right">g2s12</th>
+<th align="right">g2s13</th>
+<th align="right">g2s14</th>
+<th align="right">g2s15</th>
+<th align="right">g2s16</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ft1</td>
+<td align="right">10.222202</td>
+<td align="right">6.803465</td>
+<td align="right">5.644039</td>
+<td align="right">15.310530</td>
+<td align="right">12.022135</td>
+<td align="right">9.205384</td>
+<td align="right">7.810089</td>
+<td align="right">6.824159</td>
+<td align="right">9.601778</td>
+<td align="right">3.042279</td>
+<td align="right">13.646228</td>
+<td align="right">12.040121</td>
+<td align="right">13.800577</td>
+<td align="right">5.405056</td>
+<td align="right">11.868858</td>
+<td align="right">5.146461</td>
+</tr>
+<tr class="even">
+<td>ft2</td>
+<td align="right">13.788490</td>
+<td align="right">11.414270</td>
+<td align="right">19.247855</td>
+<td align="right">9.104344</td>
+<td align="right">7.161907</td>
+<td align="right">14.430186</td>
+<td align="right">6.693538</td>
+<td align="right">11.771966</td>
+<td align="right">5.466395</td>
+<td align="right">13.846364</td>
+<td align="right">4.814672</td>
+<td align="right">10.611065</td>
+<td align="right">14.007772</td>
+<td align="right">9.264401</td>
+<td align="right">11.794563</td>
+<td align="right">11.574728</td>
+</tr>
+<tr class="odd">
+<td>ft3</td>
+<td align="right">8.218564</td>
+<td align="right">9.340666</td>
+<td align="right">11.842295</td>
+<td align="right">13.045543</td>
+<td align="right">5.242310</td>
+<td align="right">7.199965</td>
+<td align="right">12.454361</td>
+<td align="right">11.112718</td>
+<td align="right">9.344606</td>
+<td align="right">11.487924</td>
+<td align="right">10.799383</td>
+<td align="right">4.877696</td>
+<td align="right">6.419245</td>
+<td align="right">13.373079</td>
+<td align="right">13.581551</td>
+<td align="right">10.329964</td>
+</tr>
+<tr class="even">
+<td>ft4</td>
+<td align="right">6.388767</td>
+<td align="right">14.841495</td>
+<td align="right">6.673942</td>
+<td align="right">6.147528</td>
+<td align="right">7.040335</td>
+<td align="right">15.048979</td>
+<td align="right">7.286110</td>
+<td align="right">7.894366</td>
+<td align="right">13.823895</td>
+<td align="right">14.894529</td>
+<td align="right">8.177395</td>
+<td align="right">11.067993</td>
+<td align="right">12.745004</td>
+<td align="right">13.283611</td>
+<td align="right">8.662708</td>
+<td align="right">6.765320</td>
+</tr>
+<tr class="odd">
+<td>ft5</td>
+<td align="right">7.862331</td>
+<td align="right">8.373275</td>
+<td align="right">4.457363</td>
+<td align="right">11.435550</td>
+<td align="right">12.882556</td>
+<td align="right">13.882535</td>
+<td align="right">5.722801</td>
+<td align="right">12.662282</td>
+<td align="right">3.671602</td>
+<td align="right">17.983611</td>
+<td align="right">4.309335</td>
+<td align="right">10.602149</td>
+<td align="right">7.648618</td>
+<td align="right">8.398105</td>
+<td align="right">11.239692</td>
+<td align="right">8.139710</td>
+</tr>
+<tr class="even">
+<td>ft6</td>
+<td align="right">15.439498</td>
+<td align="right">5.644524</td>
+<td align="right">9.878748</td>
+<td align="right">5.295041</td>
+<td align="right">4.737427</td>
+<td align="right">11.884359</td>
+<td align="right">7.842318</td>
+<td align="right">15.196238</td>
+<td align="right">10.719587</td>
+<td align="right">12.656550</td>
+<td align="right">7.791976</td>
+<td align="right">8.960966</td>
+<td align="right">11.817566</td>
+<td align="right">4.536809</td>
+<td align="right">8.054717</td>
+<td align="right">6.694868</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw">kable</span>(<span class="kw">tail</span>(group2))</a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">g2s1</th>
+<th align="right">g2s2</th>
+<th align="right">g2s3</th>
+<th align="right">g2s4</th>
+<th align="right">g2s5</th>
+<th align="right">g2s6</th>
+<th align="right">g2s7</th>
+<th align="right">g2s8</th>
+<th align="right">g2s9</th>
+<th align="right">g2s10</th>
+<th align="right">g2s11</th>
+<th align="right">g2s12</th>
+<th align="right">g2s13</th>
+<th align="right">g2s14</th>
+<th align="right">g2s15</th>
+<th align="right">g2s16</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ft995</td>
+<td align="right">11.560118</td>
+<td align="right">11.477506</td>
+<td align="right">7.288923</td>
+<td align="right">7.257060</td>
+<td align="right">7.974623</td>
+<td align="right">11.264721</td>
+<td align="right">10.600428</td>
+<td align="right">10.025548</td>
+<td align="right">7.492476</td>
+<td align="right">15.06344</td>
+<td align="right">8.820455</td>
+<td align="right">15.313801</td>
+<td align="right">9.524212</td>
+<td align="right">8.412263</td>
+<td align="right">14.001309</td>
+<td align="right">9.712662</td>
+</tr>
+<tr class="even">
+<td>ft996</td>
+<td align="right">6.675313</td>
+<td align="right">12.578788</td>
+<td align="right">9.168974</td>
+<td align="right">8.874279</td>
+<td align="right">12.924633</td>
+<td align="right">8.100163</td>
+<td align="right">9.838190</td>
+<td align="right">9.654799</td>
+<td align="right">8.691387</td>
+<td align="right">12.08811</td>
+<td align="right">8.808767</td>
+<td align="right">10.163288</td>
+<td align="right">10.591247</td>
+<td align="right">11.112719</td>
+<td align="right">7.381530</td>
+<td align="right">4.043808</td>
+</tr>
+<tr class="odd">
+<td>ft997</td>
+<td align="right">9.429636</td>
+<td align="right">10.788576</td>
+<td align="right">7.365419</td>
+<td align="right">6.562660</td>
+<td align="right">12.170922</td>
+<td align="right">11.668521</td>
+<td align="right">9.720355</td>
+<td align="right">14.542886</td>
+<td align="right">9.716674</td>
+<td align="right">11.50710</td>
+<td align="right">12.884846</td>
+<td align="right">7.063525</td>
+<td align="right">4.797859</td>
+<td align="right">8.954747</td>
+<td align="right">5.540972</td>
+<td align="right">9.692725</td>
+</tr>
+<tr class="even">
+<td>ft998</td>
+<td align="right">8.826315</td>
+<td align="right">11.819484</td>
+<td align="right">5.649444</td>
+<td align="right">10.404189</td>
+<td align="right">14.148555</td>
+<td align="right">8.348604</td>
+<td align="right">4.936733</td>
+<td align="right">14.004160</td>
+<td align="right">4.741586</td>
+<td align="right">10.12474</td>
+<td align="right">8.560174</td>
+<td align="right">7.037552</td>
+<td align="right">6.882366</td>
+<td align="right">9.336428</td>
+<td align="right">6.524944</td>
+<td align="right">7.723506</td>
+</tr>
+<tr class="odd">
+<td>ft999</td>
+<td align="right">14.302763</td>
+<td align="right">5.136343</td>
+<td align="right">5.557525</td>
+<td align="right">4.767551</td>
+<td align="right">12.962332</td>
+<td align="right">8.779562</td>
+<td align="right">9.618915</td>
+<td align="right">15.235528</td>
+<td align="right">13.498886</td>
+<td align="right">10.64103</td>
+<td align="right">10.652171</td>
+<td align="right">10.128990</td>
+<td align="right">8.093268</td>
+<td align="right">6.784517</td>
+<td align="right">7.035637</td>
+<td align="right">9.486925</td>
+</tr>
+<tr class="even">
+<td>ft1000</td>
+<td align="right">7.111972</td>
+<td align="right">15.204233</td>
+<td align="right">13.274704</td>
+<td align="right">13.993838</td>
+<td align="right">7.358308</td>
+<td align="right">14.302453</td>
+<td align="right">7.925037</td>
+<td align="right">9.124976</td>
+<td align="right">12.256743</td>
+<td align="right">12.69099</td>
+<td align="right">7.320802</td>
+<td align="right">10.944899</td>
+<td align="right">12.102726</td>
+<td align="right">8.468052</td>
+<td align="right">7.981384</td>
+<td align="right">6.673717</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="checking-the-properties-of-the-data-tables" class="section level3">
+<h3>Checking the properties of the data tables</h3>
+<p>Check the properties of the columns (individuals, e.g. biological samples) and rows (features, e.g. genes or proteins or metabolites) of the data tables.</p>
+<ul>
+<li><p>Use the <code>summary()</code> funciton to quickly inspect the column-wise properties (statistics per individual).</p></li>
+<li><p>Use <code>apply()</code>, <code>mean()</code> and <code>sd()</code> to generate a data frame that collects</p>
+<ul>
+<li>the column-wise parameters (statistics per feature)</li>
+<li>the row-wise parameters (statistics per feature).</li>
+</ul></li>
+</ul>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="co">## Column-wise summaries</span></a>
+<a class="sourceLine" id="cb12-2" data-line-number="2"><span class="kw">summary</span>(group1)</a></code></pre></div>
+<pre><code>      g1s1             g1s2              g1s3              g1s4              g1s5              g1s6             g1s7              g1s8              g1s9            g1s10             g1s11            g1s12            g1s13             g1s14            g1s15            g1s16        
+ Min.   : 1.153   Min.   : 0.2647   Min.   :-0.8534   Min.   : 0.9221   Min.   : 0.2519   Min.   : 1.098   Min.   :-0.6261   Min.   : 0.5412   Min.   :-2.541   Min.   : 0.4808   Min.   : 1.537   Min.   : 0.614   Min.   : 0.3706   Min.   :-0.904   Min.   : 1.078   Min.   : 0.2331  
+ 1st Qu.: 5.574   1st Qu.: 5.7378   1st Qu.: 5.6475   1st Qu.: 5.7334   1st Qu.: 5.7508   1st Qu.: 5.718   1st Qu.: 5.5893   1st Qu.: 5.5918   1st Qu.: 5.565   1st Qu.: 5.6125   1st Qu.: 5.567   1st Qu.: 5.431   1st Qu.: 5.5188   1st Qu.: 5.503   1st Qu.: 5.699   1st Qu.: 5.7006  
+ Median : 6.868   Median : 7.2550   Median : 7.0104   Median : 7.0928   Median : 7.1135   Median : 7.106   Median : 6.9690   Median : 6.9331   Median : 6.979   Median : 7.1559   Median : 7.057   Median : 6.877   Median : 6.9950   Median : 6.899   Median : 6.987   Median : 7.0582  
+ Mean   : 6.891   Mean   : 7.1632   Mean   : 6.9962   Mean   : 7.1103   Mean   : 7.0383   Mean   : 7.107   Mean   : 6.9354   Mean   : 6.9583   Mean   : 6.987   Mean   : 7.0500   Mean   : 7.049   Mean   : 6.846   Mean   : 6.9139   Mean   : 6.959   Mean   : 7.005   Mean   : 6.9945  
+ 3rd Qu.: 8.174   3rd Qu.: 8.5433   3rd Qu.: 8.3104   3rd Qu.: 8.4067   3rd Qu.: 8.2805   3rd Qu.: 8.506   3rd Qu.: 8.2376   3rd Qu.: 8.2567   3rd Qu.: 8.349   3rd Qu.: 8.4553   3rd Qu.: 8.461   3rd Qu.: 8.207   3rd Qu.: 8.3111   3rd Qu.: 8.348   3rd Qu.: 8.262   3rd Qu.: 8.3510  
+ Max.   :14.239   Max.   :12.3955   Max.   :13.7764   Max.   :14.7685   Max.   :15.2060   Max.   :13.430   Max.   :13.3995   Max.   :13.1033   Max.   :14.015   Max.   :13.6878   Max.   :13.513   Max.   :13.384   Max.   :12.5050   Max.   :13.272   Max.   :13.596   Max.   :12.9327  </code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw">summary</span>(group2)</a></code></pre></div>
+<pre><code>      g2s1              g2s2             g2s3             g2s4               g2s5              g2s6               g2s7              g2s8             g2s9            g2s10             g2s11            g2s12            g2s13             g2s14            g2s15             g2s16        
+ Min.   : 0.4878   Min.   :-1.210   Min.   : 2.164   Min.   :-0.07996   Min.   : 0.2839   Min.   : 0.05548   Min.   : 0.4454   Min.   : 0.598   Min.   : 1.132   Min.   : 0.1758   Min.   :-1.166   Min.   : 1.895   Min.   :-0.6536   Min.   : 1.289   Min.   :-0.7888   Min.   :-0.0963  
+ 1st Qu.: 7.8010   1st Qu.: 8.025   1st Qu.: 7.959   1st Qu.: 8.07439   1st Qu.: 7.8946   1st Qu.: 8.02792   1st Qu.: 8.0490   1st Qu.: 7.798   1st Qu.: 8.122   1st Qu.: 8.0893   1st Qu.: 8.050   1st Qu.: 8.090   1st Qu.: 7.8425   1st Qu.: 8.126   1st Qu.: 7.9821   1st Qu.: 8.0623  
+ Median :10.0579   Median : 9.916   Median :10.021   Median : 9.92345   Median :10.0376   Median : 9.99913   Median :10.0563   Median :10.013   Median :10.071   Median :10.0239   Median : 9.844   Median :10.022   Median : 9.9218   Median :10.060   Median : 9.8194   Median :10.0806  
+ Mean   : 9.8699   Mean   : 9.985   Mean   : 9.965   Mean   :10.00777   Mean   :10.0254   Mean   :10.05125   Mean   :10.0442   Mean   : 9.945   Mean   :10.129   Mean   :10.0470   Mean   : 9.965   Mean   :10.104   Mean   : 9.9233   Mean   : 9.961   Mean   : 9.9155   Mean   :10.0670  
+ 3rd Qu.:11.7515   3rd Qu.:11.961   3rd Qu.:11.942   3rd Qu.:12.03088   3rd Qu.:12.0975   3rd Qu.:12.10682   3rd Qu.:12.0168   3rd Qu.:11.963   3rd Qu.:12.214   3rd Qu.:12.0801   3rd Qu.:12.018   3rd Qu.:12.244   3rd Qu.:12.0490   3rd Qu.:12.005   3rd Qu.:11.9846   3rd Qu.:12.0891  
+ Max.   :19.6257   Max.   :19.358   Max.   :20.257   Max.   :20.79365   Max.   :20.4195   Max.   :20.66677   Max.   :19.9660   Max.   :18.719   Max.   :19.274   Max.   :20.0369   Max.   :19.276   Max.   :19.836   Max.   :20.0104   Max.   :19.669   Max.   :18.6784   Max.   :20.0330  </code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="co">## Columns-wise statistics</span></a>
+<a class="sourceLine" id="cb16-2" data-line-number="2">colStats &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</a>
+<a class="sourceLine" id="cb16-3" data-line-number="3">    <span class="dt">m1 =</span> <span class="kw">apply</span>(group1, <span class="dt">MARGIN =</span> <span class="dv">2</span>, mean),</a>
+<a class="sourceLine" id="cb16-4" data-line-number="4">    <span class="dt">m2 =</span> <span class="kw">apply</span>(group2, <span class="dt">MARGIN =</span> <span class="dv">2</span>, mean),</a>
+<a class="sourceLine" id="cb16-5" data-line-number="5">    <span class="dt">s1 =</span> <span class="kw">apply</span>(group1, <span class="dt">MARGIN =</span> <span class="dv">2</span>, sd),</a>
+<a class="sourceLine" id="cb16-6" data-line-number="6">    <span class="dt">s2 =</span> <span class="kw">apply</span>(group2, <span class="dt">MARGIN =</span> <span class="dv">2</span>, sd)</a>
+<a class="sourceLine" id="cb16-7" data-line-number="7">  )</a>
+<a class="sourceLine" id="cb16-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb16-9" data-line-number="9"><span class="co">## Row-wise statistics</span></a>
+<a class="sourceLine" id="cb16-10" data-line-number="10">rowStats &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</a>
+<a class="sourceLine" id="cb16-11" data-line-number="11">    <span class="dt">m1 =</span> <span class="kw">apply</span>(group1, <span class="dt">MARGIN =</span> <span class="dv">1</span>, mean),</a>
+<a class="sourceLine" id="cb16-12" data-line-number="12">    <span class="dt">m2 =</span> <span class="kw">apply</span>(group2, <span class="dt">MARGIN =</span> <span class="dv">1</span>, mean),</a>
+<a class="sourceLine" id="cb16-13" data-line-number="13">    <span class="dt">s1 =</span> <span class="kw">apply</span>(group1, <span class="dt">MARGIN =</span> <span class="dv">1</span>, sd),</a>
+<a class="sourceLine" id="cb16-14" data-line-number="14">    <span class="dt">s2 =</span> <span class="kw">apply</span>(group2, <span class="dt">MARGIN =</span> <span class="dv">1</span>, sd)</a>
+<a class="sourceLine" id="cb16-15" data-line-number="15">  )</a></code></pre></div>
+<div id="add-a-column-with-the-difference-between-sample-means-for-each-feature." class="section level4">
+<h4>Add a column with the difference between sample means for each feature.</h4>
+<p><strong>Tips: </strong> this can be done in a single operation.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">rowStats<span class="op">$</span>diff &lt;-<span class="st"> </span>rowStats<span class="op">$</span>m1 <span class="op">-</span><span class="st"> </span>rowStats<span class="op">$</span>m2 </a></code></pre></div>
+</div>
+</div>
+</div>
+<div id="merge-the-two-groups-in-a-single-data-frame" class="section level2">
+<h2>Merge the two groups in a single data frame</h2>
+<p>In omics data analysis, we typically obtain</p>
+<ul>
+<li>a single data table with all the individuals (biological samples) of all the groups</li>
+<li>a table containing the metadata, i.e. the information about each individual (biological sample)</li>
+</ul>
+<p>Two methods could be envisaged a priori:</p>
+<ul>
+<li><p><code>cbind()</code>, which simply binds the columns of two input tables. This can however be somewhat dangerous, because it assumes that these two tables have the same number of rows (features) and that these rows contain information about the same features <em>in the same order</em>. However, in some cases we dispose of data tables coming from different sources (or software tools), where the features (genes, proteins, metabolites) might have a partial overlap rather than an exact 1-to-1 correspondence, and, even when the feature sets are the same, they might be presented in different orderes.</p></li>
+<li><p>A much safer approach is thus to use <code>merge()</code>, and to explicitly indicate one or several colummns on which the features from the two table will be unified</p></li>
+</ul>
+<p>In our case, the two data tables only contain numeric data, and the identification will be done on the row names (which contain the feature identifiers ft1, ft2, … that we defined above). In some cases, we will have to merge data table containing different informations, including a column with identifiers (or maybe additional columns e.g. the genotype, conditions, …) and we will use internal columns of the table to unify their rows.</p>
+<p>We will create such a structure for further analysis/</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="co">## Read the help of the merge() function</span></a>
+<a class="sourceLine" id="cb18-2" data-line-number="2"><span class="co"># ?merge</span></a>
+<a class="sourceLine" id="cb18-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb18-4" data-line-number="4"><span class="co">## Create a data frame with the merged values</span></a>
+<a class="sourceLine" id="cb18-5" data-line-number="5">dataTable &lt;-<span class="st"> </span><span class="kw">merge</span>(<span class="dt">x =</span> group1, <span class="dt">y =</span> group2, <span class="dt">by =</span> <span class="st">&quot;row.names&quot;</span>)</a>
+<a class="sourceLine" id="cb18-6" data-line-number="6"><span class="co"># dim(dataTable) # </span><span class="al">NOTE</span><span class="co">: the merged table contains n1 + n2 columns + one additional column Row.names</span></a>
+<a class="sourceLine" id="cb18-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb18-8" data-line-number="8"><span class="co">## Use the Row.names column as names for the merged table</span></a>
+<a class="sourceLine" id="cb18-9" data-line-number="9"><span class="kw">row.names</span>(dataTable) &lt;-<span class="st"> </span>dataTable<span class="op">$</span>Row.names</a>
+<a class="sourceLine" id="cb18-10" data-line-number="10">dataTable &lt;-<span class="st"> </span>dataTable[, <span class="dv">-1</span>] <span class="co">## Suppress the first column which contained the row names</span></a>
+<a class="sourceLine" id="cb18-11" data-line-number="11"><span class="co"># dim(dataTable)</span></a>
+<a class="sourceLine" id="cb18-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb18-13" data-line-number="13"><span class="co">## Generate a metadata table</span></a>
+<a class="sourceLine" id="cb18-14" data-line-number="14">metaData &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</a>
+<a class="sourceLine" id="cb18-15" data-line-number="15">  <span class="dt">sampleNames =</span> <span class="kw">colnames</span>(dataTable),</a>
+<a class="sourceLine" id="cb18-16" data-line-number="16">  <span class="dt">sampleGroup =</span> <span class="kw">c</span>(<span class="kw">rep</span>(<span class="st">&quot;g1&quot;</span>, <span class="dt">length.out =</span> n1), <span class="kw">rep</span>(<span class="st">&quot;g2&quot;</span>, <span class="dt">length.out =</span> n2)),</a>
+<a class="sourceLine" id="cb18-17" data-line-number="17">  <span class="dt">sampleColor =</span> <span class="kw">c</span>(<span class="kw">rep</span>(<span class="st">&quot;#DDEEFF&quot;</span>, <span class="dt">length.out =</span> n1), <span class="kw">rep</span>(<span class="st">&quot;#FFEEDD&quot;</span>, <span class="dt">length.out =</span> n2))</a>
+<a class="sourceLine" id="cb18-18" data-line-number="18">)</a>
+<a class="sourceLine" id="cb18-19" data-line-number="19"></a>
+<a class="sourceLine" id="cb18-20" data-line-number="20"><span class="kw">kable</span>(metaData, <span class="dt">caption =</span> <span class="st">&quot;Metadata table&quot;</span>)</a></code></pre></div>
+<table>
+<caption>Metadata table</caption>
+<thead>
+<tr class="header">
+<th align="left">sampleNames</th>
+<th align="left">sampleGroup</th>
+<th align="left">sampleColor</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">g1s1</td>
+<td align="left">g1</td>
+<td align="left">#DDEEFF</td>
+</tr>
+<tr class="even">
+<td align="left">g1s2</td>
+<td align="left">g1</td>
+<td align="left">#DDEEFF</td>
+</tr>
+<tr class="odd">
+<td align="left">g1s3</td>
+<td align="left">g1</td>
+<td align="left">#DDEEFF</td>
+</tr>
+<tr class="even">
+<td align="left">g1s4</td>
+<td align="left">g1</td>
+<td align="left">#DDEEFF</td>
+</tr>
+<tr class="odd">
+<td align="left">g1s5</td>
+<td align="left">g1</td>
+<td align="left">#DDEEFF</td>
+</tr>
+<tr class="even">
+<td align="left">g1s6</td>
+<td align="left">g1</td>
+<td align="left">#DDEEFF</td>
+</tr>
+<tr class="odd">
+<td align="left">g1s7</td>
+<td align="left">g1</td>
+<td align="left">#DDEEFF</td>
+</tr>
+<tr class="even">
+<td align="left">g1s8</td>
+<td align="left">g1</td>
+<td align="left">#DDEEFF</td>
+</tr>
+<tr class="odd">
+<td align="left">g1s9</td>
+<td align="left">g1</td>
+<td align="left">#DDEEFF</td>
+</tr>
+<tr class="even">
+<td align="left">g1s10</td>
+<td align="left">g1</td>
+<td align="left">#DDEEFF</td>
+</tr>
+<tr class="odd">
+<td align="left">g1s11</td>
+<td align="left">g1</td>
+<td align="left">#DDEEFF</td>
+</tr>
+<tr class="even">
+<td align="left">g1s12</td>
+<td align="left">g1</td>
+<td align="left">#DDEEFF</td>
+</tr>
+<tr class="odd">
+<td align="left">g1s13</td>
+<td align="left">g1</td>
+<td align="left">#DDEEFF</td>
+</tr>
+<tr class="even">
+<td align="left">g1s14</td>
+<td align="left">g1</td>
+<td align="left">#DDEEFF</td>
+</tr>
+<tr class="odd">
+<td align="left">g1s15</td>
+<td align="left">g1</td>
+<td align="left">#DDEEFF</td>
+</tr>
+<tr class="even">
+<td align="left">g1s16</td>
+<td align="left">g1</td>
+<td align="left">#DDEEFF</td>
+</tr>
+<tr class="odd">
+<td align="left">g2s1</td>
+<td align="left">g2</td>
+<td align="left">#FFEEDD</td>
+</tr>
+<tr class="even">
+<td align="left">g2s2</td>
+<td align="left">g2</td>
+<td align="left">#FFEEDD</td>
+</tr>
+<tr class="odd">
+<td align="left">g2s3</td>
+<td align="left">g2</td>
+<td align="left">#FFEEDD</td>
+</tr>
+<tr class="even">
+<td align="left">g2s4</td>
+<td align="left">g2</td>
+<td align="left">#FFEEDD</td>
+</tr>
+<tr class="odd">
+<td align="left">g2s5</td>
+<td align="left">g2</td>
+<td align="left">#FFEEDD</td>
+</tr>
+<tr class="even">
+<td align="left">g2s6</td>
+<td align="left">g2</td>
+<td align="left">#FFEEDD</td>
+</tr>
+<tr class="odd">
+<td align="left">g2s7</td>
+<td align="left">g2</td>
+<td align="left">#FFEEDD</td>
+</tr>
+<tr class="even">
+<td align="left">g2s8</td>
+<td align="left">g2</td>
+<td align="left">#FFEEDD</td>
+</tr>
+<tr class="odd">
+<td align="left">g2s9</td>
+<td align="left">g2</td>
+<td align="left">#FFEEDD</td>
+</tr>
+<tr class="even">
+<td align="left">g2s10</td>
+<td align="left">g2</td>
+<td align="left">#FFEEDD</td>
+</tr>
+<tr class="odd">
+<td align="left">g2s11</td>
+<td align="left">g2</td>
+<td align="left">#FFEEDD</td>
+</tr>
+<tr class="even">
+<td align="left">g2s12</td>
+<td align="left">g2</td>
+<td align="left">#FFEEDD</td>
+</tr>
+<tr class="odd">
+<td align="left">g2s13</td>
+<td align="left">g2</td>
+<td align="left">#FFEEDD</td>
+</tr>
+<tr class="even">
+<td align="left">g2s14</td>
+<td align="left">g2</td>
+<td align="left">#FFEEDD</td>
+</tr>
+<tr class="odd">
+<td align="left">g2s15</td>
+<td align="left">g2</td>
+<td align="left">#FFEEDD</td>
+</tr>
+<tr class="even">
+<td align="left">g2s16</td>
+<td align="left">g2</td>
+<td align="left">#FFEEDD</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="visualisation-of-the-data" class="section level2">
+<h2>Visualisation of the data</h2>
+<div id="box-plot-of-the-sampled-values" class="section level3">
+<h3>Box plot of the sampled values</h3>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="co">#### Boxplot of the values per sample ####</span></a>
+<a class="sourceLine" id="cb19-2" data-line-number="2"><span class="kw">boxplot</span>(dataTable, </a>
+<a class="sourceLine" id="cb19-3" data-line-number="3">        <span class="dt">col =</span> <span class="kw">as.vector</span>(metaData<span class="op">$</span>sampleColor),</a>
+<a class="sourceLine" id="cb19-4" data-line-number="4">        <span class="dt">horizontal =</span> <span class="ot">TRUE</span>, </a>
+<a class="sourceLine" id="cb19-5" data-line-number="5">        <span class="dt">las =</span> <span class="dv">1</span>, </a>
+<a class="sourceLine" id="cb19-6" data-line-number="6">        <span class="dt">main =</span> <span class="st">&quot;Sampled values&quot;</span>, </a>
+<a class="sourceLine" id="cb19-7" data-line-number="7">        <span class="dt">xlab =</span> <span class="st">&quot;X&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/mean-compa-tests_sample_boxplot-1.png" alt="Box plot of the sampled values" width="60%" />
+<p class="caption">
+Box plot of the sampled values
+</p>
+</div>
+</div>
+<div id="violin-plot-of-the-sampled-values" class="section level3">
+<h3>Violin plot of the sampled values</h3>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="co">#### Boxplot of the values per sample ####</span></a>
+<a class="sourceLine" id="cb20-2" data-line-number="2">vioplot<span class="op">::</span><span class="kw">vioplot</span>(dataTable, </a>
+<a class="sourceLine" id="cb20-3" data-line-number="3">                 <span class="dt">col =</span> <span class="kw">as.vector</span>(metaData<span class="op">$</span>sampleColor),</a>
+<a class="sourceLine" id="cb20-4" data-line-number="4">                 <span class="dt">horizontal =</span> <span class="ot">TRUE</span>, </a>
+<a class="sourceLine" id="cb20-5" data-line-number="5">                 <span class="dt">las =</span> <span class="dv">1</span>, </a>
+<a class="sourceLine" id="cb20-6" data-line-number="6">                 <span class="dt">main =</span> <span class="st">&quot;Sampled values&quot;</span>, </a>
+<a class="sourceLine" id="cb20-7" data-line-number="7">                 <span class="dt">xlab =</span> <span class="st">&quot;X&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/mean-compa-tests_sample_vioplot-1.png" alt="Violin plot of the sampled values" width="60%" />
+<p class="caption">
+Violin plot of the sampled values
+</p>
+</div>
+</div>
+<div id="histogram-of-the-sampled-values" class="section level3">
+<h3>Histogram of the sampled values</h3>
+<ul>
+<li>Draw two histograms with all the values group 1 and group2, respectively.</li>
+</ul>
+<p><strong>Tip: </strong> use <code>mfrow()</code> to display the histogram above each other, and set the limits of the abscissa (x axis) to the same value.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1">xlim  &lt;-<span class="st"> </span><span class="kw">range</span>(<span class="kw">append</span>(group1, group2))</a>
+<a class="sourceLine" id="cb21-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb21-3" data-line-number="3"><span class="co">## Compute mean and sd for all the samples of group1 and group2, resp</span></a>
+<a class="sourceLine" id="cb21-4" data-line-number="4">m1 &lt;-<span class="st"> </span><span class="kw">mean</span>(<span class="kw">unlist</span>(group1))</a>
+<a class="sourceLine" id="cb21-5" data-line-number="5">m2 &lt;-<span class="st"> </span><span class="kw">mean</span>(<span class="kw">unlist</span>(group2))</a>
+<a class="sourceLine" id="cb21-6" data-line-number="6">s1 &lt;-<span class="st"> </span><span class="kw">sd</span>(<span class="kw">unlist</span>(group1))</a>
+<a class="sourceLine" id="cb21-7" data-line-number="7">s2 &lt;-<span class="st"> </span><span class="kw">sd</span>(<span class="kw">unlist</span>(group2))</a>
+<a class="sourceLine" id="cb21-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb21-9" data-line-number="9"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb21-10" data-line-number="10"><span class="co">## Plot histogram of Group1 values, and get the values in a variable named h1</span></a>
+<a class="sourceLine" id="cb21-11" data-line-number="11">h1 &lt;-<span class="st"> </span><span class="kw">hist</span>(<span class="dt">x =</span> <span class="kw">unlist</span>(group1), <span class="dt">breaks =</span> <span class="dv">100</span>, <span class="dt">col =</span> <span class="st">&quot;#DDEEFF&quot;</span>, <span class="dt">border =</span> <span class="st">&quot;blue&quot;</span>,</a>
+<a class="sourceLine" id="cb21-12" data-line-number="12">     <span class="dt">main =</span> <span class="st">&quot;Group 1&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;X&quot;</span>, <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">xlim =</span> xlim)</a>
+<a class="sourceLine" id="cb21-13" data-line-number="13"><span class="kw">abline</span>(<span class="dt">v =</span> m1, <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>) <span class="co">## mark the mean of all samples</span></a>
+<a class="sourceLine" id="cb21-14" data-line-number="14"><span class="kw">arrows</span>(<span class="dt">x0 =</span> m1, <span class="dt">x1 =</span> m1 <span class="op">+</span><span class="st"> </span>s1, </a>
+<a class="sourceLine" id="cb21-15" data-line-number="15">       <span class="dt">y0 =</span> <span class="kw">max</span>(h1<span class="op">$</span>counts)<span class="op">/</span><span class="dv">2</span>, <span class="dt">y1 =</span> <span class="kw">max</span>(h1<span class="op">$</span>counts)<span class="op">/</span><span class="dv">2</span>,</a>
+<a class="sourceLine" id="cb21-16" data-line-number="16">       <span class="dt">length =</span> <span class="fl">0.07</span>, <span class="dt">angle =</span> <span class="dv">20</span>, <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">code =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb21-17" data-line-number="17"><span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, </a>
+<a class="sourceLine" id="cb21-18" data-line-number="18">       <span class="dt">legend =</span> <span class="kw">c</span>(<span class="kw">paste0</span>(<span class="st">&quot;m1 = &quot;</span>, <span class="kw">round</span>(<span class="dt">digits =</span> <span class="dv">2</span>, m1)), </a>
+<a class="sourceLine" id="cb21-19" data-line-number="19">                  <span class="kw">paste0</span>(<span class="st">&quot;s1 = &quot;</span>, <span class="kw">round</span>(<span class="dt">digits =</span> <span class="dv">2</span>, s1))))</a>
+<a class="sourceLine" id="cb21-20" data-line-number="20"></a>
+<a class="sourceLine" id="cb21-21" data-line-number="21"><span class="co">## Plot histogram of Group2 values, and get the values in a variable named h2</span></a>
+<a class="sourceLine" id="cb21-22" data-line-number="22">h2 &lt;-<span class="st"> </span><span class="kw">hist</span>(<span class="dt">x =</span> <span class="kw">unlist</span>(group2), <span class="dt">breaks =</span> <span class="dv">100</span>, <span class="dt">col =</span> <span class="st">&quot;#FFEEDD&quot;</span>, <span class="dt">border =</span> <span class="st">&quot;brown&quot;</span>, </a>
+<a class="sourceLine" id="cb21-23" data-line-number="23">     <span class="dt">main =</span> <span class="st">&quot;Group 2&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;X&quot;</span>, <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">xlim =</span> xlim)</a>
+<a class="sourceLine" id="cb21-24" data-line-number="24"><span class="kw">abline</span>(<span class="dt">v =</span> <span class="kw">mean</span>(<span class="kw">unlist</span>(group2)), <span class="dt">col =</span> <span class="st">&quot;brown&quot;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb21-25" data-line-number="25"><span class="kw">arrows</span>(<span class="dt">x0 =</span> m2, <span class="dt">x1 =</span> m2 <span class="op">+</span><span class="st"> </span>s2, </a>
+<a class="sourceLine" id="cb21-26" data-line-number="26">       <span class="dt">y0 =</span> <span class="kw">max</span>(h2<span class="op">$</span>counts)<span class="op">/</span><span class="dv">2</span>, <span class="dt">y1 =</span> <span class="kw">max</span>(h2<span class="op">$</span>counts)<span class="op">/</span><span class="dv">2</span>,</a>
+<a class="sourceLine" id="cb21-27" data-line-number="27">       <span class="dt">length =</span> <span class="fl">0.07</span>, <span class="dt">angle =</span> <span class="dv">20</span>, <span class="dt">col =</span> <span class="st">&quot;brown&quot;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">code =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb21-28" data-line-number="28"><span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, </a>
+<a class="sourceLine" id="cb21-29" data-line-number="29">       <span class="dt">legend =</span> <span class="kw">c</span>(<span class="kw">paste0</span>(<span class="st">&quot;m2 = &quot;</span>, <span class="kw">round</span>(<span class="dt">digits =</span> <span class="dv">2</span>, m2)),</a>
+<a class="sourceLine" id="cb21-30" data-line-number="30">                  <span class="kw">paste0</span>(<span class="st">&quot;s2 = &quot;</span>, <span class="kw">round</span>(<span class="dt">digits =</span> <span class="dv">2</span>, s2))))</a></code></pre></div>
+<p><img src="figures/mean-compa-tests_hist_g1_g2-1.png" width="60%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</a></code></pre></div>
+</div>
+<div id="sampling-distribution-of-the-means" class="section level3">
+<h3>Sampling distribution of the means</h3>
+<p>Draw histogram with the sampling distribution of the means in the respective groups.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="co"># xlim  &lt;- range(append(colStats$m1, colStats$m2))</span></a>
+<a class="sourceLine" id="cb23-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb23-3" data-line-number="3"><span class="co">## Compute the parameters (mean, sd) of the sampling distributions of the means</span></a>
+<a class="sourceLine" id="cb23-4" data-line-number="4">mm1 &lt;-<span class="st"> </span><span class="kw">mean</span>(rowStats<span class="op">$</span>m1)</a>
+<a class="sourceLine" id="cb23-5" data-line-number="5">mm2 &lt;-<span class="st"> </span><span class="kw">mean</span>(rowStats<span class="op">$</span>m2)</a>
+<a class="sourceLine" id="cb23-6" data-line-number="6">se1 &lt;-<span class="st"> </span><span class="kw">sd</span>(rowStats<span class="op">$</span>m1)</a>
+<a class="sourceLine" id="cb23-7" data-line-number="7">se2 &lt;-<span class="st"> </span><span class="kw">sd</span>(rowStats<span class="op">$</span>m2)</a>
+<a class="sourceLine" id="cb23-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb23-9" data-line-number="9"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb23-10" data-line-number="10"><span class="co">## Plot histogram of Group1 values, and get the values in a variable named h1</span></a>
+<a class="sourceLine" id="cb23-11" data-line-number="11">h1 &lt;-<span class="st"> </span><span class="kw">hist</span>(<span class="dt">x =</span> rowStats<span class="op">$</span>m1, <span class="dt">breaks =</span> <span class="dv">100</span>, <span class="dt">col =</span> <span class="st">&quot;#AACCFF&quot;</span>, <span class="dt">border =</span> <span class="st">&quot;#AACCFF&quot;</span>, </a>
+<a class="sourceLine" id="cb23-12" data-line-number="12">     <span class="dt">main =</span> <span class="st">&quot;Group 1&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;X&quot;</span>, <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">xlim =</span> xlim)</a>
+<a class="sourceLine" id="cb23-13" data-line-number="13"><span class="kw">abline</span>(<span class="dt">v =</span> mm1, <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>) <span class="co">## mark the mean of all samples</span></a>
+<a class="sourceLine" id="cb23-14" data-line-number="14"><span class="kw">arrows</span>(<span class="dt">x0 =</span> mm1, <span class="dt">x1 =</span> mm1 <span class="op">+</span><span class="st"> </span>se1, </a>
+<a class="sourceLine" id="cb23-15" data-line-number="15">       <span class="dt">y0 =</span> <span class="kw">max</span>(h1<span class="op">$</span>counts)<span class="op">/</span><span class="dv">2</span>, <span class="dt">y1 =</span> <span class="kw">max</span>(h1<span class="op">$</span>counts)<span class="op">/</span><span class="dv">2</span>,</a>
+<a class="sourceLine" id="cb23-16" data-line-number="16">       <span class="dt">length =</span> <span class="fl">0.07</span>, <span class="dt">angle =</span> <span class="dv">20</span>, <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">code =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb23-17" data-line-number="17"><span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, </a>
+<a class="sourceLine" id="cb23-18" data-line-number="18">       <span class="dt">legend =</span> <span class="kw">c</span>(<span class="kw">paste0</span>(<span class="st">&quot;mm1 = &quot;</span>, <span class="kw">round</span>(<span class="dt">digits =</span> <span class="dv">2</span>, mm1)),</a>
+<a class="sourceLine" id="cb23-19" data-line-number="19">                  <span class="kw">paste0</span>(<span class="st">&quot;se1 = &quot;</span>, <span class="kw">round</span>(<span class="dt">digits =</span> <span class="dv">2</span>, se1))))</a>
+<a class="sourceLine" id="cb23-20" data-line-number="20"></a>
+<a class="sourceLine" id="cb23-21" data-line-number="21"><span class="co">## Plot histogram of Group2 values, and get the values in a variable named h2</span></a>
+<a class="sourceLine" id="cb23-22" data-line-number="22">h2 &lt;-<span class="st"> </span><span class="kw">hist</span>(<span class="dt">x =</span> rowStats<span class="op">$</span>m2, <span class="dt">breaks =</span> <span class="dv">100</span>, <span class="dt">col =</span> <span class="st">&quot;#FFCCAA&quot;</span>, <span class="dt">border =</span> <span class="st">&quot;#FFCCAA&quot;</span>, </a>
+<a class="sourceLine" id="cb23-23" data-line-number="23">     <span class="dt">main =</span> <span class="st">&quot;Group 2&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;X&quot;</span>, <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">xlim =</span> xlim)</a>
+<a class="sourceLine" id="cb23-24" data-line-number="24"><span class="kw">abline</span>(<span class="dt">v =</span> <span class="kw">mean</span>(<span class="kw">unlist</span>(group2)), <span class="dt">col =</span> <span class="st">&quot;brown&quot;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb23-25" data-line-number="25"><span class="kw">arrows</span>(<span class="dt">x0 =</span> mm2, <span class="dt">x1 =</span> mm2 <span class="op">+</span><span class="st"> </span>se2, </a>
+<a class="sourceLine" id="cb23-26" data-line-number="26">       <span class="dt">y0 =</span> <span class="kw">max</span>(h2<span class="op">$</span>counts)<span class="op">/</span><span class="dv">2</span>, <span class="dt">y1 =</span> <span class="kw">max</span>(h2<span class="op">$</span>counts)<span class="op">/</span><span class="dv">2</span>,</a>
+<a class="sourceLine" id="cb23-27" data-line-number="27">       <span class="dt">length =</span> <span class="fl">0.07</span>, <span class="dt">angle =</span> <span class="dv">20</span>, <span class="dt">col =</span> <span class="st">&quot;brown&quot;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">code =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb23-28" data-line-number="28"><span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, </a>
+<a class="sourceLine" id="cb23-29" data-line-number="29">       <span class="dt">legend =</span> <span class="kw">c</span>(<span class="kw">paste0</span>(<span class="st">&quot;mm2 = &quot;</span>, <span class="kw">round</span>(<span class="dt">digits =</span> <span class="dv">2</span>, mm2)),</a>
+<a class="sourceLine" id="cb23-30" data-line-number="30">                  <span class="kw">paste0</span>(<span class="st">&quot;se2 = &quot;</span>, <span class="kw">round</span>(<span class="dt">digits =</span> <span class="dv">2</span>, se2))))</a></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/mean-compa-tests_sampling_distrib_mean-1.png" alt="Sampling distribution of the mean" width="60%" />
+<p class="caption">
+Sampling distribution of the mean
+</p>
+</div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</a></code></pre></div>
+<ul>
+<li>Compare the standard deviations measures in the sampled values, and in the feature means. Do they differ ? Explain why.</li>
+</ul>
+<p><strong>Answer: </strong> the standard deviation of the sample means corresponds to the <strong>standard error</strong>.</p>
+</div>
+</div>
+<div id="part-2-hypothesis-testing" class="section level2">
+<h2>Part 2: hypothesis testing</h2>
+<div id="run-student-test-on-a-given-feature" class="section level3">
+<h3>Run Student test on a given feature</h3>
+<p>Since we are interested by differences in either directions, we run a two-tailed test.</p>
+<p>Hypotheses:</p>
+<p><span class="math display">\[H_0: \mu_1 = \mu2\]</span></p>
+<p><span class="math display">\[H_1: \mu_1 \ne \mu2\]</span> <strong>Exercise:</strong> pick up a given feature (e.g. the <span class="math inline">\(267^{th}\)</span>) and run a mean comparison test. Choose the parameters according to your experimental setting.</p>
+<p><strong>Tips:</strong></p>
+<ul>
+<li><code>t.test()</code></li>
+<li>you need to choose the test depending on whether the two populations have equal variance (Student) or not (Welch). Since we defined different values for the populations standard deviations (<span class="math inline">\(\sigma_1\)</span>, <span class="math inline">\(\sigma_2\)</span>), the choise is obvious.</li>
+</ul>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1">i &lt;-<span class="st"> </span><span class="dv">267</span> <span class="co">## Pick up a given feature, arbitrarily</span></a>
+<a class="sourceLine" id="cb25-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb25-3" data-line-number="3"><span class="co">## Select the values for this feature in the group 1 and group 2, resp. </span></a>
+<a class="sourceLine" id="cb25-4" data-line-number="4"><span class="co">## Tip: I use unlist() to convert a single-row data.frame into a vector</span></a>
+<a class="sourceLine" id="cb25-5" data-line-number="5">x1 &lt;-<span class="st"> </span><span class="kw">unlist</span>(group1[i, ]) </a>
+<a class="sourceLine" id="cb25-6" data-line-number="6">x2 &lt;-<span class="st"> </span><span class="kw">unlist</span>(group2[i, ])</a>
+<a class="sourceLine" id="cb25-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb25-8" data-line-number="8"><span class="co">## Run Sudent t test on one pair of samples</span></a>
+<a class="sourceLine" id="cb25-9" data-line-number="9">t.result &lt;-<span class="st"> </span><span class="kw">t.test</span>(</a>
+<a class="sourceLine" id="cb25-10" data-line-number="10">  <span class="dt">x =</span> x1, <span class="dt">y =</span> x2, </a>
+<a class="sourceLine" id="cb25-11" data-line-number="11">  <span class="dt">alternative =</span> <span class="st">&quot;two.sided&quot;</span>, <span class="dt">var.equal =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb25-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb25-13" data-line-number="13"><span class="co">## Print the result of the t test</span></a>
+<a class="sourceLine" id="cb25-14" data-line-number="14"><span class="kw">print</span>(t.result)</a></code></pre></div>
+<pre><code>
+    Welch Two Sample t-test
+
+data:  x1 and x2
+t = -2.7572, df = 24.441, p-value = 0.01086
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -3.8449347 -0.5546979
+sample estimates:
+mean of x mean of y 
+ 7.807264 10.007081 </code></pre>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="co">## Compute some additional statistics about the samples</span></a>
+<a class="sourceLine" id="cb27-2" data-line-number="2">mean1 &lt;-<span class="st"> </span><span class="kw">mean</span>(x1) <span class="co">## Mean of sample 1</span></a>
+<a class="sourceLine" id="cb27-3" data-line-number="3">mean2 &lt;-<span class="st"> </span><span class="kw">mean</span>(x2) <span class="co">## Mean of sample 2</span></a>
+<a class="sourceLine" id="cb27-4" data-line-number="4">d &lt;-<span class="st"> </span>mean2 <span class="op">-</span><span class="st"> </span>mean1 <span class="co">## Difference between sample means</span></a></code></pre></div>
+</div>
+<div id="interpret-the-result" class="section level3">
+<h3>Interpret the result</h3>
+<p>The difference between sample means was <span class="math inline">\(d = 2.2\)</span>.</p>
+<p>The <span class="math inline">\(t\)</span> test computed the <span class="math inline">\(t\)</span> statistics, which standardizes this observed distance between sample means relative to the estimated variance of the population, and to the sample sizes. With the random numbers generated above, the value is <span class="math inline">\(t_{obs} = -2.7572\)</span>.</p>
+<p>The corresponding p-value is computed as the sum of the area of the left and right tails of the Student distribution, with <span class="math inline">\(\nu = n_1 + n_2 - 2 = 24.4411491\)</span> degrees of freedom. It indicates the probability of obtaining by chance – <strong><em>under the null hypothesis</em></strong> – a result at least as extreme as the one we observed.</p>
+<p>In our case, we obtain <span class="math inline">\(p = P(T &gt; |t_{obs}| = P(T &gt; 2.7572) = 0.0109\)</span>. This is higher than our threshold <span class="math inline">\(alpha = 0.05\)</span>. We thus accept the null hypothesis.</p>
+</div>
+<div id="replicating-the-test-for-each-feature" class="section level3">
+<h3>Replicating the test for each feature</h3>
+<p>In R, loops are quite inefficient, and it is generally recommended to directly run the computations on whole vectors (R has been designed to be efficient for this), or to use specific functions in order to apply a given function each row / column of a table, or to each element of a list.</p>
+<p>For the sake of simplicity, we will first show how to implement a simple but inefficient code with a loop. In the advanced course (STATS2) will see how to optimize the speed with the <code>apply()</code> function.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1"><span class="co">## Define the statistics we want to collect</span></a>
+<a class="sourceLine" id="cb28-2" data-line-number="2">resultColumns &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;i&quot;</span>,       <span class="co"># iteration number</span></a>
+<a class="sourceLine" id="cb28-3" data-line-number="3">                    <span class="st">&quot;m1&quot;</span>,      <span class="co"># first sample mean</span></a>
+<a class="sourceLine" id="cb28-4" data-line-number="4">                    <span class="st">&quot;m2&quot;</span>,      <span class="co"># second sample mean</span></a>
+<a class="sourceLine" id="cb28-5" data-line-number="5">                    <span class="st">&quot;s1&quot;</span>,      <span class="co"># sd estimation for the first population</span></a>
+<a class="sourceLine" id="cb28-6" data-line-number="6">                    <span class="st">&quot;s2&quot;</span>,      <span class="co"># sd estimation for the second population</span></a>
+<a class="sourceLine" id="cb28-7" data-line-number="7">                    <span class="st">&quot;d&quot;</span>,       <span class="co"># difference between sample means</span></a>
+<a class="sourceLine" id="cb28-8" data-line-number="8">                    <span class="st">&quot;t&quot;</span>,       <span class="co"># test statistics</span></a>
+<a class="sourceLine" id="cb28-9" data-line-number="9">                    <span class="st">&quot;df&quot;</span>,      <span class="co"># degrees of freedom</span></a>
+<a class="sourceLine" id="cb28-10" data-line-number="10">                    <span class="st">&quot;p.value&quot;</span>  <span class="co"># nominal p-value</span></a>
+<a class="sourceLine" id="cb28-11" data-line-number="11">                    )</a>
+<a class="sourceLine" id="cb28-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb28-13" data-line-number="13"><span class="co">## Instantiate a result table to store the results</span></a>
+<a class="sourceLine" id="cb28-14" data-line-number="14">resultTable &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">matrix</span>(<span class="dt">nrow =</span> m, <span class="dt">ncol =</span> <span class="kw">length</span>(resultColumns)))</a>
+<a class="sourceLine" id="cb28-15" data-line-number="15"><span class="kw">colnames</span>(resultTable) &lt;-<span class="st"> </span>resultColumns <span class="co"># set the column names</span></a>
+<a class="sourceLine" id="cb28-16" data-line-number="16"><span class="co"># View(resultTable) ## Check the table: it contians NA values</span></a>
+<a class="sourceLine" id="cb28-17" data-line-number="17">  </a>
+<a class="sourceLine" id="cb28-18" data-line-number="18"><span class="co">## Iterate random number sampling followed by t-tests</span></a>
+<a class="sourceLine" id="cb28-19" data-line-number="19"><span class="co">## Use the funciton system.time() to measure the elapsed time</span></a>
+<a class="sourceLine" id="cb28-20" data-line-number="20"><span class="co">## This function is particular: you can also use it with curly brackets in order to enclose a block of several lines</span></a>
+<a class="sourceLine" id="cb28-21" data-line-number="21">time.iteration &lt;-<span class="st"> </span><span class="kw">system.time</span>(</a>
+<a class="sourceLine" id="cb28-22" data-line-number="22">  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>m) {</a>
+<a class="sourceLine" id="cb28-23" data-line-number="23">    <span class="co">## Generate two vectors containing the values for sample 1 and sample 2, resp.</span></a>
+<a class="sourceLine" id="cb28-24" data-line-number="24">    x1 &lt;-<span class="st"> </span><span class="kw">unlist</span>(group1[i, ]) <span class="co">## sample 1 values</span></a>
+<a class="sourceLine" id="cb28-25" data-line-number="25">    x2 &lt;-<span class="st"> </span><span class="kw">unlist</span>(group2[i, ]) <span class="co">## sample 2 values</span></a>
+<a class="sourceLine" id="cb28-26" data-line-number="26">    </a>
+<a class="sourceLine" id="cb28-27" data-line-number="27">    <span class="co">## Run the t test</span></a>
+<a class="sourceLine" id="cb28-28" data-line-number="28">    t.result &lt;-<span class="st"> </span><span class="kw">t.test</span>(</a>
+<a class="sourceLine" id="cb28-29" data-line-number="29">      <span class="dt">x =</span> x1, <span class="dt">y =</span> x2, </a>
+<a class="sourceLine" id="cb28-30" data-line-number="30">      <span class="dt">alternative =</span> <span class="st">&quot;two.sided&quot;</span>, <span class="dt">var.equal =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb28-31" data-line-number="31">    <span class="co"># names(t.result)</span></a>
+<a class="sourceLine" id="cb28-32" data-line-number="32">    </a>
+<a class="sourceLine" id="cb28-33" data-line-number="33">    <span class="co">## Collect the selected statistics in the result table</span></a>
+<a class="sourceLine" id="cb28-34" data-line-number="34">    resultTable[i, <span class="st">&quot;i&quot;</span>] &lt;-<span class="st"> </span>i</a>
+<a class="sourceLine" id="cb28-35" data-line-number="35">    resultTable[i, <span class="st">&quot;t&quot;</span>] &lt;-<span class="st"> </span>t.result<span class="op">$</span>statistic</a>
+<a class="sourceLine" id="cb28-36" data-line-number="36">    resultTable[i, <span class="st">&quot;df&quot;</span>] &lt;-<span class="st"> </span>t.result<span class="op">$</span>parameter</a>
+<a class="sourceLine" id="cb28-37" data-line-number="37">    resultTable[i, <span class="st">&quot;p.value&quot;</span>] &lt;-<span class="st"> </span>t.result<span class="op">$</span>p.value</a>
+<a class="sourceLine" id="cb28-38" data-line-number="38">    </a>
+<a class="sourceLine" id="cb28-39" data-line-number="39">    <span class="co">## Compute some additional statistics about the samples</span></a>
+<a class="sourceLine" id="cb28-40" data-line-number="40">    resultTable[i, <span class="st">&quot;m1&quot;</span>] &lt;-<span class="st"> </span><span class="kw">mean</span>(x1) <span class="co">## Mean of sample 1</span></a>
+<a class="sourceLine" id="cb28-41" data-line-number="41">    resultTable[i, <span class="st">&quot;m2&quot;</span>] &lt;-<span class="st"> </span><span class="kw">mean</span>(x2) <span class="co">## Mean of sample 2</span></a>
+<a class="sourceLine" id="cb28-42" data-line-number="42">    resultTable[i, <span class="st">&quot;s1&quot;</span>] &lt;-<span class="st"> </span><span class="kw">sd</span>(x1) <span class="co">## Standard dev estimation for population 1</span></a>
+<a class="sourceLine" id="cb28-43" data-line-number="43">    resultTable[i, <span class="st">&quot;s2&quot;</span>] &lt;-<span class="st"> </span><span class="kw">sd</span>(x2) <span class="co">## Standard dev estimation for population 1</span></a>
+<a class="sourceLine" id="cb28-44" data-line-number="44">    resultTable[i, <span class="st">&quot;d&quot;</span>] &lt;-<span class="st"> </span>resultTable[i, <span class="st">&quot;m1&quot;</span>] <span class="op">-</span><span class="st"> </span>resultTable[i, <span class="st">&quot;m2&quot;</span>]  <span class="co">## Difference between sample means</span></a>
+<a class="sourceLine" id="cb28-45" data-line-number="45">  }</a>
+<a class="sourceLine" id="cb28-46" data-line-number="46">  <span class="co">#}</span></a>
+<a class="sourceLine" id="cb28-47" data-line-number="47">  <span class="co">## View(resultTable)</span></a>
+<a class="sourceLine" id="cb28-48" data-line-number="48">)  </a>
+<a class="sourceLine" id="cb28-49" data-line-number="49"></a>
+<a class="sourceLine" id="cb28-50" data-line-number="50"><span class="kw">print</span>(time.iteration)</a></code></pre></div>
+<pre><code>   user  system elapsed 
+  0.846   0.292   1.107 </code></pre>
+</div>
+<div id="distribution-of-the-observed-differences-for-the-1000-iterations-of-the-test" class="section level3">
+<h3>Distribution of the observed differences for the <span class="math inline">\(1000\)</span> iterations of the test</h3>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb30-2" data-line-number="2"><span class="co">#head(resultTable)</span></a>
+<a class="sourceLine" id="cb30-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb30-4" data-line-number="4"><span class="co">## Compute the maximal abslute value of difference to get a centered abcsissa.</span></a>
+<a class="sourceLine" id="cb30-5" data-line-number="5"><span class="co">## This enables to highlight whether the differences are positive or negative. </span></a>
+<a class="sourceLine" id="cb30-6" data-line-number="6">max.diff &lt;-<span class="st"> </span><span class="kw">max</span>(<span class="kw">abs</span>(resultTable<span class="op">$</span>d))</a>
+<a class="sourceLine" id="cb30-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb30-8" data-line-number="8"><span class="co">## Draw an histogram of the observed differences</span></a>
+<a class="sourceLine" id="cb30-9" data-line-number="9"><span class="kw">hist</span>(resultTable<span class="op">$</span>d, </a>
+<a class="sourceLine" id="cb30-10" data-line-number="10">     <span class="dt">breaks =</span> <span class="dv">100</span>, </a>
+<a class="sourceLine" id="cb30-11" data-line-number="11">     <span class="dt">col =</span> <span class="st">&quot;#DDFFEE&quot;</span>, </a>
+<a class="sourceLine" id="cb30-12" data-line-number="12">     <span class="dt">border =</span> <span class="st">&quot;#44DD88&quot;</span>, </a>
+<a class="sourceLine" id="cb30-13" data-line-number="13">     <span class="dt">las =</span> <span class="dv">1</span>, </a>
+<a class="sourceLine" id="cb30-14" data-line-number="14">     <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="op">-</span>max.diff, max.diff), <span class="co">## Make sure that the graph is centered on 0</span></a>
+<a class="sourceLine" id="cb30-15" data-line-number="15">     <span class="dt">main =</span> <span class="st">&quot;Differences between means&quot;</span>,</a>
+<a class="sourceLine" id="cb30-16" data-line-number="16">     <span class="dt">xlab =</span> <span class="st">&quot;Difference between means&quot;</span>,</a>
+<a class="sourceLine" id="cb30-17" data-line-number="17">     <span class="dt">ylab =</span> <span class="st">&quot;Number of tests&quot;</span>)</a>
+<a class="sourceLine" id="cb30-18" data-line-number="18"><span class="kw">abline</span>(<span class="dt">v =</span> <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb30-19" data-line-number="19"></a>
+<a class="sourceLine" id="cb30-20" data-line-number="20">max.t &lt;-<span class="st"> </span><span class="kw">max</span>(<span class="kw">abs</span>(resultTable<span class="op">$</span>t))</a>
+<a class="sourceLine" id="cb30-21" data-line-number="21"><span class="kw">hist</span>(resultTable<span class="op">$</span>t, </a>
+<a class="sourceLine" id="cb30-22" data-line-number="22">     <span class="dt">breaks =</span> <span class="dv">100</span>, </a>
+<a class="sourceLine" id="cb30-23" data-line-number="23">     <span class="dt">col =</span> <span class="st">&quot;#DDFFEE&quot;</span>, </a>
+<a class="sourceLine" id="cb30-24" data-line-number="24">     <span class="dt">border =</span> <span class="st">&quot;#44DD88&quot;</span>, </a>
+<a class="sourceLine" id="cb30-25" data-line-number="25">          <span class="dt">las =</span> <span class="dv">1</span>,</a>
+<a class="sourceLine" id="cb30-26" data-line-number="26">     <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="op">-</span>max.t, max.t), <span class="co">## Make sure that the graph is centered on 0</span></a>
+<a class="sourceLine" id="cb30-27" data-line-number="27">     <span class="dt">main =</span> <span class="st">&quot;T statistics&quot;</span>,</a>
+<a class="sourceLine" id="cb30-28" data-line-number="28">     <span class="dt">xlab =</span> <span class="st">&quot;T-test statistic&quot;</span>,</a>
+<a class="sourceLine" id="cb30-29" data-line-number="29">     <span class="dt">ylab =</span> <span class="st">&quot;Number of tests&quot;</span>)</a>
+<a class="sourceLine" id="cb30-30" data-line-number="30"><span class="kw">abline</span>(<span class="dt">v =</span> <span class="dv">0</span>)</a></code></pre></div>
+<p><img src="figures/mean-compa-tests_diff_histo-1.png" width="50%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" data-line-number="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a></code></pre></div>
+</div>
+<div id="p-value-histogram" class="section level3">
+<h3>P-value histogram</h3>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" data-line-number="1"><span class="co">## Choose a color depending on whether we are under H0 (grey) or H1 (pink)</span></a>
+<a class="sourceLine" id="cb32-2" data-line-number="2"><span class="cf">if</span> (mu1 <span class="op">==</span><span class="st"> </span>mu2) {</a>
+<a class="sourceLine" id="cb32-3" data-line-number="3">  histColor &lt;-<span class="st"> &quot;#DDDDDD&quot;</span></a>
+<a class="sourceLine" id="cb32-4" data-line-number="4">  histBorder &lt;-<span class="st"> &quot;#888888&quot;</span></a>
+<a class="sourceLine" id="cb32-5" data-line-number="5">} <span class="cf">else</span> {</a>
+<a class="sourceLine" id="cb32-6" data-line-number="6">  histColor &lt;-<span class="st"> &quot;#FFCCCC&quot;</span></a>
+<a class="sourceLine" id="cb32-7" data-line-number="7">  histBorder &lt;-<span class="st"> &quot;#DD8888&quot;</span></a>
+<a class="sourceLine" id="cb32-8" data-line-number="8">}</a>
+<a class="sourceLine" id="cb32-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb32-10" data-line-number="10"><span class="co">## Draw an histogram of p-values with 20 bins</span></a>
+<a class="sourceLine" id="cb32-11" data-line-number="11"><span class="kw">hist</span>(resultTable<span class="op">$</span>p.value, </a>
+<a class="sourceLine" id="cb32-12" data-line-number="12">     <span class="dt">breaks =</span> <span class="dv">20</span>,</a>
+<a class="sourceLine" id="cb32-13" data-line-number="13">     <span class="dt">col =</span> histColor, </a>
+<a class="sourceLine" id="cb32-14" data-line-number="14">     <span class="dt">border =</span> histBorder, </a>
+<a class="sourceLine" id="cb32-15" data-line-number="15">     <span class="dt">las =</span> <span class="dv">1</span>,</a>
+<a class="sourceLine" id="cb32-16" data-line-number="16">     <span class="dt">main =</span> <span class="st">&quot;P-value histogram&quot;</span>,</a>
+<a class="sourceLine" id="cb32-17" data-line-number="17">     <span class="dt">xlab =</span> <span class="st">&quot;T-test P-value&quot;</span>,</a>
+<a class="sourceLine" id="cb32-18" data-line-number="18">     <span class="dt">ylab =</span> <span class="st">&quot;Number of tests&quot;</span>)</a>
+<a class="sourceLine" id="cb32-19" data-line-number="19"></a>
+<a class="sourceLine" id="cb32-20" data-line-number="20"><span class="co">## Draw a horizontal line indicating the number of tests per bin that would be expected under null hypothesis</span></a>
+<a class="sourceLine" id="cb32-21" data-line-number="21"><span class="kw">abline</span>(<span class="dt">h =</span> m <span class="op">/</span><span class="st"> </span><span class="dv">20</span>, <span class="dt">col =</span> <span class="st">&quot;darkgreen&quot;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a></code></pre></div>
+<p><img src="figures/mean-compa-tests_pval_histo-1.png" width="50%" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="creating-a-function-to-reuse-the-same-code-with-different-parameters" class="section level2">
+<h2>Creating a function to reuse the same code with different parameters</h2>
+<p>Depending on the selected task in the assignments above, we will run different tests with different parameters and compare the results. The most rudimentary way to do this is top copy-paste the chunk of code above for each test and set of parameters required for the assigned tasks.</p>
+<p>However, having several copies of an almost identical block of code is a very bad pracrice in programming, for several reasons</p>
+<ul>
+<li>lack of readability: the code rapidly becomes very heavy;</li>
+<li>difficulty to maintain: any modification has to be done on each copy of the chunk of code;</li>
+<li>risk for consistency: this is a source of inconsistency, because at some moment we will modify one copy and forget another one.</li>
+</ul>
+<p>A better practice is to define a <strong>function</strong> that encapsulates the code, and enables to modify the parameters by passing them as **arguments*. Hereafter we define a function that</p>
+<ul>
+<li><p>takes the parameters of the analysis as arguments</p>
+<ul>
+<li>population means <span class="math inline">\(\mu_1\)</span> and <span class="math inline">\(\mu_2\)</span>,</li>
+<li>population standard deviations <span class="math inline">\(\sigma_1\)</span> and <span class="math inline">\(\sigma_2\)</span>,</li>
+<li>sample sizes <span class="math inline">\(n_1\)</span> and <span class="math inline">\(n_2\)</span>,</li>
+<li>number of iterations <span class="math inline">\(r\)</span>.</li>
+</ul></li>
+<li>runs <span class="math inline">\(r\)</span> iterations of the t-test with 2 random samples,</li>
+<li><p>returns the results in a table with one row per iteration, and one column per resulting statistics (observed <span class="math inline">\(t\)</span> score, p-value, difference between means, …);</p></li>
+</ul>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" data-line-number="1"><span class="co">#### Define a function that runs r iterations of the t-test ####</span></a>
+<a class="sourceLine" id="cb33-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb33-3" data-line-number="3"><span class="co">#&#39; @title Repeat a T test with random numbers drawn from a normal distribution</span></a>
+<a class="sourceLine" id="cb33-4" data-line-number="4"><span class="co">#&#39; @param mu1 mean of the first population</span></a>
+<a class="sourceLine" id="cb33-5" data-line-number="5"><span class="co">#&#39; @param mu2 mean of the second population</span></a>
+<a class="sourceLine" id="cb33-6" data-line-number="6"><span class="co">#&#39; @param sigma1 standard deviation of the first population</span></a>
+<a class="sourceLine" id="cb33-7" data-line-number="7"><span class="co">#&#39; @param sigma2 standard deviation of the second population</span></a>
+<a class="sourceLine" id="cb33-8" data-line-number="8"><span class="co">#&#39; @param n1 first sample size</span></a>
+<a class="sourceLine" id="cb33-9" data-line-number="9"><span class="co">#&#39; @param n2 second sample size</span></a>
+<a class="sourceLine" id="cb33-10" data-line-number="10"><span class="co">#&#39; @param m number of repetitions of the tests</span></a>
+<a class="sourceLine" id="cb33-11" data-line-number="11"><span class="co">#&#39; @param ... additional parameters are passed to t.test(). This enables to set var.equal, alternative, ...</span></a>
+<a class="sourceLine" id="cb33-12" data-line-number="12"><span class="co">#&#39; @return  a table with one row per repetition of the test, and one column per statistics</span></a>
+<a class="sourceLine" id="cb33-13" data-line-number="13">IterateTtest &lt;-<span class="st"> </span><span class="cf">function</span>(mu1,    </a>
+<a class="sourceLine" id="cb33-14" data-line-number="14">                         mu2,</a>
+<a class="sourceLine" id="cb33-15" data-line-number="15">                         sigma1,</a>
+<a class="sourceLine" id="cb33-16" data-line-number="16">                         sigma2, </a>
+<a class="sourceLine" id="cb33-17" data-line-number="17">                         n1,     </a>
+<a class="sourceLine" id="cb33-18" data-line-number="18">                         n2,     </a>
+<a class="sourceLine" id="cb33-19" data-line-number="19">                         m,    </a>
+<a class="sourceLine" id="cb33-20" data-line-number="20">                         ...) {</a>
+<a class="sourceLine" id="cb33-21" data-line-number="21">  </a>
+<a class="sourceLine" id="cb33-22" data-line-number="22">  </a>
+<a class="sourceLine" id="cb33-23" data-line-number="23">  <span class="co">## Define the statistics we want to collect</span></a>
+<a class="sourceLine" id="cb33-24" data-line-number="24">  resultColumns &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;i&quot;</span>,       <span class="co"># iteration number</span></a>
+<a class="sourceLine" id="cb33-25" data-line-number="25">                      <span class="st">&quot;m1&quot;</span>,      <span class="co"># first sample mean</span></a>
+<a class="sourceLine" id="cb33-26" data-line-number="26">                      <span class="st">&quot;m2&quot;</span>,      <span class="co"># second sample mean</span></a>
+<a class="sourceLine" id="cb33-27" data-line-number="27">                      <span class="st">&quot;s1&quot;</span>,      <span class="co"># sd estimation for the first population</span></a>
+<a class="sourceLine" id="cb33-28" data-line-number="28">                      <span class="st">&quot;s2&quot;</span>,      <span class="co"># sd estimation for the second population</span></a>
+<a class="sourceLine" id="cb33-29" data-line-number="29">                      <span class="st">&quot;d&quot;</span>,       <span class="co"># difference between sample means</span></a>
+<a class="sourceLine" id="cb33-30" data-line-number="30">                      <span class="st">&quot;t&quot;</span>,       <span class="co"># test statistics</span></a>
+<a class="sourceLine" id="cb33-31" data-line-number="31">                      <span class="st">&quot;df&quot;</span>,      <span class="co"># degrees of freedom</span></a>
+<a class="sourceLine" id="cb33-32" data-line-number="32">                      <span class="st">&quot;p.value&quot;</span>  <span class="co"># nominal p-value</span></a>
+<a class="sourceLine" id="cb33-33" data-line-number="33">  )</a>
+<a class="sourceLine" id="cb33-34" data-line-number="34">  </a>
+<a class="sourceLine" id="cb33-35" data-line-number="35">  <span class="co">## Instantiate a result table to store the results</span></a>
+<a class="sourceLine" id="cb33-36" data-line-number="36">  resultTable &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">matrix</span>(<span class="dt">nrow =</span> m, <span class="dt">ncol =</span> <span class="kw">length</span>(resultColumns)))</a>
+<a class="sourceLine" id="cb33-37" data-line-number="37">  <span class="kw">colnames</span>(resultTable) &lt;-<span class="st"> </span>resultColumns <span class="co"># set the column names</span></a>
+<a class="sourceLine" id="cb33-38" data-line-number="38">  <span class="co"># View(resultTable) ## Check the table: it contians NA values</span></a>
+<a class="sourceLine" id="cb33-39" data-line-number="39">  </a>
+<a class="sourceLine" id="cb33-40" data-line-number="40">  <span class="co">## Iterate random number sampling followed by t-tests</span></a>
+<a class="sourceLine" id="cb33-41" data-line-number="41">  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>m) {</a>
+<a class="sourceLine" id="cb33-42" data-line-number="42">    <span class="co">## Generate two vectors containing the values for sample 1 and sample 2, resp.</span></a>
+<a class="sourceLine" id="cb33-43" data-line-number="43">    x1 &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dt">n =</span> n1, <span class="dt">mean =</span> mu1, <span class="dt">sd =</span> sigma1) <span class="co">## sample 1 values</span></a>
+<a class="sourceLine" id="cb33-44" data-line-number="44">    x2 &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dt">n =</span> n2, <span class="dt">mean =</span> mu2, <span class="dt">sd =</span> sigma2) <span class="co">## sample 2 values</span></a>
+<a class="sourceLine" id="cb33-45" data-line-number="45">    </a>
+<a class="sourceLine" id="cb33-46" data-line-number="46">    <span class="co">## Run the t test</span></a>
+<a class="sourceLine" id="cb33-47" data-line-number="47">    t.result &lt;-<span class="st"> </span><span class="kw">t.test</span>(</a>
+<a class="sourceLine" id="cb33-48" data-line-number="48">      <span class="dt">x =</span> x1, <span class="dt">y =</span> x2, </a>
+<a class="sourceLine" id="cb33-49" data-line-number="49">      <span class="dt">alternative =</span> <span class="st">&quot;two.sided&quot;</span>, <span class="dt">var.equal =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb33-50" data-line-number="50">    <span class="co"># names(t.result)</span></a>
+<a class="sourceLine" id="cb33-51" data-line-number="51">    </a>
+<a class="sourceLine" id="cb33-52" data-line-number="52">    <span class="co">## Collect the selected statistics in the result table</span></a>
+<a class="sourceLine" id="cb33-53" data-line-number="53">    resultTable[i, <span class="st">&quot;i&quot;</span>] &lt;-<span class="st"> </span>i</a>
+<a class="sourceLine" id="cb33-54" data-line-number="54">    resultTable[i, <span class="st">&quot;t&quot;</span>] &lt;-<span class="st"> </span>t.result<span class="op">$</span>statistic</a>
+<a class="sourceLine" id="cb33-55" data-line-number="55">    resultTable[i, <span class="st">&quot;df&quot;</span>] &lt;-<span class="st"> </span>t.result<span class="op">$</span>parameter</a>
+<a class="sourceLine" id="cb33-56" data-line-number="56">    resultTable[i, <span class="st">&quot;p.value&quot;</span>] &lt;-<span class="st"> </span>t.result<span class="op">$</span>p.value</a>
+<a class="sourceLine" id="cb33-57" data-line-number="57">    </a>
+<a class="sourceLine" id="cb33-58" data-line-number="58">    <span class="co">## Compute some additional statistics about the samples</span></a>
+<a class="sourceLine" id="cb33-59" data-line-number="59">    resultTable[i, <span class="st">&quot;m1&quot;</span>] &lt;-<span class="st"> </span><span class="kw">mean</span>(x1) <span class="co">## Mean of sample 1</span></a>
+<a class="sourceLine" id="cb33-60" data-line-number="60">    resultTable[i, <span class="st">&quot;m2&quot;</span>] &lt;-<span class="st"> </span><span class="kw">mean</span>(x2) <span class="co">## Mean of sample 2</span></a>
+<a class="sourceLine" id="cb33-61" data-line-number="61">    resultTable[i, <span class="st">&quot;s1&quot;</span>] &lt;-<span class="st"> </span><span class="kw">sd</span>(x1) <span class="co">## sd estimate for population 1</span></a>
+<a class="sourceLine" id="cb33-62" data-line-number="62">    resultTable[i, <span class="st">&quot;s2&quot;</span>] &lt;-<span class="st"> </span><span class="kw">sd</span>(x2) <span class="co">## sd estimate for population 2</span></a>
+<a class="sourceLine" id="cb33-63" data-line-number="63">    resultTable[i, <span class="st">&quot;d&quot;</span>] &lt;-<span class="st"> </span>resultTable[i, <span class="st">&quot;m1&quot;</span>] <span class="op">-</span><span class="st"> </span>resultTable[i, <span class="st">&quot;m2&quot;</span>] <span class="co">## Difference between sample means</span></a>
+<a class="sourceLine" id="cb33-64" data-line-number="64">  }</a>
+<a class="sourceLine" id="cb33-65" data-line-number="65">  </a>
+<a class="sourceLine" id="cb33-66" data-line-number="66">  <span class="co">#### Compute multiple testing corrections ####</span></a>
+<a class="sourceLine" id="cb33-67" data-line-number="67"></a>
+<a class="sourceLine" id="cb33-68" data-line-number="68">  <span class="co">## E-value</span></a>
+<a class="sourceLine" id="cb33-69" data-line-number="69">  <span class="co">## Expected number of FP</span></a>
+<a class="sourceLine" id="cb33-70" data-line-number="70">  resultTable<span class="op">$</span>e.value &lt;-<span class="st"> </span>resultTable<span class="op">$</span>p.value <span class="op">*</span><span class="st"> </span><span class="kw">nrow</span>(resultTable)</a>
+<a class="sourceLine" id="cb33-71" data-line-number="71">  </a>
+<a class="sourceLine" id="cb33-72" data-line-number="72">  <span class="co">## Family-Wise Error Rate (FWER)</span></a>
+<a class="sourceLine" id="cb33-73" data-line-number="73">  <span class="co">## Probability to have at least one FP given the p-value</span></a>
+<a class="sourceLine" id="cb33-74" data-line-number="74">  resultTable<span class="op">$</span>FWER &lt;-<span class="st"> </span><span class="kw">pbinom</span>(<span class="dt">q =</span> <span class="dv">0</span>, </a>
+<a class="sourceLine" id="cb33-75" data-line-number="75">                             <span class="dt">size =</span> <span class="kw">nrow</span>(resultTable), </a>
+<a class="sourceLine" id="cb33-76" data-line-number="76">                             <span class="dt">prob =</span> resultTable<span class="op">$</span>p.value, </a>
+<a class="sourceLine" id="cb33-77" data-line-number="77">                             <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb33-78" data-line-number="78"></a>
+<a class="sourceLine" id="cb33-79" data-line-number="79">  </a>
+<a class="sourceLine" id="cb33-80" data-line-number="80">  <span class="co">## Multiple testing corrections</span></a>
+<a class="sourceLine" id="cb33-81" data-line-number="81">  <span class="cf">for</span> (method <span class="cf">in</span> p.adjust.methods) {</a>
+<a class="sourceLine" id="cb33-82" data-line-number="82">    resultTable[, method] &lt;-<span class="st"> </span><span class="kw">p.adjust</span>(resultTable<span class="op">$</span>p.value, <span class="dt">method =</span> method)</a>
+<a class="sourceLine" id="cb33-83" data-line-number="83">  }</a>
+<a class="sourceLine" id="cb33-84" data-line-number="84">  </a>
+<a class="sourceLine" id="cb33-85" data-line-number="85">  <span class="co"># ## Storey - Tibshirani q-value</span></a>
+<a class="sourceLine" id="cb33-86" data-line-number="86">  <span class="co"># qvalResult &lt;- qvalue::qvalue(p = unlist(resultTable$p.value))</span></a>
+<a class="sourceLine" id="cb33-87" data-line-number="87">  <span class="co"># resultTable$q.value &lt;- </span></a>
+<a class="sourceLine" id="cb33-88" data-line-number="88">  </a>
+<a class="sourceLine" id="cb33-89" data-line-number="89">  <span class="kw">return</span>(resultTable) <span class="co">## This function returns the result table</span></a>
+<a class="sourceLine" id="cb33-90" data-line-number="90">}</a></code></pre></div>
+<p>We can now use this function to iterate the <span class="math inline">\(t\)</span> test with the parameters we want. Let us measure the running time</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1"><span class="co">## Some tests under H1</span></a>
+<a class="sourceLine" id="cb34-2" data-line-number="2"><span class="kw">system.time</span>(</a>
+<a class="sourceLine" id="cb34-3" data-line-number="3">  tTestTableH1 &lt;-<span class="st"> </span><span class="kw">IterateTtest</span>(<span class="dt">mu1 =</span> <span class="dv">7</span>, <span class="dt">mu2 =</span> <span class="dv">10</span>, <span class="dt">sigma1 =</span> <span class="dv">2</span>, <span class="dt">sigma2 =</span> <span class="dv">3</span>, <span class="dt">n1 =</span> <span class="dv">16</span>, <span class="dt">n2 =</span> <span class="dv">16</span>, <span class="dt">m =</span> <span class="dv">1000</span>)</a>
+<a class="sourceLine" id="cb34-4" data-line-number="4">)</a></code></pre></div>
+<pre><code>   user  system elapsed 
+  0.598   0.247   0.817 </code></pre>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1"><span class="co">## Some tests under H0</span></a>
+<a class="sourceLine" id="cb36-2" data-line-number="2"><span class="kw">system.time</span>(</a>
+<a class="sourceLine" id="cb36-3" data-line-number="3">  tTestTableH0 &lt;-<span class="st"> </span><span class="kw">IterateTtest</span>(<span class="dt">mu1 =</span> <span class="dv">10</span>, <span class="dt">mu2 =</span> <span class="dv">10</span>, <span class="dt">sigma1 =</span> <span class="dv">2</span>, <span class="dt">sigma2 =</span> <span class="dv">3</span>, <span class="dt">n1 =</span> <span class="dv">16</span>, <span class="dt">n2 =</span> <span class="dv">16</span>, <span class="dt">m =</span> <span class="dv">1000</span>)</a>
+<a class="sourceLine" id="cb36-4" data-line-number="4">)</a></code></pre></div>
+<pre><code>   user  system elapsed 
+  0.561   0.233   0.767 </code></pre>
+<p>This function can then be used several times, with different values of the parameters.</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" data-line-number="1"><span class="co">## What happens when  the two means are equal (under the null hypothesis)</span></a>
+<a class="sourceLine" id="cb38-2" data-line-number="2">testH0 &lt;-<span class="st"> </span><span class="kw">IterateTtest</span>(<span class="dt">mu1 =</span> <span class="dv">10</span>, <span class="dt">mu2 =</span> <span class="dv">10</span>, <span class="dt">sigma1 =</span> sigma1, <span class="dt">sigma2 =</span> sigma2, <span class="dt">n1 =</span> n1, <span class="dt">n2 =</span> n2, <span class="dt">m =</span> m, <span class="dt">var.equal =</span> <span class="ot">FALSE</span>, <span class="dt">alternative =</span> <span class="st">&quot;two.sided&quot;</span>)</a>
+<a class="sourceLine" id="cb38-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb38-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb38-5" data-line-number="5"><span class="co">## Test increasing values of the difference between population means (delta)</span></a>
+<a class="sourceLine" id="cb38-6" data-line-number="6">delta0<span class="fl">.1</span> &lt;-<span class="st"> </span><span class="kw">IterateTtest</span>(<span class="dt">mu1 =</span> mu1, <span class="dt">mu2 =</span> mu1 <span class="op">+</span><span class="st"> </span><span class="fl">0.1</span>, <span class="dt">sigma1 =</span> sigma1, <span class="dt">sigma2 =</span> sigma2, <span class="dt">n1 =</span> n1, <span class="dt">n2 =</span> n2, <span class="dt">m =</span> m, <span class="dt">var.equal =</span> <span class="ot">FALSE</span>, <span class="dt">alternative =</span> <span class="st">&quot;two.sided&quot;</span>)</a>
+<a class="sourceLine" id="cb38-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb38-8" data-line-number="8">delta0<span class="fl">.5</span> &lt;-<span class="st"> </span><span class="kw">IterateTtest</span>(<span class="dt">mu1 =</span> mu1, <span class="dt">mu2 =</span> mu1 <span class="op">+</span><span class="st"> </span><span class="fl">0.5</span>, <span class="dt">sigma1 =</span> sigma1, <span class="dt">sigma2 =</span> sigma2, <span class="dt">n1 =</span> n1, <span class="dt">n2 =</span> n2, <span class="dt">m =</span> m, <span class="dt">var.equal =</span> <span class="ot">FALSE</span>, <span class="dt">alternative =</span> <span class="st">&quot;two.sided&quot;</span>)</a>
+<a class="sourceLine" id="cb38-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb38-10" data-line-number="10">delta1 &lt;-<span class="st"> </span><span class="kw">IterateTtest</span>(<span class="dt">mu1 =</span> mu1, <span class="dt">mu2 =</span> mu1 <span class="op">+</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">sigma1 =</span> sigma1, <span class="dt">sigma2 =</span> sigma2, <span class="dt">n1 =</span> n1, <span class="dt">n2 =</span> n2, <span class="dt">m =</span> m, <span class="dt">var.equal =</span> <span class="ot">FALSE</span>, <span class="dt">alternative =</span> <span class="st">&quot;two.sided&quot;</span>)</a>
+<a class="sourceLine" id="cb38-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb38-12" data-line-number="12">delta2 &lt;-<span class="st"> </span><span class="kw">IterateTtest</span>(<span class="dt">mu1 =</span> mu1, <span class="dt">mu2 =</span> mu1 <span class="op">+</span><span class="st"> </span><span class="dv">2</span>, <span class="dt">sigma1 =</span> sigma1, <span class="dt">sigma2 =</span> sigma2, <span class="dt">n1 =</span> n1, <span class="dt">n2 =</span> n2, <span class="dt">m =</span> m, <span class="dt">var.equal =</span> <span class="ot">FALSE</span>, <span class="dt">alternative =</span> <span class="st">&quot;two.sided&quot;</span>)</a>
+<a class="sourceLine" id="cb38-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb38-14" data-line-number="14">delta3 &lt;-<span class="st"> </span><span class="kw">IterateTtest</span>(<span class="dt">mu1 =</span> mu1, <span class="dt">mu2 =</span> mu1 <span class="op">+</span><span class="st"> </span><span class="dv">3</span>, <span class="dt">sigma1 =</span> sigma1, <span class="dt">sigma2 =</span> sigma2, <span class="dt">n1 =</span> n1, <span class="dt">n2 =</span> n2, <span class="dt">m =</span> m, <span class="dt">var.equal =</span> <span class="ot">FALSE</span>, <span class="dt">alternative =</span> <span class="st">&quot;two.sided&quot;</span>)</a></code></pre></div>
+</div>
+<div id="p-value-histograms" class="section level2">
+<h2>P-value histograms</h2>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" data-line-number="1"><span class="co">## Define a function that rdraws the p-value histogram </span></a>
+<a class="sourceLine" id="cb39-2" data-line-number="2"><span class="co">## based on the result table of t-test iterations</span></a>
+<a class="sourceLine" id="cb39-3" data-line-number="3"><span class="co">## as produced by the iterate.t.test() function.</span></a>
+<a class="sourceLine" id="cb39-4" data-line-number="4">pvalHistogram &lt;-<span class="st"> </span><span class="cf">function</span>(</a>
+<a class="sourceLine" id="cb39-5" data-line-number="5">  resultTable, <span class="co">## required input (no default value): the result table from iterate.t.test()</span></a>
+<a class="sourceLine" id="cb39-6" data-line-number="6">  <span class="dt">main =</span> <span class="st">&quot;P-value histogram&quot;</span>,  <span class="co">## main title (with default value)</span></a>
+<a class="sourceLine" id="cb39-7" data-line-number="7">  <span class="dt">alpha =</span> <span class="fl">0.05</span>, <span class="co">## Significance threshold</span></a>
+<a class="sourceLine" id="cb39-8" data-line-number="8">  ... <span class="co">## Additional parameters, which will be passed to hist()</span></a>
+<a class="sourceLine" id="cb39-9" data-line-number="9">  ) {</a>
+<a class="sourceLine" id="cb39-10" data-line-number="10">  </a>
+<a class="sourceLine" id="cb39-11" data-line-number="11">  <span class="co">## Plot the histogram</span></a>
+<a class="sourceLine" id="cb39-12" data-line-number="12">  <span class="kw">hist</span>(resultTable<span class="op">$</span>p.value, </a>
+<a class="sourceLine" id="cb39-13" data-line-number="13">       <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">by =</span> <span class="fl">0.05</span>),</a>
+<a class="sourceLine" id="cb39-14" data-line-number="14">       <span class="dt">las =</span> <span class="dv">1</span>, </a>
+<a class="sourceLine" id="cb39-15" data-line-number="15">       <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>),</a>
+<a class="sourceLine" id="cb39-16" data-line-number="16">       <span class="dt">main =</span> main,</a>
+<a class="sourceLine" id="cb39-17" data-line-number="17">       <span class="dt">xlab =</span> <span class="st">&quot;T-test P-value&quot;</span>,</a>
+<a class="sourceLine" id="cb39-18" data-line-number="18">       <span class="dt">ylab =</span> <span class="st">&quot;Number of tests&quot;</span>, </a>
+<a class="sourceLine" id="cb39-19" data-line-number="19">       ...)</a>
+<a class="sourceLine" id="cb39-20" data-line-number="20">  </a>
+<a class="sourceLine" id="cb39-21" data-line-number="21">  <span class="co">## Draw a horizontal line indicating the number of tests per bin that would be expected under null hypothesis</span></a>
+<a class="sourceLine" id="cb39-22" data-line-number="22">  <span class="kw">abline</span>(<span class="dt">h =</span> m <span class="op">/</span><span class="st"> </span><span class="dv">20</span>, <span class="dt">col =</span> <span class="st">&quot;darkgreen&quot;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb39-23" data-line-number="23">  <span class="kw">abline</span>(<span class="dt">v =</span> alpha, <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb39-24" data-line-number="24">  </a>
+<a class="sourceLine" id="cb39-25" data-line-number="25">  <span class="co">## Compute the percent of positive and negative results``</span></a>
+<a class="sourceLine" id="cb39-26" data-line-number="26">  nb.pos &lt;-<span class="st"> </span><span class="kw">sum</span>(resultTable<span class="op">$</span>p.value <span class="op">&lt;</span><span class="st"> </span>alpha)</a>
+<a class="sourceLine" id="cb39-27" data-line-number="27">  nb.neg &lt;-<span class="st"> </span>m <span class="op">-</span><span class="st"> </span>nb.pos</a>
+<a class="sourceLine" id="cb39-28" data-line-number="28">  percent.pos &lt;-<span class="st"> </span><span class="dv">100</span> <span class="op">*</span><span class="st"> </span>nb.pos <span class="op">/</span><span class="st"> </span>m</a>
+<a class="sourceLine" id="cb39-29" data-line-number="29">  percent.neg &lt;-<span class="st"> </span><span class="dv">100</span> <span class="op">*</span><span class="st"> </span>nb.neg <span class="op">/</span><span class="st"> </span>m</a>
+<a class="sourceLine" id="cb39-30" data-line-number="30">  </a>
+<a class="sourceLine" id="cb39-31" data-line-number="31">  <span class="co">## Add a legend indicating the percent of iterations declaed positive and negative, resp.</span></a>
+<a class="sourceLine" id="cb39-32" data-line-number="32">  <span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, </a>
+<a class="sourceLine" id="cb39-33" data-line-number="33">         <span class="dt">bty =</span> <span class="st">&quot;o&quot;</span>, </a>
+<a class="sourceLine" id="cb39-34" data-line-number="34">         <span class="dt">bg =</span> <span class="st">&quot;white&quot;</span>,</a>
+<a class="sourceLine" id="cb39-35" data-line-number="35">         <span class="dt">cex =</span> <span class="fl">0.7</span>,</a>
+<a class="sourceLine" id="cb39-36" data-line-number="36">         <span class="dt">legend =</span> <span class="kw">c</span>(</a>
+<a class="sourceLine" id="cb39-37" data-line-number="37">           <span class="kw">paste</span>(<span class="st">&quot;m = &quot;</span>, <span class="kw">nrow</span>(resultTable)),</a>
+<a class="sourceLine" id="cb39-38" data-line-number="38">           <span class="kw">paste</span>(<span class="st">&quot;N(+) = &quot;</span>, nb.pos),</a>
+<a class="sourceLine" id="cb39-39" data-line-number="39">           <span class="kw">paste</span>(<span class="st">&quot;N(-) =&quot;</span>, nb.neg),</a>
+<a class="sourceLine" id="cb39-40" data-line-number="40">           <span class="kw">paste</span>(<span class="st">&quot;pc(+) = &quot;</span>, <span class="kw">round</span>(<span class="dt">digits =</span> <span class="dv">2</span>, percent.pos)),</a>
+<a class="sourceLine" id="cb39-41" data-line-number="41">           <span class="kw">paste</span>(<span class="st">&quot;pc(-) =&quot;</span>, <span class="kw">round</span>(<span class="dt">digits =</span> <span class="dv">2</span>, percent.neg))</a>
+<a class="sourceLine" id="cb39-42" data-line-number="42">         ))</a>
+<a class="sourceLine" id="cb39-43" data-line-number="43">}</a></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" data-line-number="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">2</span>)) <span class="co">## Prepare 2 x 2 panels figure</span></a>
+<a class="sourceLine" id="cb40-2" data-line-number="2"><span class="kw">pvalHistogram</span>(testH0, <span class="dt">main =</span> <span class="st">&quot;under H0 (mu1 = mu2)&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;#DDDDDD&quot;</span>, <span class="dt">border =</span> <span class="st">&quot;#DDDDDD&quot;</span>)</a>
+<a class="sourceLine" id="cb40-3" data-line-number="3"><span class="kw">pvalHistogram</span>(delta0<span class="fl">.1</span>, <span class="dt">main =</span> <span class="st">&quot;mu1 - mu2 = 0.1&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;#FFDDBB&quot;</span>)</a>
+<a class="sourceLine" id="cb40-4" data-line-number="4"><span class="kw">pvalHistogram</span>(delta0<span class="fl">.5</span>, <span class="dt">main =</span> <span class="st">&quot;mu1 - mu2 = 0.5&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;#FFDDBB&quot;</span>)</a>
+<a class="sourceLine" id="cb40-5" data-line-number="5"><span class="kw">pvalHistogram</span>(delta1, <span class="dt">main =</span> <span class="st">&quot;mu1 - mu2 = 1&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;#FFDDBB&quot;</span>)</a>
+<a class="sourceLine" id="cb40-6" data-line-number="6"><span class="kw">pvalHistogram</span>(delta2, <span class="dt">main =</span> <span class="st">&quot;mu1 - mu2 = 2&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;#FFDDBB&quot;</span>)</a>
+<a class="sourceLine" id="cb40-7" data-line-number="7"><span class="kw">pvalHistogram</span>(delta3, <span class="dt">main =</span> <span class="st">&quot;mu1 - mu2 = 3&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;#FFDDBB&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/mean-compa-tests_pval_histograms-1.png" alt="P-value historams of the multiple test results with increasing effect sizes." width="90%" />
+<p class="caption">
+P-value historams of the multiple test results with increasing effect sizes.
+</p>
+</div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" data-line-number="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>)) <span class="co">## Restore single-panel layout for next figures</span></a></code></pre></div>
+</div>
+<div id="volcano-plots" class="section level2">
+<h2>Volcano plots</h2>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" data-line-number="1"><span class="co">#### Define VolcanoPlot() function ####</span></a>
+<a class="sourceLine" id="cb42-2" data-line-number="2">VolcanoPlot &lt;-<span class="st"> </span><span class="cf">function</span>(resultTable, </a>
+<a class="sourceLine" id="cb42-3" data-line-number="3">                        <span class="dt">alpha =</span> <span class="fl">0.05</span>, </a>
+<a class="sourceLine" id="cb42-4" data-line-number="4">                        ...) {</a>
+<a class="sourceLine" id="cb42-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb42-6" data-line-number="6">  </a>
+<a class="sourceLine" id="cb42-7" data-line-number="7">  <span class="co">## Collect effect size values for the X axis  </span></a>
+<a class="sourceLine" id="cb42-8" data-line-number="8">  effectSize &lt;-<span class="st"> </span>resultTable<span class="op">$</span>d</a>
+<a class="sourceLine" id="cb42-9" data-line-number="9">  maxXabs &lt;-<span class="st"> </span><span class="kw">max</span>(<span class="kw">abs</span>(effectSize))</a>
+<a class="sourceLine" id="cb42-10" data-line-number="10">  xmax &lt;-<span class="st"> </span><span class="kw">signif</span>(<span class="dt">digits =</span> <span class="dv">1</span>, maxXabs)</a>
+<a class="sourceLine" id="cb42-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb42-12" data-line-number="12">  <span class="co">## Collect p-values for the Y axis</span></a>
+<a class="sourceLine" id="cb42-13" data-line-number="13">  log10Pval &lt;-<span class="st"> </span><span class="op">-</span><span class="kw">log10</span>(resultTable<span class="op">$</span>p.value)</a>
+<a class="sourceLine" id="cb42-14" data-line-number="14">    </a>
+<a class="sourceLine" id="cb42-15" data-line-number="15">  <span class="kw">plot</span>(effectSize, </a>
+<a class="sourceLine" id="cb42-16" data-line-number="16">       log10Pval,</a>
+<a class="sourceLine" id="cb42-17" data-line-number="17">       <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="op">-</span>xmax, xmax),</a>
+<a class="sourceLine" id="cb42-18" data-line-number="18">       <span class="dt">lax =</span> <span class="dv">1</span>,</a>
+<a class="sourceLine" id="cb42-19" data-line-number="19">       <span class="dt">xlab =</span> <span class="st">&quot;Effect size&quot;</span>,</a>
+<a class="sourceLine" id="cb42-20" data-line-number="20">       <span class="dt">ylab =</span> <span class="st">&quot;-log10(Pval)&quot;</span>,</a>
+<a class="sourceLine" id="cb42-21" data-line-number="21">       ...</a>
+<a class="sourceLine" id="cb42-22" data-line-number="22">       )</a>
+<a class="sourceLine" id="cb42-23" data-line-number="23">  <span class="kw">abline</span>(<span class="dt">v =</span> <span class="dv">0</span>) </a>
+<a class="sourceLine" id="cb42-24" data-line-number="24">  <span class="kw">abline</span>(<span class="dt">h =</span> <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb42-25" data-line-number="25">  <span class="kw">abline</span>(<span class="dt">h =</span> <span class="op">-</span><span class="kw">log10</span>(alpha), <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>)</a>
+<a class="sourceLine" id="cb42-26" data-line-number="26">  </a>
+<a class="sourceLine" id="cb42-27" data-line-number="27">  <span class="co">## Compute the percent of positive and negative results``</span></a>
+<a class="sourceLine" id="cb42-28" data-line-number="28">  nb.pos &lt;-<span class="st"> </span><span class="kw">sum</span>(resultTable<span class="op">$</span>p.value <span class="op">&lt;</span><span class="st"> </span>alpha)</a>
+<a class="sourceLine" id="cb42-29" data-line-number="29">  nb.neg &lt;-<span class="st"> </span>m <span class="op">-</span><span class="st"> </span>nb.pos</a>
+<a class="sourceLine" id="cb42-30" data-line-number="30">  percent.pos &lt;-<span class="st"> </span><span class="dv">100</span> <span class="op">*</span><span class="st"> </span>nb.pos <span class="op">/</span><span class="st"> </span>m</a>
+<a class="sourceLine" id="cb42-31" data-line-number="31">  percent.neg &lt;-<span class="st"> </span><span class="dv">100</span> <span class="op">*</span><span class="st"> </span>nb.neg <span class="op">/</span><span class="st"> </span>m</a>
+<a class="sourceLine" id="cb42-32" data-line-number="32">  </a>
+<a class="sourceLine" id="cb42-33" data-line-number="33"></a>
+<a class="sourceLine" id="cb42-34" data-line-number="34">  <span class="co">## Add a legend indicating the percent of iterations declaed positive and negative, resp.</span></a>
+<a class="sourceLine" id="cb42-35" data-line-number="35">  <span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, </a>
+<a class="sourceLine" id="cb42-36" data-line-number="36">         <span class="dt">bty =</span> <span class="st">&quot;o&quot;</span>, </a>
+<a class="sourceLine" id="cb42-37" data-line-number="37">         <span class="dt">bg =</span> <span class="st">&quot;white&quot;</span>,</a>
+<a class="sourceLine" id="cb42-38" data-line-number="38">         <span class="dt">cex =</span> <span class="fl">0.7</span>,</a>
+<a class="sourceLine" id="cb42-39" data-line-number="39">         <span class="dt">legend =</span> <span class="kw">c</span>(</a>
+<a class="sourceLine" id="cb42-40" data-line-number="40">           <span class="kw">paste</span>(<span class="st">&quot;m = &quot;</span>, <span class="kw">nrow</span>(resultTable)),</a>
+<a class="sourceLine" id="cb42-41" data-line-number="41">           <span class="kw">paste</span>(<span class="st">&quot;N(+) = &quot;</span>, nb.pos),</a>
+<a class="sourceLine" id="cb42-42" data-line-number="42">           <span class="kw">paste</span>(<span class="st">&quot;N(-) =&quot;</span>, nb.neg),</a>
+<a class="sourceLine" id="cb42-43" data-line-number="43">           <span class="kw">paste</span>(<span class="st">&quot;pc(+) = &quot;</span>, <span class="kw">round</span>(<span class="dt">digits =</span> <span class="dv">2</span>, percent.pos)),</a>
+<a class="sourceLine" id="cb42-44" data-line-number="44">           <span class="kw">paste</span>(<span class="st">&quot;pc(-) =&quot;</span>, <span class="kw">round</span>(<span class="dt">digits =</span> <span class="dv">2</span>, percent.neg))</a>
+<a class="sourceLine" id="cb42-45" data-line-number="45">         ))</a>
+<a class="sourceLine" id="cb42-46" data-line-number="46"></a>
+<a class="sourceLine" id="cb42-47" data-line-number="47">}</a></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" data-line-number="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb43-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb43-3" data-line-number="3"><span class="kw">VolcanoPlot</span>(testH0, <span class="dt">main =</span> <span class="st">&quot;under H0 (mu1 = mu2)&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;#DDDDDD&quot;</span>)</a>
+<a class="sourceLine" id="cb43-4" data-line-number="4"><span class="kw">VolcanoPlot</span>(delta0<span class="fl">.1</span>, <span class="dt">main =</span> <span class="st">&quot;mu1 - mu2 = 0.1&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;#FFDDBB&quot;</span>)</a>
+<a class="sourceLine" id="cb43-5" data-line-number="5"><span class="kw">VolcanoPlot</span>(delta0<span class="fl">.5</span>, <span class="dt">main =</span> <span class="st">&quot;mu1 - mu2 = 0.5&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;#FFDDBB&quot;</span>)</a>
+<a class="sourceLine" id="cb43-6" data-line-number="6"><span class="kw">VolcanoPlot</span>(delta1, <span class="dt">main =</span> <span class="st">&quot;mu1 - mu2 = 1&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;#FFDDBB&quot;</span>)</a>
+<a class="sourceLine" id="cb43-7" data-line-number="7"><span class="kw">VolcanoPlot</span>(delta2, <span class="dt">main =</span> <span class="st">&quot;mu1 - mu2 = 2&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;#FFDDBB&quot;</span>)</a>
+<a class="sourceLine" id="cb43-8" data-line-number="8"><span class="kw">VolcanoPlot</span>(delta3, <span class="dt">main =</span> <span class="st">&quot;mu1 - mu2 = 3&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;#FFDDBB&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/mean-compa-tests_volcano_plots-1.png" alt="Volcano plots of the multiple test results with increasing effect sizes." width="90%" />
+<p class="caption">
+Volcano plots of the multiple test results with increasing effect sizes.
+</p>
+</div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb44-1" data-line-number="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</a></code></pre></div>
+</div>
+<div id="multiple-testing-corrections" class="section level2">
+<h2>Multiple testing corrections</h2>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" data-line-number="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb45-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb45-3" data-line-number="3">MultiCorrectionsPlot &lt;-<span class="st"> </span><span class="cf">function</span>(resultTable,</a>
+<a class="sourceLine" id="cb45-4" data-line-number="4">                                 <span class="dt">main =</span> <span class="st">&quot;Multiple testing corrections&quot;</span>) {</a>
+<a class="sourceLine" id="cb45-5" data-line-number="5">  <span class="co">#### Compare p-value corrections under H0 ####</span></a>
+<a class="sourceLine" id="cb45-6" data-line-number="6">  <span class="kw">plot</span>(resultTable<span class="op">$</span>p.value, </a>
+<a class="sourceLine" id="cb45-7" data-line-number="7">       resultTable<span class="op">$</span>p.value,</a>
+<a class="sourceLine" id="cb45-8" data-line-number="8">       <span class="dt">main =</span> main,</a>
+<a class="sourceLine" id="cb45-9" data-line-number="9">       <span class="dt">col =</span> <span class="st">&quot;grey&quot;</span>,</a>
+<a class="sourceLine" id="cb45-10" data-line-number="10">       <span class="dt">log =</span> <span class="st">&quot;xy&quot;</span>,</a>
+<a class="sourceLine" id="cb45-11" data-line-number="11">       <span class="dt">xlab =</span> <span class="st">&quot;Nominal P-value&quot;</span>,</a>
+<a class="sourceLine" id="cb45-12" data-line-number="12">       <span class="dt">ylab =</span> <span class="st">&quot;Corrected P-value&quot;</span>,</a>
+<a class="sourceLine" id="cb45-13" data-line-number="13">       <span class="dt">panel.first =</span> <span class="kw">grid</span>())</a>
+<a class="sourceLine" id="cb45-14" data-line-number="14">  <span class="kw">abline</span>(<span class="dt">v =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb45-15" data-line-number="15">  <span class="kw">abline</span>(<span class="dt">h =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb45-16" data-line-number="16">  <span class="kw">abline</span>(<span class="dt">h  =</span> alpha, <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>)</a>
+<a class="sourceLine" id="cb45-17" data-line-number="17">  <span class="kw">abline</span>(<span class="dt">v  =</span> alpha, <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>)</a>
+<a class="sourceLine" id="cb45-18" data-line-number="18">  </a>
+<a class="sourceLine" id="cb45-19" data-line-number="19">  <span class="co">## FWER</span></a>
+<a class="sourceLine" id="cb45-20" data-line-number="20">  <span class="kw">points</span>(resultTable<span class="op">$</span>p.value, </a>
+<a class="sourceLine" id="cb45-21" data-line-number="21">         resultTable<span class="op">$</span>FWER, <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>)</a>
+<a class="sourceLine" id="cb45-22" data-line-number="22">  </a>
+<a class="sourceLine" id="cb45-23" data-line-number="23">  <span class="co">## Bonferroni correction</span></a>
+<a class="sourceLine" id="cb45-24" data-line-number="24">  <span class="kw">points</span>(resultTable<span class="op">$</span>p.value, </a>
+<a class="sourceLine" id="cb45-25" data-line-number="25">         resultTable<span class="op">$</span>bonferroni, <span class="dt">col =</span> <span class="st">&quot;orange&quot;</span>)</a>
+<a class="sourceLine" id="cb45-26" data-line-number="26">  </a>
+<a class="sourceLine" id="cb45-27" data-line-number="27">  <span class="co">## Benjamini-Hochberg</span></a>
+<a class="sourceLine" id="cb45-28" data-line-number="28">  <span class="kw">points</span>(resultTable<span class="op">$</span>p.value, </a>
+<a class="sourceLine" id="cb45-29" data-line-number="29">         resultTable<span class="op">$</span>BH, <span class="dt">col =</span> <span class="st">&quot;darkgreen&quot;</span>)</a>
+<a class="sourceLine" id="cb45-30" data-line-number="30">}  </a>
+<a class="sourceLine" id="cb45-31" data-line-number="31"></a>
+<a class="sourceLine" id="cb45-32" data-line-number="32"></a>
+<a class="sourceLine" id="cb45-33" data-line-number="33"></a>
+<a class="sourceLine" id="cb45-34" data-line-number="34"><span class="kw">MultiCorrectionsPlot</span>(testH0, <span class="dt">main =</span> <span class="st">&quot;under H0 (mu1 = mu2)&quot;</span>)</a>
+<a class="sourceLine" id="cb45-35" data-line-number="35"><span class="kw">MultiCorrectionsPlot</span>(delta0<span class="fl">.1</span>, <span class="dt">main =</span> <span class="st">&quot;mu1 - mu2 = 0.1&quot;</span>)</a>
+<a class="sourceLine" id="cb45-36" data-line-number="36"><span class="kw">MultiCorrectionsPlot</span>(delta0<span class="fl">.5</span>, <span class="dt">main =</span> <span class="st">&quot;mu1 - mu2 = 0.5&quot;</span>)</a>
+<a class="sourceLine" id="cb45-37" data-line-number="37"><span class="kw">MultiCorrectionsPlot</span>(delta1, <span class="dt">main =</span> <span class="st">&quot;mu1 - mu2 = 1&quot;</span>)</a>
+<a class="sourceLine" id="cb45-38" data-line-number="38"><span class="kw">MultiCorrectionsPlot</span>(delta2, <span class="dt">main =</span> <span class="st">&quot;mu1 - mu2 = 2&quot;</span>)</a>
+<a class="sourceLine" id="cb45-39" data-line-number="39"><span class="kw">MultiCorrectionsPlot</span>(delta3, <span class="dt">main =</span> <span class="st">&quot;mu1 - mu2 = 3&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/mean-compa-tests_multi_test_corrections-1.png" alt="Multiple testing corrections." width="90%" />
+<p class="caption">
+Multiple testing corrections.
+</p>
+</div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb46-1" data-line-number="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</a></code></pre></div>
+<p>```</p>
+</div>
+<div id="interpretation-of-the-results" class="section level2">
+<h2>Interpretation of the results</h2>
+<p>We should now write a report of interpretation, which will address the following questions.</p>
+<ul>
+<li><p>Based on the experiments under <span class="math inline">\(H_0\)</span>, compute the number of false positives and estimate the <strong>false positive rate</strong> (<strong>FPR</strong>). Compare these values with the <strong>E-value</strong> (expected number of false positives) for the 1000 tests, and with your <span class="math inline">\(alpha\)</span> trheshold.</p></li>
+<li><p>Based on the experiments under <span class="math inline">\(H_1\)</span>, estimate the <strong>sensitivity</strong> (<strong>Sn</strong>) of the test for the different mean differences tested here.</p></li>
+<li><p>Interpret the histograms of P-values obtained with the different parameters ?</p></li>
+<li><p>Draw a <strong>power curve</strong> (i.e. the sensitivity as a function of the actual difference between population means)</p></li>
+<li><p>Discuss about the adequation between the test and the conditions of our simulations.</p></li>
+<li><p>Do these observations correspond to what would be expected from the theory?</p></li>
+</ul>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

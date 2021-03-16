@@ -1,0 +1,463 @@
+---
+title: "Differential analysis of proteomics data"
+author: "Jacques van Helden"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    self_contained: no
+    code_folding: hide
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    highlight: tango
+    incremental: no
+    keep_md: yes
+    smaller: yes
+    theme: cerulean
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+    widescreen: yes
+  beamer_presentation:
+    colortheme: dolphin
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    fonttheme: structurebold
+    highlight: tango
+    incremental: no
+    keep_tex: no
+    slide_level: 2
+    theme: Montpellier
+    toc: yes
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
+  revealjs::revealjs_presentation:
+    theme: night
+    transition: none
+    self_contained: no
+    code_folding: hide
+    css: ../../slides.css
+  slidy_presentation:
+    font_adjustment: 0   ## set to negative/positive values for smaller/bigger fonts
+    duration: 45
+    self_contained: no
+    code_folding: hide
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    highlight: tango
+    incremental: no
+    keep_md: yes
+    smaller: yes
+    theme: cerulean
+    toc: yes
+    widescreen: yes
+  ioslides_presentation:
+    self_contained: no
+    code_folding: hide
+    css: ../../slides.css
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    highlight: tango
+    smaller: yes
+    toc: yes
+    widescreen: yes
+font-import: http://fonts.googleapis.com/css?family=Risque
+subtitle: DUBii -- Statistics with R
+font-family: Garamond
+transition: linear
+---
+
+```{r include=FALSE, echo=FALSE, eval=TRUE}
+
+## Install required packages
+packages <- c("knitr", "vioplot", "qvalue")
+for (pkg in packages) {
+  if (!require(pkg, character.only = TRUE)) {
+    message("Installing missing package: ", pkg)
+    install.packages(pkg)
+  }
+  library(pkg, character.only = TRUE)
+}
+
+## Set options for knitr
+options(width = 300)
+knitr::opts_chunk$set(
+  fig.width = 7, fig.height = 5, 
+  out.width = "80%",
+  fig.align = "center", 
+  fig.path = "figures/data-structures_",
+  size = "tiny", 
+  echo = TRUE, 
+  eval = TRUE, 
+  warning = FALSE, 
+  message = FALSE, 
+  results = TRUE, 
+  comment = "")
+# knitr::asis_output("\\footnotesize")
+```
+
+## Data sources
+
+Study case: 
+
+- Stare, T., Ramšak, Ž., Križnik, M. et al. Multiomics analysis of tolerant interaction of potato with potato virus Y. Sci Data 6, 250 (2019). https://doi.org/10.1038/s41597-019-0216-1 (<https://www.nature.com/articles/s41597-019-0216-1>)
+
+- The metadata and data area available on the PRIDE database (<https://www.ebi.ac.uk/pride/archive/projects/PXD015221>).
+
+- The data was downloaded from the FTP site (<ftp://ftp.pride.ebi.ac.uk/pride/data/archive/2019/09/PXD015221>). 
+
+
+
+
+## Data loading
+
+### Data location
+
+```{r}
+## Local dir containing the data
+dataDir <- "data"
+# list.files(dataDir)
+
+## Data file (table of protein quantifications)
+data.file <- "ProteomeDiscoverer_Multiconsensus_from_18_Reports_PEP_INFO_protein-table.csv"
+
+## Metadata file (sample descriptions)
+metadata.file <- "Metadata_sample_names.csv" 
+
+```
+
+### Load and check the metadata
+
+```{r}
+## Load metadata table
+metadata <- read.csv(file = file.path(dataDir, metadata.file))
+# View(metadata)
+# names(metadata)
+
+# Select the relevant columns for our analysis
+fields <- c("proteomicsPool", 
+            "Genotype",
+            "Treatment", 
+            "BiosampleName")
+poolDescriptions <- unique(metadata[, fields])
+# dim(poolDescriptions)
+# View(poolDescriptions)
+
+poolNames <- as.vector(poolDescriptions$proteomicsPool)
+
+## Define pool condition as the combination of genotype + treatment
+poolDescriptions$condition <- paste(
+  sep = "_", 
+  poolDescriptions$Genotype,
+  poolDescriptions$Treatment)
+
+## Suppress the leadin "D-", which is found everywhere and this not informative
+poolDescriptions$condition <- sub(pattern = "^D-", replacement = "", x = poolDescriptions$condition)
+
+## Build informative labels for the pools
+poolLabels <- paste(sep = "_", 
+                    poolDescriptions$condition,
+                    poolDescriptions$proteomicsPool)
+poolLabels <- sub(pattern = "_pool", replacement = "_", x = poolLabels)
+names(poolLabels) <- poolNames # use poolNames as indices
+
+## Assign the pool labels as rownames for the metadata
+rownames(poolDescriptions) <- poolLabels
+
+## Define condition-specific colors
+conditions <- sort(unique(poolDescriptions$condition))
+conditionColors <- rainbow(n = length(conditions))
+names(conditionColors) <- conditions
+
+## Assign a color to each pool according to its condition
+poolDescriptions$color <- conditionColors[poolDescriptions$condition]
+
+```
+
+The metadata table contains `r nrow(metadata)` rows, each describing one sample. However, samples were pooled by pairs for the proteomics analysis, so that the actual data contains `r nrow(poolDescriptions)` pools. The table below provides the description of the pools. 
+
+```{r}
+kable(poolDescriptions, caption = "Description of the sample pools.")
+```
+
+The data contains 3 replicates per condition, where a condition is a combination of a genotype (COI, NAHG or WT) and a treatment (MOCK or PVY).
+
+```{r}
+library(knitr)
+kable(table(poolDescriptions[, c("Genotype", "Treatment")]), 
+      caption = "Number of replicates per condition. Columns: treatment (MOCK or virus infection). Rows: genotype. ")
+```
+
+### Loading the data table
+
+
+```{r}
+data <- read.csv(file = file.path(dataDir, data.file))
+# names(data)
+# head(data)
+
+## Extract the quantities in a separat data table to facilitate the statistical analysis
+proteinQuant <- data[, poolNames]
+rownames(proteinQuant) <- data[, "Accession"]
+# dim(proteinQuant)
+# View(proteinQuant)
+
+## Replace pool names by pool labels in the protein table
+names(proteinQuant) <- poolLabels[names(proteinQuant)]
+# View(proteinQuant)
+
+
+
+```
+
+The data table contains some descriptive columns, followed by  `r nrow(proteinQuant)` columns providing the quantities of `r nrow(proteinQuant)` proteins (rows) in each sample pool (columns). 
+
+
+## Distributions of quantities per sample
+
+Draw a box plot of the protein quantities using `boxplot()` with its the default options. Then read the help page (`help(boxplot)`) and fine-tune the options to get a more informative result.  
+
+```{r boxplot_ugly, fig.width=10, fig.height=5, out.width="80%", fig.cap="Boxplot showing the distribution of counts per sample for all the detected proteins. The result is not readable, we will do better in the next fiugure. "}
+boxplot(proteinQuant)
+```
+
+```{r boxplot, fig.width=10, fig.height=6, out.width="100%", fig.cap="Boxplot showing the distribution of counts per sample for all the detected proteins"}
+
+## Store initial parameter values
+initialParameters <- par(no.readonly = TRUE)
+# par("mar")
+
+## Modify the parameters
+par(mar = c(4.1, 7, 1, 1))
+par(mfrow = c(1, 2))
+boxplot(proteinQuant, 
+        col = poolDescriptions$color,
+        xlab = "Raw counts",
+        horizontal = TRUE, 
+        cex.axis = 0.8,
+        las = TRUE)
+boxplot(log2(proteinQuant), 
+        col = poolDescriptions$color,
+        xlab = "log2(counts)",
+        horizontal = TRUE, 
+        cex.axis = 0.8,
+        las = TRUE)
+par(initialParameters)
+```
+
+
+```{r vioplot, fig.width=10, fig.height=6, out.width="100%", fig.cap="Violin showing the distribution of counts per sample for all the detected proteins"}
+
+## Store initial parameter values
+# par("mar")
+
+## Modify the parameters
+par(mar = c(4.1, 7, 1, 1))
+par(mfrow = c(1, 2))
+vioplot(proteinQuant, 
+        col = poolDescriptions$color,
+        xlab = "Raw counts",
+        horizontal = TRUE, 
+        cex.axis = 0.8,
+        las = TRUE)
+vioplot(log2(proteinQuant), 
+        col = poolDescriptions$color,
+        xlab = "log2(counts)",
+        horizontal = TRUE, 
+        cex.axis = 0.8,
+        las = TRUE)
+
+par(initialParameters)
+```
+
+## Normalisation
+
+### Mean-based normalisation
+
+### Median-based normalisation
+
+```{r median_norm}
+
+## Compute the median per pool
+medianPerPool <- apply(X = proteinQuant, 2, median, na.rm = TRUE)
+median <- median(unlist(proteinQuant), na.rm = TRUE)
+
+proteinQuantMedianNorm <- data.frame(t(t(proteinQuant) * median / medianPerPool))
+# dim(proteinQuantMedianNorm)
+# summary(proteinQuantMedianNorm)
+# apply(proteinQuantMedianNorm, 2, median, na.rm = TRUE)
+
+## Modify the parameters
+par(mar = c(4.1, 7, 4.1, 1))
+par(mfrow = c(1, 2))
+class(proteinQuant)
+dim(proteinQuant)
+vioplot(proteinQuantMedianNorm, 
+        main = "Median-based scaling",
+        col = poolDescriptions$color,
+        xlab = "Raw counts",
+        horizontal = TRUE, 
+        cex.axis = 0.8,
+        las = TRUE)
+vioplot(log2(proteinQuantMedianNorm), 
+        main = "Median-based scaling",
+        col = poolDescriptions$color,
+        xlab = "log2(counts)",
+        horizontal = TRUE, 
+        cex.axis = 0.8,
+        las = TRUE)
+
+par(initialParameters)
+
+```
+
+## Log2 transformation and Filtering
+
+
+```{r}
+
+## log2 transformation
+proteinQuantMedianNormLog2 <- log2(proteinQuantMedianNorm)
+
+## Replace NA values by zero values
+na2zero <- proteinQuantMedianNormLog2[]
+na2zero[is.na(na2zero)] <- 0
+
+## Filter out proteins with NA values
+nona <- na.omit(proteinQuantMedianNormLog2)
+dim(nona)
+```
+
+
+
+## Multidimensional scaling with PCA
+
+A first exploratory approach is to project the samples on a 2-dimensional plane, where the distance between samples approximately corresponds to the differences between their proteomics profiles. 
+
+```{r pc_plots, fig.width=8, fig.height=8, out.width="80%"}
+pc <- prcomp(x = t(nona), center = FALSE, scale. = FALSE)
+par(mfrow = c(2,2))
+plot(pc, col = "#BBFFDD", xlab = "Components")
+# dim(pc$x)
+# rownames(pc$x)
+# View(pc$x)
+for (i in c(1, 3, 5)) {
+  plot(pc$x[, c(i, i + 1)], 
+       col = poolDescriptions[rownames(pc$x), "color"], 
+       panel.first = grid(), pch = 19)
+  if (i == 1) {
+    legend("bottomright", legend = names(conditionColors), col = conditionColors, pch = 19, cex = 0.65)
+  }
+}  
+par(initialParameters)
+```
+
+
+## Clustering
+
+### Clustering of the proteins
+
+```{r protein_tree, fig.width=12, fig.height=7, out.width="100%", fig.cap="Clustering of the proteins based on their profiles across sample pools. Similarity measure: correlation. Aggregation rule: complete linkage. "}
+
+## Clustering of the proteins
+protDist <- as.dist(1 - cor(t(nona)))
+# dim(protDist)
+protTree <- hclust(d = protDist, method = "complete")
+plot(protTree, cex = 0.7, main = "Clustering between proteins\n(correlation, complete)")
+```
+
+### Clustering of the sample pools
+
+```{r sample_tree, fig.width=12, fig.height=7, out.width="100%", fig.cap="Clustering of the sample pools based on their profiles across proteins. Similarity measure: correlation. Aggregation rule: complete linkage. "}
+
+## Clustering of the proteins
+poolDist <- as.dist(1 - cor(nona))
+protTree <- hclust(d = poolDist, method = "complete")
+plot(protTree, cex = 0.7, 
+     main = "Clustering between sample pools\n(correlation, complete)")
+```
+
+## Heatmap
+
+
+```{r heatmap, fig.width=12, fig.height=12, out.width="100%", fig.cap="Heatmap of log2-transformed values (NA filtered). " }
+
+heatmap(x = as.matrix(nona), 
+        Colv = NA, 
+        scale = "none", cexRow = 0.7)
+
+```
+
+
+## Differential analysis
+
+```{r t_test}
+# Define the two conditions to compare
+testCondition <- "NAHG_PVY"
+ctrlCondition <- "WT_PVY"
+
+## Compute statistics per protein
+statPerProt <- data.frame(
+  mean = apply(nona, 1, mean),
+  sd = apply(nona, 1, sd),
+  mean1 = apply(nona[, poolDescriptions$condition == testCondition], 1, mean),
+  mean2 = apply(nona[, poolDescriptions$condition == ctrlCondition], 1, mean),
+  s1 = apply(nona[, poolDescriptions$condition == testCondition], 1, sd),
+  s2 = apply(nona[, poolDescriptions$condition == ctrlCondition], 1, sd)
+)
+statPerProt$diff = statPerProt$mean2 - statPerProt$mean1
+# View(statPerProt)
+
+## Run t.test on each protein
+for (i in 1:nrow(nona)) {
+  test.result <- t.test(
+    x = nona[i, poolDescriptions$condition == testCondition],
+    y = nona[i, poolDescriptions$condition == ctrlCondition],
+    var.equal = TRUE)
+  statPerProt[i, "tStat"] <- test.result$statistic
+  statPerProt[i, "df"] <- test.result$parameter
+  statPerProt[i, "p.value"] <- test.result$p.value
+}
+
+# View(statPerProt)
+```
+
+### Multiple testing corrections
+
+```{r}
+statPerProt$e.value <- statPerProt$p.value * nrow(nona)
+statPerProt$q.value <- qvalue::qvalue(statPerProt$p.value)$qvalues
+statPerProt$padj <- p.adjust(statPerProt$p.value, method = "BY")
+```
+
+
+### Histogram of the p-values
+
+```{r pval_histo, fig.width=7, fig.height=4, out.width="60%"}
+hist(statPerProt$p.value, 
+     main = "P-value histogram", 
+     xlab = "p-value",
+     ylab = "number of proteins", las = 2, col = "#DDEEFF",
+     breaks = seq(from = 0, to = 1, by = 0.05))
+```
+
+### Volcano plot
+
+```{r volcano, fig.width=7, fig.height=5, out.width="60%"}
+plot(statPerProt$diff, 
+     -log10(statPerProt$p.value), 
+     main = "Volcano plot", 
+     xlab = "Diff",
+     ylab = "-log10(p-value)", las = 2)
+abline(v = 0)
+
+alpha <- 0.05/nrow(nona)
+abline(h = -log10(alpha))
+```
+
