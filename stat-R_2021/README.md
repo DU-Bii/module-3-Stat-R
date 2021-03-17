@@ -256,8 +256,10 @@ To follow this course, prior knowledge is expected on:
 
 ## Ressources
 
-| Topic                               	| Title                  	| Description                                         	| Link 	                                        |
+| Category 	| Title                  	| Description                                         	| Link 	                                        |
 |-------------------------------------	|------------------------	|-----------------------------------------------------	|-------------------------------------------	|
+| Coding | The tidyverse R style guide | Style recommendations for R code | <https://style.tidyverse.org/> |
+| Versioning | Happy Git and GitHub for the useR | How to manage versioning of R code on a github repository | <https://happygitwithr.com/> |
 | Functions                           	| R Documentation        	| List of R packages and functions                    	| <https://www.rdocumentation.org/>	|
 | Functions                           	| QuickR                 	| List R functions for stats and plotting             	| <https://www.rdocumentation.org/>	|
 | Statistics and DataViz              	| STDHA                  	| Statistical tools for high-throughput data analysis 	| <http://www.sthda.com/english/> |
