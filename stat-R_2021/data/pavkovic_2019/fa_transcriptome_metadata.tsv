@@ -1,21 +1,21 @@
 dataType	sampleName	condition	sampleNumber	color
-transcriptome	day14_1	day14	1	#FF4400
-transcriptome	day14_2	day14	2	#FF4400
-transcriptome	day14_3	day14	3	#FF4400
-transcriptome	day1_1	day1	1	#BBD7FF
-transcriptome	day1_2	day1	2	#BBD7FF
-transcriptome	day1_3	day1	3	#BBD7FF
-transcriptome	day2_1	day1	1	#F0BBFF
-transcriptome	day2_2	day1	2	#F0BBFF
-transcriptome	day2_3	day1	3	#F0BBFF
-transcriptome	day3_1	day3	1	#FFFFDD
-transcriptome	day3_2	day3	2	#FFFFDD
-transcriptome	day3_3	day3	3	#FFFFDD
-transcriptome	day7_1	day7	1	#FFDD88
-transcriptome	day7_2	day7	2	#FFDD88
-transcriptome	day7_3	day7	3	#FFDD88
-transcriptome	normal_1	normal	1	#BBFFBB
-transcriptome	normal_2	normal	2	#BBFFBB
-transcriptome	normal_3	normal	3	#BBFFBB
+1 transcriptome	day14_1	day14	1	#FF4400
+2 transcriptome	day14_2	day14	2	#FF4400
+3 transcriptome	day14_3	day14	3	#FF4400
+4 transcriptome	day1_1	day1	1	#BBD7FF
+5 transcriptome	day1_2	day1	2	#BBD7FF
+6 transcriptome	day1_3	day1	3	#BBD7FF
+7 transcriptome	day2_1	day1	1	#F0BBFF
+8 transcriptome	day2_2	day1	2	#F0BBFF
+9 transcriptome	day2_3	day1	3	#F0BBFF
+10 transcriptome	day3_1	day3	1	#FFFFDD
+11 transcriptome	day3_2	day3	2	#FFFFDD
+12 transcriptome	day3_3	day3	3	#FFFFDD
+13 transcriptome	day7_1	day7	1	#FFDD88
+14 transcriptome	day7_2	day7	2	#FFDD88
+15 transcriptome	day7_3	day7	3	#FFDD88
+16 transcriptome	normal_1	normal	1	#BBFFBB
+17 transcriptome	normal_2	normal	2	#BBFFBB
+18 transcriptome	normal_3	normal	3	#BBFFBB
 
 
