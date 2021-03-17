@@ -3,11 +3,15 @@ title: "Tutorial: exploration of multi-omics data"
 author: "Jacques van Helden"
 date: '`r Sys.Date()`'
 output:
-  pdf_document:
+  html_document:
+    self_contained: no
     fig_caption: yes
     highlight: zenburn
+    theme: cerulean
     toc: yes
     toc_depth: 3
+    toc_float: yes
+    code_folding: "hide"
   ioslides_presentation:
     slide_level: 2
     self_contained: no
@@ -20,15 +24,11 @@ output:
     smaller: yes
     toc: yes
     widescreen: yes
-  html_document:
-    self_contained: no
+  pdf_document:
     fig_caption: yes
     highlight: zenburn
-    theme: cerulean
     toc: yes
     toc_depth: 3
-    toc_float: yes
-    code_folding: "hide"
   beamer_presentation:
     colortheme: dolphin
     fig_caption: yes
@@ -479,7 +479,13 @@ The distribution is stronly right-skewed, and its most representative part is "c
 hist(log2(pfa_vector), breaks = 100)
 ```
 
+## Controlling the insertion of images in an R markdown report
 
+We will now add a some options to the header of the R chunk in the R markdown, in order to control the way this figure is inserted in the report (width, height; )
+
+```{r fa_hist_log2_chunk_param}
+hist(log2(pfa_vector), breaks = 100)
+```
 
 
 ### Box plot

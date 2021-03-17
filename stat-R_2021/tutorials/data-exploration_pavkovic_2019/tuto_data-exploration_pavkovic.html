@@ -1538,9 +1538,10 @@ div.tocify {
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>pfa_vector <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">as.vector</span>(pfa))</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(pfa_vector)</span></code></pre></div>
 <p><img src="figures/pavkovic2019_fa_hist_ugly-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>Let us now improve the histogram in order to get an intuition of our data.</p>
+<p>Let us now improve the histogram to get an intuition of our data. A first step is to increase the number of bins, with the</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(pfa_vector, <span class="at">breaks =</span> <span class="dv">200</span>)</span></code></pre></div>
 <p><img src="figures/pavkovic2019_fa_hist_breaks-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The distribution is stronly right-skewed, and its most representative part is “compressed” on the left side of the graph. As shown below, a log2 transformation provides a more informative view of the data.</p>
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">log2</span>(pfa_vector), <span class="at">breaks =</span> <span class="dv">100</span>)</span></code></pre></div>
 <p><img src="figures/pavkovic2019_fa_hist_log2-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
