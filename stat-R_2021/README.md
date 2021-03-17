@@ -259,6 +259,7 @@ To follow this course, prior knowledge is expected on:
 | Category 	| Title                  	| Description                                         	| Link 	                                        |
 |-------------------------------------	|------------------------	|-----------------------------------------------------	|-------------------------------------------	|
 | Coding | The tidyverse R style guide | Style recommendations for R code | <https://style.tidyverse.org/> |
+| Coding | Tidyverse cheat sheet | One-poage summary of basic tidyverse syntax | <https://s3.amazonaws.com/assets.datacamp.com/blog_assets/Tidyverse+Cheat+Sheet.pdf> |
 | Versioning | Happy Git and GitHub for the useR | How to manage versioning of R code on a github repository | <https://happygitwithr.com/> |
 | Functions                           	| R Documentation        	| List of R packages and functions                    	| <https://www.rdocumentation.org/>	|
 | Functions                           	| QuickR                 	| List R functions for stats and plotting             	| <https://www.rdocumentation.org/>	|
