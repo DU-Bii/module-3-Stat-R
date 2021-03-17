@@ -467,14 +467,23 @@ pfa_vector <- unlist(as.vector(pfa))
 hist(pfa_vector)
 ```
 
-Let us now improve the histogram in order to get an intuition of our data. 
+Let us now improve the histogram  to get an intuition of our data. A first step is to increase the number of bins, with the 
 
 ```{r fa_hist_breaks}
 hist(pfa_vector, breaks = 200)
 ```
 
+The distribution is stronly right-skewed, and its most representative part is "compressed" on the left side of the graph. As shown below, a log2 transformation provides a more informative view of the data. 
 
 ```{r fa_hist_log2}
+hist(log2(pfa_vector), breaks = 100)
+```
+
+## Controlling the insertion of images in an R markdown report
+
+We will now add a some options to the header of the R chunk in the R markdown, in order to control the way this figure is inserted in the report (width, height; )
+
+```{r fa_hist_log2_chunk_param}
 hist(log2(pfa_vector), breaks = 100)
 ```
 
