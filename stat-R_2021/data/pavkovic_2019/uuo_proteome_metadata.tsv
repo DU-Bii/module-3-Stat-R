@@ -1,11 +1,11 @@
 dataType	sampleName	condition	sampleNumber	color
-1	transcriptome	normal_1	normal	1	#BBFFBB
-2	transcriptome	normal_2	normal	2	#BBFFBB
-3	transcriptome	day3_1	day3	1	#FFFFDD
-4	transcriptome	day3_2	day3	2	#FFFFDD
-5	transcriptome	day3_3	day3	3	#FFFFDD
-6	transcriptome	day7_1	day7	1	#FFDD88
-7	transcriptome	day7_2	day7	2	#FFDD88
-8	transcriptome	day7_3	day7	3	#FFDD88
-9	transcriptome	day14_1	day14	1	#FF4400
-10	transcriptome	day14_2	day14	2	#FF4400
+1	proteome	normal_1	normal	1	#BBFFBB
+2	proteome	normal_2	normal	2	#BBFFBB
+3	proteome	day3_1	day3	1	#FFFFDD
+4	proteome	day3_2	day3	2	#FFFFDD
+5	proteome	day3_3	day3	3	#FFFFDD
+6	proteome	day7_1	day7	1	#FFDD88
+7	proteome	day7_2	day7	2	#FFDD88
+8	proteome	day7_3	day7	3	#FFDD88
+9	proteome	day14_1	day14	1	#FF4400
+10	proteome	day14_2	day14	2	#FF4400
