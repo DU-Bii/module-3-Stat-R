@@ -24,20 +24,11 @@ output:
     smaller: yes
     toc: yes
     widescreen: yes
-  slidy_presentation:
-    smart: no
-    slide_level: 2
-    self_contained: yes
+  pdf_document:
     fig_caption: yes
-    fig_height: 5
-    fig_width: 7
-    highlight: tango
-    incremental: no
-    keep_md: yes
-    smaller: yes
-    theme: cerulean
+    highlight: zenburn
     toc: yes
-    widescreen: yes
+    toc_depth: 3
   beamer_presentation:
     colortheme: dolphin
     fig_caption: yes
@@ -55,11 +46,20 @@ output:
     transition: none
     self_contained: true
     css: ../slides.css
-  pdf_document:
+  slidy_presentation:
+    smart: no
+    slide_level: 2
+    self_contained: yes
     fig_caption: yes
-    highlight: zenburn
+    fig_height: 5
+    fig_width: 7
+    highlight: tango
+    incremental: no
+    keep_md: yes
+    smaller: yes
+    theme: cerulean
     toc: yes
-    toc_depth: 3
+    widescreen: yes
   powerpoint_presentation:
     slide_level: 2
     fig_caption: yes
@@ -121,6 +121,7 @@ This tutorial aims at
 3. Show some convenient ways of combinig R code and markdown elements within an R markdown document in order to obtain a well-formatted scientific report. 
 
     - configuring the parameters in the yaml header of the R markdown file
+    - organising the code in R chunks
     - writing, documenting and using an R function
     - generating an ugly figure, improving it and controlling its incorporation in the report (size, legend)
 
