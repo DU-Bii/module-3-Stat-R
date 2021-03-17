@@ -204,6 +204,15 @@ To follow this course, prior knowledge is expected on:
     - **Tutoriel: exploration des données multi-omiques** [[html](tutorials/data-exploration_pavkovic_2019/tuto_data-exploration_pavkovic.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2021/tutorials/data-exploration_pavkovic_2019/tuto_data-exploration_pavkovic.Rmd)]
 
 
+- **Exercice : application de l'ACP aux données multi-omiques de Pavkovicz (2019)**
+
+    1. Téléchargez le [Rmd source](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2021/tutorials/data-exploration_pavkovic_2019/tuto_data-exploration_pavkovic.Rmd) du tutoriel "exploration des données multi-omiques"
+    2. Téléversez-le dans un dossier de votre espace sur le cluster
+    3. Dans l'en-tête de votre version du Rmd, changez la valeur du  `self_contained` en indiquant `TRUE`
+    4. Lancez knitr pour générer le rapport en formats HTML et pdf pour vous assurez que l'original compile bien. 
+    5. Réalisez l'exercice "PCA of Pavkovicz data"
+    6. Déposez les résultats (Rmd et fichier html self-contained) dans le sous-dossier TP4 du dossier de dépôt convenu sur slack
+
 <a name="session-5"></a>
 
 <!--
@@ -240,6 +249,12 @@ To follow this course, prior knowledge is expected on:
     - revoir à tête reposée le practical sur les statistiques
     - revoir à tête reposée l'exemple de notebook Rmd sur Rstudio: Antoine l'a un peu complété
     - ***facultatif***: pour les plus avancés, voir l'exemple du notebook .rmd  optionnel sur les statistiques 
+
+4. Après la session 4
+
+    - terminer le TP de Magali Berlan sur l'ACP
+    - réaliser le travail personnel de Jacques van Helden : application de l'ACP aux données multi-omiques de Pavkovicz
+
 
    **L'activité atelier est annulée due à la charge de travail déjà importante.**
 
