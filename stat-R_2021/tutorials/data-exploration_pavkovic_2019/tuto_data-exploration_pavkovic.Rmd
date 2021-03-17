@@ -3,15 +3,11 @@ title: "Tutorial: exploration of multi-omics data"
 author: "Jacques van Helden"
 date: '`r Sys.Date()`'
 output:
-  html_document:
-    self_contained: no
+  pdf_document:
     fig_caption: yes
     highlight: zenburn
-    theme: cerulean
     toc: yes
     toc_depth: 3
-    toc_float: yes
-    code_folding: "hide"
   ioslides_presentation:
     slide_level: 2
     self_contained: no
@@ -24,11 +20,15 @@ output:
     smaller: yes
     toc: yes
     widescreen: yes
-  pdf_document:
+  html_document:
+    self_contained: no
     fig_caption: yes
     highlight: zenburn
+    theme: cerulean
     toc: yes
     toc_depth: 3
+    toc_float: yes
+    code_folding: "hide"
   beamer_presentation:
     colortheme: dolphin
     fig_caption: yes
@@ -467,16 +467,19 @@ pfa_vector <- unlist(as.vector(pfa))
 hist(pfa_vector)
 ```
 
-Let us now improve the histogram in order to get an intuition of our data. 
+Let us now improve the histogram  to get an intuition of our data. A first step is to increase the number of bins, with the 
 
 ```{r fa_hist_breaks}
 hist(pfa_vector, breaks = 200)
 ```
 
+The distribution is stronly right-skewed, and its most representative part is "compressed" on the left side of the graph. As shown below, a log2 transformation provides a more informative view of the data. 
 
 ```{r fa_hist_log2}
 hist(log2(pfa_vector), breaks = 100)
 ```
+
+
 
 
 ### Box plot
