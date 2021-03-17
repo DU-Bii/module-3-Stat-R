@@ -204,6 +204,15 @@ To follow this course, prior knowledge is expected on:
     - **Tutoriel: exploration des données multi-omiques** [[html](tutorials/data-exploration_pavkovic_2019/tuto_data-exploration_pavkovic.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2021/tutorials/data-exploration_pavkovic_2019/tuto_data-exploration_pavkovic.Rmd)]
 
 
+- **Exercice : application de l'ACP aux données multi-omiques de Pavkovicz (2019)**
+
+    1. Téléchargez le [Rmd source](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2021/tutorials/data-exploration_pavkovic_2019/tuto_data-exploration_pavkovic.Rmd) du tutoriel "exploration des données multi-omiques"
+    2. Téléversez-le dans un dossier de votre espace sur le cluster
+    3. Dans l'en-tête de votre version du Rmd, changez la valeur du  `self_contained` en indiquant `TRUE`
+    4. Lancez knitr pour générer le rapport en formats HTML et pdf pour vous assurez que l'original compile bien. 
+    5. Réalisez l'exercice "PCA of Pavkovicz data"
+    6. Déposez les résultats (Rmd et fichier html self-contained) dans le sous-dossier TP4 du dossier de dépôt convenu sur slack
+
 <a name="session-5"></a>
 
 <!--
@@ -241,6 +250,12 @@ To follow this course, prior knowledge is expected on:
     - revoir à tête reposée l'exemple de notebook Rmd sur Rstudio: Antoine l'a un peu complété
     - ***facultatif***: pour les plus avancés, voir l'exemple du notebook .rmd  optionnel sur les statistiques 
 
+4. Après la session 4
+
+    - terminer le TP de Magali Berlan sur l'ACP
+    - réaliser le travail personnel de Jacques van Helden : application de l'ACP aux données multi-omiques de Pavkovicz
+
+
    **L'activité atelier est annulée due à la charge de travail déjà importante.**
 
 
@@ -256,8 +271,11 @@ To follow this course, prior knowledge is expected on:
 
 ## Ressources
 
-| Topic                               	| Title                  	| Description                                         	| Link 	                                        |
+| Category 	| Title                  	| Description                                         	| Link 	                                        |
 |-------------------------------------	|------------------------	|-----------------------------------------------------	|-------------------------------------------	|
+| Coding | The tidyverse R style guide | Style recommendations for R code | <https://style.tidyverse.org/> |
+| Coding | Tidyverse cheat sheet | One-poage summary of basic tidyverse syntax | <https://s3.amazonaws.com/assets.datacamp.com/blog_assets/Tidyverse+Cheat+Sheet.pdf> |
+| Versioning | Happy Git and GitHub for the useR | How to manage versioning of R code on a github repository | <https://happygitwithr.com/> |
 | Functions                           	| R Documentation        	| List of R packages and functions                    	| <https://www.rdocumentation.org/>	|
 | Functions                           	| QuickR                 	| List R functions for stats and plotting             	| <https://www.rdocumentation.org/>	|
 | Statistics and DataViz              	| STDHA                  	| Statistical tools for high-throughput data analysis 	| <http://www.sthda.com/english/> |

@@ -11,7 +11,7 @@
 
 <meta name="author" content="Jacques van Helden" />
 
-<meta name="date" content="2021-03-16" />
+<meta name="date" content="2021-03-17" />
 
 <title>Tutorial: exploration of multi-omics data</title>
 
@@ -365,7 +365,7 @@ div.tocify {
 <h1 class="title toc-ignore">Tutorial: exploration of multi-omics data</h1>
 <h3 class="subtitle">DUBii 2020</h3>
 <h4 class="author">Jacques van Helden</h4>
-<h4 class="date">2021-03-16</h4>
+<h4 class="date">2021-03-17</h4>
 
 </div>
 
@@ -376,10 +376,10 @@ div.tocify {
 <ol style="list-style-type: decimal">
 <li><p>Learn to load files from remote locations, either directly or by downloading them to a local folder.</p></li>
 <li><p>Apply some of the methods taught in the previous courses in order to explore a data set.</p></li>
-<li><p>Show some convenient ways of handling the organisation of R code within an R markdown document</p>
+<li><p>Show some convenient ways of combinig R code and markdown elements within an R markdown document in order to obtain a well-formatted scientific report.</p>
 <ul>
-<li>alternating R chunks and markdown elements to</li>
 <li>configuring the parameters in the yaml header of the R markdown file</li>
+<li>organising the code in R chunks</li>
 <li>writing, documenting and using an R function</li>
 <li>generating an ugly figure, improving it and controlling its incorporation in the report (size, legend)</li>
 </ul></li>
@@ -1539,29 +1539,75 @@ div.tocify {
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>pfa_vector <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">as.vector</span>(pfa))</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(pfa_vector)</span></code></pre></div>
 <p><img src="figures/pavkovic2019_fa_hist_ugly-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>Let us now improve the histogram in order to get an intuition of our data.</p>
+<p>Let us now improve the histogram to get an intuition of our data. A first step is to increase the number of bins, with the</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(pfa_vector, <span class="at">breaks =</span> <span class="dv">200</span>)</span></code></pre></div>
 <p><img src="figures/pavkovic2019_fa_hist_breaks-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The distribution is stronly right-skewed, and its most representative part is “compressed” on the left side of the graph. As shown below, a log2 transformation provides a more informative view of the data.</p>
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">log2</span>(pfa_vector), <span class="at">breaks =</span> <span class="dv">100</span>)</span></code></pre></div>
 <p><img src="figures/pavkovic2019_fa_hist_log2-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-<div id="box-plot" class="section level3">
-<h3>Box plot</h3>
+<div id="enhancing-the-figure" class="section level3">
+<h3>Enhancing the figure</h3>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Improve the histogram</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="do">## - add a title, axis labels, coloring, ...</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="do">## - increase readaility by writing each parameter on a separate line</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">log2</span>(pfa_vector), </span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">0</span>, <span class="at">to =</span> <span class="dv">20</span>, <span class="at">by =</span> <span class="fl">0.1</span>),</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="st">&quot;#BBDDFF&quot;</span>,</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">border =</span> <span class="st">&quot;#88AAFF&quot;</span>,</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">las =</span> <span class="dv">1</span>, <span class="co"># I like to read the labels</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;log2(x)&quot;</span>, </span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">&quot;Number of observations&quot;</span>, </span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Proteome, folic-acid treated samples&quot;</span>)</span></code></pre></div>
+<p><img src="figures/pavkovic2019_fa_hist_log2_nicer-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-<div id="scatter-plot" class="section level3">
-<h3>Scatter plot</h3>
+<div id="controlling-the-insertion-of-images-in-an-r-markdown-report" class="section level3">
+<h3>Controlling the insertion of images in an R markdown report</h3>
+<p>We will now add a some options to the header of the R chunk in the R markdown, in order to control the way this figure is inserted in the report. Note that the chunk header must come on a single line.</p>
+<p><code>```{r fa_hist_log2_sized, out.width="75%", fig.width=7, fig.height=4, fig.cap="Distribution of log2-transformed values for the proteome of folic acid-treated samples (data from Pavcovic et al., 2019)"}</code></p>
+<ul>
+<li><p><code>fig.height</code> and <code>fig.width</code> specify the size of the figure generated by R. These parameters are convenient to ensure proper proportions between height and widths, but also to incresae the readability of the labels (if you increasa the size, the fonts will look smaller).</p></li>
+<li><p><code>out.width</code> enables you to control the width occupied by your figure in the HTML or pdf report.</p></li>
+<li><p><code>fig.cap</code> enables you to add a caption to the figure</p></li>
+</ul>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Improve the histogram</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="do">## - add a title, axis labels, coloring, ...</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="do">## - increase readaility by writing each parameter on a separate line</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">log2</span>(pfa_vector), </span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">0</span>, <span class="at">to =</span> <span class="dv">20</span>, <span class="at">by =</span> <span class="fl">0.1</span>),</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="st">&quot;#BBDDFF&quot;</span>,</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">border =</span> <span class="st">&quot;#88AAFF&quot;</span>,</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">las =</span> <span class="dv">1</span>, <span class="co"># I like to read the labels</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;log2(x)&quot;</span>, </span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">&quot;Number of observations&quot;</span>, </span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Proteome, folic-acid treated samples&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/pavkovic2019_fa_hist_log2_sized-1.png" alt="Distribution of log2-transformed values for the proteome of folic acid-treated samples (data from Pavcovic et al., 2019)" width="90%" />
+<p class="caption">
+Distribution of log2-transformed values for the proteome of folic acid-treated samples (data from Pavcovic et al., 2019)
+</p>
 </div>
+</div>
+</div>
+<div id="exercise-pca-of-pavkovicz-data" class="section level2">
+<h2>Exercise: PCA of Pavkovicz data</h2>
+<p>As an exercise, we ask you to insert here your analysis of Pavkovicz data with the PCA methods presented in the session 4 of this course. Try to generate nice figures that will give you insight into the structure of the 4 datasets : transcriptome and proteome for the two respective treatments (folic acid and surgery, respectively).</p>
+<p>For this, you should first download a copy of the R markdown source, install it in a local folder, and run knitr to compile an HTML or pdf report. If this works, you will start adding your own chunks of code and interpretation of the results.</p>
+<p>Tips: - play with the scale options of the PC transformation - test if the 3rd and 4th components provide additional information than the 1st and 2nd components - compare the results obtained with the raw and normalised data sets, respectively - test the PCA with and without log2 transformation</p>
+<p>It is not necessary to show all the results in this report, only select the most informative plots.</p>
+<p>At the end, we expect to find here the most relevant figures resulting from this exploration, with a short explanation of - the parameters you chose for the analysis (normalised or not, log2 transformed or not, PC scaling or not, …) - some interpretation of the results in term of positioning of the samples on the components.</p>
+<p>Don’t hesitate to call the team in case of trouble.</p>
 </div>
 <div id="save-a-memory-image-of-your-session" class="section level2">
 <h2>Save a memory image of your session</h2>
 <p>Use the finction <code>save.image()</code> to store an image of your session, in a file <code>pavkovic_memory_image.Rdata</code> in the local folder specified above. This file will contain all the data that you loaded during this session, and enable you to reload everything without having to re-execute all the steps.</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Define the path to the memory image file</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>memory_image_file <span class="ot">&lt;-</span> <span class="fu">file.path</span>(local_folder, <span class="st">&quot;pavkovic_memory_image.Rdata&quot;</span>)</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Save the memory image</span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="fu">save.image</span>(<span class="at">file =</span> memory_image_file)</span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span>(<span class="st">&quot;Memory image saved in file</span><span class="sc">\n\t</span><span class="st">&quot;</span>, memory_image_file)</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Define the path to the memory image file</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>memory_image_file <span class="ot">&lt;-</span> <span class="fu">file.path</span>(local_folder, <span class="st">&quot;pavkovic_memory_image.Rdata&quot;</span>)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Save the memory image</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="fu">save.image</span>(<span class="at">file =</span> memory_image_file)</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span>(<span class="st">&quot;Memory image saved in file</span><span class="sc">\n\t</span><span class="st">&quot;</span>, memory_image_file)</span></code></pre></div>
 <p>For a future session, you will be able to reload all the data with a single command:</p>
 <p><code>load([path_to_your_memory_image])</code></p>
 <p>You will need to replace <code>[path_to_your_memory_image]</code> by your actual path. In my case, the command becomes:</p>
@@ -1570,7 +1616,7 @@ div.tocify {
 <div id="save-your-session-info" class="section level2">
 <h2>Save your session info</h2>
 <p>For the sake of traceability, store the specifications of your R environment in the report, with the command <code>sessionInfo()</code>. This will indicate the version of R as wella sof all the libraries used in this notebook.</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
 <pre><code>R version 4.0.2 (2020-06-22)
 Platform: x86_64-apple-darwin17.0 (64-bit)
 Running under: macOS Mojave 10.14.6

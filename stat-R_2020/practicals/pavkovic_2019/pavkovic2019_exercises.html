@@ -11,11 +11,11 @@
 
 <meta name="author" content="Olivier Sand and Jacques van Helden" />
 
-<meta name="date" content="2020-06-03" />
+<meta name="date" content="2021-03-11" />
 
 <title>Practical - exploring omics data</title>
 
-<script src="pavkovic2019_exercises_files/header-attrs-2.1/header-attrs.js"></script>
+<script src="pavkovic2019_exercises_files/header-attrs-2.5/header-attrs.js"></script>
 <script src="pavkovic2019_exercises_files/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="pavkovic2019_exercises_files/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
@@ -27,6 +27,17 @@
 <script src="pavkovic2019_exercises_files/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="pavkovic2019_exercises_files/navigation-1.1/tabsets.js"></script>
 <script src="pavkovic2019_exercises_files/navigation-1.1/codefolding.js"></script>
+<link href="pavkovic2019_exercises_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="pavkovic2019_exercises_files/anchor-sections-1.0/anchor-sections.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
 
 
 
@@ -253,7 +264,7 @@ div.tocify {
 <h1 class="title toc-ignore">Practical - exploring omics data</h1>
 <h3 class="subtitle">DUBii 2020</h3>
 <h4 class="author">Olivier Sand and Jacques van Helden</h4>
-<h4 class="date">2020-06-03</h4>
+<h4 class="date">2021-03-11</h4>
 
 </div>
 
@@ -395,7 +406,7 @@ div.tocify {
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();
@@ -439,7 +450,7 @@ $(document).ready(function ()  {
       theme: "bootstrap3",
       context: '.toc-content',
       hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
       },
       ignoreSelector: ".toc-ignore",
       scrollTo: 0
