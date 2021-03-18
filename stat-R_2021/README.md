@@ -198,7 +198,7 @@ To follow this course, prior knowledge is expected on:
 
 - Practicals:
 
-    - [**TD sur l'ACP**](practicals/2021-03-11-TD-ACP.html) visualisable [ici](https://htmlpreview.github.io/?https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2021/practicals/2021-03-11-TD-ACP.html) a réaliser sur ces données : [metadata](data/metadata.RDS) et [microbiota.abundance.log](data/microbiota.abundance.log.RDS)
+    - [TD sur l'ACP](practicals/2021-03-11-TD-ACP.html) visualisable [ici](https://htmlpreview.github.io/?https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2021/practicals/2021-03-11-TD-ACP.html) a réaliser sur ces données : [metadata](data/metadata.RDS) et [microbiota.abundance.log](data/microbiota.abundance.log.RDS)
     - [Correction du TD sur l'ACP](practicals/2021-03-11-TD-ACP-correction.html), visualisable [ici](https://htmlpreview.github.io/?https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2021/practicals/2021-03-11-TD-ACP-correction.html)
 
     - **Tutoriel: exploration des données multi-omiques** [[html](tutorials/data-exploration_pavkovic_2019/tuto_data-exploration_pavkovic.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2021/tutorials/data-exploration_pavkovic_2019/tuto_data-exploration_pavkovic.Rmd)]
