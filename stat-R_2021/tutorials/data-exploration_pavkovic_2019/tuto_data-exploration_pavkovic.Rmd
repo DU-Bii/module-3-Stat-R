@@ -364,7 +364,7 @@ local_fa_file <- downloadOnlyOnce(
 ## Transcriptome metadata
 trans_metadata_file <- downloadOnlyOnce(
   url_base = pavkovic_base, 
-  file_name = "transcriptome_metadata.tsv",
+  file_name = "fa_transcriptome_metadata.tsv",
   local_folder =  pavkovic_folder
 )
 
@@ -378,7 +378,7 @@ local_pfa_file <- downloadOnlyOnce(
 ## Proteome metadata
 prot_metadata_file <- downloadOnlyOnce(
   url_base = pavkovic_base, 
-  file_name = "proteome_metadata.tsv",
+  file_name = "pfa_proteome_metadata.tsv",
   local_folder =  pavkovic_folder
 )
 
