@@ -67,7 +67,7 @@ output:
     fig_width: 7
     toc: yes
 font-import: http://fonts.googleapis.com/css?family=Risque
-subtitle: DUBii 2020
+subtitle: DUBii 2021
 font-family: Garamond
 transition: linear
 editor_options: 
