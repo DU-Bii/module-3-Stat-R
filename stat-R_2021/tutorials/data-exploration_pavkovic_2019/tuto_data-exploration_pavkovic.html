@@ -1597,6 +1597,28 @@ Distribution of log2-transformed values for the proteome of folic acid-treated s
 <p>It is not necessary to show all the results in this report, only select the most informative plots.</p>
 <p>At the end, we expect to find here the most relevant figures resulting from this exploration, with a short explanation of - the parameters you chose for the analysis (normalised or not, log2 transformed or not, PC scaling or not, …) - some interpretation of the results in term of positioning of the samples on the components.</p>
 <p>Don’t hesitate to call the team in case of trouble.</p>
+  <p>Here is an example of code for a log2 boxplot ofthe fa data that uses the metadata tables to set up the colors.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">5</span>, <span class="dv">1</span>))</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>log2fa <span class="ot">&lt;-</span> <span class="fu">log2</span>(fa <span class="sc">+</span> <span class="fl">0.1</span>)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(log2fa, </span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> transcriptome_metadata<span class="sc">$</span>color,</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">horizontal =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">las =</span> <span class="dv">1</span>, </span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">&quot;log2-transformed&quot;</span>, </span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">&quot;log2(value)&quot;</span>)</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>log2pfa <span class="ot">&lt;-</span> <span class="fu">log2</span>(pfa <span class="sc">+</span> <span class="fl">0.1</span>)</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(log2pfa, </span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> proteome_metadata<span class="sc">$</span>color,</span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">horizontal =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">las =</span> <span class="dv">1</span>, </span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">&quot;log2-transformed&quot;</span>, </span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">&quot;log2(value)&quot;</span>)</span></code></pre></div>
+<p><img src="figures/pavkovic2019_test_boxplot-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="save-a-memory-image-of-your-session" class="section level2">
 <h2>Save a memory image of your session</h2>
