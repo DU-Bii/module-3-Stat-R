@@ -5,9 +5,7 @@ dataType	sampleName	condition	sampleNumber	color
 4	proteome	day1_2	day1	2	#FFFFDD
 5	proteome	day2_1	day2	1	#BBD7FF
 6	proteome	day2_2	day2	1	#BBD7FF
-7	proteome	day3_1	day3	1	#F0BBFF
-8	proteome	day3_2	day3	2	#F0BBFF
-9	proteome	day7_1	day7	1	#FFDD88
-10	proteome	day7_2	day7	2	#FFDD88
-11	proteome	day14_1	day14	1	#FF4400
-12	proteome	day14_2	day14	2	#FF4400
+7	proteome	day7_1	day7	1	#FFDD88
+8	proteome	day7_2	day7	2	#FFDD88
+9	proteome	day14_1	day14	1	#FF4400
+10	proteome	day14_2	day14	2	#FF4400

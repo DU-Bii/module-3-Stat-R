@@ -5,9 +5,9 @@ dataType	sampleName	condition	sampleNumber	color
 4 transcriptome	day1_1	day1	1	#BBD7FF
 5 transcriptome	day1_2	day1	2	#BBD7FF
 6 transcriptome	day1_3	day1	3	#BBD7FF
-7 transcriptome	day2_1	day1	1	#F0BBFF
-8 transcriptome	day2_2	day1	2	#F0BBFF
-9 transcriptome	day2_3	day1	3	#F0BBFF
+7 transcriptome	day2_1	day2	1	#F0BBFF
+8 transcriptome	day2_2	day2	2	#F0BBFF
+9 transcriptome	day2_3	day2	3	#F0BBFF
 10 transcriptome	day3_1	day3	1	#FFFFDD
 11 transcriptome	day3_2	day3	2	#FFFFDD
 12 transcriptome	day3_3	day3	3	#FFFFDD
