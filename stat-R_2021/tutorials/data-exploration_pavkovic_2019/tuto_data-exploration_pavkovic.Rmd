@@ -370,23 +370,31 @@ local_fa_norm_file <- download_only_once(
 
 
 ## Transcriptome metadata
-trans_metadata_file <- download_only_once(
+fa_metadata_file <- download_only_once(
   url_base = pavkovic_base, 
   file_name = "fa_transcriptome_metadata.tsv",
   local_folder =  pavkovic_folder
 )
 
-## Proteome data table
+## FA proteome data table
 local_pfa_file <- download_only_once(
   url_base = pavkovic_base, 
   file_name = "pfa_model_counts.tsv.gz",
   local_folder =  pavkovic_folder
 )
 
-## Proteome metadata
-prot_metadata_file <- download_only_once(
+## FA proteome metadata
+pfa_metadata_file <- download_only_once(
   url_base = pavkovic_base, 
   file_name = "pfa_proteome_metadata.tsv",
+  local_folder =  pavkovic_folder
+)
+
+
+## UUO proteome data table
+local_puuo_file <- download_only_once(
+  url_base = pavkovic_base, 
+  file_name = "puuo_model_counts.tsv.gz",
   local_folder =  pavkovic_folder
 )
 
@@ -429,37 +437,52 @@ We can now load the data that from our local folder.
 ```{r load_fa}
 
 ## Load transcriptome data (raw counts)
-fa <- read.delim(file = local_fa_file, sep = "\t", header = TRUE)
+fa_by_read_delim <- read.delim(file = local_fa_file, sep = "\t", header = TRUE)
 
 ## Check the first lines of the loaded file
-dim(fa)
-kable(head(fa), caption = "FA transcriptome loaded with read.delim()")
+# dim(fa)
+message("Loaded raw counts of FA transcriptome raw counts with read_delim(): ", 
+        nrow(fa_by_read_delim), " rows x ", ncol(fa_by_read_delim), " columns")
+kable(head(fa_by_read_delim), caption = "FA transcriptome loaded with read.delim()")
+
+
 
 ## Load the same data with load_fix_row_names
 fa <- load_fix_row_names(file = local_fa_file, rownames.col = 1)
-message("Loaded raw counts of FA transcriptome with load_fix_row_names(): ", nrow(fa), "rows x ", ncol(fa), "columns")
+message("Loaded raw counts of FA transcriptome raw counts with load_fix_row_names(): ", 
+        nrow(fa), " rows x ", ncol(fa), " columns")
 kable(head(fa), caption = "FA transcriptome loaded with load_fix_row_names()")
 # hist(unlist(fa), breaks = 100)
 
 ## Load normalised data with load_fix_row_names
 fa_norm <- load_fix_row_names(file = local_fa_norm_file, rownames.col = 1)
+message("Loaded raw counts of FA transcriptome normalised counts with load_fix_row_names(): ", 
+        nrow(fa_norm), " rows x ", ncol(fa_norm), " columns")
 # dim(fa_norm)
-kable(head(fa), caption = "First loines of the loaded normalised counts of FA transcriptome with load_fix_row_names()")
+kable(head(fa_norm), caption = "First lines of the loaded normalised counts of FA transcriptome with load_fix_row_names()")
 
-## Load proteome data
+## Load FA proteome data
 pfa <- load_fix_row_names(file = local_pfa_file, rownames.col = 1)
-dim(pfa)
+message("Loaded raw counts of FA proteome (pfa)  with load_fix_row_names(): ", 
+        nrow(pfa), " rows x ", ncol(pfa), " columns")
+# dim(pfa)
+
+## Load UUO proteome data
+puuo <- load_fix_row_names(file = local_puuo_file, rownames.col = 1)
+message("Loaded raw counts of UUO proteome (puuo)  with load_fix_row_names(): ", 
+        nrow(puuo), " rows x ", ncol(puuo), " columns")
+# dim(pfa)
 
 ## Check the first lines of the loaded file
 kable(head(pfa), caption = "First lines of the proteome table")
 
 ## Load proteome metadata
-proteome_metadata <- read.delim(file = prot_metadata_file, sep = "\t", header = TRUE)
-kable(proteome_metadata, caption = "Metadata for the proteome dataset")
+pfa_metadata <- read.delim(file = pfa_metadata_file, sep = "\t", header = TRUE)
+kable(pfa_metadata, caption = "Metadata for the FA proteome dataset")
 
 ## Load transcriptome metadata
-transcriptome_metadata <- read.delim(file = trans_metadata_file, sep = "\t", header = TRUE)
-kable(transcriptome_metadata, caption = "Metadata for the transcriptome dataset")
+fa_metadata <- read.delim(file = fa_metadata_file, sep = "\t", header = TRUE)
+kable(fa_metadata, caption = "Metadata for the transcriptome dataset")
 
 ```
 
@@ -559,7 +582,7 @@ par(mfrow = c(1,2)) ## Two side-by-side panes
 log2pfa <- log2(pfa + 0.1)
 
 boxplot(pfa, 
-        col = proteome_metadata$color,
+        col = pfa_metadata$color,
         horizontal = TRUE, 
         las = 1, 
         main = "Proteome, original values", 
@@ -567,7 +590,7 @@ boxplot(pfa,
 
 
 boxplot(log2pfa, 
-        col = proteome_metadata$color,
+        col = pfa_metadata$color,
         horizontal = TRUE, 
         las = 1, 
         main = "Proteome, log2-transformed", 
@@ -592,7 +615,7 @@ par(mfrow = c(2,2)) ## 4 panels, with 2 rows and 2 columns
 
 ## Raw counts
 boxplot(fa, 
-        col = transcriptome_metadata$color,
+        col = fa_metadata$color,
         horizontal = TRUE, 
         las = 1, 
         main = "FA transcriptome\nraw counts", 
@@ -600,7 +623,7 @@ boxplot(fa,
 
 ## Normalised transcriptome data
 boxplot(fa_norm, 
-        col = transcriptome_metadata$color,
+        col = fa_metadata$color,
         horizontal = TRUE, 
         las = 1, 
         main = "FA transcriptome\nnormalised counts", 
@@ -614,7 +637,7 @@ log2fa_norm <- log2(fa_norm + 0.1)
 
 ## Raw counts
 boxplot(log2fa, 
-        col = transcriptome_metadata$color,
+        col = fa_metadata$color,
         horizontal = TRUE, 
         las = 1, 
         main = "FA transcriptome\nlog2raw (counts)", 
@@ -622,7 +645,7 @@ boxplot(log2fa,
 
 ## Normalised transcriptome data
 boxplot(log2fa_norm, 
-        col = transcriptome_metadata$color,
+        col = fa_metadata$color,
         horizontal = TRUE, 
         las = 1, 
         main = "FA transcriptome\nlog2(normalised counts)", 
