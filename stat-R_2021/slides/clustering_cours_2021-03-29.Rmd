@@ -101,8 +101,15 @@ options(scipen = 12) ## Max number of digits for non-scientific notation
 ```
 
 ```{r  echo=F}
-data.folder <- "/Users/abadel/ownCloud/enseignement/DUBII/module3_statR/clustering/TCGA/data/BIC"
-BIC.expr.file <- file.path(data.folder, "BIC_log2-norm-counts_edgeR_DEG_top_1000.tsv.gz")
+## Define data folder
+data.folder <- "../data/TCGA_BIC_subset"
+
+## File containing subset of the expression table
+BIC.expr.file <- file.path(
+  data.folder,
+  "BIC_log2-norm-counts_edgeR_DEG_top_1000.tsv.gz")
+
+## Load expression table
 message("Loading expression file\t", BIC.expr.file)
 BIC.expr <- read.table(file = BIC.expr.file, header = TRUE)
 ```
