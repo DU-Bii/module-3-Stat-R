@@ -10,9 +10,10 @@
 
 - [Session 4. Analyse en composantes principales / Exploration des données multidimensionelles](#session-4)
 
-- Session 5. Classification supervisée et apprentissage
+- [Session 5. Classification supervisée et apprentissage](#session-5)]
 
-- Session 6. Classification non-supervisée / Analyse d'enrichissement
+- [Session 6. Classification non-supervisée / Analyse d'enrichissement](#session-6)]
+
 
 
 ## Goals
@@ -187,7 +188,6 @@ To follow this course, prior knowledge is expected on:
 -->
 
 
-
 #### Supports de cours
 
 
@@ -211,19 +211,35 @@ To follow this course, prior knowledge is expected on:
     6. Déposez les résultats (Rmd et fichier html self-contained) dans le sous-dossier TP4 du dossier de dépôt convenu sur slack
 
 <a name="session-5"></a>
-
-<!--
-
-<a name="session-4"></a>
-
-
-### Session 5. Classification supervisée et apprentissage
-
 <a name="session-6"></a>
 
-### Session 6. Classification non-supervisée / Analyse d'enrichissement
+### Sessions 5 et 6 (rassemblées en une journée)
 
+
+#### Objectifs
+
+#### Supports pédagogiques
+
+
+
+1. Clustering
+
+2. Classification supervisée
+
+
+
+3. Analyse d'enrichissement fonctionnel
+
+    - Tutoriel: 
+    [[html](tutorials/Rsession6_tuto_gProfiler.html)]
+    [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2021/tutorials/Rsession6_tuto_gProfiler.Rmd)]
+    
+
+<!--
+4. Corrélation régression (à confirmer)
 -->
+
+
 
 
 ### Travail personnel
