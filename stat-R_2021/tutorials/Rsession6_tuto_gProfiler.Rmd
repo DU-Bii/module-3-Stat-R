@@ -102,96 +102,140 @@ for (lib in requiredLib) {
   require(lib, character.only = TRUE)
 }
 
-library(gprofiler2)
+library(gprofiler2) 
 
 ```
 
 ## Goal of this tutorial
 
-This tutorial aims at showing how to use the gProfiler2 R package. It is more or less a Rmd version of the vignette. You can refer to the vignette and reference manual (links below) for more details.
+This tutorial aims at showing how to use the `gProfiler2` R package. It is more or less a Rmd version of the vignette. You can refer to the vignette and reference manual (links below) for more details.
 
 ## References
 
-R package : <https://cran.r-project.org/web/packages/gprofiler2>
+- R package : <https://cran.r-project.org/web/packages/gprofiler2>
 
-Reference manual: <https://cran.r-project.org/web/packages/gprofiler2/gprofiler2.pdf>
+- Reference manual: <https://cran.r-project.org/web/packages/gprofiler2/gprofiler2.pdf>
 
-Vignette: <https://cran.r-project.org/web/packages/gprofiler2/vignettes/gprofiler2.html>
+- Vignette: <https://cran.r-project.org/web/packages/gprofiler2/vignettes/gprofiler2.html>
 
 ## g:GOSt - functional enrichment analysis of gene lists
 
-Here is an example in Homo sapiens with various types of gene identifiers, a SNP id, chromosomal intervals and a term ID from the Gene Ontology. Parameters are described in the vignette. The result is a named list where “result” is a data.frame with the enrichment analysis results and “meta” contains a named list with all the metadata for the query.
+Here is an example in *Homo sapiens* with various types of gene identifiers, a SNP ID, chromosomal intervals and a term ID from the Gene Ontology (*GO*). Parameters are described in the vignette. The result is a named list where "result" is a `data.frame` with the enrichment analysis results and "meta" contains a named list with all the metadata for the query.
 
 ```{r test_vignette_partA}
 
-# Example of gene list functional enrichment analysis with gost
-gostres <- gost(query = c("X:1000:1000000", "rs17396340", "GO:0005005", "ENSG00000156103", "NLRP1"), 
-                organism = "hsapiens", ordered_query = FALSE, 
-                multi_query = FALSE, significant = TRUE, exclude_iea = FALSE, 
-                measure_underrepresentation = FALSE, evcodes = FALSE, 
-                user_threshold = 0.05, correction_method = "g_SCS", 
-                domain_scope = "annotated", custom_bg = NULL, 
-                numeric_ns = "", sources = NULL, as_short_link = FALSE)
+## Example of gene list functional enrichment analysis with gost
+gostres <- gost(
+  query = c("X:1000:1000000", 
+            "rs17396340", 
+            "GO:0005005",
+            "ENSG00000156103", 
+            "NLRP1"), 
+  organism = "hsapiens", 
+  ordered_query = FALSE, 
+  multi_query = FALSE, 
+  significant = TRUE, 
+  exclude_iea = FALSE, 
+  measure_underrepresentation = FALSE, 
+  evcodes = FALSE, 
+  user_threshold = 0.05, 
+  correction_method = "g_SCS", 
+  domain_scope = "annotated", 
+  custom_bg = NULL, 
+  numeric_ns = "", 
+  sources = NULL, 
+  as_short_link = FALSE)
 
 names(gostres)
 summary(gostres)
-head(gostres$result)
 names(gostres$meta)
+# head(gostres$result)
+kable(head(gostres$result))
 
 ```
 
 
-With the parameter evcodes = TRUE, the result will include the evidence codes. In addition, a column “intersection” will appear showing the input gene IDs that intersect with the corresponding functional term. Note that this parameter can decrease the performance and make the query slower.
+With the parameter `evcodes = TRUE`, the result will include the evidence codes. In addition, a column "intersection" will appear showing the input gene IDs that intersect with the corresponding functional term. Note that this parameter can decrease the performance and make the query slower.
 
 ```{r test_vignette_partB}
 
 # Example with intersection (can be time consuming)
-gostres2 <- gost(query = c("X:1000:1000000", "rs17396340", "GO:0005005", "ENSG00000156103", "NLRP1"), 
-                organism = "hsapiens", ordered_query = FALSE, 
-                multi_query = FALSE, significant = TRUE, exclude_iea = FALSE, 
-                measure_underrepresentation = FALSE, evcodes = TRUE, 
-                user_threshold = 0.05, correction_method = "g_SCS", 
-                domain_scope = "annotated", custom_bg = NULL, 
-                numeric_ns = "", sources = NULL)
+gostres2 <- gost(
+  query = c("X:1000:1000000", 
+            "rs17396340",
+            "GO:0005005", 
+            "ENSG00000156103", 
+            "NLRP1"), 
+  organism = "hsapiens", 
+  ordered_query = FALSE, 
+  multi_query = FALSE, 
+  significant = TRUE, 
+  exclude_iea = FALSE, 
+  measure_underrepresentation = FALSE, 
+  evcodes = TRUE, 
+  user_threshold = 0.05, 
+  correction_method = "g_SCS", 
+  domain_scope = "annotated", 
+  custom_bg = NULL, 
+  numeric_ns = "", sources = NULL)
 
-head(gostres2$result)
+# head(gostres2$result)
+kable(head(gostres2$result))
 
 ```
 
 
-The query results can also be gathered into a short-link to the g:Profiler web tool.
+The query results can also be gathered into a short-link to the `g:Profiler` web tool.
 
 ```{r test_vignette-partC}
 
 # Get a web link
-gostres_link <- gost(query = c("X:1000:1000000", "rs17396340", "GO:0005005", "ENSG00000156103", "NLRP1"), 
-                as_short_link = TRUE)
+gostres_link <- gost(
+  query = c("X:1000:1000000", 
+            "rs17396340", 
+            "GO:0005005", 
+            "ENSG00000156103", 
+            "NLRP1"), 
+  as_short_link = TRUE)
 gostres_link
 
 ```
 
 
-The function gost also allows to perform enrichment on multiple input gene lists. If the parameter multiquery = TRUE is used, then the results from all of the input queries are grouped according to term IDs for better comparison.
+The function `gost` also allows to perform enrichment on multiple input gene lists. If the parameter `multiquery = TRUE` is used, then the results from all of the input queries are grouped according to term IDs for better comparison.
 
 ```{r test_vignette_partD}
 
 # Multiple gene lists
-multi_gostres1 <- gost(query = list("chromX" = c("X:1000:1000000", "rs17396340", 
-                                                 "GO:0005005", "ENSG00000156103", "NLRP1"),
-                             "chromY" = c("Y:1:10000000", "rs17396340", 
-                                          "GO:0005005", "ENSG00000156103", "NLRP1")), 
-                       multi_query = FALSE)
+multi_gostres1 <- gost(
+  query = list("chromX" = c("X:1000:1000000", 
+                            "rs17396340", 
+                            "GO:0005005", 
+                            "ENSG00000156103", 
+                            "NLRP1"),
+               "chromY" = c("Y:1:10000000", 
+                            "rs17396340", 
+                            "GO:0005005", 
+                            "ENSG00000156103", 
+                            "NLRP1")), 
+  multi_query = FALSE)
 
-head(multi_gostres1$result)
+# head(multi_gostres1$result)
+kable(head(multi_gostres1$result))
 
+multi_gostres2 <- gost(
+  query = list("chromX" = c("X:1000:1000000", 
+                            "rs17396340",
+                            "GO:0005005", 
+                            "ENSG00000156103", "NLRP1"),
+               "chromY" = c("Y:1:10000000", 
+                            "rs17396340", 
+                            "GO:0005005", 
+                            "ENSG00000156103", "NLRP1")), 
+  multi_query = TRUE)
 
-multi_gostres2 <- gost(query = list("chromX" = c("X:1000:1000000", "rs17396340",
-                                                 "GO:0005005", "ENSG00000156103", "NLRP1"),
-                             "chromY" = c("Y:1:10000000", "rs17396340", 
-                                          "GO:0005005", "ENSG00000156103", "NLRP1")), 
-                       multi_query = TRUE)
-
-head(multi_gostres2$result)
+# head(multi_gostres2$result)
+kable(head(multi_gostres2$result))
 
 ```
 
@@ -206,9 +250,9 @@ gostplot(gostres, capped = TRUE, interactive = TRUE)
 ```
 
 
-If interactive = FALSE, then the function returns a static ggplot object.
+If `interactive = FALSE`, then the function returns a static ggplot object.
 
-The function publish_gostplot takes the static plot object as an input and enables to highlight a selection of interesting terms from the results with numbers and table of results.
+The function `publish_gostplot` takes the static plot object as an input and enables to highlight a selection of interesting terms from the results with numbers and table of results.
 
 ```{r test_vignette_partF, fig.width=10}
 
@@ -226,10 +270,15 @@ The gost results can also be visualized as a table.
 
 ```{r test_vignette_partG, out.width="100%", fig.width=10}
 # Table
-publish_gosttable(gostres, highlight_terms = gostres$result[c(1:2,10,100:102,120,124,125),],
-                        use_colors = TRUE, 
-                        show_columns = c("source", "term_name", "term_size", "intersection_size"),
-                        filename = NULL)
+publish_gosttable(
+  gostres, 
+  highlight_terms = gostres$result[c(1:2,10,100:102,120,124,125),],
+  use_colors = TRUE, 
+  show_columns = c("source", 
+                   "term_name", 
+                   "term_size", 
+                   "intersection_size"),
+  filename = NULL)
 
 ```
 
@@ -242,11 +291,12 @@ The same functions work also in case of multiquery results showing multiple Manh
 gostplot(multi_gostres2, capped = TRUE, interactive = TRUE)
 
 # Multiquery table
-publish_gosttable(multi_gostres1, 
-                         highlight_terms = multi_gostres1$result[c(1, 24, 82, 176, 204, 234),],
-                        use_colors = TRUE, 
-                        show_columns = c("source", "term_name", "term_size"),
-                        filename = NULL)
+publish_gosttable(
+  multi_gostres1, 
+  highlight_terms = multi_gostres1$result[c(1, 24, 82, 176, 204, 234),],
+  use_colors = TRUE, 
+  show_columns = c("source", "term_name", "term_size"),
+  filename = NULL)
 
 ```
 
@@ -258,27 +308,34 @@ GProfiler2 also has a tool to convert gene IDs between databases, etc. It is cal
 
 ```{r test_vignette_partK}
 # Gene identifier conversion with gconvert
-gconvert(query = c("REAC:R-HSA-3928664", "rs17396340", "NLRP1"), organism = "hsapiens", 
-         target="ENSG", mthreshold = Inf, filter_na = TRUE)
+gconvert(
+  query = c("REAC:R-HSA-3928664", "rs17396340", "NLRP1"), 
+  organism = "hsapiens", 
+  target = "ENSG",
+  mthreshold = Inf, 
+  filter_na = TRUE)
 
 
 ``` 
 
 
-GProfiler2 also has a tool to map gene IDs between species. It is called g:Orth.
+`GProfiler2` also has a tool to map gene IDs between species. It is called `g:Orth`.
 
 ```{r test_vignette_partL}
 
 # Mapping homologous genes across related organisms with gorth
-gorth(query = c("Klf4", "Sox2", "71950"), source_organism = "mmusculus", 
-      target_organism = "hsapiens", mthreshold = Inf, filter_na = TRUE,
+gorth(query = c("Klf4", "Sox2", "71950"), 
+      source_organism = "mmusculus", 
+      target_organism = "hsapiens", 
+      mthreshold = Inf, 
+      filter_na = TRUE,
       numeric_ns = "ENTREZGENE_ACC")
 
 ```
 
 ## Other gProfiler versions
 
-It is possible to use older (archived) versions or the beta version of gProfiler.
+It is possible to use older (archived) versions or the beta version of  `gProfiler`.
 
 ```{r test_vignette_partM}
 
