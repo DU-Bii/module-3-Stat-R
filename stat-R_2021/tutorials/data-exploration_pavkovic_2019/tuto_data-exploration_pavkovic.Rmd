@@ -1,6 +1,6 @@
 ---
 title: "Tutorial: exploration of multi-omics data"
-author: "Jacques van Helden"
+author: "Jacques van Helden et Olivier Sand"
 date: '`r Sys.Date()`'
 output:
   html_document:
@@ -67,7 +67,7 @@ output:
     fig_width: 7
     toc: yes
 font-import: http://fonts.googleapis.com/css?family=Risque
-subtitle: DUBii 2020
+subtitle: DUBii 2021
 font-family: Garamond
 transition: linear
 editor_options: 
@@ -310,7 +310,7 @@ Roxygen2 provides is a very convenient way of documenting a function, because
 #' @param local_folder path of a local folder where the file should be stored
 #' @return the function returns the path of the local file, built from local_folder and file_name
 #' @export
-downloadOnlyOnce <- function(url_base, 
+download_only_once <- function(url_base, 
                              file_name,
                              local_folder) {
 
@@ -340,7 +340,7 @@ downloadOnlyOnce <- function(url_base,
 
 
 
-We can now use our new function `downloadOnlyOnce()` to download the files from the folic acid dataset and store them in a local folder. We will download successively :
+We can now use our new function `download_only_once()` to download the files from the folic acid dataset and store them in a local folder. We will download successively :
 
 - transcriptome data (`fa`)
 - transcriptome medata
@@ -355,33 +355,48 @@ pavkovic_folder <- "~/DUBii-m3_data/pavkovic_2019"
 #### Dowload folic acid data and metadata ####
 
 ## Transcriptome data table
-local_fa_file <- downloadOnlyOnce(
+local_fa_file <- download_only_once(
   url_base = pavkovic_base, 
   file_name = "fa_raw_counts.tsv.gz",
   local_folder =  pavkovic_folder
 )
 
-## Transcriptome metadata
-trans_metadata_file <- downloadOnlyOnce(
+## Normalised transcriptome data table
+local_fa_norm_file <- download_only_once(
   url_base = pavkovic_base, 
-  file_name = "transcriptome_metadata.tsv",
+  file_name = "fa_normalized_counts.tsv.gz",
   local_folder =  pavkovic_folder
 )
 
-## Proteome data table
-local_pfa_file <- downloadOnlyOnce(
+
+## Transcriptome metadata
+fa_metadata_file <- download_only_once(
+  url_base = pavkovic_base, 
+  file_name = "fa_transcriptome_metadata.tsv",
+  local_folder =  pavkovic_folder
+)
+
+## FA proteome data table
+local_pfa_file <- download_only_once(
   url_base = pavkovic_base, 
   file_name = "pfa_model_counts.tsv.gz",
   local_folder =  pavkovic_folder
 )
 
-## Proteome metadata
-prot_metadata_file <- downloadOnlyOnce(
+## FA proteome metadata
+pfa_metadata_file <- download_only_once(
   url_base = pavkovic_base, 
-  file_name = "proteome_metadata.tsv",
+  file_name = "pfa_proteome_metadata.tsv",
   local_folder =  pavkovic_folder
 )
 
+
+## UUO proteome data table
+local_puuo_file <- download_only_once(
+  url_base = pavkovic_base, 
+  file_name = "puuo_model_counts.tsv.gz",
+  local_folder =  pavkovic_folder
+)
 
 
 ```
@@ -394,7 +409,7 @@ After having run the chunk of code above, try to re-run it. In principle, you sh
 
 We now write a function `load_fix_row_names()` that loads a data file and takes a specified column as row names, whilst automatically fixing potential problems due to duplicate labels in this column. 
 
-```{r my_easy_load_function}
+```{r load_fix_row_names_function}
 #' @title Load a tab-separated value file and manually set row ames after having forced them to unique values
 #' @author Jacques van Helden email{Jacques.van-Helden@@france-bioinformatique.fr}
 #' @param file file path
@@ -421,33 +436,53 @@ We can now load the data that from our local folder.
 
 ```{r load_fa}
 
-## Load transcriptome data
-fa <- read.delim(file = local_fa_file, sep = "\t", header = TRUE)
+## Load transcriptome data (raw counts)
+fa_by_read_delim <- read.delim(file = local_fa_file, sep = "\t", header = TRUE)
 
 ## Check the first lines of the loaded file
-dim(fa)
-kable(head(fa), caption = "Loaded with read.delim()")
+# dim(fa)
+message("Loaded raw counts of FA transcriptome raw counts with read_delim(): ", 
+        nrow(fa_by_read_delim), " rows x ", ncol(fa_by_read_delim), " columns")
+kable(head(fa_by_read_delim), caption = "FA transcriptome loaded with read.delim()")
 
-## Load same data with load_fix_row_names
+
+
+## Load the same data with load_fix_row_names
 fa <- load_fix_row_names(file = local_fa_file, rownames.col = 1)
-dim(fa)
-kable(head(fa), caption = "Loaded with myEasyLad()")
-hist(unlist(fa), breaks = 100)
+message("Loaded raw counts of FA transcriptome raw counts with load_fix_row_names(): ", 
+        nrow(fa), " rows x ", ncol(fa), " columns")
+kable(head(fa), caption = "FA transcriptome loaded with load_fix_row_names()")
+# hist(unlist(fa), breaks = 100)
 
-## Load proteome data
+## Load normalised data with load_fix_row_names
+fa_norm <- load_fix_row_names(file = local_fa_norm_file, rownames.col = 1)
+message("Loaded raw counts of FA transcriptome normalised counts with load_fix_row_names(): ", 
+        nrow(fa_norm), " rows x ", ncol(fa_norm), " columns")
+# dim(fa_norm)
+kable(head(fa_norm), caption = "First lines of the loaded normalised counts of FA transcriptome with load_fix_row_names()")
+
+## Load FA proteome data
 pfa <- load_fix_row_names(file = local_pfa_file, rownames.col = 1)
-dim(pfa)
+message("Loaded raw counts of FA proteome (pfa)  with load_fix_row_names(): ", 
+        nrow(pfa), " rows x ", ncol(pfa), " columns")
+# dim(pfa)
+
+## Load UUO proteome data
+puuo <- load_fix_row_names(file = local_puuo_file, rownames.col = 1)
+message("Loaded raw counts of UUO proteome (puuo)  with load_fix_row_names(): ", 
+        nrow(puuo), " rows x ", ncol(puuo), " columns")
+# dim(pfa)
 
 ## Check the first lines of the loaded file
-kable(head(pfa))
+kable(head(pfa), caption = "First lines of the proteome table")
 
 ## Load proteome metadata
-proteome_metadata <- read.delim(file = prot_metadata_file, sep = "\t", header = TRUE)
-kable(proteome_metadata, caption = "Metadata for the proteome dataset")
+pfa_metadata <- read.delim(file = pfa_metadata_file, sep = "\t", header = TRUE)
+kable(pfa_metadata, caption = "Metadata for the FA proteome dataset")
 
 ## Load transcriptome metadata
-transcriptome_metadata <- read.delim(file = trans_metadata_file, sep = "\t", header = TRUE)
-kable(transcriptome_metadata, caption = "Metadata for the transcriptome dataset")
+fa_metadata <- read.delim(file = fa_metadata_file, sep = "\t", header = TRUE)
+kable(fa_metadata, caption = "Metadata for the transcriptome dataset")
 
 ```
 
@@ -476,7 +511,9 @@ hist(pfa_vector, breaks = 200)
 The distribution is stronly right-skewed, and its most representative part is "compressed" on the left side of the graph. As shown below, a log2 transformation provides a more informative view of the data. 
 
 ```{r fa_hist_log2}
-hist(log2(pfa_vector), breaks = 100)
+## Plot the histogram of log2-transformed proteome data
+## Note: we add an epsilon of 0.1 in order to avoid problems with null values
+hist(log2(pfa_vector + 0.1), breaks = 100)
 ```
 
 ### Enhancing the figure
@@ -487,8 +524,8 @@ hist(log2(pfa_vector), breaks = 100)
 ## Improve the histogram
 ## - add a title, axis labels, coloring, ...
 ## - increase readaility by writing each parameter on a separate line
-hist(log2(pfa_vector), 
-     breaks = seq(from = 0, to = 20, by = 0.1),
+hist(log2(pfa_vector + 0.1), 
+     breaks = seq(from = -4, to = 20, by = 0.1),
      col = "#BBDDFF",
      border = "#88AAFF",
      las = 1, # I like to read the labels
@@ -528,6 +565,108 @@ hist(log2(pfa_vector),
 
 ```
 
+## Box plots 
+
+Here is an example of code for a log2 boxplot ofthe fa data that uses the metadata tables to set up the colors.
+
+### Proteome data
+
+```{r proteome_boxplots, fig.width=10, fig.height=7, out.width="90%", fig.cap="Box plots of proteome data before (left) and after (right) log2 transformation. "}
+## Box plot of the transcriptome data before and after normalisation
+par_ori <- par(no.readonly = TRUE) ## Store the original parameters in order to restore them afterwards
+par(mar = c(4, 6, 5, 1)) ## Adapt the margins of the boxplot in order to have enough space for sample labels
+par(mfrow = c(1,2)) ## Two side-by-side panes
+
+## Compute the log2 of the proteome data
+## Note: we add an epsilon of 0.1 to avoid problems with null values
+log2pfa <- log2(pfa + 0.1)
+
+boxplot(pfa, 
+        col = pfa_metadata$color,
+        horizontal = TRUE, 
+        las = 1, 
+        main = "Proteome, original values", 
+        xlab = "value")
+
+
+boxplot(log2pfa, 
+        col = pfa_metadata$color,
+        horizontal = TRUE, 
+        las = 1, 
+        main = "Proteome, log2-transformed", 
+        xlab = "log2(value)")
+
+par(par_ori)
+```
+
+The box plots show the distribution of the data before (left) and after (right) log2 transformation. 
+
+### Transcriptome data
+
+The transcriptome data is providedd
+
+```{r transcriptome_boxplots, fig.width=10, fig.height=12, out.width="90%", fig.cap="Box plots of transcriptome data before (left) and after (right) normalisation. All values are log2 transformed. "}
+## Box plot of the transcriptome data before and after normalisation
+par_ori <- par(no.readonly = TRUE) ## Store the original parameters in order to restore them afterwards
+par(mar = c(4, 6, 5, 1)) ## Adapt the margins of the boxplot in order to have enough space for sample labels
+par(mfrow = c(2,2)) ## 4 panels, with 2 rows and 2 columns
+
+## Counts before and after normalisation, but no log2 transformation
+
+## Raw counts
+boxplot(fa, 
+        col = fa_metadata$color,
+        horizontal = TRUE, 
+        las = 1, 
+        main = "FA transcriptome\nraw counts", 
+        xlab = "counts")
+
+## Normalised transcriptome data
+boxplot(fa_norm, 
+        col = fa_metadata$color,
+        horizontal = TRUE, 
+        las = 1, 
+        main = "FA transcriptome\nnormalised counts", 
+        xlab = "counts")
+
+
+## Compute the log2 of the transcriptome data
+## Note: we add an epsilon of 0.1 to avoid problems with null values
+log2fa <- log2(fa + 0.1)
+log2fa_norm <- log2(fa_norm + 0.1)
+
+## Raw counts
+boxplot(log2fa, 
+        col = fa_metadata$color,
+        horizontal = TRUE, 
+        las = 1, 
+        main = "FA transcriptome\nlog2raw (counts)", 
+        xlab = "log2(counts)")
+
+## Normalised transcriptome data
+boxplot(log2fa_norm, 
+        col = fa_metadata$color,
+        horizontal = TRUE, 
+        las = 1, 
+        main = "FA transcriptome\nlog2(normalised counts)", 
+        xlab = "log2(normalised counts)")
+
+par(par_ori)
+```
+
+#### Observations
+
+1. The raw and normalised counts (top) show a strongly right-skewed distribution due to the presence of outliers. In each sample, a very few genes have very high values (25 miilion counts !). Such outliers can be really problematic because they will exert a very strong effect on the subsequent analyses (PCA, clustering, or any other analysis that relies on distances between samples). For PCA, we recommend to use the log2-transformed values. 
+
+2. The log2 transformation (bottom) mittigates the impact of these outliers. The bottom right panel shows that all the samples have the same third quartile (right side of the boxplot rectangle), thereby indicating the method used to standardise this method.
+
+3. For all samples, the third quartile equals the minimal value, indicating that at least 25% of the genes had a null count. 
+
+4. The sample *day2_2* has a median value equal to its minimal value, indicating that at least 50% of the genes have null value in this sample. 
+
+
+
+
 ## Exercise: PCA of Pavkovicz data
 
 
@@ -550,10 +689,10 @@ At the end, we expect to find here the most relevant figures resulting from this
 Don't hesitate to call the team in case of trouble. 
 
 
+
 ## Save a memory image of your session
 
-Use the finction `save.image()` to store an image of your session, in a file `pavkovic_memory_image.Rdata` in the  local folder specified above. 
-This file will contain all the data that you loaded during this session, and enable you to reload everything without having to re-execute all the steps. 
+Use the function `save.image()` to store an image of your session, in a file `pavkovic_memory_image.Rdata` in the  local folder specified above. This file will contain all the data that you loaded during this session, and enable you to reload everything without having to re-execute all the steps. 
 
 ```{r memory_image}
 

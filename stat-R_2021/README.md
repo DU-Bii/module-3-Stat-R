@@ -79,9 +79,7 @@ To follow this course, prior knowledge is expected on:
 
 - Practical: 
 
-    - [Practical on dataframes applied to omics data](practicals/Rsession1_practicals_dataframes.ipynb) 
-    - Corrigé fourni plus tard, on vous laisse encore un peu de refexion sur celui-ci
-
+    - [Practical on dataframes applied to omics data](practicals/Rsession1_practicals_dataframes.ipynb) et [son corrigé en .ipynb](practicals/Rsession1_practicals_dataframes_correction.ipynb) ou [son corrigé en .html](practicals/Rsession1_practicals_dataframes_correction.html)
 - Data: 
 
     - [Temperatures.txt](data/Temperatures.txt),[rawData](data/pavkovic2019_transcriptome_uuo_metadata.tsv
@@ -125,8 +123,7 @@ To follow this course, prior knowledge is expected on:
 
     - optional on **loops, conditions and functions** ([notebook ipynb](practicals/Rsession2_practical_loops_conditions_functions.ipynb) et [son corrigé](practicals/Rsession2_practical_loops_conditions_functions_correction.html))
     - on **figures** ([notebook ipynb](practicals/Rsession2_practicals_figures.ipynb) et [son corrigé](practicals/Rsession2_practicals_figures_correction.html))
-    - TD **introduction au tidyverse** ([format html](practicals/2021-03-04-TD-Intro-tidyverse.html), [format ipynb](practicals/TD-tidyverse-dplyr-tidyr-sujet.ipynb))
-    - Corrigé du TD **introduction au tidyverse** : [partie 1 sur ggplot au format ipynb](practicals/TD-tidyverse-ggplot-correction.ipynb) et [partie 2 & 3 pour dplyr et tidyr au format ipynb](practicals/TD-tidyverse-dplyr-tidyr-correction.ipynb)
+    - TD introduction au **tidyverse** ([format html](practicals/2021-03-04-TD-Intro-tidyverse.html), [format ipynb](practicals/TD-tidyverse-dplyr-tidyr-sujet.ipynb)) et ses corrigés: [partie 1 sur ggplot au format ipynb](practicals/TD-tidyverse-ggplot-correction.ipynb) et [partie 2 & 3 pour dplyr et tidyr au format ipynb](practicals/TD-tidyverse-dplyr-tidyr-correction.ipynb)
 
 
 <a name="session-3"></a>
@@ -198,8 +195,8 @@ To follow this course, prior knowledge is expected on:
 
 - Practicals:
 
-    - [**TD sur l'ACP**](practicals/2021-03-11-TD-ACP.html) visualisable [ici](https://htmlpreview.github.io/?https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2021/practicals/2021-03-11-TD-ACP.html) a réaliser sur ces données : [metadata](data/metadata.RDS) et [microbiota.abundance.log](data/microbiota.abundance.log.RDS)
-    - La correction du TD sur l'ACP sera fournie **jeudi 18 mars**
+    - [TD sur l'ACP](practicals/2021-03-11-TD-ACP.html) visualisable [ici](https://htmlpreview.github.io/?https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2021/practicals/2021-03-11-TD-ACP.html) a réaliser sur ces données : [metadata](data/metadata.RDS) et [microbiota.abundance.log](data/microbiota.abundance.log.RDS)
+    - [Correction du TD sur l'ACP](practicals/2021-03-11-TD-ACP-correction.html), visualisable [ici](https://htmlpreview.github.io/?https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2021/practicals/2021-03-11-TD-ACP-correction.html)
 
     - **Tutoriel: exploration des données multi-omiques** [[html](tutorials/data-exploration_pavkovic_2019/tuto_data-exploration_pavkovic.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2021/tutorials/data-exploration_pavkovic_2019/tuto_data-exploration_pavkovic.Rmd)]
 
@@ -208,7 +205,7 @@ To follow this course, prior knowledge is expected on:
 
     1. Téléchargez le [Rmd source](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2021/tutorials/data-exploration_pavkovic_2019/tuto_data-exploration_pavkovic.Rmd) du tutoriel "exploration des données multi-omiques"
     2. Téléversez-le dans un dossier de votre espace sur le cluster
-    3. Dans l'en-tête de votre version du Rmd, changez la valeur du  `self_contained` en indiquant `TRUE`
+    3. Dans l'en-tête de votre version du Rmd, changez la valeur du  `self_contained` en indiquant `yes`
     4. Lancez knitr pour générer le rapport en formats HTML et pdf pour vous assurez que l'original compile bien. 
     5. Réalisez l'exercice "PCA of Pavkovicz data"
     6. Déposez les résultats (Rmd et fichier html self-contained) dans le sous-dossier TP4 du dossier de dépôt convenu sur slack

@@ -9,9 +9,9 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Jacques van Helden" />
+<meta name="author" content="Jacques van Helden et Olivier Sand" />
 
-<meta name="date" content="2021-03-17" />
+<meta name="date" content="2021-03-22" />
 
 <title>Tutorial: exploration of multi-omics data</title>
 
@@ -362,9 +362,9 @@ div.tocify {
 
 
 <h1 class="title toc-ignore">Tutorial: exploration of multi-omics data</h1>
-<h3 class="subtitle">DUBii 2020</h3>
-<h4 class="author">Jacques van Helden</h4>
-<h4 class="date">2021-03-17</h4>
+<h3 class="subtitle">DUBii 2021</h3>
+<h4 class="author">Jacques van Helden et Olivier Sand</h4>
+<h4 class="date">2021-03-22</h4>
 
 </div>
 
@@ -748,7 +748,7 @@ div.tocify {
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param local_folder path of a local folder where the file should be stored</span></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @return the function returns the path of the local file, built from local_folder and file_name</span></span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>downloadOnlyOnce <span class="ot">&lt;-</span> <span class="cf">function</span>(url_base, </span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>download_only_once <span class="ot">&lt;-</span> <span class="cf">function</span>(url_base, </span>
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>                             file_name,</span>
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>                             local_folder) {</span>
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
@@ -774,7 +774,7 @@ div.tocify {
 <span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(local_file)</span>
 <span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<p>We can now use our new function <code>downloadOnlyOnce()</code> to download the files from the folic acid dataset and store them in a local folder. We will download successively :</p>
+<p>We can now use our new function <code>download_only_once()</code> to download the files from the folic acid dataset and store them in a local folder. We will download successively :</p>
 <ul>
 <li>transcriptome data (<code>fa</code>)</li>
 <li>transcriptome medata</li>
@@ -788,32 +788,48 @@ div.tocify {
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="do">#### Dowload folic acid data and metadata ####</span></span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Transcriptome data table</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>local_fa_file <span class="ot">&lt;-</span> <span class="fu">downloadOnlyOnce</span>(</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>local_fa_file <span class="ot">&lt;-</span> <span class="fu">download_only_once</span>(</span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">url_base =</span> pavkovic_base, </span>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">file_name =</span> <span class="st">&quot;fa_raw_counts.tsv.gz&quot;</span>,</span>
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">local_folder =</span>  pavkovic_folder</span>
 <span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="do">## Transcriptome metadata</span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>trans_metadata_file <span class="ot">&lt;-</span> <span class="fu">downloadOnlyOnce</span>(</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="do">## Normalised transcriptome data table</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>local_fa_norm_file <span class="ot">&lt;-</span> <span class="fu">download_only_once</span>(</span>
 <span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">url_base =</span> pavkovic_base, </span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">file_name =</span> <span class="st">&quot;transcriptome_metadata.tsv&quot;</span>,</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">file_name =</span> <span class="st">&quot;fa_normalized_counts.tsv.gz&quot;</span>,</span>
 <span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">local_folder =</span>  pavkovic_folder</span>
 <span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="do">## Proteome data table</span></span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>local_pfa_file <span class="ot">&lt;-</span> <span class="fu">downloadOnlyOnce</span>(</span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">url_base =</span> pavkovic_base, </span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">file_name =</span> <span class="st">&quot;pfa_model_counts.tsv.gz&quot;</span>,</span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">local_folder =</span>  pavkovic_folder</span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="do">## Proteome metadata</span></span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>prot_metadata_file <span class="ot">&lt;-</span> <span class="fu">downloadOnlyOnce</span>(</span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">url_base =</span> pavkovic_base, </span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">file_name =</span> <span class="st">&quot;proteome_metadata.tsv&quot;</span>,</span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">local_folder =</span>  pavkovic_folder</span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="do">## Transcriptome metadata</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>fa_metadata_file <span class="ot">&lt;-</span> <span class="fu">download_only_once</span>(</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">url_base =</span> pavkovic_base, </span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">file_name =</span> <span class="st">&quot;fa_transcriptome_metadata.tsv&quot;</span>,</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">local_folder =</span>  pavkovic_folder</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a><span class="do">## FA proteome data table</span></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>local_pfa_file <span class="ot">&lt;-</span> <span class="fu">download_only_once</span>(</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">url_base =</span> pavkovic_base, </span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">file_name =</span> <span class="st">&quot;pfa_model_counts.tsv.gz&quot;</span>,</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">local_folder =</span>  pavkovic_folder</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a><span class="do">## FA proteome metadata</span></span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>pfa_metadata_file <span class="ot">&lt;-</span> <span class="fu">download_only_once</span>(</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>  <span class="at">url_base =</span> pavkovic_base, </span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>  <span class="at">file_name =</span> <span class="st">&quot;pfa_proteome_metadata.tsv&quot;</span>,</span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>  <span class="at">local_folder =</span>  pavkovic_folder</span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a><span class="do">## UUO proteome data table</span></span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>local_puuo_file <span class="ot">&lt;-</span> <span class="fu">download_only_once</span>(</span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>  <span class="at">url_base =</span> pavkovic_base, </span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>  <span class="at">file_name =</span> <span class="st">&quot;puuo_model_counts.tsv.gz&quot;</span>,</span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>  <span class="at">local_folder =</span>  pavkovic_folder</span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p>After having run the chunk of code above, try to re-run it. In principle, you should just receive messages telling you that the files are already there.</p>
 </div>
 <div id="loading-the-files" class="section level3">
@@ -838,15 +854,16 @@ div.tocify {
 <span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(x)</span>
 <span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>We can now load the data that from our local folder.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Load transcriptome data</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>fa <span class="ot">&lt;-</span> <span class="fu">read.delim</span>(<span class="at">file =</span> local_fa_file, <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Load transcriptome data (raw counts)</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>fa_by_read_delim <span class="ot">&lt;-</span> <span class="fu">read.delim</span>(<span class="at">file =</span> local_fa_file, <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Check the first lines of the loaded file</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(fa)</span></code></pre></div>
-<pre><code>[1] 46679    19</code></pre>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(fa), <span class="at">caption =</span> <span class="st">&quot;Loaded with read.delim()&quot;</span>)</span></code></pre></div>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># dim(fa)</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span>(<span class="st">&quot;Loaded raw counts of FA transcriptome raw counts with read_delim(): &quot;</span>, </span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>        <span class="fu">nrow</span>(fa_by_read_delim), <span class="st">&quot; rows x &quot;</span>, <span class="fu">ncol</span>(fa_by_read_delim), <span class="st">&quot; columns&quot;</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(fa_by_read_delim), <span class="at">caption =</span> <span class="st">&quot;FA transcriptome loaded with read.delim()&quot;</span>)</span></code></pre></div>
 <table style="width:100%;">
-<caption>Loaded with read.delim()</caption>
+<caption>FA transcriptome loaded with read.delim()</caption>
 <colgroup>
 <col width="8%" />
 <col width="4%" />
@@ -1020,13 +1037,13 @@ div.tocify {
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Load same data with load_fix_row_names</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>fa <span class="ot">&lt;-</span> <span class="fu">load_fix_row_names</span>(<span class="at">file =</span> local_fa_file, <span class="at">rownames.col =</span> <span class="dv">1</span>)</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(fa)</span></code></pre></div>
-<pre><code>[1] 46679    18</code></pre>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(fa), <span class="at">caption =</span> <span class="st">&quot;Loaded with myEasyLad()&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Load the same data with load_fix_row_names</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>fa <span class="ot">&lt;-</span> <span class="fu">load_fix_row_names</span>(<span class="at">file =</span> local_fa_file, <span class="at">rownames.col =</span> <span class="dv">1</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span>(<span class="st">&quot;Loaded raw counts of FA transcriptome raw counts with load_fix_row_names(): &quot;</span>, </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">nrow</span>(fa), <span class="st">&quot; rows x &quot;</span>, <span class="fu">ncol</span>(fa), <span class="st">&quot; columns&quot;</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(fa), <span class="at">caption =</span> <span class="st">&quot;FA transcriptome loaded with load_fix_row_names()&quot;</span>)</span></code></pre></div>
 <table style="width:100%;">
-<caption>Loaded with myEasyLad()</caption>
+<caption>FA transcriptome loaded with load_fix_row_names()</caption>
 <colgroup>
 <col width="8%" />
 <col width="4%" />
@@ -1200,15 +1217,205 @@ div.tocify {
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">unlist</span>(fa), <span class="at">breaks =</span> <span class="dv">100</span>)</span></code></pre></div>
-<p><img src="figures/pavkovic2019_load_fa-1.png" width="672" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Load proteome data</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>pfa <span class="ot">&lt;-</span> <span class="fu">load_fix_row_names</span>(<span class="at">file =</span> local_pfa_file, <span class="at">rownames.col =</span> <span class="dv">1</span>)</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(pfa)</span></code></pre></div>
-<pre><code>[1] 8044   10</code></pre>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Check the first lines of the loaded file</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(pfa))</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># hist(unlist(fa), breaks = 100)</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Load normalised data with load_fix_row_names</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>fa_norm <span class="ot">&lt;-</span> <span class="fu">load_fix_row_names</span>(<span class="at">file =</span> local_fa_norm_file, <span class="at">rownames.col =</span> <span class="dv">1</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span>(<span class="st">&quot;Loaded raw counts of FA transcriptome normalised counts with load_fix_row_names(): &quot;</span>, </span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">nrow</span>(fa_norm), <span class="st">&quot; rows x &quot;</span>, <span class="fu">ncol</span>(fa_norm), <span class="st">&quot; columns&quot;</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co"># dim(fa_norm)</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(fa_norm), <span class="at">caption =</span> <span class="st">&quot;First lines of the loaded normalised counts of FA transcriptome with load_fix_row_names()&quot;</span>)</span></code></pre></div>
 <table>
+<caption>First lines of the loaded normalised counts of FA transcriptome with load_fix_row_names()</caption>
+<colgroup>
+<col width="8%" />
+<col width="4%" />
+<col width="5%" />
+<col width="5%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
+<col width="5%" />
+<col width="4%" />
+<col width="4%" />
+<col width="5%" />
+<col width="5%" />
+<col width="4%" />
+<col width="4%" />
+<col width="5%" />
+<col width="5%" />
+<col width="4%" />
+<col width="5%" />
+<col width="4%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">day1_1</th>
+<th align="right">day1_2</th>
+<th align="right">day1_3</th>
+<th align="right">day14_1</th>
+<th align="right">day14_2</th>
+<th align="right">day14_3</th>
+<th align="right">day2_1</th>
+<th align="right">day2_2</th>
+<th align="right">day2_3</th>
+<th align="right">day3_1</th>
+<th align="right">day3_2</th>
+<th align="right">day3_3</th>
+<th align="right">day7_1</th>
+<th align="right">day7_2</th>
+<th align="right">day7_3</th>
+<th align="right">normal_1</th>
+<th align="right">normal_2</th>
+<th align="right">normal_3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">ENSMUSG00000000001</td>
+<td align="right">2711.22417</td>
+<td align="right">1094.745589</td>
+<td align="right">1331.5880610</td>
+<td align="right">728.668808</td>
+<td align="right">603.846446</td>
+<td align="right">646.124076</td>
+<td align="right">1185.658698</td>
+<td align="right">1239.4695</td>
+<td align="right">829.596362</td>
+<td align="right">928.1069573</td>
+<td align="right">1110.908359</td>
+<td align="right">951.071644</td>
+<td align="right">953.722863</td>
+<td align="right">1008.0265279</td>
+<td align="right">1001.4667413</td>
+<td align="right">719.032852</td>
+<td align="right">1247.299971</td>
+<td align="right">809.375515</td>
+</tr>
+<tr class="even">
+<td align="left">ENSMUSG00000000003</td>
+<td align="right">0.00000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+</tr>
+<tr class="odd">
+<td align="left">ENSMUSG00000000028</td>
+<td align="right">42.82759</td>
+<td align="right">13.485108</td>
+<td align="right">21.9214582</td>
+<td align="right">16.244209</td>
+<td align="right">10.802262</td>
+<td align="right">33.839559</td>
+<td align="right">166.379146</td>
+<td align="right">23.6540</td>
+<td align="right">137.895374</td>
+<td align="right">48.8972257</td>
+<td align="right">8.244218</td>
+<td align="right">49.868925</td>
+<td align="right">6.091296</td>
+<td align="right">6.8109901</td>
+<td align="right">39.5074036</td>
+<td align="right">10.420766</td>
+<td align="right">7.448588</td>
+<td align="right">1.700369</td>
+</tr>
+<tr class="even">
+<td align="left">ENSMUSG00000000031</td>
+<td align="right">15.46552</td>
+<td align="right">4.290716</td>
+<td align="right">0.5620887</td>
+<td align="right">1.160301</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">1.105509</td>
+<td align="right">0.0000</td>
+<td align="right">5.560297</td>
+<td align="right">0.9403313</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.9729986</td>
+<td align="right">1.8375537</td>
+<td align="right">1.488681</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+</tr>
+<tr class="odd">
+<td align="left">ENSMUSG00000000037</td>
+<td align="right">0.00000</td>
+<td align="right">17.162865</td>
+<td align="right">3.9346207</td>
+<td align="right">6.961804</td>
+<td align="right">2.160452</td>
+<td align="right">1.057486</td>
+<td align="right">31.507014</td>
+<td align="right">0.0000</td>
+<td align="right">43.370319</td>
+<td align="right">8.4629814</td>
+<td align="right">7.213691</td>
+<td align="right">0.000000</td>
+<td align="right">6.961481</td>
+<td align="right">99.2458551</td>
+<td align="right">0.9187768</td>
+<td align="right">47.637787</td>
+<td align="right">6.771444</td>
+<td align="right">0.000000</td>
+</tr>
+<tr class="even">
+<td align="left">ENSMUSG00000000049</td>
+<td align="right">36.87931</td>
+<td align="right">3.064797</td>
+<td align="right">28.6665222</td>
+<td align="right">30.167817</td>
+<td align="right">2.160452</td>
+<td align="right">59.219228</td>
+<td align="right">6.080301</td>
+<td align="right">14.1924</td>
+<td align="right">2.224119</td>
+<td align="right">0.9403313</td>
+<td align="right">27.824235</td>
+<td align="right">5.699306</td>
+<td align="right">27.845923</td>
+<td align="right">6.8109901</td>
+<td align="right">31.2384121</td>
+<td align="right">41.683064</td>
+<td align="right">25.731487</td>
+<td align="right">27.205900</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Load FA proteome data</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>pfa <span class="ot">&lt;-</span> <span class="fu">load_fix_row_names</span>(<span class="at">file =</span> local_pfa_file, <span class="at">rownames.col =</span> <span class="dv">1</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span>(<span class="st">&quot;Loaded raw counts of FA proteome (pfa)  with load_fix_row_names(): &quot;</span>, </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">nrow</span>(pfa), <span class="st">&quot; rows x &quot;</span>, <span class="fu">ncol</span>(pfa), <span class="st">&quot; columns&quot;</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co"># dim(pfa)</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Load UUO proteome data</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>puuo <span class="ot">&lt;-</span> <span class="fu">load_fix_row_names</span>(<span class="at">file =</span> local_puuo_file, <span class="at">rownames.col =</span> <span class="dv">1</span>)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span>(<span class="st">&quot;Loaded raw counts of UUO proteome (puuo)  with load_fix_row_names(): &quot;</span>, </span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>        <span class="fu">nrow</span>(puuo), <span class="st">&quot; rows x &quot;</span>, <span class="fu">ncol</span>(puuo), <span class="st">&quot; columns&quot;</span>)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co"># dim(pfa)</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="do">## Check the first lines of the loaded file</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(pfa), <span class="at">caption =</span> <span class="st">&quot;First lines of the proteome table&quot;</span>)</span></code></pre></div>
+<table>
+<caption>First lines of the proteome table</caption>
 <colgroup>
 <col width="16%" />
 <col width="8%" />
@@ -1318,11 +1525,11 @@ div.tocify {
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Load proteome metadata</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>proteome_metadata <span class="ot">&lt;-</span> <span class="fu">read.delim</span>(<span class="at">file =</span> prot_metadata_file, <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(proteome_metadata, <span class="at">caption =</span> <span class="st">&quot;Metadata for the proteome dataset&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Load proteome metadata</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>pfa_metadata <span class="ot">&lt;-</span> <span class="fu">read.delim</span>(<span class="at">file =</span> pfa_metadata_file, <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(pfa_metadata, <span class="at">caption =</span> <span class="st">&quot;Metadata for the FA proteome dataset&quot;</span>)</span></code></pre></div>
 <table>
-<caption>Metadata for the proteome dataset</caption>
+<caption>Metadata for the FA proteome dataset</caption>
 <thead>
 <tr class="header">
 <th align="left">dataType</th>
@@ -1334,70 +1541,84 @@ div.tocify {
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">transcriptome</td>
+<td align="left">proteome</td>
 <td align="left">normal_1</td>
 <td align="left">normal</td>
 <td align="right">1</td>
 <td align="left">#BBFFBB</td>
 </tr>
 <tr class="even">
-<td align="left">transcriptome</td>
+<td align="left">proteome</td>
 <td align="left">normal_2</td>
 <td align="left">normal</td>
 <td align="right">2</td>
 <td align="left">#BBFFBB</td>
 </tr>
 <tr class="odd">
-<td align="left">transcriptome</td>
-<td align="left">day3_1</td>
-<td align="left">day3</td>
+<td align="left">proteome</td>
+<td align="left">day1_1</td>
+<td align="left">day1</td>
 <td align="right">1</td>
 <td align="left">#FFFFDD</td>
 </tr>
 <tr class="even">
-<td align="left">transcriptome</td>
-<td align="left">day3_2</td>
-<td align="left">day3</td>
+<td align="left">proteome</td>
+<td align="left">day1_2</td>
+<td align="left">day1</td>
 <td align="right">2</td>
 <td align="left">#FFFFDD</td>
 </tr>
 <tr class="odd">
-<td align="left">transcriptome</td>
-<td align="left">day3_3</td>
-<td align="left">day3</td>
-<td align="right">3</td>
-<td align="left">#FFFFDD</td>
+<td align="left">proteome</td>
+<td align="left">day2_1</td>
+<td align="left">day2</td>
+<td align="right">1</td>
+<td align="left">#BBD7FF</td>
 </tr>
 <tr class="even">
-<td align="left">transcriptome</td>
+<td align="left">proteome</td>
+<td align="left">day2_2</td>
+<td align="left">day2</td>
+<td align="right">1</td>
+<td align="left">#BBD7FF</td>
+</tr>
+<tr class="odd">
+<td align="left">proteome</td>
+<td align="left">day3_1</td>
+<td align="left">day3</td>
+<td align="right">1</td>
+<td align="left">#F0BBFF</td>
+</tr>
+<tr class="even">
+<td align="left">proteome</td>
+<td align="left">day3_2</td>
+<td align="left">day3</td>
+<td align="right">2</td>
+<td align="left">#F0BBFF</td>
+</tr>
+<tr class="odd">
+<td align="left">proteome</td>
 <td align="left">day7_1</td>
 <td align="left">day7</td>
 <td align="right">1</td>
 <td align="left">#FFDD88</td>
 </tr>
-<tr class="odd">
-<td align="left">transcriptome</td>
+<tr class="even">
+<td align="left">proteome</td>
 <td align="left">day7_2</td>
 <td align="left">day7</td>
 <td align="right">2</td>
 <td align="left">#FFDD88</td>
 </tr>
-<tr class="even">
-<td align="left">transcriptome</td>
-<td align="left">day7_3</td>
-<td align="left">day7</td>
-<td align="right">3</td>
-<td align="left">#FFDD88</td>
-</tr>
 <tr class="odd">
-<td align="left">transcriptome</td>
+<td align="left">proteome</td>
 <td align="left">day14_1</td>
 <td align="left">day14</td>
 <td align="right">1</td>
 <td align="left">#FF4400</td>
 </tr>
 <tr class="even">
-<td align="left">transcriptome</td>
+<td align="left">proteome</td>
 <td align="left">day14_2</td>
 <td align="left">day14</td>
 <td align="right">2</td>
@@ -1405,9 +1626,9 @@ div.tocify {
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Load transcriptome metadata</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>transcriptome_metadata <span class="ot">&lt;-</span> <span class="fu">read.delim</span>(<span class="at">file =</span> trans_metadata_file, <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(transcriptome_metadata, <span class="at">caption =</span> <span class="st">&quot;Metadata for the transcriptome dataset&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Load transcriptome metadata</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>fa_metadata <span class="ot">&lt;-</span> <span class="fu">read.delim</span>(<span class="at">file =</span> fa_metadata_file, <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(fa_metadata, <span class="at">caption =</span> <span class="st">&quot;Metadata for the transcriptome dataset&quot;</span>)</span></code></pre></div>
 <table>
 <caption>Metadata for the transcriptome dataset</caption>
 <thead>
@@ -1421,105 +1642,126 @@ div.tocify {
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">transcriptome</td>
-<td align="left">day14_12</td>
+<td align="left">1 transcriptome</td>
+<td align="left">day14_1</td>
 <td align="left">day14</td>
-<td align="right">12</td>
+<td align="right">1</td>
 <td align="left">#FF4400</td>
 </tr>
 <tr class="even">
-<td align="left">transcriptome</td>
-<td align="left">day14_13</td>
+<td align="left">2 transcriptome</td>
+<td align="left">day14_2</td>
 <td align="left">day14</td>
-<td align="right">13</td>
+<td align="right">2</td>
 <td align="left">#FF4400</td>
 </tr>
 <tr class="odd">
-<td align="left">transcriptome</td>
-<td align="left">day14_14</td>
+<td align="left">3 transcriptome</td>
+<td align="left">day14_3</td>
 <td align="left">day14</td>
-<td align="right">14</td>
+<td align="right">3</td>
 <td align="left">#FF4400</td>
 </tr>
 <tr class="even">
-<td align="left">transcriptome</td>
-<td align="left">day14_15</td>
-<td align="left">day14</td>
-<td align="right">15</td>
-<td align="left">#FF4400</td>
+<td align="left">4 transcriptome</td>
+<td align="left">day1_1</td>
+<td align="left">day1</td>
+<td align="right">1</td>
+<td align="left">#BBD7FF</td>
 </tr>
 <tr class="odd">
-<td align="left">transcriptome</td>
-<td align="left">day3_4</td>
+<td align="left">5 transcriptome</td>
+<td align="left">day1_2</td>
+<td align="left">day1</td>
+<td align="right">2</td>
+<td align="left">#BBD7FF</td>
+</tr>
+<tr class="even">
+<td align="left">6 transcriptome</td>
+<td align="left">day1_3</td>
+<td align="left">day1</td>
+<td align="right">3</td>
+<td align="left">#BBD7FF</td>
+</tr>
+<tr class="odd">
+<td align="left">7 transcriptome</td>
+<td align="left">day2_1</td>
+<td align="left">day1</td>
+<td align="right">1</td>
+<td align="left">#F0BBFF</td>
+</tr>
+<tr class="even">
+<td align="left">8 transcriptome</td>
+<td align="left">day2_2</td>
+<td align="left">day1</td>
+<td align="right">2</td>
+<td align="left">#F0BBFF</td>
+</tr>
+<tr class="odd">
+<td align="left">9 transcriptome</td>
+<td align="left">day2_3</td>
+<td align="left">day1</td>
+<td align="right">3</td>
+<td align="left">#F0BBFF</td>
+</tr>
+<tr class="even">
+<td align="left">10 transcriptome</td>
+<td align="left">day3_1</td>
 <td align="left">day3</td>
-<td align="right">4</td>
+<td align="right">1</td>
+<td align="left">#FFFFDD</td>
+</tr>
+<tr class="odd">
+<td align="left">11 transcriptome</td>
+<td align="left">day3_2</td>
+<td align="left">day3</td>
+<td align="right">2</td>
 <td align="left">#FFFFDD</td>
 </tr>
 <tr class="even">
-<td align="left">transcriptome</td>
-<td align="left">day3_5</td>
+<td align="left">12 transcriptome</td>
+<td align="left">day3_3</td>
 <td align="left">day3</td>
-<td align="right">5</td>
+<td align="right">3</td>
 <td align="left">#FFFFDD</td>
 </tr>
 <tr class="odd">
-<td align="left">transcriptome</td>
-<td align="left">day3_6</td>
-<td align="left">day3</td>
-<td align="right">6</td>
-<td align="left">#FFFFDD</td>
-</tr>
-<tr class="even">
-<td align="left">transcriptome</td>
-<td align="left">day3_7</td>
-<td align="left">day3</td>
-<td align="right">7</td>
-<td align="left">#FFFFDD</td>
-</tr>
-<tr class="odd">
-<td align="left">transcriptome</td>
-<td align="left">day7_10</td>
+<td align="left">13 transcriptome</td>
+<td align="left">day7_1</td>
 <td align="left">day7</td>
-<td align="right">10</td>
+<td align="right">1</td>
 <td align="left">#FFDD88</td>
 </tr>
 <tr class="even">
-<td align="left">transcriptome</td>
-<td align="left">day7_11</td>
+<td align="left">14 transcriptome</td>
+<td align="left">day7_2</td>
 <td align="left">day7</td>
-<td align="right">11</td>
+<td align="right">2</td>
 <td align="left">#FFDD88</td>
 </tr>
 <tr class="odd">
-<td align="left">transcriptome</td>
-<td align="left">day7_8</td>
+<td align="left">15 transcriptome</td>
+<td align="left">day7_3</td>
 <td align="left">day7</td>
-<td align="right">8</td>
+<td align="right">3</td>
 <td align="left">#FFDD88</td>
 </tr>
 <tr class="even">
-<td align="left">transcriptome</td>
-<td align="left">day7_9</td>
-<td align="left">day7</td>
-<td align="right">9</td>
-<td align="left">#FFDD88</td>
-</tr>
-<tr class="odd">
-<td align="left">transcriptome</td>
+<td align="left">16 transcriptome</td>
 <td align="left">normal_1</td>
 <td align="left">normal</td>
 <td align="right">1</td>
 <td align="left">#BBFFBB</td>
 </tr>
-<tr class="even">
-<td align="left">transcriptome</td>
+<tr class="odd">
+<td align="left">17 transcriptome</td>
 <td align="left">normal_2</td>
 <td align="left">normal</td>
 <td align="right">2</td>
 <td align="left">#BBFFBB</td>
 </tr>
-<tr class="odd">
-<td align="left">transcriptome</td>
+<tr class="even">
+<td align="left">18 transcriptome</td>
 <td align="left">normal_3</td>
 <td align="left">normal</td>
 <td align="right">3</td>
@@ -1535,29 +1777,31 @@ div.tocify {
 <div id="histogram" class="section level3">
 <h3>Histogram</h3>
 <p>Draw histograms of the transcriptome and proteom data, all samples together.</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>pfa_vector <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">as.vector</span>(pfa))</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(pfa_vector)</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>pfa_vector <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">as.vector</span>(pfa))</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(pfa_vector)</span></code></pre></div>
 <p><img src="figures/pavkovic2019_fa_hist_ugly-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Let us now improve the histogram to get an intuition of our data. A first step is to increase the number of bins, with the</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(pfa_vector, <span class="at">breaks =</span> <span class="dv">200</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(pfa_vector, <span class="at">breaks =</span> <span class="dv">200</span>)</span></code></pre></div>
 <p><img src="figures/pavkovic2019_fa_hist_breaks-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>The distribution is stronly right-skewed, and its most representative part is “compressed” on the left side of the graph. As shown below, a log2 transformation provides a more informative view of the data.</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">log2</span>(pfa_vector), <span class="at">breaks =</span> <span class="dv">100</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Plot the histogram of log2-transformed proteome data</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Note: we add an epsilon of 0.1 in order to avoid problems with null values</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">log2</span>(pfa_vector <span class="sc">+</span> <span class="fl">0.1</span>), <span class="at">breaks =</span> <span class="dv">100</span>)</span></code></pre></div>
 <p><img src="figures/pavkovic2019_fa_hist_log2-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="enhancing-the-figure" class="section level3">
 <h3>Enhancing the figure</h3>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Improve the histogram</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="do">## - add a title, axis labels, coloring, ...</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="do">## - increase readaility by writing each parameter on a separate line</span></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">log2</span>(pfa_vector), </span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">0</span>, <span class="at">to =</span> <span class="dv">20</span>, <span class="at">by =</span> <span class="fl">0.1</span>),</span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="st">&quot;#BBDDFF&quot;</span>,</span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">border =</span> <span class="st">&quot;#88AAFF&quot;</span>,</span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">las =</span> <span class="dv">1</span>, <span class="co"># I like to read the labels</span></span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;log2(x)&quot;</span>, </span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">&quot;Number of observations&quot;</span>, </span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Proteome, folic-acid treated samples&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Improve the histogram</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="do">## - add a title, axis labels, coloring, ...</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="do">## - increase readaility by writing each parameter on a separate line</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">log2</span>(pfa_vector <span class="sc">+</span> <span class="fl">0.1</span>), </span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="sc">-</span><span class="dv">4</span>, <span class="at">to =</span> <span class="dv">20</span>, <span class="at">by =</span> <span class="fl">0.1</span>),</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="st">&quot;#BBDDFF&quot;</span>,</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">border =</span> <span class="st">&quot;#88AAFF&quot;</span>,</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">las =</span> <span class="dv">1</span>, <span class="co"># I like to read the labels</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;log2(x)&quot;</span>, </span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">&quot;Number of observations&quot;</span>, </span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Proteome, folic-acid treated samples&quot;</span>)</span></code></pre></div>
 <p><img src="figures/pavkovic2019_fa_hist_log2_nicer-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="controlling-the-insertion-of-images-in-an-r-markdown-report" class="section level3">
@@ -1569,22 +1813,124 @@ div.tocify {
 <li><p><code>out.width</code> enables you to control the width occupied by your figure in the HTML or pdf report.</p></li>
 <li><p><code>fig.cap</code> enables you to add a caption to the figure</p></li>
 </ul>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Improve the histogram</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="do">## - add a title, axis labels, coloring, ...</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="do">## - increase readaility by writing each parameter on a separate line</span></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">log2</span>(pfa_vector), </span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">0</span>, <span class="at">to =</span> <span class="dv">20</span>, <span class="at">by =</span> <span class="fl">0.1</span>),</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="st">&quot;#BBDDFF&quot;</span>,</span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">border =</span> <span class="st">&quot;#88AAFF&quot;</span>,</span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">las =</span> <span class="dv">1</span>, <span class="co"># I like to read the labels</span></span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;log2(x)&quot;</span>, </span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">&quot;Number of observations&quot;</span>, </span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Proteome, folic-acid treated samples&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Improve the histogram</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="do">## - add a title, axis labels, coloring, ...</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="do">## - increase readaility by writing each parameter on a separate line</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">log2</span>(pfa_vector), </span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">0</span>, <span class="at">to =</span> <span class="dv">20</span>, <span class="at">by =</span> <span class="fl">0.1</span>),</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="st">&quot;#BBDDFF&quot;</span>,</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">border =</span> <span class="st">&quot;#88AAFF&quot;</span>,</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">las =</span> <span class="dv">1</span>, <span class="co"># I like to read the labels</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;log2(x)&quot;</span>, </span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">&quot;Number of observations&quot;</span>, </span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Proteome, folic-acid treated samples&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figures/pavkovic2019_fa_hist_log2_sized-1.png" alt="Distribution of log2-transformed values for the proteome of folic acid-treated samples (data from Pavcovic et al., 2019)" width="90%" />
 <p class="caption">
 Distribution of log2-transformed values for the proteome of folic acid-treated samples (data from Pavcovic et al., 2019)
 </p>
+</div>
+</div>
+</div>
+<div id="box-plots" class="section level2">
+<h2>Box plots</h2>
+<p>Here is an example of code for a log2 boxplot ofthe fa data that uses the metadata tables to set up the colors.</p>
+<div id="proteome-data" class="section level3">
+<h3>Proteome data</h3>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Box plot of the transcriptome data before and after normalisation</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>par_ori <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">no.readonly =</span> <span class="cn">TRUE</span>) <span class="do">## Store the original parameters in order to restore them afterwards</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">5</span>, <span class="dv">1</span>)) <span class="do">## Adapt the margins of the boxplot in order to have enough space for sample labels</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)) <span class="do">## Two side-by-side panes</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Compute the log2 of the proteome data</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Note: we add an epsilon of 0.1 to avoid problems with null values</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>log2pfa <span class="ot">&lt;-</span> <span class="fu">log2</span>(pfa <span class="sc">+</span> <span class="fl">0.1</span>)</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(pfa, </span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> pfa_metadata<span class="sc">$</span>color,</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">horizontal =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">las =</span> <span class="dv">1</span>, </span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">&quot;Proteome, original values&quot;</span>, </span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">&quot;value&quot;</span>)</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(log2pfa, </span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> pfa_metadata<span class="sc">$</span>color,</span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">horizontal =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">las =</span> <span class="dv">1</span>, </span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">&quot;Proteome, log2-transformed&quot;</span>, </span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">&quot;log2(value)&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/pavkovic2019_proteome_boxplots-1.png" alt="Box plots of proteome data before (left) and after (right) log2 transformation. " width="90%" />
+<p class="caption">
+Box plots of proteome data before (left) and after (right) log2 transformation.
+</p>
+</div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(par_ori)</span></code></pre></div>
+<p>The box plots show the distribution of the data before (left) and after (right) log2 transformation.</p>
+</div>
+<div id="transcriptome-data" class="section level3">
+<h3>Transcriptome data</h3>
+<p>The transcriptome data is providedd</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Box plot of the transcriptome data before and after normalisation</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>par_ori <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">no.readonly =</span> <span class="cn">TRUE</span>) <span class="do">## Store the original parameters in order to restore them afterwards</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">5</span>, <span class="dv">1</span>)) <span class="do">## Adapt the margins of the boxplot in order to have enough space for sample labels</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>)) <span class="do">## 4 panels, with 2 rows and 2 columns</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Counts before and after normalisation, but no log2 transformation</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="do">## Raw counts</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(fa, </span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> fa_metadata<span class="sc">$</span>color,</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">horizontal =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">las =</span> <span class="dv">1</span>, </span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">&quot;FA transcriptome</span><span class="sc">\n</span><span class="st">raw counts&quot;</span>, </span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">&quot;counts&quot;</span>)</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a><span class="do">## Normalised transcriptome data</span></span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(fa_norm, </span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> fa_metadata<span class="sc">$</span>color,</span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">horizontal =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">las =</span> <span class="dv">1</span>, </span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">&quot;FA transcriptome</span><span class="sc">\n</span><span class="st">normalised counts&quot;</span>, </span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">&quot;counts&quot;</span>)</span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a><span class="do">## Compute the log2 of the transcriptome data</span></span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a><span class="do">## Note: we add an epsilon of 0.1 to avoid problems with null values</span></span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>log2fa <span class="ot">&lt;-</span> <span class="fu">log2</span>(fa <span class="sc">+</span> <span class="fl">0.1</span>)</span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>log2fa_norm <span class="ot">&lt;-</span> <span class="fu">log2</span>(fa_norm <span class="sc">+</span> <span class="fl">0.1</span>)</span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a><span class="do">## Raw counts</span></span>
+<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(log2fa, </span>
+<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> fa_metadata<span class="sc">$</span>color,</span>
+<span id="cb22-33"><a href="#cb22-33" aria-hidden="true" tabindex="-1"></a>        <span class="at">horizontal =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb22-34"><a href="#cb22-34" aria-hidden="true" tabindex="-1"></a>        <span class="at">las =</span> <span class="dv">1</span>, </span>
+<span id="cb22-35"><a href="#cb22-35" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">&quot;FA transcriptome</span><span class="sc">\n</span><span class="st">log2raw (counts)&quot;</span>, </span>
+<span id="cb22-36"><a href="#cb22-36" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">&quot;log2(counts)&quot;</span>)</span>
+<span id="cb22-37"><a href="#cb22-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-38"><a href="#cb22-38" aria-hidden="true" tabindex="-1"></a><span class="do">## Normalised transcriptome data</span></span>
+<span id="cb22-39"><a href="#cb22-39" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(log2fa_norm, </span>
+<span id="cb22-40"><a href="#cb22-40" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> fa_metadata<span class="sc">$</span>color,</span>
+<span id="cb22-41"><a href="#cb22-41" aria-hidden="true" tabindex="-1"></a>        <span class="at">horizontal =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb22-42"><a href="#cb22-42" aria-hidden="true" tabindex="-1"></a>        <span class="at">las =</span> <span class="dv">1</span>, </span>
+<span id="cb22-43"><a href="#cb22-43" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">&quot;FA transcriptome</span><span class="sc">\n</span><span class="st">log2(normalised counts)&quot;</span>, </span>
+<span id="cb22-44"><a href="#cb22-44" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">&quot;log2(normalised counts)&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/pavkovic2019_transcriptome_boxplots-1.png" alt="Box plots of transcriptome data before (left) and after (right) normalisation. All values are log2 transformed. " width="90%" />
+<p class="caption">
+Box plots of transcriptome data before (left) and after (right) normalisation. All values are log2 transformed.
+</p>
+</div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(par_ori)</span></code></pre></div>
+<div id="observations" class="section level4">
+<h4>Observations</h4>
+<ol style="list-style-type: decimal">
+<li><p>The raw and normalised counts (top) show a strongly right-skewed distribution due to the presence of outliers. In each sample, a very few genes have very high values (25 miilion counts !). Such outliers can be really problematic because they will exert a very strong effect on the subsequent analyses (PCA, clustering, or any other analysis that relies on distances between samples). For PCA, we recommend to use the log2-transformed values.</p></li>
+<li><p>The log2 transformation (bottom) mittigates the impact of these outliers. The bottom right panel shows that all the samples have the same third quartile (right side of the boxplot rectangle), thereby indicating the method used to standardise this method.</p></li>
+<li><p>For all samples, the third quartile equals the minimal value, indicating that at least 25% of the genes had a null count.</p></li>
+<li><p>The sample <em>day2_2</em> has a median value equal to its minimal value, indicating that at least 50% of the genes have null value in this sample.</p></li>
+</ol>
 </div>
 </div>
 </div>
@@ -1599,14 +1945,14 @@ Distribution of log2-transformed values for the proteome of folic acid-treated s
 </div>
 <div id="save-a-memory-image-of-your-session" class="section level2">
 <h2>Save a memory image of your session</h2>
-<p>Use the finction <code>save.image()</code> to store an image of your session, in a file <code>pavkovic_memory_image.Rdata</code> in the local folder specified above. This file will contain all the data that you loaded during this session, and enable you to reload everything without having to re-execute all the steps.</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Define the path to the memory image file</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>memory_image_file <span class="ot">&lt;-</span> <span class="fu">file.path</span>(local_folder, <span class="st">&quot;pavkovic_memory_image.Rdata&quot;</span>)</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Save the memory image</span></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="fu">save.image</span>(<span class="at">file =</span> memory_image_file)</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span>(<span class="st">&quot;Memory image saved in file</span><span class="sc">\n\t</span><span class="st">&quot;</span>, memory_image_file)</span></code></pre></div>
+<p>Use the function <code>save.image()</code> to store an image of your session, in a file <code>pavkovic_memory_image.Rdata</code> in the local folder specified above. This file will contain all the data that you loaded during this session, and enable you to reload everything without having to re-execute all the steps.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Define the path to the memory image file</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>memory_image_file <span class="ot">&lt;-</span> <span class="fu">file.path</span>(local_folder, <span class="st">&quot;pavkovic_memory_image.Rdata&quot;</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Save the memory image</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="fu">save.image</span>(<span class="at">file =</span> memory_image_file)</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span>(<span class="st">&quot;Memory image saved in file</span><span class="sc">\n\t</span><span class="st">&quot;</span>, memory_image_file)</span></code></pre></div>
 <p>For a future session, you will be able to reload all the data with a single command:</p>
 <p><code>load([path_to_your_memory_image])</code></p>
 <p>You will need to replace <code>[path_to_your_memory_image]</code> by your actual path. In my case, the command becomes:</p>
@@ -1615,7 +1961,7 @@ Distribution of log2-transformed values for the proteome of folic acid-treated s
 <div id="save-your-session-info" class="section level2">
 <h2>Save your session info</h2>
 <p>For the sake of traceability, store the specifications of your R environment in the report, with the command <code>sessionInfo()</code>. This will indicate the version of R as wella sof all the libraries used in this notebook.</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
 <pre><code>R version 4.0.2 (2020-06-22)
 Platform: x86_64-conda_cos6-linux-gnu (64-bit)
 Running under: CentOS Linux 7 (Core)

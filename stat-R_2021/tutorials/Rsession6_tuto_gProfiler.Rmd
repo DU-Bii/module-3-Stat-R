@@ -1,0 +1,302 @@
+---
+title: "Tutorial gProfiler"
+author: "Olivier Sand"
+date: '`r Sys.Date()`'
+output:
+  html_document:
+    self_contained: yes
+    fig_caption: yes
+    highlight: zenburn
+    theme: cerulean
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+    code_folding: "hide"
+  ioslides_presentation:
+    slide_level: 2
+    self_contained: no
+    colortheme: dolphin
+    fig_caption: yes
+    fig_height: 5
+    fig_width: 7
+    fonttheme: structurebold
+    highlight: tango
+    smaller: yes
+    toc: yes
+    widescreen: yes
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
+  beamer_presentation:
+    colortheme: dolphin
+    fig_caption: yes
+    fig_height: 5
+    fig_width: 7
+    fonttheme: structurebold
+    highlight: tango
+    incremental: no
+    keep_tex: no
+    slide_level: 2
+    theme: Montpellier
+    toc: yes
+  revealjs::revealjs_presentation:
+    theme: night
+    transition: none
+    self_contained: true
+    css: ../slides.css
+  slidy_presentation:
+    smart: no
+    slide_level: 2
+    self_contained: yes
+    fig_caption: yes
+    fig_height: 5
+    fig_width: 7
+    highlight: tango
+    incremental: no
+    keep_md: yes
+    smaller: yes
+    theme: cerulean
+    toc: yes
+    widescreen: yes
+  powerpoint_presentation:
+    slide_level: 2
+    fig_caption: yes
+    fig_height: 5
+    fig_width: 7
+    toc: yes
+font-import: http://fonts.googleapis.com/css?family=Risque
+subtitle: DUBii 2021
+font-family: Garamond
+transition: linear
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+
+options(width = 300)
+knitr::opts_chunk$set(
+  fig.width = 7, fig.height = 5, 
+  fig.path = 'figures',
+  fig.align = "center", 
+  size = "tiny", 
+  echo = TRUE, 
+  eval = TRUE, 
+  warning = FALSE, 
+  message = FALSE, 
+  results = TRUE, 
+  comment = "")
+
+options(scipen = 12) ## Max number of digits for non-scientific notation
+
+```
+
+```{r libraries, echo=FALSE, eval=TRUE}
+requiredLib <- c("knitr","gprofiler2")
+for (lib in requiredLib) {
+  if (!require(lib, character.only = TRUE)) {
+    install.packages(lib, )
+  }
+  require(lib, character.only = TRUE)
+}
+
+library(gprofiler2)
+
+```
+
+## Goal of this tutorial
+
+This tutorial aims at showing how to use the gProfiler2 R package. It is more or less a Rmd version of the vignette. You can refer to the vignette and reference manual (links below) for more details.
+
+## References
+
+R package : <https://cran.r-project.org/web/packages/gprofiler2>
+
+Reference manual: <https://cran.r-project.org/web/packages/gprofiler2/gprofiler2.pdf>
+
+Vignette: <https://cran.r-project.org/web/packages/gprofiler2/vignettes/gprofiler2.html>
+
+## g:GOSt - functional enrichment analysis of gene lists
+
+Here is an example in Homo sapiens with various types of gene identifiers, a SNP id, chromosomal intervals and a term ID from the Gene Ontology. Parameters are described in the vignette. The result is a named list where “result” is a data.frame with the enrichment analysis results and “meta” contains a named list with all the metadata for the query.
+
+```{r test_vignette_partA}
+
+# Example of gene list functional enrichment analysis with gost
+gostres <- gost(query = c("X:1000:1000000", "rs17396340", "GO:0005005", "ENSG00000156103", "NLRP1"), 
+                organism = "hsapiens", ordered_query = FALSE, 
+                multi_query = FALSE, significant = TRUE, exclude_iea = FALSE, 
+                measure_underrepresentation = FALSE, evcodes = FALSE, 
+                user_threshold = 0.05, correction_method = "g_SCS", 
+                domain_scope = "annotated", custom_bg = NULL, 
+                numeric_ns = "", sources = NULL, as_short_link = FALSE)
+
+names(gostres)
+summary(gostres)
+head(gostres$result)
+names(gostres$meta)
+
+```
+
+
+With the parameter evcodes = TRUE, the result will include the evidence codes. In addition, a column “intersection” will appear showing the input gene IDs that intersect with the corresponding functional term. Note that this parameter can decrease the performance and make the query slower.
+
+```{r test_vignette_partB}
+
+# Example with intersection (can be time consuming)
+gostres2 <- gost(query = c("X:1000:1000000", "rs17396340", "GO:0005005", "ENSG00000156103", "NLRP1"), 
+                organism = "hsapiens", ordered_query = FALSE, 
+                multi_query = FALSE, significant = TRUE, exclude_iea = FALSE, 
+                measure_underrepresentation = FALSE, evcodes = TRUE, 
+                user_threshold = 0.05, correction_method = "g_SCS", 
+                domain_scope = "annotated", custom_bg = NULL, 
+                numeric_ns = "", sources = NULL)
+
+head(gostres2$result)
+
+```
+
+
+The query results can also be gathered into a short-link to the g:Profiler web tool.
+
+```{r test_vignette-partC}
+
+# Get a web link
+gostres_link <- gost(query = c("X:1000:1000000", "rs17396340", "GO:0005005", "ENSG00000156103", "NLRP1"), 
+                as_short_link = TRUE)
+gostres_link
+
+```
+
+
+The function gost also allows to perform enrichment on multiple input gene lists. If the parameter multiquery = TRUE is used, then the results from all of the input queries are grouped according to term IDs for better comparison.
+
+```{r test_vignette_partD}
+
+# Multiple gene lists
+multi_gostres1 <- gost(query = list("chromX" = c("X:1000:1000000", "rs17396340", 
+                                                 "GO:0005005", "ENSG00000156103", "NLRP1"),
+                             "chromY" = c("Y:1:10000000", "rs17396340", 
+                                          "GO:0005005", "ENSG00000156103", "NLRP1")), 
+                       multi_query = FALSE)
+
+head(multi_gostres1$result)
+
+
+multi_gostres2 <- gost(query = list("chromX" = c("X:1000:1000000", "rs17396340",
+                                                 "GO:0005005", "ENSG00000156103", "NLRP1"),
+                             "chromY" = c("Y:1:10000000", "rs17396340", 
+                                          "GO:0005005", "ENSG00000156103", "NLRP1")), 
+                       multi_query = TRUE)
+
+head(multi_gostres2$result)
+
+```
+
+
+The enrichment results can be visualized with a Manhattan-like-plot.
+
+```{r test_vignette_partE}
+
+# Visualization
+gostplot(gostres, capped = TRUE, interactive = TRUE)
+
+```
+
+
+If interactive = FALSE, then the function returns a static ggplot object.
+
+The function publish_gostplot takes the static plot object as an input and enables to highlight a selection of interesting terms from the results with numbers and table of results.
+
+```{r test_vignette_partF}
+
+# Static ggplot object
+p <- gostplot(gostres, capped = FALSE, interactive = FALSE)
+
+# Highlight terms
+pp <- publish_gostplot(p, highlight_terms = c("GO:0048013", "REAC:R-HSA-3928663"), 
+                       width = NA, height = NA, filename = NULL )
+
+```
+
+
+The gost results can also be visualized as a table.
+
+```{r test_vignette_partG, out.width="80%"}
+# Table
+publish_gosttable(gostres, highlight_terms = gostres$result[c(1:2,10,100:102,120,124,125),],
+                        use_colors = TRUE, 
+                        show_columns = c("source", "term_name", "term_size", "intersection_size"),
+                        filename = NULL)
+
+```
+
+
+The same functions work also in case of multiquery results showing multiple Manhattan plots on top of each other and a multiple result table.
+
+```{r test_vignette_partH, out.width="80%"}
+
+# Multiquery plot
+gostplot(multi_gostres2, capped = TRUE, interactive = TRUE)
+
+# Multiquery table
+publish_gosttable(multi_gostres1, 
+                         highlight_terms = multi_gostres1$result[c(1, 24, 82, 176, 204, 234),],
+                        use_colors = TRUE, 
+                        show_columns = c("source", "term_name", "term_size"),
+                        filename = NULL)
+
+```
+
+In addition to the available GO, KEGG, etc data sources, users can upload their own custom data source using the Gene Matrix Transposed file format (GMT). The users can compose the files themselves or use pre-compiled gene sets from available dedicated websites like Molecular Signatures Database (MSigDB), etc.
+
+## Other tools
+
+GProfiler2 also has a tool to convert gene IDs between databases, etc. It is called g:Convert.
+
+``` {r test_vignette_partK}
+# Gene identifier conversion with gconvert
+gconvert(query = c("REAC:R-HSA-3928664", "rs17396340", "NLRP1"), organism = "hsapiens", 
+         target="ENSG", mthreshold = Inf, filter_na = TRUE)
+
+
+``` 
+
+
+GProfiler2 also has a tool to map gene IDs between species. It is called g:Orth.
+
+```{r test_vignette_partL}
+
+# Mapping homologous genes across related organisms with gorth
+gorth(query = c("Klf4", "Sox2", "71950"), source_organism = "mmusculus", 
+      target_organism = "hsapiens", mthreshold = Inf, filter_na = TRUE,
+      numeric_ns = "ENTREZGENE_ACC")
+
+```
+
+## Other gProfiler versions
+
+It is possible to use older (archived) versions or the beta version of gProfiler.
+
+```{r test_vignette_partM}
+
+# Accessing archived version (gprofiler2 package is only compatible with versions e94_eg41_p11 and higher)
+set_base_url("http://biit.cs.ut.ee/gprofiler_archive3/e95_eg42_p13")
+
+# Accessing the beta release
+set_base_url("http://biit.cs.ut.ee/gprofiler_beta")
+
+# Check the current version
+get_base_url()
+
+```
+
+## Save your session info
+
+For the sake of traceability, store the specifications of your R environment in the report, with the command `sessionInfo()`. This will indicate the version of R as well as of all the libraries used in this notebook. 
+
+```{r session_info}
+sessionInfo()
+```
