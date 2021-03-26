@@ -226,7 +226,7 @@ To follow this course, prior knowledge is expected on:
 
     - Cours: principes du clustering 
     [[html](slides/clustering_cours_2021-03-29.html)]
-    [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2021/tutorials/slides/clustering_cours_2021-03-29.Rmd)]
+    [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2021/slides/clustering_cours_2021-03-29.Rmd)]
 
 2. Classification supervisée
 
