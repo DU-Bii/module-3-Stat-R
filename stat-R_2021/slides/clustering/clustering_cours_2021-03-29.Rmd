@@ -1,0 +1,1232 @@
+---
+title: "Clustering : classification non supervisée"
+subtitle: "Hierarchical clustering et Kmeans"
+author: "Anne Badel & Jacques van Helden"
+date: "29 mars 2021" #"`r Sys.Date()`"
+output:
+  slidy_presentation:
+    highlight: default
+    incremental: no
+    smart: no
+    slide_level: 1
+    self_contained: yes
+    fig_caption: no
+    fig_height: 5
+    fig_width: 5
+    keep_md: yes
+    smaller: yes
+    theme: cerulean
+    toc: yes
+    widescreen: yes
+  html_document:
+    fig_caption: yes
+    highlight: zenburn
+    self_contained: no
+    theme: cerulean
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+  ioslides_presentation:
+    highlight: zenburn
+    incremental: no
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
+  revealjs::revealjs_presentation:
+    theme: night
+    transition: none
+    self_contained: true
+    slide_level: 1
+    css: ../slides.css
+  powerpoint_presentation:
+    slide_level: 1
+    fig_caption: no
+    fig_height: 5
+    fig_width: 5
+  beamer_presentation:
+    theme: Hannover #Montpellier
+    colortheme: beaver
+    fonttheme: professionalfonts #structurebold
+    highlight: pygments #default
+    fig_caption: no
+    fig_height: 4
+    fig_width: 5
+    incremental: no
+    keep_tex: no
+    slide_level: 1
+    toc: yes
+font-import: http://fonts.googleapis.com/css?family=Risque
+font-family: Garamond
+transition: linear
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r settings, include=FALSE, echo=FALSE, eval=TRUE}
+## Install required packages
+packages <- c("knitr", 
+              "FactoMineR", # for PCA
+              "aricode",  # for adjusted Rand Index,
+              "RColorBrewer", "vegan", "pheatmap",
+              "tinytex")
+# library(formattable)
+
+for (pkg in packages) {
+  if (!require(pkg, character.only = TRUE)) {
+    install.packages(pkg)
+    require(pkg, character.only = TRUE)
+  }
+}
+
+options(width = 300)
+
+# options(encoding = 'UTF-8')
+
+knitr::opts_chunk$set(
+  fig.width = 5, fig.height = 5, 
+  fig.path = 'figures/TCGA_',
+  fig.align = "center", 
+  size = "tiny", 
+  echo = TRUE, 
+  eval = TRUE, 
+  warning = FALSE, 
+  message = FALSE, 
+  results = TRUE, 
+  comment = "")
+
+options(scipen = 12) ## Max number of digits for non-scientific notation
+```
+
+```{r  echo=F}
+## Define data folder
+data.folder <- "../../data/TCGA_BIC_subset"
+
+## File containing subset of the expression table
+BIC_expr_file <- file.path(
+  data.folder,
+  "BIC_log2-norm-counts_edgeR_DEG_top_1000.tsv.gz")
+
+## Load expression table
+message("Loading expression file\t", BIC_expr_file)
+BIC_expr <- read.table(file = BIC_expr_file, header = TRUE)
+message("Loaded BIC expression table with ", nrow(BIC_expr), " rows (genes) x ", ncol(BIC_expr), " columns (samples)")
+
+```
+
+```{r, echo = F, eval=FALSE}
+## ANNE: JE RECOMMANDE VRAIMENT D'EVITER CE TRONQUAGE DES NOMS
+## LES BIOLOGISTES N'Y RETROUVENT PAS LEUR LATIN
+## De plus cela génère des messages " duplicate 'row.names' are not allowed"
+reduc_name <- function(nom_long) {
+  temp <- unlist(strsplit(nom_long, split = ""))[11:18]
+  nom_court <- paste(temp, collapse = "")
+  return(nom_court)
+}
+rownames(BIC_expr) <- sapply(rownames(BIC_expr), reduc_name)
+colnames(BIC_expr) <- sapply(colnames(BIC_expr), reduc_name)
+```
+
+# Questions abordées dans ce cours
+
+1. Les données, leurs représentations
+
+    - data BIC issue de la base TCGA
+  
+2. Comment comparer deux individus
+
+    - notion de distance
+  
+3. Comment découvrir des "clusters" dans les données ?
+
+    - classification hiérarchique
+    - kmeans
+
+4. Comment déterminer le nombre de groupe optimal ?
+
+5. Comment comparer deux classifications ?
+
+# Les données : TCGA (1)
+
+Les données sont issues de la base [Recount2](https://jhubiostatistics.shinyapps.io/recount/). 
+Nous avons sélectionné l'étude [**TCGA : The Cancer Genome Atlas**](https://cancergenome.nih.gov/), regroupant des données RNA-seq pour plus de 12.000 patients souffrant de différents types de cancer. Nous nous intéressons ici uniquement aux données **Breast Invasive Cancer** (**BIC**) concernant le cancer du sein.
+
+Les données ont été préparées pour vous, selon la procédure détaillée au cours sur l'analyse différentielle de données RNA-seq.
+
+1. Filtrage des gènes à variance nulle et de ceux contenant trop de zéros.
+
+2. Normalisation (méthode robuste aux outliers)
+
+3. Analyse différentielle multi-groupes (en utilisant le package Bioconductor `edgeR`).
+
+4. Correction des P-valeurs pour tenir compte des tests multiples (nous avons testé ici ~20.000 gènes). Nous estimons le False Discovery Rate (FDR) selon la méthode de Benjamini-Hochberg (fonction R `p.adjust(all.pvalues, method="fdr")`). 
+
+5. Sélection de gènes différentiellement exprimés sur base d'un seuil $\alpha = 0.05$ appliqué au FDR.
+
+# TCGA (2)
+
+```{r data1, echo = FALSE}
+kable(BIC_expr[1:6, 1:4])
+```
+
+Pour des raisons historiques, en analyse transcriptomique les données sont toujours fournies avec
+
+- 1 ligne = 1 gène `r print(rownames(BIC_expr)[1:4])`
+- 1 échantillon biologique = 1 colonne `r print(colnames(BIC_expr)[1:4])`
+
+Cette convention a été établie en 1997, lors des toutes premières publications sur le transcriptome de la levure. Dans ces études, l'objet d'intérêt (l'"individu") était le gène, et les variables étaient ses mesures d'expression dans les différentes conditions testées.
+
+Pour l'analyse de tissus cancéreux, on considère au contraire que l'"objet" d'intérêt  est l'échantillon prélevé sur le patient, et les variables sont les mesures d'expression des différents gènes chez un patient.
+
+
+# TCGA (3)
+
+**Classiquement**, en analyse de données, les individus sont les lignes du tableau de données, les colonnes sont les variables. 
+
+Ce qui implique de faire attention, et éventuellement de travailler sur la matrice transposée (fonction `t()` en R) pour utiliser correctement les fonctions classiques.
+
+```{r data_transpose}
+t(BIC_expr[1:6, 1:4])
+```
+
+```{r t_data, include=FALSE, echo=FALSE, eval=TRUE}
+## Je recommande d'utiliser deux data frames différentes 
+## car ci-dessous on aura parfois besoin de travailler
+## avec la table non-transposée
+BIC_expr_sample_rows <- t(BIC_expr)
+```
+
+- 1 ligne = 1 gène = 1 individu = 1 vecteur
+
+- 1 colonne = 1 feature = 1 vecteur
+
+- l'ensemble des données = 1 data.frame
+
+```{r dim_data, echo = FALSE}
+dim(BIC_expr_sample_rows)
+```
+
+
+# Représentons ces données (1)
+
+- extrait des données
+  * chaque individu est représenté par un vecteur de mesures
+  
+```{r extrait_data1, echo = FALSE}
+BIC_expr_sample_rows[1:4,1:5]
+```
+
+- Comment représenter / visualiser ces données ?
+- Dans quel espace de réprésentation ?
+
+
+# Représentons ces données : un individu à la fois (2)
+
+```{r visu_ligne1, echo = FALSE, out.width = "80%", fig.height=5, fig.width=12}
+plot(1:200, BIC_expr[1, 1:200], 
+     type = "l", 
+     ylab  = "log2(counts)", 
+     ylim = c(0, 30), 
+     xlab = "sample number",
+     panel.first = grid())
+# plot(1:200, BIC_expr[1, 1:200], type = "l")
+legend("topleft", legend = rownames(BIC_expr)[1], col = "black", lwd = 2)
+```
+
+
+# Représentons ces données : deux individu à la fois (3)
+
+```{r visu_ligne2, echo = FALSE, out.width = "80%", fig.height=5, fig.width=12}
+plot(1:200, BIC_expr[1, 1:200], 
+     type = "l", 
+     ylab  = "log2(counts)", 
+     xlab = "sample number", 
+     ylim = c(0,30), 
+     panel.first = grid())
+lines(1:200, BIC_expr[10, 1:200], 
+     col = "red")
+legend("topleft", legend = rownames(BIC_expr)[c(1,10)], col = c("black", "red"), lwd = 2)
+```
+
+
+# Représentons ces données : une variable à la fois (4)
+
+```{r, echo = FALSE, out.width = "90%", fig.height=5, fig.width=12}
+par(mfrow = c(1, 2))
+## Select a single sample
+sample_name <- names(BIC_expr[])[1]
+sample_values <- unlist(BIC_expr[, sample_name])
+# length(sample_values)
+hist(sample_values, 
+     main = paste("Sample: ", 
+                  sample_name), 
+     xlab = "log2(counts)",
+     ylab = "Number of genes",
+     breaks = 100,
+     col = "#BBDDFF",
+     las = 1)
+boxplot(sample_values, 
+        ylab = "log2(counts)", 
+        col = "#BBDDFF",
+        las = 1)
+
+## Anne, je corrige ici : il ne faut aps ajouter du bruit aux valeurs d'expression, 
+## mais à la position horizontale, afin de bien voir les points
+my_jitter <- jitter(rep(1, length(sample_values)), factor = 8)
+# my_jitter <- jitter(sample_values, factor = 1000)
+# plot(my_jitter, sample_values)
+points(my_jitter, 
+       sample_values,
+       col = "blue", 
+       pch = 1, 
+       cex = 0.5)
+par(mfrow = c(1,1))
+```
+
+# Représentons ces données : deux variables à la fois (5)
+
+```{r echo = FALSE, out.width = "50%", fig.width=6, fig.height=6}
+x <- BIC_expr[, 1]
+y <- BIC_expr[, 4]
+
+plot(x, y,
+     xlab = paste("Sample:", colnames(BIC_expr)[1]),
+     ylab = paste("Sample:", colnames(BIC_expr)[2]),
+     panel.first = grid(),
+     las = 1)
+```
+
+# Représentons ces données : toutes les variables (6)
+
+en tenant compte de l'ensemble des individus/ lignes et variables / colonnes = un nuage de points dans un espace à 1000 dimensions
+
+  - chaque point est représenté par un vecteur dans $\mathbb{R}^{1000}$
+  - le nuage de points est représenté par une matrice à n (= 819) et p (= 1000 dimensions)
+    + n = nombre de lignes = nombre d'individus = taille de l'échantillon
+    + p = nombre de colonnes = nombre de variables décrivant l'échantillon
+
+= PAS de représentation possible (pour l'instant)
+
+# On a cependant
+
+- ACP
+- heatmap
+
+
+# ACP
+
+```{r ACP1, echo=FALSE, out.width="60%", fig.width=10, fig.height=10}
+BIC_PCA <- PCA(BIC_expr, scale.unit = TRUE, graph = FALSE)
+plot(BIC_PCA, choix = "ind", label = "none")
+```
+
+
+# heatmap
+
+```{r heatmap1, echo=FALSE, out.width="60%", fig.width=12, fig.height=12}
+pheatmap::pheatmap(BIC_expr[1:200, 1:200], 
+                   cluster_rows = FALSE, cluster_cols = FALSE)
+```
+
+# Clustering et classification : définition
+
+Nous utiliserons les termes anglais
+
+en français :
+
+- clustering = classification 
+- classification = discrimination
+
+
+# Clustering
+
+On a **pas d'information** supplémentaire sur nos données, juste le data.frame contenant
+
+- variables quantitatives = vecteur de réels
+ 
+**Clustering** : on cherche à mettre en évidence des groupes (/ des clusters) dans les données
+
+- un groupe = 
+  * des individus qui se ressemblent et 
+  * qui sont différents des autres groupes
+  
+- le clustering appartient aux méthodes dites **non supervisées**, ou descriptives
+
+
+# Classification
+
+On a **une **information** supplémentaire sur nos données : on connaît le partitionnement de notre jeu de données
+
+- variables quantitatives = vecteur de réels
+- ET
+- variable qualitative = groupe (cluster)
+
+**Classification** : on cherche un algorithme / un modèle permettant de prédire la classe, le groupe de tout individu dont on connait les caractéristiques
+
+- la classification appartient aux méthodes dites **supervisées**, ou prédictives
+
+# Clustering
+
+```{r are_there_clusters1, echo=FALSE, out.width="45%", fig.cap="données simulées : y a-t-il des groupes ?"}
+include_graphics(path = "img/figure1.png")
+```
+- y a t'il des groupes ? si oui, combien ?
+
+  + Méthode agglomérative ou hierarchical clustering
+  + Moyennes mobiles ou K-means : séparation optimale des groupes connaissant le nombre de groupes
+
+
+# Comment comparer des vecteurs-individus ?
+
+```{r points_vs_curves, echo = FALSE, fig.width = 10, fig.height = 5, out.width = "80%"}
+## Plot distance between curves in a time series
+vect.A <- c(1, 1.5, 3, 3.5, 3, 1.5, 0.5, -1, -1.5, -1)
+vect.B <- c(1, 1.1, 1.2, 1.5, 1.2, 1.1, 1, 0.9, 0.8, 0.9)
+vect.C <- c(1, 0.9, 0.8, 0.7, 0.8, 0.9, 1, 0.95, 0.9, 0.8)
+plot(0:10, type = "n", xlim = c(1, 10), ylim = c(-2, 4), 
+     main = "3 individuals in a 10-D space\nCurve representation",
+     xlab = "", ylab = "", las = 1, panel.first = grid())
+lines(vect.A, type = "b", col = "blue")
+lines(vect.B, type = "b", col = "green")
+lines(vect.C, type = "b", col = "red")
+legend("topright", legend = c("A", "B", "C"), 
+       col = c("blue", "green", "red"), lty = 1,
+       text.col = c("blue", "green", "red"))
+```
+
+# Distances
+
+Définition d'une distance : fonction positive de deux variables
+
+1. $d(x,y) \ge 0$
+2. $d(x,y) = d(y,x)$
+3. $d(x,y) = 0 \Longleftrightarrow x = y$
+4. **Inégalité triangulaire :** $d(x,z) \le$ d(x,y)+d(y,z)
+
+Si 1,2,3 seulement: dissimilarité
+
+# Distance euclidienne et distance de corrélation
+
+```{r are_there_clusters2, echo=FALSE, out.width="45%", fig.cap="données simulées : y a-t-il des groupes ?"}
+## ANNE, CETTE FIGURE MANQUE, JE METS TEMPORAIREMENT UN MESSAGE D'ERREUR
+# include_graphics(path = "img/cor_vs_euclidian_dist.png")
+print("MISSING FIGURE")
+```
+
+
+```{r compare_dist_euclidienne_dist_correlation, echo = FALSE}
+ABC.dist <- dist(rbind((vect.A), vect.B, vect.C))
+ABC.cor <- as.dist(cor(t(rbind(vect.A, vect.B, vect.C))))
+ABC.cordist <- as.dist(1 - ABC.cor)
+ABC.resume <- cbind(ABC.dist, ABC.cor, ABC.cordist)
+colnames(ABC.resume) <- c("Euclidian distance", "Correlation coefficient", "Correlation distance")
+rownames(ABC.resume) <- c("A - B", "A - C", "B - C")
+knitr::kable(ABC.resume, align = 'c', digits = 2)
+```
+
+# Avec R (1) : distance entre deux individus 
+
+- on utilise la fonction `dist()` avec l'option `method = "euclidean", "manhattan", ...` 
+
+```{r calcul_dist1, echo = FALSE}
+x = runif(10, 1, 5)
+y = runif(10, 2, 4)
+mat.xy <- data.frame(matrix(rbind(x,y), nrow = 2))[, 1:5]
+names(mat.xy) <- paste0("t", 1:ncol(mat.xy))
+rownames(mat.xy) <- c("X", "Y")
+
+knitr::kable(mat.xy[,], digits = 2)
+```
+
+distance euclidienne : `dist(mat.xy) = ` `r round(dist(mat.xy), digits = 2)`
+
+distance de manhattan = `dist(mat.xy, method = "manhattan")` `r round(dist(mat.xy, method = "manhattan"), digits = 2)`
+
+- on utilise la fonction `1 - cor()` avec l'option `method = "pearson", "spearman", ...` 
+
+distance de corrélation = `1-cor(t(mat.xy)` `r round(1-cor(t(mat.xy), method = "pearson")[1, 2], digits = 2)`
+
+# Avec R (2) : distance entre individus d'un nuage de points 
+
+- distance euclidienne, de 5 individus choisis au hasard
+```{r BIC_dist, echo = FALSE}
+mat_BIC <- BIC_expr[sample(1:150, 5),]
+print(dist(mat_BIC), digits = 2)
+```
+
+- distance de corrélation : $d = 1-r$
+```{r iris_cor_dist, echo = FALSE}
+cor.mat.BIC <- cor(t(mat_BIC))
+print(as.dist(1 - cor.mat.BIC), digits = 2)
+```
+
+# Avec R (3) : distance entre variables décrivant le nuage de points 
+
+```{r echo = FALSE}
+cor.mat.BIC <- cor(mat_BIC)
+print(as.dist(1 - cor.mat.BIC[1:6, 1:6]), digits = 2)
+```
+
+# Distances entre groupes (1)
+
+```{r group_distances_1, echo = FALSE, fig.width = 6, fig.height = 6, out.width = "50%"}
+x1 <- rnorm(5, 1, 0.5)
+y1 <- rnorm(5, 0, 1)
+mat1 <- cbind(x1, y1)
+x2 <- rnorm(5, 4, 1)
+y2 <- rnorm(5, 6, 2)
+mat2 <- cbind(x2, y2)
+mat <- rbind(mat1, mat2)
+plot(mat, col = rep(c("red", "blue"), each = 5),
+     xlab = "", ylab = "", las = 1, panel.first = grid())
+```
+
+
+# Distances entre groupes (2)
+
+```{r group_distances_2, echo=FALSE, out.width="60%"}
+include_graphics(path = "img/groupes.png")
+```
+
+# Les données
+
+Revenons à nos données
+
+
+# Visualisation des données (1)
+
+On peut ensuite essayer de visualiser les données
+
+  - par un `plot` (**!** ne pas faire si "grosses" données)
+  
+```{r plot_4variables, echo = FALSE, out.width="40%"}
+toto <- as.data.frame(BIC_expr[, sample(1:ncol(BIC_expr), 4)])
+plot(toto, las = 1)
+```
+
+
+# Visualisation des données (2)
+
+  - par un `boxplot` (**!** ne pas faire si "grosses" données)
+
+```{r boxplot_4variables, out.width="40%"}
+boxplot(BIC_expr[, sample(1:ncol(BIC_expr), 30)], las = 2)
+```
+
+
+# Préparation des données (1) : variables de variance nulle
+
+```{r}
+BIC.var <- apply(BIC_expr, 2, var)
+sum(apply(BIC_expr, 2, var) == 0)
+```
+
+# Préparation des données (2) : Mise à l'échelle
+
+Afin de pouvoir considérer que toutes les variables sont à la même échelle, il est parfois nécessaire de standardiser les données.
+
+- soit 
+
+  - en centrant (ramener la moyenne / médiane de chaque variable à $0$)
+  
+```{r centring}
+BIC_expr.centre <- scale(BIC_expr, center = TRUE, scale = FALSE)
+```
+
+- soit 
+
+  - en centrant (ramener la moyenne de chaque variable $0$)
+  - et mettant à l'échelle (ramener la variance de chaque variable à $1$)
+
+```{r centring_scaling}
+BIC_expr.scaled <- scale(BIC_expr, center = TRUE, scale = TRUE)
+```
+
+- soit en effectuant une transformation des variables, par exemple transformation logarithmique
+
+# On peut visuellement regarder l'effet de la standardisation
+
+- par des boîtes à moustaches (boxplot)
+
+# Centrage sur la moyenne ou la médiane
+
+```{r data_centring, echo = FALSE, out.width="70%", fig.width=8, fig.height=6}
+
+## Compute the median expression per sample
+BIC_median <- apply(BIC_expr, 2, median)
+BIC_expr_scaled_median <- sweep(x = BIC_expr, MARGIN = 2, STATS = BIC_median)
+par(mfrow = c(1,3))
+par(mar = c(7, 4.1, 4.1, 1.1)) # adapt margin sizes for the labels
+boxplot(BIC_expr[, 1:20], main = "Raw data", las = 2)
+boxplot(BIC_expr.centre[, 1:20], main = "Centered on the mean", las = 2)
+boxplot(BIC_expr_scaled_median[, 1:20], main = "Centered on the median", las = 2)
+par(mar = c(5.1, 4.1, 4.1, 2.1)) # Restore original margin sizes
+par(mfrow = c(1,1))
+```
+
+# Mise à l'échelle écart-type ou intervalle interquartile
+
+```{r data_scaling, echo = FALSE, out.width="70%", fig.width=8, fig.height=6}
+## Show the impact of data scaling: raw versus sd-based scaling vs IQR-based scaling
+
+
+## Scaling by sample standard deviation
+BIC.sd <- apply(BIC_expr, 2, sd) ## Standard dev per sample
+# length(BIC.sd)
+mat.BIC.sd <- matrix(rep(BIC.sd, each = nrow(BIC_expr)), ncol = ncol(BIC_expr)) ## Create amatrix with the sd values
+#dim(mat.BIC.sd)
+#dim(BIC_expr)
+colnames(mat.BIC.sd) <- colnames(BIC_expr)
+rownames(mat.BIC.sd) <- rownames(BIC_expr)
+# View(mat.BIC.sd)
+BIC_expr.scaled.sd <- BIC_expr / mat.BIC.sd
+
+
+## Scaling by sample interquartile range (IQR)
+BIC.iqr <- apply(BIC_expr, 2, IQR)
+mat.BIC.iqr <- matrix(rep(BIC.iqr, each = nrow(BIC_expr)), ncol = ncol(BIC_expr))
+BIC_expr.scaled.iqr <- BIC_expr / mat.BIC.iqr
+
+# range(apply(BIC_expr.scaled.iqr, 2, IQR))
+
+## Plot boxplots to show the impact of scaling
+par(mfrow = c(1,3))
+par(mar = c(7, 4.1, 4.1, 1.1)) # adapt margin sizes for the labels
+
+## Raw data
+boxplot(BIC_expr[, 1:20], main = "Raw data", las = 2)
+
+## Standard deviation-based scaling
+boxplot(BIC_expr.scaled.sd[, 1:20], main = "Scaled, standard deviation", las = 2)
+
+## IQR-based scaling
+boxplot(BIC_expr.scaled.iqr[, 1:20], main = "Scaled, IQR", las = 2)
+par(mar = c(5.1, 4.1, 4.1, 2.1)) # Restore original margin sizes
+par(mfrow = c(1,1))
+```
+
+# Standardisation : centrage et mise à l'échelle
+
+```{r standardization, echo = FALSE, out.width="70%", fig.width=8, fig.height=6}
+BIC.iqr.mediane <- apply(BIC_expr.scaled.iqr, 2, median)
+BIC_expr.scaled.iqr.mediane <- sweep(BIC_expr.scaled.iqr, 2, BIC.iqr.mediane)
+par(mfrow = c(1,3))
+par(mar = c(20, 4.1, 4.1, 1.1)) # adapt margin sizes for the labels
+
+## Raw data
+boxplot(BIC_expr[, 1:20], main = "Raw data", las = 2)
+
+## Standardization based on the mean and standard deviation 
+boxplot(BIC_expr.scaled[, 1:20], main = "Standardized (mean, sd)", las = 2)
+
+## Standardisation based no robust estimators:= median + IQR
+boxplot(BIC_expr.scaled.iqr.mediane[, 1:20], main = "Standardized (median, IQR)", las = 2)
+par(mar = c(5.1, 4.1, 4.1, 2.1)) # Restore original margin sizes
+par(mfrow = c(1,1))
+```
+
+
+# La classification hiérarchique : principe
+
+**classification hiérarchique** : mettre en évidence des liens hiérachiques entre les individus
+
+- classification hiérarchique **ascendante** : partir des individus pour arriver à des classes / cluster
+- classification hiérarchique **descendante** : partir d'un groupe qu'on subdivise en sous-groupes /clusters jusqu'à arriver à des individus.
+
+# Notion importante, cf distances
+
+- ressemblance entre individus = distance
+
+  - euclidienne
+  - corrélation
+- ressemblance entre groupes d'invidus = critère d'aggrégation
+
+  - lien simple
+  - lien complet
+  - lien moyen
+  - critère de Ward
+
+# L'algorithme : étape 1
+
+- départ : n individus = n clusters distincts
+- calcul des distances entre tous les individus
+
+  +  choix de la métrique à utiliser en fonction du type de données
+
+- regroupement des 2 individus les plus proches => (n-1) clusters
+
+# Au départ
+
+```{r hclust_initial, echo=FALSE, out.width="60%"}
+include_graphics(path = "img/hclust1.png")
+```
+
+
+# Identification des individus les plus proches
+
+```{r hclust_closest, echo=FALSE, out.width="60%"}
+include_graphics(path = "img/hclust2.png")
+```
+
+
+# Construction du dendrogramme
+
+```{r hclust_dendrogram, echo=FALSE, out.width="50%"}
+include_graphics(path = "img/hclust3.png")
+```
+
+# Etape j :
+
+- calcul des dissemblances entre chaque groupe obtenu à l'étape $(j-1)$
+
+- regroupement des deux groupes les plus proches => $(n-j)$ clusters
+  
+# Calcul des nouveaux représentants 'BE' et 'CD'
+
+```{r hclust_nvx_representants, echo=FALSE, out.width="60%"}
+include_graphics(path = "img/hclust4.png")
+```
+
+# Calcul des distances de l'individu restant 'A' aux points moyens
+
+```{r hclust_update_dist, echo=FALSE, out.width="60%"}
+include_graphics(path = "img/hclust5.png")
+```
+
+
+# A est plus proche de ...
+
+```{r hclust_closest_a, echo=FALSE, out.width="60%"}
+include_graphics(path = "img/hclust6.png")
+```
+
+# dendrogramme
+
+```{r hclust_dendrogram2, echo=FALSE, out.width="60%"}
+include_graphics(path = "img/hclust7.png")
+```
+
+# pour finir
+
+```{r hclust_finalize, echo=FALSE, out.width="60%"}
+include_graphics(path = "img/hclust8.png")
+```
+
+---
+
+- à l'étape $(n-1)$, tous les individus sont regroupés dans un même cluster
+
+# dendrogramme final
+
+```{r hclust_dendrogram_final, echo=FALSE, out.width="70%"}
+include_graphics(path = "img/hclust9.png")
+```
+
+# Sur nos données (1) : deux métriques différentes
+
+```{r hclust_euclidian_vs_manhattan, fig.width=10, fig.height=7, out.width="80%", fig.width=10, fig.height=7, echo = FALSE}
+BIC.euc <- dist(BIC_expr)
+BIC.scale.euc <- dist(BIC_expr.scaled)
+BIC_expr.cor <- cor(t(BIC_expr))
+BIC_expr.cor.dist <- 1 - BIC_expr.cor
+BIC.scale.hclust <- hclust(BIC.scale.euc)
+BIC.scale.max <- dist(BIC_expr.scaled, method = "maximum")
+BIC.scale.hclust.max <- hclust(BIC.scale.max)
+par(mfrow = c(1,2))
+plot(BIC.scale.hclust, hang = -1, cex = 0.5, main = "Euclidian dist")
+plot(BIC.scale.hclust.max, hang = -1, cex = 0.5, main = "Maximum dist")
+par(mfrow = c(1,1))
+```
+
+# Sur nos données (2) : deux critères d'aggrégation différents
+
+```{r linkage_rule, fig.width=10, fig.height=7, out.width="80%", echo = FALSE}
+BIC.scale.hclust.single <- hclust(BIC.scale.euc, method = "single")
+BIC.scale.hclust.ward <- hclust(BIC.scale.euc, method = "ward.D2")
+par(mfrow = c(1,2))
+plot(BIC.scale.hclust.single, hang = -1, cex = 0.5, main = "Single linkage")
+plot(BIC.scale.hclust.ward, hang = -1, cex = 0.5, main = "Ward linkage")
+par(mfrow = c(1,1))
+```
+
+---
+
+# En conclusion
+
+- Faire attention au données
+
+  + données manquantes
+  + données invariantes
+  + données normalisées
+  
+- **Choisir** 
+
+  * la distance (entre individus) et 
+  * le critère d'aggrégation (entre cluster)
+  
+adaptés à nos données
+
+# Visualisation à l'aide de heatmap : données brutes
+
+```{r pheatmap1, fig.width = 8, fig.heigh = 6, out.width="60%"}
+pheatmap::pheatmap(BIC_expr, clustering.method = "ward.D2")
+```
+
+# Visualisation à l'aide de heatmap : données mise à l'échelle
+
+```{r pheatmap2, fig.width = 8, fig.heigh = 6, out.width="60%"}
+pheatmap::pheatmap(BIC_expr.scaled, clustering.method = "ward.D2")
+```
+
+# Les k-means
+
+Les individus dans le plan
+
+```{r kmeans_initial, echo=FALSE, out.width="70%", fig.width=5, fig.height=5}
+include_graphics(path = "img/kmeans0.png")
+```
+
+=> faire apparaitres des classes / des clusters
+
+# L'algorithme
+
+## étape 1 :
+
+- $k$ centres provisoires tirés au hasard
+- $k$ clusters créés à partir des centres en regroupant les individus les plus proches de chaque centre
+- obtention de la partition $P_0$ 
+
+# Choix des centres provisoires 
+
+```{r kmeans_init_centers, echo=FALSE, out.width="80%"}
+include_graphics(path = "img/kmeans1.png")
+```
+
+
+# Calcul des distances aux centres provisoires 
+
+```{r kmeans_dist_to_centers, echo=FALSE, out.width="80%"}
+include_graphics(path = "img/kmeans2.png")
+```
+
+# Affectation à un cluster
+
+```{r kmeans_cluster_assignment, echo=FALSE, out.width="80%"}
+include_graphics(path = "img/kmeans3.png")
+```
+
+# Calcul des nouveaux centres de classes
+
+## Etape j :
+
+- construction des centres de gravité des k clusters construits à l’étape $(j-1)$
+
+- $k$ nouveaux clusters créés à partir des nouveaux centres suivant la même règle qu’à l’étape $0$
+
+- obtention de la partition $P_j$
+
+```{r kmeans_update_centers, echo=FALSE, out.width="80%"}
+include_graphics(path = "img/kmeans4.png")
+```
+
+# Fin : 
+
+- l’algorithme converge vers une partition stable
+
+## Arrêt : 
+
+- lorsque la partition reste la même, ou lorsque la variance intra-cluster ne décroit plus, ou lorsque le nombre maximal d’itérations est atteint.
+
+```{r kmeans_stop, echo=FALSE, out.width="80%"}
+include_graphics(path = "img/kmeans5.png")
+```
+
+# Un premier k-means en 5 groupes
+
+```{r calc_kmeans, results = TRUE}
+iris.scale.kmeans5 <- kmeans(BIC_expr.scaled, center = 5)
+iris.scale.kmeans5$cluster[1:20]
+```
+
+# Comment déterminer le nombre de clusters ? (1)
+
+Ces méthodes non supervisées, sont sans *a priori* sur la structure, le nombre de groupe, des données.
+
+rappel : un cluster est composé
+
+- d'individus qui se ressemblent
+- d'individus très différents des individus de ceux des autres clusters
+
+
+# Comment déterminer le nombre de clusters ? (2)
+  
+- si les individus d’un même cluster sont proches
+
+  - homogénéité maximale à l’intérieur de chaque cluster => variance intra faible
+
+- si les individus de 2 clusters différents sont éloignés => variance inter forte
+
+  - hétérogénéité maximale entre chaque cluster
+    
+    
+# Comment déterminer le nombre de clusters ? avec la classification hiérarchique
+
+La coupure de l’arbre à un niveau donné construit une partition. la coupure doit se faire :
+
+- après les agrégations correspondant à des valeurs peu élevées de l’indice
+
+- avant les agrégations correspondant à des niveaux élevés de l’indice, qui dissocient les groupes bien distincts dans la population.
+
+---
+
+```{r plot_iris_ward, out.width="95%", fig.width=10, fig.height=8}
+plot(BIC.scale.hclust.ward, hang = -1, cex = 0.5)
+```
+
+# Comment déterminer le nombre de clusters ? avec les kmeans
+
+```{r, echo = FALSE, out.width = "60%"}
+wss <- numeric(length = 50)
+wss[1] <- kmeans(BIC_expr.scaled, center = 2)$totss
+for (nbgrp in 2:50) {
+  wss[nbgrp] <- kmeans(BIC_expr.scaled, center = nbgrp)$tot.withinss
+}
+barplot(wss, names.arg = 1:50, main = "variance intra en fonction du nombre de clusters")
+```
+
+# Comparaison des résultats des deux clustering
+
+- par une table
+
+```{r echo = FALSE,results = TRUE}
+cluster.kmeans3 <- kmeans(BIC_expr.scaled, center = 3)$cluster
+cluster.kmeans3 <- paste0("k", cluster.kmeans3)
+cluster.hclust4 <- cutree(hclust(dist(BIC_expr.scaled), method = "ward.D2"), k = 4)
+cluster.hclust4 <- paste0("c", cluster.hclust4)
+contingency.table <- table(as.vector(cluster.hclust4), as.vector(cluster.kmeans3))
+
+knitr::kable(contingency.table, align = "c",  row.names = TRUE)
+```
+
+# Pros et cons des différents algorithmes
+
+| Algorithme | Pros | Cons |
+|-------------|------------------------------|------------------------|
+| **Hiérarchique** | L'arbre reflète la nature imbriquée de tous les sous-clusters | Complexité quadratique (mémoire et temps de calcul) $\rightarrow$ quadruple chaque fois qu'on double le nombre d'individus  |
+| | Permet une visualisation couplée dendrogramme (groupes) + heatmap (profils individuels) | |
+| | Choix a posteriori du nombre de clusters | |
+| **K-means** | Rapide (linéaire en temps), peut traiter des jeux de données énormes (centaines de milliers de pics ChIP-seq) | Positions initiales des centres est aléatoire $\rightarrow$ résultats changent d'une exécution à l'autre |
+| | | Distance euclidienne (pas appropriée pour transcriptome par exemple) |
+
+
+# Comparaison de clustering: Rand Index
+
+Mesure de similarité entre deux clustering
+
+à partir du nombre de fois que les clustering sont d'accord
+
+$$R=\frac{m+s}{t}$$
+
+- $m$ = nombre de paires dans la même classe dans les deux classifications
+- $s$ = nombre de paires séparées dans les deux classifications
+- $t$ = nombre total de paires
+
+```{r}
+## Compute Rand index
+(RI <- aricode::RI(cluster.hclust4, cluster.kmeans3))
+```
+
+# Comparaison de clustering: Adjusted Rand Index
+
+$$ \text{ARI} = \frac{\text{RI}-\text{E(RI)}}{\text{Max RI} - \text{E(RI)}}$$
+
+- $\text{ARI}$ = adjusted Rand Index = RI normalisé
+- $E(RI)$ = expected RI, espérance aléatoire (en assignant les groupes au hasard)
+- Prend en compte la taille des classes
+- $\text{ARI}= 1$ pour classification identique
+- $\text{ARI} \simeq  0$ pour classification aléatoire (peut être <0)
+- Adapté même si les nombres de classes diffèrent entre les deux classifications
+- Adapé à des tailles de classes différentes
+
+
+
+# Comparaison des résultats des deux classifications
+
+- rand index et adjusted rand index
+
+```{r}
+## Compute adjusted Rand index
+(ARI <- aricode::ARI(cluster.hclust4, cluster.kmeans3))
+```
+
+# Supplementary materials
+
+POUR ALLER PLUS LOIN
+
+# Distances utilisées dans R (1)
+
+- distance euclidienne ou distance $L_2$:
+  $d(x,y)=\sqrt{\sum_i (x_i-y_i)^2}$
+  
+- distance de manahattan ou distance $L_1$:
+  $d(x,y)=\sum_i |x_i-y_i|$
+    
+- distance du maximum ou L-infinis, $L_\infty$:
+  $d(x,y)=\max_i |x_i-y_i|$
+    
+```{r distances, echo=FALSE, out.width="50%"}
+include_graphics(path = "img/distance.png")
+```
+
+
+# Distances utilisées dans R (2)
+
+- distance de Minkowski $l_p$:
+$$d(x,y)=\sqrt[p]{\sum_i (|x_i-y_i|^p}$$
+
+- distance de Canberra (x et y valeurs positives):
+$$d(x,y)=\sum_i \frac{x_i-y_i}{x_i+y_i}$$
+
+- distance binaire ou distance de Jaccard ou Tanimoto: proportion de propriétés communes
+
+
+
+  
+**Note** : lors du TP, sur les données d'expression RNA-seq, nous utiliserons le **coefficient de corrélation de Spearman** et la distance dérivée, $d_c = 1-r$
+
+# Autres distances non géométriques (pour information)
+
+Utilisées en bio-informatique:
+
+- Distance de **Hamming**: nombre de remplacements de caractères (substitutions)
+
+- Distance de **Levenshtein**: nombre de substitutions, insertions, deletions entre deux chaînes de caractères
+
+$$d("BONJOUR", "BONSOIR")=2$$
+
+- Distance d'**alignements**: distances de Levenshtein avec poids (par ex. matrices BLOSSUM)
+
+- Distances d'**arbre** (Neighbor Joining)
+
+- Distances **ultra-métriques** (phylogénie UPGMA)
+
+
+# Distances plus classiques en génomique
+
+Il existe d'autres mesures de distances, plus ou moins adaptées à chaque problématique :
+
+- **Jaccard** (comparaison d'ensembles): $J_D = \frac{A \cap B}{A \cup B}$
+
+- Distance du $\chi^2$ (comparaison de tableau d'effectifs)
+
+Ne sont pas des distances, mais indices de dissimilarité :
+
+- **Bray-Curtis** (en écologie, comparaison d'abondance d'espèces)
+- **Jensen-Shannon** (comparaison de distributions)
+# Distance avec R : indice de Jaccard
+
+- ou pour des distances particulières, par exemple l'indice de Jaccard :
+```{r echo = FALSE}
+v.a <- c(0, 1, 0, 0, 0, 0, 0)
+v.b <- c(0, 1, 0, 0, 0, 1, 0)
+v.c <- c(0, 1, 0, 0, 0, 0, 0)
+mat.abc <- as.matrix(rbind(v.a, v.b, v.c))
+knitr::kable(mat.abc, align = "c")
+vegan::vegdist(mat.abc)
+```
+
+
+
+----
+
+## ... par une projection sur une ACP
+
+```{r,  out.width="90%", fig.width=12, fig.height=6}
+par(mfrow = c(1,2))
+biplot(prcomp(BIC_expr), las = 1, cex = 0.7,
+       main = "Données non normalisées")
+biplot(prcomp(BIC_expr, scale = TRUE), las = 1, cex = 0.7,
+       main = "Données normalisées")
+```
+
+# Géométrie et distances (1)
+
+On considère les données comme des points de $\mathbb{R}^n$ 
+
+```{r, echo = FALSE, out.width = "30%"}
+x = runif(10, 1, 5)
+y = runif(10, 2, 4)
+plot(x, y, xlab = "", ylab = "", las = 1, panel.first = grid())
+```
+
+$\mathbb{R}^n$ : espace Euclidien à $n$ dimensions, où 
+
+- chaque dimension représente une des variables observées;
+- un individu est décrit comme un vecteur à $n$ valeurs, qui correspond à un point dans cet espace. 
+
+# Géométrie et distances (2)
+
+On considère les données comme des points de $R^n$ (*)
+
+- géométrie donnée par distances
+- distances = dissimilarités imposées par le problème
+- dissimilarités $\longrightarrow$ permettent la visualisation de l'ensemble des points
+
+```{r echo = FALSE, out.width = "30%"}
+plot(x, y, xlab = "", ylab = "", las = 1, panel.first = grid())
+segments(x[2], y[2], x[4], y[4], col = "red", lwd = 2, lty = 2)
+```
+
+# Géométrie et distances (3)
+
+Sur la base d'une distance
+
+- Clustering :
+
+```{r}
+## Plot distances between 3 points in a 2D Euclidian space
+plot(x = 0, y = 0, type = "n", xlim = c(0, 5), ylim = c(0, 5), 
+    xlab = "", ylab = "", las = 1, 
+     main = "3 individuals in a 2-D space\nDot plot representation",
+     panel.first = grid())
+points(x = 1, y = 1, col = "blue", pch = 19)
+text(x = 1, y = 1, col = "blue", label = "A", pos = 2)
+points(x = 2, y = 0, col = "green", pch = 19)
+text(x = 2, y = 0, col = "green", label = "B", pos = 4)
+points(x = 4, y = 4, col = "red", pch = 19)
+text(x = 4, y = 4, col = "red", label = "C", pos = 4)
+
+```
+
+# Distance euclidienne
+
+- distance euclidienne ou distance $L_2$:
+  $d(x,y)=\sqrt{\sum_i (x_i-y_i)^2}$
+
+# Distances entre groupes (2)
+
+- **Single linkage** : élements les plus proches des 2 groupes
+
+$$D(C_1,C_2) = \min_{i \in C_1, j \in C_2} D(x_i, x_j)$$
+  
+- **Complete linkage** : éléments les plus éloignés des 2 groupes
+
+$$D(C_1,C_2) = \max_{i \in C_1, j \in C_2} D(x_i, x_j)$$
+
+- **Average linkage** : distance moyenne
+
+$$D(C_1,C_2) = \frac{1}{N_1 N_2} \sum_{i \in C_1, j \in C_2} D(x_i, x_j)$$
+  
+- **Ward**
+
+$d^2(C_i,C_j) = I_{intra}(C_i \cup C_j)-I_{intra}(C_i)-I_{intra}(C_j)$
+
+$D(C_1,C_2) = \sqrt{\frac{N_1N_2}{N_1 + N_2}} \| m_1 -m_2 \|$
+
+
+# La matrice de distance euclidienne
+
+
+```{r levelplot_euclidian, out.width="50%", fig.width=6, fig.height=6, echo = FALSE}
+levelplot(as.matrix(BIC.scale.euc), xlab = "", ylab = "")
+```
+
+# La matrice de distance de corrélation
+
+```{r levelplot_cor, out.width="50%", fig.width=6, fig.height=6, echo = FALSE}
+levelplot(BIC_expr.cor.dist, xlab = "", ylab = "")
+```
+
+
+# Les heatmap - échelle de couleur standardisée par colonne
+
+```{r pheatmap3, fig.width = 8, fig.heigh = 6, out.width="60%"}
+pheatmap::pheatmap(BIC_expr, scale = "column", clustering.method = "ward.D2")
+```
+
+# Les heatmap - échelle de couleur standardisée par ligne
+
+```{r pheatmap4, fig.width = 8, fig.heigh = 6, out.width="60%"}
+pheatmap::pheatmap(BIC_expr, scale = "row", clustering.method = "ward.D2")
+```
+
+# Avec R (1) : distance entre deux individus 
+
+- on utilise la fonction `dist()` avec l'option `method = "euclidean", "manhattan", ...` 
+
+```{r, echo = FALSE}
+x = runif(10, 1, 5)
+y = runif(10, 2, 4)
+mat.xy <- data.frame(matrix(rbind(x,y), nrow = 2))[, 1:5]
+names(mat.xy) <- paste0("t", 1:ncol(mat.xy))
+rownames(mat.xy) <- c("X", "Y")
+
+## Display the details of distance computation
+mat.details <- mat.xy
+mat.details["abs(Y - X)", ] <- abs(mat.details["Y", ] - mat.xy["X", ])
+mat.details["(Y - X)^2", ] <- (mat.details["Y", ] - mat.xy["X", ])^2
+mat.details[, "SUM"] <- apply(mat.details, 1, sum)
+mat.details["Eucl",]  <- mat.details["abs(Y - X)", ]
+mat.details["Eucl", "SUM"] <- sqrt(mat.details["(Y - X)^2", "SUM"]) 
+knitr::kable(mat.details[,], digits = 2)
+```
+
+distance euclidienne : `r round(dist(mat.xy), digits = 2)`
+
+distance de manhattan = `r round(dist(mat.xy, method = "manhattan"), digits = 2)`
+
+- on utilise la fonction `1 - cor()` avec l'option `method = "pearson", "spearman", ...` 
+
+distance de corrélation = `r round(1-cor(t(mat.xy), method = "pearson")[1, 2], digits = 2)`
+
+# Je ne fais pas attention à ce que je fais ...
+
+... c'est à dire aux options des fonctions `dist()` et `hclust()`
+
+```{r echo = FALSE}
+BIC.euc <- dist(BIC_expr)
+BIC.scale.euc <- dist(BIC_expr.scaled)
+BIC_expr.cor <- cor(t(BIC_expr))
+BIC_expr.cor.dist <- 1 - BIC_expr.cor
+```
+
+```{r dont_care, fig.width=10, fig.height=4, out.width="60%", echo = FALSE}
+BIC.hclust <- hclust(BIC.euc)
+plot(BIC.hclust, hang = -1, cex = 0.5)
+```
+
+```{r dont_care_norm, fig.width=10, fig.height=4, out.width="60%", echo = FALSE}
+BIC.scale.hclust <- hclust(BIC.scale.euc)
+plot(BIC.scale.hclust, hang = -1, cex = 0.5)
+```
+
+```{r dont_care_raw_vs_norm, fig.width=10, fig.height=7, out.width="80%", fig.width=10, fig.height=7}
+par(mfrow = c(2, 1))
+plot(BIC.hclust, hang = -1, cex = 0.5, main = "Données brutes")
+plot(BIC.scale.hclust, hang = -1, cex = 0.5, main = "Normalisées")
+```
+
+# Supplément : analyse de données d'expression 2019
+
+- TP clustering : 
+[[html](TP_clustering.html)]
+[[pdf](TP_clustering.pdf)]
+[[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/seance_4/TP_clustering.Rmd)]
+
+- Première partie : chargement des données
+
+
+---
+# R environment used for this analysis
+
+```{r session_info}
+## Print the complete list of libraries + versions used in this session
+sessionInfo()
+```
+
+
+---
+
+Contact: <anne.badel@univ-paris-diderot.fr>
