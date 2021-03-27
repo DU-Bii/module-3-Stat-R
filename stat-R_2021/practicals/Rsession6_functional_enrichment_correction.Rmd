@@ -81,7 +81,7 @@ options(width = 300)
 # options(encoding = 'UTF-8')
 knitr::opts_chunk$set(
   fig.width = 7, fig.height = 5, 
-  fig.path = 'figures',
+  fig.path = 'figures/',
   fig.align = "center", 
   size = "tiny", 
   echo = TRUE, 
@@ -116,7 +116,7 @@ This practical aims at showing how to analyze functional enrichment on a list of
 
 ## Study case : The Cancer Gene Atlas (TCGA) Breast Invasive Cancer (BIC) data
 
-cfr TP4 ?
+cfr Clustering session
 
 ## References
 
@@ -133,7 +133,7 @@ First, you need to load the gene list.
 ```{r data_loading}
 
 #local_folder <- "~/Documents/DUBii/DUBii_2019/module-3-Stat-R/stat-R_2020/data/TCGA_BIC_subset"  # on my computer
-local_folder <- "/shared/projects/DUBii_2019/module-3-Stat-R/stat-R_2020/data/TCGA_BIC_subset"  # on the nncr
+local_folder <- "/shared/projects/dubii2021/trainers/module3/module-3-Stat-R/stat-R_2020/data/TCGA_BIC_subset"  # on the nncr
 file_name <- "BIC_log2-norm-counts_edgeR_DEG_top_1000.tsv.gz"
 BIC.expr.file <- file.path(local_folder, file_name)
 
@@ -179,7 +179,7 @@ gostres <- gost(query = DEGListClean,
 
 names(gostres)
 summary(gostres)
-head(gostres$result)
+kable(head(gostres$result))
 names(gostres$meta)
 
 # Visualization
@@ -195,7 +195,7 @@ gostres2 <- gost(query = DEGListClean,
                 domain_scope = "annotated", custom_bg = NULL, 
                 numeric_ns = "", sources = NULL)
 
-head(gostres2$result)
+kable(head(gostres2$result))
 
 # Get a web link
 gostres_link <- gost(query = DEGListClean, 
@@ -226,32 +226,6 @@ publish_gosttable(gostres, highlight_terms = gostres$result[c(1:2,10,50:52,64,69
 
 ````
 
-
-## Save a memory image of your session
-
-Use the fonction `save.image()` to store an image of your session, in a file `functional_enrichment_memory_image.Rdata` in the  local folder specified above.
-This file will contain all the data that you loaded during this session, and enable you to reload everything without having to re-execute all the steps. 
-
-```{r memory_image}
-
-## Define the path to the memory image file
-personal_folder <- "/shared/projects/dubii2021/YOURFOLDER"  # adapt to your personal folder
-memory_image_file <- file.path(personal_folder, "functional_enrichment_memory_image.Rdata")
-
-## Save the memory image
-save.image(file = memory_image_file)
-
-message("Memory image saved in file\n\t", memory_image_file)
-```
-
-For a future session, you will be able to reload all the data with a single command:
-
-`load([path_to_your_memory_image])`
-
- You will need to replace `[path_to_your_memory_image]` by your actual path. 
- In my case, the command becomes:
- 
- `load("`r memory_image_file`")`
 
 ## Save your session info
 
