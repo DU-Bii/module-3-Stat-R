@@ -237,14 +237,18 @@ To follow this course, prior knowledge is expected on:
 
 3. Analyse d'enrichissement fonctionnel
 
+<!--
     - Introduction:
     [[html](slides/)]
+-->
     - Tutoriel: 
     [[html](tutorials/Rsession6_tuto_gProfiler.html)]
     [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2021/tutorials/Rsession6_tuto_gProfiler.Rmd)]
+    <!--
     - Practical:
     [[html](practicals/)]
     [[Rmd](practicals/)]
+-->
 
 <!--
 4. Corrélation régression (à confirmer)
