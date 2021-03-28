@@ -3,20 +3,15 @@ title: "Tutorial gProfiler"
 author: "Olivier Sand"
 date: '`r Sys.Date()`'
 output:
-  slidy_presentation:
-    smart: no
-    slide_level: 2
+  html_document:
     self_contained: yes
     fig_caption: yes
-    fig_height: 5
-    fig_width: 7
-    highlight: tango
-    incremental: no
-    keep_md: yes
-    smaller: yes
+    highlight: zenburn
     theme: cerulean
     toc: yes
-    widescreen: yes
+    toc_depth: 3
+    toc_float: yes
+    code_folding: "hide"
   ioslides_presentation:
     slide_level: 2
     self_contained: no
@@ -51,15 +46,20 @@ output:
     transition: none
     self_contained: true
     css: ../slides.css
-  html_document:
+  slidy_presentation:
+    smart: no
+    slide_level: 2
     self_contained: yes
     fig_caption: yes
-    highlight: zenburn
+    fig_height: 5
+    fig_width: 7
+    highlight: tango
+    incremental: no
+    keep_md: yes
+    smaller: yes
     theme: cerulean
     toc: yes
-    toc_depth: 3
-    toc_float: yes
-    code_folding: "hide"
+    widescreen: yes
   powerpoint_presentation:
     slide_level: 2
     fig_caption: yes
@@ -79,7 +79,7 @@ editor_options:
 options(width = 300)
 knitr::opts_chunk$set(
   fig.width = 7, fig.height = 5, 
-  fig.path = 'figures',
+  fig.path = 'figures/tuto-',
   fig.align = "center", 
   size = "tiny", 
   echo = TRUE, 
@@ -150,7 +150,7 @@ names(gostres)
 summary(gostres)
 names(gostres$meta)
 # head(gostres$result)
-kable(head(gostres$result))
+kable(head(gostres$result), digits = c(0, 0, 30, 7, 7, 7, 3, 3, 0, 0, 7, 7, 0, 0))
 
 ```
 
@@ -177,10 +177,11 @@ gostres2 <- gost(
   correction_method = "g_SCS", 
   domain_scope = "annotated", 
   custom_bg = NULL, 
-  numeric_ns = "", sources = NULL)
+  numeric_ns = "", 
+  sources = NULL)
 
 # head(gostres2$result)
-kable(head(gostres2$result))
+kable(head(gostres2$result), digits = c(0, 0, 30, 7, 7, 7, 3, 3, 0, 0, 7, 7, 0, 0, 0, 0))
 
 ```
 
@@ -218,10 +219,10 @@ multi_gostres1 <- gost(
                             "GO:0005005", 
                             "ENSG00000156103", 
                             "NLRP1")), 
-  multi_query = FALSE)
+                multi_query = FALSE)
 
 # head(multi_gostres1$result)
-kable(head(multi_gostres1$result))
+kable(head(multi_gostres1$result), digits = c(0, 0, 30, 7, 7, 7, 3, 3, 0, 0, 7, 7, 0, 0))
 
 multi_gostres2 <- gost(
   query = list("chromX" = c("X:1000:1000000", 
@@ -235,7 +236,7 @@ multi_gostres2 <- gost(
   multi_query = TRUE)
 
 # head(multi_gostres2$result)
-kable(head(multi_gostres2$result))
+kable(head(multi_gostres2$result), digits = c(0, 0, 30, 7, 7, 7, 3, 3, 0, 0, 7, 7, 0, 0))
 
 ```
 
@@ -260,8 +261,11 @@ The function `publish_gostplot` takes the static plot object as an input and ena
 p <- gostplot(gostres, capped = FALSE, interactive = FALSE)
 
 # Highlight terms
-pp <- publish_gostplot(p, highlight_terms = c("GO:0048013", "REAC:R-HSA-3928663"), 
-                       width = NA, height = NA, filename = NULL )
+pp <- publish_gostplot(p, 
+                       highlight_terms = c("GO:0048013", "REAC:R-HSA-3928663"), 
+                       width = NA, 
+                       height = NA, 
+                       filename = NULL )
 
 ```
 
@@ -304,7 +308,7 @@ In addition to the available GO, KEGG, etc data sources, users can upload their 
 
 ## Other tools
 
-GProfiler2 also has a tool to convert gene IDs between databases, etc. It is called g:Convert.
+`GProfiler2` also has a tool to convert gene IDs between databases, etc. It is called g:Convert.
 
 ```{r test_vignette_partK}
 # Gene identifier conversion with gconvert
