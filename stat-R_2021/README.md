@@ -215,6 +215,9 @@ To follow this course, prior knowledge is expected on:
 
 ### Sessions 5 et 6 (rassemblées en une journée)
 
+- Date:  29/03/2021 de 10h00 à 13h00 et de 14h30 à 17h30
+- Instructeurs : Anne Badel, Jacques van Helden, Olivier Sand  
+- Helpers : Claire Vandiedonck, Yves Clément, Bruno Toupance, Olivier Taboureau
 
 #### Objectifs
 
@@ -234,10 +237,14 @@ To follow this course, prior knowledge is expected on:
 
 3. Analyse d'enrichissement fonctionnel
 
+    - Introduction:
+    [[html](slides/)]
     - Tutoriel: 
     [[html](tutorials/Rsession6_tuto_gProfiler.html)]
     [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2021/tutorials/Rsession6_tuto_gProfiler.Rmd)]
-    
+    - Practical:
+    [[html](practicals/)]
+    [[Rmd](practicals/)]
 
 <!--
 4. Corrélation régression (à confirmer)
