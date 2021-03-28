@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Jacques van Helden" />
+
+<meta name="date" content="2021-03-28" />
+
+<title>Tutorial: machine-learning with TGCA BIC transcriptome</title>
+
+<script src="01_data-loading_TCGA-BIC_files/header-attrs-2.5/header-attrs.js"></script>
+<script src="01_data-loading_TCGA-BIC_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="01_data-loading_TCGA-BIC_files/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="01_data-loading_TCGA-BIC_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="01_data-loading_TCGA-BIC_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="01_data-loading_TCGA-BIC_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="01_data-loading_TCGA-BIC_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="01_data-loading_TCGA-BIC_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="01_data-loading_TCGA-BIC_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="01_data-loading_TCGA-BIC_files/navigation-1.1/tabsets.js"></script>
+<script src="01_data-loading_TCGA-BIC_files/navigation-1.1/codefolding.js"></script>
+<link href="01_data-loading_TCGA-BIC_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="01_data-loading_TCGA-BIC_files/anchor-sections-1.0/anchor-sections.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  { color: #cccccc; background-color: #303030; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ffcfaf; } /* Alert */
+code span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+code span.at { } /* Attribute */
+code span.bn { color: #dca3a3; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #f0dfaf; } /* ControlFlow */
+code span.ch { color: #dca3a3; } /* Char */
+code span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+code span.co { color: #7f9f7f; } /* Comment */
+code span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+code span.do { color: #7f9f7f; } /* Documentation */
+code span.dt { color: #dfdfbf; } /* DataType */
+code span.dv { color: #dcdccc; } /* DecVal */
+code span.er { color: #c3bf9f; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #c0bed1; } /* Float */
+code span.fu { color: #efef8f; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+code span.kw { color: #f0dfaf; } /* Keyword */
+code span.op { color: #f0efd0; } /* Operator */
+code span.ot { color: #efef8f; } /* Other */
+code span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+code span.sc { color: #dca3a3; } /* SpecialChar */
+code span.ss { color: #cc9393; } /* SpecialString */
+code span.st { color: #cc9393; } /* String */
+code span.va { } /* Variable */
+code span.vs { color: #cc9393; } /* VerbatimString */
+code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
+
+.sourceCode .row {
+  width: 100%;
+}
+.sourceCode {
+  overflow-x: auto;
+}
+.code-folding-btn {
+  margin-right: -30px;
+}
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Tutorial: machine-learning with TGCA BIC transcriptome</h1>
+<h3 class="subtitle">01. Data loading</h3>
+<h4 class="author">Jacques van Helden</h4>
+<h4 class="date">2021-03-28</h4>
+
+</div>
+
+
+<div id="downloading-and-loading-the-data-and-metadata-files" class="section level2">
+<h2>Downloading and loading the data and metadata files</h2>
+<p>The preprocessed datasets are available on the course github repository.</p>
+<div id="a-convenient-function-to-download-files-only-once" class="section level3">
+<h3>A convenient function to download files only once</h3>
+<p>We will use the function <code>download_only_once()</code> that we defined in a previous course on data exploration.</p>
+<p>This function takes as input a base URL, a file name and a local folder.</p>
+<ul>
+<li>It checks if the local folder already exists, and if not creates it.</li>
+<li>It then checks if the file is already present in this local folder, and if not downloads it.</li>
+</ul>
+<p>This facilitates the downloading of the different files required for the practical. Open the code box below and run the code in your R console.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @title Download a file only if it is not yet here</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @author Jacques van Helden email{Jacques.van-Helden@@france-bioinformatique.fr}</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param url_base base of the URL, that will be prepended to the file name</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param file_name name of the file (should not contain any path)</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param local_folder path of a local folder where the file should be stored</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @return the function returns the path of the local file, built from local_folder and file_name</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @export©</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>download_only_once <span class="ot">&lt;-</span> <span class="cf">function</span>(</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  url_base, </span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  file_name,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  local_folder) {</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Define the source URL  </span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  url <span class="ot">&lt;-</span> <span class="fu">file.path</span>(url_base, file_name)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">&quot;Source URL</span><span class="sc">\n\t</span><span class="st">&quot;</span>,  url)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Define the local file</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  local_file <span class="ot">&lt;-</span> <span class="fu">file.path</span>(local_folder, file_name)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Create the local data folder if it does not exist</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dir.create</span>(local_folder, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Download the file ONLY if it is not already there</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(local_file)) {</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">message</span>(<span class="st">&quot;Downloading file from source URL to local file</span><span class="sc">\n\t</span><span class="st">&quot;</span>, </span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>            local_file)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">download.file</span>(<span class="at">url =</span> url, <span class="at">destfile =</span> local_file)</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">message</span>(<span class="st">&quot;Local file already exists, no need to download</span><span class="sc">\n\t</span><span class="st">&quot;</span>, </span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>            local_file)</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(local_file)</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div id="exercise-data-download" class="section level3">
+<h3>Exercise: data download</h3>
+<ol style="list-style-type: decimal">
+<li>Use the function <code>download_only_once()</code> to download the BIC transciptome data and metadata from the github web site and store it in a local folder (for example <code>~/m3-stat-R/TCGA-BIC_analysis</code>).</li>
+</ol>
+<p>Base URL: <a href="https://github.com/DU-Bii/module-3-Stat-R/raw/master/stat-R_2021/data/TCGA_BIC_subset/" class="uri">https://github.com/DU-Bii/module-3-Stat-R/raw/master/stat-R_2021/data/TCGA_BIC_subset/</a></p>
+<p>Files :</p>
+<ul>
+<li><p>Expression table (1000 top-ranking genes from differential analysis):</p>
+<ul>
+<li><p>File name: <code>BIC_log2-norm-counts_edgeR_DEG_top_1000.tsv.gz</code></p></li>
+<li><p>This file contains log2-transformed and standardised counts, with 1000 genes (rows) x 819 samples (columns)</p></li>
+</ul></li>
+<li><p>Metadata:</p>
+<ul>
+<li><p>File name: <code>BIC_sample-classes.tsv.gz</code></p></li>
+<li><p>This file indicates the status of the 3 marker genes traditionnally used to diagnose the breast cancer type, as well as the cancer class derived from these 3 markers</p></li>
+<li><p>For more information, see the pre-processing report: <a href="https://du-bii.github.io/study-cases/Homo_sapiens/TCGA_study-case/import_TCGA_from_Recount.html">import_TCGA_from_Recount.html</a></p></li>
+</ul></li>
+</ul>
+<ol start="2" style="list-style-type: decimal">
+<li>After having downloaded these files, load them in variables having the following names (for the sake of consistency with the course material).</li>
+</ol>
+<ul>
+<li>Expression table: bic_expr</li>
+<li>Metadata: bic_meta</li>
+</ul>
+</div>
+<div id="solution" class="section level3">
+<h3>Solution</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Define the remote URL and local folder</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>bic_url <span class="ot">&lt;-</span> <span class="st">&quot;https://github.com/DU-Bii/module-3-Stat-R/raw/master/stat-R_2021/data/TCGA_BIC_subset/&quot;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>bic_folder <span class="ot">&lt;-</span> <span class="st">&quot;~/m3-stat-R/TCGA-BIC_analysis&quot;</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Download and load the expression data table</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Note: we use check.names=FALSE to avoid replacing hyphens by dots</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="do">## in sample names, because we want to keep them as in the </span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="do">## original data files. </span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>bic_expr_file <span class="ot">&lt;-</span> <span class="fu">download_only_once</span>(</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">url_base =</span> bic_url, </span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">file_name =</span> <span class="st">&quot;BIC_log2-norm-counts_edgeR_DEG_top_1000.tsv.gz&quot;</span>,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">local_folder =</span> bic_folder)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>bic_expr <span class="ot">&lt;-</span> <span class="fu">read.delim</span>(<span class="at">file =</span> bic_expr_file, </span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>                       <span class="at">header =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>                       <span class="at">row.names =</span> <span class="dv">1</span>,</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>                       <span class="at">check.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co"># colnames(bic_expr)</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co"># dim(bic_expr)</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="co"># View(head(bic_expr))</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="do">## Download the metadata file</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>bic_meta_file <span class="ot">&lt;-</span> <span class="fu">download_only_once</span>(</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">url_base =</span> bic_url, </span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">file_name =</span> <span class="st">&quot;BIC_sample-classes.tsv.gz&quot;</span>,</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">local_folder =</span> bic_folder)</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>bic_meta <span class="ot">&lt;-</span> <span class="fu">read.delim</span>(<span class="at">file =</span> bic_meta_file, </span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>                       <span class="at">header =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>                       <span class="at">row.names =</span> <span class="dv">1</span>,</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>                       <span class="at">check.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+</div>
+</div>
+<div id="exploring-the-metadata" class="section level2">
+<h2>Exploring the metadata</h2>
+<div id="exercise" class="section level3">
+<h3>Exercise</h3>
+<p>Check the content of the metadata file by looking at the first rows, and count the number of samples per class.</p>
+</div>
+<div id="solution-1" class="section level3">
+<h3>Solution</h3>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Show the head of the metadata table</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(bic_meta, <span class="at">n =</span> <span class="dv">10</span>), <span class="at">caption =</span> <span class="st">&quot;First rows of the BIC metadata table&quot;</span>)</span></code></pre></div>
+<table>
+<caption>First rows of the BIC metadata table</caption>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="left">cancer.type</th>
+<th align="left">ER1</th>
+<th align="left">PR1</th>
+<th align="left">Her2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1AB92ADA-637E-4A42-A39A-70CEEEA41AE3</td>
+<td align="left">Luminal.A</td>
+<td align="left">Positive</td>
+<td align="left">Positive</td>
+<td align="left">Negative</td>
+</tr>
+<tr class="even">
+<td align="left">DA98A67C-F11F-41D3-8223-1161EBFF8B58</td>
+<td align="left">Unclassified</td>
+<td align="left">Positive</td>
+<td align="left">Negative</td>
+<td align="left">Negative</td>
+</tr>
+<tr class="odd">
+<td align="left">06CCFD0F-7FB8-471E-B823-C7876582D6FC</td>
+<td align="left">HER2pos</td>
+<td align="left">Negative</td>
+<td align="left">Negative</td>
+<td align="left">Positive</td>
+</tr>
+<tr class="even">
+<td align="left">A33B2F42-6EC6-4FB2-8BE5-542407A0382E</td>
+<td align="left">Unclassified</td>
+<td align="left">Positive</td>
+<td align="left">Negative</td>
+<td align="left">Negative</td>
+</tr>
+<tr class="odd">
+<td align="left">D021A258-8713-4383-9DCA-45E2F54A0411</td>
+<td align="left">Luminal.A</td>
+<td align="left">Positive</td>
+<td align="left">Positive</td>
+<td align="left">Negative</td>
+</tr>
+<tr class="even">
+<td align="left">C705FA90-D9AA-4949-BACA-1C022A14CB03</td>
+<td align="left">Luminal.A</td>
+<td align="left">Positive</td>
+<td align="left">Positive</td>
+<td align="left">Negative</td>
+</tr>
+<tr class="odd">
+<td align="left">85380A2D-9951-4D4B-A2A4-6F5F2AFC54E3</td>
+<td align="left">Luminal.A</td>
+<td align="left">Positive</td>
+<td align="left">Positive</td>
+<td align="left">Negative</td>
+</tr>
+<tr class="even">
+<td align="left">F53A9C63-1AF7-4CBC-B8B7-4AA7AAED3364</td>
+<td align="left">Luminal.A</td>
+<td align="left">Positive</td>
+<td align="left">Positive</td>
+<td align="left">Negative</td>
+</tr>
+<tr class="odd">
+<td align="left">13EF5323-EAD9-4BC7-8AC4-33875BF12E17</td>
+<td align="left">Luminal.B</td>
+<td align="left">Positive</td>
+<td align="left">Positive</td>
+<td align="left">Positive</td>
+</tr>
+<tr class="even">
+<td align="left">079EACA1-0319-4B54-B20B-673F4576C69D</td>
+<td align="left">Basal.like</td>
+<td align="left">Negative</td>
+<td align="left">Negative</td>
+<td align="left">Negative</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of samples per class</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">sort</span>(<span class="fu">table</span>(bic_meta<span class="sc">$</span>cancer.type), <span class="at">decreasing =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">caption =</span> <span class="st">&quot;Number of samples per class&quot;</span>)</span></code></pre></div>
+<table>
+<caption>Number of samples per class</caption>
+<thead>
+<tr class="header">
+<th align="left">Var1</th>
+<th align="right">Freq</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Luminal.A</td>
+<td align="right">422</td>
+</tr>
+<tr class="even">
+<td align="left">Basal.like</td>
+<td align="right">131</td>
+</tr>
+<tr class="odd">
+<td align="left">Luminal.B</td>
+<td align="right">118</td>
+</tr>
+<tr class="even">
+<td align="left">Unclassified</td>
+<td align="right">107</td>
+</tr>
+<tr class="odd">
+<td align="left">HER2pos</td>
+<td align="right">41</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="sorting-samples-by-cancer-class" class="section level2">
+<h2>Sorting samples by cancer class</h2>
+<p>Sort the expression and metadata tables so that the samples with the same class come together. This is a bit triccky so we provide immediately the solution, but you might attempt todo it in you way if you have time.</p>
+<p>Some tips:</p>
+<pre><code>- The expression table has one row per gene and one column per sample, whereas the metadata file has one row per sample. 
+
+- You can use the function `order()` to obtain the indices of the metadata table by order of sample class. This will return a vector with all the indixes of the first class, then all the indices of the second class, etc. 
+
+- You can then use the indices of the dataframes to re-order them. 
+
+- We are not sure that the samples have the same order in the metadata and in the expression tables. So we will use the sample class to re-order the rows (samples) of the metadata file, but after this is done we will use the sample IDs of the metadata file (in the row names) in order to sort the columns of the expression table. This will guarantee that samples are in a consistent order between data and metadata tables.</code></pre>
+<div id="solution-2" class="section level3">
+<h3>Solution</h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Check that the row names of the metadata contain the same set </span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="do">## of IDs than the column names of the expression table</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">rownames</span>(bic_meta)) <span class="do">## the metadata contains 819 rows</span></span></code></pre></div>
+<pre><code>[1] 819</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">colnames</span>(bic_expr)) <span class="do">## the data contains 819 columns</span></span></code></pre></div>
+<pre><code>[1] 819</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">intersect</span>(<span class="fu">rownames</span>(bic_meta), <span class="fu">colnames</span>(bic_expr))) <span class="do">## Their intersection contains the same number of elements</span></span></code></pre></div>
+<pre><code>[1] 819</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Get the sample order according to the cancer type column of the metadata</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>sample_order <span class="ot">&lt;-</span> <span class="fu">order</span>(bic_meta<span class="sc">$</span>cancer.type)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(bic_meta<span class="sc">$</span>cancer.type[sample_order])</span></code></pre></div>
+<pre><code>  [1] &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;  
+ [20] &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;  
+ [39] &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;  
+ [58] &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;  
+ [77] &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;  
+ [96] &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;  
+[115] &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;HER2pos&quot;      &quot;HER2pos&quot;     
+[134] &quot;HER2pos&quot;      &quot;HER2pos&quot;      &quot;HER2pos&quot;      &quot;HER2pos&quot;      &quot;HER2pos&quot;      &quot;HER2pos&quot;      &quot;HER2pos&quot;      &quot;HER2pos&quot;      &quot;HER2pos&quot;      &quot;HER2pos&quot;      &quot;HER2pos&quot;      &quot;HER2pos&quot;      &quot;HER2pos&quot;      &quot;HER2pos&quot;      &quot;HER2pos&quot;      &quot;HER2pos&quot;      &quot;HER2pos&quot;      &quot;HER2pos&quot;      &quot;HER2pos&quot;     
+[153] &quot;HER2pos&quot;      &quot;HER2pos&quot;      &quot;HER2pos&quot;      &quot;HER2pos&quot;      &quot;HER2pos&quot;      &quot;HER2pos&quot;      &quot;HER2pos&quot;      &quot;HER2pos&quot;      &quot;HER2pos&quot;      &quot;HER2pos&quot;      &quot;HER2pos&quot;      &quot;HER2pos&quot;      &quot;HER2pos&quot;      &quot;HER2pos&quot;      &quot;HER2pos&quot;      &quot;HER2pos&quot;      &quot;HER2pos&quot;      &quot;HER2pos&quot;      &quot;HER2pos&quot;     
+[172] &quot;HER2pos&quot;      &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;   
+[191] &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;   
+[210] &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;   
+[229] &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;   
+[248] &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;   
+[267] &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;   
+[286] &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;   
+[305] &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;   
+[324] &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;   
+[343] &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;   
+[362] &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;   
+[381] &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;   
+[400] &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;   
+[419] &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;   
+[438] &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;   
+[457] &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;   
+[476] &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;   
+[495] &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;   
+[514] &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;   
+[533] &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;   
+[552] &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;   
+[571] &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;   
+[590] &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.A&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;   
+[609] &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;   
+[628] &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;   
+[647] &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;   
+[666] &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;   
+[685] &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;   
+[704] &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Luminal.B&quot;    &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot;
+[723] &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot;
+[742] &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot;
+[761] &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot;
+[780] &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot;
+[799] &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot;
+[818] &quot;Unclassified&quot; &quot;Unclassified&quot;</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Sort the metadata rows (samples) according to this order</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>bic_meta <span class="ot">&lt;-</span> bic_meta[sample_order, ]</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Sort the expression table to make sure that the samples (columns)</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="do">## come in the same order as the rows of the metadata table</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>bic_expr <span class="ot">&lt;-</span> bic_expr[, <span class="fu">row.names</span>(bic_meta)]</span></code></pre></div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
