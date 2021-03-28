@@ -10,9 +10,9 @@
 
 - [Session 4. Analyse en composantes principales / Exploration des données multidimensionelles](#session-4)
 
-- [Session 5. Classification supervisée et apprentissage](#session-5)]
+- [Session 5. Classification supervisée et apprentissage](#session-5)
 
-- [Session 6. Classification non-supervisée / Analyse d'enrichissement](#session-6)]
+- [Session 6. Classification non-supervisée / Analyse d'enrichissement](#session-6)
 
 
 
@@ -244,6 +244,7 @@ To follow this course, prior knowledge is expected on:
     - Tutoriel: 
     [[html](tutorials/Rsession6_tuto_gProfiler.html)]
     [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2021/tutorials/Rsession6_tuto_gProfiler.Rmd)]
+
 <!--
     - Practical:
     [[html](practicals/)]
