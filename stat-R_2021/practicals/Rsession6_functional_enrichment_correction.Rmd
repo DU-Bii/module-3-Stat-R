@@ -1,6 +1,6 @@
 ---
 title: "Functional enrichment practical"
-author: "Olivier Sand"
+author: "Olivier Sand and Jacques van Helden"
 date: '`r Sys.Date()`'
 output:
   html_document:
@@ -81,7 +81,7 @@ options(width = 300)
 # options(encoding = 'UTF-8')
 knitr::opts_chunk$set(
   fig.width = 7, fig.height = 5, 
-  fig.path = 'figures/',
+  fig.path = 'figures/enrich-',
   fig.align = "center", 
   size = "tiny", 
   echo = TRUE, 
@@ -98,6 +98,9 @@ options(scipen = 12) ## Max number of digits for non-scientific notation
 
 
 ```{r libraries, echo=FALSE, eval=TRUE}
+
+#### Load libraries ####
+message("Loading libraries")
 requiredLib <- c("knitr","gprofiler2")
 for (lib in requiredLib) {
   if (!require(lib, character.only = TRUE)) {
@@ -112,125 +115,198 @@ library(gprofiler2)
 
 ## Goal of this practical
 
-This practical aims at showing how to analyze functional enrichment on a list of differentially expressed genes with gProfiler.
+This practical aims at showing how to analyze functional enrichment on a list of genes with `gProfiler`.
 
 ## Study case : The Cancer Gene Atlas (TCGA) Breast Invasive Cancer (BIC) data
 
-cfr Clustering session
+Description : <https://du-bii.github.io/study-cases/Homo_sapiens/TCGA_study-case/>
 
 ## References
 
-R package : <https://cran.r-project.org/web/packages/gprofiler2>
+- R package : <https://cran.r-project.org/web/packages/gprofiler2>
 
-Reference manual: <https://cran.r-project.org/web/packages/gprofiler2/gprofiler2.pdf>
+- Reference manual: <https://cran.r-project.org/web/packages/gprofiler2/gprofiler2.pdf>
 
-Vignette: <https://cran.r-project.org/web/packages/gprofiler2/vignettes/gprofiler2.html>
+- Vignette: <https://cran.r-project.org/web/packages/gprofiler2/vignettes/gprofiler2.html>
 
 ## Load (clusters of differentially) expressed genes
 
-First, you need to load the gene list.
+First, you need to load the gene list, which can be found on the github repository, in the following file. 
+
+- 1000 top DEG genes: <https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2021/data/TCGA_BIC_subset/BIC_edgeR_DEG_top_1000_geneIDs.txt>
+
 
 ```{r data_loading}
 
-#local_folder <- "~/Documents/DUBii/DUBii_2019/module-3-Stat-R/stat-R_2020/data/TCGA_BIC_subset"  # on my computer
-local_folder <- "/shared/projects/dubii2021/trainers/module3/module-3-Stat-R/stat-R_2021/data/TCGA_BIC_subset"  # on the nncr
-file_name <- "BIC_log2-norm-counts_edgeR_DEG_top_1000.tsv.gz"
-BIC.expr.file <- file.path(local_folder, file_name)
+#### Load the gene list ####
+message("Loading gene list")
+## URL of the data folder on github
+data_folder_url <- 'https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2021/data/TCGA_BIC_subset/'
 
-# Load expression
-message("Loading expression file\t", BIC.expr.file)
-BIC.expr <- read.table(file = BIC.expr.file, header = TRUE)
+gene_list_file <- "BIC_edgeR_DEG_top_1000_geneIDs.txt"
 
-## Size of expression data
-dim(BIC.expr)
+## Trick : the file is read as a one-column table, and we transform it to a vector with unlist()
+gene_list <- unlist(read.delim(file = file.path(data_folder_url, gene_list_file), header = FALSE))
 
-## Row names correspond to genes
-head(rownames(BIC.expr))
-
-## Column names correspond to samples
-head(colnames(BIC.expr))
-
-# Get the gene IDs
-DEGList <- rownames(BIC.expr)
-
-# Remove isoform number from gene IDs
-DEGListClean <- gsub("\\..*$", "", DEGList, perl = TRUE)
-
+## Check the length of the gene list
+length(gene_list)
 
 ```
 
 
 ## Gene list functional enrichment analysis with gost
 
-1. Use the gost function to get the enrichment results
-2. Visualize the results as an interactive plot and as a table
-3. Get a web link to share the results with your coworkers
-4. Make a static plot and highlight the GO:0071840 and HPA:0300000 terms 
+1. Use the `gost()` function to get the enrichment results.
 
-````{r gost}
+- Note: we use FDR as multiple testing correction.
 
-gostres <- gost(query = DEGListClean, 
-                organism = "hsapiens", ordered_query = FALSE, 
-                multi_query = FALSE, significant = TRUE, exclude_iea = FALSE, 
-                measure_underrepresentation = FALSE, evcodes = FALSE, 
-                user_threshold = 0.05, correction_method = "g_SCS", 
-                domain_scope = "annotated", custom_bg = NULL, 
-                numeric_ns = "", sources = NULL, as_short_link = FALSE)
+```{r gost}
 
+#### Run enrichment analysis with gost() ####
+message("Running the enrichment analysis")
+## Run the analysis
+gostres <- gost(query = gene_list, 
+                organism = "hsapiens", 
+                ordered_query = FALSE, 
+                multi_query = FALSE, 
+                significant = TRUE, 
+                exclude_iea = FALSE, 
+                measure_underrepresentation = FALSE, 
+                evcodes = FALSE, 
+                user_threshold = 0.05, 
+                correction_method = "fdr", 
+                domain_scope = "annotated", 
+                custom_bg = NULL, 
+                numeric_ns = "", 
+                sources = NULL, 
+                as_short_link = FALSE)
+
+## Check the structure of the result
 names(gostres)
-summary(gostres)
-kable(head(gostres$result))
+names(gostres$result)
+kable(summary(gostres))
+## Check the most significant results, formating for kable
+#head(gostres$result)
+kable(head(gostres$result), digits = c(0, 0, 15, 7, 7, 7, 3, 3, 0, 0, 7, 7, 0, 0))
+# kable(head(gostres$result), 
+#       format = c("%s", "%s", "%e", "%d", "%d", "%d", "%.3f", "%.3f", "%s", "%s", "%d", "%d", "%s", "%s"))
 names(gostres$meta)
 
-# Visualization
-gostplot(gostres, capped = TRUE, interactive = TRUE)
+```
+
+2. Visualize the results as an interactive plot
 
 
+```{r gostplot, fig.width=8, fig.height=5, out.width="100%", fig.cap="Dynamic figure of the enrichment analysis. "}
+
+### Visualization ###
+message("Generating a dynamic plot of the results")
+# Plot the results
+gostplot(gostres, capped = TRUE, 
+         interactive = TRUE)
+
+```
+
+
+We can now tune the parameters to get some additional information about the evidence code and the list of genes at the intersection between the query set and the functional classes. Note that this generates a table with very large columns. 
+
+```{r gostplot_intersect}
+
+### With the input gene IDs that intersect with the corresponding functional term ###
+message("Running the enrichment analysis showing the intersections")
 # With intersection (can be time consuming)
-gostres2 <- gost(query = DEGListClean, 
-                organism = "hsapiens", ordered_query = FALSE, 
-                multi_query = FALSE, significant = TRUE, exclude_iea = FALSE, 
-                measure_underrepresentation = FALSE, evcodes = TRUE, 
-                user_threshold = 0.05, correction_method = "g_SCS", 
-                domain_scope = "annotated", custom_bg = NULL, 
+gostres2 <- gost(query = gene_list, 
+                organism = "hsapiens", 
+                ordered_query = FALSE, 
+                multi_query = FALSE, 
+                significant = TRUE, 
+                exclude_iea = FALSE, 
+                measure_underrepresentation = FALSE, 
+                evcodes = TRUE, 
+                user_threshold = 0.05, 
+                correction_method = "fdr", 
+                domain_scope = "annotated", 
+                custom_bg = NULL, 
                 numeric_ns = "", sources = NULL)
 
-kable(head(gostres2$result))
+kable(head(gostres2$result), digits = c(0, 0, 15, 7, 7, 7, 3, 3, 0, 0, 7, 7, 0, 0, 0, 0))
 
+```
+
+3. Get a web link to share the results with your coworkers
+
+
+```{r web_link}
+
+### Web link ###
+message("Getting a web link to view the results")
 # Get a web link
-gostres_link <- gost(query = DEGListClean, 
-                      organism = "hsapiens", ordered_query = FALSE, 
-                      multi_query = FALSE, significant = TRUE, exclude_iea = FALSE, 
-                      measure_underrepresentation = FALSE, evcodes = TRUE, 
-                      user_threshold = 0.05, correction_method = "g_SCS", 
-                      domain_scope = "annotated", custom_bg = NULL, 
-                      numeric_ns = "", sources = NULL,
+gostres_link <- gost(query = gene_list, 
+                      organism = "hsapiens", 
+                      ordered_query = FALSE, 
+                      multi_query = FALSE, 
+                      significant = TRUE, 
+                      exclude_iea = FALSE, 
+                      measure_underrepresentation = FALSE, 
+                      evcodes = TRUE, 
+                      user_threshold = 0.05, 
+                      correction_method = "fdr", 
+                      domain_scope = "annotated", 
+                      custom_bg = NULL, 
+                      numeric_ns = "", 
+                      sources = NULL,
                       as_short_link = TRUE)
 
+gostres_link
 
+```
+
+4. Make a static plot 
+
+```{r static_plot, fig.width=8, fig.height=5, out.width="100%", fig.cap="Static figure of the enrichment analysis. "}
+
+### Static plot ###
+message("Generating a static plot")
 # Static ggplot object
 p <- gostplot(gostres, capped = FALSE, interactive = FALSE)
 p
 
+```
+
+5. Highlight the `GO:0071840` and `HPA:0300000` terms
+
+```{r highlight_terms, fig.width=8, fig.height=5, out.width="100%", fig.cap="Static figure of the enrichment analysis with highlighted terms. "}
+### Highlight terms ###
+message("Highlighting terms")
 # Highlight terms
-pp <- publish_gostplot(p, highlight_terms = c("GO:0071840", "HPA:0300000"), 
-                       width = NA, height = NA, filename = NULL )
-pp
+pp <- publish_gostplot(p, 
+                       highlight_terms = c("GO:0071840", "HPA:0300000"), 
+                       width = NA, 
+                       height = NA, 
+                       filename = NULL )
+#pp
+```
 
+6. Produce a custom table with choosen results
+
+```{r custom_table, fig.width=10, fig.height=5, out.width="100%", fig.cap="Custom table of the enrichment analysis with choosen results. "}
 # Table
-publish_gosttable(gostres, highlight_terms = gostres$result[c(1:2,10,50:52,64,69,71),],
-                        use_colors = TRUE, 
-                        show_columns = c("source", "term_name", "term_size", "intersection_size"),
-                        filename = NULL)
+publish_gosttable(gostres, 
+                  highlight_terms = gostres$result[c(1:2,10,50:52,64,69,71),],
+                  use_colors = TRUE, 
+                  show_columns = c("source", "term_name", "term_size", "intersection_size"),
+                  filename = NULL)
 
+```
 
-````
-
+If you feel adventurous, you can try to do the same with multiple gene lists (for instance, clusters from the previous practical).
 
 ## Save your session info
 
 For the sake of traceability, store the specifications of your R environment in the report, with the command `sessionInfo()`. This will indicate the version of R as well as of all the libraries used in this notebook. 
 
 ```{r session_info}
+
 sessionInfo()
+
 ```
