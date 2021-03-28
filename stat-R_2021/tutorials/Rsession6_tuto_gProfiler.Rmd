@@ -3,15 +3,20 @@ title: "Tutorial gProfiler"
 author: "Olivier Sand"
 date: '`r Sys.Date()`'
 output:
-  html_document:
+  slidy_presentation:
+    smart: no
+    slide_level: 2
     self_contained: yes
     fig_caption: yes
-    highlight: zenburn
+    fig_height: 5
+    fig_width: 7
+    highlight: tango
+    incremental: no
+    keep_md: yes
+    smaller: yes
     theme: cerulean
     toc: yes
-    toc_depth: 3
-    toc_float: yes
-    code_folding: "hide"
+    widescreen: yes
   ioslides_presentation:
     slide_level: 2
     self_contained: no
@@ -46,20 +51,15 @@ output:
     transition: none
     self_contained: true
     css: ../slides.css
-  slidy_presentation:
-    smart: no
-    slide_level: 2
+  html_document:
     self_contained: yes
     fig_caption: yes
-    fig_height: 5
-    fig_width: 7
-    highlight: tango
-    incremental: no
-    keep_md: yes
-    smaller: yes
+    highlight: zenburn
     theme: cerulean
     toc: yes
-    widescreen: yes
+    toc_depth: 3
+    toc_float: yes
+    code_folding: "hide"
   powerpoint_presentation:
     slide_level: 2
     fig_caption: yes
