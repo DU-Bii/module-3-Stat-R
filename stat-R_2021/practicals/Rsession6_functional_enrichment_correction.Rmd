@@ -133,7 +133,7 @@ First, you need to load the gene list.
 ```{r data_loading}
 
 #local_folder <- "~/Documents/DUBii/DUBii_2019/module-3-Stat-R/stat-R_2020/data/TCGA_BIC_subset"  # on my computer
-local_folder <- "/shared/projects/dubii2021/trainers/module3/module-3-Stat-R/stat-R_2020/data/TCGA_BIC_subset"  # on the nncr
+local_folder <- "/shared/projects/dubii2021/trainers/module3/module-3-Stat-R/stat-R_2021/data/TCGA_BIC_subset"  # on the nncr
 file_name <- "BIC_log2-norm-counts_edgeR_DEG_top_1000.tsv.gz"
 BIC.expr.file <- file.path(local_folder, file_name)
 
