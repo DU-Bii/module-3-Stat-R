@@ -208,7 +208,7 @@ Files :
 - Metadata: bic_meta
 
 
-### Solution
+### Solution: data download and load
 
 ```{r download_and_load}
 ## Define the remote URL and local folder
@@ -247,11 +247,11 @@ bic_meta <- read.delim(file = bic_meta_file,
 
 ## Exploring the metadata
 
-### Exercise
+### Exercise: metadata exploration
 
 Check the content of the metadata file by looking at the first rows, and count the number of samples per class. 
 
-### Solution
+### Solution: metadata exploration
 
 ```{r metadata_exploration}
 
@@ -271,18 +271,18 @@ kable(sort(table(bic_meta$cancer.type), decreasing = TRUE),
 Sort the expression and metadata tables so that the samples with the same class come together. This is a bit triccky so we provide immediately the solution, but you might attempt todo it in you way if you have time. 
 
 
-Some tips:
+### Some tips: sorting samples
 
-    - The expression table has one row per gene and one column per sample, whereas the metadata file has one row per sample. 
+- The expression table has one row per gene and one column per sample, whereas the metadata file has one row per sample. 
 
-    - You can use the function `order()` to obtain the indices of the metadata table by order of sample class. This will return a vector with all the indixes of the first class, then all the indices of the second class, etc. 
-    
-    - You can then use the indices of the dataframes to re-order them. 
-    
-    - We are not sure that the samples have the same order in the metadata and in the expression tables. So we will use the sample class to re-order the rows (samples) of the metadata file, but after this is done we will use the sample IDs of the metadata file (in the row names) in order to sort the columns of the expression table. This will guarantee that samples are in a consistent order between data and metadata tables.
+- You can use the function `order()` to obtain the indices of the metadata table by order of sample class. This will return a vector with all the indixes of the first class, then all the indices of the second class, etc. 
+
+- You can then use the indices of the dataframes to re-order them. 
+
+- We are not sure that the samples have the same order in the metadata and in the expression tables. So we will use the sample class to re-order the rows (samples) of the metadata file, but after this is done we will use the sample IDs of the metadata file (in the row names) in order to sort the columns of the expression table. This will guarantee that samples are in a consistent order between data and metadata tables.
     
 
-### Solution
+### Solution: sorting samples
 
 ```{r sort_samples}
 ## Check that the row names of the metadata contain the same set 
@@ -306,7 +306,7 @@ bic_expr <- bic_expr[, row.names(bic_meta)]
 
 ## Generate readable sample labels
 
-The TCGA samples have very long and structured IDs, whcih make them inconvenient to display on the type of graphs we would like to generate (boxplots, PC plots, heatmaps, ...). 
+The TCGA samples have very long and structured IDs, whcih make them inconvenient to display on the type of graphs we would like to generate (box plots, PC plots, heatmaps, ...). 
 
 We will thus generate readable labels, and add them as a separate column to the metadata table.
 
@@ -434,15 +434,15 @@ rownames(bic_expr_labels) <- make.names(gene_info$name)
 
 ## Box plot
 
-### Exercise
+### Exercise: box plot
 
 Select 30 samples at random, and draw a boxplot.
 
 Sort the samples according to their index in the columns of the expression table (this will ensure that samples of the same class come together). 
 
-## Solution
+### Solution: box plot
 
-```{r box_plot_rand_samples, fig.height=12, fig.width=8, out.width="60%",  fig.cap="Box plot of a random selection of samples from the TCGA-BIC transcriptome dataset. "}
+```{r box_plot_rand_samples, fig.height=8, fig.width=12, out.width="100%",  fig.cap="Box plot of a random selection of samples from the TCGA-BIC transcriptome dataset. "}
 #### Box plot ####
 sample_size <- 30
 
@@ -464,7 +464,7 @@ boxplot(x = bic_expr[, selected_samples],
         main = "Before normalisation",
         horizontal = TRUE, 
         las = 1, notch = TRUE,
-        cex.axis = 0.7)
+        cex.axis = 1)
 boxplot(x = bic_expr_centered[, selected_samples], 
         names = bic_meta$label[selected_samples],
         col = bic_meta$color[selected_samples],
@@ -497,7 +497,7 @@ Generate a graph with the two first components and color samples according to th
 
 
 ```{r pc_plot}
-## PC plot of the TAGC BIC samples
+#### PC plot of the TAGC BIC samples ####
 
 
 
@@ -510,10 +510,10 @@ At the end of this tutorial, we dispose of the following data types.
 | Variable name | Data content |
 |--------------|----------------------------------------------|
 | `bic_meta` | metadata with a few added columns (sample color, estimators of central tendency and dispersion) |
-| bic_expr | non-normalised expression table |
-| bic_expr_centered | median-based expression table |
-| bic_expr_std | sample-wise standardised expression table, all samples having the same median and IQR |
-| bic_expr_labels | same content as bic_expr_std but with row names replaced by human-readable gene names, and column names by human-readable sample labels |
+| `bic_expr` | non-normalised expression table |
+| `bic_expr_centered` | median-based expression table |
+| `bic_expr_std` | sample-wise standardised expression table, all samples having the same median and IQR |
+| `bic_expr_labels` | same content as bic_expr_std but with row names replaced by human-readable gene names, and column names by human-readable sample labels |
 
 ## Save a memory image
 
