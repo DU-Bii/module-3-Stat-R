@@ -101,6 +101,9 @@ options(scipen = 12) ## Max number of digits for non-scientific notation
 
 
 ```{r libraries, echo=FALSE, eval=TRUE}
+#### Load required R libraries ####
+
+## CRAN libraries
 requiredLib <- c("knitr")
 for (lib in requiredLib) {
   if (!require(lib, character.only = TRUE)) {
@@ -108,6 +111,17 @@ for (lib in requiredLib) {
   }
   require(lib, character.only = TRUE)
 }
+
+## Bioconductor libraries
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+
+if (!require("biomaRt", character.only = TRUE)) {
+  BiocManager::install("biomaRt")
+}
+require("biomaRt", character.only = TRUE)
+
 
 ```
 
@@ -194,7 +208,7 @@ Files :
 - Metadata: bic_meta
 
 
-### Solution
+### Solution: data download and load
 
 ```{r download_and_load}
 ## Define the remote URL and local folder
@@ -233,11 +247,11 @@ bic_meta <- read.delim(file = bic_meta_file,
 
 ## Exploring the metadata
 
-### Exercise
+### Exercise: metadata exploration
 
 Check the content of the metadata file by looking at the first rows, and count the number of samples per class. 
 
-### Solution
+### Solution: metadata exploration
 
 ```{r metadata_exploration}
 
@@ -257,18 +271,18 @@ kable(sort(table(bic_meta$cancer.type), decreasing = TRUE),
 Sort the expression and metadata tables so that the samples with the same class come together. This is a bit triccky so we provide immediately the solution, but you might attempt todo it in you way if you have time. 
 
 
-Some tips:
+### Some tips: sorting samples
 
-    - The expression table has one row per gene and one column per sample, whereas the metadata file has one row per sample. 
+- The expression table has one row per gene and one column per sample, whereas the metadata file has one row per sample. 
 
-    - You can use the function `order()` to obtain the indices of the metadata table by order of sample class. This will return a vector with all the indixes of the first class, then all the indices of the second class, etc. 
-    
-    - You can then use the indices of the dataframes to re-order them. 
-    
-    - We are not sure that the samples have the same order in the metadata and in the expression tables. So we will use the sample class to re-order the rows (samples) of the metadata file, but after this is done we will use the sample IDs of the metadata file (in the row names) in order to sort the columns of the expression table. This will guarantee that samples are in a consistent order between data and metadata tables.
+- You can use the function `order()` to obtain the indices of the metadata table by order of sample class. This will return a vector with all the indixes of the first class, then all the indices of the second class, etc. 
+
+- You can then use the indices of the dataframes to re-order them. 
+
+- We are not sure that the samples have the same order in the metadata and in the expression tables. So we will use the sample class to re-order the rows (samples) of the metadata file, but after this is done we will use the sample IDs of the metadata file (in the row names) in order to sort the columns of the expression table. This will guarantee that samples are in a consistent order between data and metadata tables.
     
 
-### Solution
+### Solution: sorting samples
 
 ```{r sort_samples}
 ## Check that the row names of the metadata contain the same set 
@@ -290,7 +304,226 @@ bic_expr <- bic_expr[, row.names(bic_meta)]
 
 ```
 
+## Generate readable sample labels
+
+The TCGA samples have very long and structured IDs, whcih make them inconvenient to display on the type of graphs we would like to generate (box plots, PC plots, heatmaps, ...). 
+
+We will thus generate readable labels, and add them as a separate column to the metadata table.
+
+For this, we will use the class name and use the funciotn `make.names()` to avoid having duplicate labels (this will add a number besides the class name). 
+
+```{r sample_labels}
+#### Sample labels ####
+bic_meta$label <- make.names(
+  names = bic_meta$cancer.type, 
+  unique = TRUE)
+
+```
 
 
+## Get gene IDs and names
+
+The row names of the expression table indicate the Ensembl gene ID and the version of the genome annotation (a number after the dot). This ID is quite long, and we would prefer to have more readable labels for the genes. For this, we will get the gene name (also called "gene symbol"). 
+
+```{r get_gene_names}
+#### Get gene names ####
+
+gene_info <- data.frame(
+  ENSG = sub(x = row.names(bic_expr), 
+             perl = TRUE, 
+             replacement = "", 
+             pattern = '\\..*'),
+  row.names = row.names(bic_expr)
+)
+# head(gene_info)
+
+
+## Get gene names from ENSEMBL using biomaRt package
+library("biomaRt")
+ensembl <- useMart("ensembl", dataset = "hsapiens_gene_ensembl")
+ensembl_info <- getBM(attributes = c('ensembl_gene_id',
+                                     'external_gene_name'),
+                      filters = 'ensembl_gene_id',
+                      values = gene_info$ENSG,
+                      mart = ensembl)
+row.names(ensembl_info) <- ensembl_info$ensembl_gene_id
+
+## Add gene name in a new column of the gene_info table
+gene_info$name <- ensembl_info[gene_info$ENSG, "external_gene_name"]
+
+## There is one gene with no name
+# sum(is.na(gene_info$name))
+## Replace undefined gene names by the gene ID
+gene_info[is.na(gene_info$name), "name"] <- gene_info[is.na(gene_info$name), "ENSG"]
+
+```
+
+
+
+## Assign sample colors
+
+We add here a code to assign a color to each sample according to its class. 
+
+```{r sample_colors}
+#### Class and sample colors ####
+class_names <- unique(bic_meta$cancer.type)
+
+## Assign one color to each class
+class_color <- c(
+  "Basal.like" = "#DDEEFF",  
+  "HER2pos" = "#88FF88",
+  "Luminal.A" = "#FFBB55",
+  "Luminal.B" = "#EE88FF",
+  "Unclassified"  = "#8888FF"
+)
+
+## Assign a color to each sample according to its class
+bic_meta$color <- class_color[bic_meta$cancer.type]
+# table(bic_meta$color)
+
+```
+
+## Sample standardisation
+
+We will standardise the samples using robust estimators, to avoid the impact of extreme values. 
+
+```{r}
+#### Sample standardisation ####
+
+## Compute descriptive stats on the samples 
+bic_meta$mean <- apply(bic_expr, 2, mean)
+bic_meta$sd <- apply(bic_expr, 2, sd)
+bic_meta$median <- apply(bic_expr, 2, median)
+bic_meta$iqr <- apply(bic_expr, 2, IQR)
+
+## Centering on the mean
+expr_median <- median(unlist(bic_expr))
+bic_expr_centered <- t(t(bic_expr) - bic_meta$median) + expr_median
+# dim(bic_expr)
+# dim(bic_expr_centered)
+# apply(bic_expr_centered, 2, median)
+
+## Compute the IQR of the whole expression table
+expr_iqr <- IQR(unlist(bic_expr_centered)) 
+
+## Scale each sample based  on its IQR
+bic_expr_std <- t((t(bic_expr) - unlist(bic_meta$median)) 
+                  /  unlist(bic_meta$iqr)) * expr_iqr + expr_median
+# apply(bic_expr_std, 2, IQR)
+# range( apply(bic_expr_std, 2, IQR))
+# range( apply(bic_expr_std, 2, median))
+
+```
+
+## Dataset with readable row and column names
+
+Create a dataset with 
+
+- gene names as row.names 
+- sample labels as column.names
+
+```{r dataset_with_labels}
+#### Data set with readable 
+bic_expr_labels <- bic_expr_std
+dim(bic_expr_labels)
+colnames(bic_expr_labels) <- bic_meta$label
+rownames(bic_expr_labels) <- make.names(gene_info$name) 
+
+```
+
+
+## Box plot
+
+### Exercise: box plot
+
+Select 30 samples at random, and draw a boxplot.
+
+Sort the samples according to their index in the columns of the expression table (this will ensure that samples of the same class come together). 
+
+### Solution: box plot
+
+```{r box_plot_rand_samples, fig.height=8, fig.width=12, out.width="100%",  fig.cap="Box plot of a random selection of samples from the TCGA-BIC transcriptome dataset. "}
+#### Box plot ####
+sample_size <- 30
+
+## select sample indices
+selected_samples <- sort(sample(
+  x = 1:ncol(bic_expr), 
+  size = sample_size,
+  replace = FALSE))
+
+## Box plots
+par.ori <- par(no.readonly = TRUE)
+par(mfrow = c(1, 3))
+par(mar = c(5, 6, 4, 1))
+## Original data
+boxplot(x = bic_expr[, selected_samples], 
+        names = bic_meta$label[selected_samples],
+        col = bic_meta$color[selected_samples],
+        xlab = "log2(counts)",
+        main = "Before normalisation",
+        horizontal = TRUE, 
+        las = 1, notch = TRUE,
+        cex.axis = 1)
+boxplot(x = bic_expr_centered[, selected_samples], 
+        names = bic_meta$label[selected_samples],
+        col = bic_meta$color[selected_samples],
+        xlab = "log2(counts)",
+        main = "Median-based centering",
+        horizontal = TRUE, 
+        las = 1, notch = TRUE,
+        cex.axis = 0.7)
+boxplot(x = bic_expr_std[, selected_samples], 
+        names = bic_meta$label[selected_samples],
+        col = bic_meta$color[selected_samples],
+        xlab = "log2(counts)",
+        main = "IQR-based scaling",
+        horizontal = TRUE, 
+        las = 1, notch = TRUE,
+        cex.axis = 0.7)
+par(par.ori)
+```
+
+
+
+## PCA
+
+### Exercise
+
+Generate a graph with the two first components and color samples according to their class. Do the sample classes segregate on this PC plot?
+
+
+### Solution
+
+
+```{r pc_plot}
+#### PC plot of the TAGC BIC samples ####
+
+
+
+```
+
+## Variables
+
+At the end of this tutorial, we dispose of the following data types. 
+
+| Variable name | Data content |
+|--------------|----------------------------------------------|
+| `bic_meta` | metadata with a few added columns (sample color, estimators of central tendency and dispersion) |
+| `bic_expr` | non-normalised expression table |
+| `bic_expr_centered` | median-based expression table |
+| `bic_expr_std` | sample-wise standardised expression table, all samples having the same median and IQR |
+| `bic_expr_labels` | same content as bic_expr_std but with row names replaced by human-readable gene names, and column names by human-readable sample labels |
+
+## Save a memory image
+
+We can now save a memory image, which will enable us to reload the whole data with a single command for the next tutorials. 
+
+```{r save_image}
+#### Save memory image ####
+mem_image <- file.path(bic_folder, "bic_data.Rdata")
+message("Saving memory image in file\n\t", mem_image)
+save.image(file = mem_image)
+```
 
 

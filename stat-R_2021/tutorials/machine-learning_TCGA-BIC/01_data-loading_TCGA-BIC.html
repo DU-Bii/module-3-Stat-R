@@ -11,24 +11,31 @@
 
 <meta name="author" content="Jacques van Helden" />
 
-<meta name="date" content="2021-03-28" />
+<meta name="date" content="2021-03-29" />
 
 <title>Tutorial: machine-learning with TGCA BIC transcriptome</title>
 
-<script src="01_data-loading_TCGA-BIC_files/header-attrs-2.5/header-attrs.js"></script>
+<script src="01_data-loading_TCGA-BIC_files/header-attrs-2.7/header-attrs.js"></script>
 <script src="01_data-loading_TCGA-BIC_files/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="01_data-loading_TCGA-BIC_files/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
 <script src="01_data-loading_TCGA-BIC_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="01_data-loading_TCGA-BIC_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="01_data-loading_TCGA-BIC_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
 <script src="01_data-loading_TCGA-BIC_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
 <link href="01_data-loading_TCGA-BIC_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="01_data-loading_TCGA-BIC_files/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="01_data-loading_TCGA-BIC_files/navigation-1.1/tabsets.js"></script>
 <script src="01_data-loading_TCGA-BIC_files/navigation-1.1/codefolding.js"></script>
-<link href="01_data-loading_TCGA-BIC_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
-<script src="01_data-loading_TCGA-BIC_files/anchor-sections-1.0/anchor-sections.js"></script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -40,7 +47,14 @@
     </style>
 
 
-<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
@@ -136,39 +150,9 @@ code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
   }
 })();
 </script>
-<style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
 
 
-<style type="text/css">
-h1 {
-  font-size: 34px;
-}
-h1.title {
-  font-size: 38px;
-}
-h2 {
-  font-size: 30px;
-}
-h3 {
-  font-size: 24px;
-}
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
-}
-</style>
+
 
 
 
@@ -178,10 +162,6 @@ h6 {
   max-width: 940px;
   margin-left: auto;
   margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
 }
 img {
   max-width:100%;
@@ -198,6 +178,9 @@ button.code-folding-btn:focus {
 summary {
   display: list-item;
 }
+pre code {
+  padding: 0;
+}
 </style>
 
 
@@ -210,7 +193,6 @@ summary {
   max-height: 500px;
   min-height: 44px;
   overflow-y: auto;
-  background: white;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
@@ -339,22 +321,22 @@ div.tocify {
 
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row-fluid">
-<div class="col-xs-12 col-sm-4 col-md-3">
+<div class="row">
+<div class="col-sm-12 col-md-4 col-lg-3">
 <div id="TOC" class="tocify">
 </div>
 </div>
 
-<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+<div class="toc-content col-sm-12 col-md-8 col-lg-9">
 
 
 
 
-<div class="fluid-row" id="header">
+<div id="header">
 
-<div class="btn-group pull-right">
-<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
-<ul class="dropdown-menu" style="min-width: 50px;">
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
 <li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
 <li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
 </ul>
@@ -365,7 +347,7 @@ div.tocify {
 <h1 class="title toc-ignore">Tutorial: machine-learning with TGCA BIC transcriptome</h1>
 <h3 class="subtitle">01. Data loading</h3>
 <h4 class="author">Jacques van Helden</h4>
-<h4 class="date">2021-03-28</h4>
+<h4 class="date">2021-03-29</h4>
 
 </div>
 
@@ -445,8 +427,8 @@ div.tocify {
 <li>Metadata: bic_meta</li>
 </ul>
 </div>
-<div id="solution" class="section level3">
-<h3>Solution</h3>
+<div id="solution-data-download-and-load" class="section level3">
+<h3>Solution: data download and load</h3>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Define the remote URL and local folder</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>bic_url <span class="ot">&lt;-</span> <span class="st">&quot;https://github.com/DU-Bii/module-3-Stat-R/raw/master/stat-R_2021/data/TCGA_BIC_subset/&quot;</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -481,12 +463,12 @@ div.tocify {
 </div>
 <div id="exploring-the-metadata" class="section level2">
 <h2>Exploring the metadata</h2>
-<div id="exercise" class="section level3">
-<h3>Exercise</h3>
+<div id="exercise-metadata-exploration" class="section level3">
+<h3>Exercise: metadata exploration</h3>
 <p>Check the content of the metadata file by looking at the first rows, and count the number of samples per class.</p>
 </div>
-<div id="solution-1" class="section level3">
-<h3>Solution</h3>
+<div id="solution-metadata-exploration" class="section level3">
+<h3>Solution: metadata exploration</h3>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Show the head of the metadata table</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(bic_meta, <span class="at">n =</span> <span class="dv">10</span>), <span class="at">caption =</span> <span class="st">&quot;First rows of the BIC metadata table&quot;</span>)</span></code></pre></div>
 <table>
@@ -612,27 +594,28 @@ div.tocify {
 <div id="sorting-samples-by-cancer-class" class="section level2">
 <h2>Sorting samples by cancer class</h2>
 <p>Sort the expression and metadata tables so that the samples with the same class come together. This is a bit triccky so we provide immediately the solution, but you might attempt todo it in you way if you have time.</p>
-<p>Some tips:</p>
-<pre><code>- The expression table has one row per gene and one column per sample, whereas the metadata file has one row per sample. 
-
-- You can use the function `order()` to obtain the indices of the metadata table by order of sample class. This will return a vector with all the indixes of the first class, then all the indices of the second class, etc. 
-
-- You can then use the indices of the dataframes to re-order them. 
-
-- We are not sure that the samples have the same order in the metadata and in the expression tables. So we will use the sample class to re-order the rows (samples) of the metadata file, but after this is done we will use the sample IDs of the metadata file (in the row names) in order to sort the columns of the expression table. This will guarantee that samples are in a consistent order between data and metadata tables.</code></pre>
-<div id="solution-2" class="section level3">
-<h3>Solution</h3>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Check that the row names of the metadata contain the same set </span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="do">## of IDs than the column names of the expression table</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">rownames</span>(bic_meta)) <span class="do">## the metadata contains 819 rows</span></span></code></pre></div>
+<div id="some-tips-sorting-samples" class="section level3">
+<h3>Some tips: sorting samples</h3>
+<ul>
+<li><p>The expression table has one row per gene and one column per sample, whereas the metadata file has one row per sample.</p></li>
+<li><p>You can use the function <code>order()</code> to obtain the indices of the metadata table by order of sample class. This will return a vector with all the indixes of the first class, then all the indices of the second class, etc.</p></li>
+<li><p>You can then use the indices of the dataframes to re-order them.</p></li>
+<li><p>We are not sure that the samples have the same order in the metadata and in the expression tables. So we will use the sample class to re-order the rows (samples) of the metadata file, but after this is done we will use the sample IDs of the metadata file (in the row names) in order to sort the columns of the expression table. This will guarantee that samples are in a consistent order between data and metadata tables.</p></li>
+</ul>
+</div>
+<div id="solution-sorting-samples" class="section level3">
+<h3>Solution: sorting samples</h3>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Check that the row names of the metadata contain the same set </span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="do">## of IDs than the column names of the expression table</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">rownames</span>(bic_meta)) <span class="do">## the metadata contains 819 rows</span></span></code></pre></div>
 <pre><code>[1] 819</code></pre>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">colnames</span>(bic_expr)) <span class="do">## the data contains 819 columns</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">colnames</span>(bic_expr)) <span class="do">## the data contains 819 columns</span></span></code></pre></div>
 <pre><code>[1] 819</code></pre>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">intersect</span>(<span class="fu">rownames</span>(bic_meta), <span class="fu">colnames</span>(bic_expr))) <span class="do">## Their intersection contains the same number of elements</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">intersect</span>(<span class="fu">rownames</span>(bic_meta), <span class="fu">colnames</span>(bic_expr))) <span class="do">## Their intersection contains the same number of elements</span></span></code></pre></div>
 <pre><code>[1] 819</code></pre>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Get the sample order according to the cancer type column of the metadata</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>sample_order <span class="ot">&lt;-</span> <span class="fu">order</span>(bic_meta<span class="sc">$</span>cancer.type)</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(bic_meta<span class="sc">$</span>cancer.type[sample_order])</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Get the sample order according to the cancer type column of the metadata</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>sample_order <span class="ot">&lt;-</span> <span class="fu">order</span>(bic_meta<span class="sc">$</span>cancer.type)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(bic_meta<span class="sc">$</span>cancer.type[sample_order])</span></code></pre></div>
 <pre><code>  [1] &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;  
  [20] &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;  
  [39] &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;   &quot;Basal.like&quot;  
@@ -677,13 +660,230 @@ div.tocify {
 [780] &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot;
 [799] &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot; &quot;Unclassified&quot;
 [818] &quot;Unclassified&quot; &quot;Unclassified&quot;</code></pre>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Sort the metadata rows (samples) according to this order</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>bic_meta <span class="ot">&lt;-</span> bic_meta[sample_order, ]</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Sort the expression table to make sure that the samples (columns)</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="do">## come in the same order as the rows of the metadata table</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>bic_expr <span class="ot">&lt;-</span> bic_expr[, <span class="fu">row.names</span>(bic_meta)]</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Sort the metadata rows (samples) according to this order</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>bic_meta <span class="ot">&lt;-</span> bic_meta[sample_order, ]</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Sort the expression table to make sure that the samples (columns)</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="do">## come in the same order as the rows of the metadata table</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>bic_expr <span class="ot">&lt;-</span> bic_expr[, <span class="fu">row.names</span>(bic_meta)]</span></code></pre></div>
 </div>
+</div>
+<div id="generate-readable-sample-labels" class="section level2">
+<h2>Generate readable sample labels</h2>
+<p>The TCGA samples have very long and structured IDs, whcih make them inconvenient to display on the type of graphs we would like to generate (box plots, PC plots, heatmaps, …).</p>
+<p>We will thus generate readable labels, and add them as a separate column to the metadata table.</p>
+<p>For this, we will use the class name and use the funciotn <code>make.names()</code> to avoid having duplicate labels (this will add a number besides the class name).</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Sample labels ####</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>bic_meta<span class="sc">$</span>label <span class="ot">&lt;-</span> <span class="fu">make.names</span>(</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">names =</span> bic_meta<span class="sc">$</span>cancer.type, </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">unique =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+</div>
+<div id="get-gene-ids-and-names" class="section level2">
+<h2>Get gene IDs and names</h2>
+<p>The row names of the expression table indicate the Ensembl gene ID and the version of the genome annotation (a number after the dot). This ID is quite long, and we would prefer to have more readable labels for the genes. For this, we will get the gene name (also called “gene symbol”).</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Get gene names ####</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>gene_info <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ENSG =</span> <span class="fu">sub</span>(<span class="at">x =</span> <span class="fu">row.names</span>(bic_expr), </span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">perl =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">replacement =</span> <span class="st">&quot;&quot;</span>, </span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">pattern =</span> <span class="st">&#39;</span><span class="sc">\\</span><span class="st">..*&#39;</span>),</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">row.names =</span> <span class="fu">row.names</span>(bic_expr)</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="co"># head(gene_info)</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="do">## Get gene names from ENSEMBL using biomaRt package</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;biomaRt&quot;</span>)</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>ensembl <span class="ot">&lt;-</span> <span class="fu">useMart</span>(<span class="st">&quot;ensembl&quot;</span>, <span class="at">dataset =</span> <span class="st">&quot;hsapiens_gene_ensembl&quot;</span>)</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>ensembl_info <span class="ot">&lt;-</span> <span class="fu">getBM</span>(<span class="at">attributes =</span> <span class="fu">c</span>(<span class="st">&#39;ensembl_gene_id&#39;</span>,</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">&#39;external_gene_name&#39;</span>),</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>                      <span class="at">filters =</span> <span class="st">&#39;ensembl_gene_id&#39;</span>,</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>                      <span class="at">values =</span> gene_info<span class="sc">$</span>ENSG,</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>                      <span class="at">mart =</span> ensembl)</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a><span class="fu">row.names</span>(ensembl_info) <span class="ot">&lt;-</span> ensembl_info<span class="sc">$</span>ensembl_gene_id</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a><span class="do">## Add gene name in a new column of the gene_info table</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>gene_info<span class="sc">$</span>name <span class="ot">&lt;-</span> ensembl_info[gene_info<span class="sc">$</span>ENSG, <span class="st">&quot;external_gene_name&quot;</span>]</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a><span class="do">## There is one gene with no name</span></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a><span class="co"># sum(is.na(gene_info$name))</span></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a><span class="do">## Replace undefined gene names by the gene ID</span></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>gene_info[<span class="fu">is.na</span>(gene_info<span class="sc">$</span>name), <span class="st">&quot;name&quot;</span>] <span class="ot">&lt;-</span> gene_info[<span class="fu">is.na</span>(gene_info<span class="sc">$</span>name), <span class="st">&quot;ENSG&quot;</span>]</span></code></pre></div>
+</div>
+<div id="assign-sample-colors" class="section level2">
+<h2>Assign sample colors</h2>
+<p>We add here a code to assign a color to each sample according to its class.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Class and sample colors ####</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>class_names <span class="ot">&lt;-</span> <span class="fu">unique</span>(bic_meta<span class="sc">$</span>cancer.type)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Assign one color to each class</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>class_color <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Basal.like&quot;</span> <span class="ot">=</span> <span class="st">&quot;#DDEEFF&quot;</span>,  </span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;HER2pos&quot;</span> <span class="ot">=</span> <span class="st">&quot;#88FF88&quot;</span>,</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Luminal.A&quot;</span> <span class="ot">=</span> <span class="st">&quot;#FFBB55&quot;</span>,</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Luminal.B&quot;</span> <span class="ot">=</span> <span class="st">&quot;#EE88FF&quot;</span>,</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Unclassified&quot;</span>  <span class="ot">=</span> <span class="st">&quot;#8888FF&quot;</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="do">## Assign a color to each sample according to its class</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>bic_meta<span class="sc">$</span>color <span class="ot">&lt;-</span> class_color[bic_meta<span class="sc">$</span>cancer.type]</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="co"># table(bic_meta$color)</span></span></code></pre></div>
+</div>
+<div id="sample-standardisation" class="section level2">
+<h2>Sample standardisation</h2>
+<p>We will standardise the samples using robust estimators, to avoid the impact of extreme values.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Sample standardisation ####</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Compute descriptive stats on the samples </span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>bic_meta<span class="sc">$</span>mean <span class="ot">&lt;-</span> <span class="fu">apply</span>(bic_expr, <span class="dv">2</span>, mean)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>bic_meta<span class="sc">$</span>sd <span class="ot">&lt;-</span> <span class="fu">apply</span>(bic_expr, <span class="dv">2</span>, sd)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>bic_meta<span class="sc">$</span>median <span class="ot">&lt;-</span> <span class="fu">apply</span>(bic_expr, <span class="dv">2</span>, median)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>bic_meta<span class="sc">$</span>iqr <span class="ot">&lt;-</span> <span class="fu">apply</span>(bic_expr, <span class="dv">2</span>, IQR)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="do">## Centering on the mean</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>expr_median <span class="ot">&lt;-</span> <span class="fu">median</span>(<span class="fu">unlist</span>(bic_expr))</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>bic_expr_centered <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">t</span>(bic_expr) <span class="sc">-</span> bic_meta<span class="sc">$</span>median) <span class="sc">+</span> expr_median</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="co"># dim(bic_expr)</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="co"># dim(bic_expr_centered)</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="co"># apply(bic_expr_centered, 2, median)</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a><span class="do">## Compute the IQR of the whole expression table</span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>expr_iqr <span class="ot">&lt;-</span> <span class="fu">IQR</span>(<span class="fu">unlist</span>(bic_expr_centered)) </span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a><span class="do">## Scale each sample based  on its IQR</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>bic_expr_std <span class="ot">&lt;-</span> <span class="fu">t</span>((<span class="fu">t</span>(bic_expr) <span class="sc">-</span> <span class="fu">unlist</span>(bic_meta<span class="sc">$</span>median)) </span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>                  <span class="sc">/</span>  <span class="fu">unlist</span>(bic_meta<span class="sc">$</span>iqr)) <span class="sc">*</span> expr_iqr <span class="sc">+</span> expr_median</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a><span class="co"># apply(bic_expr_std, 2, IQR)</span></span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a><span class="co"># range( apply(bic_expr_std, 2, IQR))</span></span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a><span class="co"># range( apply(bic_expr_std, 2, median))</span></span></code></pre></div>
+</div>
+<div id="dataset-with-readable-row-and-column-names" class="section level2">
+<h2>Dataset with readable row and column names</h2>
+<p>Create a dataset with</p>
+<ul>
+<li>gene names as row.names</li>
+<li>sample labels as column.names</li>
+</ul>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Data set with readable </span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>bic_expr_labels <span class="ot">&lt;-</span> bic_expr_std</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(bic_expr_labels)</span></code></pre></div>
+<pre><code>[1] 1000  819</code></pre>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(bic_expr_labels) <span class="ot">&lt;-</span> bic_meta<span class="sc">$</span>label</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(bic_expr_labels) <span class="ot">&lt;-</span> <span class="fu">make.names</span>(gene_info<span class="sc">$</span>name) </span></code></pre></div>
+</div>
+<div id="box-plot" class="section level2">
+<h2>Box plot</h2>
+<div id="exercise-box-plot" class="section level3">
+<h3>Exercise: box plot</h3>
+<p>Select 30 samples at random, and draw a boxplot.</p>
+<p>Sort the samples according to their index in the columns of the expression table (this will ensure that samples of the same class come together).</p>
+</div>
+<div id="solution-box-plot" class="section level3">
+<h3>Solution: box plot</h3>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Box plot ####</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>sample_size <span class="ot">&lt;-</span> <span class="dv">30</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="do">## select sample indices</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>selected_samples <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">sample</span>(</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(bic_expr), </span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">size =</span> sample_size,</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">replace =</span> <span class="cn">FALSE</span>))</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="do">## Box plots</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>par.ori <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">no.readonly =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>))</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">4</span>, <span class="dv">1</span>))</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="do">## Original data</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(<span class="at">x =</span> bic_expr[, selected_samples], </span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">names =</span> bic_meta<span class="sc">$</span>label[selected_samples],</span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> bic_meta<span class="sc">$</span>color[selected_samples],</span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">&quot;log2(counts)&quot;</span>,</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">&quot;Before normalisation&quot;</span>,</span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">horizontal =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">las =</span> <span class="dv">1</span>, <span class="at">notch =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">cex.axis =</span> <span class="dv">1</span>)</span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(<span class="at">x =</span> bic_expr_centered[, selected_samples], </span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>        <span class="at">names =</span> bic_meta<span class="sc">$</span>label[selected_samples],</span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> bic_meta<span class="sc">$</span>color[selected_samples],</span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">&quot;log2(counts)&quot;</span>,</span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">&quot;Median-based centering&quot;</span>,</span>
+<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">horizontal =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">las =</span> <span class="dv">1</span>, <span class="at">notch =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb21-30"><a href="#cb21-30" aria-hidden="true" tabindex="-1"></a>        <span class="at">cex.axis =</span> <span class="fl">0.7</span>)</span>
+<span id="cb21-31"><a href="#cb21-31" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(<span class="at">x =</span> bic_expr_std[, selected_samples], </span>
+<span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a>        <span class="at">names =</span> bic_meta<span class="sc">$</span>label[selected_samples],</span>
+<span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> bic_meta<span class="sc">$</span>color[selected_samples],</span>
+<span id="cb21-34"><a href="#cb21-34" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">&quot;log2(counts)&quot;</span>,</span>
+<span id="cb21-35"><a href="#cb21-35" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">&quot;IQR-based scaling&quot;</span>,</span>
+<span id="cb21-36"><a href="#cb21-36" aria-hidden="true" tabindex="-1"></a>        <span class="at">horizontal =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb21-37"><a href="#cb21-37" aria-hidden="true" tabindex="-1"></a>        <span class="at">las =</span> <span class="dv">1</span>, <span class="at">notch =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb21-38"><a href="#cb21-38" aria-hidden="true" tabindex="-1"></a>        <span class="at">cex.axis =</span> <span class="fl">0.7</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/pavkovic2019_box_plot_rand_samples-1.png" alt="Box plot of a random selection of samples from the TCGA-BIC transcriptome dataset. " width="100%" />
+<p class="caption">
+Box plot of a random selection of samples from the TCGA-BIC transcriptome dataset.
+</p>
+</div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(par.ori)</span></code></pre></div>
+</div>
+</div>
+<div id="pca" class="section level2">
+<h2>PCA</h2>
+<div id="exercise" class="section level3">
+<h3>Exercise</h3>
+<p>Generate a graph with the two first components and color samples according to their class. Do the sample classes segregate on this PC plot?</p>
+</div>
+<div id="solution" class="section level3">
+<h3>Solution</h3>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="do">## PC plot of the TAGC BIC samples</span></span></code></pre></div>
+</div>
+</div>
+<div id="variables" class="section level2">
+<h2>Variables</h2>
+<p>At the end of this tutorial, we dispose of the following data types.</p>
+<table>
+<colgroup>
+<col width="23%" />
+<col width="76%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable name</th>
+<th>Data content</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>bic_meta</code></td>
+<td>metadata with a few added columns (sample color, estimators of central tendency and dispersion)</td>
+</tr>
+<tr class="even">
+<td><code>bic_expr</code></td>
+<td>non-normalised expression table</td>
+</tr>
+<tr class="odd">
+<td><code>bic_expr_centered</code></td>
+<td>median-based expression table</td>
+</tr>
+<tr class="even">
+<td><code>bic_expr_std</code></td>
+<td>sample-wise standardised expression table, all samples having the same median and IQR</td>
+</tr>
+<tr class="odd">
+<td><code>bic_expr_labels</code></td>
+<td>same content as bic_expr_std but with row names replaced by human-readable gene names, and column names by human-readable sample labels</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="save-a-memory-image" class="section level2">
+<h2>Save a memory image</h2>
+<p>We can now save a memory image, which will enable us to reload the whole data with a single command for the next tutorials.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Save memory image ####</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>mem_image <span class="ot">&lt;-</span> <span class="fu">file.path</span>(bic_folder, <span class="st">&quot;bic_data.Rdata&quot;</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span>(<span class="st">&quot;Saving memory image in file</span><span class="sc">\n\t</span><span class="st">&quot;</span>, mem_image)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="fu">save.image</span>(<span class="at">file =</span> mem_image)</span></code></pre></div>
 </div>
 
 
@@ -715,7 +915,7 @@ $(document).ready(function () {
 
 $(document).ready(function () {
   $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
+    $(this).parent().toggleClass('nav-tabs-open');
   });
 });
 </script>
