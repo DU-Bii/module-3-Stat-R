@@ -232,7 +232,7 @@ To follow this course, prior knowledge is expected on:
 | | Practical | |
 | **Analyse d'enrichissement fonctionnel** | Cours | |
 | | Tutorial | [[html](tutorials/Rsession6_tuto_gProfiler.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2021/tutorials/Rsession6_tuto_gProfiler.Rmd)] |
-| | Practical | |
+| | Practical | [[html](practical/Rsession6_functional_enrichment.html)] [[Rmd](practical/Rsession6_functional_enrichment.Rmd)]|
 | **Supervised classification** | Slides | |
 | | Practical | |
 
