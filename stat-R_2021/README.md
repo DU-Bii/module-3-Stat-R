@@ -223,19 +223,18 @@ To follow this course, prior knowledge is expected on:
 
 #### Supports pédagogiques
 
+1. Chargement et exploration des données TGCA BIC
 
 
-1. Clustering
+
+2. Clustering
 
     - Cours: principes du clustering 
     [[html](slides/clustering/clustering_cours_2021-03-29.html)]
     [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2021/slides/clustering/clustering_cours_2021-03-29.Rmd)]
 
-2. Classification supervisée
-
-
-
 3. Analyse d'enrichissement fonctionnel
+
 
 <!--
     - Introduction:
@@ -250,6 +249,11 @@ To follow this course, prior knowledge is expected on:
     [[html](practicals/)]
     [[Rmd](practicals/)]
 -->
+
+
+4. Classification supervisée
+
+
 
 <!--
 4. Corrélation régression (à confirmer)
