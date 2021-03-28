@@ -2,12 +2,11 @@
 
 ## Introduction
 
-
 This tutorial/practical aims at providing a first survey of machine-learning methods (clustering and supervised classification) based on an illustrative study case: the transcriptomic RNA-seq for a cohort of Breast Invasive Cancer from [The Cancer Genome Atlas](https://cancergenome.nih.gov/). 
 
 ## Course structure
 
-1. Data loading and exploration [[html](tutorials/machine-learning_TCGA-BIC/01_data-loading_TCGA-BIC.html)] [[Rmd](tutorials/machine-learning_TCGA-BIC/01_data-loading_TCGA-BIC.Rmd)]
+1. Data loading and exploration: [[html](tutorials/machine-learning_TCGA-BIC/01_data-loading_TCGA-BIC.html)] [[Rmd](tutorials/machine-learning_TCGA-BIC/01_data-loading_TCGA-BIC.Rmd)]
 
 2. Clustering
 
