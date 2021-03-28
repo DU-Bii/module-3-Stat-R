@@ -1,0 +1,770 @@
+---
+title: "Tutorial: machine-learning with TGCA BIC transcriptome"
+subtitle: "01. Data loading"
+author: "Jacques van Helden"
+date: '`r Sys.Date()`'
+output:
+  html_document:
+    self_contained: no
+    fig_caption: yes
+    highlight: zenburn
+    theme: cerulean
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+    code_folding: "hide"
+  ioslides_presentation:
+    slide_level: 2
+    self_contained: no
+    colortheme: dolphin
+    fig_caption: yes
+    fig_height: 5
+    fig_width: 7
+    fonttheme: structurebold
+    highlight: tango
+    smaller: yes
+    toc: yes
+    widescreen: yes
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
+  beamer_presentation:
+    colortheme: dolphin
+    fig_caption: yes
+    fig_height: 5
+    fig_width: 7
+    fonttheme: structurebold
+    highlight: tango
+    incremental: no
+    keep_tex: no
+    slide_level: 2
+    theme: Montpellier
+    toc: yes
+  revealjs::revealjs_presentation:
+    theme: night
+    transition: none
+    self_contained: true
+    css: ../slides.css
+  slidy_presentation:
+    smart: no
+    slide_level: 2
+    self_contained: yes
+    fig_caption: yes
+    fig_height: 5
+    fig_width: 7
+    highlight: tango
+    incremental: no
+    keep_md: yes
+    smaller: yes
+    theme: cerulean
+    toc: yes
+    widescreen: yes
+  powerpoint_presentation:
+    slide_level: 2
+    fig_caption: yes
+    fig_height: 5
+    fig_width: 7
+    toc: yes
+font-import: http://fonts.googleapis.com/css?family=Risque
+subtitle: DUBii 2021
+font-family: Garamond
+transition: linear
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+
+```{r settings, include=FALSE, echo=FALSE, eval=TRUE}
+
+options(width = 300)
+# options(encoding = 'UTF-8')
+knitr::opts_chunk$set(
+  fig.width = 7, fig.height = 5, 
+  fig.path = 'figures/pavkovic2019_',
+  fig.align = "center", 
+  size = "tiny", 
+  echo = TRUE, 
+  eval = TRUE, 
+  warning = FALSE, 
+  message = FALSE, 
+  results = TRUE, 
+  comment = "")
+
+options(scipen = 12) ## Max number of digits for non-scientific notation
+# knitr::asis_output("\\footnotesize")
+
+```
+
+
+
+```{r libraries, echo=FALSE, eval=TRUE}
+requiredLib <- c("knitr")
+for (lib in requiredLib) {
+  if (!require(lib, character.only = TRUE)) {
+    install.packages(lib, )
+  }
+  require(lib, character.only = TRUE)
+}
+
+```
+
+
+## Downloading the data files
+
+The preprocessed datasets are available on the course github repository. 
+
+
+
+We will use the function `download_only_once()` that we defined in a previous course on data exploration. 
+
+This function takes as input a base URL, a file name and a local folder. 
+
+- It checks if the local folder already exists, and if not  creates it. 
+- It then checks if the file is already present in this local folder, and if not downloads it. 
+
+This facilitates the downloading of the different files required for the practical. 
+
+
+```{r function_download_only_once}
+#' @title Download a file only if it is not yet here
+#' @author Jacques van Helden email{Jacques.van-Helden@@france-bioinformatique.fr}
+#' @param url_base base of the URL, that will be prepended to the file name
+#' @param file_name name of the file (should not contain any path)
+#' @param local_folder path of a local folder where the file should be stored
+#' @return the function returns the path of the local file, built from local_folder and file_name
+#' @export©
+download_only_once <- function(
+  url_base, 
+  file_name,
+  local_folder) {
+
+  ## Define the source URL  
+  url <- file.path(url_base, file_name)
+  message("Source URL\n\t",  url)
+
+  ## Define the local file
+  local_file <- file.path(local_folder, file_name)
+  
+  ## Create the local data folder if it does not exist
+  dir.create(local_folder, showWarnings = FALSE, recursive = TRUE)
+  
+  ## Download the file ONLY if it is not already there
+  if (!file.exists(local_file)) {
+    message("Downloading file from source URL to local file\n\t", 
+            local_file)
+    download.file(url = url, destfile = local_file)
+  } else {
+    message("Local file already exists, no need to download\n\t", 
+            local_file)
+  }
+  
+  return(local_file)
+}
+```
+
+
+
+## Study case : mouse kidney 
+
+As study case for this tutorial, we will use multi-omics data from a study published by [Pavkovic et al. (2019)](https://doi.org/10.1038/s41597-019-0095-5), which combines transctiptomics (RNA-seq) and proteomics approaches to understand the molecular mechanisms underlying the kidney fibrosis pathology. 
+
+The authors applied two commonly used treatments to induce kidney fibrosis in mouse: 
+
+- a reversible chemical-induced injury model, denoted as **FA** for **folic acid** induced nephropathy;  
+
+- an irreversible surgically-induced fibrosis model, denoted as **UUO** for **unilateral uretral obstruction**.
+
+## References and data sources
+
+
+-  **Reference**: Pavkovic, M., Pantano, L., Gerlach, C.V. et al. Multi omics analysis of fibrotic kidneys in two mouse models. Sci Data 6, 92 (2019) <https://doi.org/10.1038/s41597-019-0095-5>
+
+- **Mouse fibrotic kidney browser:** <http://hbcreports.med.harvard.edu/fmm/>
+
+- Data on Zenodo: <https://zenodo.org/record/2592516>
+
+## Data preparation
+
+A description of the study case can be found in the *[Mus musculus section](https://du-bii.github.io/study-cases/#mus-musculus)* of the the [DUBii study cases repository](https://du-bii.github.io/study-cases/) repository. 
+
+We also provide there a detailed explanation of the [data preparation steps](https://du-bii.github.io/study-cases/Mus_musculus/pavkovic_2019/Rmd/prepare-data_pavkovic_2019.html): 
+
+- downloading the data from its original source repository, 
+- exploring the datasets it with various graphical representtions, 
+- computing some descriptive statistics on the different samples, 
+- pre-processing,
+- storing the results in a memory image. 
+
+
+## Data file naming
+
+We prepared the data from Pavkovic as a text file with tab-separated values (**tsv** files). 
+
+All the files are available on github:
+- <https://github.com/DU-Bii/module-3-Stat-R/tree/master/stat-R_2021/data/pavkovic_2019>
+
+The files are named according to the following convention:
+
+- the prefix indicate the data type
+
+    - **fa**: folic acid induced nephropathy (reversible), transcriptome data
+    - **pfa**: folic acid induced nephropathy, proteome data
+    - **uuo**: unilateral uretral obstruction (irreversible), transcriptome data
+    - **puuo**: unilateral uretral obstruction, proteome data
+
+- The suffix indicates the data  normalisation
+
+    - **raw**: transcriptome counts provided by the authors (note: not integer, because their raw data was already somehow normalized)
+    - **normalized¨**: transcriptome counts standardized to achieve the same third quartile for each sample
+    - **log2**: log2 transformation for proteome data
+    
+- the  **metadata** files contain a short description of each sample (one row per sample). Note that the last column contains a sample-specific color specification in [hexadecimal web color code](https://en.wikipedia.org/wiki/Web_colors#Hex_triplet) to facilitate the drawings. Don't hesitate to chose [other colors](https://htmlcolorcodes.com/) according to your personal taste. 
+
+## R style
+
+The R code belows follows the tidyverse styling guide (<https://style.tidyverse.org/>).
+
+## Approach for this tutorial
+
+This tutorial will consist of exercises that can be realised in a stepwise way, with alternance of working sessions and live demos of the solutions, in order to make sure that all the trainees acquire each step.
+
+## Data exploration
+
+Before computing any descriptive parameter on a dataset, I generallyi attempt to get a picture of the whole distribution.
+
+
+### Finding a data file on github
+
+We will provide here a magic recipe to download the data from the github repository to your local folder, and to load it in R. 
+
+
+```{r data_loading}
+## specify the base URL from which data files can be downloaded 
+url_base <- "https://github.com/DU-Bii/module-3-Stat-R/raw/master/stat-R_2021/data/pavkovic_2019"
+
+
+## Choose a specific data file
+data_prefix <- "pfa" ## proteome data of folic-acid treated mouse
+data_suffix <- "model" ## no normalization
+file_name <- paste0(data_prefix, "_", data_suffix, "_counts.tsv.gz")
+
+## Compose the URL to download the file from github
+url <- file.path(url_base, file_name)
+
+message("URL: ",  url)
+
+```
+
+### Loading a data file directly from github
+
+Now we defined the URL, we can easily load the file directly from github to a data frame in our R environement. 
+
+```{r load_from_github, eval=FALSE}
+## this requires to load a specific package
+if (!require("data.table")) {
+  install.packages("data.table")
+}
+library(data.table)
+
+pfa <- fread(url, header = TRUE, sep = "\t")
+dim(pfa)
+names(pfa)
+kable(head(pfa))
+
+```
+
+
+
+### Downloading a data file and storing it locally once forever
+
+We can now download the data file to a local folder, but we would like to do this only once.
+
+```{r download_only_once}
+## Specify the path relative to your home directory (~)
+local_folder <- "~/DUBii-m3_data/pavkovic_2019"
+local_file <- file.path(local_folder, file_name)
+
+## Create the local data folder if it does not exist
+dir.create(local_folder, showWarnings = FALSE, recursive = TRUE)
+
+## Download the file ONLY if it is not already there
+if (!file.exists(local_file)) {
+  message("Downloading file from github to local file\n\t", 
+          local_file)
+  download.file(url = url, destfile = local_file)
+} else {
+  message("Local file already exists, no need to download\n\t", 
+          local_file)
+}
+
+```
+
+
+### Loading the local copy of your data file
+
+
+We will now load the proteome file, with the following parameters
+
+- the first row contains the column headers
+- the first columnt contains the protein IDs, and we would like to have them as row.names for the loaded data frame. This is a bit tricky because some protein names are diplicated. We use the **very** convenient function `make.names(x, unique = TRUE)`.
+
+
+```{r load_local_file}
+## Load the data from the local file
+pfa <- read.delim(file = local_file, header = TRUE, sep = "\t")
+
+kable(head(pfa), caption = "Data frame just after loading")
+
+
+## Convert the first colum to row names
+row.names(pfa) <- make.names(as.vector(pfa$id), unique = TRUE)
+pfa <- pfa[, -1] ## Suppress the ID colimn
+kable(head(pfa), caption = "Data frame with row names")
+
+```
+
+
+### Writing a function to download a file only once
+
+Write a functions that will download a file from a remote location to a local folder, but do this only if the local file is not yet present there. 
+
+Note that we use the [roxygen2](https://kbroman.org/pkg_primer/pages/docs.html) format to write the documentation of this function. In any programming language, a function should always be documented in order to enable other people to use it, and the doc is also very useful for a developer to reuse her/his own code. The documentation becomes particularly interesting when you start building your own R packages, since it will automatically generate the help pages. 
+
+The documentation of a function should include
+- a description of what it does
+- the author name and a way to contact her/him
+- a description of each parameter (argument) of the function
+- a description of the return value
+
+Roxygen2 provides is a very convenient way of documenting a function, because 
+- the formalism is very simple
+- the doc comes together with the code of the function (by default, R functions are documented in a separate file)
+
+
+```{r function_download_only_once}
+#' @title Download a file only if it is not yet here
+#' @author Jacques van Helden email{Jacques.van-Helden@@france-bioinformatique.fr}
+#' @param url_base base of the URL, that will be prepended to the file name
+#' @param file_name name of the file (should not contain any path)
+#' @param local_folder path of a local folder where the file should be stored
+#' @return the function returns the path of the local file, built from local_folder and file_name
+#' @export
+download_only_once <- function(url_base, 
+                             file_name,
+                             local_folder) {
+
+  ## Define the source URL  
+  url <- file.path(url_base, file_name)
+  message("Source URL\n\t",  url)
+
+  ## Define the local file
+  local_file <- file.path(local_folder, file_name)
+  
+  ## Create the local data folder if it does not exist
+  dir.create(local_folder, showWarnings = FALSE, recursive = TRUE)
+  
+  ## Download the file ONLY if it is not already there
+  if (!file.exists(local_file)) {
+    message("Downloading file from source URL to local file\n\t", 
+            local_file)
+    download.file(url = url, destfile = local_file)
+  } else {
+    message("Local file already exists, no need to download\n\t", 
+            local_file)
+  }
+  
+  return(local_file)
+}
+```
+
+
+
+We can now use our new function `download_only_once()` to download the files from the folic acid dataset and store them in a local folder. We will download successively :
+
+- transcriptome data (`fa`)
+- transcriptome medata
+- proteome data (`pfa`)
+- proteome medata
+
+```{r download_fa}
+## Specify the basic parameters
+pavkovic_base <- "https://github.com/DU-Bii/module-3-Stat-R/raw/master/stat-R_2021/data/pavkovic_2019"
+pavkovic_folder <- "~/DUBii-m3_data/pavkovic_2019"
+
+#### Dowload folic acid data and metadata ####
+
+## Transcriptome data table
+local_fa_file <- download_only_once(
+  url_base = pavkovic_base, 
+  file_name = "fa_raw_counts.tsv.gz",
+  local_folder =  pavkovic_folder
+)
+
+## Normalised transcriptome data table
+local_fa_norm_file <- download_only_once(
+  url_base = pavkovic_base, 
+  file_name = "fa_normalized_counts.tsv.gz",
+  local_folder =  pavkovic_folder
+)
+
+
+## Transcriptome metadata
+fa_metadata_file <- download_only_once(
+  url_base = pavkovic_base, 
+  file_name = "fa_transcriptome_metadata.tsv",
+  local_folder =  pavkovic_folder
+)
+
+## FA proteome data table
+local_pfa_file <- download_only_once(
+  url_base = pavkovic_base, 
+  file_name = "pfa_model_counts.tsv.gz",
+  local_folder =  pavkovic_folder
+)
+
+## FA proteome metadata
+pfa_metadata_file <- download_only_once(
+  url_base = pavkovic_base, 
+  file_name = "pfa_proteome_metadata.tsv",
+  local_folder =  pavkovic_folder
+)
+
+
+## UUO proteome data table
+local_puuo_file <- download_only_once(
+  url_base = pavkovic_base, 
+  file_name = "puuo_model_counts.tsv.gz",
+  local_folder =  pavkovic_folder
+)
+
+
+```
+
+After having run the chunk of code above, try to re-run it. In principle, you should just receive messages telling you that the files are already there. 
+
+
+### Loading the files
+
+
+We now write a function `load_fix_row_names()` that loads a data file and takes a specified column as row names, whilst automatically fixing potential problems due to duplicate labels in this column. 
+
+```{r load_fix_row_names_function}
+#' @title Load a tab-separated value file and manually set row ames after having forced them to unique values
+#' @author Jacques van Helden email{Jacques.van-Helden@@france-bioinformatique.fr}
+#' @param file file path
+#' @param header=1 Header is set to 1 by default
+#' @param sep="\t" Column separator is set to tab by default
+#' @param rownames.col=1 Column containing the row names
+#' @param ... all other parameters are passed to read.delim()
+#' @return a data frame with the loaded data
+load_fix_row_names <- function(file, 
+                       header = 1, 
+                       sep = "\t",
+                       rownames.col = 1, 
+                       ...) {
+  x <- read.delim(file = file, ...)
+  rownames(x) <- make.names(x[, rownames.col], unique = TRUE)
+  x <- x[, -rownames.col]
+  return(x)
+}
+
+```
+
+
+We can now load the data that from our local folder. 
+
+```{r load_fa}
+
+## Load transcriptome data (raw counts)
+fa_by_read_delim <- read.delim(file = local_fa_file, sep = "\t", header = TRUE)
+
+## Check the first lines of the loaded file
+# dim(fa)
+message("Loaded raw counts of FA transcriptome raw counts with read_delim(): ", 
+        nrow(fa_by_read_delim), " rows x ", ncol(fa_by_read_delim), " columns")
+kable(head(fa_by_read_delim), caption = "FA transcriptome loaded with read.delim()")
+
+
+
+## Load the same data with load_fix_row_names
+fa <- load_fix_row_names(file = local_fa_file, rownames.col = 1)
+message("Loaded raw counts of FA transcriptome raw counts with load_fix_row_names(): ", 
+        nrow(fa), " rows x ", ncol(fa), " columns")
+kable(head(fa), caption = "FA transcriptome loaded with load_fix_row_names()")
+# hist(unlist(fa), breaks = 100)
+
+## Load normalised data with load_fix_row_names
+fa_norm <- load_fix_row_names(file = local_fa_norm_file, rownames.col = 1)
+message("Loaded raw counts of FA transcriptome normalised counts with load_fix_row_names(): ", 
+        nrow(fa_norm), " rows x ", ncol(fa_norm), " columns")
+# dim(fa_norm)
+kable(head(fa_norm), caption = "First lines of the loaded normalised counts of FA transcriptome with load_fix_row_names()")
+
+## Load FA proteome data
+pfa <- load_fix_row_names(file = local_pfa_file, rownames.col = 1)
+message("Loaded raw counts of FA proteome (pfa)  with load_fix_row_names(): ", 
+        nrow(pfa), " rows x ", ncol(pfa), " columns")
+# dim(pfa)
+
+## Load UUO proteome data
+puuo <- load_fix_row_names(file = local_puuo_file, rownames.col = 1)
+message("Loaded raw counts of UUO proteome (puuo)  with load_fix_row_names(): ", 
+        nrow(puuo), " rows x ", ncol(puuo), " columns")
+# dim(pfa)
+
+## Check the first lines of the loaded file
+kable(head(pfa), caption = "First lines of the proteome table")
+
+## Load proteome metadata
+pfa_metadata <- read.delim(file = pfa_metadata_file, sep = "\t", header = TRUE)
+kable(pfa_metadata, caption = "Metadata for the FA proteome dataset")
+
+## Load transcriptome metadata
+fa_metadata <- read.delim(file = fa_metadata_file, sep = "\t", header = TRUE)
+kable(fa_metadata, caption = "Metadata for the transcriptome dataset")
+
+```
+
+
+
+We can now use this function to download and load the different data files. 
+
+
+## Graphical exploration of the data
+
+### Histogram
+
+Draw histograms of the transcriptome and proteom data, all samples together. 
+
+```{r fa_hist_ugly}
+pfa_vector <- unlist(as.vector(pfa))
+hist(pfa_vector)
+```
+
+Let us now improve the histogram  to get an intuition of our data. A first step is to increase the number of bins, with the 
+
+```{r fa_hist_breaks}
+hist(pfa_vector, breaks = 200)
+```
+
+The distribution is stronly right-skewed, and its most representative part is "compressed" on the left side of the graph. As shown below, a log2 transformation provides a more informative view of the data. 
+
+```{r fa_hist_log2}
+## Plot the histogram of log2-transformed proteome data
+## Note: we add an epsilon of 0.1 in order to avoid problems with null values
+hist(log2(pfa_vector + 0.1), breaks = 100)
+```
+
+### Enhancing the figure
+
+
+
+```{r fa_hist_log2_nicer}
+## Improve the histogram
+## - add a title, axis labels, coloring, ...
+## - increase readaility by writing each parameter on a separate line
+hist(log2(pfa_vector + 0.1), 
+     breaks = seq(from = -4, to = 20, by = 0.1),
+     col = "#BBDDFF",
+     border = "#88AAFF",
+     las = 1, # I like to read the labels
+     xlab = "log2(x)", 
+     ylab = "Number of observations", 
+     main = "Proteome, folic-acid treated samples")
+
+```
+
+
+### Controlling the insertion of images in an R markdown report
+
+We will now add a some options to the header of the R chunk in the R markdown, in order to control the way this figure is inserted in the report.  Note that the chunk header must come on a single line. 
+ 
+`  ```{r fa_hist_log2_sized, out.width="75%", fig.width=7, fig.height=4, fig.cap="Distribution of log2-transformed values for the proteome of folic acid-treated samples (data from Pavcovic et al., 2019)"}
+`
+
+- `fig.height` and `fig.width` specify the size of the figure generated by R. These parameters are convenient to ensure proper proportions between height and widths, but also to incresae the readability of the labels (if you increasa the size, the fonts will look smaller).
+
+- `out.width` enables you to control the width occupied by your figure in the HTML or pdf report. 
+
+- `fig.cap` enables you to add a caption to the figure
+
+
+```{r fa_hist_log2_sized, out.width="90%", fig.width=7, fig.height=4, fig.cap="Distribution of log2-transformed values for the proteome of folic acid-treated samples (data from Pavcovic et al., 2019)"}
+## Improve the histogram
+## - add a title, axis labels, coloring, ...
+## - increase readaility by writing each parameter on a separate line
+hist(log2(pfa_vector), 
+     breaks = seq(from = 0, to = 20, by = 0.1),
+     col = "#BBDDFF",
+     border = "#88AAFF",
+     las = 1, # I like to read the labels
+     xlab = "log2(x)", 
+     ylab = "Number of observations", 
+     main = "Proteome, folic-acid treated samples")
+
+```
+
+## Box plots 
+
+Here is an example of code for a log2 boxplot ofthe fa data that uses the metadata tables to set up the colors.
+
+### Proteome data
+
+```{r proteome_boxplots, fig.width=10, fig.height=7, out.width="90%", fig.cap="Box plots of proteome data before (left) and after (right) log2 transformation. "}
+## Box plot of the transcriptome data before and after normalisation
+par_ori <- par(no.readonly = TRUE) ## Store the original parameters in order to restore them afterwards
+par(mar = c(4, 6, 5, 1)) ## Adapt the margins of the boxplot in order to have enough space for sample labels
+par(mfrow = c(1,2)) ## Two side-by-side panes
+
+## Compute the log2 of the proteome data
+## Note: we add an epsilon of 0.1 to avoid problems with null values
+log2pfa <- log2(pfa + 0.1)
+
+boxplot(pfa, 
+        col = pfa_metadata$color,
+        horizontal = TRUE, 
+        las = 1, 
+        main = "Proteome, original values", 
+        xlab = "value")
+
+
+boxplot(log2pfa, 
+        col = pfa_metadata$color,
+        horizontal = TRUE, 
+        las = 1, 
+        main = "Proteome, log2-transformed", 
+        xlab = "log2(value)")
+
+par(par_ori)
+```
+
+The box plots show the distribution of the data before (left) and after (right) log2 transformation. 
+
+### Transcriptome data
+
+The transcriptome data is providedd
+
+```{r transcriptome_boxplots, fig.width=10, fig.height=12, out.width="90%", fig.cap="Box plots of transcriptome data before (left) and after (right) normalisation. All values are log2 transformed. "}
+## Box plot of the transcriptome data before and after normalisation
+par_ori <- par(no.readonly = TRUE) ## Store the original parameters in order to restore them afterwards
+par(mar = c(4, 6, 5, 1)) ## Adapt the margins of the boxplot in order to have enough space for sample labels
+par(mfrow = c(2,2)) ## 4 panels, with 2 rows and 2 columns
+
+## Counts before and after normalisation, but no log2 transformation
+
+## Raw counts
+boxplot(fa, 
+        col = fa_metadata$color,
+        horizontal = TRUE, 
+        las = 1, 
+        main = "FA transcriptome\nraw counts", 
+        xlab = "counts")
+
+## Normalised transcriptome data
+boxplot(fa_norm, 
+        col = fa_metadata$color,
+        horizontal = TRUE, 
+        las = 1, 
+        main = "FA transcriptome\nnormalised counts", 
+        xlab = "counts")
+
+
+## Compute the log2 of the transcriptome data
+## Note: we add an epsilon of 0.1 to avoid problems with null values
+log2fa <- log2(fa + 0.1)
+log2fa_norm <- log2(fa_norm + 0.1)
+
+## Raw counts
+boxplot(log2fa, 
+        col = fa_metadata$color,
+        horizontal = TRUE, 
+        las = 1, 
+        main = "FA transcriptome\nlog2raw (counts)", 
+        xlab = "log2(counts)")
+
+## Normalised transcriptome data
+boxplot(log2fa_norm, 
+        col = fa_metadata$color,
+        horizontal = TRUE, 
+        las = 1, 
+        main = "FA transcriptome\nlog2(normalised counts)", 
+        xlab = "log2(normalised counts)")
+
+par(par_ori)
+```
+
+#### Observations
+
+1. The raw and normalised counts (top) show a strongly right-skewed distribution due to the presence of outliers. In each sample, a very few genes have very high values (25 miilion counts !). Such outliers can be really problematic because they will exert a very strong effect on the subsequent analyses (PCA, clustering, or any other analysis that relies on distances between samples). For PCA, we recommend to use the log2-transformed values. 
+
+2. The log2 transformation (bottom) mittigates the impact of these outliers. The bottom right panel shows that all the samples have the same third quartile (right side of the boxplot rectangle), thereby indicating the method used to standardise this method.
+
+3. For all samples, the third quartile equals the minimal value, indicating that at least 25% of the genes had a null count. 
+
+4. The sample *day2_2* has a median value equal to its minimal value, indicating that at least 50% of the genes have null value in this sample. 
+
+
+
+
+## Exercise: PCA of Pavkovicz data
+
+
+As an exercise, we ask you to insert here your analysis of Pavkovicz data with the PCA methods presented in the session 4 of this course. Try to generate nice figures that will give you insight into the structure of the 4 datasets :  transcriptome and proteome for the two respective treatments (folic acid and surgery, respectively). 
+
+For this, you should first download a copy of the R markdown source, install it in a local folder, and run knitr to compile an HTML or pdf report. If this works, you will start adding your own chunks of code and interpretation of the results. 
+
+Tips: 
+- play with the scale options of the PC transformation
+- test if the 3rd and 4th components provide additional information than the 1st and 2nd components
+- compare the results obtained with the raw and normalised data sets, respectively
+- test the PCA with and without log2 transformation
+
+It is not necessary to show all the results in this report, only select the most informative plots. 
+
+At the end, we expect to find here the most relevant figures resulting from this exploration, with a short explanation of
+- the parameters you chose for the analysis (normalised or not, log2 transformed or not, PC scaling or not, ...)
+- some interpretation of the results in term of positioning of the samples on the components.
+
+Don't hesitate to call the team in case of trouble. 
+
+
+
+## Save a memory image of your session
+
+Use the function `save.image()` to store an image of your session, in a file `pavkovic_memory_image.Rdata` in the  local folder specified above. This file will contain all the data that you loaded during this session, and enable you to reload everything without having to re-execute all the steps. 
+
+```{r memory_image}
+
+## Define the path to the memory image file
+memory_image_file <- file.path(local_folder, "pavkovic_memory_image.Rdata")
+
+## Save the memory image
+save.image(file = memory_image_file)
+
+message("Memory image saved in file\n\t", memory_image_file)
+```
+
+For a future session, you will be able to reload all the data with a single command:
+
+`load([path_to_your_memory_image])`
+
+ You will need to replace `[path_to_your_memory_image]` by your actual path. 
+ In my case, the command becomes:
+ 
+ `load("`r memory_image_file`")`
+
+## Save your session info
+
+For the sake of traceability, store the specifications of your R environment in the report, with the command `sessionInfo()`. This will indicate the version of R as wella sof all the libraries used in this notebook. 
+
+```{r session_info}
+sessionInfo()
+```
+
+
+
+
