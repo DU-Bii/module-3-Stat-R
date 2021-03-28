@@ -526,4 +526,43 @@ message("Saving memory image in file\n\t", mem_image)
 save.image(file = mem_image)
 ```
 
+The memory image has been saved in a local folder, in the following file: `r mem_image`
+
+## Command to reload this dataset
+
+The memory image generated at the end of this tutorial is stored on the github repository, and can be reloaded as follows. 
+
+```{r reload_mem_image, eval=FALSE}
+#### Reload memory image from github repository ####
+github_mem_img <- "https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2021/data/TCGA_BIC_subset/bic_data.Rdata?raw=true"
+
+## Define local destination folder
+bic_folder <- "~/m3-stat-R/TCGA-BIC_analysis"
+## Create it if required
+dir.create(bic_folder, showWarnings = FALSE, recursive = TRUE)
+
+## Define local destination for the memory image
+mem_image <- file.path(bic_folder, "bic_data.Rdata")
+if (file.exists(mem_image)) {
+  message("Memory image already there, skipping download")
+} else {
+  message("Downloading memory image from\n", github_mem_img)
+  download.file(url = github_mem_img, destfile = mem_image)
+  message("Local memory image\t", mem_image)
+}
+
+load(mem_image)
+
+```
+
+
+
+## Session info
+
+As usual, we write the session info in the report for the sake of traceability. 
+
+```{r session_info}
+sessionInfo()
+
+```
 
