@@ -223,35 +223,18 @@ To follow this course, prior knowledge is expected on:
 
 #### Supports pédagogiques
 
-1. Chargement et exploration des données TGCA BIC
 
-
-
-2. Clustering
-
-    - Cours: principes du clustering 
-    [[html](slides/clustering/clustering_cours_2021-03-29.html)]
-    [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2021/slides/clustering/clustering_cours_2021-03-29.Rmd)]
-
-3. Analyse d'enrichissement fonctionnel
-
-
-<!--
-    - Introduction:
-    [[html](slides/)]
--->
-    - Tutoriel: 
-    [[html](tutorials/Rsession6_tuto_gProfiler.html)]
-    [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2021/tutorials/Rsession6_tuto_gProfiler.Rmd)]
-
-<!--
-    - Practical:
-    [[html](practicals/)]
-    [[Rmd](practicals/)]
--->
-
-
-4. Classification supervisée
+| Topics | Support | Formats |
+|----------------------|-------------------------|-----------|
+| **The TCGA BIC study case** | Intro | [[md](tutorials/machine-learning_TCGA-BIC/README.md)] |
+| **Data loading and exploration** | Tutorial | [[html](tutorials/machine-learning_TCGA-BIC/01_data-loading_TCGA-BIC.html)] [[Rmd](tutorials/machine-learning_TCGA-BIC/01_data-loading_TCGA-BIC.Rmd)] |
+| **Principes du clustering** | Cours | [[html](slides/clustering/clustering_cours_2021-03-29.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2021/slides/clustering/clustering_cours_2021-03-29.Rmd)] |
+| | Practical | |
+| **Analyse d'enrichissement fonctionnel** | Cours | |
+| | Tutorial | [[html](tutorials/Rsession6_tuto_gProfiler.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2021/tutorials/Rsession6_tuto_gProfiler.Rmd)] |
+| | Practical | |
+| **Supervised classification** | Slides | |
+| | Practical | |
 
 
 
