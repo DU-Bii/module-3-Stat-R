@@ -106,7 +106,7 @@ options(scipen = 12) ## Max number of digits for non-scientific notation
 ## CRAN libraries
 requiredLib <- c("knitr",
                  "factoextra", ## for extended distances
-                 "aricode",  # for adjusted Rand Index,
+                 "aricode",  # for Adjusted Rand Index (ARI),
                  "pheatmap",  ## To draw beautiful heat maps
                  "scales" ## to draw plot with semi-transparent points
 )
@@ -389,7 +389,7 @@ confusion_euclidian_complete <- table(
   clusters_euclidian_complete,
   subset_meta$cancer.type)
 
-kable(confusion_euclidian_complete)
+kable(confusion_euclidian_complete, row.names = TRUE)
 
 ## Compute Adjusted Rand Index (ARI)
 ari_euclidian_complete <- round(
@@ -402,9 +402,61 @@ message("ARI for Euclidian distance and complete linkage: ",
         ari_euclidian_complete)
 ```
 
-With Euclidian distance and the complete lin,kage, we obtain an Adjusted Rank Index (ARI) of `r ari_euclidian_complete`. 
+With Euclidian distance and the complete lin,kage, we obtain an Adjusted Rank Index (ARI) of `r ari_euclidian_complete`, computed with a subset of the expression table. 
 
 The next question is of course: can we obtain better results with other distances and agglomeration rules? This will be left as an exercise. 
+
+## Clustering with the full dataset
+
+Compute the ARI index with the same similarity measure and the same agglomeration rule, but with the full dataset (`bic_expr_labels`)
+
+```{r ari_full_dataset}
+
+## Choose the clustering parameters
+distance <- "euclidian"
+rule <- "complete"
+
+message("Computing ARI with ", 
+        distance, " dissimilarity and ",
+        rule, " linkage")
+
+## Euclidian distance
+bic_dist <- factoextra::get_dist(
+  x = t(bic_expr_labels), method = distance)
+
+#### Sample tree with Euclidian distance, complete linkage ####
+sample_tree <- hclust(
+  d = bic_dist, method = rule)
+
+## Confusion matrix
+nclust <- 4
+bic_clusters <- cutree(
+  tree = sample_tree, k = nclust)
+bic_confusion <- table(
+  bic_clusters,
+  bic_meta$cancer.type)
+
+kable(bic_confusion, row.names = TRUE, 
+      caption = paste0(
+        "Confusion table of the sample clusters versus cancer subtypes (all samples and 1000 genes). ",
+        "Distance: ", distance, ". ",
+        "Agglomeration rule: ", rule, ". "
+        
+      ))
+
+## Compute Adjusted Rand Index (ARI)
+bic_ari <- round(
+  digits = 3, 
+  aricode::ARI(
+    c1 = bic_clusters, 
+    c2 = bic_meta$cancer.type))
+
+message("ARI for Euclidian distance and complete linkage (full dataset): ",
+        bic_ari)
+
+```
+
+With Euclidian distance and the complete lin,kage, we obtain an Adjusted Rank Index (ARI) of `r bic_ari`, computed with a subset of the expression table. 
 
 ## Heatmap with biclustering (samples + genes)
 
