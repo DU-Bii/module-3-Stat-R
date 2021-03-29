@@ -820,7 +820,7 @@ div.tocify {
 <span id="cb21-37"><a href="#cb21-37" aria-hidden="true" tabindex="-1"></a>        <span class="at">las =</span> <span class="dv">1</span>, <span class="at">notch =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb21-38"><a href="#cb21-38" aria-hidden="true" tabindex="-1"></a>        <span class="at">cex.axis =</span> <span class="fl">0.7</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figures/pavkovic2019_box_plot_rand_samples-1.png" alt="Box plot of a random selection of samples from the TCGA-BIC transcriptome dataset. " width="100%" />
+<img src="figures/tcga-bic_box_plot_rand_samples-1.png" alt="Box plot of a random selection of samples from the TCGA-BIC transcriptome dataset. " width="100%" />
 <p class="caption">
 Box plot of a random selection of samples from the TCGA-BIC transcriptome dataset.
 </p>
@@ -836,7 +836,45 @@ Box plot of a random selection of samples from the TCGA-BIC transcriptome datase
 </div>
 <div id="solution" class="section level3">
 <h3>Solution</h3>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### PC plot of the TAGC BIC samples ####</span></span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### PC plot of the TAGC BIC samples ####</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(factoextra)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Compute the principal components</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="do">## This is done on the transposed data table</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>bic_pca <span class="ot">&lt;-</span> <span class="fu">PCA</span>(<span class="fu">t</span>(bic_expr_labels), </span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>               <span class="at">scale.unit =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>               <span class="at">ncp =</span> <span class="fu">ncol</span>(bic_expr_labels), </span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>               <span class="at">graph =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a><span class="do">## Table with the coordinates of each sample in the PC space</span></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>bic_pcs <span class="ot">&lt;-</span> bic_pca<span class="sc">$</span>ind<span class="sc">$</span>coord</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the PC dimensions</span></span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(bic_pcs)</span></code></pre></div>
+<pre><code>[1] 819 818</code></pre>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Plot the variance per component ####</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_eig</span>(bic_pca, <span class="at">addlabels =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/tcga-bic_pca_variance_lot-1.png" alt="Variance of the first components for the BIC dataset" width="60%" />
+<p class="caption">
+Variance of the first components for the BIC dataset
+</p>
+</div>
+<p>The plots of individuals show that the cancer types segregate partly onb the first and second PCs.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Plot individuals on the 2 first components ####</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_ind</span>(<span class="at">X =</span> bic_pca, </span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">axes =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), </span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">col.ind =</span> bic_meta<span class="sc">$</span>cancer.type,</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">label =</span> <span class="st">&quot;none&quot;</span>) </span></code></pre></div>
+<p><img src="figures/tcga-bic_pca_ind_plot_PC1-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The 3rd and 4th PCs seem much less informative with respect to the cancer types: the individuals seem intermingled irrespective of their cancer type.</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Plot individuals on the 2 first components ####</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_ind</span>(<span class="at">X =</span> bic_pca, </span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">axes =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>), </span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">col.ind =</span> bic_meta<span class="sc">$</span>cancer.type,</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">label =</span> <span class="st">&quot;none&quot;</span>) </span></code></pre></div>
+<p><img src="figures/tcga-bic_pca_ind_plot_PC3-4-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <div id="variables" class="section level2">
@@ -880,39 +918,41 @@ Box plot of a random selection of samples from the TCGA-BIC transcriptome datase
 <div id="save-a-memory-image" class="section level2">
 <h2>Save a memory image</h2>
 <p>We can now save a memory image, which will enable us to reload the whole data with a single command for the next tutorials.</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Save memory image ####</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>mem_image <span class="ot">&lt;-</span> <span class="fu">file.path</span>(bic_folder, <span class="st">&quot;bic_data.Rdata&quot;</span>)</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span>(<span class="st">&quot;Saving memory image in file</span><span class="sc">\n\t</span><span class="st">&quot;</span>, mem_image)</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="fu">save.image</span>(<span class="at">file =</span> mem_image)</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Save memory image ####</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>mem_image <span class="ot">&lt;-</span> <span class="fu">file.path</span>(bic_folder, <span class="st">&quot;bic_data.Rdata&quot;</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span>(<span class="st">&quot;Saving memory image in file</span><span class="sc">\n\t</span><span class="st">&quot;</span>, mem_image)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="fu">save.image</span>(<span class="at">file =</span> mem_image)</span></code></pre></div>
 <p>The memory image has been saved in a local folder, in the following file: ~/m3-stat-R/TCGA-BIC_analysis/bic_data.Rdata</p>
 </div>
 <div id="command-to-reload-this-dataset" class="section level2">
 <h2>Command to reload this dataset</h2>
 <p>The memory image generated at the end of this tutorial is stored on the github repository, and can be reloaded as follows.</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Reload memory image from github repository ####</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>github_mem_img <span class="ot">&lt;-</span> <span class="st">&quot;https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2021/data/TCGA_BIC_subset/bic_data.Rdata?raw=true&quot;</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Define local destination folder</span></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>bic_folder <span class="ot">&lt;-</span> <span class="st">&quot;~/m3-stat-R/TCGA-BIC_analysis&quot;</span></span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Create it if required</span></span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(bic_folder, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="do">## Define local destination for the memory image</span></span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>mem_image <span class="ot">&lt;-</span> <span class="fu">file.path</span>(bic_folder, <span class="st">&quot;bic_data.Rdata&quot;</span>)</span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">file.exists</span>(mem_image)) {</span>
-<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">&quot;Memory image already there, skipping download&quot;</span>)</span>
-<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
-<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">&quot;Downloading memory image from</span><span class="sc">\n</span><span class="st">&quot;</span>, github_mem_img)</span>
-<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">download.file</span>(<span class="at">url =</span> github_mem_img, <span class="at">destfile =</span> mem_image)</span>
-<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">&quot;Local memory image</span><span class="sc">\t</span><span class="st">&quot;</span>, mem_image)</span>
-<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(mem_image)</span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Reload memory image from github repository ####</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>github_mem_img <span class="ot">&lt;-</span> <span class="st">&quot;https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2021/data/TCGA_BIC_subset/bic_data.Rdata?raw=true&quot;</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Define local destination folder</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>bic_folder <span class="ot">&lt;-</span> <span class="st">&quot;~/m3-stat-R/TCGA-BIC_analysis&quot;</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Create it if required</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(bic_folder, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="do">## Define local destination for the memory image</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>mem_image <span class="ot">&lt;-</span> <span class="fu">file.path</span>(bic_folder, <span class="st">&quot;bic_data.Rdata&quot;</span>)</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">file.exists</span>(mem_image)) {</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">&quot;Memory image already there, skipping download&quot;</span>)</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">&quot;Downloading memory image from</span><span class="sc">\n</span><span class="st">&quot;</span>, github_mem_img)</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">download.file</span>(<span class="at">url =</span> github_mem_img, <span class="at">destfile =</span> mem_image)</span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">&quot;Local memory image</span><span class="sc">\t</span><span class="st">&quot;</span>, mem_image)</span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a><span class="do">## Load the memory image</span></span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span>(<span class="st">&quot;Loading memory image&quot;</span>, mem_image)</span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(mem_image)</span></code></pre></div>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session info</h2>
 <p>As usual, we write the session info in the report for the sake of traceability.</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
 <pre><code>R version 4.0.2 (2020-06-22)
 Platform: x86_64-apple-darwin17.0 (64-bit)
 Running under: macOS Mojave 10.14.6
@@ -928,14 +968,16 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] biomaRt_2.44.4 knitr_1.31    
+[1] biomaRt_2.44.4   factoextra_1.0.7 ggplot2_3.3.3    FactoMineR_2.4   knitr_1.31      
 
 loaded via a namespace (and not attached):
- [1] progress_1.2.2       tidyselect_1.1.0     xfun_0.22            bslib_0.2.4          purrr_0.3.4          vctrs_0.3.6          generics_0.1.0       htmltools_0.5.1.1    stats4_4.0.2         BiocFileCache_1.12.1 yaml_2.2.1           utf8_1.2.1           blob_1.2.1           XML_3.99-0.6        
-[15] rlang_0.4.10         jquerylib_0.1.3      pillar_1.5.1         withr_2.4.1          glue_1.4.2           DBI_1.1.1            rappdirs_0.3.3       BiocGenerics_0.34.0  bit64_4.0.5          dbplyr_2.1.0         lifecycle_1.0.0      stringr_1.4.0        memoise_2.0.0        evaluate_0.14       
-[29] Biobase_2.48.0       IRanges_2.22.2       fastmap_1.1.0        curl_4.3             parallel_4.0.2       fansi_0.4.2          AnnotationDbi_1.50.3 highr_0.8            Rcpp_1.0.6           openssl_1.4.3        BiocManager_1.30.12  cachem_1.0.4         S4Vectors_0.26.1     jsonlite_1.7.2      
-[43] bit_4.0.4            hms_1.0.0            askpass_1.1          digest_0.6.27        stringi_1.5.3        dplyr_1.0.5          tools_4.0.2          magrittr_2.0.1       sass_0.3.1           RSQLite_2.2.5        tibble_3.1.0         crayon_1.4.1         pkgconfig_2.0.3      ellipsis_0.3.1      
-[57] xml2_1.3.2           prettyunits_1.1.1    assertthat_0.2.1     rmarkdown_2.7        httr_1.4.2           R6_2.5.0             compiler_4.0.2      </code></pre>
+ [1] bit64_4.0.5          progress_1.2.2       httr_1.4.2           tools_4.0.2          backports_1.2.1      bslib_0.2.4          utf8_1.2.1           R6_2.5.0             DT_0.17              DBI_1.1.1            BiocGenerics_0.34.0  colorspace_2.0-0     withr_2.4.1          tidyselect_1.1.0    
+[15] prettyunits_1.1.1    bit_4.0.4            curl_4.3             compiler_4.0.2       Biobase_2.48.0       flashClust_1.01-2    xml2_1.3.2           labeling_0.4.2       sass_0.3.1           scales_1.1.1         askpass_1.1          rappdirs_0.3.3       stringr_1.4.0        digest_0.6.27       
+[29] foreign_0.8-81       rmarkdown_2.7        rio_0.5.26           pkgconfig_2.0.3      htmltools_0.5.1.1    dbplyr_2.1.0         fastmap_1.1.0        highr_0.8            htmlwidgets_1.5.3    rlang_0.4.10         readxl_1.3.1         RSQLite_2.2.5        farver_2.1.0         jquerylib_0.1.3     
+[43] generics_0.1.0       jsonlite_1.7.2       dplyr_1.0.5          zip_2.1.1            car_3.0-10           magrittr_2.0.1       leaps_3.1            Rcpp_1.0.6           munsell_0.5.0        S4Vectors_0.26.1     fansi_0.4.2          abind_1.4-5          lifecycle_1.0.0      scatterplot3d_0.3-41
+[57] stringi_1.5.3        yaml_2.2.1           carData_3.0-4        MASS_7.3-53.1        BiocFileCache_1.12.1 grid_4.0.2           blob_1.2.1           parallel_4.0.2       ggrepel_0.9.1        forcats_0.5.1        crayon_1.4.1         lattice_0.20-41      haven_2.3.1          hms_1.0.0           
+[71] pillar_1.5.1         ggpubr_0.4.0         ggsignif_0.6.1       stats4_4.0.2         XML_3.99-0.6         glue_1.4.2           evaluate_0.14        data.table_1.14.0    BiocManager_1.30.12  vctrs_0.3.6          cellranger_1.1.0     gtable_0.3.0         openssl_1.4.3        purrr_0.3.4         
+[85] tidyr_1.1.3          assertthat_0.2.1     cachem_1.0.4         xfun_0.22            openxlsx_4.2.3       broom_0.7.5          rstatix_0.7.0        tibble_3.1.0         AnnotationDbi_1.50.3 memoise_2.0.0        IRanges_2.22.2       cluster_2.1.1        ellipsis_0.3.1      </code></pre>
 </div>
 
 

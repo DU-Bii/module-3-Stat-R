@@ -83,7 +83,7 @@ options(width = 300)
 # options(encoding = 'UTF-8')
 knitr::opts_chunk$set(
   fig.width = 7, fig.height = 5, 
-  fig.path = 'figures/pavkovic2019_',
+  fig.path = 'figures/tcga-bic_',
   fig.align = "center", 
   size = "tiny", 
   echo = TRUE, 
@@ -104,7 +104,7 @@ options(scipen = 12) ## Max number of digits for non-scientific notation
 #### Load required R libraries ####
 
 ## CRAN libraries
-requiredLib <- c("knitr")
+requiredLib <- c("knitr", "FactoMineR", "factoextra")
 for (lib in requiredLib) {
   if (!require(lib, character.only = TRUE)) {
     install.packages(lib, )
@@ -496,12 +496,54 @@ Generate a graph with the two first components and color samples according to th
 ### Solution
 
 
-```{r pc_plot}
+```{r pca}
 #### PC plot of the TAGC BIC samples ####
+library(factoextra)
 
+
+## Compute the principal components
+## This is done on the transposed data table
+bic_pca <- PCA(t(bic_expr_labels), 
+               scale.unit = FALSE, 
+               ncp = ncol(bic_expr_labels), 
+               graph = FALSE)
+
+## Table with the coordinates of each sample in the PC space
+bic_pcs <- bic_pca$ind$coord
+
+# Check the PC dimensions
+dim(bic_pcs)
 
 
 ```
+
+```{r pca_variance_lot, fig.width=7, fig.height=5, out.width="60%", fig.cap="Variance of the first components for the BIC dataset"}
+
+#### Plot the variance per component ####
+fviz_eig(bic_pca, addlabels = TRUE)
+
+```
+
+The plots of individuals show that the cancer types segregate partly onb the first and second PCs. 
+
+```{r pca_ind_plot_PC1-2}
+#### Plot individuals on the 2 first components ####
+fviz_pca_ind(X = bic_pca, 
+             axes = c(1, 2), 
+             col.ind = bic_meta$cancer.type,
+             label = "none") 
+```
+
+The 3rd and 4th PCs seem much less informative with respect to the cancer types: the individuals seem  intermingled irrespective of their cancer type. 
+
+```{r pca_ind_plot_PC3-4}
+#### Plot individuals on the 2 first components ####
+fviz_pca_ind(X = bic_pca, 
+             axes = c(3, 4), 
+             col.ind = bic_meta$cancer.type,
+             label = "none") 
+```
+
 
 ## Variables
 
@@ -551,6 +593,8 @@ if (file.exists(mem_image)) {
   message("Local memory image\t", mem_image)
 }
 
+## Load the memory image
+message("Loading memory image", mem_image)
 load(mem_image)
 
 ```
