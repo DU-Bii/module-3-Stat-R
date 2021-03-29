@@ -233,6 +233,7 @@ To follow this course, prior knowledge is expected on:
 | **Analyse d'enrichissement fonctionnel** | Cours | [[html](slides/cours_enrichment_2021.html)]|
 | | Tutorial | [[html](tutorials/Rsession6_tuto_gProfiler.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2021/tutorials/Rsession6_tuto_gProfiler.Rmd)] |
 | | Practical | [[html](practicals/Rsession6_functional_enrichment.html)] [[Rmd](practicals/Rsession6_functional_enrichment.Rmd)]|
+| | Correction | [[html](practicals/Rsession6_functional_enrichment_correction.html)] [[Rmd](practicals/Rsession6_functional_enrichment_correction.Rmd)]|
 | **Supervised classification** | Slides | |
 | | Tutorial + practical | [[html](tutorials/machine-learning_TCGA-BIC/04_supervised-classification_TCGA-BIC_tuto-tp.html)]  [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2021/tutorials/machine-learning_TCGA-BIC/04_supervised-classification_TCGA-BIC_tuto-tp.Rmd)] |
 
