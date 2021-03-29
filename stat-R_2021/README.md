@@ -230,7 +230,7 @@ To follow this course, prior knowledge is expected on:
 | **Data loading and exploration** | Tutorial (optional) | [[html](tutorials/machine-learning_TCGA-BIC/01_data-loading_TCGA-BIC.html)] [[Rmd](tutorials/machine-learning_TCGA-BIC/01_data-loading_TCGA-BIC.Rmd)] |
 | **Principes du clustering** | Cours | [[html](slides/clustering/clustering_cours_2021-03-29.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2021/slides/clustering/clustering_cours_2021-03-29.Rmd)] |
 | | Tutorial + practical | [[html](tutorials/machine-learning_TCGA-BIC/02_clustering_TCGA-BIC_solutions.html)]  [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2021/tutorials/machine-learning_TCGA-BIC/02_clustering_TCGA-BIC_solutions.Rmd)] |
-| **Analyse d'enrichissement fonctionnel** | Cours | |
+| **Analyse d'enrichissement fonctionnel** | Cours | [[html](slides/cours_enrichment_2021.html)]|
 | | Tutorial | [[html](tutorials/Rsession6_tuto_gProfiler.html)] [[Rmd](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2021/tutorials/Rsession6_tuto_gProfiler.Rmd)] |
 | | Practical | [[html](practicals/Rsession6_functional_enrichment.html)] [[Rmd](practicals/Rsession6_functional_enrichment.Rmd)]|
 | **Supervised classification** | Slides | |
