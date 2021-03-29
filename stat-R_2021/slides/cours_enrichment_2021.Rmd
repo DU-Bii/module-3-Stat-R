@@ -177,23 +177,28 @@ VennDiagram::venn.diagram(
   - genes reachable by your approach (ex : miRNA targets, Godard et al., 2015)
 
 - Multiple-test corrections
-  - correction choice (adjusted P-values : Bonferroni correction, Benjamini-Hochberg FDR...)
+  - correction choice (adjusted P-values : Bonferroni correction, Benjamini-Hochberg, FDR...)
   - inter-test dependancies corrections (gSCS in gProfiler)
 
 # Tutorial - Using gProfiler in R with the gprofiler2 package
 
-Rsession6_tuto_gProfiler.Rmd and Rsession6_tuto_gProfiler.html on github
+- tool: g:GOSt from gProfiler <https://biit.cs.ut.ee/gprofiler/gost>
+- documentation: <https://biit.cs.ut.ee/gprofiler/page/docs>
+
+- Rmd : <https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2021/tutorials/Rsession6_tuto_gProfiler.Rmd>
+- html : <https://du-bii.github.io/module-3-Stat-R/stat-R_2021/tutorials/Rsession6_tuto_gProfiler.html>
+
 
 # Practical - Annotating a group of differentially expressed genes (DEG)
 
-Rsession6_functional_enrichment.Rmd and Rsession6_functional_enrichment.html on github
-
-- tool: g:GOSt from gProfiler <https://biit.cs.ut.ee/gprofiler/gost>
-- documentation: <https://biit.cs.ut.ee/gprofiler/page/docs>
 - Goal:
     - detect functions (biological process, pathways, regulation...) associated with the set of DEG
     - interpret the resuls
 - What about a negative control ?
+
+- Rmd : <https://du-bii.github.io/module-3-Stat-R/stat-R_2021/practicals/Rsession6_functional_enrichment.Rmd>
+- html : <https://du-bii.github.io/module-3-Stat-R/stat-R_2021/practicals/Rsession6_functional_enrichment.html>
+
 
 ```{r out.width="50%", echo=FALSE}
 include_graphics("../../stat-R_2020/enrichment/images/gProfiler_site.png")
