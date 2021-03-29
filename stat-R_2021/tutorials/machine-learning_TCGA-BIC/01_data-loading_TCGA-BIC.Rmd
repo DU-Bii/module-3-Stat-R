@@ -104,7 +104,11 @@ options(scipen = 12) ## Max number of digits for non-scientific notation
 #### Load required R libraries ####
 
 ## CRAN libraries
-requiredLib <- c("knitr", "FactoMineR", "factoextra")
+requiredLib <- c("knitr", 
+                 "FactoMineR", 
+                 "factoextra",
+                 "openxlsx" ## to write excel tables
+                 )
 for (lib in requiredLib) {
   if (!require(lib, character.only = TRUE)) {
     install.packages(lib, )
@@ -116,7 +120,7 @@ for (lib in requiredLib) {
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 
-
+## biomaRt is used to get  information (name, description) from Ensembl gene IDs
 if (!require("biomaRt", character.only = TRUE)) {
   BiocManager::install("biomaRt")
 }
@@ -342,7 +346,8 @@ gene_info <- data.frame(
 library("biomaRt")
 ensembl <- useMart("ensembl", dataset = "hsapiens_gene_ensembl")
 ensembl_info <- getBM(attributes = c('ensembl_gene_id',
-                                     'external_gene_name'),
+                                     'external_gene_name',
+                                     'description'),
                       filters = 'ensembl_gene_id',
                       values = gene_info$ENSG,
                       mart = ensembl)
@@ -350,11 +355,34 @@ row.names(ensembl_info) <- ensembl_info$ensembl_gene_id
 
 ## Add gene name in a new column of the gene_info table
 gene_info$name <- ensembl_info[gene_info$ENSG, "external_gene_name"]
+gene_info$description <- ensembl_info[gene_info$ENSG, "description"]
 
 ## There is one gene with no name
 # sum(is.na(gene_info$name))
 ## Replace undefined gene names by the gene ID
-gene_info[is.na(gene_info$name), "name"] <- gene_info[is.na(gene_info$name), "ENSG"]
+gene_info[is.na(gene_info$name), "name"] <-
+  gene_info[is.na(gene_info$name), "ENSG"]
+
+## Print the first rows of the gene info table
+kable(head(gene_info, n = 10), caption = "First rows of the gene information table collected from BioMart")
+
+## Export the gene info table in a TSV file
+gene_info_file_tsv <- file.path(bic_folder, "BIC_top1000_gene_info.tsv")
+message("Saving gene info table in TSV file\n\t", 
+        gene_info_file_tsv)
+write.table(x = gene_info, 
+            file = gene_info_file_tsv, 
+            quote = FALSE, 
+            sep = "\t", 
+            row.names = TRUE, 
+            col.names = NA)
+
+## Export the gene info table in Excel (xlsx) file
+gene_info_file_xlsx <- file.path(bic_folder, "BIC_top1000_gene_info.xlsx")
+message("Saving gene info table in xlsx file\n\t",
+        gene_info_file_xlsx)
+openxlsx::write.xlsx(x = gene_info, file = gene_info_file_xlsx)
+
 
 ```
 
@@ -552,6 +580,7 @@ At the end of this tutorial, we dispose of the following data types.
 | Variable name | Data content |
 |--------------|----------------------------------------------|
 | `bic_meta` | metadata with a few added columns (sample color, estimators of central tendency and dispersion) |
+| `gene_info`| ID, name and description of the 1000 genes used here |
 | `bic_expr` | non-normalised expression table |
 | `bic_expr_centered` | median-based expression table |
 | `bic_expr_std` | sample-wise standardised expression table, all samples having the same median and IQR |
