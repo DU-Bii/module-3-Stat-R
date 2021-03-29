@@ -669,10 +669,11 @@ Sample tree of the expression matrix with Euclidian distance and complete linkag
 <span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  clusters_euclidian_complete,</span>
 <span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  subset_meta<span class="sc">$</span>cancer.type)</span>
 <span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(confusion_euclidian_complete)</span></code></pre></div>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(confusion_euclidian_complete, <span class="at">row.names =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
+<th align="left"></th>
 <th align="right">Basal.like</th>
 <th align="right">HER2pos</th>
 <th align="right">Luminal.A</th>
@@ -681,24 +682,28 @@ Sample tree of the expression matrix with Euclidian distance and complete linkag
 </thead>
 <tbody>
 <tr class="odd">
+<td align="left">1</td>
 <td align="right">16</td>
 <td align="right">16</td>
 <td align="right">0</td>
 <td align="right">2</td>
 </tr>
 <tr class="even">
+<td align="left">2</td>
 <td align="right">3</td>
 <td align="right">1</td>
 <td align="right">3</td>
 <td align="right">1</td>
 </tr>
 <tr class="odd">
+<td align="left">3</td>
 <td align="right">1</td>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="right">0</td>
 </tr>
 <tr class="even">
+<td align="left">4</td>
 <td align="right">0</td>
 <td align="right">3</td>
 <td align="right">17</td>
@@ -715,16 +720,108 @@ Sample tree of the expression matrix with Euclidian distance and complete linkag
 <span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span>(<span class="st">&quot;ARI for Euclidian distance and complete linkage: &quot;</span>,</span>
 <span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>        ari_euclidian_complete)</span></code></pre></div>
-<p>With Euclidian distance and the complete lin,kage, we obtain an Adjusted Rank Index (ARI) of 0.312.</p>
+<p>With Euclidian distance and the complete lin,kage, we obtain an Adjusted Rank Index (ARI) of 0.312, computed with a subset of the expression table.</p>
 <p>The next question is of course: can we obtain better results with other distances and agglomeration rules? This will be left as an exercise.</p>
+</div>
+<div id="clustering-with-the-full-dataset" class="section level2">
+<h2>Clustering with the full dataset</h2>
+<p>Compute the ARI index with the same similarity measure and the same agglomeration rule, but with the full dataset (<code>bic_expr_labels</code>)</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Choose the clustering parameters</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>distance <span class="ot">&lt;-</span> <span class="st">&quot;euclidian&quot;</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>rule <span class="ot">&lt;-</span> <span class="st">&quot;complete&quot;</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span>(<span class="st">&quot;Computing ARI with &quot;</span>, </span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>        distance, <span class="st">&quot; dissimilarity and &quot;</span>,</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>        rule, <span class="st">&quot; linkage&quot;</span>)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="do">## Euclidian distance</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>bic_dist <span class="ot">&lt;-</span> factoextra<span class="sc">::</span><span class="fu">get_dist</span>(</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">t</span>(bic_expr_labels), <span class="at">method =</span> distance)</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="do">#### Sample tree with Euclidian distance, complete linkage ####</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>sample_tree <span class="ot">&lt;-</span> <span class="fu">hclust</span>(</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">d =</span> bic_dist, <span class="at">method =</span> rule)</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a><span class="do">## Confusion matrix</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>nclust <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>bic_clusters <span class="ot">&lt;-</span> <span class="fu">cutree</span>(</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">tree =</span> sample_tree, <span class="at">k =</span> nclust)</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>bic_confusion <span class="ot">&lt;-</span> <span class="fu">table</span>(</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>  bic_clusters,</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>  bic_meta<span class="sc">$</span>cancer.type)</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(bic_confusion, <span class="at">row.names =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>      <span class="at">caption =</span> <span class="fu">paste0</span>(</span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Confusion table of the sample clusters versus cancer subtypes (all samples and 1000 genes). &quot;</span>,</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Distance: &quot;</span>, distance, <span class="st">&quot;. &quot;</span>,</span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Agglomeration rule: &quot;</span>, rule, <span class="st">&quot;. &quot;</span></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>      ))</span></code></pre></div>
+<table>
+<caption>Confusion table of the sample clusters versus cancer subtypes (all samples and 1000 genes). Distance: euclidian. Agglomeration rule: complete.</caption>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">Basal.like</th>
+<th align="right">HER2pos</th>
+<th align="right">Luminal.A</th>
+<th align="right">Luminal.B</th>
+<th align="right">Unclassified</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1</td>
+<td align="right">117</td>
+<td align="right">40</td>
+<td align="right">378</td>
+<td align="right">106</td>
+<td align="right">100</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="right">4</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">3</td>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td align="right">9</td>
+<td align="right">1</td>
+<td align="right">18</td>
+<td align="right">7</td>
+<td align="right">4</td>
+</tr>
+<tr class="even">
+<td align="left">4</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">26</td>
+<td align="right">5</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Compute Adjusted Rand Index (ARI)</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>bic_ari <span class="ot">&lt;-</span> <span class="fu">round</span>(</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">digits =</span> <span class="dv">3</span>, </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  aricode<span class="sc">::</span><span class="fu">ARI</span>(</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">c1 =</span> bic_clusters, </span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">c2 =</span> bic_meta<span class="sc">$</span>cancer.type))</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span>(<span class="st">&quot;ARI for Euclidian distance and complete linkage (full dataset): &quot;</span>,</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>        bic_ari)</span></code></pre></div>
+<p>With Euclidian distance and the complete lin,kage, we obtain an Adjusted Rank Index (ARI) of -0.011, computed with a subset of the expression table.</p>
 </div>
 <div id="heatmap-with-biclustering-samples-genes" class="section level2">
 <h2>Heatmap with biclustering (samples + genes)</h2>
 <p>Biclustering amounts to cluster both the individuals (patient samples in our case) and variables (genes in our case).</p>
 <p>We will illustrate this with the Spearman correlation as distance and Ward as agglomeration rule.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Biclustering ####</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># left as an exercise</span></span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Biclustering ####</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># left as an exercise</span></span></code></pre></div>
 </div>
 <div id="personal-work-chosing-the-most-relevant-parameters" class="section level2">
 <h2>Personal work: chosing the most relevant parameters</h2>
@@ -743,7 +840,7 @@ Sample tree of the expression matrix with Euclidian distance and complete linkag
 <div id="session-info" class="section level2">
 <h2>Session info</h2>
 <p>As usual, we write the session info in the report for the sake of traceability.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
 <pre><code>R version 4.0.2 (2020-06-22)
 Platform: x86_64-apple-darwin17.0 (64-bit)
 Running under: macOS Mojave 10.14.6
