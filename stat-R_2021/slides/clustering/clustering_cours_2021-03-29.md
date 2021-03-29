@@ -2,7 +2,7 @@
 title: "Clustering : classification non supervisée"
 subtitle: "Hierarchical clustering et Kmeans"
 author: "Anne Badel & Jacques van Helden"
-date: "29 mars 2021" #"2021-03-27"
+date: "29 mars 2021" #"2021-03-29"
 output:
   slidy_presentation:
     highlight: default
@@ -69,7 +69,84 @@ editor_options:
 
 
 
+```r
+## Install required packages
+packages <- c("knitr", 
+              "FactoMineR", # for PCA
+              "aricode",  # for adjusted Rand Index,
+              "RColorBrewer", 
+              "vegan", 
+              "pheatmap",
+              "scales", ## to draw plot with semi-transparent points
+              "tinytex")
+# library(formattable)
 
+for (pkg in packages) {
+  if (!require(pkg, character.only = TRUE)) {
+    install.packages(pkg)
+    require(pkg, character.only = TRUE)
+  }
+}
+```
+
+
+<!-- ```{r  echo=F} -->
+<!-- ## Define data folder -->
+<!-- data.folder <- "../../data/TCGA_BIC_subset" -->
+
+<!-- ## File containing subset of the expression table -->
+<!-- bic_expr_labels_file <- file.path( -->
+<!--   data.folder, -->
+<!--   "BIC_log2-norm-counts_edgeR_DEG_top_1000.tsv.gz") -->
+
+<!-- ## Load expression table -->
+<!-- message("Loading expression file\t", bic_expr_labels_file) -->
+<!-- bic_expr_labels <- read.table(file = bic_expr_labels_file, header = TRUE) -->
+<!-- message("Loaded BIC expression table with ", nrow(bic_expr_labels), " rows (genes) x ", ncol(bic_expr_labels), " columns (samples)") -->
+
+<!-- ``` -->
+
+<!-- ```{r, echo = F, eval=FALSE} -->
+<!-- ## ANNE: JE RECOMMANDE VRAIMENT D'EVITER CE TRONQUAGE DES NOMS -->
+<!-- ## LES BIOLOGISTES N'Y RETROUVENT PAS LEUR LATIN -->
+<!-- ## De plus cela génère des messages " duplicate 'row.names' are not allowed" -->
+<!-- reduc_name <- function(nom_long) { -->
+<!--   temp <- unlist(strsplit(nom_long, split = ""))[11:18] -->
+<!--   nom_court <- paste(temp, collapse = "") -->
+<!--   return(nom_court) -->
+<!-- } -->
+<!-- # rownames(bic_expr_labels) <- sapply(rownames(bic_expr_labels), reduc_name) -->
+<!-- # colnames(bic_expr_labels) <- sapply(colnames(bic_expr_labels), reduc_name) -->
+
+<!-- ``` -->
+
+
+## Data reloading
+
+We reload here the memory image saved at the end of the tutorial [Data loading and exploration](https://du-bii.github.io/module-3-Stat-R/stat-R_2021/tutorials/machine-learning_TCGA-BIC/01_data-loading_TCGA-BIC.html).
+
+
+```r
+#### Reload memory image from github repository ####
+github_mem_img <- "https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2021/data/TCGA_BIC_subset/bic_data.Rdata?raw=true"
+
+## Define local destination folder
+bic_folder <- "~/m3-stat-R/TCGA-BIC_analysis"
+## Create it if required
+dir.create(bic_folder, showWarnings = FALSE, recursive = TRUE)
+
+## Define local destination for the memory image
+mem_image <- file.path(bic_folder, "bic_data.Rdata")
+if (file.exists(mem_image)) {
+  message("Memory image already there, skipping download")
+} else {
+  message("Downloading memory image from\n", github_mem_img)
+  download.file(url = github_mem_img, destfile = mem_image)
+  message("Local memory image\t", mem_image)
+}
+
+load(mem_image)
+```
 
 # Questions abordées dans ce cours
 
@@ -110,14 +187,14 @@ Les données ont été préparées pour vous, selon la procédure détaillée au
 # TCGA (2)
 
 
-|                   | X1AB92ADA.637E.4A42.A39A.70CEEEA41AE3| DA98A67C.F11F.41D3.8223.1161EBFF8B58| X06CCFD0F.7FB8.471E.B823.C7876582D6FC| A33B2F42.6EC6.4FB2.8BE5.542407A0382E|
-|:------------------|-------------------------------------:|------------------------------------:|-------------------------------------:|------------------------------------:|
-|ENSG00000000003.14 |                              16.52775|                             18.84599|                              18.67677|                             17.75458|
-|ENSG00000000419.12 |                              17.50349|                             17.01692|                              18.15315|                             19.34170|
-|ENSG00000000457.13 |                              17.96040|                             17.29379|                              17.51914|                             18.34040|
-|ENSG00000000460.16 |                              16.77151|                             16.30180|                              16.85386|                             17.75886|
-|ENSG00000000938.12 |                              15.13011|                             13.57196|                              15.04359|                             15.11192|
-|ENSG00000000971.15 |                              17.21898|                             20.05815|                              17.48420|                             18.33249|
+|         | Basal.like.99| Luminal.A.248| Luminal.B.48| Luminal.A.409|
+|:--------|-------------:|-------------:|------------:|-------------:|
+|TSPAN6   |      16.80977|      18.94369|     16.55594|      19.38377|
+|DPM1     |      17.95231|      17.49642|     18.11666|      16.91358|
+|SCYL3    |      17.29159|      17.50080|     18.42470|      18.17979|
+|C1orf112 |      16.64188|      16.36108|     17.48377|      17.29434|
+|FGR      |      17.53178|      15.08102|     15.01736|      15.34302|
+|CFH      |      18.38088|      18.79525|     18.02682|      17.37518|
 
 Pour des raisons historiques, en analyse transcriptomique les données sont toujours fournies avec
 
@@ -126,7 +203,7 @@ Pour des raisons historiques, en analyse transcriptomique les données sont touj
 
 Cette convention a été établie en 1997, lors des toutes premières publications sur le transcriptome de la levure. Dans ces études, l'objet d'intérêt (l'"individu") était le gène, et les variables étaient ses mesures d'expression dans les différentes conditions testées.
 
-Pour l'analyse de tissus cancéreux, on considère au contraire que l'"objet" d'intérêt  est l'échantillon prélevé sur le patient, et les variables sont les mesures d'expression des différents gènes chez un patient.
+Pour le prochain TP sur la classification supervisée de tissus cancéreux, on considèrera au contraire que l'"objet" d'intérêt  est l'échantillon prélevé sur le patient, et les variables sont les mesures d'expression des différents gènes chez un patient.
 
 
 # TCGA (3)
@@ -137,15 +214,15 @@ Ce qui implique de faire attention, et éventuellement de travailler sur la matr
 
 
 ```r
-t(BIC_expr[1:6, 1:4])
+t(bic_expr_labels[1:6, 1:4])
 ```
 
 ```
-                                      ENSG00000000003.14 ENSG00000000419.12 ENSG00000000457.13 ENSG00000000460.16 ENSG00000000938.12 ENSG00000000971.15
-X1AB92ADA.637E.4A42.A39A.70CEEEA41AE3           16.52775           17.50349           17.96040           16.77151           15.13011           17.21899
-DA98A67C.F11F.41D3.8223.1161EBFF8B58            18.84599           17.01692           17.29379           16.30180           13.57196           20.05815
-X06CCFD0F.7FB8.471E.B823.C7876582D6FC           18.67677           18.15315           17.51914           16.85386           15.04359           17.48420
-A33B2F42.6EC6.4FB2.8BE5.542407A0382E            17.75458           19.34170           18.34039           17.75886           15.11192           18.33249
+               TSPAN6     DPM1    SCYL3 C1orf112      FGR      CFH
+Basal.like   16.84036 17.64740 17.93260 17.63825 16.67788 18.04494
+Basal.like.1 18.52655 18.14431 16.79884 17.34841 15.56100 17.03132
+Basal.like.2 19.14367 17.32173 17.05726 16.02602 17.61965 18.19628
+Basal.like.3 17.93844 17.83135 17.37199 16.86000 14.62704 18.53828
 ```
 
 
@@ -169,11 +246,11 @@ A33B2F42.6EC6.4FB2.8BE5.542407A0382E            17.75458           19.34170     
   
 
 ```
-                                      ENSG00000000003.14 ENSG00000000419.12 ENSG00000000457.13 ENSG00000000460.16 ENSG00000000938.12
-X1AB92ADA.637E.4A42.A39A.70CEEEA41AE3           16.52775           17.50349           17.96040           16.77151           15.13011
-DA98A67C.F11F.41D3.8223.1161EBFF8B58            18.84599           17.01692           17.29379           16.30180           13.57196
-X06CCFD0F.7FB8.471E.B823.C7876582D6FC           18.67677           18.15315           17.51914           16.85386           15.04359
-A33B2F42.6EC6.4FB2.8BE5.542407A0382E            17.75458           19.34170           18.34039           17.75886           15.11192
+               TSPAN6     DPM1    SCYL3 C1orf112      FGR
+Basal.like   16.84036 17.64740 17.93260 17.63825 16.67788
+Basal.like.1 18.52655 18.14431 16.79884 17.34841 15.56100
+Basal.like.2 19.14367 17.32173 17.05726 16.02602 17.61965
+Basal.like.3 17.93844 17.83135 17.37199 16.86000 14.62704
 ```
 
 - Comment représenter / visualiser ces données ?
@@ -192,11 +269,13 @@ A33B2F42.6EC6.4FB2.8BE5.542407A0382E            17.75458           19.34170     
 
 # Représentons ces données : une variable à la fois (4)
 
-<img src="figures/TCGA_unnamed-chunk-3-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="figures/TCGA_unnamed-chunk-1-1.png" width="90%" style="display: block; margin: auto;" />
 
 # Représentons ces données : deux variables à la fois (5)
 
-<img src="figures/TCGA_unnamed-chunk-4-1.png" width="50%" style="display: block; margin: auto;" />
+L'intensité des couleurs reflète la densité locale des points
+
+<img src="figures/TCGA_unnamed-chunk-2-1.png" width="50%" style="display: block; margin: auto;" />
 
 # Représentons ces données : toutes les variables (6)
 
@@ -230,13 +309,12 @@ Nous utiliserons les termes anglais
 
 en français :
 
-- clustering = classification 
-- classification = discrimination
-
+- clustering = classification non supervisée, découverte de classe
+- supervised classification = classement
 
 # Clustering
 
-On a **pas d'information** supplémentaire sur nos données, juste le data.frame contenant
+On n'a **pas d'information** supplémentaire sur nos données, juste le `data.frame` contenant
 
 - variables quantitatives = vecteur de réels
  
@@ -251,7 +329,7 @@ On a **pas d'information** supplémentaire sur nos données, juste le data.frame
 
 # Classification
 
-On a **une **information** supplémentaire sur nos données : on connaît le partitionnement de notre jeu de données
+On a **une information supplémentaire** : on connaît le partitionnement de notre jeu de données
 
 - variables quantitatives = vecteur de réels
 - ET
@@ -287,10 +365,7 @@ Si 1,2,3 seulement: dissimilarité
 
 # Distance euclidienne et distance de corrélation
 
-
-```
-[1] "MISSING FIGURE"
-```
+<img src="img/cor_vs_euclidian_dist.png" title="données simulées : y a-t-il des groupes ?" alt="données simulées : y a-t-il des groupes ?" width="45%" style="display: block; margin: auto;" />
 
 
 
@@ -307,49 +382,49 @@ Si 1,2,3 seulement: dissimilarité
 
 |   |   t1|   t2|   t3|   t4|   t5|
 |:--|----:|----:|----:|----:|----:|
-|X  | 1.96| 3.67| 4.80| 2.96| 4.37|
-|Y  | 3.83| 3.29| 3.28| 3.59| 3.34|
+|X  | 1.75| 3.56| 4.85| 4.09| 3.27|
+|Y  | 3.28| 3.11| 2.05| 3.29| 3.02|
 
-distance euclidienne : `dist(mat.xy) = ` 2.72
+distance euclidienne : `dist(mat.xy) = ` 3.33
 
-distance de manhattan = `dist(mat.xy, method = "manhattan")` 5.43
+distance de manhattan = `dist(mat.xy, method = "manhattan")` 5.83
 
 - on utilise la fonction `1 - cor()` avec l'option `method = "pearson", "spearman", ...` 
 
-distance de corrélation = `1-cor(t(mat.xy)` 1.93
+distance de corrélation = `1-cor(t(mat.xy)` 1.68
 
 # Avec R (2) : distance entre individus d'un nuage de points 
 
 - distance euclidienne, de 5 individus choisis au hasard
 
 ```
-                   ENSG00000003509.15 ENSG00000001629.9 ENSG00000003096.13 ENSG00000005108.15
-ENSG00000001629.9                  70                                                        
-ENSG00000003096.13                 70               125                                      
-ENSG00000005108.15                 58               118                 55                   
-ENSG00000006007.11                 87                27                141                135
+        CREBBP VPS41 CACNA1G GCFC2
+VPS41       37                    
+CACNA1G    217   186              
+GCFC2       75    43     149      
+POLR2J      65    37     164    28
 ```
 
 - distance de corrélation : $d = 1-r$
 
 ```
-                   ENSG00000003509.15 ENSG00000001629.9 ENSG00000003096.13 ENSG00000005108.15
-ENSG00000001629.9                0.87                                                        
-ENSG00000003096.13               0.80              0.97                                      
-ENSG00000005108.15               0.94              0.74               0.64                   
-ENSG00000006007.11               1.24              0.92               1.28               0.99
+        CREBBP VPS41 CACNA1G GCFC2
+VPS41     0.75                    
+CACNA1G   0.75  0.88              
+GCFC2     1.07  0.88    1.06      
+POLR2J    1.49  1.39    1.24  1.10
 ```
 
 # Avec R (3) : distance entre variables décrivant le nuage de points 
 
 
 ```
-                                      X1AB92ADA.637E.4A42.A39A.70CEEEA41AE3 DA98A67C.F11F.41D3.8223.1161EBFF8B58 X06CCFD0F.7FB8.471E.B823.C7876582D6FC A33B2F42.6EC6.4FB2.8BE5.542407A0382E D021A258.8713.4383.9DCA.45E2F54A0411
-DA98A67C.F11F.41D3.8223.1161EBFF8B58                                 0.1296                                                                                                                                                     
-X06CCFD0F.7FB8.471E.B823.C7876582D6FC                                0.0410                               0.2803                                                                                                                
-A33B2F42.6EC6.4FB2.8BE5.542407A0382E                                 0.0426                               0.2437                                0.0085                                                                          
-D021A258.8713.4383.9DCA.45E2F54A0411                                 0.1876                               0.4379                                0.0899                               0.1130                                     
-C705FA90.D9AA.4949.BACA.1C022A14CB03                                 0.0371                               0.1702                                0.0408                               0.0448                               0.0774
+             Basal.like Basal.like.1 Basal.like.2 Basal.like.3 Basal.like.4
+Basal.like.1     0.0193                                                    
+Basal.like.2     0.0157       0.0343                                       
+Basal.like.3     0.0591       0.0843       0.0161                          
+Basal.like.4     0.0154       0.0061       0.0478       0.1114             
+Basal.like.5     0.0114       0.0136       0.0408       0.0917       0.0072
 ```
 
 # Distances entre groupes (1)
@@ -381,7 +456,7 @@ On peut ensuite essayer de visualiser les données
 
 
 ```r
-boxplot(BIC_expr[, sample(1:ncol(BIC_expr), 30)], las = 2)
+boxplot(bic_expr_labels[, sample(1:ncol(bic_expr_labels), 30)], las = 2)
 ```
 
 <img src="figures/TCGA_boxplot_4variables-1.png" width="40%" style="display: block; margin: auto;" />
@@ -391,8 +466,8 @@ boxplot(BIC_expr[, sample(1:ncol(BIC_expr), 30)], las = 2)
 
 
 ```r
-BIC.var <- apply(BIC_expr, 2, var)
-sum(apply(BIC_expr, 2, var) == 0)
+BIC.var <- apply(bic_expr_labels, 2, var)
+sum(apply(bic_expr_labels, 2, var) == 0)
 ```
 
 ```
@@ -409,7 +484,7 @@ Afin de pouvoir considérer que toutes les variables sont à la même échelle, 
   
 
 ```r
-BIC_expr.centre <- scale(BIC_expr, center = TRUE, scale = FALSE)
+bic_expr_labels.centre <- scale(bic_expr_labels, center = TRUE, scale = FALSE)
 ```
 
 - soit 
@@ -419,7 +494,7 @@ BIC_expr.centre <- scale(BIC_expr, center = TRUE, scale = FALSE)
 
 
 ```r
-BIC_expr.scaled <- scale(BIC_expr, center = TRUE, scale = TRUE)
+bic_expr_labels.scaled <- scale(bic_expr_labels, center = TRUE, scale = TRUE)
 ```
 
 - soit en effectuant une transformation des variables, par exemple transformation logarithmique
@@ -548,7 +623,7 @@ adaptés à nos données
 
 
 ```r
-pheatmap::pheatmap(BIC_expr, clustering.method = "ward.D2")
+pheatmap::pheatmap(bic_expr_labels, clustering.method = "ward.D2")
 ```
 
 <img src="figures/TCGA_pheatmap1-1.png" width="60%" style="display: block; margin: auto;" />
@@ -557,7 +632,7 @@ pheatmap::pheatmap(BIC_expr, clustering.method = "ward.D2")
 
 
 ```r
-pheatmap::pheatmap(BIC_expr.scaled, clustering.method = "ward.D2")
+pheatmap::pheatmap(bic_expr_labels.scaled, clustering.method = "ward.D2")
 ```
 
 <img src="figures/TCGA_pheatmap2-1.png" width="60%" style="display: block; margin: auto;" />
@@ -617,15 +692,13 @@ Les individus dans le plan
 
 
 ```r
-iris.scale.kmeans5 <- kmeans(BIC_expr.scaled, center = 5)
+iris.scale.kmeans5 <- kmeans(bic_expr_labels.scaled, center = 5)
 iris.scale.kmeans5$cluster[1:20]
 ```
 
 ```
-ENSG00000000003.14 ENSG00000000419.12 ENSG00000000457.13 ENSG00000000460.16 ENSG00000000938.12 ENSG00000000971.15 ENSG00000001036.13 ENSG00000001084.10 ENSG00000001167.14 ENSG00000001460.17 ENSG00000001461.16 ENSG00000001497.16  ENSG00000001561.6 ENSG00000001617.11  ENSG00000001629.9 
-                 4                  4                  4                  4                  5                  1                  1                  4                  1                  5                  4                  1                  4                  1                  1 
-ENSG00000001630.15 ENSG00000001631.15 ENSG00000002016.17 ENSG00000002330.13 ENSG00000002549.12 
-                 1                  4                  5                  4                  1 
+  TSPAN6     DPM1    SCYL3 C1orf112      FGR      CFH    FUCA2     GCLC     NFYA    STPG1   NIPAL3    LAS1L    ENPP4   SEMA3F   ANKIB1  CYP51A1    KRIT1    RAD52      BAD     LAP3 
+       2        3        3        3        4        2        2        3        2        4        2        2        3        2        2        2        3        4        3        2 
 ```
 
 # Comment déterminer le nombre de clusters ? (1)
@@ -668,19 +741,19 @@ plot(BIC.scale.hclust.ward, hang = -1, cex = 0.5)
 
 # Comment déterminer le nombre de clusters ? avec les kmeans
 
-<img src="figures/TCGA_unnamed-chunk-7-1.png" width="60%" style="display: block; margin: auto;" />
+<img src="figures/TCGA_unnamed-chunk-5-1.png" width="60%" style="display: block; margin: auto;" />
 
 # Comparaison des résultats des deux clustering
 
 - par une table
 
 
-|   | k1  | k2  | k3 |
-|:--|:---:|:---:|:--:|
-|c1 | 57  | 398 | 0  |
-|c2 |  0  | 98  | 61 |
-|c3 | 293 |  3  | 0  |
-|c4 |  0  |  0  | 90 |
+|   | k1 | k2  | k3  |
+|:--|:--:|:---:|:---:|
+|c1 | 0  | 57  | 398 |
+|c2 | 61 |  0  | 98  |
+|c3 | 0  | 293 |  3  |
+|c4 | 90 |  0  |  0  |
 
 # Pros et cons des différents algorithmes
 
@@ -830,19 +903,19 @@ v.c 0.0000000 0.3333333
 
 ```r
 par(mfrow = c(1,2))
-biplot(prcomp(BIC_expr), las = 1, cex = 0.7,
+biplot(prcomp(bic_expr_labels), las = 1, cex = 0.7,
        main = "Données non normalisées")
-biplot(prcomp(BIC_expr, scale = TRUE), las = 1, cex = 0.7,
+biplot(prcomp(bic_expr_labels, scale = TRUE), las = 1, cex = 0.7,
        main = "Données normalisées")
 ```
 
-<img src="figures/TCGA_unnamed-chunk-12-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="figures/TCGA_unnamed-chunk-10-1.png" width="90%" style="display: block; margin: auto;" />
 
 # Géométrie et distances (1)
 
 On considère les données comme des points de $\mathbb{R}^n$ 
 
-<img src="figures/TCGA_unnamed-chunk-13-1.png" width="30%" style="display: block; margin: auto;" />
+<img src="figures/TCGA_unnamed-chunk-11-1.png" width="30%" style="display: block; margin: auto;" />
 
 $\mathbb{R}^n$ : espace Euclidien à $n$ dimensions, où 
 
@@ -857,7 +930,7 @@ On considère les données comme des points de $R^n$ (*)
 - distances = dissimilarités imposées par le problème
 - dissimilarités $\longrightarrow$ permettent la visualisation de l'ensemble des points
 
-<img src="figures/TCGA_unnamed-chunk-14-1.png" width="30%" style="display: block; margin: auto;" />
+<img src="figures/TCGA_unnamed-chunk-12-1.png" width="30%" style="display: block; margin: auto;" />
 
 # Géométrie et distances (3)
 
@@ -880,7 +953,7 @@ points(x = 4, y = 4, col = "red", pch = 19)
 text(x = 4, y = 4, col = "red", label = "C", pos = 4)
 ```
 
-<img src="figures/TCGA_unnamed-chunk-15-1.png" style="display: block; margin: auto;" />
+<img src="figures/TCGA_unnamed-chunk-13-1.png" style="display: block; margin: auto;" />
 
 # Distance euclidienne
 
@@ -922,7 +995,7 @@ $D(C_1,C_2) = \sqrt{\frac{N_1N_2}{N_1 + N_2}} \| m_1 -m_2 \|$
 
 
 ```r
-pheatmap::pheatmap(BIC_expr, scale = "column", clustering.method = "ward.D2")
+pheatmap::pheatmap(bic_expr_labels, scale = "column", clustering.method = "ward.D2")
 ```
 
 <img src="figures/TCGA_pheatmap3-1.png" width="60%" style="display: block; margin: auto;" />
@@ -931,7 +1004,7 @@ pheatmap::pheatmap(BIC_expr, scale = "column", clustering.method = "ward.D2")
 
 
 ```r
-pheatmap::pheatmap(BIC_expr, scale = "row", clustering.method = "ward.D2")
+pheatmap::pheatmap(bic_expr_labels, scale = "row", clustering.method = "ward.D2")
 ```
 
 <img src="figures/TCGA_pheatmap4-1.png" width="60%" style="display: block; margin: auto;" />
@@ -943,19 +1016,19 @@ pheatmap::pheatmap(BIC_expr, scale = "row", clustering.method = "ward.D2")
 
 |           |   t1|   t2|   t3|   t4|   t5|   SUM|
 |:----------|----:|----:|----:|----:|----:|-----:|
-|X          | 4.51| 2.96| 4.15| 3.43| 1.12| 16.19|
-|Y          | 3.33| 2.81| 2.09| 3.26| 2.65| 14.14|
-|abs(Y - X) | 1.18| 0.16| 2.06| 0.18| 1.53|  5.11|
-|(Y - X)^2  | 1.39| 0.02| 4.26| 0.03| 2.34|  8.05|
-|Eucl       | 1.18| 0.16| 2.06| 0.18| 1.53|  2.84|
+|X          | 1.67| 2.57| 1.30| 4.51| 2.31| 12.36|
+|Y          | 2.35| 3.58| 2.38| 3.33| 2.50| 14.15|
+|abs(Y - X) | 0.68| 1.01| 1.08| 1.18| 0.19|  4.14|
+|(Y - X)^2  | 0.47| 1.01| 1.17| 1.39| 0.04|  4.08|
+|Eucl       | 0.68| 1.01| 1.08| 1.18| 0.19|  2.02|
 
-distance euclidienne : 2.84
+distance euclidienne : 2.02
 
-distance de manhattan = 5.11
+distance de manhattan = 4.14
 
 - on utilise la fonction `1 - cor()` avec l'option `method = "pearson", "spearman", ...` 
 
-distance de corrélation = 0.84
+distance de corrélation = 0.29
 
 # Je ne fais pas attention à ce que je fais ...
 
@@ -1011,13 +1084,13 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] tinytex_0.27       pheatmap_1.0.12    vegan_2.5-6        lattice_0.20-41    permute_0.9-5      RColorBrewer_1.1-2 aricode_1.0.0      FactoMineR_2.3     knitr_1.30        
+ [1] tinytex_0.30       scales_1.1.1       pheatmap_1.0.12    vegan_2.5-7        lattice_0.20-41    permute_0.9-5      RColorBrewer_1.1-2 aricode_1.0.0      FactoMineR_2.4     knitr_1.31        
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.5           highr_0.8            pillar_1.4.6         compiler_4.0.2       tools_4.0.2          digest_0.6.27        nlme_3.1-150         evaluate_0.14        lifecycle_0.2.0      tibble_3.0.4         gtable_0.3.0         mgcv_1.8-33          pkgconfig_2.0.3      rlang_0.4.8         
-[15] Matrix_1.2-18        parallel_4.0.2       ggrepel_0.8.2        yaml_2.2.1           xfun_0.19            stringr_1.4.0        dplyr_1.0.2          cluster_2.1.0        generics_0.1.0       vctrs_0.3.4          flashClust_1.01-2    grid_4.0.2           tidyselect_1.1.0     scatterplot3d_0.3-41
-[29] glue_1.4.2           R6_2.5.0             rmarkdown_2.5        farver_2.0.3         ggplot2_3.3.2        purrr_0.3.4          magrittr_1.5         splines_4.0.2        scales_1.1.1         ellipsis_0.3.1       htmltools_0.5.0      leaps_3.1            MASS_7.3-53          colorspace_2.0-0    
-[43] labeling_0.4.2       stringi_1.5.3        munsell_0.5.0        crayon_1.3.4        
+ [1] tidyselect_1.1.0     xfun_0.22            bslib_0.2.4          purrr_0.3.4          splines_4.0.2        colorspace_2.0-0     vctrs_0.3.6          generics_0.1.0       htmltools_0.5.1.1    mgcv_1.8-34          yaml_2.2.1           utf8_1.2.1           rlang_0.4.10         jquerylib_0.1.3     
+[15] pillar_1.5.1         glue_1.4.2           DBI_1.1.1            lifecycle_1.0.0      stringr_1.4.0        munsell_0.5.0        gtable_0.3.0         htmlwidgets_1.5.3    leaps_3.1            evaluate_0.14        labeling_0.4.2       parallel_4.0.2       fansi_0.4.2          highr_0.8           
+[29] Rcpp_1.0.6           KernSmooth_2.23-18   flashClust_1.01-2    DT_0.17              scatterplot3d_0.3-41 jsonlite_1.7.2       farver_2.1.0         ggplot2_3.3.3        digest_0.6.27        stringi_1.5.3        dplyr_1.0.5          ggrepel_0.9.1        grid_4.0.2           tools_4.0.2         
+[43] magrittr_2.0.1       sass_0.3.1           tibble_3.1.0         cluster_2.1.1        crayon_1.4.1         pkgconfig_2.0.3      ellipsis_0.3.1       MASS_7.3-53.1        Matrix_1.3-2         assertthat_0.2.1     rmarkdown_2.7        R6_2.5.0             nlme_3.1-152         compiler_4.0.2      
 ```
 
 

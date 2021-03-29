@@ -66,20 +66,6 @@ editor_options:
 
 
 ```{r settings, include=FALSE, echo=FALSE, eval=TRUE}
-## Install required packages
-packages <- c("knitr", 
-              "FactoMineR", # for PCA
-              "aricode",  # for adjusted Rand Index,
-              "RColorBrewer", "vegan", "pheatmap",
-              "tinytex")
-# library(formattable)
-
-for (pkg in packages) {
-  if (!require(pkg, character.only = TRUE)) {
-    install.packages(pkg)
-    require(pkg, character.only = TRUE)
-  }
-}
 
 options(width = 300)
 
@@ -87,7 +73,7 @@ options(width = 300)
 
 knitr::opts_chunk$set(
   fig.width = 5, fig.height = 5, 
-  fig.path = 'figures/TCGA_',
+  fig.path = 'figures/TCGA-clustering_',
   fig.align = "center", 
   size = "tiny", 
   echo = TRUE, 
@@ -100,33 +86,87 @@ knitr::opts_chunk$set(
 options(scipen = 12) ## Max number of digits for non-scientific notation
 ```
 
-```{r  echo=F}
-## Define data folder
-data.folder <- "../../data/TCGA_BIC_subset"
 
-## File containing subset of the expression table
-BIC_expr_file <- file.path(
-  data.folder,
-  "BIC_log2-norm-counts_edgeR_DEG_top_1000.tsv.gz")
+```{r install_packages}
+## Install required packages
+packages <- c("knitr", 
+              "FactoMineR", # for PCA
+              "aricode",  # for adjusted Rand Index,
+              "RColorBrewer", 
+              "vegan", 
+              "pheatmap",
+              "scales", ## to draw plot with semi-transparent points
+              "tinytex")
+# library(formattable)
 
-## Load expression table
-message("Loading expression file\t", BIC_expr_file)
-BIC_expr <- read.table(file = BIC_expr_file, header = TRUE)
-message("Loaded BIC expression table with ", nrow(BIC_expr), " rows (genes) x ", ncol(BIC_expr), " columns (samples)")
+for (pkg in packages) {
+  if (!require(pkg, character.only = TRUE)) {
+    install.packages(pkg)
+    require(pkg, character.only = TRUE)
+  }
+}
 
 ```
 
-```{r, echo = F, eval=FALSE}
-## ANNE: JE RECOMMANDE VRAIMENT D'EVITER CE TRONQUAGE DES NOMS
-## LES BIOLOGISTES N'Y RETROUVENT PAS LEUR LATIN
-## De plus cela génère des messages " duplicate 'row.names' are not allowed"
-reduc_name <- function(nom_long) {
-  temp <- unlist(strsplit(nom_long, split = ""))[11:18]
-  nom_court <- paste(temp, collapse = "")
-  return(nom_court)
+
+<!-- ```{r  echo=F} -->
+<!-- ## Define data folder -->
+<!-- data.folder <- "../../data/TCGA_BIC_subset" -->
+
+<!-- ## File containing subset of the expression table -->
+<!-- bic_expr_labels_file <- file.path( -->
+<!--   data.folder, -->
+<!--   "BIC_log2-norm-counts_edgeR_DEG_top_1000.tsv.gz") -->
+
+<!-- ## Load expression table -->
+<!-- message("Loading expression file\t", bic_expr_labels_file) -->
+<!-- bic_expr_labels <- read.table(file = bic_expr_labels_file, header = TRUE) -->
+<!-- message("Loaded BIC expression table with ", nrow(bic_expr_labels), " rows (genes) x ", ncol(bic_expr_labels), " columns (samples)") -->
+
+<!-- ``` -->
+
+<!-- ```{r, echo = F, eval=FALSE} -->
+<!-- ## ANNE: JE RECOMMANDE VRAIMENT D'EVITER CE TRONQUAGE DES NOMS -->
+<!-- ## LES BIOLOGISTES N'Y RETROUVENT PAS LEUR LATIN -->
+<!-- ## De plus cela génère des messages " duplicate 'row.names' are not allowed" -->
+<!-- reduc_name <- function(nom_long) { -->
+<!--   temp <- unlist(strsplit(nom_long, split = ""))[11:18] -->
+<!--   nom_court <- paste(temp, collapse = "") -->
+<!--   return(nom_court) -->
+<!-- } -->
+<!-- # rownames(bic_expr_labels) <- sapply(rownames(bic_expr_labels), reduc_name) -->
+<!-- # colnames(bic_expr_labels) <- sapply(colnames(bic_expr_labels), reduc_name) -->
+
+<!-- ``` -->
+
+
+## Data reloading
+
+We reload here the memory image saved at the end of the tutorial [Data loading and exploration](https://du-bii.github.io/module-3-Stat-R/stat-R_2021/tutorials/machine-learning_TCGA-BIC/01_data-loading_TCGA-BIC.html).
+
+```{r reload_mem_image}
+#### Reload memory image from github repository ####
+github_mem_img <- "https://github.com/DU-Bii/module-3-Stat-R/blob/master/stat-R_2021/data/TCGA_BIC_subset/bic_data.Rdata?raw=true"
+
+## Define local destination folder
+bic_folder <- "~/m3-stat-R/TCGA-BIC_analysis"
+## Create it if required
+dir.create(bic_folder, showWarnings = FALSE, recursive = TRUE)
+
+## Define local destination for the memory image
+mem_image <- file.path(bic_folder, "bic_data.Rdata")
+if (file.exists(mem_image)) {
+  message("Memory image already there, skipping download")
+} else {
+  message("Downloading memory image from\n", github_mem_img)
+  download.file(url = github_mem_img, destfile = mem_image)
+  message("Local memory image\t", mem_image)
 }
-rownames(BIC_expr) <- sapply(rownames(BIC_expr), reduc_name)
-colnames(BIC_expr) <- sapply(colnames(BIC_expr), reduc_name)
+
+## Load the memory image
+message("Loading memory image", mem_image)
+load(mem_image)
+
 ```
 
 # Questions abordées dans ce cours
@@ -168,17 +208,19 @@ Les données ont été préparées pour vous, selon la procédure détaillée au
 # TCGA (2)
 
 ```{r data1, echo = FALSE}
-kable(BIC_expr[1:6, 1:4])
+## Select a fesw random samples and display a bit of the table
+rand_samples <- sample(x = 1:ncol(bic_expr_labels), size = 4, replace = FALSE)
+kable(bic_expr_labels[1:6, rand_samples])
 ```
 
 Pour des raisons historiques, en analyse transcriptomique les données sont toujours fournies avec
 
-- 1 ligne = 1 gène `r print(rownames(BIC_expr)[1:4])`
-- 1 échantillon biologique = 1 colonne `r print(colnames(BIC_expr)[1:4])`
+- 1 ligne = 1 gène `r print(rownames(bic_expr_labels)[1:4])`
+- 1 échantillon biologique = 1 colonne `r print(colnames(bic_expr_labels)[1:4])`
 
 Cette convention a été établie en 1997, lors des toutes premières publications sur le transcriptome de la levure. Dans ces études, l'objet d'intérêt (l'"individu") était le gène, et les variables étaient ses mesures d'expression dans les différentes conditions testées.
 
-Pour l'analyse de tissus cancéreux, on considère au contraire que l'"objet" d'intérêt  est l'échantillon prélevé sur le patient, et les variables sont les mesures d'expression des différents gènes chez un patient.
+Pour le prochain TP sur la classification supervisée de tissus cancéreux, on considèrera au contraire que l'"objet" d'intérêt  est l'échantillon prélevé sur le patient, et les variables sont les mesures d'expression des différents gènes chez un patient.
 
 
 # TCGA (3)
@@ -188,14 +230,14 @@ Pour l'analyse de tissus cancéreux, on considère au contraire que l'"objet" d'
 Ce qui implique de faire attention, et éventuellement de travailler sur la matrice transposée (fonction `t()` en R) pour utiliser correctement les fonctions classiques.
 
 ```{r data_transpose}
-t(BIC_expr[1:6, 1:4])
+t(bic_expr_labels[1:6, 1:4])
 ```
 
 ```{r t_data, include=FALSE, echo=FALSE, eval=TRUE}
 ## Je recommande d'utiliser deux data frames différentes 
 ## car ci-dessous on aura parfois besoin de travailler
 ## avec la table non-transposée
-BIC_expr_sample_rows <- t(BIC_expr)
+bic_expr_labels_sample_rows <- t(bic_expr_labels)
 ```
 
 - 1 ligne = 1 gène = 1 individu = 1 vecteur
@@ -205,7 +247,7 @@ BIC_expr_sample_rows <- t(BIC_expr)
 - l'ensemble des données = 1 data.frame
 
 ```{r dim_data, echo = FALSE}
-dim(BIC_expr_sample_rows)
+dim(bic_expr_labels_sample_rows)
 ```
 
 
@@ -215,7 +257,7 @@ dim(BIC_expr_sample_rows)
   * chaque individu est représenté par un vecteur de mesures
   
 ```{r extrait_data1, echo = FALSE}
-BIC_expr_sample_rows[1:4,1:5]
+bic_expr_labels_sample_rows[1:4,1:5]
 ```
 
 - Comment représenter / visualiser ces données ?
@@ -225,29 +267,35 @@ BIC_expr_sample_rows[1:4,1:5]
 # Représentons ces données : un individu à la fois (2)
 
 ```{r visu_ligne1, echo = FALSE, out.width = "80%", fig.height=5, fig.width=12}
-plot(1:200, BIC_expr[1, 1:200], 
+plot(1:200, bic_expr_labels[1, 1:200], 
      type = "l", 
      ylab  = "log2(counts)", 
      ylim = c(0, 30), 
      xlab = "sample number",
+     main = "Transcription profiles of an arbitrary gene",
      panel.first = grid())
-# plot(1:200, BIC_expr[1, 1:200], type = "l")
-legend("topleft", legend = rownames(BIC_expr)[1], col = "black", lwd = 2)
+# plot(1:200, bic_expr_labels[1, 1:200], type = "l")
+legend("topleft", legend = rownames(bic_expr_labels)[1], col = "black", lwd = 2)
 ```
 
 
 # Représentons ces données : deux individu à la fois (3)
 
 ```{r visu_ligne2, echo = FALSE, out.width = "80%", fig.height=5, fig.width=12}
-plot(1:200, BIC_expr[1, 1:200], 
+plot(1:200, bic_expr_labels[1, 1:200], 
      type = "l", 
      ylab  = "log2(counts)", 
      xlab = "sample number", 
+     main = "Transcription profiles of two arbitrary genes",
      ylim = c(0,30), 
      panel.first = grid())
-lines(1:200, BIC_expr[10, 1:200], 
+lines(1:200, bic_expr_labels[10, 1:200], 
      col = "red")
-legend("topleft", legend = rownames(BIC_expr)[c(1,10)], col = c("black", "red"), lwd = 2)
+legend("bottomleft", 
+       legend = rownames(bic_expr_labels)[c(1,10)], 
+       col = c("black", "red"), 
+       cex = 0.7,
+       lwd = 2)
 ```
 
 
@@ -256,8 +304,8 @@ legend("topleft", legend = rownames(BIC_expr)[c(1,10)], col = c("black", "red"),
 ```{r, echo = FALSE, out.width = "90%", fig.height=5, fig.width=12}
 par(mfrow = c(1, 2))
 ## Select a single sample
-sample_name <- names(BIC_expr[])[1]
-sample_values <- unlist(BIC_expr[, sample_name])
+sample_name <- colnames(bic_expr_labels)[1]
+sample_values <- unlist(bic_expr_labels[, sample_name])
 # length(sample_values)
 hist(sample_values, 
      main = paste("Sample: ", 
@@ -269,6 +317,7 @@ hist(sample_values,
      las = 1)
 boxplot(sample_values, 
         ylab = "log2(counts)", 
+        main = paste0("Box plot of sample\n", sample_name),
         col = "#BBDDFF",
         las = 1)
 
@@ -277,9 +326,11 @@ boxplot(sample_values,
 my_jitter <- jitter(rep(1, length(sample_values)), factor = 8)
 # my_jitter <- jitter(sample_values, factor = 1000)
 # plot(my_jitter, sample_values)
+library(scales)
 points(my_jitter, 
        sample_values,
-       col = "blue", 
+       col = alpha("brown", 0.3),
+#       col = "blue", 
        pch = 1, 
        cex = 0.5)
 par(mfrow = c(1,1))
@@ -287,14 +338,17 @@ par(mfrow = c(1,1))
 
 # Représentons ces données : deux variables à la fois (5)
 
+L'intensité des couleurs reflète la densité locale des points
+
 ```{r echo = FALSE, out.width = "50%", fig.width=6, fig.height=6}
-x <- BIC_expr[, 1]
-y <- BIC_expr[, 4]
+x <- bic_expr_labels[, 1]
+y <- bic_expr_labels[, 4]
 
 plot(x, y,
-     xlab = paste("Sample:", colnames(BIC_expr)[1]),
-     ylab = paste("Sample:", colnames(BIC_expr)[2]),
+     xlab = paste("Sample:", colnames(bic_expr_labels)[1]),
+     ylab = paste("Sample:", colnames(bic_expr_labels)[2]),
      panel.first = grid(),
+     col = densCols(x, y),
      las = 1)
 ```
 
@@ -318,16 +372,24 @@ en tenant compte de l'ensemble des individus/ lignes et variables / colonnes = u
 # ACP
 
 ```{r ACP1, echo=FALSE, out.width="60%", fig.width=10, fig.height=10}
-BIC_PCA <- PCA(BIC_expr, scale.unit = TRUE, graph = FALSE)
-plot(BIC_PCA, choix = "ind", label = "none")
+bic_pca <- PCA(bic_expr_labels, 
+               scale.unit = TRUE, 
+               graph = FALSE)
+plot(bic_pca, 
+     choix = "ind", 
+     label = "none")
 ```
 
 
 # heatmap
 
 ```{r heatmap1, echo=FALSE, out.width="60%", fig.width=12, fig.height=12}
-pheatmap::pheatmap(BIC_expr[1:200, 1:200], 
-                   cluster_rows = FALSE, cluster_cols = FALSE)
+rand_samples <- sample(1:ncol(bic_expr_labels), size = 100)
+pheatmap::pheatmap(
+  bic_expr_labels[1:100, rand_samples], 
+  cluster_rows = FALSE, 
+  cluster_cols = FALSE,
+  cex = 0.5)
 ```
 
 # Clustering et classification : définition
@@ -336,13 +398,12 @@ Nous utiliserons les termes anglais
 
 en français :
 
-- clustering = classification 
-- classification = discrimination
-
+- clustering = classification non supervisée, découverte de classe
+- supervised classification = classement
 
 # Clustering
 
-On a **pas d'information** supplémentaire sur nos données, juste le data.frame contenant
+On n'a **pas d'information** supplémentaire sur nos données, juste le `data.frame` contenant
 
 - variables quantitatives = vecteur de réels
  
@@ -357,7 +418,7 @@ On a **pas d'information** supplémentaire sur nos données, juste le data.frame
 
 # Classification
 
-On a **une **information** supplémentaire sur nos données : on connaît le partitionnement de notre jeu de données
+On a **une information supplémentaire** : on connaît le partitionnement de notre jeu de données
 
 - variables quantitatives = vecteur de réels
 - ET
@@ -410,9 +471,7 @@ Si 1,2,3 seulement: dissimilarité
 # Distance euclidienne et distance de corrélation
 
 ```{r are_there_clusters2, echo=FALSE, out.width="45%", fig.cap="données simulées : y a-t-il des groupes ?"}
-## ANNE, CETTE FIGURE MANQUE, JE METS TEMPORAIREMENT UN MESSAGE D'ERREUR
-# include_graphics(path = "img/cor_vs_euclidian_dist.png")
-print("MISSING FIGURE")
+include_graphics(path = "img/cor_vs_euclidian_dist.png")
 ```
 
 
@@ -452,7 +511,7 @@ distance de corrélation = `1-cor(t(mat.xy)` `r round(1-cor(t(mat.xy), method = 
 
 - distance euclidienne, de 5 individus choisis au hasard
 ```{r BIC_dist, echo = FALSE}
-mat_BIC <- BIC_expr[sample(1:150, 5),]
+mat_BIC <- bic_expr_labels[sample(1:150, 5),]
 print(dist(mat_BIC), digits = 2)
 ```
 
@@ -502,7 +561,7 @@ On peut ensuite essayer de visualiser les données
   - par un `plot` (**!** ne pas faire si "grosses" données)
   
 ```{r plot_4variables, echo = FALSE, out.width="40%"}
-toto <- as.data.frame(BIC_expr[, sample(1:ncol(BIC_expr), 4)])
+toto <- as.data.frame(bic_expr_labels[, sample(1:ncol(bic_expr_labels), 4)])
 plot(toto, las = 1)
 ```
 
@@ -512,15 +571,15 @@ plot(toto, las = 1)
   - par un `boxplot` (**!** ne pas faire si "grosses" données)
 
 ```{r boxplot_4variables, out.width="40%"}
-boxplot(BIC_expr[, sample(1:ncol(BIC_expr), 30)], las = 2)
+boxplot(bic_expr_labels[, sample(1:ncol(bic_expr_labels), 30)], las = 2)
 ```
 
 
 # Préparation des données (1) : variables de variance nulle
 
 ```{r}
-BIC.var <- apply(BIC_expr, 2, var)
-sum(apply(BIC_expr, 2, var) == 0)
+BIC.var <- apply(bic_expr_labels, 2, var)
+sum(apply(bic_expr_labels, 2, var) == 0)
 ```
 
 # Préparation des données (2) : Mise à l'échelle
@@ -532,7 +591,7 @@ Afin de pouvoir considérer que toutes les variables sont à la même échelle, 
   - en centrant (ramener la moyenne / médiane de chaque variable à $0$)
   
 ```{r centring}
-BIC_expr.centre <- scale(BIC_expr, center = TRUE, scale = FALSE)
+bic_expr_labels.centre <- scale(bic_expr_labels, center = TRUE, scale = FALSE)
 ```
 
 - soit 
@@ -541,7 +600,7 @@ BIC_expr.centre <- scale(BIC_expr, center = TRUE, scale = FALSE)
   - et mettant à l'échelle (ramener la variance de chaque variable à $1$)
 
 ```{r centring_scaling}
-BIC_expr.scaled <- scale(BIC_expr, center = TRUE, scale = TRUE)
+bic_expr_labels.scaled <- scale(bic_expr_labels, center = TRUE, scale = TRUE)
 ```
 
 - soit en effectuant une transformation des variables, par exemple transformation logarithmique
@@ -555,13 +614,13 @@ BIC_expr.scaled <- scale(BIC_expr, center = TRUE, scale = TRUE)
 ```{r data_centring, echo = FALSE, out.width="70%", fig.width=8, fig.height=6}
 
 ## Compute the median expression per sample
-BIC_median <- apply(BIC_expr, 2, median)
-BIC_expr_scaled_median <- sweep(x = BIC_expr, MARGIN = 2, STATS = BIC_median)
+BIC_median <- apply(bic_expr_labels, 2, median)
+bic_expr_labels_scaled_median <- sweep(x = bic_expr_labels, MARGIN = 2, STATS = BIC_median)
 par(mfrow = c(1,3))
 par(mar = c(7, 4.1, 4.1, 1.1)) # adapt margin sizes for the labels
-boxplot(BIC_expr[, 1:20], main = "Raw data", las = 2)
-boxplot(BIC_expr.centre[, 1:20], main = "Centered on the mean", las = 2)
-boxplot(BIC_expr_scaled_median[, 1:20], main = "Centered on the median", las = 2)
+boxplot(bic_expr_labels[, 1:20], main = "Raw data", las = 2)
+boxplot(bic_expr_labels.centre[, 1:20], main = "Centered on the mean", las = 2)
+boxplot(bic_expr_labels_scaled_median[, 1:20], main = "Centered on the median", las = 2)
 par(mar = c(5.1, 4.1, 4.1, 2.1)) # Restore original margin sizes
 par(mfrow = c(1,1))
 ```
@@ -573,36 +632,36 @@ par(mfrow = c(1,1))
 
 
 ## Scaling by sample standard deviation
-BIC.sd <- apply(BIC_expr, 2, sd) ## Standard dev per sample
+BIC.sd <- apply(bic_expr_labels, 2, sd) ## Standard dev per sample
 # length(BIC.sd)
-mat.BIC.sd <- matrix(rep(BIC.sd, each = nrow(BIC_expr)), ncol = ncol(BIC_expr)) ## Create amatrix with the sd values
+mat.BIC.sd <- matrix(rep(BIC.sd, each = nrow(bic_expr_labels)), ncol = ncol(bic_expr_labels)) ## Create amatrix with the sd values
 #dim(mat.BIC.sd)
-#dim(BIC_expr)
-colnames(mat.BIC.sd) <- colnames(BIC_expr)
-rownames(mat.BIC.sd) <- rownames(BIC_expr)
+#dim(bic_expr_labels)
+colnames(mat.BIC.sd) <- colnames(bic_expr_labels)
+rownames(mat.BIC.sd) <- rownames(bic_expr_labels)
 # View(mat.BIC.sd)
-BIC_expr.scaled.sd <- BIC_expr / mat.BIC.sd
+bic_expr_labels.scaled.sd <- bic_expr_labels / mat.BIC.sd
 
 
 ## Scaling by sample interquartile range (IQR)
-BIC.iqr <- apply(BIC_expr, 2, IQR)
-mat.BIC.iqr <- matrix(rep(BIC.iqr, each = nrow(BIC_expr)), ncol = ncol(BIC_expr))
-BIC_expr.scaled.iqr <- BIC_expr / mat.BIC.iqr
+BIC.iqr <- apply(bic_expr_labels, 2, IQR)
+mat.BIC.iqr <- matrix(rep(BIC.iqr, each = nrow(bic_expr_labels)), ncol = ncol(bic_expr_labels))
+bic_expr_labels.scaled.iqr <- bic_expr_labels / mat.BIC.iqr
 
-# range(apply(BIC_expr.scaled.iqr, 2, IQR))
+# range(apply(bic_expr_labels.scaled.iqr, 2, IQR))
 
 ## Plot boxplots to show the impact of scaling
 par(mfrow = c(1,3))
 par(mar = c(7, 4.1, 4.1, 1.1)) # adapt margin sizes for the labels
 
 ## Raw data
-boxplot(BIC_expr[, 1:20], main = "Raw data", las = 2)
+boxplot(bic_expr_labels[, 1:20], main = "Raw data", las = 2)
 
 ## Standard deviation-based scaling
-boxplot(BIC_expr.scaled.sd[, 1:20], main = "Scaled, standard deviation", las = 2)
+boxplot(bic_expr_labels.scaled.sd[, 1:20], main = "Scaled, standard deviation", las = 2)
 
 ## IQR-based scaling
-boxplot(BIC_expr.scaled.iqr[, 1:20], main = "Scaled, IQR", las = 2)
+boxplot(bic_expr_labels.scaled.iqr[, 1:20], main = "Scaled, IQR", las = 2)
 par(mar = c(5.1, 4.1, 4.1, 2.1)) # Restore original margin sizes
 par(mfrow = c(1,1))
 ```
@@ -610,19 +669,19 @@ par(mfrow = c(1,1))
 # Standardisation : centrage et mise à l'échelle
 
 ```{r standardization, echo = FALSE, out.width="70%", fig.width=8, fig.height=6}
-BIC.iqr.mediane <- apply(BIC_expr.scaled.iqr, 2, median)
-BIC_expr.scaled.iqr.mediane <- sweep(BIC_expr.scaled.iqr, 2, BIC.iqr.mediane)
+BIC.iqr.mediane <- apply(bic_expr_labels.scaled.iqr, 2, median)
+bic_expr_labels.scaled.iqr.mediane <- sweep(bic_expr_labels.scaled.iqr, 2, BIC.iqr.mediane)
 par(mfrow = c(1,3))
 par(mar = c(20, 4.1, 4.1, 1.1)) # adapt margin sizes for the labels
 
 ## Raw data
-boxplot(BIC_expr[, 1:20], main = "Raw data", las = 2)
+boxplot(bic_expr_labels[, 1:20], main = "Raw data", las = 2)
 
 ## Standardization based on the mean and standard deviation 
-boxplot(BIC_expr.scaled[, 1:20], main = "Standardized (mean, sd)", las = 2)
+boxplot(bic_expr_labels.scaled[, 1:20], main = "Standardized (mean, sd)", las = 2)
 
 ## Standardisation based no robust estimators:= median + IQR
-boxplot(BIC_expr.scaled.iqr.mediane[, 1:20], main = "Standardized (median, IQR)", las = 2)
+boxplot(bic_expr_labels.scaled.iqr.mediane[, 1:20], main = "Standardized (median, IQR)", las = 2)
 par(mar = c(5.1, 4.1, 4.1, 2.1)) # Restore original margin sizes
 par(mfrow = c(1,1))
 ```
@@ -727,12 +786,12 @@ include_graphics(path = "img/hclust9.png")
 # Sur nos données (1) : deux métriques différentes
 
 ```{r hclust_euclidian_vs_manhattan, fig.width=10, fig.height=7, out.width="80%", fig.width=10, fig.height=7, echo = FALSE}
-BIC.euc <- dist(BIC_expr)
-BIC.scale.euc <- dist(BIC_expr.scaled)
-BIC_expr.cor <- cor(t(BIC_expr))
-BIC_expr.cor.dist <- 1 - BIC_expr.cor
+BIC.euc <- dist(bic_expr_labels)
+BIC.scale.euc <- dist(bic_expr_labels.scaled)
+bic_expr_labels.cor <- cor(t(bic_expr_labels))
+bic_expr_labels.cor.dist <- 1 - bic_expr_labels.cor
 BIC.scale.hclust <- hclust(BIC.scale.euc)
-BIC.scale.max <- dist(BIC_expr.scaled, method = "maximum")
+BIC.scale.max <- dist(bic_expr_labels.scaled, method = "maximum")
 BIC.scale.hclust.max <- hclust(BIC.scale.max)
 par(mfrow = c(1,2))
 plot(BIC.scale.hclust, hang = -1, cex = 0.5, main = "Euclidian dist")
@@ -771,13 +830,13 @@ adaptés à nos données
 # Visualisation à l'aide de heatmap : données brutes
 
 ```{r pheatmap1, fig.width = 8, fig.heigh = 6, out.width="60%"}
-pheatmap::pheatmap(BIC_expr, clustering.method = "ward.D2")
+pheatmap::pheatmap(bic_expr_labels, clustering.method = "ward.D2")
 ```
 
 # Visualisation à l'aide de heatmap : données mise à l'échelle
 
 ```{r pheatmap2, fig.width = 8, fig.heigh = 6, out.width="60%"}
-pheatmap::pheatmap(BIC_expr.scaled, clustering.method = "ward.D2")
+pheatmap::pheatmap(bic_expr_labels.scaled, clustering.method = "ward.D2")
 ```
 
 # Les k-means
@@ -846,7 +905,7 @@ include_graphics(path = "img/kmeans5.png")
 # Un premier k-means en 5 groupes
 
 ```{r calc_kmeans, results = TRUE}
-iris.scale.kmeans5 <- kmeans(BIC_expr.scaled, center = 5)
+iris.scale.kmeans5 <- kmeans(bic_expr_labels.scaled, center = 5)
 iris.scale.kmeans5$cluster[1:20]
 ```
 
@@ -889,9 +948,9 @@ plot(BIC.scale.hclust.ward, hang = -1, cex = 0.5)
 
 ```{r, echo = FALSE, out.width = "60%"}
 wss <- numeric(length = 50)
-wss[1] <- kmeans(BIC_expr.scaled, center = 2)$totss
+wss[1] <- kmeans(bic_expr_labels.scaled, center = 2)$totss
 for (nbgrp in 2:50) {
-  wss[nbgrp] <- kmeans(BIC_expr.scaled, center = nbgrp)$tot.withinss
+  wss[nbgrp] <- kmeans(bic_expr_labels.scaled, center = nbgrp)$tot.withinss
 }
 barplot(wss, names.arg = 1:50, main = "variance intra en fonction du nombre de clusters")
 ```
@@ -901,9 +960,9 @@ barplot(wss, names.arg = 1:50, main = "variance intra en fonction du nombre de c
 - par une table
 
 ```{r echo = FALSE,results = TRUE}
-cluster.kmeans3 <- kmeans(BIC_expr.scaled, center = 3)$cluster
+cluster.kmeans3 <- kmeans(bic_expr_labels.scaled, center = 3)$cluster
 cluster.kmeans3 <- paste0("k", cluster.kmeans3)
-cluster.hclust4 <- cutree(hclust(dist(BIC_expr.scaled), method = "ward.D2"), k = 4)
+cluster.hclust4 <- cutree(hclust(dist(bic_expr_labels.scaled), method = "ward.D2"), k = 4)
 cluster.hclust4 <- paste0("c", cluster.hclust4)
 contingency.table <- table(as.vector(cluster.hclust4), as.vector(cluster.kmeans3))
 
@@ -1045,9 +1104,9 @@ vegan::vegdist(mat.abc)
 
 ```{r,  out.width="90%", fig.width=12, fig.height=6}
 par(mfrow = c(1,2))
-biplot(prcomp(BIC_expr), las = 1, cex = 0.7,
+biplot(prcomp(bic_expr_labels), las = 1, cex = 0.7,
        main = "Données non normalisées")
-biplot(prcomp(BIC_expr, scale = TRUE), las = 1, cex = 0.7,
+biplot(prcomp(bic_expr_labels, scale = TRUE), las = 1, cex = 0.7,
        main = "Données normalisées")
 ```
 
@@ -1136,20 +1195,20 @@ levelplot(as.matrix(BIC.scale.euc), xlab = "", ylab = "")
 # La matrice de distance de corrélation
 
 ```{r levelplot_cor, out.width="50%", fig.width=6, fig.height=6, echo = FALSE}
-levelplot(BIC_expr.cor.dist, xlab = "", ylab = "")
+levelplot(bic_expr_labels.cor.dist, xlab = "", ylab = "")
 ```
 
 
 # Les heatmap - échelle de couleur standardisée par colonne
 
 ```{r pheatmap3, fig.width = 8, fig.heigh = 6, out.width="60%"}
-pheatmap::pheatmap(BIC_expr, scale = "column", clustering.method = "ward.D2")
+pheatmap::pheatmap(bic_expr_labels, scale = "column", clustering.method = "ward.D2")
 ```
 
 # Les heatmap - échelle de couleur standardisée par ligne
 
 ```{r pheatmap4, fig.width = 8, fig.heigh = 6, out.width="60%"}
-pheatmap::pheatmap(BIC_expr, scale = "row", clustering.method = "ward.D2")
+pheatmap::pheatmap(bic_expr_labels, scale = "row", clustering.method = "ward.D2")
 ```
 
 # Avec R (1) : distance entre deux individus 
@@ -1186,10 +1245,10 @@ distance de corrélation = `r round(1-cor(t(mat.xy), method = "pearson")[1, 2], 
 ... c'est à dire aux options des fonctions `dist()` et `hclust()`
 
 ```{r echo = FALSE}
-BIC.euc <- dist(BIC_expr)
-BIC.scale.euc <- dist(BIC_expr.scaled)
-BIC_expr.cor <- cor(t(BIC_expr))
-BIC_expr.cor.dist <- 1 - BIC_expr.cor
+BIC.euc <- dist(bic_expr_labels)
+BIC.scale.euc <- dist(bic_expr_labels.scaled)
+bic_expr_labels.cor <- cor(t(bic_expr_labels))
+bic_expr_labels.cor.dist <- 1 - bic_expr_labels.cor
 ```
 
 ```{r dont_care, fig.width=10, fig.height=4, out.width="60%", echo = FALSE}
