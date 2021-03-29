@@ -706,22 +706,44 @@ Sample tree of the expression matrix with Euclidian distance and complete linkag
 </tr>
 </tbody>
 </table>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Compute Adjusted Rand Index (ARI)</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>ari_euclidian_complete <span class="ot">&lt;-</span> <span class="fu">round</span>(</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">digits =</span> <span class="dv">3</span>, </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  aricode<span class="sc">::</span><span class="fu">ARI</span>(</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">c1 =</span> clusters_euclidian_complete, </span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">c2 =</span> subset_meta<span class="sc">$</span>cancer.type))</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span>(<span class="st">&quot;ARI for Euclidian distance and complete linkage: &quot;</span>,</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>        ari_euclidian_complete)</span></code></pre></div>
+<p>With Euclidian distance and the complete lin,kage, we obtain an Adjusted Rank Index (ARI) of 0.312.</p>
+<p>The next question is of course: can we obtain better results with other distances and agglomeration rules? This will be left as an exercise.</p>
 </div>
-<div id="exercise-chosing-the-most-relevant-parameters" class="section level2">
-<h2>Exercise: chosing the most relevant parameters</h2>
+<div id="heatmap-with-biclustering-samples-genes" class="section level2">
+<h2>Heatmap with biclustering (samples + genes)</h2>
+<p>Biclustering amounts to cluster both the individuals (patient samples in our case) and variables (genes in our case).</p>
+<p>We will illustrate this with the Spearman correlation as distance and Ward as agglomeration rule.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Biclustering ####</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># left as an exercise</span></span></code></pre></div>
+</div>
+<div id="personal-work-chosing-the-most-relevant-parameters" class="section level2">
+<h2>Personal work: chosing the most relevant parameters</h2>
+<p>These analyses can be led collectively: each trainee could take one combination of parameters.</p>
 <ol style="list-style-type: decimal">
 <li><p>Based on the examples above, find the most relevant parameters (dissimilarity matrix, agglomeration rule) to cluster the samples of the subset expression matrix. Choose these parameters based on the confusion matrix and the ARI.</p></li>
 <li><p>Draw different graphical representations of the best result:</p>
 <ul>
 <li>heatmap of the distance matrix</li>
-<li></li>
+<li>sample tree with coloring of the annotated cancer type</li>
+<li>heatmap (samples x genes) with coloring of the metadata</li>
 </ul></li>
+<li><p>Use these optimal parameters to run clustering with all the samples of the BIC dataset and the `1000 genes instead of the subset of 100. Export a table with the sample clusters and another one with the gene clusters.</p></li>
 </ol>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session info</h2>
 <p>As usual, we write the session info in the report for the sake of traceability.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
 <pre><code>R version 4.0.2 (2020-06-22)
 Platform: x86_64-apple-darwin17.0 (64-bit)
 Running under: macOS Mojave 10.14.6

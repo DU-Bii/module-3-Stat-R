@@ -391,16 +391,50 @@ confusion_euclidian_complete <- table(
 
 kable(confusion_euclidian_complete)
 
+## Compute Adjusted Rand Index (ARI)
+ari_euclidian_complete <- round(
+  digits = 3, 
+  aricode::ARI(
+    c1 = clusters_euclidian_complete, 
+    c2 = subset_meta$cancer.type))
+
+message("ARI for Euclidian distance and complete linkage: ",
+        ari_euclidian_complete)
 ```
 
-## Exercise: chosing the most relevant parameters
+With Euclidian distance and the complete lin,kage, we obtain an Adjusted Rank Index (ARI) of `r ari_euclidian_complete`. 
+
+The next question is of course: can we obtain better results with other distances and agglomeration rules? This will be left as an exercise. 
+
+## Heatmap with biclustering (samples + genes)
+
+Biclustering amounts to cluster both the individuals (patient samples in our case) and variables (genes in our case).
+
+We will illustrate this with the Spearman correlation as distance and Ward as agglomeration rule. 
+
+```{r biclustering}
+#### Biclustering ####
+
+# left as an exercise
+
+
+```
+
+
+## Personal work: chosing the most relevant parameters
+
+These analyses can be led collectively: each trainee could take one combination of parameters. 
 
 1. Based on the examples above, find the most relevant parameters (dissimilarity matrix, agglomeration rule) to cluster the samples of the subset expression matrix. Choose these parameters based on the confusion matrix and the ARI. 
 
 2. Draw different graphical representations of the best result: 
 
     - heatmap of the distance matrix
-    -
+    - sample tree with coloring of the annotated cancer type
+    - heatmap (samples x genes) with coloring of the metadata
+    
+
+3. Use these optimal parameters to run clustering with all the samples of the BIC dataset and the `1000 genes instead of the subset of 100. Export a table with the sample clusters and another one with the gene clusters.
 
 
 
