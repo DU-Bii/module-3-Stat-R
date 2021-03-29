@@ -112,11 +112,13 @@ This tutorial aims at showing how to use the `gProfiler2` R package. It is more 
 
 ## References
 
-- R package : <https://cran.r-project.org/web/packages/gprofiler2>
+- R package: <https://cran.r-project.org/web/packages/gprofiler2>
 
 - Reference manual: <https://cran.r-project.org/web/packages/gprofiler2/gprofiler2.pdf>
 
 - Vignette: <https://cran.r-project.org/web/packages/gprofiler2/vignettes/gprofiler2.html>
+
+- ev codes: <http://geneontology.org/docs/guide-go-evidence-codes/>
 
 ## g:GOSt - functional enrichment analysis of gene lists
 
