@@ -608,24 +608,24 @@ Heatmap of the Euclidian distance
 <div id="computing-a-tree-from-a-distance-matrix" class="section level2">
 <h2>Computing a tree from a distance matrix</h2>
 <p>Use the function <code>hclust()</code> to get trees from the previously computed distance matrices.</p>
-<div id="example-euclidian-matrix-average-linkage" class="section level3">
-<h3>Example: Euclidian matrix, average linkage</h3>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Sample tree with Euclidian distance, average linkage ####</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>sample_tree_euclidian_average <span class="ot">&lt;-</span> <span class="fu">hclust</span>(</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">d =</span> sample_dist_euclidian, <span class="at">method =</span> <span class="st">&quot;average&quot;</span>)</span>
+<div id="example-euclidian-matrix-complete-linkage" class="section level3">
+<h3>Example: Euclidian matrix, complete linkage</h3>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Sample tree with Euclidian distance, complete linkage ####</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>sample_tree_euclidian_complete <span class="ot">&lt;-</span> <span class="fu">hclust</span>(</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">d =</span> sample_dist_euclidian, <span class="at">method =</span> <span class="st">&quot;complete&quot;</span>)</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sample_tree_euclidian_average, </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sample_tree_euclidian_complete, </span>
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="cn">NA</span>, <span class="at">ylab =</span> <span class="cn">NA</span>, <span class="at">hang =</span> <span class="sc">-</span><span class="dv">1</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figures/tcga-bic_sample_tree_euclidian_average-1.png" alt="Sample tree of the expression matrix with Euclidian distance and average linkage. " width="100%" />
+<img src="figures/tcga-bic_sample_tree_euclidian_complete-1.png" alt="Sample tree of the expression matrix with Euclidian distance and complete linkage. " width="100%" />
 <p class="caption">
-Sample tree of the expression matrix with Euclidian distance and average linkage.
+Sample tree of the expression matrix with Euclidian distance and complete linkage.
 </p>
 </div>
 <p>We can also use some fancy library (e.g. <code>ClassDiscovery</code>) to color the tree labels. Other librairies can be used to generate nice tree drawings, don’t hesitate to google and improve.</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ClassDiscovery)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>ClassDiscovery<span class="sc">::</span><span class="fu">plotColoredClusters</span>(</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  sample_tree_euclidian_average, </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  sample_tree_euclidian_complete, </span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">labs =</span> subset_meta<span class="sc">$</span>cancer.type, <span class="do">## class labels</span></span>
 <span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="st">&quot;grey&quot;</span>, <span class="do">## tree color</span></span>
 <span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">cols =</span> subset_meta<span class="sc">$</span>color, </span>
@@ -637,9 +637,9 @@ Sample tree of the expression matrix with Euclidian distance and average linkage
 <span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> class_color,</span>
 <span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">text.col =</span> class_color, <span class="at">cex=</span><span class="fl">0.9</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figures/tcga-bic_sample_tree_euclidian_average_colored-1.png" alt="Sample tree of the expression matrix with Euclidian distance and average linkage. " width="100%" />
+<img src="figures/tcga-bic_sample_tree_euclidian_complete_colored-1.png" alt="Sample tree of the expression matrix with Euclidian distance and complete linkage. " width="100%" />
 <p class="caption">
-Sample tree of the expression matrix with Euclidian distance and average linkage.
+Sample tree of the expression matrix with Euclidian distance and complete linkage.
 </p>
 </div>
 </div>
@@ -652,10 +652,76 @@ Sample tree of the expression matrix with Euclidian distance and average linkage
 <p>Based on the analyses above, would you consider that some agglomeration rules are generally more relevant than other ones with this dataset? If so, is it systematic or does the best agglomeration rule vary depending on the dissimilarity measure?</p>
 </div>
 </div>
+<div id="tree-cut" class="section level2">
+<h2>Tree cut</h2>
+<ol style="list-style-type: decimal">
+<li><p>Cut the tree to obtain 4 samples clusters from the tree obtained with Euclidian distance and complete linkage.</p></li>
+<li><p>Create a confusion matrix to compare the sample compositon of the clusters with the cancer types annotated in the metadata.</p></li>
+<li><p>Compute the ARI from this confusion matrix.</p></li>
+</ol>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Cluster - cancer type comparison ####</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Cut the tree</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>nclust <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>clusters_euclidian_complete <span class="ot">&lt;-</span> <span class="fu">cutree</span>(</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">tree =</span> sample_tree_euclidian_complete, <span class="at">k =</span> nclust)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>confusion_euclidian_complete <span class="ot">&lt;-</span> <span class="fu">table</span>(</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  clusters_euclidian_complete,</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  subset_meta<span class="sc">$</span>cancer.type)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(confusion_euclidian_complete)</span></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Basal.like</th>
+<th align="right">HER2pos</th>
+<th align="right">Luminal.A</th>
+<th align="right">Luminal.B</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">16</td>
+<td align="right">16</td>
+<td align="right">0</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="right">0</td>
+<td align="right">3</td>
+<td align="right">17</td>
+<td align="right">17</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="exercise-chosing-the-most-relevant-parameters" class="section level2">
+<h2>Exercise: chosing the most relevant parameters</h2>
+<ol style="list-style-type: decimal">
+<li><p>Based on the examples above, find the most relevant parameters (dissimilarity matrix, agglomeration rule) to cluster the samples of the subset expression matrix. Choose these parameters based on the confusion matrix and the ARI.</p></li>
+<li><p>Draw different graphical representations of the best result:</p>
+<ul>
+<li>heatmap of the distance matrix</li>
+<li></li>
+</ul></li>
+</ol>
+</div>
 <div id="session-info" class="section level2">
 <h2>Session info</h2>
 <p>As usual, we write the session info in the report for the sake of traceability.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
 <pre><code>R version 4.0.2 (2020-06-22)
 Platform: x86_64-apple-darwin17.0 (64-bit)
 Running under: macOS Mojave 10.14.6
