@@ -145,6 +145,8 @@ if (file.exists(mem_image)) {
   message("Local memory image\t", mem_image)
 }
 
+## Load the memory image
+message("Loading memory image", mem_image)
 load(mem_image)
 ```
 
@@ -187,14 +189,14 @@ Les données ont été préparées pour vous, selon la procédure détaillée au
 # TCGA (2)
 
 
-|         | Basal.like.99| Luminal.A.248| Luminal.B.48| Luminal.A.409|
-|:--------|-------------:|-------------:|------------:|-------------:|
-|TSPAN6   |      16.80977|      18.94369|     16.55594|      19.38377|
-|DPM1     |      17.95231|      17.49642|     18.11666|      16.91358|
-|SCYL3    |      17.29159|      17.50080|     18.42470|      18.17979|
-|C1orf112 |      16.64188|      16.36108|     17.48377|      17.29434|
-|FGR      |      17.53178|      15.08102|     15.01736|      15.34302|
-|CFH      |      18.38088|      18.79525|     18.02682|      17.37518|
+|         | Luminal.A.83| Luminal.B.99| Luminal.A.417| Luminal.A.318|
+|:--------|------------:|------------:|-------------:|-------------:|
+|TSPAN6   |     18.98338|     18.51158|      16.48997|      18.47712|
+|DPM1     |     17.94254|     17.06309|      17.85425|      17.20569|
+|SCYL3    |     18.95936|     17.00965|      17.47549|      16.82820|
+|C1orf112 |     18.31903|     15.89376|      17.18320|      15.71367|
+|FGR      |     13.76168|     17.43222|      15.12968|      16.33244|
+|CFH      |     16.60954|     20.49160|      18.63168|      19.63751|
 
 Pour des raisons historiques, en analyse transcriptomique les données sont toujours fournies avec
 
@@ -259,23 +261,23 @@ Basal.like.3 17.93844 17.83135 17.37199 16.86000 14.62704
 
 # Représentons ces données : un individu à la fois (2)
 
-<img src="figures/TCGA_visu_ligne1-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="figures/TCGA-clustering_visu_ligne1-1.png" width="80%" style="display: block; margin: auto;" />
 
 
 # Représentons ces données : deux individu à la fois (3)
 
-<img src="figures/TCGA_visu_ligne2-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="figures/TCGA-clustering_visu_ligne2-1.png" width="80%" style="display: block; margin: auto;" />
 
 
 # Représentons ces données : une variable à la fois (4)
 
-<img src="figures/TCGA_unnamed-chunk-1-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="figures/TCGA-clustering_unnamed-chunk-1-1.png" width="90%" style="display: block; margin: auto;" />
 
 # Représentons ces données : deux variables à la fois (5)
 
 L'intensité des couleurs reflète la densité locale des points
 
-<img src="figures/TCGA_unnamed-chunk-2-1.png" width="50%" style="display: block; margin: auto;" />
+<img src="figures/TCGA-clustering_unnamed-chunk-2-1.png" width="50%" style="display: block; margin: auto;" />
 
 # Représentons ces données : toutes les variables (6)
 
@@ -296,12 +298,12 @@ en tenant compte de l'ensemble des individus/ lignes et variables / colonnes = u
 
 # ACP
 
-<img src="figures/TCGA_ACP1-1.png" width="60%" style="display: block; margin: auto;" />
+<img src="figures/TCGA-clustering_ACP1-1.png" width="60%" style="display: block; margin: auto;" />
 
 
 # heatmap
 
-<img src="figures/TCGA_heatmap1-1.png" width="60%" style="display: block; margin: auto;" />
+<img src="figures/TCGA-clustering_heatmap1-1.png" width="60%" style="display: block; margin: auto;" />
 
 # Clustering et classification : définition
 
@@ -350,7 +352,7 @@ On a **une information supplémentaire** : on connaît le partitionnement de not
 
 # Comment comparer des vecteurs-individus ?
 
-<img src="figures/TCGA_points_vs_curves-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="figures/TCGA-clustering_points_vs_curves-1.png" width="80%" style="display: block; margin: auto;" />
 
 # Distances
 
@@ -382,37 +384,37 @@ Si 1,2,3 seulement: dissimilarité
 
 |   |   t1|   t2|   t3|   t4|   t5|
 |:--|----:|----:|----:|----:|----:|
-|X  | 1.75| 3.56| 4.85| 4.09| 3.27|
-|Y  | 3.28| 3.11| 2.05| 3.29| 3.02|
+|X  | 2.32| 4.20| 3.43| 4.09| 4.50|
+|Y  | 3.43| 2.49| 2.56| 2.04| 2.26|
 
-distance euclidienne : `dist(mat.xy) = ` 3.33
+distance euclidienne : `dist(mat.xy) = ` 3.76
 
-distance de manhattan = `dist(mat.xy, method = "manhattan")` 5.83
+distance de manhattan = `dist(mat.xy, method = "manhattan")` 7.97
 
 - on utilise la fonction `1 - cor()` avec l'option `method = "pearson", "spearman", ...` 
 
-distance de corrélation = `1-cor(t(mat.xy)` 1.68
+distance de corrélation = `1-cor(t(mat.xy)` 1.91
 
 # Avec R (2) : distance entre individus d'un nuage de points 
 
 - distance euclidienne, de 5 individus choisis au hasard
 
 ```
-        CREBBP VPS41 CACNA1G GCFC2
-VPS41       37                    
-CACNA1G    217   186              
-GCFC2       75    43     149      
-POLR2J      65    37     164    28
+       KLHL13 TFPI SEMA3F GGCT
+TFPI       71                 
+SEMA3F    132   81            
+GGCT      132   82     34     
+DHX33      87   44     58   57
 ```
 
 - distance de corrélation : $d = 1-r$
 
 ```
-        CREBBP VPS41 CACNA1G GCFC2
-VPS41     0.75                    
-CACNA1G   0.75  0.88              
-GCFC2     1.07  0.88    1.06      
-POLR2J    1.49  1.39    1.24  1.10
+       KLHL13 TFPI SEMA3F GGCT
+TFPI     0.57                 
+SEMA3F   1.26 1.24            
+GGCT     1.25 1.22   0.87     
+DHX33    0.85 1.08   1.33 1.15
 ```
 
 # Avec R (3) : distance entre variables décrivant le nuage de points 
@@ -420,16 +422,16 @@ POLR2J    1.49  1.39    1.24  1.10
 
 ```
              Basal.like Basal.like.1 Basal.like.2 Basal.like.3 Basal.like.4
-Basal.like.1     0.0193                                                    
-Basal.like.2     0.0157       0.0343                                       
-Basal.like.3     0.0591       0.0843       0.0161                          
-Basal.like.4     0.0154       0.0061       0.0478       0.1114             
-Basal.like.5     0.0114       0.0136       0.0408       0.0917       0.0072
+Basal.like.1      0.300                                                    
+Basal.like.2      0.290        0.828                                       
+Basal.like.3      0.042        0.277        0.461                          
+Basal.like.4      0.645        0.140        1.330        0.547             
+Basal.like.5      0.049        0.341        0.218        0.082        0.767
 ```
 
 # Distances entre groupes (1)
 
-<img src="figures/TCGA_group_distances_1-1.png" width="50%" style="display: block; margin: auto;" />
+<img src="figures/TCGA-clustering_group_distances_1-1.png" width="50%" style="display: block; margin: auto;" />
 
 
 # Distances entre groupes (2)
@@ -447,7 +449,7 @@ On peut ensuite essayer de visualiser les données
 
   - par un `plot` (**!** ne pas faire si "grosses" données)
   
-<img src="figures/TCGA_plot_4variables-1.png" width="40%" style="display: block; margin: auto;" />
+<img src="figures/TCGA-clustering_plot_4variables-1.png" width="40%" style="display: block; margin: auto;" />
 
 
 # Visualisation des données (2)
@@ -459,7 +461,7 @@ On peut ensuite essayer de visualiser les données
 boxplot(bic_expr_labels[, sample(1:ncol(bic_expr_labels), 30)], las = 2)
 ```
 
-<img src="figures/TCGA_boxplot_4variables-1.png" width="40%" style="display: block; margin: auto;" />
+<img src="figures/TCGA-clustering_boxplot_4variables-1.png" width="40%" style="display: block; margin: auto;" />
 
 
 # Préparation des données (1) : variables de variance nulle
@@ -505,15 +507,15 @@ bic_expr_labels.scaled <- scale(bic_expr_labels, center = TRUE, scale = TRUE)
 
 # Centrage sur la moyenne ou la médiane
 
-<img src="figures/TCGA_data_centring-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="figures/TCGA-clustering_data_centring-1.png" width="70%" style="display: block; margin: auto;" />
 
 # Mise à l'échelle écart-type ou intervalle interquartile
 
-<img src="figures/TCGA_data_scaling-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="figures/TCGA-clustering_data_scaling-1.png" width="70%" style="display: block; margin: auto;" />
 
 # Standardisation : centrage et mise à l'échelle
 
-<img src="figures/TCGA_standardization-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="figures/TCGA-clustering_standardization-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 # La classification hiérarchique : principe
@@ -596,11 +598,11 @@ bic_expr_labels.scaled <- scale(bic_expr_labels, center = TRUE, scale = TRUE)
 
 # Sur nos données (1) : deux métriques différentes
 
-<img src="figures/TCGA_hclust_euclidian_vs_manhattan-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="figures/TCGA-clustering_hclust_euclidian_vs_manhattan-1.png" width="80%" style="display: block; margin: auto;" />
 
 # Sur nos données (2) : deux critères d'aggrégation différents
 
-<img src="figures/TCGA_linkage_rule-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="figures/TCGA-clustering_linkage_rule-1.png" width="80%" style="display: block; margin: auto;" />
 
 ---
 
@@ -626,7 +628,7 @@ adaptés à nos données
 pheatmap::pheatmap(bic_expr_labels, clustering.method = "ward.D2")
 ```
 
-<img src="figures/TCGA_pheatmap1-1.png" width="60%" style="display: block; margin: auto;" />
+<img src="figures/TCGA-clustering_pheatmap1-1.png" width="60%" style="display: block; margin: auto;" />
 
 # Visualisation à l'aide de heatmap : données mise à l'échelle
 
@@ -635,7 +637,7 @@ pheatmap::pheatmap(bic_expr_labels, clustering.method = "ward.D2")
 pheatmap::pheatmap(bic_expr_labels.scaled, clustering.method = "ward.D2")
 ```
 
-<img src="figures/TCGA_pheatmap2-1.png" width="60%" style="display: block; margin: auto;" />
+<img src="figures/TCGA-clustering_pheatmap2-1.png" width="60%" style="display: block; margin: auto;" />
 
 # Les k-means
 
@@ -698,7 +700,7 @@ iris.scale.kmeans5$cluster[1:20]
 
 ```
   TSPAN6     DPM1    SCYL3 C1orf112      FGR      CFH    FUCA2     GCLC     NFYA    STPG1   NIPAL3    LAS1L    ENPP4   SEMA3F   ANKIB1  CYP51A1    KRIT1    RAD52      BAD     LAP3 
-       2        3        3        3        4        2        2        3        2        4        2        2        3        2        2        2        3        4        3        2 
+       5        5        5        5        4        2        2        5        2        4        5        2        5        2        2        2        5        4        5        2 
 ```
 
 # Comment déterminer le nombre de clusters ? (1)
@@ -737,23 +739,23 @@ La coupure de l’arbre à un niveau donné construit une partition. la coupure 
 plot(BIC.scale.hclust.ward, hang = -1, cex = 0.5)
 ```
 
-<img src="figures/TCGA_plot_iris_ward-1.png" width="95%" style="display: block; margin: auto;" />
+<img src="figures/TCGA-clustering_plot_iris_ward-1.png" width="95%" style="display: block; margin: auto;" />
 
 # Comment déterminer le nombre de clusters ? avec les kmeans
 
-<img src="figures/TCGA_unnamed-chunk-5-1.png" width="60%" style="display: block; margin: auto;" />
+<img src="figures/TCGA-clustering_unnamed-chunk-5-1.png" width="60%" style="display: block; margin: auto;" />
 
 # Comparaison des résultats des deux clustering
 
 - par une table
 
 
-|   | k1 | k2  | k3  |
-|:--|:--:|:---:|:---:|
-|c1 | 0  | 57  | 398 |
-|c2 | 61 |  0  | 98  |
-|c3 | 0  | 293 |  3  |
-|c4 | 90 |  0  |  0  |
+|   | k1  | k2  | k3 |
+|:--|:---:|:---:|:--:|
+|c1 | 398 | 57  | 0  |
+|c2 | 98  |  0  | 61 |
+|c3 |  3  | 293 | 0  |
+|c4 |  0  |  0  | 90 |
 
 # Pros et cons des différents algorithmes
 
@@ -909,13 +911,13 @@ biplot(prcomp(bic_expr_labels, scale = TRUE), las = 1, cex = 0.7,
        main = "Données normalisées")
 ```
 
-<img src="figures/TCGA_unnamed-chunk-10-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="figures/TCGA-clustering_unnamed-chunk-10-1.png" width="90%" style="display: block; margin: auto;" />
 
 # Géométrie et distances (1)
 
 On considère les données comme des points de $\mathbb{R}^n$ 
 
-<img src="figures/TCGA_unnamed-chunk-11-1.png" width="30%" style="display: block; margin: auto;" />
+<img src="figures/TCGA-clustering_unnamed-chunk-11-1.png" width="30%" style="display: block; margin: auto;" />
 
 $\mathbb{R}^n$ : espace Euclidien à $n$ dimensions, où 
 
@@ -930,7 +932,7 @@ On considère les données comme des points de $R^n$ (*)
 - distances = dissimilarités imposées par le problème
 - dissimilarités $\longrightarrow$ permettent la visualisation de l'ensemble des points
 
-<img src="figures/TCGA_unnamed-chunk-12-1.png" width="30%" style="display: block; margin: auto;" />
+<img src="figures/TCGA-clustering_unnamed-chunk-12-1.png" width="30%" style="display: block; margin: auto;" />
 
 # Géométrie et distances (3)
 
@@ -953,7 +955,7 @@ points(x = 4, y = 4, col = "red", pch = 19)
 text(x = 4, y = 4, col = "red", label = "C", pos = 4)
 ```
 
-<img src="figures/TCGA_unnamed-chunk-13-1.png" style="display: block; margin: auto;" />
+<img src="figures/TCGA-clustering_unnamed-chunk-13-1.png" style="display: block; margin: auto;" />
 
 # Distance euclidienne
 
@@ -984,11 +986,11 @@ $D(C_1,C_2) = \sqrt{\frac{N_1N_2}{N_1 + N_2}} \| m_1 -m_2 \|$
 # La matrice de distance euclidienne
 
 
-<img src="figures/TCGA_levelplot_euclidian-1.png" width="50%" style="display: block; margin: auto;" />
+<img src="figures/TCGA-clustering_levelplot_euclidian-1.png" width="50%" style="display: block; margin: auto;" />
 
 # La matrice de distance de corrélation
 
-<img src="figures/TCGA_levelplot_cor-1.png" width="50%" style="display: block; margin: auto;" />
+<img src="figures/TCGA-clustering_levelplot_cor-1.png" width="50%" style="display: block; margin: auto;" />
 
 
 # Les heatmap - échelle de couleur standardisée par colonne
@@ -998,7 +1000,7 @@ $D(C_1,C_2) = \sqrt{\frac{N_1N_2}{N_1 + N_2}} \| m_1 -m_2 \|$
 pheatmap::pheatmap(bic_expr_labels, scale = "column", clustering.method = "ward.D2")
 ```
 
-<img src="figures/TCGA_pheatmap3-1.png" width="60%" style="display: block; margin: auto;" />
+<img src="figures/TCGA-clustering_pheatmap3-1.png" width="60%" style="display: block; margin: auto;" />
 
 # Les heatmap - échelle de couleur standardisée par ligne
 
@@ -1007,7 +1009,7 @@ pheatmap::pheatmap(bic_expr_labels, scale = "column", clustering.method = "ward.
 pheatmap::pheatmap(bic_expr_labels, scale = "row", clustering.method = "ward.D2")
 ```
 
-<img src="figures/TCGA_pheatmap4-1.png" width="60%" style="display: block; margin: auto;" />
+<img src="figures/TCGA-clustering_pheatmap4-1.png" width="60%" style="display: block; margin: auto;" />
 
 # Avec R (1) : distance entre deux individus 
 
@@ -1016,19 +1018,19 @@ pheatmap::pheatmap(bic_expr_labels, scale = "row", clustering.method = "ward.D2"
 
 |           |   t1|   t2|   t3|   t4|   t5|   SUM|
 |:----------|----:|----:|----:|----:|----:|-----:|
-|X          | 1.67| 2.57| 1.30| 4.51| 2.31| 12.36|
-|Y          | 2.35| 3.58| 2.38| 3.33| 2.50| 14.15|
-|abs(Y - X) | 0.68| 1.01| 1.08| 1.18| 0.19|  4.14|
-|(Y - X)^2  | 0.47| 1.01| 1.17| 1.39| 0.04|  4.08|
-|Eucl       | 0.68| 1.01| 1.08| 1.18| 0.19|  2.02|
+|X          | 2.27| 2.73| 1.47| 4.65| 3.27| 14.39|
+|Y          | 2.64| 3.99| 3.78| 2.61| 2.02| 15.03|
+|abs(Y - X) | 0.37| 1.25| 2.31| 2.04| 1.25|  7.23|
+|(Y - X)^2  | 0.14| 1.57| 5.34| 4.18| 1.57| 12.80|
+|Eucl       | 0.37| 1.25| 2.31| 2.04| 1.25|  3.58|
 
-distance euclidienne : 2.02
+distance euclidienne : 3.58
 
-distance de manhattan = 4.14
+distance de manhattan = 7.23
 
 - on utilise la fonction `1 - cor()` avec l'option `method = "pearson", "spearman", ...` 
 
-distance de corrélation = 0.29
+distance de corrélation = 1.52
 
 # Je ne fais pas attention à ce que je fais ...
 
@@ -1036,9 +1038,9 @@ distance de corrélation = 0.29
 
 
 
-<img src="figures/TCGA_dont_care-1.png" width="60%" style="display: block; margin: auto;" />
+<img src="figures/TCGA-clustering_dont_care-1.png" width="60%" style="display: block; margin: auto;" />
 
-<img src="figures/TCGA_dont_care_norm-1.png" width="60%" style="display: block; margin: auto;" />
+<img src="figures/TCGA-clustering_dont_care_norm-1.png" width="60%" style="display: block; margin: auto;" />
 
 
 ```r
@@ -1047,7 +1049,7 @@ plot(BIC.hclust, hang = -1, cex = 0.5, main = "Données brutes")
 plot(BIC.scale.hclust, hang = -1, cex = 0.5, main = "Normalisées")
 ```
 
-<img src="figures/TCGA_dont_care_raw_vs_norm-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="figures/TCGA-clustering_dont_care_raw_vs_norm-1.png" width="80%" style="display: block; margin: auto;" />
 
 # Supplément : analyse de données d'expression 2019
 
