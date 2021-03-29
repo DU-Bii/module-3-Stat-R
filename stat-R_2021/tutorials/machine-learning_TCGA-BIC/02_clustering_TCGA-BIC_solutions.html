@@ -390,26 +390,30 @@ div.tocify {
 </thead>
 <tbody>
 <tr class="odd">
+<td><code>class_color</code></td>
+<td>a vector specifying the color to be associated to each sample class (cancer type)</td>
+</tr>
+<tr class="even">
 <td><code>bic_meta</code></td>
 <td>metadata with a few added columns (sample color, estimators of central tendency and dispersion)</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>gene_info</code></td>
 <td>ID, name and description of the 1000 genes used here</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>bic_expr</code></td>
 <td>non-normalised expression table</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>bic_expr_centered</code></td>
 <td>median-based expression table</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>bic_expr_std</code></td>
 <td>sample-wise standardised expression table, all samples having the same median and IQR</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>bic_expr_labels</code></td>
 <td>same content as bic_expr_std but with row names replaced by human-readable gene names, and column names by human-readable sample labels</td>
 </tr>
@@ -537,10 +541,121 @@ div.tocify {
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>subset_expr_labels <span class="ot">&lt;-</span> bic_expr_labels[<span class="dv">1</span><span class="sc">:</span>subset_gene_nb, subset_labels]</span></code></pre></div>
 </div>
 </div>
+<div id="distance-computation" class="section level2">
+<h2>Distance computation</h2>
+<p>Read the help page of the enhanced distance function of the package <code>factoextra</code> (<code>factoextra::get_dist</code>).</p>
+<p>Use this method to compute 3 dissimilarity matrices, using respectively Euclidian, Pearson and Spearman distances. Name these matrices respectively <code>sample_dist_euclidian</code>, <code>sample_dist_pearson</code>, and <code>sample_dist_spearman</code>,</p>
+<p>Tips:</p>
+<ul>
+<li>Beware: <code>get_dist()</code> computes distances betwee the <em>rows</em> of a data matrix. For sample clustering we will thus need to transpose the data.frame with the function <code>t()</code>.</li>
+</ul>
+<div id="example-euclidian-distance" class="section level3">
+<h3>Example: Euclidian distance</h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Inter-sample distances ####</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(factoextra)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ?factoextra::get_dist</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Euclidian distance</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>sample_dist_euclidian <span class="ot">&lt;-</span> factoextra<span class="sc">::</span><span class="fu">get_dist</span>(</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">t</span>(subset_expr_labels), <span class="at">method =</span> <span class="st">&quot;euclidian&quot;</span>)</span></code></pre></div>
+</div>
+<div id="exercise" class="section level3">
+<h3>Exercise</h3>
+<p>Use <code>get_dist()</code> to compute correlation-based distances with respectiely Pearson and Spearman correlations. Save the results in variables named <code>sample_dist_pearson</code> and <code>sample_dist_spearman</code>.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Pearson distance</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>sample_dist_pearson <span class="ot">&lt;-</span> factoextra<span class="sc">::</span><span class="fu">get_dist</span>(</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">t</span>(subset_expr_labels), <span class="at">method =</span> <span class="st">&quot;pearson&quot;</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Spearman distance</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>sample_dist_spearman <span class="ot">&lt;-</span> factoextra<span class="sc">::</span><span class="fu">get_dist</span>(</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">t</span>(subset_expr_labels), <span class="at">method =</span> <span class="st">&quot;spearman&quot;</span>)</span></code></pre></div>
+</div>
+</div>
+<div id="distance-heatmaps" class="section level2">
+<h2>Distance heatmaps</h2>
+<p>Use the function <code>pheatmap()</code> (from the package of the same name) to plot the distance matrices. Use the <code>annotation</code> option to display colors above the columns indicating the cancer type and the status of the three gene markers (Her2, PR1 and ER1).</p>
+<div id="example-euclidian-distance-heatmap" class="section level3">
+<h3>Example: Euclidian distance heatmap</h3>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Heatmap of the Euclidian distance ####s</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>subset_annotation <span class="ot">&lt;-</span> subset_meta[, <span class="fu">c</span>(<span class="st">&quot;cancer.type&quot;</span>, <span class="st">&quot;ER1&quot;</span>, <span class="st">&quot;PR1&quot;</span>, <span class="st">&quot;Her2&quot;</span>)]</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(subset_annotation) <span class="ot">&lt;-</span> subset_meta<span class="sc">$</span>label</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">pheatmap</span>(sample_dist_euclidian, </span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">cluster_rows =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">cluster_cols =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">main =</span> <span class="st">&quot;Euclidian distance&quot;</span>, </span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">annotation_col =</span> subset_annotation)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/tcga-bic_dist_euclidian_heatmap-1.png" alt="Heatmap of the Euclidian distance" width="100%" />
+<p class="caption">
+Heatmap of the Euclidian distance
+</p>
+</div>
+</div>
+<div id="exercise-distance-heatmaps" class="section level3">
+<h3>Exercise: distance heatmaps</h3>
+<p>Run the same analysis for the Pearson and Spearman distance matrices. Interpret the results: do some of these measures seem more relevant to highlight the similarities between samples?</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Pearson distance heatmap ####</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Spearman distance heatmap ####</span></span></code></pre></div>
+</div>
+<div id="interpretation-dissimilarity-measures" class="section level3">
+<h3>Interpretation: dissimilarity measures</h3>
+<p>Comparing the three distance heatmaps above, can you already conclude something about the most relevant measure of dissimilarity between samples?</p>
+<ul>
+<li>TO BE COMPLETED</li>
+</ul>
+</div>
+</div>
+<div id="computing-a-tree-from-a-distance-matrix" class="section level2">
+<h2>Computing a tree from a distance matrix</h2>
+<p>Use the function <code>hclust()</code> to get trees from the previously computed distance matrices.</p>
+<div id="example-euclidian-matrix-average-linkage" class="section level3">
+<h3>Example: Euclidian matrix, average linkage</h3>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Sample tree with Euclidian distance, average linkage ####</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>sample_tree_euclidian_average <span class="ot">&lt;-</span> <span class="fu">hclust</span>(</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">d =</span> sample_dist_euclidian, <span class="at">method =</span> <span class="st">&quot;average&quot;</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sample_tree_euclidian_average, </span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="cn">NA</span>, <span class="at">ylab =</span> <span class="cn">NA</span>, <span class="at">hang =</span> <span class="sc">-</span><span class="dv">1</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/tcga-bic_sample_tree_euclidian_average-1.png" alt="Sample tree of the expression matrix with Euclidian distance and average linkage. " width="100%" />
+<p class="caption">
+Sample tree of the expression matrix with Euclidian distance and average linkage.
+</p>
+</div>
+<p>We can also use some fancy library (e.g. <code>ClassDiscovery</code>) to color the tree labels. Other librairies can be used to generate nice tree drawings, don’t hesitate to google and improve.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ClassDiscovery)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>ClassDiscovery<span class="sc">::</span><span class="fu">plotColoredClusters</span>(</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  sample_tree_euclidian_average, </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">labs =</span> subset_meta<span class="sc">$</span>cancer.type, <span class="do">## class labels</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="st">&quot;grey&quot;</span>, <span class="do">## tree color</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">cols =</span> subset_meta<span class="sc">$</span>color, </span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">cex =</span> <span class="fl">0.6</span>,</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">&quot;Euclidian distance, Ward linkage&quot;</span>)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topright&quot;</span>,</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">legend =</span> <span class="fu">names</span>(class_color), </span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> class_color,</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">text.col =</span> class_color, <span class="at">cex=</span><span class="fl">0.9</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/tcga-bic_sample_tree_euclidian_average_colored-1.png" alt="Sample tree of the expression matrix with Euclidian distance and average linkage. " width="100%" />
+<p class="caption">
+Sample tree of the expression matrix with Euclidian distance and average linkage.
+</p>
+</div>
+</div>
+<div id="exercises-other-matrices-and-linkage-rules" class="section level3">
+<h3>Exercises: other matrices and linkage rules</h3>
+<p>Test the different agglomeration rules (single, average, complete, ward) and the different disimilarity measures (Euclidian, Spearman, Pearson).</p>
+</div>
+<div id="interpretation-agglomeration-rule" class="section level3">
+<h3>Interpretation: agglomeration rule</h3>
+<p>Based on the analyses above, would you consider that some agglomeration rules are generally more relevant than other ones with this dataset? If so, is it systematic or does the best agglomeration rule vary depending on the dissimilarity measure?</p>
+</div>
+</div>
 <div id="session-info" class="section level2">
 <h2>Session info</h2>
 <p>As usual, we write the session info in the report for the sake of traceability.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
 <pre><code>R version 4.0.2 (2020-06-22)
 Platform: x86_64-apple-darwin17.0 (64-bit)
 Running under: macOS Mojave 10.14.6
@@ -556,11 +671,13 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] scales_1.1.1    pheatmap_1.0.12 aricode_1.0.0   knitr_1.31     
+[1] ClassDiscovery_3.3.13 oompaBase_3.2.9       cluster_2.1.1         scales_1.1.1          pheatmap_1.0.12       aricode_1.0.0         factoextra_1.0.7      ggplot2_3.3.3         knitr_1.31           
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.6         magrittr_2.0.1     munsell_0.5.0      colorspace_2.0-0   lattice_0.20-41    R6_2.5.0           rlang_0.4.10       highr_0.8          stringr_1.4.0      tools_4.0.2        grid_4.0.2         gtable_0.3.0       xfun_0.22          jquerylib_0.1.3    htmltools_0.5.1.1 
-[16] yaml_2.2.1         digest_0.6.27      lifecycle_1.0.0    Matrix_1.3-2       RColorBrewer_1.1-2 sass_0.3.1         evaluate_0.14      rmarkdown_2.7      stringi_1.5.3      compiler_4.0.2     bslib_0.2.4        jsonlite_1.7.2    </code></pre>
+ [1] Rcpp_1.0.6         oompaData_3.1.1    highr_0.8          RColorBrewer_1.1-2 bslib_0.2.4        compiler_4.0.2     pillar_1.5.1       jquerylib_0.1.3    tools_4.0.2        mclust_5.4.7       digest_0.6.27      lattice_0.20-41    jsonlite_1.7.2     evaluate_0.14      lifecycle_1.0.0   
+[16] tibble_3.1.0       gtable_0.3.0       pkgconfig_2.0.3    rlang_0.4.10       Matrix_1.3-2       DBI_1.1.1          ggrepel_0.9.1      yaml_2.2.1         xfun_0.22          withr_2.4.1        stringr_1.4.0      dplyr_1.0.5        generics_0.1.0     sass_0.3.1         vctrs_0.3.6       
+[31] grid_4.0.2         tidyselect_1.1.0   glue_1.4.2         R6_2.5.0           fansi_0.4.2        rmarkdown_2.7      farver_2.1.0       purrr_0.3.4        magrittr_2.0.1     ellipsis_0.3.1     htmltools_0.5.1.1  assertthat_0.2.1   colorspace_2.0-0   utf8_1.2.1         stringi_1.5.3     
+[46] munsell_0.5.0      crayon_1.4.1      </code></pre>
 </div>
 
 
