@@ -302,7 +302,7 @@ Roxygen2 provides is a very convenient way of documenting a function, because
 - the doc comes together with the code of the function (by default, R functions are documented in a separate file)
 
 
-```{r solution_download-load_functions}
+```{r function_download_only_once}
 #' @title Download a file only if it is not yet here
 #' @author Jacques van Helden email{Jacques.van-Helden@@france-bioinformatique.fr}
 #' @param url_base base of the URL, that will be prepended to the file name
