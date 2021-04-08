@@ -77,7 +77,7 @@ Nous fournissons ci-dessous une trame avec les principales sections attendus. Se
 
 ## Remise du rapport
 
-Date: **le 10 mai 2021**.  Si vous anticipez un problème pour remettre le rapport à cette date contactez-nous aussi rapidement que possible pour que nous puissions prévoir une remise plus tardive. 
+Date: **le 10 mai 2021 minuit**.  Si vous anticipez un problème pour remettre le rapport à cette date contactez-nous aussi rapidement que possible pour que nous puissions prévoir une remise plus tardive. 
 
 - Commencez par renommer le fichier Rmd en remplaçant Prenom-NOM par vos nom et prénom. 
 - Le rapport est attendu en formats Rmd + HTML (en activant l'option self_contained de l'en-tête). 
@@ -113,10 +113,25 @@ Le bloc suivant inclut le code pour charger les
 
 Nous vous demandons de créer un data.frame qui collectera les statistiques par gène et par échantillon. 
 
+```{r data_loading}
+
+## (Claire): prépare les questions ##
+
+```
+
 
 ### Transformation log2
 
 Appliquez une transformation log2 des données brutes, après avoir ajouté un epsilon $\epsilon = 1$ (les valeurs nulles seront donc représentées par un log2(counts) valant 0. 
+
+
+```{r data_loading}
+
+## (Claire): prépare les questions ##
+
+```
+
+
 
 ### Statistiques par échantillon avant normalisation
 
@@ -131,6 +146,14 @@ Appliquez une transformation log2 des données brutes, après avoir ajouté un e
 
 Ces résultats seront sotckés dans un data.frame avec 1 ligne par échantillon et 1 colonne par statistique, qui sera affiché avec la fonction `kable()` (n'oubliez pas la légende). 
 
+```{r data_loading}
+
+## (Claire): prépare les questions ##
+
+```
+
+
+
 
 ## Filtrage et normalisation des données
 
@@ -143,6 +166,7 @@ La méthode choisie ici consiste à
 - standardiser les échantillons sur le 3ème quartile des valeurs non-nulles. Nous vous rappelons que d'autres méthodes plus élaborées ont été vues dans les modules 4 et 5, mais nous avons choisi ici une solution simple tout en étant robuste. 
 
 ```{r sample_wise_standardisation}
+## (Jacques):  ##
 
 ```
 
@@ -159,20 +183,53 @@ Générez un data.frame avec une ligne par gène et une statistique par colonne,
 - maximum
 - annotations biomart
 
+```{r data_loading}
+
+## (Claire): prépare les questions ##
+
+```
+
+
 ## Distribution des données
 
 - Dessinez un box plot des échantillons avant et après normalisation, et commentez la façon dont l'effet de la normalisation apparaît sur ces graphiques. 
+
+```{r }
+## (Jacques): prépare  ##
+
+```
 
 ## Filtrage
 
 - Sélectionnez les gènes ayant un niveau moyen minimal de XX et un coefficient de variation 
 
 
+```{r }
+## (Jacques): prépare  ##
+
+```
+
 ## ACP
 
-- plot des gènes
-- plot des échantillons
+- plot des gènes: Jacques? Anne et Claire ne sont pas sûres que ce soient pertinent!
+- plot des échantillons en colrant par condition (time point) en prenant les gènes comme variables
+
+```{r }
+## (Jacques ou Anne): prépare  ##
+
+```
 
 ## Clustering
+
+1. matrice de distance
+2. hclust dans les 2 sens
+3. heatmap
+4. représenter sur l'ACP les lcusters d'échantillon
+
+```{r }
+## (Anne): prépare  ##
+
+```
+
 
 
