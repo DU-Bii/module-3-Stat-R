@@ -1,0 +1,178 @@
+---
+title: "Mini-projet 2021 - Exploration des données de Pavkovic"
+author: "Prénom Nom"
+date: '`r Sys.Date()`'
+output:
+  html_document:
+    self_contained: yes
+    code_download: yes
+    fig_caption: yes
+    highlight: zenburn
+    theme: cerulean
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+    code_folding: "hide"
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+
+```{r settings, include=FALSE, echo=FALSE, eval=TRUE}
+
+options(width = 300)
+# options(encoding = 'UTF-8')
+knitr::opts_chunk$set(
+  fig.width = 7, fig.height = 5, 
+  fig.path = 'figures/tcga-bic_',
+  fig.align = "center", 
+  size = "tiny", 
+  echo = TRUE, 
+  eval = TRUE, 
+  warning = FALSE, 
+  message = FALSE, 
+  results = TRUE, 
+  comment = "")
+
+options(scipen = 12) ## Max number of digits for non-scientific notation
+# knitr::asis_output("\\footnotesize")
+
+```
+
+
+
+```{r libraries, echo=FALSE, eval=TRUE}
+#### Load required R libraries ####
+
+## CRAN libraries
+requiredLib <- c("knitr",
+                 "e1071", ## For svm()
+                 "caret" ## Many utilities for supervised classification
+                 )
+for (lib in requiredLib) {
+  if (!require(lib, character.only = TRUE)) {
+    install.packages(lib, )
+  }
+  require(lib, character.only = TRUE)
+}
+
+
+
+```
+
+
+## Synopsis du projet
+
+
+Le but du projet est de mettre en oeuvre les méthodes vues dans le module 3 "R et statistiques" pour explorer le jeu de données de Pavokovic, et de fournir un rapport d'analyse au format R markdown. 
+
+Nous fournissons ci-dessous une trame avec les principales sections attendus. Sentez-vous libres d'adapter cette trame ou d'y ajouter des analyses complémentaires si elles vous aident à interpréter vos résultats. 
+
+## Remise du rapport
+
+Date: **le 10 mai 2021**.  Si vous anticipez un problème pour remettre le rapport à cette date contactez-nous aussi rapidement que possible pour que nous puissions prévoir une remise plus tardive. 
+
+- Commencez par renommer le fichier Rmd en remplaçant Prenom-NOM par vos nom et prénom. 
+- Le rapport est attendu en formats Rmd + HTML (en activant l'option self_contained de l'en-tête). 
+- Déposez les fichiers dans un sous-dossier de vote compte du cluster. Attention, veillez à respecter précisément cette structure de chemin car nous nous baserons dessus pour récupérer vos résultats. 
+
+    `/shared/projects/dubii2021/[login]/m3-stat-R/mini-projet` 
+
+
+## Critères d'évaluation
+
+- Reproductibilité des analyses: nous tenterons de regénérer le rapport HTML à partir de votre Rmd, en partant de notre compte sur le serveur IFB. 
+- Manipulation des objets R
+- Mobilisation des méthodes statistiques vues au cours
+- Pertinence des interprétations statistiques
+- Pertinence des interprétations biologiques
+- Clarté de la rédaction
+- Clarté des illustrations (figures et tableaux): graphismes, légendes ...
+
+Nous vous encourageons à assurer la lisibilpité de votre code (syntaxe, nommage des variables, commentaires de code)
+
+## Chargement des données brutes
+
+Le bloc suivant inclut le code pour charger les
+
+```{r data_loading}
+
+## CODE A FOURNIR (Jacques): charger les données de transcriptome de l'acide folique ##
+
+```
+
+
+## Statistiques descriptives
+
+Nous vous demandons de créer un data.frame qui collectera les statistiques par gène et par échantillon. 
+
+
+### Transformation log2
+
+Appliquez une transformation log2 des données brutes, après avoir ajouté un epsilon $\epsilon = 1$ (les valeurs nulles seront donc représentées par un log2(counts) valant 0. 
+
+### Statistiques par échantillon avant normalisation
+
+- moyenne
+- médiane
+- écart-type
+- premier quartile
+- troisième quartile
+- maximum
+- nombre de valeurs nulles
+- intervalle inter-quartiles
+
+Ces résultats seront sotckés dans un data.frame avec 1 ligne par échantillon et 1 colonne par statistique, qui sera affiché avec la fonction `kable()` (n'oubliez pas la légende). 
+
+
+## Filtrage et normalisation des données
+
+Nous fournissons ci-dessous le code pour normaliser les données, en standardisant le 3ème quantile. 
+
+La méthode choisie ici consiste à 
+
+- écarter les gènes "non-détectés", c'est -à-dire ceux ayant des valeurs nulles dans >90% des échantillons, ou ayant une valeur moyenne < 10 (arbitrairement). 
+
+- standardiser les échantillons sur le 3ème quartile des valeurs non-nulles. Nous vous rappelons que d'autres méthodes plus élaborées ont été vues dans les modules 4 et 5, mais nous avons choisi ici une solution simple tout en étant robuste. 
+
+```{r sample_wise_standardisation}
+
+```
+
+### Statistiques par gène après normalisation, et annotation des gènes
+
+
+Générez un data.frame avec une ligne par gène et une statistique par colonne, à partir du tableau de données normalisées :
+
+- moyenne
+- écart-type
+- coefficient de variation
+- minimum
+- médiane
+- maximum
+- annotations biomart
+
+## Distribution des données
+
+- Dessinez un box plot des échantillons avant et après normalisation, et commentez la façon dont l'effet de la normalisation apparaît sur ces graphiques. 
+
+## Filtrage
+
+- Sélectionnez les gènes ayant un niveau moyen minimal de XX et un coefficient de variation 
+
+
+## ACP
+
+- plot des gènes
+- plot des échantillons
+
+## Clustering
+
+
