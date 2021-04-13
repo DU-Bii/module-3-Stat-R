@@ -4,7 +4,7 @@ author: "Prénom Nom"
 date: '`r Sys.Date()`'
 output:
   html_document:
-    self_contained: yes
+    self_contained: no
     code_download: yes
     fig_caption: yes
     highlight: zenburn
@@ -136,6 +136,10 @@ download_only_once <- function(
 }
 ```
 
+Nous téléchargeons deux fichiers dans un dossier local, et les chargeons dans les data.frames suivantes: 
+
+- Données brutes de transcriptome: `fa_expr_raw`
+- Métadonnées: `fa_meta`
 
 ```{r download_and_load}
 ## Define the remote URL and local folder
@@ -151,57 +155,68 @@ pavkovic_data_folder <- file.path(pavkovic_folder, "data")
 ## Note: we use check.names=FALSE to avoid replacing hyphens by dots
 ## in sample names, because we want to keep them as in the 
 ## original data files. 
-pavkovic_expr_file <- download_only_once(
+message("Downloading FA transcriptome file\t", "fa_raw_counts.tsv.gz",
+  "\n\tfrom\t", pavkovic_url)
+fa_expr_file <- download_only_once(
   url_base = pavkovic_url, 
   file_name = "fa_raw_counts.tsv.gz",
   local_folder = pavkovic_data_folder)
-pavkovic_expr <- read.delim(file = pavkovic_expr_file, 
+message("Loading FA transcriptome data from\n\t", fa_expr_file)
+fa_expr_raw <- read.delim(file = fa_expr_file, 
                        header = TRUE, 
                        row.names = 1)
-# colnames(pavkovic_expr)
-# dim(pavkovic_expr)
-# View(head(pavkovic_expr))
+# colnames(fa_expr_raw)
+# dim(fa_expr_raw)
+# View(head(fa_expr_raw))
 
 ## Download the metadata file
-pavkovic_meta_file <- download_only_once(
+message("Downloading FA metadata file\t", "fa_transcriptome_metadata.tsv",
+  "\n\tfrom\t", pavkovic_url)
+fa_meta_file <- download_only_once(
   url_base = pavkovic_url, 
   file_name = "fa_transcriptome_metadata.tsv",
   local_folder = pavkovic_data_folder)
-pavkovic_meta <- read.delim(file = pavkovic_meta_file, 
+message("Loading FA metadata from\n\t", fa_meta_file)
+fa_meta <- read.delim(file = fa_meta_file, 
                        header = TRUE, 
                        row.names = 1)
 
-# View(pavkovic_meta)
-kable(pavkovic_meta, caption = "Metdata for Pavkovoc FA transcriptome")
+# View(fa_meta)
+kable(fa_meta, caption = "Metdata for Pavkovoc FA transcriptome")
 ```
+
+
+
+
+## Transformation log2
+
+Appliquez une transformation log2 des données brutes, après avoir ajouté un epsilon $\epsilon = 1$ (les valeurs nulles seront donc représentées par un log2(counts) valant $0$. Stockez le résultat dans une data.frame nommée `fa_expr_log2`.
+
+Affchez un fragment des tableaux `fa_expr_raw` et `fa_expr_log2` en sélectionnant les lignes 100 à 109 et les colonnes 5 à 10, afin de vous assurer que la transformation log2 a bien fonctionné. 
+
+```{r log2_transform}
+## Log2 transformation of the transcriptome data
+epsilon <- 1
+fa_expr_log2 <- log2(fa_expr_raw + epsilon)
+# dim(fa_expr_log2)
+# View(head(fa_expr_log2))
+
+## Display of a fragment of the data before and after log2 transformation
+kable(fa_expr_raw[100:109, 5:10], caption = "Fragment des données transcriptomiques brutes")
+kable(fa_expr_log2[100:109, 5:10], caption = "Fragment des données transcriptomiques après transformation log2")
+```
+
 
 ## Statistiques descriptives
 
 Nous vous demandons de créer un data.frame qui collectera les statistiques par gène et par échantillon. 
 
-## (Claire): prépare les questions ##
-
-
-```{r gene_stat}
-
-
-```
-
-
-### Transformation log2
-
-Appliquez une transformation log2 des données brutes, après avoir ajouté un epsilon $\epsilon = 1$ (les valeurs nulles seront donc représentées par un log2(counts) valant 0. 
-
-
-```{r data_loading}
-
-## (Claire): prépare les questions ##
-
-```
-
+### (Claire): prépare les questions ###
 
 
 ### Statistiques par échantillon avant normalisation
+
+Créez une data.frame nommée `gene_stat_prenorm` qui comportera une ligne par gène et une colonne par statistique, et calculez les statistiques suivantes sur les valeurs log2 de chaque gène. 
 
 - moyenne
 - médiane
@@ -214,9 +229,22 @@ Appliquez une transformation log2 des données brutes, après avoir ajouté un e
 
 Ces résultats seront sotckés dans un data.frame avec 1 ligne par échantillon et 1 colonne par statistique, qui sera affiché avec la fonction `kable()` (n'oubliez pas la légende). 
 
-```{r data_loading}
+Affichez les lignes 100 à 109 de ce tableau de statistiques. 
 
-## (Claire): prépare les questions ##
+```{r gene_stat_pre_norm}
+## Gene-wise statistics before normalisation
+gene_stat_prenorm <- data.frame(
+  mean = apply(fa_expr_raw, 1, mean),
+  median = apply(fa_expr_raw, 1, median),
+  sd = apply(fa_expr_raw, 1, sd),
+  Q1 = apply(fa_expr_raw, 1, quantile, p = 0.25),
+  Q3 = apply(fa_expr_raw, 1, quantile, p = 0.75),
+  max = apply(fa_expr_raw, 1, max),
+  null = apply(fa_expr_raw == 0, 1, sum),
+  iqr = apply(fa_expr_raw, 1, IQR)
+)
+
+kable(gene_stat_prenorm[100:109, ], caption = "Gene-wise statistics before normalisation.")
 
 ```
 
@@ -229,19 +257,79 @@ Nous fournissons ci-dessous le code pour normaliser les données, en standardisa
 
 La méthode choisie ici consiste à 
 
-- écarter les gènes "non-détectés", c'est -à-dire ceux ayant des valeurs nulles dans >90% des échantillons, ou ayant une valeur moyenne < 10 (arbitrairement). 
+- écarter les gènes "non-détectés", c'est -à-dire ceux ayant des valeurs nulles dans au moins 90% des échantillons;
+
+- écarter les gènes à peine exprimés, c'est-à-dire ceux ayant une valeur moyenne < 10 (arbitrairement);
 
 - standardiser les échantillons sur le 3ème quartile des valeurs non-nulles. Nous vous rappelons que d'autres méthodes plus élaborées ont été vues dans les modules 4 et 5, mais nous avons choisi ici une solution simple tout en étant robuste. 
 
-```{r sample_wise_standardisation}
-## (Jacques):  ##
+```{r gene_filtering}
+## Data filtering: genes having at least 90% null values
+undetected_genes <- gene_stat_prenorm$null >= ncol(fa_expr_raw) * 0.9
+print(paste0("Undetected genes (null in >= 90% samples): ", sum(undetected_genes)))
+
+## Data filtering: genes having a mean expression < 10
+barely_expressed_genes <- gene_stat_prenorm$mean < 10
+print(paste0("Barely expressed genes (mean < 10): ", sum(barely_expressed_genes)))
+
+## Apply filtering on both criteria
+discarded_genes <- undetected_genes | barely_expressed_genes
+print(paste0("Discarded genes: ", sum(discarded_genes)))
+kept_genes <- !discarded_genes
+print(paste0("Kept genes: ", sum(kept_genes)))
+
+## Genes after filtering
+fa_expr_log2_filtered <- fa_expr_log2[kept_genes, ]
 
 ```
+
+
+```{r sample_standardisation}
+## Generate a data frame where null values are replaced by NA
+fa_expr_nonull <- fa_expr_log2_filtered
+fa_expr_nonull[fa_expr_log2_filtered <= 0] <- NA
+sum(is.na(fa_expr_nonull))
+
+## Compute the 3rd quartile of non-null values for each sample
+sample_q3_nonull <- apply(fa_expr_nonull, 2, quantile, prob = 0.75, na.rm = TRUE)
+# print(sample_q3_nonull)
+
+## Compute the A3 for all the values, which will serve as target value for the standardised sample Q3
+all_q3_nonull <- quantile(unlist(fa_expr_nonull), prob = 0.75, na.rm = TRUE)
+# print(all_q3_nonull)
+
+## Standardise expression on  the third quartile of non-null values
+## Beware : for this standardization we keep the null values
+##
+## Trick : I transpose the table to apply the ratio sample per sample, 
+## and then transpose the result to get the genes in rows and samples in columns
+fa_expr_log2_standard <- t(t(fa_expr_log2_filtered) / sample_q3_nonull * all_q3_nonull)
+# quantile(unlist(fa_expr_log2_standard), probs = 0.75, na.rm = TRUE)
+
+## I also compute the values for the "nonull" table for 
+## the sake of comparison and to check that the third quantiles of non-null 
+## values are well identical across samples.
+fa_expr_log2_standard_nonull <- t(t(fa_expr_nonull) / sample_q3_nonull * all_q3_nonull)
+# quantile(unlist(fa_expr_log2_standard_nonull), probs = 0.75, na.rm = TRUE)
+
+standardisation_impact <- data.frame(
+  before_all = apply(fa_expr_log2_filtered, 2, quantile, prob =  0.75, na.rm = TRUE),
+  before_nonull = apply(fa_expr_nonull, 2, quantile, prob =  0.75, na.rm = TRUE),
+  after_nonul = apply(fa_expr_log2_standard_nonull, 2, quantile, prob =  0.75, na.rm = TRUE),
+  after_all = apply(fa_expr_log2_standard, 2, quantile, prob =  0.75, na.rm = TRUE)
+)
+
+
+## Note: after standardization the Q3 show some variations because we compute them here with the null values
+kable(standardisation_impact, caption = "Impact of standardization on the third quantile (Q3) per sample. Third quantiles are computed before and after standardisation, with either all the values of the filtered table, or only the non-null values. ")
+
+```
+
 
 ### Statistiques par gène après normalisation, et annotation des gènes
 
 
-Générez un data.frame avec une ligne par gène et une statistique par colonne, à partir du tableau de données normalisées :
+Générez un data.frame avec une ligne par gène à partir du tableau de données normalisées, avec les statistiques suivantes (une statistique par colonne):
 
 - moyenne
 - écart-type
@@ -249,27 +337,55 @@ Générez un data.frame avec une ligne par gène et une statistique par colonne,
 - minimum
 - médiane
 - maximum
-- annotations biomart
 
-```{r data_loading}
+Ajoutez une colonne avec les annotations biomart de chaque gène/ 
 
-## (Claire): prépare les questions ##
+Affichez les lignes 100 à 109 de ce tableau de statistiques. 
+
+
+```{r gene_stat_post_norm}
+## Stat per gene after normalisation
+## Gene-wise statistics before normalisation
+gene_stat_norm <- data.frame(
+  mean = apply(fa_expr_log2_standard, 1, mean),
+  sd = apply(fa_expr_log2_standard, 1, sd))
+gene_stat_norm$V = gene_stat_norm$sd / gene_stat_norm$mean
+gene_stat_norm$min = apply(fa_expr_log2_standard, 1, min)
+gene_stat_norm$median = apply(fa_expr_log2_standard, 1, median)
+gene_stat_norm$max = apply(fa_expr_log2_standard, 1, max)
+
+kable(gene_stat_norm[100:109, ], caption = "Gene-wise statistics after normalisation.")
+
 
 ```
 
 
 ## Distribution des données
 
+- Dessinez la distribution des valeurs après normalisation (tous échantillons confondus)
+
+```{r fa_expr_norm_distrib, fig.width=8, fig.height=5, out.width="60%", fig.cap="Distribution of expression values (log2 counts) after gene filtering and standardisation on the sample-wise third-quartile of non-null values. The vertical line highlights the mean value. "}
+hist(unlist(fa_expr_log2_standard), breaks = seq(from = 0, to = max(fa_expr_log2_standard) + 1, by = 0.25),
+     xlab = "log2(counts) after standardisation", 
+     ylab = "number of genes afterfiltering",
+     col = "#BBDDFF",
+     las = 1, cex.axis = 0.8,
+     main = "distribution after standardisation")
+abline(v = mean(fa_expr_log2_standard), col = "darkgreen", lwd = 2)
+
+```
+
+
 - Dessinez un box plot des échantillons avant et après normalisation, et commentez la façon dont l'effet de la normalisation apparaît sur ces graphiques. 
 
 ```{r }
-## (Jacques): prépare  ##
+## 
 
 ```
 
 ## Filtrage
 
-- Sélectionnez les gènes ayant un niveau moyen minimal de XX et un coefficient de variation 
+- Sélectionnez les gènes ayant un niveau log2 moyen minimal supérieur à 4 et un coefficient de variation 
 
 
 ```{r }
