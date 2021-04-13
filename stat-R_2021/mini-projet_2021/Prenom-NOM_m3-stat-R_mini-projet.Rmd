@@ -364,10 +364,10 @@ kable(gene_stat_norm[100:109, ], caption = "Gene-wise statistics after normalisa
 
 - Dessinez la distribution des valeurs après normalisation (tous échantillons confondus)
 
-```{r fa_expr_norm_distrib, fig.width=8, fig.height=5, out.width="60%", fig.cap="Distribution of expression values (log2 counts) after gene filtering and standardisation on the sample-wise third-quartile of non-null values. The vertical line highlights the mean value. "}
+```{r fa_expr_norm_distrib, fig.width=8, fig.height=5, out.width="70%", fig.cap="Distribution of expression values (log2 counts) after gene filtering and standardisation on the sample-wise third-quartile of non-null values. The vertical line highlights the mean value. "}
 hist(unlist(fa_expr_log2_standard), breaks = seq(from = 0, to = max(fa_expr_log2_standard) + 1, by = 0.25),
      xlab = "log2(counts) after standardisation", 
-     ylab = "number of genes afterfiltering",
+     ylab = "number of genes after filtering",
      col = "#BBDDFF",
      las = 1, cex.axis = 0.8,
      main = "distribution after standardisation")
