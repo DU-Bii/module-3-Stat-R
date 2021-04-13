@@ -432,7 +432,7 @@ load_fix_row_names <- function(file,
 ```
 
 
-We can now load the data that from our local folder. 
+We can now load the data from our local folder. 
 
 ```{r load_fa}
 
