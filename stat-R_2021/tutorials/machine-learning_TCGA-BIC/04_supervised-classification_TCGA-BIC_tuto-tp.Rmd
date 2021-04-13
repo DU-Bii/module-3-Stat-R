@@ -298,9 +298,10 @@ Use the best kernel defined above, and estimate the MER with the 100, 200, 300, 
 use the `tune.svm()` function to find the optimal SVM parameters.
 
 ```{r tune_svm}
-
-tune.svm(x = training_expr, 
-         y = as.factor(training_classes))
+#### Tune SVM ####
+svm_tuning_result <- tune.svm(
+  x = training_expr, 
+  y = as.factor(training_classes))
 
 ```
 
