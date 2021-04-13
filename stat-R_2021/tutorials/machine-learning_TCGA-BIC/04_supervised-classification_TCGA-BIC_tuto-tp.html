@@ -11,7 +11,7 @@
 
 <meta name="author" content="Jacques van Helden" />
 
-<meta name="date" content="2021-03-29" />
+<meta name="date" content="2021-04-13" />
 
 <title>Tutorial: machine-learning with TGCA BIC transcriptome</title>
 
@@ -347,7 +347,7 @@ div.tocify {
 <h1 class="title toc-ignore">Tutorial: machine-learning with TGCA BIC transcriptome</h1>
 <h3 class="subtitle">04. Supervised classification</h3>
 <h4 class="author">Jacques van Helden</h4>
-<h4 class="date">2021-03-29</h4>
+<h4 class="date">2021-04-13</h4>
 
 </div>
 
@@ -563,10 +563,22 @@ Basal.like    HER2pos  Luminal.A  Luminal.B
 <h2>Exercise: impact of the SVM kernel</h2>
 <p>Based on the above example, test the 4 SVM kernels (linear, radial, sigmoid, polynomial) and compare the performances. Which kernel gives the best results.</p>
 </div>
+<div id="exercise-impact-of-the-number-of-variables-genes" class="section level2">
+<h2>Exercise: impact of the number of variables (genes)</h2>
+<p>Use the best kernel defined above, and estimate the MER with the 100, 200, 300, 500, 1000 top genes respectively.</p>
+</div>
+<div id="svm-tuning" class="section level2">
+<h2>SVM tuning</h2>
+<p>use the <code>tune.svm()</code> function to find the optimal SVM parameters.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Tune SVM ####</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>svm_tuning_result <span class="ot">&lt;-</span> <span class="fu">tune.svm</span>(</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> training_expr, </span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">as.factor</span>(training_classes))</span></code></pre></div>
+</div>
 <div id="session-info" class="section level2">
 <h2>Session info</h2>
 <p>As usual, we write the session info in the report for the sake of traceability.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
 <pre><code>R version 4.0.2 (2020-06-22)
 Platform: x86_64-apple-darwin17.0 (64-bit)
 Running under: macOS Mojave 10.14.6
