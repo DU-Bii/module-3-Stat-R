@@ -52,10 +52,7 @@ options(scipen = 12) ## Max number of digits for non-scientific notation
 #### Load required R libraries ####
 
 ## CRAN libraries
-requiredLib <- c("knitr",
-                 "e1071", ## For svm()
-                 "caret" ## Many utilities for supervised classification
-                 )
+requiredLib <- c("knitr")
 for (lib in requiredLib) {
   if (!require(lib, character.only = TRUE)) {
     install.packages(lib, )
@@ -100,22 +97,93 @@ Nous vous encourageons à assurer la lisibilpité de votre code (syntaxe, nommag
 
 ## Chargement des données brutes
 
-Le bloc suivant inclut le code pour charger les
+Le bloc suivant contient une  fonction qui permet de télécharger un fichier dans l'espace de travail, sauf s'il est déjà présent. Nous l'utiliserons ensuite pour télécharger les données à analyser en évitant de refaire le transfert à chaque exécution de l'analyse. 
 
-```{r data_loading}
+```{r function_download_only_once}
+#' @title Download a file only if it is not yet here
+#' @author Jacques van Helden email{Jacques.van-Helden@@france-bioinformatique.fr}
+#' @param url_base base of the URL, that will be prepended to the file name
+#' @param file_name name of the file (should not contain any path)
+#' @param local_folder path of a local folder where the file should be stored
+#' @return the function returns the path of the local file, built from local_folder and file_name
+#' @export©
+download_only_once <- function(
+  url_base, 
+  file_name,
+  local_folder) {
 
-## CODE A FOURNIR (Jacques): charger les données de transcriptome de l'acide folique ##
+  ## Define the source URL  
+  url <- file.path(url_base, file_name)
+  message("Source URL\n\t",  url)
 
+  ## Define the local file
+  local_file <- file.path(local_folder, file_name)
+  
+  ## Create the local data folder if it does not exist
+  dir.create(local_folder, showWarnings = FALSE, recursive = TRUE)
+  
+  ## Download the file ONLY if it is not already there
+  if (!file.exists(local_file)) {
+    message("Downloading file from source URL to local file\n\t", 
+            local_file)
+    download.file(url = url, destfile = local_file)
+  } else {
+    message("Local file already exists, no need to download\n\t", 
+            local_file)
+  }
+  
+  return(local_file)
+}
 ```
 
+
+```{r download_and_load}
+## Define the remote URL and local folder
+pavkovic_url <- "https://github.com/DU-Bii/module-3-Stat-R/raw/master/stat-R_2021/data/pavkovic_2019/"
+
+## Define the local folder for this analysis (where the data will be downloaded and the results generated)
+pavkovic_folder <- "~/m3-stat-R/pavkovic_analysis"
+
+## Define a sub-folder for the data
+pavkovic_data_folder <- file.path(pavkovic_folder, "data")
+
+## Download and load the expression data table
+## Note: we use check.names=FALSE to avoid replacing hyphens by dots
+## in sample names, because we want to keep them as in the 
+## original data files. 
+pavkovic_expr_file <- download_only_once(
+  url_base = pavkovic_url, 
+  file_name = "fa_raw_counts.tsv.gz",
+  local_folder = pavkovic_data_folder)
+pavkovic_expr <- read.delim(file = pavkovic_expr_file, 
+                       header = TRUE, 
+                       row.names = 1)
+# colnames(pavkovic_expr)
+# dim(pavkovic_expr)
+# View(head(pavkovic_expr))
+
+## Download the metadata file
+pavkovic_meta_file <- download_only_once(
+  url_base = pavkovic_url, 
+  file_name = "fa_transcriptome_metadata.tsv",
+  local_folder = pavkovic_data_folder)
+pavkovic_meta <- read.delim(file = pavkovic_meta_file, 
+                       header = TRUE, 
+                       row.names = 1)
+
+# View(pavkovic_meta)
+kable(pavkovic_meta, caption = "Metdata for Pavkovoc FA transcriptome")
+```
 
 ## Statistiques descriptives
 
 Nous vous demandons de créer un data.frame qui collectera les statistiques par gène et par échantillon. 
 
-```{r data_loading}
-
 ## (Claire): prépare les questions ##
+
+
+```{r gene_stat}
+
 
 ```
 
