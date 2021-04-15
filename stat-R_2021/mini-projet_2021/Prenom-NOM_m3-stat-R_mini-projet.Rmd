@@ -161,6 +161,8 @@ fa_expr_file <- download_only_once(
   url_base = pavkovic_url, 
   file_name = "fa_raw_counts.tsv.gz",
   local_folder = pavkovic_data_folder)
+
+## Load the expresdsion table
 message("Loading FA transcriptome data from\n\t", fa_expr_file)
 fa_expr_raw <- read.delim(file = fa_expr_file, 
                        header = TRUE, 
@@ -176,6 +178,8 @@ fa_meta_file <- download_only_once(
   url_base = pavkovic_url, 
   file_name = "fa_transcriptome_metadata.tsv",
   local_folder = pavkovic_data_folder)
+
+## Load the metadata
 message("Loading FA metadata from\n\t", fa_meta_file)
 fa_meta <- read.delim(file = fa_meta_file, 
                        header = TRUE, 
@@ -312,6 +316,7 @@ fa_expr_log2_standard <- t(t(fa_expr_log2_filtered) / sample_q3_nonull * all_q3_
 fa_expr_log2_standard_nonull <- t(t(fa_expr_nonull) / sample_q3_nonull * all_q3_nonull)
 # quantile(unlist(fa_expr_log2_standard_nonull), probs = 0.75, na.rm = TRUE)
 
+## Compute 3 before and after standardisation, including or not the null values
 standardisation_impact <- data.frame(
   before_all = apply(fa_expr_log2_filtered, 2, quantile, prob =  0.75, na.rm = TRUE),
   before_nonull = apply(fa_expr_nonull, 2, quantile, prob =  0.75, na.rm = TRUE),
@@ -320,7 +325,8 @@ standardisation_impact <- data.frame(
 )
 
 
-## Note: after standardization the Q3 show some variations because we compute them here with the null values
+## Note: after standardization the Q3 of the data we will use show some variations 
+## because we compute them here with the null values
 kable(standardisation_impact, caption = "Impact of standardization on the third quantile (Q3) per sample. Third quantiles are computed before and after standardisation, with either all the values of the filtered table, or only the non-null values. ")
 
 ```
@@ -365,7 +371,8 @@ kable(gene_stat_norm[100:109, ], caption = "Gene-wise statistics after normalisa
 - Dessinez la distribution des valeurs après normalisation (tous échantillons confondus)
 
 ```{r fa_expr_norm_distrib, fig.width=8, fig.height=5, out.width="70%", fig.cap="Distribution of expression values (log2 counts) after gene filtering and standardisation on the sample-wise third-quartile of non-null values. The vertical line highlights the mean value. "}
-hist(unlist(fa_expr_log2_standard), breaks = seq(from = 0, to = max(fa_expr_log2_standard) + 1, by = 0.25),
+hist(unlist(fa_expr_log2_standard), 
+     breaks = seq(from = 0, to = max(fa_expr_log2_standard) + 1, by = 0.25),
      xlab = "log2(counts) after standardisation", 
      ylab = "number of genes after filtering",
      col = "#BBDDFF",
@@ -378,42 +385,188 @@ abline(v = mean(fa_expr_log2_standard), col = "darkgreen", lwd = 2)
 
 - Dessinez un box plot des échantillons avant et après normalisation, et commentez la façon dont l'effet de la normalisation apparaît sur ces graphiques. 
 
-```{r }
-## 
+```{r boxplots_standardisation_impact, fig.width=10, fig.height=12, out.width="100%", fig.cap="Box plots showing the impact of normalisation"}
+#### Box plots to show normalisation impact ####
+par(mar = c(4,6,4,1)) ## Set the margins
+par(mfrow = c(2,2))
+boxplot(fa_expr_log2_filtered, 
+        horizontal = TRUE,
+        xlab = "log2(counts)", 
+        las = 1, 
+        col = fa_meta$color, 
+        main = "Before standardisation\nall values")
+boxplot(fa_expr_nonull, 
+        horizontal = TRUE, 
+        xlab = "log2(counts)", 
+        las = 1, 
+        col = fa_meta$color, 
+        main = "Before standardisation\nzeros discarded")
+boxplot(fa_expr_log2_standard_nonull, 
+        horizontal = TRUE, 
+        xlab = "log2(counts)", 
+        las = 1, 
+        col = fa_meta$color, 
+        main = "Standardised\nzeros discarded")
+boxplot(fa_expr_log2_standard, 
+        xlab = "log2(counts)", 
+        las = 1, 
+        horizontal = TRUE, 
+        col = fa_meta$color, 
+        main = "Standardised\nall values")
+par(mfrow = c(1, 1))
+par(mar = c(4,5,5,1))
 
 ```
 
 ## Filtrage
 
-- Sélectionnez les gènes ayant un niveau log2 moyen minimal supérieur à 4 et un coefficient de variation 
+Pour réduire le nombre de gènes, nous allons écarter les gènes faiblement exprimés (log2 moyen inférieur à 4), et ne retenir que ceux qui montrent des variations importantes entre échantillons. Pour ce dernier critère , nous nous baasons sur nle coefficient de variation, afin de relativiser la dispersion (écart type) par rapport à la tendance centrale (moyenne). 
+
+Sélectionnez les gènes ayant un niveau log2 moyen minimal supérieur à 3 ($s > 3$) et un coefficient de variation supérieur à 0.5 ($V > 0.5$). Note: ces valeurs sont parfaitement arbitraires, elles ont érté choisies pour obtenir un nombre raisonnable de gènes. 
 
 
-```{r }
-## (Jacques): prépare  ##
+```{r gene_selection}
+#### Gene selection ####
+
+## Compute a Boolean vector indicating whether each gene passes or not the expression level threshold
+high_expression <- gene_stat_norm$mean > 3
+# table(high_expression) # count number of genes with high/weak expression
+
+## Compute a Boolean vector indicating whether each gene passes or not the variation coefficient threshold
+high_variation <- gene_stat_norm$V > 0.5
+# table(high_variation) # count number of genes with weak high coeffficient of variation
+
+## Select genes having both a high mean expression and a high variation coefficien
+selected_genes <- high_variation & high_expression
+# table(selected_genes) # count number of genes with weak high coeffficient of variation
+print(paste0("Selected genes: ", sum(selected_genes)))
+
+## Create a data frame with the expression of the selected genes
+fa_expr_selected <- fa_expr_log2_standard[selected_genes, ]
 
 ```
 
+Dessinez des histogrammes des valeurs d'expression avant et après cette sélection de gènes, et commentez les différences. 
+
+```{r hist_expr_selected_genes, fig.width=7, fig.height=8, out.width="60%", fig.cap="Distribution of expression values before and after gene selection"}
+#### Histograms of expression before and after gene selection ####
+
+par(mfrow=c(2,1))
+hist(unlist(fa_expr_log2_standard), 
+     breaks = seq(from = 0, to = max(fa_expr_log2_standard) + 1, by = 0.25),
+     main = "Filtered genes",
+     col =  "#DDBBFF")
+
+hist(unlist(fa_expr_selected), 
+     breaks = seq(from = 0, to = max(fa_expr_log2_standard) + 1, by = 0.25),
+     main = "Selected genes",
+     col =  "#FFDDBB")
+
+par(mfrow=c(1,1))
+
+
+# ## Some quick checks: the selection of highly variable genes select those having many zeros - and high values in other samples
+# hist(unlist(fa_expr_log2_filtered[high_expression, ]), breaks=100)
+# hist(unlist(fa_expr_log2_filtered[high_variation, ]), breaks=100)
+# hist(unlist(fa_expr_log2_filtered[!high_variation, ]), breaks=100)
+# hist(unlist(fa_expr_log2_filtered[selected_genes, ]), breaks=100)
+
+```
+
+
+```{r boxplots_expr_selected_genes}
+#### Histogram of expression after gene selection ####
+
+par(mfrow=c(2,1))
+hist(unlist(fa_expr_log2_standard), 
+     breaks = seq(from = 0, to = max(fa_expr_log2_standard) + 1, by = 0.25),
+     las = 1, cex.axis = 0.7, 
+     main = "Filtered genes",
+     col =  "#BBDDFF")
+
+hist(unlist(fa_expr_selected), 
+     breaks = seq(from = 0, to = max(fa_expr_log2_standard) + 1, by = 0.25),
+     las = 1, cex.axis = 0.7, 
+     main = "Selected genes",
+     col =  "#88FFBB")
+
+par(mfrow=c(1,1))
+
+
+
+```
+
+
 ## ACP
 
-- plot des gènes: Jacques? Anne et Claire ne sont pas sûres que ce soient pertinent!
-- plot des échantillons en colrant par condition (time point) en prenant les gènes comme variables
+Dessinez un plot ACP des échantillons en les colorant par condition. 
+
+- avec la matrice d'expression initiale ($fa_expr$)
+- avec la matrice finale (transformation log2, filtre des gènes non-détectés, standardisation et sélection des gènes fortement exprimés et a-à haut coefficient de variation)
 
 ```{r }
-## (Jacques ou Anne): prépare  ##
+#### PC plots ####
+
 
 ```
 
 ## Clustering
 
-1. matrice de distance
-2. hclust dans les 2 sens
-3. heatmap
-4. représenter sur l'ACP les lcusters d'échantillon
+- Calculez les matrices de distance entre échantillons, en utilisant respectivement les distances euclidienne, coefficient de Pearson  et de Spearman. 
 
-```{r }
-## (Anne): prépare  ##
+
+
+```{r sample_distances}
 
 ```
+
+
+
+- Effectuez un clustering hiérarchique des échantillons, en utilisant le critère de Ward pour l'agglomération. Comparez les arbres d'échantillons obtenus avec ces trois métriques et choisissez celle qui vous paraît la plus pertinente.
+
+
+
+```{r sample_clustering}
+
+```
+
+
+- Effectuez un clustering hiérarchique des gènes en utilisant la distance basée sur le coefficient de Pearson et le critère de Ward
+
+```{r gene_clustering}
+
+```
+
+
+- Dessinez un arbre avec le résultat du clustering des gènes et commentez sa strcuture. Si vous deviez choisir de façon arbitraire un nombre de clusters, que choisiriez-vous ? Pourquoi ? Pas de panique, nous pouvons assumer ici que la réponse comporte une part de subjectivité. 
+
+```{r gene_tree}
+
+```
+
+
+- Dessinez une heatmap du résultat, en sélectionnant les deux résultats de clustering ci-dessus pour les gènes et les échantillons. 
+
+```{r biclustering}
+
+```
+
+
+Interprétez les résultats en quelques phrases. 
+
+
+## Enrichissement fonctionnel
+
+Effectuez une analyse d'enrichissement fonctionnel avec les principaux clusters obtenus dans la section précédente. 
+
+```{r functional_enrichment}
+
+```
+
+## Conclusions générales
+
+
+Résumez en quelques phrases vos conclusions à partir des résultats obtenus. 
 
 
 
