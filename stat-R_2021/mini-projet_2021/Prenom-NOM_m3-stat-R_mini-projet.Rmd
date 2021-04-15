@@ -5,7 +5,7 @@ date: '`r Sys.Date()`'
 output:
   html_document:
     self_contained: no
-    code_download: yes
+    code_download: true
     fig_caption: yes
     highlight: zenburn
     theme: cerulean
@@ -504,30 +504,55 @@ Dessinez un plot ACP des échantillons en les colorant par condition.
 - avec la matrice d'expression initiale ($fa_expr$)
 - avec la matrice finale (transformation log2, filtre des gènes non-détectés, standardisation et sélection des gènes fortement exprimés et a-à haut coefficient de variation)
 
-```{r }
-#### PC plots ####
+```{r acp_raw}
+# tous les gènes
+ma_pca_raw_tt <- PCA(t(fa_expr_raw), 
+                      scale.unit = FALSE, 
+                      graph = FALSE)
+plot(ma_pca_raw_tt, choix = "ind")
+fviz_pca_ind(ma_pca_raw_tt, col.ind = fa_meta[, "color"])
+# seulement les gènes sélectionnés
+ma_pca_raw_sel <- PCA(t(fa_expr_raw[selected_genes,]), 
+                      scale.unit = FALSE, 
+                      graph = FALSE)
+fviz_pca_ind(ma_pca_raw_sel, col.ind = fa_meta[, "color"])
+```
 
-
+```{r acp_sel}
+ma_pca_sel <- PCA(t(fa_expr_selected), scale.unit = FALSE,
+                  graph = FALSE)
+plot(ma_pca_sel, choix = "var")
+plot(ma_pca_sel, choix = "ind")
+fviz_pca_ind(ma_pca_sel, col.ind = fa_meta[, "color"])
 ```
 
 ## Clustering
 
-- Calculez les matrices de distance entre échantillons, en utilisant respectivement les distances euclidienne, coefficient de Pearson  et de Spearman. 
-
+- Calculez les matrices de distance entre échantillons, en utilisant respectivement les distances euclidienne (`dist()`), coefficient de Pearson (`cor(, method = "pearson")`)  et de Spearman (`cor(, method = "spearman")`).
 
 
 ```{r sample_distances}
-
+dist_euc_sel <- dist(t(fa_expr_selected))
+cor_pearson_sel <- as.dist(1 - cor(fa_expr_selected))
+cor_spearman_sel <- 1 - as.dist(cor(fa_expr_selected, method = "spearman"))
 ```
 
 
 
-- Effectuez un clustering hiérarchique des échantillons, en utilisant le critère de Ward pour l'agglomération. Comparez les arbres d'échantillons obtenus avec ces trois métriques et choisissez celle qui vous paraît la plus pertinente.
+
+- Effectuez un clustering hiérarchique des échantillons, en utilisant le critère de Ward (`ward.d2`) pour l'agglomération. Comparez les arbres d'échantillons obtenus avec ces trois métriques et choisissez celle qui vous paraît la plus pertinente.
 
 
 
 ```{r sample_clustering}
-
+par(mfrow = c(1,3))
+plot(hclust(dist_euc_sel), hang = -1,
+     main = "euclidean distance")
+plot(hclust(cor_pearson_sel), hang = -1,
+     main = "pearson")
+plot(hclust(cor_spearman_sel), hang = -1,
+     main = "spearman")
+par(mfrow = c(1,1))
 ```
 
 
@@ -535,20 +560,26 @@ Dessinez un plot ACP des échantillons en les colorant par condition.
 
 ```{r gene_clustering}
 
+cor_pearson_gene <- as.dist(1 - cor(t(fa_expr_selected)))
+plot(hclust(cor_pearson_gene), hang = -1,
+     main = "gènes")
 ```
 
 
 - Dessinez un arbre avec le résultat du clustering des gènes et commentez sa strcuture. Si vous deviez choisir de façon arbitraire un nombre de clusters, que choisiriez-vous ? Pourquoi ? Pas de panique, nous pouvons assumer ici que la réponse comporte une part de subjectivité. 
 
 ```{r gene_tree}
-
+plot(hclust(cor_pearson_gene), hang = -1,
+     main = "gènes")
+rect.hclust(hclust(cor_pearson_gene), k = 7)
 ```
 
 
 - Dessinez une heatmap du résultat, en sélectionnant les deux résultats de clustering ci-dessus pour les gènes et les échantillons. 
 
 ```{r biclustering}
-
+pheatmap(t(fa_expr_selected),
+         clustering_distance_cols = "correlation", clustering_distance_rows = "correlation")
 ```
 
 
