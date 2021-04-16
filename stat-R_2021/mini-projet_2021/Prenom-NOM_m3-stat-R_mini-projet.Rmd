@@ -3,6 +3,11 @@ title: "Mini-projet 2021 - Exploration des données de Pavkovic"
 author: "Prénom Nom"
 date: '`r Sys.Date()`'
 output:
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
   html_document:
     self_contained: yes
     code_download: true
@@ -13,11 +18,6 @@ output:
     toc_depth: 3
     toc_float: yes
     code_folding: "hide"
-  pdf_document:
-    fig_caption: yes
-    highlight: zenburn
-    toc: yes
-    toc_depth: 3
 editor_options: 
   chunk_output_type: console
 ---
@@ -204,17 +204,20 @@ fa_meta <- read.delim(file = fa_meta_file,
 ```
 
 Nous regardons la structure de chaque dataframe.
+
 ```{r insepct data}
 str(fa_expr_raw)
 str(fa_meta)
 ```
 
 Les deux fichiers ne donnent pas les observations de l'échantillon dans le même ordre:
+
 ```{r check data order}
 fa_meta$sampleName == names(fa_expr_raw)
 ```
 
 Nous les réorganisons les échantillons dans l'ordre de l'expérience: condition normale, puis day 1 à 14 avec les 3 réplicats.
+
 ```{r reoder data}
 sample_order <- c(paste0("normal_", 1:3), paste0("day1_", 1:3), paste0("day2_", 1:3), paste0("day3_", 1:3), paste0("day7_", 1:3), paste0("day14_", 1:3))
 
@@ -535,18 +538,22 @@ fa_expr_selected <- fa_expr_log2_standard[selected_genes, ]
 
 Dessinez des histogrammes des valeurs d'expression avant et après cette sélection de gènes, et commentez les différences. 
 
-```{r hist_expr_selected_genes, fig.width=7, fig.height=8, out.width="100%", fig.cap="Distribution of expression values before and after gene selection"}
+```{r hist_expr_selected_genes, fig.width=8, fig.height=6, out.width="100%", fig.cap="Distribution of expression values before and after gene selection"}
 #### Histograms of expression before and after gene selection ####
 
 par(mfrow = c(2,1))
 hist(unlist(fa_expr_log2_standard), 
      breaks = seq(from = 0, to = max(fa_expr_log2_standard) + 1, by = 0.25),
-     main = "Standardized values before gene selecetion",
+     las = 1, 
+     cex.axis = 0.8, 
+     main = "Standardized values before gene selection",
      col =  "#DDBBFF")
 
 hist(unlist(fa_expr_selected), 
      breaks = seq(from = 0, to = max(fa_expr_log2_standard) + 1, by = 0.25),
-     main = "Standardized values after gene selecetion",
+     las = 1, 
+     cex.axis = 0.8, 
+     main = "Standardized values after gene selection",
      col =  "#FFDDBB")
 
 par(mfrow = c(1,1))
@@ -633,6 +640,7 @@ dist_euc_sel <- dist(t(fa_expr_selected))
 cor_pearson_sel <- as.dist(1 - cor(fa_expr_selected))
 cor_spearman_sel <- 1 - as.dist(cor(fa_expr_selected, method = "spearman"))
 ```
+
 
 - Effectuez un clustering hiérarchique des échantillons, en utilisant le critère de Ward (`ward.d2`) pour l'agglomération. Comparez les arbres d'échantillons obtenus avec ces trois métriques et choisissez celle qui vous paraît la plus pertinente.
 
