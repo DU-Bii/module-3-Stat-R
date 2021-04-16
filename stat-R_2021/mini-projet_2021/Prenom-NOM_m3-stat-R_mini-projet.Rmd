@@ -621,7 +621,7 @@ par(mfrow = c(1,1))
 
 Dessinez un plot ACP des échantillons en les colorant par condition avant et après normalisation.
 
-- avec la matrice d'expression initiale ($fa_expr$)
+- avec les comptages bruts de la matrice d'expression initiale ($fa_expr$)
 
 ```{r acp_raw_all_genes, fig.width=8, fig.height=8, out.width="60%", fig.cap="PC plot of the samples from the raw expression values of all genes. "}
 ## Raw expression values, all genes
@@ -633,12 +633,26 @@ fviz_pca_ind(ma_pca_raw_tt, col.ind = fa_meta[, "color"])
 
 ```
 
-```{r acp_raw_selected_genes, fig.width=8, fig.height=8, out.width="60%", fig.cap="PC plot of the samples from the raw expression values of selected genes. "}
-## Raw values with only the selected genes
-ma_pca_raw_sel <- PCA(t(fa_expr_raw[selected_genes,]), 
-                      scale.unit = FALSE, 
-                      graph = FALSE)
-fviz_pca_ind(ma_pca_raw_sel, col.ind = fa_meta[, "color"])
+<!-- - avec les comptages bruts, mais en restreignant l'analyse aux gènes sélectionnés ($fa_expr_raw[selected_genes,]$) -->
+
+
+<!-- ```{r acp_raw_selected_genes, fig.width=8, fig.height=8, out.width="60%", fig.cap="PC plot of the samples from the raw expression values of selected genes. "} -->
+<!-- ## Raw values with only the selected genes -->
+<!-- ma_pca_raw_sel <- PCA(t(fa_expr_raw[selected_genes,]),  -->
+<!--                       scale.unit = FALSE,  -->
+<!--                       graph = FALSE) -->
+<!-- fviz_pca_ind(ma_pca_raw_sel, col.ind = fa_meta[, "color"]) -->
+<!-- ``` -->
+
+
+- avec la matrice de valeurs filtrées et après transformation log2
+
+```{r acp_norm_filtered_genes, fig.width=8, fig.height=8, out.width="60%", fig.cap="PC plot of the samples from standardised values after gene selection. "}
+ma_pca_filtered <- PCA(t(fa_expr_log2_filtered), scale.unit = FALSE,
+                  graph = FALSE)
+# plot(ma_pca_filtered, choix = "var")
+# plot(ma_pca_sel, choix = "ind")
+fviz_pca_ind(ma_pca_filtered, col.ind = fa_meta[, "color"])
 ```
 
 - avec la matrice finale (transformation log2, filtre des gènes non-détectés, standardisation et sélection des gènes fortement exprimés et à haut coefficient de variation)
