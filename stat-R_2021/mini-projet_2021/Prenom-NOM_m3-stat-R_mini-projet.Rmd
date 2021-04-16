@@ -257,7 +257,7 @@ Dans le tutorial sur les dataframes sur le jeu de données "uuo" (relisez le cor
 
 #### Par échantillon avant normalisation
 
-Créez un data.frame nommé `sample_stat_prenorm` qui comportera une ligne par échantillon et une colonne par statistique, et calculez les statistiques suivantes sur les valeurs log2 d'expression de chaque échantillon:
+Nous créons un data.frame nommé `sample_stat_prenorm` qui comportera une ligne par échantillon et une colonne par statistique, et calculez les statistiques suivantes sur les valeurs log2 d'expression de chaque échantillon:
 
 - moyenne
 - écart-type
@@ -288,37 +288,37 @@ kable(sample_stat_prenorm, caption = "Sample-wise statistics before normalisatio
 ```
 
 
-<!-- #### Par gène avant normalisation -->
+#### Par gène avant normalisation
 
-<!-- Créez un data.frame nommé `gene_stat_prenorm` qui comportera une ligne par gène et une colonne par statistique, et calculez les statistiques suivantes sur les valeurs log2 de chaque gène.  -->
+Nous crésons ci-dessous un data.frame nommé `gene_stat_prenorm` qui comportera une ligne par gène et une colonne par statistique, et calculez les statistiques suivantes sur les valeurs log2 de chaque gène.
 
-<!-- - moyenne -->
-<!-- - médiane -->
-<!-- - écart-type -->
-<!-- - premier quartile -->
-<!-- - troisième quartile -->
-<!-- - maximum -->
-<!-- - nombre de valeurs nulles -->
-<!-- - intervalle inter-quartiles -->
+- moyenne
+- médiane
+- écart-type
+- premier quartile
+- troisième quartile
+- maximum
+- nombre de valeurs nulles
+- intervalle inter-quartiles
 
-<!-- Ces résultats seront stockés dans un data.frame avec 1 ligne par échantillon et 1 colonne par statistique. Vous afficherez les lignes 100 à 109 de ce tableau de statistiques avec la fonction `kable()` (n'oubliez pas la légende).  -->
+Ces résultats seront stockés dans un data.frame avec 1 ligne par échantillon et 1 colonne par statistique. Vous afficherez les lignes 100 à 109 de ce tableau de statistiques avec la fonction `kable()` (n'oubliez pas la légende).
 
-<!-- ```{r gene_stat_pre_norm} -->
-<!-- ## Gene-wise statistics before normalisation -->
-<!-- gene_stat_prenorm <- data.frame( -->
-<!--   mean = apply(fa_expr_raw, 1, mean, na.rm=TRUE), -->
-<!--   sd = apply(fa_expr_raw, 1, sd, na.rm=TRUE), -->
-<!--   iqr = apply(fa_expr_raw, 1, IQR, na.rm=TRUE), -->
-<!--   Q1 = apply(fa_expr_raw, 1, quantile, p = 0.25, na.rm=TRUE), -->
-<!--   median = apply(fa_expr_raw, 1, median, na.rm=TRUE), -->
-<!--   Q3 = apply(fa_expr_raw, 1, quantile, p = 0.75, na.rm=TRUE), -->
-<!--   max = apply(fa_expr_raw, 1, max, na.rm=TRUE), -->
-<!--   null = apply(fa_expr_raw == 0, 1, sum, na.rm=TRUE) -->
-<!-- ) -->
+```{r gene_stat_pre_norm}
+## Gene-wise statistics before normalisation
+gene_stat_prenorm <- data.frame(
+  mean = apply(fa_expr_raw, 1, mean, na.rm=TRUE),
+  sd = apply(fa_expr_raw, 1, sd, na.rm=TRUE),
+  iqr = apply(fa_expr_raw, 1, IQR, na.rm=TRUE),
+  Q1 = apply(fa_expr_raw, 1, quantile, p = 0.25, na.rm=TRUE),
+  median = apply(fa_expr_raw, 1, median, na.rm=TRUE),
+  Q3 = apply(fa_expr_raw, 1, quantile, p = 0.75, na.rm=TRUE),
+  max = apply(fa_expr_raw, 1, max, na.rm=TRUE),
+  null = apply(fa_expr_raw == 0, 1, sum, na.rm=TRUE)
+)
 
-<!-- kable(gene_stat_prenorm[100:109, ], caption = "Gene-wise statistics before normalisation.") -->
+kable(gene_stat_prenorm[100:109, ], caption = "Gene-wise statistics before normalisation.")
 
-<!-- ``` -->
+```
 
 
 ## 2. Filtrage et normalisation des données
@@ -417,8 +417,10 @@ Générez un data.frame avec une ligne par gène à partir du tableau de donnée
 
 Chaque gène étant donné par son identifiant dans la base de données ENSEMBL vous utiliserez le paquet biomaRt pour ajouter des annotations à chacun des gènes: symbole, chromosome, coordonnées génomiques.
 
-Ajoutez une colonne avec les annotations biomart de chaque gène/ 
-```{r}
+Ajoutez une colonne avec les annotations biomart de chaque gène. 
+
+```{r gene_annotations}
+#### Gene annotations ####
 
 ```
 
@@ -427,7 +429,8 @@ Affichez les lignes 100 à 109 de ce tableau de statistiques.
 
 
 ```{r gene_stat_post_norm}
-## Stat per gene after normalisation
+#### Stat per gene after normalisation ####
+
 ## Gene-wise statistics before normalisation
 gene_stat_norm <- data.frame(
   mean = apply(fa_expr_log2_standard, 1, mean),
@@ -532,7 +535,7 @@ fa_expr_selected <- fa_expr_log2_standard[selected_genes, ]
 
 Dessinez des histogrammes des valeurs d'expression avant et après cette sélection de gènes, et commentez les différences. 
 
-```{r hist_expr_selected_genes, fig.width=7, fig.height=8, out.width="60%", fig.cap="Distribution of expression values before and after gene selection"}
+```{r hist_expr_selected_genes, fig.width=7, fig.height=8, out.width="100%", fig.cap="Distribution of expression values before and after gene selection"}
 #### Histograms of expression before and after gene selection ####
 
 par(mfrow = c(2,1))
@@ -590,27 +593,32 @@ par(mfrow = c(1,1))
 Dessinez un plot ACP des échantillons en les colorant par condition. 
 
 - avec la matrice d'expression initiale ($fa_expr$)
-- avec la matrice finale (transformation log2, filtre des gènes non-détectés, standardisation et sélection des gènes fortement exprimés et a-à haut coefficient de variation)
 
-```{r acp_raw}
-# tous les gènes
+```{r acp_raw_all_genes, fig.width=8, fig.height=8, out.width="60%", fig.cap="PC plot of the samples from the raw expression values of all genes. "}
+## Raw expression values, all genes
 ma_pca_raw_tt <- PCA(t(fa_expr_raw), 
                       scale.unit = FALSE, 
                       graph = FALSE)
-plot(ma_pca_raw_tt, choix = "ind")
+# plot(ma_pca_raw_tt, choix = "ind")
 fviz_pca_ind(ma_pca_raw_tt, col.ind = fa_meta[, "color"])
-# seulement les gènes sélectionnés
+
+```
+
+```{r acp_raw_selected_genes, fig.width=8, fig.height=8, out.width="60%", fig.cap="PC plot of the samples from the raw expression values of selected genes. "}
+## Raw values with only the selected genes
 ma_pca_raw_sel <- PCA(t(fa_expr_raw[selected_genes,]), 
                       scale.unit = FALSE, 
                       graph = FALSE)
 fviz_pca_ind(ma_pca_raw_sel, col.ind = fa_meta[, "color"])
 ```
 
-```{r acp_sel}
+- avec la matrice finale (transformation log2, filtre des gènes non-détectés, standardisation et sélection des gènes fortement exprimés et a-à haut coefficient de variation)
+
+```{r acp_norm_selected_genes, fig.width=8, fig.height=8, out.width="60%", fig.cap="PC plot of the samples from standardised values after gene selection. "}
 ma_pca_sel <- PCA(t(fa_expr_selected), scale.unit = FALSE,
                   graph = FALSE)
-plot(ma_pca_sel, choix = "var")
-plot(ma_pca_sel, choix = "ind")
+# plot(ma_pca_sel, choix = "var")
+# plot(ma_pca_sel, choix = "ind")
 fviz_pca_ind(ma_pca_sel, col.ind = fa_meta[, "color"])
 ```
 
@@ -620,6 +628,7 @@ fviz_pca_ind(ma_pca_sel, col.ind = fa_meta[, "color"])
 
 
 ```{r sample_distances}
+#### Sample distances ####
 dist_euc_sel <- dist(t(fa_expr_selected))
 cor_pearson_sel <- as.dist(1 - cor(fa_expr_selected))
 cor_spearman_sel <- 1 - as.dist(cor(fa_expr_selected, method = "spearman"))
@@ -632,7 +641,8 @@ cor_spearman_sel <- 1 - as.dist(cor(fa_expr_selected, method = "spearman"))
 
 
 
-```{r sample_clustering}
+```{r sample_clustering, fig.width=12, plot.height=5, out.width="100%", fig.cap="Sample tree with three alternative distance metrics: Euclidiant distance (left), Pearson correlation (center), Spearman correlation (right).? "}
+#### Sample clustering ####
 par(mfrow = c(1,3))
 plot(hclust(dist_euc_sel), hang = -1,
      main = "euclidean distance")
