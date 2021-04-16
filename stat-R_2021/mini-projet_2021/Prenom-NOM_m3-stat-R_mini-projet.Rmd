@@ -225,7 +225,7 @@ fa_meta <- fa_meta[match(sample_order, fa_meta$sampleName),]
 kable(fa_meta, caption = "Metdata for Pavkovoc FA transcriptome")
 ```
 
-=> Ainsi, nous avons un jeu de données avec un échantillon de `r nrows(fa_meta)` observations et des données d'expression de `r nrows(fa_expr_raw)` gènes.
+=> Ainsi, nous avons un jeu de données avec un échantillon de `r nrow(fa_meta)` observations et des données d'expression de `r nrow(fa_expr_raw)` gènes.
 
 ### Transformation log2
 
@@ -255,7 +255,7 @@ kable(fa_expr_log2[100:109, 5:10], caption = "Fragment des données transcriptom
 Dans le tutorial sur les dataframes sur le jeu de données "uuo" (relisez le corrigé), nous vous avons demandé de créer un data.frame qui collectera les statistiques par gène et par échantillon. Nous vous demandons de réaliser une étude similaire sur les données "FA".
 
 
-#### par échantillon avant normalisation
+#### Par échantillon avant normalisation
 
 Créez un data.frame nommé `sample_stat_prenorm` qui comportera une ligne par échantillon et une colonne par statistique, et calculez les statistiques suivantes sur les valeurs log2 d'expression de chaque échantillon:
 
@@ -288,37 +288,37 @@ kable(sample_stat_prenorm, caption = "Sample-wise statistics before normalisatio
 ```
 
 
-#### par gène avant normalisation
+<!-- #### Par gène avant normalisation -->
 
-Créez un data.frame nommé `gene_stat_prenorm` qui comportera une ligne par gène et une colonne par statistique, et calculez les statistiques suivantes sur les valeurs log2 de chaque gène. 
+<!-- Créez un data.frame nommé `gene_stat_prenorm` qui comportera une ligne par gène et une colonne par statistique, et calculez les statistiques suivantes sur les valeurs log2 de chaque gène.  -->
 
-- moyenne
-- médiane
-- écart-type
-- premier quartile
-- troisième quartile
-- maximum
-- nombre de valeurs nulles
-- intervalle inter-quartiles
+<!-- - moyenne -->
+<!-- - médiane -->
+<!-- - écart-type -->
+<!-- - premier quartile -->
+<!-- - troisième quartile -->
+<!-- - maximum -->
+<!-- - nombre de valeurs nulles -->
+<!-- - intervalle inter-quartiles -->
 
-Ces résultats seront stockés dans un data.frame avec 1 ligne par échantillon et 1 colonne par statistique. Vous afficherez les lignes 100 à 109 de ce tableau de statistiques avec la fonction `kable()` (n'oubliez pas la légende). 
+<!-- Ces résultats seront stockés dans un data.frame avec 1 ligne par échantillon et 1 colonne par statistique. Vous afficherez les lignes 100 à 109 de ce tableau de statistiques avec la fonction `kable()` (n'oubliez pas la légende).  -->
 
-```{r gene_stat_pre_norm}
-## Gene-wise statistics before normalisation
-gene_stat_prenorm <- data.frame(
-  mean = apply(fa_expr_raw, 1, mean, na.rm=TRUE),
-  sd = apply(fa_expr_raw, 1, sd, na.rm=TRUE),
-  iqr = apply(fa_expr_raw, 1, IQR, na.rm=TRUE),
-  Q1 = apply(fa_expr_raw, 1, quantile, p = 0.25, na.rm=TRUE),
-  median = apply(fa_expr_raw, 1, median, na.rm=TRUE),
-  Q3 = apply(fa_expr_raw, 1, quantile, p = 0.75, na.rm=TRUE),
-  max = apply(fa_expr_raw, 1, max, na.rm=TRUE),
-  null = apply(fa_expr_raw == 0, 1, sum, na.rm=TRUE)
-)
+<!-- ```{r gene_stat_pre_norm} -->
+<!-- ## Gene-wise statistics before normalisation -->
+<!-- gene_stat_prenorm <- data.frame( -->
+<!--   mean = apply(fa_expr_raw, 1, mean, na.rm=TRUE), -->
+<!--   sd = apply(fa_expr_raw, 1, sd, na.rm=TRUE), -->
+<!--   iqr = apply(fa_expr_raw, 1, IQR, na.rm=TRUE), -->
+<!--   Q1 = apply(fa_expr_raw, 1, quantile, p = 0.25, na.rm=TRUE), -->
+<!--   median = apply(fa_expr_raw, 1, median, na.rm=TRUE), -->
+<!--   Q3 = apply(fa_expr_raw, 1, quantile, p = 0.75, na.rm=TRUE), -->
+<!--   max = apply(fa_expr_raw, 1, max, na.rm=TRUE), -->
+<!--   null = apply(fa_expr_raw == 0, 1, sum, na.rm=TRUE) -->
+<!-- ) -->
 
-kable(gene_stat_prenorm[100:109, ], caption = "Gene-wise statistics before normalisation.")
+<!-- kable(gene_stat_prenorm[100:109, ], caption = "Gene-wise statistics before normalisation.") -->
 
-```
+<!-- ``` -->
 
 
 ## 2. Filtrage et normalisation des données
@@ -333,7 +333,8 @@ La méthode choisie ici consiste à
 
 - standardiser les échantillons sur le 3ème quartile des valeurs non-nulles. Nous vous rappelons que d'autres méthodes plus élaborées ont été vues dans les modules 4 et 5, mais nous avons choisi ici une solution simple tout en étant robuste. 
 
-### Filtrage
+### Filtrage 1 : élimination des gènes non détectés ou à peine exprimés
+
 ```{r gene_filtering}
 ## Data filtering: genes having at least 90% null values
 undetected_genes <- gene_stat_prenorm$null >= ncol(fa_expr_raw) * 0.9
@@ -407,6 +408,7 @@ kable(standardisation_impact, caption = "Impact of standardization on the third 
 Générez un data.frame avec une ligne par gène à partir du tableau de données normalisées, avec les statistiques suivantes (une statistique par colonne):
 
 - moyenne
+- variance
 - écart-type
 - coefficient de variation
 - minimum
@@ -429,6 +431,7 @@ Affichez les lignes 100 à 109 de ce tableau de statistiques.
 ## Gene-wise statistics before normalisation
 gene_stat_norm <- data.frame(
   mean = apply(fa_expr_log2_standard, 1, mean),
+  var = apply(fa_expr_log2_standard, 1, var),
   sd = apply(fa_expr_log2_standard, 1, sd))
 gene_stat_norm$V = gene_stat_norm$sd / gene_stat_norm$mean
 gene_stat_norm$min = apply(fa_expr_log2_standard, 1, min)
@@ -443,7 +446,7 @@ kable(gene_stat_norm[100:109, ], caption = "Gene-wise statistics after normalisa
 
 ### Distribution des données
 
-- Dessinez la distribution des valeurs après normalisation (tous échantillons confondus)
+- Dessinez sous forme d'un histogramme la distribution des valeurs après normalisation (tous échantillons confondus)
 
 ```{r fa_expr_norm_distrib, fig.width=8, fig.height=5, out.width="70%", fig.cap="Distribution of expression values (log2 counts) after gene filtering and standardisation on the sample-wise third-quartile of non-null values. The vertical line highlights the mean value. "}
 hist(unlist(fa_expr_log2_standard), 
@@ -495,7 +498,7 @@ par(mar = c(4,5,5,1))
 
 ## 4. Analyse de regroupement des données
 
-### Filtrage
+### Filtrage 2 : sélection de gènes d'expression élevée et variable
 
 Pour réduire le nombre de gènes, nous allons écarter les gènes faiblement exprimés (log2 moyen inférieur à 4), et ne retenir que ceux qui montrent des variations importantes entre échantillons. Pour ce dernier critère , nous nous basons sur le coefficient de variation, afin de relativiser la dispersion (écart type) par rapport à la tendance centrale (moyenne). 
 
@@ -513,6 +516,10 @@ high_expression <- gene_stat_norm$mean > 3
 high_variation <- gene_stat_norm$V > 0.5
 # table(high_variation) # count number of genes with weak high coeffficient of variation
 
+## Compute a Boolean vector indicating whether each gene passes or not the variance threshold
+# high_variance <- gene_stat_norm$var > 2
+# table(high_variance) # count number of genes with weak high variance
+
 ## Select genes having both a high mean expression and a high variation coefficien
 selected_genes <- high_variation & high_expression
 # table(selected_genes) # count number of genes with weak high coeffficient of variation
@@ -528,18 +535,18 @@ Dessinez des histogrammes des valeurs d'expression avant et après cette sélect
 ```{r hist_expr_selected_genes, fig.width=7, fig.height=8, out.width="60%", fig.cap="Distribution of expression values before and after gene selection"}
 #### Histograms of expression before and after gene selection ####
 
-par(mfrow=c(2,1))
+par(mfrow = c(2,1))
 hist(unlist(fa_expr_log2_standard), 
      breaks = seq(from = 0, to = max(fa_expr_log2_standard) + 1, by = 0.25),
-     main = "Filtered genes",
+     main = "Standardized values before gene selecetion",
      col =  "#DDBBFF")
 
 hist(unlist(fa_expr_selected), 
      breaks = seq(from = 0, to = max(fa_expr_log2_standard) + 1, by = 0.25),
-     main = "Selected genes",
+     main = "Standardized values after gene selecetion",
      col =  "#FFDDBB")
 
-par(mfrow=c(1,1))
+par(mfrow = c(1,1))
 
 
 # ## Some quick checks: the selection of highly variable genes select those having many zeros - and high values in other samples
@@ -550,24 +557,28 @@ par(mfrow=c(1,1))
 
 ```
 
+Dessinzes un box plot des valeurs d'expression avant et après sélection des gènes, et commentez le résultat. 
 
-```{r boxplots_expr_selected_genes}
+```{r boxplots_expr_selected_genes, fig.width=10, fig.height=5, out.width="60%", fig.cap="Box plots of standardised expression values before and after gene selection. "}
 #### Histogram of expression after gene selection ####
 
-par(mfrow=c(2,1))
-hist(unlist(fa_expr_log2_standard), 
-     breaks = seq(from = 0, to = max(fa_expr_log2_standard) + 1, by = 0.25),
-     las = 1, cex.axis = 0.7, 
-     main = "Filtered genes",
-     col =  "#BBDDFF")
+par(mfrow = c(1,2))
 
-hist(unlist(fa_expr_selected), 
-     breaks = seq(from = 0, to = max(fa_expr_log2_standard) + 1, by = 0.25),
-     las = 1, cex.axis = 0.7, 
-     main = "Selected genes",
-     col =  "#88FFBB")
+boxplot(fa_expr_log2_standard, 
+        horizontal = TRUE,
+        xlab = "log2(counts)", 
+        las = 1, 
+        col = fa_meta$color, 
+        main = "Before gene selection\nstandardised values")
+boxplot(fa_expr_selected, 
+        horizontal = TRUE,
+        xlab = "log2(counts)", 
+        las = 1, 
+        col = fa_meta$color, 
+        main = "After gene selection\nstandardised values")
 
-par(mfrow=c(1,1))
+
+par(mfrow = c(1,1))
 
 
 
