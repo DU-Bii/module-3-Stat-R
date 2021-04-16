@@ -3,11 +3,6 @@ title: "Mini-projet 2021 - Exploration des données de Pavkovic"
 author: "Prénom Nom"
 date: '`r Sys.Date()`'
 output:
-  pdf_document:
-    fig_caption: yes
-    highlight: zenburn
-    toc: yes
-    toc_depth: 3
   html_document:
     self_contained: yes
     code_download: true
@@ -18,6 +13,11 @@ output:
     toc_depth: 3
     toc_float: yes
     code_folding: "hide"
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
 editor_options: 
   chunk_output_type: console
 ---
