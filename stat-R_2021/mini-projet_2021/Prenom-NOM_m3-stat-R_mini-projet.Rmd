@@ -21,14 +21,12 @@ output:
 editor_options: 
   chunk_output_type: console
 ---
-
 ```{r settings, include=FALSE, echo=FALSE, eval=TRUE}
-
 options(width = 300)
 # options(encoding = 'UTF-8')
 knitr::opts_chunk$set(
   fig.width = 7, fig.height = 5, 
-  fig.path = 'figures/tcga-bic_',
+  fig.path = 'figures/mini-projet_',
   fig.align = "center", 
   size = "tiny", 
   echo = TRUE, 
@@ -40,27 +38,40 @@ knitr::opts_chunk$set(
 
 options(scipen = 12) ## Max number of digits for non-scientific notation
 # knitr::asis_output("\\footnotesize")
-
 ```
 
 ```{r libraries, echo=FALSE, eval=TRUE}
-
 # Load required CRAN R libraries
-requiredLib <- c("knitr", "FactoMineR", "factoextra", "pheatmap")
-for (lib in requiredLib) {
+required_cranLib <- c("knitr", "FactoMineR", "factoextra", "pheatmap")
+for (lib in required_cranLib) {
   if (!require(lib, character.only = TRUE)) {
     install.packages(lib, )
   }
   require(lib, character.only = TRUE)
 }
 
+required_biocLib <- c("biomaRt")
+for (lib in required_biocLib) {
+if (!requireNamespace(lib, character.only = TRUE)) {
+  BiocManager::install(lib)
+  }
+  require(lib, character.only = TRUE)
+}
+
+
+kable(as.data.frame(c(required_cranLib, required_biocLib)),
+      col.names = "libraries",
+      caption = "Loaded required libraries"
+    )
+
+sessionInfo()
 ```
 
 ## Synopsis du projet
 
 ### Travail demandé
 
-Le but de ce travail est de mettre en oeuvre les méthodes vues dans le module 3 "R et statistiques" pour explorer le jeu de données de Pavokovic, et de rendre un rapport d'analyse au format R markdown. 
+Le but de ce travail est de mettre en oeuvre les méthodes vues dans le module 3 "R et statistiques" pour explorer le jeu de données de Pavokovic, et de rendre un rapport d'analyse au format `.Rmd`. 
 
 Nous fournissons ci-dessous une trame avec les principales sections attendues. Certaines contiennent déjà du code. Vous devrez en compléter d'autres. Sentez-vous libres d'adapter cette trame ou d'y ajouter des analyses complémentaires si elles vous aident à interpréter vos résultats. 
 
@@ -68,8 +79,8 @@ Nous fournissons ci-dessous une trame avec les principales sections attendues. C
 
 Date: **le 10 mai 2021 minuit**.  Si vous anticipez un problème pour remettre le rapport à cette date contactez-nous aussi rapidement que possible pour que nous puissions prévoir une remise plus tardive. 
 
-- Commencez par renommer le fichier Rmd en remplaçant Prenom-NOM par vos nom et prénom. 
-- Le rapport est attendu en formats Rmd + HTML (en gardant l'option self_contained de l'en-tête activée). 
+- Commencez par renommer le fichier .Rmd en remplaçant Prenom-NOM par vos nom et prénom. 
+- Le rapport est attendu en formats .Rmd + .HTML (en gardant l'option self_contained de l'en-tête activée). 
 - Déposez les fichiers dans un sous-dossier de vote compte du cluster. Attention, veillez à respecter précisément cette structure de chemin car nous nous baserons dessus pour récupérer vos résultats. 
 
     `/shared/projects/dubii2021/[login]/m3-stat-R/mini-projet` 
@@ -84,7 +95,7 @@ Date: **le 10 mai 2021 minuit**.  Si vous anticipez un problème pour remettre l
 - Clarté de la rédaction
 - Clarté des illustrations (figures et tableaux): graphismes, légendes ...
 
-Nous vous encourageons à assurer la lisibilpité de votre code (syntaxe, nommage des variables, commentaires de code)
+Nous vous encourageons à assurer la lisibilité de votre code (syntaxe, nommage des variables, commentaires de code)
 
 ### Objectifs scientifiques
 
@@ -94,27 +105,26 @@ Nous partons du même jeu de données *Fil Rouge* de ce module issues de la publ
 
 Deux modèles de fibrose rénale chez la souris sont étudiés:
 
-1. Le premier est un modèle de néphropathie réversible induite par l'acide folique (folic acid (FA)). Les souris ont été sacrifiées avant le traitement (day 0), puis à jour 1, 2, 7 et 14 days après une seule injection d'acide folique.
+1. Le premier est un modèle de néphropathie réversible induite par l'acide folique (folic acid (FA)). Les souris ont été sacrifiées avant le traitement (normal), puis à jour 1, 2, 7 et 14 (day1,...) après une seule injection d'acide folique.
 
 2. Le second est un modèle irréversible induit chrirurgicalement (unilateral ureteral obstruction (UUO)). les souris ont été sacrifiées avant obstruction (day 0) et à 3, 7 et 14 jours après obstruction par ligation de l'uretère du rein gauche.
 
 A partir de ces extraits de rein, l'ARN messager total et les petits ARNs ont été séquencés et les protéines caratérisées par spectrométrie de masse en tandem (TMT).
 
-**But scientifique:** Dans le tutoriel sur les dataframes, vous avez travaillé sur les données de ***transcriptome du modèle UUO***. Dans ce mini-projet, vous allez travailler sur les données du modèle FA afin d'identifier de regrouper les observations (échantillon) et les gènes selon des profils d'expression similaires.
+**But scientifique:** Dans le tutoriel sur les dataframes, vous avez travaillé sur les données de ***transcriptome du modèle UUO***. Dans ce mini-projet, vous allez travailler sur les données du ***transcriptome du modèle FA*** afin de regrouper les observations (échantillon) et les gènes selon des profils d'expression similaires.
 
 **Votre projet se décompose en 4 parties:**
 
-1. statsitiques descriptives des données brutes
+1. statsitiques descriptives des données brutes: commandes fournies
 2. normalisation des données : commandes fournies
-3. statistiques descriptives des données normalisées
-4. analyse de regroupement des données
-
+3. statistiques descriptives des données normalisées: à vous de jouer
+4. analyse de regroupement des données: à vous de jouer
 
 ## 1. Les données brutes
 
-### Chargement des données brutes
-
 ***Vous n'avez rien à coder ici. Le code est fourni.***
+
+### Chargement des données brutes
 
 Le bloc suivant contient une fonction qui permet de télécharger un fichier dans l'espace de travail, sauf s'il est déjà présent. Nous l'utiliserons ensuite pour télécharger les données à analyser en évitant de refaire le transfert à chaque exécution de l'analyse. 
 
@@ -200,7 +210,6 @@ message("Loading FA metadata from\n\t", fa_meta_file)
 fa_meta <- read.delim(file = fa_meta_file, 
                        header = TRUE, 
                        row.names = 1)
-
 ```
 
 Nous regardons la structure de chaque dataframe.
@@ -219,7 +228,8 @@ fa_meta$sampleName == names(fa_expr_raw)
 Nous les réorganisons les échantillons dans l'ordre de l'expérience: condition normale, puis day 1 à 14 avec les 3 réplicats.
 
 ```{r reoder data}
-sample_order <- c(paste0("normal_", 1:3), paste0("day1_", 1:3), paste0("day2_", 1:3), paste0("day3_", 1:3), paste0("day7_", 1:3), paste0("day14_", 1:3))
+sample_order <- c(paste(rep(c("normal", "day1", "day2", "day3", "day7", "day14"), each = 3),
+                        1:3, sep = "_"))
 
 fa_expr_raw <- fa_expr_raw[,sample_order]
 fa_meta <- fa_meta[match(sample_order, fa_meta$sampleName),]
@@ -231,8 +241,6 @@ kable(fa_meta, caption = "Metdata for Pavkovoc FA transcriptome")
 => Ainsi, nous avons un jeu de données avec un échantillon de `r nrow(fa_meta)` observations et des données d'expression de `r nrow(fa_expr_raw)` gènes.
 
 ### Transformation log2
-
-***A vous de jouer!***
 
 Appliquez une transformation log2 des données brutes, après avoir ajouté un epsilon $\epsilon = 1$ (les valeurs nulles seront donc représentées par un log2(counts) valant $0$. Stockez le résultat dans un data.frame nommé `fa_expr_log2`.
 
@@ -250,17 +258,13 @@ kable(fa_expr_raw[100:109, 5:10], caption = "Fragment des données transcriptomi
 kable(fa_expr_log2[100:109, 5:10], caption = "Fragment des données transcriptomiques après transformation log2")
 ```
 
-
 ### Statistiques descriptives
-
-***A vous de jouer!***
 
 Dans le tutorial sur les dataframes sur le jeu de données "uuo" (relisez le corrigé), nous vous avons demandé de créer un data.frame qui collectera les statistiques par gène et par échantillon. Nous vous demandons de réaliser une étude similaire sur les données "FA".
 
-
 #### Par échantillon avant normalisation
 
-Nous créons un data.frame nommé `sample_stat_prenorm` qui comportera une ligne par échantillon et une colonne par statistique, et calculez les statistiques suivantes sur les valeurs log2 d'expression de chaque échantillon:
+Nous créons un data.frame nommé `sample_stat_prenorm` qui comportera une ligne par échantillon et une colonne par statistique. Nous calculons les statistiques suivantes sur les valeurs log2 d'expression de chaque échantillon:
 
 - moyenne
 - écart-type
@@ -290,10 +294,9 @@ kable(sample_stat_prenorm, caption = "Sample-wise statistics before normalisatio
 
 ```
 
-
 #### Par gène avant normalisation
 
-Nous crésons ci-dessous un data.frame nommé `gene_stat_prenorm` qui comportera une ligne par gène et une colonne par statistique, et calculez les statistiques suivantes sur les valeurs log2 de chaque gène.
+Nous créons ci-dessous un data.frame nommé `gene_stat_prenorm` qui comportera une ligne par gène et une colonne par statistique. Nous calculons les statistiques suivantes sur les valeurs log2 de chaque gène.
 
 - moyenne
 - médiane
@@ -309,32 +312,35 @@ Ces résultats seront stockés dans un data.frame avec 1 ligne par échantillon 
 ```{r gene_stat_pre_norm}
 ## Gene-wise statistics before normalisation
 gene_stat_prenorm <- data.frame(
-  mean = apply(fa_expr_raw, 1, mean, na.rm=TRUE),
-  sd = apply(fa_expr_raw, 1, sd, na.rm=TRUE),
-  iqr = apply(fa_expr_raw, 1, IQR, na.rm=TRUE),
-  Q1 = apply(fa_expr_raw, 1, quantile, p = 0.25, na.rm=TRUE),
-  median = apply(fa_expr_raw, 1, median, na.rm=TRUE),
-  Q3 = apply(fa_expr_raw, 1, quantile, p = 0.75, na.rm=TRUE),
-  max = apply(fa_expr_raw, 1, max, na.rm=TRUE),
-  null = apply(fa_expr_raw == 0, 1, sum, na.rm=TRUE)
+  mean = apply(fa_expr_raw, 1, mean, na.rm = TRUE),
+  sd = apply(fa_expr_raw, 1, sd, na.rm = TRUE),
+  iqr = apply(fa_expr_raw, 1, IQR, na.rm = TRUE),
+  Q1 = apply(fa_expr_raw, 1, quantile, p = 0.25, na.rm = TRUE),
+  median = apply(fa_expr_raw, 1, median, na.rm = TRUE),
+  Q3 = apply(fa_expr_raw, 1, quantile, p = 0.75, na.rm = TRUE),
+  max = apply(fa_expr_raw, 1, max, na.rm = TRUE),
+  null = apply(fa_expr_raw == 0, 1, sum, na.rm = TRUE)
 )
 
-kable(gene_stat_prenorm[100:109, ], caption = "Gene-wise statistics before normalisation.")
+kable(gene_stat_prenorm[100:109, ], caption = "Gene-wise statistics before normalisation")
 
 ```
 
-
 ## 2. Filtrage et normalisation des données
 
-Nous fournissons ci-dessous le code pour normaliser les données, en standardisant le 3ème quantile. 
+***Vous n'avez rien à coder ici. Le code est fourni.***
 
-La méthode choisie ici consiste à 
+Il existe plusieurs façons de normaliser les données de transcriptome  vues dans les modules 4 et 5 (cf. total counts, quantiles, TMM, RLE, limma voom,...), mais nous avons choisi ici une solution simple tout en étant robuste pour normaliser les données en standardisant le 3ème quantile. 
 
-- écarter les gènes "non-détectés", c'est -à-dire ceux ayant des valeurs nulles dans au moins 90% des échantillons;
+La méthode choisie ici consiste à :
+
+- écarter les gènes "non-détectés", c'est-à-dire ceux ayant des valeurs nulles dans au moins 90% des échantillons;
 
 - écarter les gènes à peine exprimés, c'est-à-dire ceux ayant une valeur moyenne < 10 (arbitrairement);
 
-- standardiser les échantillons sur le 3ème quartile des valeurs non-nulles. Nous vous rappelons que d'autres méthodes plus élaborées ont été vues dans les modules 4 et 5, mais nous avons choisi ici une solution simple tout en étant robuste. 
+- standardiser les échantillons sur le 3ème quartile des valeurs non-nulles: on divise par le 3ème quartile de l'échantillon et on multiplie par le 3ème quartile déterminé sur l'ensemble des échantillons.
+
+Nous fournissons ci-dessous le code.
 
 ### Filtrage 1 : élimination des gènes non détectés ou à peine exprimés
 
@@ -355,12 +361,9 @@ print(paste0("Kept genes: ", sum(kept_genes)))
 
 ## Genes after filtering
 fa_expr_log2_filtered <- fa_expr_log2[kept_genes, ]
-
 ```
 
 ### Normalisation entre échantillons
-
-***Vous n'avez rien à coder ici. Le code est fourni.***
 
 ```{r sample_standardisation}
 ## Generate a data frame where null values are replaced by NA
@@ -368,29 +371,28 @@ fa_expr_nonull <- fa_expr_log2_filtered
 fa_expr_nonull[fa_expr_log2_filtered <= 0] <- NA
 sum(is.na(fa_expr_nonull))
 
-## Compute the 3rd quartile of non-null values for each sample
+## Compute the 3rd quartile of non-null values for each sample and store them in a vector:
 sample_q3_nonull <- apply(fa_expr_nonull, 2, quantile, prob = 0.75, na.rm = TRUE)
 # print(sample_q3_nonull)
 
-## Compute the A3 for all the values, which will serve as target value for the standardised sample Q3
+## Compute the Q3 for all the values, which will serve as target value for the standardised sample Q3
 all_q3_nonull <- quantile(unlist(fa_expr_nonull), prob = 0.75, na.rm = TRUE)
 # print(all_q3_nonull)
 
-## Standardise expression on  the third quartile of non-null values
+## Standardise expression on the third quartile of non-null values
 ## Beware : for this standardization we keep the null values
-##
-## Trick : I transpose the table to apply the ratio sample per sample, 
-## and then transpose the result to get the genes in rows and samples in columns
-fa_expr_log2_standard <- t(t(fa_expr_log2_filtered) / sample_q3_nonull * all_q3_nonull)
+## Trick : we transpose the table to apply the ratio sample per sample, 
+## and then transpose the results to get back the genes in rows and samples in columns
+fa_expr_log2_standard <- t(t(fa_expr_log2_filtered) * all_q3_nonull / sample_q3_nonull )
 # quantile(unlist(fa_expr_log2_standard), probs = 0.75, na.rm = TRUE)
 
-## I also compute the values for the "nonull" table for 
+## We also compute the values for the "nonull" table for 
 ## the sake of comparison and to check that the third quantiles of non-null 
 ## values are well identical across samples.
-fa_expr_log2_standard_nonull <- t(t(fa_expr_nonull) / sample_q3_nonull * all_q3_nonull)
+fa_expr_log2_standard_nonull <- t(t(fa_expr_nonull) * all_q3_nonull / sample_q3_nonull )
 # quantile(unlist(fa_expr_log2_standard_nonull), probs = 0.75, na.rm = TRUE)
 
-## Compute 3 before and after standardisation, including or not the null values
+## Compute Q3 before and after standardisation, including or not the null values
 standardisation_impact <- data.frame(
   before_all = apply(fa_expr_log2_filtered, 2, quantile, prob =  0.75, na.rm = TRUE),
   before_nonull = apply(fa_expr_nonull, 2, quantile, prob =  0.75, na.rm = TRUE),
@@ -398,54 +400,83 @@ standardisation_impact <- data.frame(
   after_all = apply(fa_expr_log2_standard, 2, quantile, prob =  0.75, na.rm = TRUE)
 )
 
-## Note: after standardization the Q3 of the data we will use show some variations 
+## Note: after standardization the Q3 of the data show some variations 
 ## because we compute them here with the null values
 kable(standardisation_impact, caption = "Impact of standardization on the third quantile (Q3) per sample. Third quantiles are computed before and after standardisation, with either all the values of the filtered table, or only the non-null values. ")
-
 ```
 
 ## 3. Les données normalisées
 
-### Statistiques par gène après normalisation, et annotation des gènes
+***A vous de jouer!***
+
+### Statistiques par gène après normalisation
 
 Générez un data.frame avec une ligne par gène à partir du tableau de données normalisées, avec les statistiques suivantes (une statistique par colonne):
 
 - moyenne
 - variance
 - écart-type
-- coefficient de variation
+- coefficient de variation (écart-type divisé par la moyenne)
+- intervalle inter-quartiles
 - minimum
 - médiane
 - maximum
 
-Chaque gène étant donné par son identifiant dans la base de données ENSEMBL vous utiliserez le paquet biomaRt pour ajouter des annotations à chacun des gènes: symbole, chromosome, coordonnées génomiques.
+```{r gene_stat_post_norm}
 
-Ajoutez une colonne avec les annotations biomart de chaque gène. 
-
-```{r gene_annotations}
-#### Gene annotations ####
+## Gene-wise statistics after normalisation
+gene_stat_norm <- data.frame(
+  mean = apply(fa_expr_log2_standard, 1, mean, na.rm = F),
+  var = apply(fa_expr_log2_standard, 1, var, na.rm = TRUE),
+  sd = apply(fa_expr_log2_standard, 1, sd, na.rm = F),
+  CV = NA,
+  min = apply(fa_expr_log2_standard, 1, min, na.rm = TRUE),
+  Q1 = apply(fa_expr_log2_standard, 1, quantile, p = 0.25, na.rm = TRUE),
+  median = apply(fa_expr_log2_standard, 1, median, na.rm = TRUE),
+  Q3 = apply(fa_expr_log2_standard, 1, quantile, p = 0.75, na.rm = TRUE),
+  max = apply(fa_expr_log2_standard, 1, max, na.rm = TRUE),
+  null = apply(fa_expr_log2_standard == 0, 1, sum, na.rm = TRUE)
+  )
+gene_stat_norm$CV <- gene_stat_norm$sd / gene_stat_norm$mean
 
 ```
 
+### Annotation des gènes
 
-Affichez les lignes 100 à 109 de ce tableau de statistiques. 
+Chaque gène étant donné par son identifiant dans la base de données ENSEMBL vous utiliserez le `paquet biomaRt de bioconductor` pour ajouter des annotations : symbole, chromosome, coordonnées génomiques, brin. 
+Suivez pas à pas la méthode proposée:
 
+ - sélectionnez la base de données ENSEMBL avec la fonction `useMart()`. Attention à choisir le bon génome avec l'agument `dataset`: `mmusculus_gene_ensembl`
+ 
+ - avec la fonction `getBM()` récupérez de la base de données ENSEMBL les champs demandés (***pour symbole utilisez external_gene_name***) en appliquant "ensembl_geneid" pour l'agument `filter` et en indiquant pour l'argument `values` le vecteur des identifiants des gènes présents dans le dataframe `gene_stat_norm`. Vous obtenez un dataframe.
+ 
+A présent, ajoutez au dataframe `gene_stat_norm` en 1ères colonnes les annotations retrouvées grâce à biomaRt. Attention, certains gènes ne sont pas retrouvés dans la version d'ENSEMBL sur biomaRt donc laissez des NA comme données manquantes dans ce cas. Nous vous recommandons d'utiliser la function `merge()` ou `left_join()` de dplyr pour fusionner les deux dataframes en un seul.
+ 
+```{r gene_annotations}
+ensembl <- useMart("ENSEMBL_MART_ENSEMBL", host = "www.ensembl.org", dataset = "mmusculus_gene_ensembl")
 
-```{r gene_stat_post_norm}
-#### Stat per gene after normalisation ####
+genes <-getBM(attributes = c("ensembl_gene_id", "external_gene_name", "chromosome_name",
+                              "start_position", "end_position", "strand"), 
+                filter = "ensembl_gene_id",
+                values = row.names(gene_stat_norm),
+                mart = ensembl
+              )
+  
+ 
+gene_stat_norm <- merge(genes, gene_stat_norm, by.x = "ensembl_gene_id", by.y = 0, sort = FALSE)
 
-## Gene-wise statistics before normalisation
-gene_stat_norm <- data.frame(
-  mean = apply(fa_expr_log2_standard, 1, mean),
-  var = apply(fa_expr_log2_standard, 1, var),
-  sd = apply(fa_expr_log2_standard, 1, sd))
-gene_stat_norm$V = gene_stat_norm$sd / gene_stat_norm$mean
-gene_stat_norm$min = apply(fa_expr_log2_standard, 1, min)
-gene_stat_norm$median = apply(fa_expr_log2_standard, 1, median)
-gene_stat_norm$max = apply(fa_expr_log2_standard, 1, max)
+kable(gene_stat_norm[100:109, ], caption = "Gene-wise statistics after normalisation")
+```
 
-kable(gene_stat_norm[100:109, ], caption = "Gene-wise statistics after normalisation.")
+**Challenge falcultatif:**
 
+Enfin, réordonnez les gènes par position génomique et affichez les lignes 5 premières et  5 dernières lignes de ce tableau de statistiques. 
+
+```{r display fragment of gene-wise stats after norm}
+
+gene_stat_norm <- gene_stat_norm[order(gene_stat_norm$chromosome_name, gene_stat_norm$start_position),]
+
+kable(gene_stat_norm[c(1:5, (nrow(gene_stat_norm)-4):nrow(gene_stat_norm)), ], caption = "Gene-wise statistics after normalisation.")
 
 ```
 
@@ -465,7 +496,6 @@ hist(unlist(fa_expr_log2_standard),
 abline(v = mean(fa_expr_log2_standard), col = "darkgreen", lwd = 2)
 
 ```
-
 
 - Dessinez un box plot des échantillons avant et après normalisation, et commentez la façon dont l'effet de la normalisation apparaît sur ces graphiques. 
 
@@ -506,20 +536,17 @@ par(mar = c(4,5,5,1))
 
 ### Filtrage 2 : sélection de gènes d'expression élevée et variable
 
-Pour réduire le nombre de gènes, nous allons écarter les gènes faiblement exprimés (log2 moyen inférieur à 4), et ne retenir que ceux qui montrent des variations importantes entre échantillons. Pour ce dernier critère , nous nous basons sur le coefficient de variation, afin de relativiser la dispersion (écart type) par rapport à la tendance centrale (moyenne). 
+Pour réduire le nombre de gènes, nous allons écarter les gènes faiblement exprimés (log2 moyen inférieur à 4), et ne retenir que ceux qui montrent des variations importantes entre échantillons. Pour ce dernier critère, nous nous basons sur le coefficient de variation afin de relativiser la dispersion (écart type) par rapport à la tendance centrale (moyenne). 
 
-Sélectionnez les gènes ayant un niveau log2 moyen minimal supérieur à 3 ($s > 3$) et un coefficient de variation supérieur à 0.5 ($V > 0.5$). Note: ces valeurs sont parfaitement arbitraires, elles ont érté choisies pour obtenir un nombre raisonnable de gènes. 
-
+Sélectionnez les gènes ayant un niveau log2 moyen minimal supérieur à 3 ($s > 3$) et un coefficient de variation supérieur à 0.5 ($CV > 0.5$). Note: ces valeurs sont parfaitement arbitraires, elles ont été choisies pour obtenir un nombre raisonnable de gènes. 
 
 ```{r gene_selection}
-#### Gene selection ####
-
 ## Compute a Boolean vector indicating whether each gene passes or not the expression level threshold
 high_expression <- gene_stat_norm$mean > 3
 # table(high_expression) # count number of genes with high/weak expression
 
 ## Compute a Boolean vector indicating whether each gene passes or not the variation coefficient threshold
-high_variation <- gene_stat_norm$V > 0.5
+high_variation <- gene_stat_norm$CV > 0.5
 # table(high_variation) # count number of genes with weak high coeffficient of variation
 
 ## Compute a Boolean vector indicating whether each gene passes or not the variance threshold
@@ -564,10 +591,9 @@ par(mfrow = c(1,1))
 # hist(unlist(fa_expr_log2_filtered[high_variation, ]), breaks=100)
 # hist(unlist(fa_expr_log2_filtered[!high_variation, ]), breaks=100)
 # hist(unlist(fa_expr_log2_filtered[selected_genes, ]), breaks=100)
-
 ```
 
-Dessinzes un box plot des valeurs d'expression avant et après sélection des gènes, et commentez le résultat. 
+Dessinez un box plot par échantillon des valeurs d'expression avant et après sélection des gènes, et commentez le résultat. 
 
 ```{r boxplots_expr_selected_genes, fig.width=10, fig.height=5, out.width="60%", fig.cap="Box plots of standardised expression values before and after gene selection. "}
 #### Histogram of expression after gene selection ####
@@ -587,17 +613,13 @@ boxplot(fa_expr_selected,
         col = fa_meta$color, 
         main = "After gene selection\nstandardised values")
 
-
 par(mfrow = c(1,1))
-
-
-
 ```
 
 
 ### ACP
 
-Dessinez un plot ACP des échantillons en les colorant par condition. 
+Dessinez un plot ACP des échantillons en les colorant par condition avant et après normalisation.
 
 - avec la matrice d'expression initiale ($fa_expr$)
 
@@ -619,7 +641,7 @@ ma_pca_raw_sel <- PCA(t(fa_expr_raw[selected_genes,]),
 fviz_pca_ind(ma_pca_raw_sel, col.ind = fa_meta[, "color"])
 ```
 
-- avec la matrice finale (transformation log2, filtre des gènes non-détectés, standardisation et sélection des gènes fortement exprimés et a-à haut coefficient de variation)
+- avec la matrice finale (transformation log2, filtre des gènes non-détectés, standardisation et sélection des gènes fortement exprimés et à haut coefficient de variation)
 
 ```{r acp_norm_selected_genes, fig.width=8, fig.height=8, out.width="60%", fig.cap="PC plot of the samples from standardised values after gene selection. "}
 ma_pca_sel <- PCA(t(fa_expr_selected), scale.unit = FALSE,
@@ -661,7 +683,6 @@ par(mfrow = c(1,1))
 - Effectuez un clustering hiérarchique des gènes en utilisant la distance basée sur le coefficient de Pearson et le critère de Ward
 
 ```{r gene_clustering}
-
 cor_pearson_gene <- as.dist(1 - cor(t(fa_expr_selected)))
 plot(hclust(cor_pearson_gene), hang = -1,
      main = "gènes")
