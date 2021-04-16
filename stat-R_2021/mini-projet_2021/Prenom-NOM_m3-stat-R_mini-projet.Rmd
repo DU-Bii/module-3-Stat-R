@@ -634,11 +634,7 @@ cor_pearson_sel <- as.dist(1 - cor(fa_expr_selected))
 cor_spearman_sel <- 1 - as.dist(cor(fa_expr_selected, method = "spearman"))
 ```
 
-
-
-
 - Effectuez un clustering hiérarchique des échantillons, en utilisant le critère de Ward (`ward.d2`) pour l'agglomération. Comparez les arbres d'échantillons obtenus avec ces trois métriques et choisissez celle qui vous paraît la plus pertinente.
-
 
 
 ```{r sample_clustering, fig.width=12, plot.height=5, out.width="100%", fig.cap="Sample tree with three alternative distance metrics: Euclidiant distance (left), Pearson correlation (center), Spearman correlation (right).? "}
