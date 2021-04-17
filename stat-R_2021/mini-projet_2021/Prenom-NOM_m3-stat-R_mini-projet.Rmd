@@ -560,9 +560,9 @@ par(mar = c(4,5,5,1))
 
 Pour réduire le nombre de gènes, nous allons écarter les gènes faiblement exprimés (log2 moyen inférieur à 4), et ne retenir que ceux qui montrent des variations importantes entre échantillons. Pour ce dernier critère, nous nous basons sur le coefficient de variation afin de relativiser la dispersion (écart type) par rapport à la tendance centrale (moyenne). 
 
-Sélectionnez les gènes ayant un niveau log2 moyen minimal supérieur à 3 ($m > 3$) et un coefficient de variation supérieur à 0.5 ($CV > 0.5$). Note: ces valeurs sont parfaitement arbitraires, elles ont été choisies pour obtenir un nombre raisonnable de gènes.
+<!-- Sélectionnez les gènes ayant un niveau log2 moyen minimal supérieur à 3 ($m > 3$) et un coefficient de variation supérieur à 0.5 ($CV > 0.5$). Note: ces valeurs sont parfaitement arbitraires, elles ont été choisies pour obtenir un nombre raisonnable de gènes.  -->
 
-<!-- Sélectionnez les gènes ayant un niveau log2 moyen minimal supérieur à 5 ($m > 5$) et une variance supérieure à 2 ($s^2 > 2$). Note: ces valeurs sont parfaitement arbitraires, elles ont été choisies pour obtenir un nombre raisonnable de gènes.  -->
+Sélectionnez les gènes ayant un niveau log2 moyen minimal supérieur à 5 ($m > 5$) et une variance supérieure à 2 ($s^2 > 2$). Note: ces valeurs sont parfaitement arbitraires, elles ont été choisies pour obtenir un nombre raisonnable de gènes. 
 
 
 ```{r gene_selection}
@@ -574,14 +574,14 @@ high_expression <- gene_stat_norm$mean > 5
 high_variation <- gene_stat_norm$CV > 0.5
 # table(high_variation) # count number of genes with weak high coeffficient of variation
 
-# ## Compute a Boolean vector indicating whether each gene passes or not the variance threshold
-# high_variance <- gene_stat_norm$var > 2
-# # table(high_variance) # count number of genes with weak high variance
+## Compute a Boolean vector indicating whether each gene passes or not the variance threshold
+high_variance <- gene_stat_norm$var > 2
+# table(high_variance) # count number of genes with weak high variance
 
-## Select genes having both a high mean expression and a high variation coefficien
-selected_genes <- high_variation & high_expression
-# ## Select genes having both a high mean expression and a high variance
-# selected_genes <- high_variance & high_expression
+# ## Select genes having both a high mean expression and a high variation coefficien
+# selected_genes <- high_variation & high_expression
+## Select genes having both a high mean expression and a high variance
+selected_genes <- high_variance & high_expression
 # table(selected_genes) # count number of genes with weak high coeffficient of variation
 print(paste0("Selected genes: ", sum(selected_genes)))
 
@@ -750,7 +750,7 @@ pheatmap(t(fa_expr_selected),
 Interprétez les résultats en quelques phrases. 
 
 
-### Enrichissement fonctionnel
+## 5. Enrichissement fonctionnel
 
 Effectuez une analyse d'enrichissement fonctionnel avec les principaux clusters obtenus dans la section précédente. 
 
