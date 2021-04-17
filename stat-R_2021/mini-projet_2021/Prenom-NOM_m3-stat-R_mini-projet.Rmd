@@ -21,6 +21,8 @@ output:
 editor_options: 
   chunk_output_type: console
 ---
+
+
 ```{r settings, include=FALSE, echo=FALSE, eval=TRUE}
 options(width = 300)
 # options(encoding = 'UTF-8')
@@ -44,7 +46,11 @@ options(scipen = 12) ## Max number of digits for non-scientific notation
 #### Required libraries ####
 
 # Load required CRAN R libraries
-required_cranLib <- c("knitr", "FactoMineR", "factoextra", "pheatmap")
+required_cranLib <- c("knitr", 
+                      "FactoMineR", 
+                      "factoextra", 
+                      "gprofiler2",
+                      "pheatmap")
 for (lib in required_cranLib) {
   if (!require(lib, character.only = TRUE)) {
     install.packages(lib)
@@ -280,7 +286,7 @@ Nous créons un data.frame nommé `sample_stat_prenorm` qui comportera une ligne
 Il sera affiché avec la fonction `kable()` (n'oubliez pas la légende). 
 
 ```{r sample_stat_pre_norm}
-
+message("Computing sample-wise statistics on raw counts")
 sample_stat_prenorm <- data.frame(
   mean = apply(fa_expr_log2, 2, mean, na.rm=TRUE),
   sd = apply(fa_expr_log2, 2, sd, na.rm=TRUE),
@@ -312,7 +318,8 @@ Nous créons ci-dessous un data.frame nommé `gene_stat_prenorm` qui comportera 
 Ces résultats seront stockés dans un data.frame avec 1 ligne par échantillon et 1 colonne par statistique. Vous afficherez les lignes 100 à 109 de ce tableau de statistiques avec la fonction `kable()` (n'oubliez pas la légende).
 
 ```{r gene_stat_pre_norm}
-## Gene-wise statistics before normalisation
+## Gene-wise statistics for the raw counts (will be used for normalisation)
+message("Computing gene-wise statistics on raw counts")
 gene_stat_prenorm <- data.frame(
   mean = apply(fa_expr_raw, 1, mean, na.rm = TRUE),
   sd = apply(fa_expr_raw, 1, sd, na.rm = TRUE),
@@ -344,14 +351,16 @@ La méthode choisie ici consiste à :
 
 Nous fournissons ci-dessous le code.
 
-### Filtrage 1 : élimination des gènes non détectés ou à peine exprimés
+### Filtrage : élimination des gènes non détectés ou à peine exprimés
 
 ```{r gene_filtering}
 ## Data filtering: genes having at least 90% null values
+message("Filtering undetected genes")
 undetected_genes <- gene_stat_prenorm$null >= ncol(fa_expr_raw) * 0.9
 print(paste0("Undetected genes (null in >= 90% samples): ", sum(undetected_genes)))
 
 ## Data filtering: genes having a mean expression < 10
+message("Filtering barely expressed genes")
 barely_expressed_genes <- gene_stat_prenorm$mean < 10
 print(paste0("Barely expressed genes (mean < 10): ", sum(barely_expressed_genes)))
 
@@ -427,6 +436,7 @@ Générez un data.frame avec une ligne par gène à partir du tableau de donnée
 ```{r gene_stat_post_norm}
 
 ## Gene-wise statistics after normalisation
+message("Computing gene-wise statistics on log2-transformed and normalised counts")
 gene_stat_norm <- data.frame(
   mean = apply(fa_expr_log2_standard, 1, mean, na.rm = F),
   var = apply(fa_expr_log2_standard, 1, var, na.rm = TRUE),
@@ -452,19 +462,30 @@ Suivez pas à pas la méthode proposée:
  
  - avec la fonction `getBM()` récupérez de la base de données ENSEMBL les champs demandés (***pour symbole utilisez external_gene_name***) en appliquant "ensembl_geneid" pour l'agument `filter` et en indiquant pour l'argument `values` le vecteur des identifiants des gènes présents dans le dataframe `gene_stat_norm`. Vous obtenez un dataframe.
  
-A présent, ajoutez au dataframe `gene_stat_norm` en 1ères colonnes les annotations retrouvées grâce à biomaRt. Attention, certains gènes ne sont pas retrouvés dans la version d'ENSEMBL sur biomaRt donc laissez des NA comme données manquantes dans ce cas. Nous vous recommandons d'utiliser la function `merge()` ou `left_join()` de dplyr pour fusionner les deux dataframes en un seul.
+A présent, ajoutez au dataframe `gene_stat_norm` en 1ères colonnes les annotations retrouvées grâce à biomaRt. Attention, certains gènes ne sont pas retrouvés dans la version d'ENSEMBL sur biomaRt donc laissez des NA comme données manquantes dans ce cas. Nous vous recommandons d'utiliser la function `merge()` ou `left_join()` de `dplyr` pour fusionner les deux dataframes en un seul.
  
 ```{r gene_annotations}
-ensembl <- useMart("ENSEMBL_MART_ENSEMBL", host = "www.ensembl.org", dataset = "mmusculus_gene_ensembl")
+### Gene annotations ####
 
-genes <-getBM(attributes = c("ensembl_gene_id", "external_gene_name", "chromosome_name",
-                              "start_position", "end_position", "strand"), 
-                filter = "ensembl_gene_id",
-                values = row.names(gene_stat_norm),
-                mart = ensembl
-              )
+## Open a connection to Ensembl MART
+message("Opening connection to Ensembl MART")
+ensembl <- useMart("ENSEMBL_MART_ENSEMBL", 
+                   host = "www.ensembl.org", 
+                   dataset = "mmusculus_gene_ensembl")
+
+## Get gene annotations
+message("Getting gene annotations")
+genes <- getBM(attributes = c("ensembl_gene_id", 
+                              "external_gene_name", 
+                              "chromosome_name",
+                              "start_position", 
+                              "end_position", 
+                              "strand"), 
+               filter = "ensembl_gene_id",
+               values = row.names(gene_stat_norm),
+               mart = ensembl)
   
- 
+## Merge gene annotations and expression statistics
 gene_stat_norm <- merge(genes, gene_stat_norm, by.x = "ensembl_gene_id", by.y = 0, sort = FALSE)
 
 kable(gene_stat_norm[100:109, ], caption = "Gene-wise statistics after normalisation")
@@ -478,7 +499,8 @@ Enfin, réordonnez les gènes par position génomique et affichez les lignes 5 p
 
 gene_stat_norm <- gene_stat_norm[order(gene_stat_norm$chromosome_name, gene_stat_norm$start_position),]
 
-kable(gene_stat_norm[c(1:5, (nrow(gene_stat_norm)-4):nrow(gene_stat_norm)), ], caption = "Gene-wise statistics after normalisation.")
+kable(gene_stat_norm[c(1:5, (nrow(gene_stat_norm) - 4):nrow(gene_stat_norm)), ], 
+      caption = "Gene-wise statistics after normalisation.")
 
 ```
 
@@ -536,15 +558,18 @@ par(mar = c(4,5,5,1))
 
 ## 4. Analyse de regroupement des données
 
-### Filtrage 2 : sélection de gènes d'expression élevée et variable
+### Sélection de gènes d'expression élevée et variable
 
 Pour réduire le nombre de gènes, nous allons écarter les gènes faiblement exprimés (log2 moyen inférieur à 4), et ne retenir que ceux qui montrent des variations importantes entre échantillons. Pour ce dernier critère, nous nous basons sur le coefficient de variation afin de relativiser la dispersion (écart type) par rapport à la tendance centrale (moyenne). 
 
-Sélectionnez les gènes ayant un niveau log2 moyen minimal supérieur à 3 ($s > 3$) et un coefficient de variation supérieur à 0.5 ($CV > 0.5$). Note: ces valeurs sont parfaitement arbitraires, elles ont été choisies pour obtenir un nombre raisonnable de gènes. 
+<!-- Sélectionnez les gènes ayant un niveau log2 moyen minimal supérieur à 3 ($m > 3$) et un coefficient de variation supérieur à 0.5 ($CV > 0.5$). Note: ces valeurs sont parfaitement arbitraires, elles ont été choisies pour obtenir un nombre raisonnable de gènes.  -->
+
+Sélectionnez les gènes ayant un niveau log2 moyen minimal supérieur à 5 ($m > 5$) et une variance supérieure à 2 ($s^2 > 2$). Note: ces valeurs sont parfaitement arbitraires, elles ont été choisies pour obtenir un nombre raisonnable de gènes. 
+
 
 ```{r gene_selection}
 ## Compute a Boolean vector indicating whether each gene passes or not the expression level threshold
-high_expression <- gene_stat_norm$mean > 3
+high_expression <- gene_stat_norm$mean > 5
 # table(high_expression) # count number of genes with high/weak expression
 
 ## Compute a Boolean vector indicating whether each gene passes or not the variation coefficient threshold
@@ -552,11 +577,13 @@ high_variation <- gene_stat_norm$CV > 0.5
 # table(high_variation) # count number of genes with weak high coeffficient of variation
 
 ## Compute a Boolean vector indicating whether each gene passes or not the variance threshold
-# high_variance <- gene_stat_norm$var > 2
+high_variance <- gene_stat_norm$var > 2
 # table(high_variance) # count number of genes with weak high variance
 
-## Select genes having both a high mean expression and a high variation coefficien
-selected_genes <- high_variation & high_expression
+# ## Select genes having both a high mean expression and a high variation coefficien
+# selected_genes <- high_variation & high_expression
+## Select genes having both a high mean expression and a high variance
+selected_genes <- high_variance & high_expression
 # table(selected_genes) # count number of genes with weak high coeffficient of variation
 print(paste0("Selected genes: ", sum(selected_genes)))
 
@@ -649,7 +676,7 @@ fviz_pca_ind(ma_pca_raw_tt, col.ind = fa_meta[, "color"])
 
 - avec la matrice de valeurs filtrées et après transformation log2
 
-```{r acp_norm_filtered_genes, fig.width=8, fig.height=8, out.width="60%", fig.cap="PC plot of the samples from standardised values after gene selection. "}
+```{r acp_norm_filtered_genes, fig.width=8, fig.height=8, out.width="60%", fig.cap="PC plot of the samples from standardised values before gene selection. "}
 ma_pca_filtered <- PCA(t(fa_expr_log2_filtered), scale.unit = FALSE,
                   graph = FALSE)
 # plot(ma_pca_filtered, choix = "var")
@@ -725,11 +752,53 @@ pheatmap(t(fa_expr_selected),
 Interprétez les résultats en quelques phrases. 
 
 
-### Enrichissement fonctionnel
+## 5. Enrichissement fonctionnel
 
 Effectuez une analyse d'enrichissement fonctionnel avec les principaux clusters obtenus dans la section précédente. 
 
 ```{r functional_enrichment}
+#### Run enrichment analysis with gost() ####
+message("Running enrichment analysis with gost")
+
+gene_list <- unlist(subset(x = gene_stat_norm, 
+                    subset = selected_genes,
+                    select = external_gene_name))
+# length(gene_list)
+
+gostres <- gost(query = gene_list, 
+                organism = "mmusculus", 
+                ordered_query = FALSE, 
+                multi_query = FALSE, 
+                significant = TRUE, 
+                exclude_iea = FALSE, 
+                measure_underrepresentation = FALSE, 
+                evcodes = FALSE, 
+                user_threshold = 0.05, 
+                correction_method = "fdr", 
+                domain_scope = "annotated", 
+                custom_bg = NULL, 
+                numeric_ns = "", 
+                sources = NULL, 
+                as_short_link = FALSE)
+
+
+## Check the structure of the result
+names(gostres)
+names(gostres$result)
+kable(summary(gostres))
+
+# hist(gostres$result$p_value, breaks=seq(from=0, to=1, by = 0.05))
+
+## Check the most significant results, formating for kable
+#head(gostres$result)
+enrich_order <- order(gostres$result$p_value, decreasing = FALSE)
+sorted_result <- gostres$result[enrich_order, ]
+kable(head(sorted_result, n = 10), 
+      digits = c(0, 0, 15, 7, 7, 7, 3, 3, 0, 0, 7, 7, 0, 0), 
+      caption = "Top 10 most significant enriched functional classes")
+# kable(head(gostres$result), 
+#       format = c("%s", "%s", "%e", "%d", "%d", "%d", "%.3f", "%.3f", "%s", "%s", "%d", "%d", "%s", "%s"))
+names(gostres$meta)
 
 ```
 
