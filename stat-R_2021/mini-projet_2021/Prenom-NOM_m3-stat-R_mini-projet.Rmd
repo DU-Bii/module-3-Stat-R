@@ -41,19 +41,21 @@ options(scipen = 12) ## Max number of digits for non-scientific notation
 ```
 
 ```{r libraries, echo=FALSE, eval=TRUE}
+#### Required libraries ####
+
 # Load required CRAN R libraries
 required_cranLib <- c("knitr", "FactoMineR", "factoextra", "pheatmap")
 for (lib in required_cranLib) {
   if (!require(lib, character.only = TRUE)) {
-    install.packages(lib, )
+    install.packages(lib)
   }
   require(lib, character.only = TRUE)
 }
 
 required_biocLib <- c("biomaRt")
 for (lib in required_biocLib) {
-if (!requireNamespace(lib, character.only = TRUE)) {
-  BiocManager::install(lib)
+  if (!requireNamespace(lib, character.only = TRUE)) {
+    BiocManager::install(lib)
   }
   require(lib, character.only = TRUE)
 }
