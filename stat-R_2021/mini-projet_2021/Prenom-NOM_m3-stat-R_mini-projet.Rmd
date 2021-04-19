@@ -553,6 +553,8 @@ par(mar = c(4,5,5,1))
 
 ## 4. Analyse de regroupement des données
 
+***A vous de jouer!***
+
 ### Sélection de gènes d'expression élevée et variable
 
 Pour réduire le nombre de gènes, nous allons écarter les gènes faiblement exprimés (log2 moyen inférieur à 4), et ne retenir que ceux qui montrent des variations importantes entre échantillons. Pour ce dernier critère, nous nous basons sur la variance. 
@@ -739,6 +741,8 @@ Interprétez les résultats en quelques phrases.
 
 
 ## 5. Enrichissement fonctionnel
+
+***A vous de jouer!***
 
 Effectuez une analyse d'enrichissement fonctionnel avec les principaux clusters obtenus dans la section précédente. 
 
