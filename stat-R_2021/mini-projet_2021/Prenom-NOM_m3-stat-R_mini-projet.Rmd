@@ -66,7 +66,6 @@ for (lib in required_biocLib) {
   require(lib, character.only = TRUE)
 }
 
-
 kable(as.data.frame(c(required_cranLib, required_biocLib)),
       col.names = "libraries",
       caption = "Loaded required libraries"
@@ -79,13 +78,13 @@ sessionInfo()
 
 ### Travail demandé
 
-Le but de ce travail est de mettre en oeuvre les méthodes vues dans le module 3 "R et statistiques" pour explorer le jeu de données de Pavokovic, et de rendre un rapport d'analyse au format `.Rmd`. 
+Le but de ce travail est de mettre en oeuvre les méthodes vues dans le module 3 "R et statistiques" pour explorer le jeu de données de Pavkovic, et de rendre un rapport d'analyse au format `.Rmd`. 
 
 Nous fournissons ci-dessous une trame avec les principales sections attendues. Certaines contiennent déjà du code. Vous devrez en compléter d'autres. Sentez-vous libres d'adapter cette trame ou d'y ajouter des analyses complémentaires si elles vous aident à interpréter vos résultats. 
 
 ### Remise du rapport
 
-Date: **le 10 mai 2021 minuit**.  Si vous anticipez un problème pour remettre le rapport à cette date contactez-nous aussi rapidement que possible pour que nous puissions prévoir une remise plus tardive. 
+Date: **le 17 mai 2021 minuit**.  Si vous anticipez un problème pour remettre le rapport à cette date contactez-nous aussi rapidement que possible pour que nous puissions prévoir une remise plus tardive. 
 
 - Commencez par renommer le fichier .Rmd en remplaçant Prenom-NOM par vos nom et prénom. 
 - Le rapport est attendu en formats .Rmd + .HTML (en gardant l'option self_contained de l'en-tête activée). 
@@ -121,12 +120,13 @@ A partir de ces extraits de rein, l'ARN messager total et les petits ARNs ont é
 
 **But scientifique:** Dans le tutoriel sur les dataframes, vous avez travaillé sur les données de ***transcriptome du modèle UUO***. Dans ce mini-projet, vous allez travailler sur les données du ***transcriptome du modèle FA*** afin de regrouper les observations (échantillon) et les gènes selon des profils d'expression similaires.
 
-**Votre projet se décompose en 4 parties:**
+**Votre projet se décompose en 5 parties dont 3 seront à réaliser par:**
 
-1. statsitiques descriptives des données brutes: commandes fournies
-2. normalisation des données : commandes fournies
-3. statistiques descriptives des données normalisées: à vous de jouer
-4. analyse de regroupement des données: à vous de jouer
+1. Statitiques descriptives des données brutes: commandes fournies
+2. Normalisation des données : commandes fournies
+3. Statistiques descriptives des données normalisées: à vous de jouer
+4. Analyse de regroupement des données: à vous de jouer
+5. Analyse d'enrichissement fonctionnel: à vous de jouer
 
 ## 1. Les données brutes
 
@@ -250,9 +250,9 @@ kable(fa_meta, caption = "Metdata for Pavkovoc FA transcriptome")
 
 ### Transformation log2
 
-Appliquez une transformation log2 des données brutes, après avoir ajouté un epsilon $\epsilon = 1$ (les valeurs nulles seront donc représentées par un log2(counts) valant $0$. Stockez le résultat dans un data.frame nommé `fa_expr_log2`.
+Nous appliquons une transformation en log2 des données brutes, après avoir ajouté un epsilon $\epsilon = 1$ (les valeurs nulles seront donc représentées par un log2(counts) valant $0$. Nous stockons le résultat dans un data.frame nommé `fa_expr_log2`.
 
-Affchez un fragment des tableaux `fa_expr_raw` et `fa_expr_log2` en sélectionnant les lignes 100 à 109 et les colonnes 5 à 10, afin de vous assurer que la transformation log2 a bien fonctionné. 
+Nous affichons un fragment des tableaux `fa_expr_raw` et `fa_expr_log2` en sélectionnant les lignes 100 à 109 et les colonnes 5 à 10, afin de nous assurer que la transformation en log2 a bien fonctionné. 
 
 ```{r log2_transform}
 ## Log2 transformation of the transcriptome data
@@ -268,11 +268,11 @@ kable(fa_expr_log2[100:109, 5:10], caption = "Fragment des données transcriptom
 
 ### Statistiques descriptives
 
-Dans le tutorial sur les dataframes sur le jeu de données "uuo" (relisez le corrigé), nous vous avons demandé de créer un data.frame qui collectera les statistiques par gène et par échantillon. Nous vous demandons de réaliser une étude similaire sur les données "FA".
+Dans le tutorial sur les dataframes sur le jeu de données "uuo" (relisez le corrigé), nous vous avons demandé de créer un data.frame qui collecte les statistiques par gène et par échantillon. Nous vous demandons de réaliser une étude similaire sur les données "FA" avant et après normalisation inter-échantillons des données. Le code de la partie avant normalisation est donné.
 
 #### Par échantillon avant normalisation
 
-Nous créons un data.frame nommé `sample_stat_prenorm` qui comportera une ligne par échantillon et une colonne par statistique. Nous calculons les statistiques suivantes sur les valeurs log2 d'expression de chaque échantillon:
+Nous créons un data.frame nommé `sample_stat_prenorm` qui comporte une ligne par échantillon et une colonne par statistique. Nous calculons les statistiques suivantes sur les valeurs log2 d'expression de chaque échantillon:
 
 - moyenne
 - écart-type
@@ -283,7 +283,7 @@ Nous créons un data.frame nommé `sample_stat_prenorm` qui comportera une ligne
 - maximum
 - nombre de valeurs nulles
 
-Il sera affiché avec la fonction `kable()` (n'oubliez pas la légende). 
+Il est affiché avec la fonction `kable()`. 
 
 ```{r sample_stat_pre_norm}
 message("Computing sample-wise statistics on raw counts")
@@ -299,12 +299,11 @@ sample_stat_prenorm <- data.frame(
 )
 
 kable(sample_stat_prenorm, caption = "Sample-wise statistics before normalisation.")
-
 ```
 
 #### Par gène avant normalisation
 
-Nous créons ci-dessous un data.frame nommé `gene_stat_prenorm` qui comportera une ligne par gène et une colonne par statistique. Nous calculons les statistiques suivantes sur les valeurs log2 de chaque gène.
+Nous créons ci-dessous un data.frame nommé `gene_stat_prenorm` qui comporte une ligne par gène et une colonne par statistique. Nous calculons les statistiques suivantes sur les valeurs log2 de chaque gène.
 
 - moyenne
 - médiane
@@ -315,7 +314,7 @@ Nous créons ci-dessous un data.frame nommé `gene_stat_prenorm` qui comportera 
 - nombre de valeurs nulles
 - intervalle inter-quartiles
 
-Ces résultats seront stockés dans un data.frame avec 1 ligne par échantillon et 1 colonne par statistique. Vous afficherez les lignes 100 à 109 de ce tableau de statistiques avec la fonction `kable()` (n'oubliez pas la légende).
+Ces résultats sont stockés dans un data.frame avec 1 ligne par échantillon et 1 colonne par statistique. Nous affichons les lignes 100 à 109 de ce tableau de statistiques avec la fonction `kable()`.
 
 ```{r gene_stat_pre_norm}
 ## Gene-wise statistics for the raw counts (will be used for normalisation)
@@ -332,7 +331,6 @@ gene_stat_prenorm <- data.frame(
 )
 
 kable(gene_stat_prenorm[100:109, ], caption = "Gene-wise statistics before normalisation")
-
 ```
 
 ## 2. Filtrage et normalisation des données
@@ -434,7 +432,6 @@ Générez un data.frame avec une ligne par gène à partir du tableau de donnée
 - maximum
 
 ```{r gene_stat_post_norm}
-
 ## Gene-wise statistics after normalisation
 message("Computing gene-wise statistics on log2-transformed and normalised counts")
 gene_stat_norm <- data.frame(
@@ -450,19 +447,20 @@ gene_stat_norm <- data.frame(
   null = apply(fa_expr_log2_standard == 0, 1, sum, na.rm = TRUE)
   )
 gene_stat_norm$CV <- gene_stat_norm$sd / gene_stat_norm$mean
-
 ```
 
 ### Annotation des gènes
 
 Chaque gène étant donné par son identifiant dans la base de données ENSEMBL vous utiliserez le `paquet biomaRt de bioconductor` pour ajouter des annotations : symbole, chromosome, coordonnées génomiques, brin. 
-Suivez pas à pas la méthode proposée:
+Suivez pas à pas la méthode proposée (***certaines étapes peuvent prendre quelques minutes***):
+
+ - chargez le paquet biomaRt, voire installer-le uniquement si nécessaire. Indiquez le code à l'emplacement adéquat dans de .Rmd.
 
  - sélectionnez la base de données ENSEMBL avec la fonction `useMart()`. Attention à choisir le bon génome avec l'agument `dataset`: `mmusculus_gene_ensembl`
  
  - avec la fonction `getBM()` récupérez de la base de données ENSEMBL les champs demandés (***pour symbole utilisez external_gene_name***) en appliquant "ensembl_geneid" pour l'agument `filter` et en indiquant pour l'argument `values` le vecteur des identifiants des gènes présents dans le dataframe `gene_stat_norm`. Vous obtenez un dataframe.
  
-A présent, ajoutez au dataframe `gene_stat_norm` en 1ères colonnes les annotations retrouvées grâce à biomaRt. Attention, certains gènes ne sont pas retrouvés dans la version d'ENSEMBL sur biomaRt donc laissez des NA comme données manquantes dans ce cas. Nous vous recommandons d'utiliser la function `merge()` ou `left_join()` de `dplyr` pour fusionner les deux dataframes en un seul.
+A présent, ajoutez au dataframe `gene_stat_norm` en 1ères colonnes les annotations retrouvées grâce à biomaRt. Attention, certains gènes ne sont pas retrouvés dans la version d'ENSEMBL sur biomaRt donc laissez des NA comme données manquantes dans ce cas. Nous vous recommandons d'utiliser la function `merge()` de R base ou bien `left_join()` de `dplyr` pour fusionner les deux dataframes en un seul.
  
 ```{r gene_annotations}
 ### Gene annotations ####
@@ -501,7 +499,6 @@ gene_stat_norm <- gene_stat_norm[order(gene_stat_norm$chromosome_name, gene_stat
 
 kable(gene_stat_norm[c(1:5, (nrow(gene_stat_norm) - 4):nrow(gene_stat_norm)), ], 
       caption = "Gene-wise statistics after normalisation.")
-
 ```
 
 
@@ -518,10 +515,9 @@ hist(unlist(fa_expr_log2_standard),
      las = 1, cex.axis = 0.8,
      main = "distribution after standardisation")
 abline(v = mean(fa_expr_log2_standard), col = "darkgreen", lwd = 2)
-
 ```
 
-- Dessinez un box plot des échantillons avant et après normalisation, et commentez la façon dont l'effet de la normalisation apparaît sur ces graphiques. 
+- Dessinez un box plot par échantillon avant et après normalisation, et commentez la façon dont l'effet de la normalisation apparaît sur ces graphiques. 
 
 ```{r boxplots_standardisation_impact, fig.width=10, fig.height=12, out.width="100%", fig.cap="Box plots showing the impact of normalisation"}
 #### Box plots to show normalisation impact ####
@@ -553,19 +549,17 @@ boxplot(fa_expr_log2_standard,
         main = "Standardised\nall values")
 par(mfrow = c(1, 1))
 par(mar = c(4,5,5,1))
-
 ```
 
 ## 4. Analyse de regroupement des données
 
 ### Sélection de gènes d'expression élevée et variable
 
-Pour réduire le nombre de gènes, nous allons écarter les gènes faiblement exprimés (log2 moyen inférieur à 4), et ne retenir que ceux qui montrent des variations importantes entre échantillons. Pour ce dernier critère, nous nous basons sur le coefficient de variation afin de relativiser la dispersion (écart type) par rapport à la tendance centrale (moyenne). 
+Pour réduire le nombre de gènes, nous allons écarter les gènes faiblement exprimés (log2 moyen inférieur à 4), et ne retenir que ceux qui montrent des variations importantes entre échantillons. Pour ce dernier critère, nous nous basons sur la variance. 
 
 <!-- Sélectionnez les gènes ayant un niveau log2 moyen minimal supérieur à 3 ($m > 3$) et un coefficient de variation supérieur à 0.5 ($CV > 0.5$). Note: ces valeurs sont parfaitement arbitraires, elles ont été choisies pour obtenir un nombre raisonnable de gènes.  -->
 
 Sélectionnez les gènes ayant un niveau log2 moyen minimal supérieur à 5 ($m > 5$) et une variance supérieure à 2 ($s^2 > 2$). Note: ces valeurs sont parfaitement arbitraires, elles ont été choisies pour obtenir un nombre raisonnable de gènes. 
-
 
 ```{r gene_selection}
 ## Compute a Boolean vector indicating whether each gene passes or not the expression level threshold
@@ -589,7 +583,6 @@ print(paste0("Selected genes: ", sum(selected_genes)))
 
 ## Create a data frame with the expression of the selected genes
 fa_expr_selected <- fa_expr_log2_standard[selected_genes, ]
-
 ```
 
 Dessinez des histogrammes des valeurs d'expression avant et après cette sélection de gènes, et commentez les différences. 
@@ -658,8 +651,7 @@ ma_pca_raw_tt <- PCA(t(fa_expr_raw),
                       scale.unit = FALSE, 
                       graph = FALSE)
 # plot(ma_pca_raw_tt, choix = "ind")
-fviz_pca_ind(ma_pca_raw_tt, col.ind = fa_meta[, "color"])
-
+fviz_pca_ind(ma_pca_raw_tt, col.ind = fa_meta[,"condition"])
 ```
 
 <!-- - avec les comptages bruts, mais en restreignant l'analyse aux gènes sélectionnés ($fa_expr_raw[selected_genes,]$) -->
@@ -681,7 +673,7 @@ ma_pca_filtered <- PCA(t(fa_expr_log2_filtered), scale.unit = FALSE,
                   graph = FALSE)
 # plot(ma_pca_filtered, choix = "var")
 # plot(ma_pca_sel, choix = "ind")
-fviz_pca_ind(ma_pca_filtered, col.ind = fa_meta[, "color"])
+fviz_pca_ind(ma_pca_filtered, col.ind = fa_meta[, "condition"])
 ```
 
 - avec la matrice finale (transformation log2, filtre des gènes non-détectés, standardisation et sélection des gènes fortement exprimés et à haut coefficient de variation)
@@ -691,7 +683,7 @@ ma_pca_sel <- PCA(t(fa_expr_selected), scale.unit = FALSE,
                   graph = FALSE)
 # plot(ma_pca_sel, choix = "var")
 # plot(ma_pca_sel, choix = "ind")
-fviz_pca_ind(ma_pca_sel, col.ind = fa_meta[, "color"])
+fviz_pca_ind(ma_pca_sel, col.ind = fa_meta[, "condition"])
 ```
 
 ### Clustering
@@ -706,9 +698,7 @@ cor_pearson_sel <- as.dist(1 - cor(fa_expr_selected))
 cor_spearman_sel <- 1 - as.dist(cor(fa_expr_selected, method = "spearman"))
 ```
 
-
 - Effectuez un clustering hiérarchique des échantillons, en utilisant le critère de Ward (`ward.d2`) pour l'agglomération. Comparez les arbres d'échantillons obtenus avec ces trois métriques et choisissez celle qui vous paraît la plus pertinente.
-
 
 ```{r sample_clustering, fig.width=12, plot.height=5, out.width="100%", fig.cap="Sample tree with three alternative distance metrics: Euclidiant distance (left), Pearson correlation (center), Spearman correlation (right).? "}
 #### Sample clustering ####
@@ -722,7 +712,6 @@ plot(hclust(cor_spearman_sel), hang = -1,
 par(mfrow = c(1,1))
 ```
 
-
 - Effectuez un clustering hiérarchique des gènes en utilisant la distance basée sur le coefficient de Pearson et le critère de Ward
 
 ```{r gene_clustering}
@@ -730,7 +719,6 @@ cor_pearson_gene <- as.dist(1 - cor(t(fa_expr_selected)))
 plot(hclust(cor_pearson_gene), hang = -1,
      main = "gènes")
 ```
-
 
 - Dessinez un arbre avec le résultat du clustering des gènes et commentez sa strcuture. Si vous deviez choisir de façon arbitraire un nombre de clusters, que choisiriez-vous ? Pourquoi ? Pas de panique, nous pouvons assumer ici que la réponse comporte une part de subjectivité. 
 
@@ -740,14 +728,12 @@ plot(hclust(cor_pearson_gene), hang = -1,
 rect.hclust(hclust(cor_pearson_gene), k = 7)
 ```
 
-
 - Dessinez une heatmap du résultat, en sélectionnant les deux résultats de clustering ci-dessus pour les gènes et les échantillons. 
 
 ```{r biclustering}
 pheatmap(t(fa_expr_selected),
          clustering_distance_cols = "correlation", clustering_distance_rows = "correlation")
 ```
-
 
 Interprétez les résultats en quelques phrases. 
 
@@ -799,7 +785,6 @@ kable(head(sorted_result, n = 10),
 # kable(head(gostres$result), 
 #       format = c("%s", "%s", "%e", "%d", "%d", "%d", "%.3f", "%.3f", "%s", "%s", "%d", "%d", "%s", "%s"))
 names(gostres$meta)
-
 ```
 
 ## Conclusions générales
