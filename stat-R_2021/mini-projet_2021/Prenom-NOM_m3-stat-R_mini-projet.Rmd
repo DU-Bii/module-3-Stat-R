@@ -60,7 +60,7 @@ for (lib in required_cranLib) {
 
 required_biocLib <- c("biomaRt")
 for (lib in required_biocLib) {
-  if (!requireNamespace(lib, character.only = TRUE)) {
+  if (!require(lib, character.only = TRUE)) {
     BiocManager::install(lib)
   }
   require(lib, character.only = TRUE)
