@@ -777,6 +777,9 @@ names(gostres)
 names(gostres$result)
 kable(summary(gostres))
 
+# Visualization
+gostplot(gostres, capped = TRUE, interactive = TRUE)
+
 # hist(gostres$result$p_value, breaks=seq(from=0, to=1, by = 0.05))
 
 ## Check the most significant results, formating for kable
