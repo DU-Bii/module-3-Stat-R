@@ -58,7 +58,7 @@ for (lib in required_cranLib) {
   require(lib, character.only = TRUE)
 }
 
-required_biocLib <- c("biomaRt", "edgeR", "DESeq2", "DESeq")
+required_biocLib <- c("biomaRt")
 for (lib in required_biocLib) {
   if (!require(lib, character.only = TRUE)) {
     BiocManager::install(lib)
@@ -765,21 +765,21 @@ fviz_pca_ind(ma_pca_sel, col.ind = fa_meta[, "condition"])
 
 ```{r sample_distances}
 #### Sample distances ####
-dist_euc_sel <- dist(t(fa_expr_selected))
-cor_pearson_sel <- as.dist(1 - cor(fa_expr_selected))
-cor_spearman_sel <- 1 - as.dist(cor(fa_expr_selected, method = "spearman"))
+dist_euc_samples <- dist(t(fa_expr_selected))
+cor_pearson_samples <- as.dist(1 - cor(fa_expr_selected))
+cor_spearman_samples <- as.dist(1 - cor(fa_expr_selected, method = "spearman"))
 ```
 
-- Effectuez un clustering hiérarchique des échantillons, en utilisant le critère de Ward (`ward.d2`) pour l'agglomération. Comparez les arbres d'échantillons obtenus avec ces trois métriques et choisissez celle qui vous paraît la plus pertinente.
+- Effectuez un clustering hiérarchique des échantillons, en utilisant le critère "complete" pour l'agglomération. Comparez les arbres d'échantillons obtenus avec ces trois métriques et choisissez celle qui vous paraît la plus pertinente.
 
 ```{r sample_clustering, fig.width=12, plot.height=5, out.width="100%", fig.cap="Sample tree with three alternative distance metrics: Euclidiant distance (left), Pearson correlation (center), Spearman correlation (right).? "}
 #### Sample clustering ####
 par(mfrow = c(1,3))
-plot(hclust(dist_euc_sel), hang = -1,
+plot(hclust(dist_euc_samples), hang = -1,
      main = "euclidean distance")
-plot(hclust(cor_pearson_sel), hang = -1,
+plot(hclust(cor_pearson_samples), hang = -1,
      main = "pearson")
-plot(hclust(cor_spearman_sel), hang = -1,
+plot(hclust(cor_spearman_samples), hang = -1,
      main = "spearman")
 par(mfrow = c(1,1))
 ```
@@ -788,33 +788,51 @@ par(mfrow = c(1,1))
 
 ```{r gene_tree}
 #### Gene tree with Pearson correlation ####
-
-## Compute Pearson correlation between genes
-cor_pearson_gene <- as.dist(1 - cor(t(fa_expr_selected)))
+clustering_method <- "complete" ## Choose a clustering method
+cor_pearson_genes <-  as.dist(1 - cor(t(fa_expr_selected)))
 
 ## Build a gene tree
-gene_tree_pearson <- hclust(cor_pearson_gene)
+gene_tree_pearson <- hclust(cor_pearson_genes, method = clustering_method)
 
 ## Plot the gene tree
 plot(gene_tree_pearson, hang = -1, las = 1, 
-     main = "Gene tree", labels = FALSE)
+     main = paste0("Gene tree; Pearson coefficient; ", clustering_method, " clustering"), 
+     labels = FALSE)
 ```
 
-- Dessinez un arbre avec le résultat du clustering des gènes et commentez sa strcuture. Si vous deviez choisir de façon arbitraire un nombre de clusters, que choisiriez-vous ? Pourquoi ? Pas de panique, nous pouvons assumer ici que la réponse comporte une part de subjectivité. 
+- Dessinez un arbre avec le résultat du clustering des gènes et commentez sa structure. Si vous deviez choisir de façon arbitraire un nombre de clusters, que choisiriez-vous ? Pourquoi ? Pas de panique, nous pouvons assumer ici que la réponse comporte une part de subjectivité. 
 
 ```{r gene_tree_with_boxes}
 #### Plot the gene tree with boxes to denote the clusters ####
 plot(gene_tree_pearson, hang = -1,
-     main = "Gene tree with 7 clusters", labels = FALSE)
+     main = paste0("Gene tree with 7 clusters; Pearson coefficient; ", clustering_method, " clustering"), 
+     labels = FALSE)
 rect.hclust(gene_tree_pearson, k = 7)
 ```
 
 - Dessinez une heatmap du résultat, en sélectionnant les deux résultats de clustering ci-dessus pour les gènes et les échantillons. 
 
-```{r biclustering}
-pheatmap(t(fa_expr_selected), labels_col = "",
-         clustering_distance_cols = "correlation", clustering_distance_rows = "correlation")
+```{r heatmap_biclustering, fig.width=10, fig.height=8, out.width="90%", fig.cap="Heatmap showing the biclustering of genes and samples. "}
+#### Heatmap ####
+pheatmap(t(fa_expr_selected), 
+         main = paste0("Biclustering; ", "Pearson correlation; ", clustering_method, " clustering"),
+         labels_col = "", 
+         clustering_method = clustering_method, 
+         clustering_distance_cols = "correlation", 
+         clustering_distance_rows = "correlation")
 ```
+
+- Dessinez une heatmap du résultat, en affichant un arbre sur les gènes mais pas sur les échantillons
+
+```{r biclustering}
+pheatmap(t(fa_expr_selected), 
+         main = paste0("Gene clustering; ", "Pearson correlation; ", clustering_method, " clustering"),
+         labels_col = "", 
+         clustering_method = clustering_method, 
+         clustering_distance_cols = "correlation", 
+         cluster_rows = FALSE)
+```
+
 
 Interprétez les résultats en quelques phrases. 
 
