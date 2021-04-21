@@ -58,7 +58,7 @@ for (lib in required_cranLib) {
   require(lib, character.only = TRUE)
 }
 
-required_biocLib <- c("biomaRt")
+required_biocLib <- c("biomaRt", "edgeR", "DESeq2", "DESeq")
 for (lib in required_biocLib) {
   if (!require(lib, character.only = TRUE)) {
     BiocManager::install(lib)
@@ -248,23 +248,6 @@ kable(fa_meta, caption = "Metdata for Pavkovoc FA transcriptome")
 
 => Ainsi, nous avons un jeu de données avec un échantillon de `r nrow(fa_meta)` observations et des données d'expression de `r nrow(fa_expr_raw)` gènes.
 
-### Transformation log2
-
-Nous appliquons une transformation en log2 des données brutes, après avoir ajouté un epsilon $\epsilon = 1$ (les valeurs nulles seront donc représentées par un log2(counts) valant $0$. Nous stockons le résultat dans un data.frame nommé `fa_expr_log2`.
-
-Nous affichons un fragment des tableaux `fa_expr_raw` et `fa_expr_log2` en sélectionnant les lignes 100 à 109 et les colonnes 5 à 10, afin de nous assurer que la transformation en log2 a bien fonctionné. 
-
-```{r log2_transform}
-## Log2 transformation of the transcriptome data
-epsilon <- 1
-fa_expr_log2 <- log2(fa_expr_raw + epsilon)
-# dim(fa_expr_log2)
-# View(head(fa_expr_log2))
-
-## Display of a fragment of the data before and after log2 transformation
-kable(fa_expr_raw[100:109, 5:10], caption = "Fragment des données transcriptomiques brutes")
-kable(fa_expr_log2[100:109, 5:10], caption = "Fragment des données transcriptomiques après transformation log2")
-```
 
 ### Statistiques descriptives
 
@@ -288,14 +271,14 @@ Il est affiché avec la fonction `kable()`.
 ```{r sample_stat_pre_norm}
 message("Computing sample-wise statistics on raw counts")
 sample_stat_prenorm <- data.frame(
-  mean = apply(fa_expr_log2, 2, mean, na.rm=TRUE),
-  sd = apply(fa_expr_log2, 2, sd, na.rm=TRUE),
-  iqr = apply(fa_expr_log2, 2, IQR, na.rm=TRUE),
-  Q1 = apply(fa_expr_log2, 2, quantile, p = 0.25, na.rm=TRUE),
-  median = apply(fa_expr_log2, 2, median, na.rm=TRUE),
-  Q3 = apply(fa_expr_log2, 2, quantile, p = 0.75, na.rm=TRUE),
-  max = apply(fa_expr_log2, 2, max, na.rm=TRUE),
-  null = apply(fa_expr_log2 == 0, 2, sum, na.rm=TRUE)
+  mean = apply(fa_expr_raw, 2, mean, na.rm = TRUE),
+  sd = apply(fa_expr_raw, 2, sd, na.rm = TRUE),
+  iqr = apply(fa_expr_raw, 2, IQR, na.rm = TRUE),
+  Q1 = apply(fa_expr_raw, 2, quantile, p = 0.25, na.rm = TRUE),
+  median = apply(fa_expr_raw, 2, median, na.rm = TRUE),
+  Q3 = apply(fa_expr_raw, 2, quantile, p = 0.75, na.rm = TRUE),
+  max = apply(fa_expr_raw, 2, max, na.rm = TRUE),
+  null = apply(fa_expr_raw == 0, 2, sum, na.rm = TRUE)
 )
 
 kable(sample_stat_prenorm, caption = "Sample-wise statistics before normalisation.")
@@ -341,11 +324,13 @@ Il existe plusieurs façons de normaliser les données de transcriptome  vues da
 
 La méthode choisie ici consiste à :
 
-- écarter les gènes "non-détectés", c'est-à-dire ceux ayant des valeurs nulles dans au moins 90% des échantillons;
+1. **Ecarter les gènes "non-détectés"**, c'est-à-dire ceux ayant des valeurs nulles dans au moins 90% des échantillons.
 
-- écarter les gènes à peine exprimés, c'est-à-dire ceux ayant une valeur moyenne < 10 (arbitrairement);
+2. **Ecarter les gènes à peine exprimés**, c'est-à-dire ceux ayant une valeur moyenne < 10 (arbitrairement).
 
-- standardiser les échantillons sur le 3ème quartile des valeurs non-nulles: on divise par le 3ème quartile de l'échantillon et on multiplie par le 3ème quartile déterminé sur l'ensemble des échantillons.
+3. **Standardiser les échantillons **sur le 3ème quartile des gènes restants: on divise les comptages bruts par le 3ème quartile de l'échantillon et on multiplie par le 3ème quartile de l'ensemble des échantillons.
+
+4. **Normaliser les comptages** (au sens propre, c'est-à-dire rapprocher leur distribution de la distribution gaussienne) par une transformation logarithmique (log2). 
 
 Nous fournissons ci-dessous le code.
 
@@ -369,52 +354,137 @@ kept_genes <- !discarded_genes
 print(paste0("Kept genes: ", sum(kept_genes)))
 
 ## Genes after filtering
-fa_expr_log2_filtered <- fa_expr_log2[kept_genes, ]
+fa_expr_filtered <- fa_expr_raw[kept_genes, ]
+
 ```
 
-### Normalisation entre échantillons
 
-```{r sample_standardisation}
-## Generate a data frame where null values are replaced by NA
-fa_expr_nonull <- fa_expr_log2_filtered
-fa_expr_nonull[fa_expr_log2_filtered <= 0] <- NA
-sum(is.na(fa_expr_nonull))
 
-## Compute the 3rd quartile of non-null values for each sample and store them in a vector:
-sample_q3_nonull <- apply(fa_expr_nonull, 2, quantile, prob = 0.75, na.rm = TRUE)
-# print(sample_q3_nonull)
 
-## Compute the Q3 for all the values, which will serve as target value for the standardised sample Q3
-all_q3_nonull <- quantile(unlist(fa_expr_nonull), prob = 0.75, na.rm = TRUE)
-# print(all_q3_nonull)
+<!-- #### TMM via edgeR -->
 
-## Standardise expression on the third quartile of non-null values
-## Beware : for this standardization we keep the null values
-## Trick : we transpose the table to apply the ratio sample per sample, 
-## and then transpose the results to get back the genes in rows and samples in columns
-fa_expr_log2_standard <- t(t(fa_expr_log2_filtered) * all_q3_nonull / sample_q3_nonull )
-# quantile(unlist(fa_expr_log2_standard), probs = 0.75, na.rm = TRUE)
+<!-- Nous appliquons ici la normalisation sur base de la méthode TMM (Trimmed Mean of the M-values) développée par Robinson et Oshlack.  -->
 
-## We also compute the values for the "nonull" table for 
-## the sake of comparison and to check that the third quantiles of non-null 
-## values are well identical across samples.
-fa_expr_log2_standard_nonull <- t(t(fa_expr_nonull) * all_q3_nonull / sample_q3_nonull )
-# quantile(unlist(fa_expr_log2_standard_nonull), probs = 0.75, na.rm = TRUE)
+<!-- - Robinson, M.D., Oshlack, A. A scaling normalization method for differential expression analysis of RNA-seq data. Genome Biol 11, R25 (2010). <https://doi.org/10.1186/gb-2010-11-3-r25> -->
 
-## Compute Q3 before and after standardisation, including or not the null values
-standardisation_impact <- data.frame(
-  before_all = apply(fa_expr_log2_filtered, 2, quantile, prob =  0.75, na.rm = TRUE),
-  before_nonull = apply(fa_expr_nonull, 2, quantile, prob =  0.75, na.rm = TRUE),
-  after_nonul = apply(fa_expr_log2_standard_nonull, 2, quantile, prob =  0.75, na.rm = TRUE),
-  after_all = apply(fa_expr_log2_standard, 2, quantile, prob =  0.75, na.rm = TRUE)
-)
 
-## Note: after standardization the Q3 of the data show some variations 
-## because we compute them here with the null values
-kable(standardisation_impact, caption = "Impact of standardization on the third quantile (Q3) per sample. Third quantiles are computed before and after standardisation, with either all the values of the filtered table, or only the non-null values. ")
+
+<!-- ```{r tmm_standardisation} -->
+<!-- message("Standardising the counts wiht edgeR TMM method") -->
+
+<!-- ## Create an edgeR object with the transcriptome data -->
+<!-- d <- DGEList(counts = fa_expr_raw, group = fa_meta$condition) -->
+
+<!-- ## Compute the normalisinfg factors with the TMM method -->
+<!-- d <- calcNormFactors(d, method = "upperquartile") ## Compute normalizing factors -->
+<!-- # d_tmm <- calcNormFactors(d, method = "TMM") ## Compute normalizing factors -->
+<!-- # d_q3 <- calcNormFactors(d, method = "upperquartile") ## Compute normalizing factors -->
+<!-- # plot(d_tmm$samples$norm.factors, d_q3$samples$norm.factors) -->
+<!-- # cpm_q3 <- cpm(d_q3) -->
+<!-- # apply(cpm(d_q3), 2, quantile, prob = 0.75) -->
+<!-- # apply(cpm(d_tmm), 2, quantile, prob = 0.75) -->
+
+<!-- ## Store the scaling factor in the metadata -->
+<!-- fa_meta$scaling.factor <- d$samples$norm.factors -->
+
+<!-- ## Create a separate data.frame with the standardised counts -->
+<!-- fa_expr_tmm <- fa_expr_raw ## A quick way to have the same size and row names and column names -->
+<!-- for (s in 1:ncol(fa_expr_tmm)) { -->
+<!--   fa_expr_tmm[, s] <- fa_expr_raw[, s] / fa_meta$scaling.factor[s] -->
+<!-- } -->
+<!-- # range(fa_expr_tmm) -->
+<!-- # mean(unlist(fa_expr_tmm)) -->
+<!-- # q3_raw <- apply(fa_expr_raw, 2, quantile, prob = 0.75) -->
+<!-- # q3_tmm <- apply(fa_expr_tmm, 2, quantile, prob = 0.75) -->
+<!-- # plot(q3_raw, q3_tmm) -->
+<!-- # summary(fa_expr_tmm) -->
+<!-- ## Compute the log2-transformed counts after normalisation -->
+<!-- fa_expr_tmm_log2 <- log2(fa_expr_tmm + epsilon) -->
+
+<!-- boxplot(fa_expr_tmm_log2, horiz = TRUE) -->
+<!-- ``` -->
+
+
+### Standardisation entre échantillons
+
+Nous appliquons ici une méthode simple mais efficace de standardisation
+
+```{r normalisation_q3}
+#### Inter-sample standardisation on the Q3 of raw counts ####
+total_q3 <- quantile(unlist(fa_expr_filtered), probs = 0.75)
+sample_stat_prenorm$Q3_filterd <- apply(fa_expr_filtered, 2, quantile, probs = 0.75)
+sample_stat_prenorm$scale_factor <- 1 / sample_stat_prenorm$Q3_filterd * total_q3
+
+## Apply standardisation
+fa_expr_standard <- t(t(fa_expr_filtered) * unlist(sample_stat_prenorm$scale_factor))
+## Check 3rd quantile after standardisation
+kable(apply(fa_expr_standard, 2, quantile, probs = 0.75), 
+      col.names = "Q3_standardised", 
+      caption = "Third quartile of the filtered counts after inter-sample standardisation of the third quartiles. ")
+# boxplot(fa_expr_standard, horizontal = TRUE)
 ```
 
-## 3. Les données normalisées
+
+<!-- ```{r sample_standardisation} -->
+<!-- ## Generate a data frame where null values are replaced by NA -->
+<!-- fa_expr_nonull <- fa_expr_log2_filtered -->
+<!-- fa_expr_nonull[fa_expr_log2_filtered <= 0] <- NA -->
+<!-- sum(is.na(fa_expr_nonull)) -->
+
+<!-- ## Compute the 3rd quartile of non-null values for each sample and store them in a vector: -->
+<!-- sample_q3_nonull <- apply(fa_expr_nonull, 2, quantile, prob = 0.75, na.rm = TRUE) -->
+<!-- # print(sample_q3_nonull) -->
+
+<!-- ## Compute the Q3 for all the values, which will serve as target value for the standardised sample Q3 -->
+<!-- all_q3_nonull <- quantile(unlist(fa_expr_nonull), prob = 0.75, na.rm = TRUE) -->
+<!-- # print(all_q3_nonull) -->
+
+<!-- ## Standardise expression on the third quartile of non-null values -->
+<!-- ## Beware : for this standardization we keep the null values -->
+<!-- ## Trick : we transpose the table to apply the ratio sample per sample,  -->
+<!-- ## and then transpose the results to get back the genes in rows and samples in columns -->
+<!-- fa_expr_log2 <- t(t(fa_expr_log2_filtered) * all_q3_nonull / sample_q3_nonull ) -->
+<!-- # quantile(unlist(fa_expr_log2), probs = 0.75, na.rm = TRUE) -->
+
+<!-- ## We also compute the values for the "nonull" table for  -->
+<!-- ## the sake of comparison and to check that the third quantiles of non-null  -->
+<!-- ## values are well identical across samples. -->
+<!-- fa_expr_log2_nonull <- t(t(fa_expr_nonull) * all_q3_nonull / sample_q3_nonull ) -->
+<!-- # quantile(unlist(fa_expr_log2_nonull), probs = 0.75, na.rm = TRUE) -->
+
+<!-- ## Compute Q3 before and after standardisation, including or not the null values -->
+<!-- standardisation_impact <- data.frame( -->
+<!--   before_all = apply(fa_expr_log2_filtered, 2, quantile, prob =  0.75, na.rm = TRUE), -->
+<!--   before_nonull = apply(fa_expr_nonull, 2, quantile, prob =  0.75, na.rm = TRUE), -->
+<!--   after_nonul = apply(fa_expr_log2_nonull, 2, quantile, prob =  0.75, na.rm = TRUE), -->
+<!--   after_all = apply(fa_expr_log2, 2, quantile, prob =  0.75, na.rm = TRUE) -->
+<!-- ) -->
+
+<!-- ## Note: after standardization the Q3 of the data show some variations  -->
+<!-- ## because we compute them here with the null values -->
+<!-- kable(standardisation_impact, caption = "Impact of standardization on the third quantile (Q3) per sample. Third quantiles are computed before and after standardisation, with either all the values of the filtered table, or only the non-null values. ") -->
+<!-- ``` -->
+
+
+### Transformation log2
+
+Nous appliquons une transformation en log2 des données brutes, après avoir ajouté un epsilon $\epsilon = 1$ (les valeurs nulles seront donc représentées par un log2(counts) valant $0$. Nous stockons le résultat dans un data.frame nommé `fa_expr_log2`.
+
+Nous affichons un fragment des tableaux `fa_expr_raw` et `fa_expr_log2` en sélectionnant les lignes 100 à 109 et les colonnes 5 à 10, afin de nous assurer que la transformation en log2 a bien fonctionné. 
+
+```{r log2_transform}
+## Log2 transformation of the transcriptome data
+epsilon <- 1
+fa_expr_log2 <- log2(fa_expr_standard + epsilon)
+# dim(fa_expr_log2)
+# View(head(fa_expr_log2))
+
+## Display of a fragment of the data before and after log2 transformation
+kable(fa_expr_raw[100:109, 5:10], caption = "Fragment des données transcriptomiques brutes")
+kable(fa_expr_log2[100:109, 5:10], caption = "Fragment des données transcriptomiques après transformation log2")
+```
+
+## 3. Statistiques descriptives sur les données normalisées
 
 ***A vous de jouer!***
 
@@ -435,16 +505,16 @@ Générez un data.frame avec une ligne par gène à partir du tableau de donnée
 ## Gene-wise statistics after normalisation
 message("Computing gene-wise statistics on log2-transformed and normalised counts")
 gene_stat_norm <- data.frame(
-  mean = apply(fa_expr_log2_standard, 1, mean, na.rm = F),
-  var = apply(fa_expr_log2_standard, 1, var, na.rm = TRUE),
-  sd = apply(fa_expr_log2_standard, 1, sd, na.rm = F),
+  mean = apply(fa_expr_log2, 1, mean, na.rm = F),
+  var = apply(fa_expr_log2, 1, var, na.rm = TRUE),
+  sd = apply(fa_expr_log2, 1, sd, na.rm = F),
   CV = NA,
-  min = apply(fa_expr_log2_standard, 1, min, na.rm = TRUE),
-  Q1 = apply(fa_expr_log2_standard, 1, quantile, p = 0.25, na.rm = TRUE),
-  median = apply(fa_expr_log2_standard, 1, median, na.rm = TRUE),
-  Q3 = apply(fa_expr_log2_standard, 1, quantile, p = 0.75, na.rm = TRUE),
-  max = apply(fa_expr_log2_standard, 1, max, na.rm = TRUE),
-  null = apply(fa_expr_log2_standard == 0, 1, sum, na.rm = TRUE)
+  min = apply(fa_expr_log2, 1, min, na.rm = TRUE),
+  Q1 = apply(fa_expr_log2, 1, quantile, p = 0.25, na.rm = TRUE),
+  median = apply(fa_expr_log2, 1, median, na.rm = TRUE),
+  Q3 = apply(fa_expr_log2, 1, quantile, p = 0.75, na.rm = TRUE),
+  max = apply(fa_expr_log2, 1, max, na.rm = TRUE),
+  null = apply(fa_expr_log2 == 0, 1, sum, na.rm = TRUE)
   )
 gene_stat_norm$CV <- gene_stat_norm$sd / gene_stat_norm$mean
 ```
@@ -491,7 +561,7 @@ kable(gene_stat_norm[100:109, ], caption = "Gene-wise statistics after normalisa
 
 **Challenge falcultatif:**
 
-Enfin, réordonnez les gènes par position génomique et affichez les lignes 5 premières et  5 dernières lignes de ce tableau de statistiques. 
+Réordonnez les gènes par position génomique et affichez les lignes 5 premières et  5 dernières lignes de ce tableau de statistiques. 
 
 ```{r display fragment of gene-wise stats after norm}
 
@@ -507,14 +577,14 @@ kable(gene_stat_norm[c(1:5, (nrow(gene_stat_norm) - 4):nrow(gene_stat_norm)), ],
 - Dessinez sous forme d'un histogramme la distribution des valeurs après normalisation (tous échantillons confondus)
 
 ```{r fa_expr_norm_distrib, fig.width=8, fig.height=5, out.width="70%", fig.cap="Distribution of expression values (log2 counts) after gene filtering and standardisation on the sample-wise third-quartile of non-null values. The vertical line highlights the mean value. "}
-hist(unlist(fa_expr_log2_standard), 
-     breaks = seq(from = 0, to = max(fa_expr_log2_standard) + 1, by = 0.25),
+hist(unlist(fa_expr_log2), 
+     breaks = seq(from = 0, to = max(fa_expr_log2) + 1, by = 0.25),
      xlab = "log2(counts) after standardisation", 
      ylab = "number of genes after filtering",
      col = "#BBDDFF",
      las = 1, cex.axis = 0.8,
      main = "distribution after standardisation")
-abline(v = mean(fa_expr_log2_standard), col = "darkgreen", lwd = 2)
+abline(v = mean(fa_expr_log2), col = "darkgreen", lwd = 2)
 ```
 
 - Dessinez un box plot par échantillon avant et après normalisation, et commentez la façon dont l'effet de la normalisation apparaît sur ces graphiques. 
@@ -523,30 +593,30 @@ abline(v = mean(fa_expr_log2_standard), col = "darkgreen", lwd = 2)
 #### Box plots to show normalisation impact ####
 par(mar = c(4,6,4,1)) ## Set the margins
 par(mfrow = c(2,2))
-boxplot(fa_expr_log2_filtered, 
+boxplot(fa_expr_raw, 
         horizontal = TRUE,
-        xlab = "log2(counts)", 
+        xlab = "counts", 
         las = 1, 
         col = fa_meta$color, 
-        main = "Before standardisation\nall values")
-boxplot(fa_expr_nonull, 
+        main = "Raw counts, all genes")
+boxplot(fa_expr_filtered, 
         horizontal = TRUE, 
-        xlab = "log2(counts)", 
+        xlab = "counts", 
         las = 1, 
         col = fa_meta$color, 
-        main = "Before standardisation\nzeros discarded")
-boxplot(fa_expr_log2_standard_nonull, 
+        main = "Raw counts, filtered genes")
+boxplot(fa_expr_standard, 
         horizontal = TRUE, 
-        xlab = "log2(counts)", 
+        xlab = "counts", 
         las = 1, 
         col = fa_meta$color, 
-        main = "Standardised\nzeros discarded")
-boxplot(fa_expr_log2_standard, 
+        main = "Standardised counts (sample Q3)")
+boxplot(fa_expr_log2, 
         xlab = "log2(counts)", 
         las = 1, 
         horizontal = TRUE, 
         col = fa_meta$color, 
-        main = "Standardised\nall values")
+        main = "Normalised counts")
 par(mfrow = c(1, 1))
 par(mar = c(4,5,5,1))
 ```
@@ -584,7 +654,7 @@ selected_genes <- high_variance & high_expression
 print(paste0("Selected genes: ", sum(selected_genes)))
 
 ## Create a data frame with the expression of the selected genes
-fa_expr_selected <- fa_expr_log2_standard[selected_genes, ]
+fa_expr_selected <- fa_expr_log2[selected_genes, ]
 ```
 
 Dessinez des histogrammes des valeurs d'expression avant et après cette sélection de gènes, et commentez les différences. 
@@ -593,15 +663,15 @@ Dessinez des histogrammes des valeurs d'expression avant et après cette sélect
 #### Histograms of expression before and after gene selection ####
 
 par(mfrow = c(2,1))
-hist(unlist(fa_expr_log2_standard), 
-     breaks = seq(from = 0, to = max(fa_expr_log2_standard) + 1, by = 0.25),
+hist(unlist(fa_expr_log2), 
+     breaks = seq(from = 0, to = max(fa_expr_log2) + 1, by = 0.25),
      las = 1, 
      cex.axis = 0.8, 
      main = "Standardized values before gene selection",
      col =  "#DDBBFF")
 
 hist(unlist(fa_expr_selected), 
-     breaks = seq(from = 0, to = max(fa_expr_log2_standard) + 1, by = 0.25),
+     breaks = seq(from = 0, to = max(fa_expr_log2) + 1, by = 0.25),
      las = 1, 
      cex.axis = 0.8, 
      main = "Standardized values after gene selection",
@@ -624,18 +694,18 @@ Dessinez un box plot par échantillon des valeurs d'expression avant et après s
 
 par(mfrow = c(1,2))
 
-boxplot(fa_expr_log2_standard, 
+boxplot(fa_expr_log2, 
         horizontal = TRUE,
         xlab = "log2(counts)", 
         las = 1, 
         col = fa_meta$color, 
-        main = "Before gene selection\nstandardised values")
+        main = "Before gene selection")
 boxplot(fa_expr_selected, 
         horizontal = TRUE,
         xlab = "log2(counts)", 
         las = 1, 
         col = fa_meta$color, 
-        main = "After gene selection\nstandardised values")
+        main = "After gene selection")
 
 par(mfrow = c(1,1))
 ```
@@ -668,10 +738,10 @@ fviz_pca_ind(ma_pca_raw_tt, col.ind = fa_meta[,"condition"])
 <!-- ``` -->
 
 
-- avec la matrice de valeurs filtrées et après transformation log2
+- avec la matrice de valeurs normalisées des gènes filtrés
 
-```{r acp_norm_filtered_genes, fig.width=8, fig.height=8, out.width="60%", fig.cap="PC plot of the samples from standardised values before gene selection. "}
-ma_pca_filtered <- PCA(t(fa_expr_log2_filtered), scale.unit = FALSE,
+```{r acp_norm_filtered_genes, fig.width=8, fig.height=8, out.width="60%", fig.cap="PC plot of the samples from normalised counts, before gene selection. "}
+ma_pca_filtered <- PCA(t(fa_expr_log2), scale.unit = FALSE,
                   graph = FALSE)
 # plot(ma_pca_filtered, choix = "var")
 # plot(ma_pca_sel, choix = "ind")
@@ -680,7 +750,7 @@ fviz_pca_ind(ma_pca_filtered, col.ind = fa_meta[, "condition"])
 
 - avec la matrice finale (transformation log2, filtre des gènes non-détectés, standardisation et sélection des gènes fortement exprimés et à haut coefficient de variation)
 
-```{r acp_norm_selected_genes, fig.width=8, fig.height=8, out.width="60%", fig.cap="PC plot of the samples from standardised values after gene selection. "}
+```{r acp_norm_selected_genes, fig.width=8, fig.height=8, out.width="60%", fig.cap="PC plot of the samples from normalised values, after gene selection. "}
 ma_pca_sel <- PCA(t(fa_expr_selected), scale.unit = FALSE,
                   graph = FALSE)
 # plot(ma_pca_sel, choix = "var")
@@ -716,24 +786,33 @@ par(mfrow = c(1,1))
 
 - Effectuez un clustering hiérarchique des gènes en utilisant la distance basée sur le coefficient de Pearson et le critère de Ward
 
-```{r gene_clustering}
+```{r gene_tree}
+#### Gene tree with Pearson correlation ####
+
+## Compute Pearson correlation between genes
 cor_pearson_gene <- as.dist(1 - cor(t(fa_expr_selected)))
-plot(hclust(cor_pearson_gene), hang = -1,
-     main = "gènes")
+
+## Build a gene tree
+gene_tree_pearson <- hclust(cor_pearson_gene)
+
+## Plot the gene tree
+plot(gene_tree_pearson, hang = -1, las = 1, 
+     main = "Gene tree", labels = FALSE)
 ```
 
 - Dessinez un arbre avec le résultat du clustering des gènes et commentez sa strcuture. Si vous deviez choisir de façon arbitraire un nombre de clusters, que choisiriez-vous ? Pourquoi ? Pas de panique, nous pouvons assumer ici que la réponse comporte une part de subjectivité. 
 
-```{r gene_tree}
-plot(hclust(cor_pearson_gene), hang = -1,
-     main = "gènes")
-rect.hclust(hclust(cor_pearson_gene), k = 7)
+```{r gene_tree_with_boxes}
+#### Plot the gene tree with boxes to denote the clusters ####
+plot(gene_tree_pearson, hang = -1,
+     main = "Gene tree with 7 clusters", labels = FALSE)
+rect.hclust(gene_tree_pearson, k = 7)
 ```
 
 - Dessinez une heatmap du résultat, en sélectionnant les deux résultats de clustering ci-dessus pour les gènes et les échantillons. 
 
 ```{r biclustering}
-pheatmap(t(fa_expr_selected),
+pheatmap(t(fa_expr_selected), labels_col = "",
          clustering_distance_cols = "correlation", clustering_distance_rows = "correlation")
 ```
 
