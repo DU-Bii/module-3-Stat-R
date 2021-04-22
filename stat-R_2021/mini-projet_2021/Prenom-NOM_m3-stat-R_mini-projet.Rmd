@@ -71,7 +71,6 @@ kable(as.data.frame(c(required_cranLib, required_biocLib)),
       caption = "Loaded required libraries"
     )
 
-sessionInfo()
 ```
 
 ## Synopsis du projet
@@ -532,7 +531,7 @@ Suivez pas à pas la méthode proposée (***certaines étapes peuvent prendre qu
  
 A présent, ajoutez au dataframe `gene_stat_norm` en 1ères colonnes les annotations retrouvées grâce à biomaRt. Attention, certains gènes ne sont pas retrouvés dans la version d'ENSEMBL sur biomaRt donc laissez des NA comme données manquantes dans ce cas. Nous vous recommandons d'utiliser la function `merge()` de R base ou bien `left_join()` de `dplyr` pour fusionner les deux dataframes en un seul.
  
-```{r gene_annotations}
+```{r gene_annotations, eval=FALSE}
 ### Gene annotations ####
 
 ## Open a connection to Ensembl MART
@@ -563,7 +562,7 @@ kable(gene_stat_norm[100:109, ], caption = "Gene-wise statistics after normalisa
 
 Réordonnez les gènes par position génomique et affichez les lignes 5 premières et  5 dernières lignes de ce tableau de statistiques. 
 
-```{r display fragment of gene-wise stats after norm}
+```{r sort_genes_by_chrom, eval=FALSE}
 
 gene_stat_norm <- gene_stat_norm[order(gene_stat_norm$chromosome_name, gene_stat_norm$start_position),]
 
@@ -816,7 +815,7 @@ rect.hclust(gene_tree_pearson, k = 7)
 #### Heatmap ####
 pheatmap(t(fa_expr_selected), 
          main = paste0("Biclustering; ", "Pearson correlation; ", clustering_method, " clustering"),
-         labels_col = "", 
+         labels_col = "", scale = "none",
          clustering_method = clustering_method, 
          clustering_distance_cols = "correlation", 
          clustering_distance_rows = "correlation")
@@ -827,7 +826,7 @@ pheatmap(t(fa_expr_selected),
 ```{r biclustering}
 pheatmap(t(fa_expr_selected), 
          main = paste0("Gene clustering; ", "Pearson correlation; ", clustering_method, " clustering"),
-         labels_col = "", 
+         labels_col = "", scale = "none",
          clustering_method = clustering_method, 
          clustering_distance_cols = "correlation", 
          cluster_rows = FALSE)
@@ -847,12 +846,18 @@ Effectuez une analyse d'enrichissement fonctionnel avec les principaux clusters 
 #### Run enrichment analysis with gost() ####
 message("Running enrichment analysis with gost")
 
-gene_list <- unlist(subset(x = gene_stat_norm, 
-                    subset = selected_genes,
-                    select = external_gene_name))
-# length(gene_list)
+## Get the list of IDs for the selected genes ##
+gene_ids <- rownames(gene_stat_norm)[selected_genes]
 
-gostres <- gost(query = gene_list, 
+## Get the list of gene names for the selected genes ##
+# gene_names <- unlist(subset(x = gene_stat_norm, 
+#                     subset = selected_genes,
+#                     select = external_gene_name))
+# length(gene_names)
+
+##
+
+gostres <- gost(query = gene_ids, 
                 organism = "mmusculus", 
                 ordered_query = FALSE, 
                 multi_query = FALSE, 
@@ -897,4 +902,12 @@ names(gostres$meta)
 Résumez en quelques phrases vos conclusions à partir des résultats obtenus. 
 
 
+## Session info
+
+
+```{r session_info}
+#### Session info ####
+sessionInfo()
+
+```
 
