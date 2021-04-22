@@ -815,7 +815,7 @@ rect.hclust(gene_tree_pearson, k = 7)
 #### Heatmap ####
 pheatmap(t(fa_expr_selected), 
          main = paste0("Biclustering; ", "Pearson correlation; ", clustering_method, " clustering"),
-         labels_col = "", scale = "none",
+         show_colnames = FALSE, scale = "none",
          clustering_method = clustering_method, 
          clustering_distance_cols = "correlation", 
          clustering_distance_rows = "correlation")
@@ -826,7 +826,7 @@ pheatmap(t(fa_expr_selected),
 ```{r biclustering}
 pheatmap(t(fa_expr_selected), 
          main = paste0("Gene clustering; ", "Pearson correlation; ", clustering_method, " clustering"),
-         labels_col = "", scale = "none",
+         show_colnames = FALSE, scale = "none",
          clustering_method = clustering_method, 
          clustering_distance_cols = "correlation", 
          cluster_rows = FALSE)
