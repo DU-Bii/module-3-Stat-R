@@ -83,7 +83,7 @@ Nous fournissons ci-dessous une trame avec les principales sections attendues. C
 
 ### Remise du rapport
 
-Date: **le 17 mai 2021 minuit**.  Si vous anticipez un problème pour remettre le rapport à cette date contactez-nous aussi rapidement que possible pour que nous puissions prévoir une remise plus tardive. 
+Date: **le 22 mai 2021 à minuit**.  Si vous anticipez un problème pour remettre le rapport à cette date contactez-nous aussi rapidement que possible pour que nous puissions prévoir une remise plus tardive. 
 
 - Commencez par renommer le fichier .Rmd en remplaçant Prenom-NOM par vos nom et prénom. 
 - Le rapport est attendu en formats .Rmd + .HTML (en gardant l'option self_contained de l'en-tête activée). 
@@ -359,51 +359,6 @@ fa_expr_filtered <- fa_expr_raw[kept_genes, ]
 
 
 
-
-<!-- #### TMM via edgeR -->
-
-<!-- Nous appliquons ici la normalisation sur base de la méthode TMM (Trimmed Mean of the M-values) développée par Robinson et Oshlack.  -->
-
-<!-- - Robinson, M.D., Oshlack, A. A scaling normalization method for differential expression analysis of RNA-seq data. Genome Biol 11, R25 (2010). <https://doi.org/10.1186/gb-2010-11-3-r25> -->
-
-
-
-<!-- ```{r tmm_standardisation} -->
-<!-- message("Standardising the counts wiht edgeR TMM method") -->
-
-<!-- ## Create an edgeR object with the transcriptome data -->
-<!-- d <- DGEList(counts = fa_expr_raw, group = fa_meta$condition) -->
-
-<!-- ## Compute the normalisinfg factors with the TMM method -->
-<!-- d <- calcNormFactors(d, method = "upperquartile") ## Compute normalizing factors -->
-<!-- # d_tmm <- calcNormFactors(d, method = "TMM") ## Compute normalizing factors -->
-<!-- # d_q3 <- calcNormFactors(d, method = "upperquartile") ## Compute normalizing factors -->
-<!-- # plot(d_tmm$samples$norm.factors, d_q3$samples$norm.factors) -->
-<!-- # cpm_q3 <- cpm(d_q3) -->
-<!-- # apply(cpm(d_q3), 2, quantile, prob = 0.75) -->
-<!-- # apply(cpm(d_tmm), 2, quantile, prob = 0.75) -->
-
-<!-- ## Store the scaling factor in the metadata -->
-<!-- fa_meta$scaling.factor <- d$samples$norm.factors -->
-
-<!-- ## Create a separate data.frame with the standardised counts -->
-<!-- fa_expr_tmm <- fa_expr_raw ## A quick way to have the same size and row names and column names -->
-<!-- for (s in 1:ncol(fa_expr_tmm)) { -->
-<!--   fa_expr_tmm[, s] <- fa_expr_raw[, s] / fa_meta$scaling.factor[s] -->
-<!-- } -->
-<!-- # range(fa_expr_tmm) -->
-<!-- # mean(unlist(fa_expr_tmm)) -->
-<!-- # q3_raw <- apply(fa_expr_raw, 2, quantile, prob = 0.75) -->
-<!-- # q3_tmm <- apply(fa_expr_tmm, 2, quantile, prob = 0.75) -->
-<!-- # plot(q3_raw, q3_tmm) -->
-<!-- # summary(fa_expr_tmm) -->
-<!-- ## Compute the log2-transformed counts after normalisation -->
-<!-- fa_expr_tmm_log2 <- log2(fa_expr_tmm + epsilon) -->
-
-<!-- boxplot(fa_expr_tmm_log2, horiz = TRUE) -->
-<!-- ``` -->
-
-
 ### Standardisation entre échantillons
 
 Nous appliquons ici une méthode simple mais efficace de standardisation
@@ -424,45 +379,6 @@ kable(apply(fa_expr_standard, 2, quantile, probs = 0.75),
 ```
 
 
-<!-- ```{r sample_standardisation} -->
-<!-- ## Generate a data frame where null values are replaced by NA -->
-<!-- fa_expr_nonull <- fa_expr_log2_filtered -->
-<!-- fa_expr_nonull[fa_expr_log2_filtered <= 0] <- NA -->
-<!-- sum(is.na(fa_expr_nonull)) -->
-
-<!-- ## Compute the 3rd quartile of non-null values for each sample and store them in a vector: -->
-<!-- sample_q3_nonull <- apply(fa_expr_nonull, 2, quantile, prob = 0.75, na.rm = TRUE) -->
-<!-- # print(sample_q3_nonull) -->
-
-<!-- ## Compute the Q3 for all the values, which will serve as target value for the standardised sample Q3 -->
-<!-- all_q3_nonull <- quantile(unlist(fa_expr_nonull), prob = 0.75, na.rm = TRUE) -->
-<!-- # print(all_q3_nonull) -->
-
-<!-- ## Standardise expression on the third quartile of non-null values -->
-<!-- ## Beware : for this standardization we keep the null values -->
-<!-- ## Trick : we transpose the table to apply the ratio sample per sample,  -->
-<!-- ## and then transpose the results to get back the genes in rows and samples in columns -->
-<!-- fa_expr_log2 <- t(t(fa_expr_log2_filtered) * all_q3_nonull / sample_q3_nonull ) -->
-<!-- # quantile(unlist(fa_expr_log2), probs = 0.75, na.rm = TRUE) -->
-
-<!-- ## We also compute the values for the "nonull" table for  -->
-<!-- ## the sake of comparison and to check that the third quantiles of non-null  -->
-<!-- ## values are well identical across samples. -->
-<!-- fa_expr_log2_nonull <- t(t(fa_expr_nonull) * all_q3_nonull / sample_q3_nonull ) -->
-<!-- # quantile(unlist(fa_expr_log2_nonull), probs = 0.75, na.rm = TRUE) -->
-
-<!-- ## Compute Q3 before and after standardisation, including or not the null values -->
-<!-- standardisation_impact <- data.frame( -->
-<!--   before_all = apply(fa_expr_log2_filtered, 2, quantile, prob =  0.75, na.rm = TRUE), -->
-<!--   before_nonull = apply(fa_expr_nonull, 2, quantile, prob =  0.75, na.rm = TRUE), -->
-<!--   after_nonul = apply(fa_expr_log2_nonull, 2, quantile, prob =  0.75, na.rm = TRUE), -->
-<!--   after_all = apply(fa_expr_log2, 2, quantile, prob =  0.75, na.rm = TRUE) -->
-<!-- ) -->
-
-<!-- ## Note: after standardization the Q3 of the data show some variations  -->
-<!-- ## because we compute them here with the null values -->
-<!-- kable(standardisation_impact, caption = "Impact of standardization on the third quantile (Q3) per sample. Third quantiles are computed before and after standardisation, with either all the values of the filtered table, or only the non-null values. ") -->
-<!-- ``` -->
 
 
 ### Transformation log2
@@ -489,7 +405,7 @@ kable(fa_expr_log2[100:109, 5:10], caption = "Fragment des données transcriptom
 
 ### Statistiques par gène après normalisation
 
-Générez un data.frame avec une ligne par gène à partir du tableau de données normalisées, avec les statistiques suivantes (une statistique par colonne):
+Générez un data.frame nommée `gene_stat_norm` avec une ligne par gène à partir du tableau de données normalisées, avec les statistiques suivantes (une statistique par colonne):
 
 - moyenne
 - variance
@@ -503,19 +419,7 @@ Générez un data.frame avec une ligne par gène à partir du tableau de donnée
 ```{r gene_stat_post_norm}
 ## Gene-wise statistics after normalisation
 message("Computing gene-wise statistics on log2-transformed and normalised counts")
-gene_stat_norm <- data.frame(
-  mean = apply(fa_expr_log2, 1, mean, na.rm = F),
-  var = apply(fa_expr_log2, 1, var, na.rm = TRUE),
-  sd = apply(fa_expr_log2, 1, sd, na.rm = F),
-  CV = NA,
-  min = apply(fa_expr_log2, 1, min, na.rm = TRUE),
-  Q1 = apply(fa_expr_log2, 1, quantile, p = 0.25, na.rm = TRUE),
-  median = apply(fa_expr_log2, 1, median, na.rm = TRUE),
-  Q3 = apply(fa_expr_log2, 1, quantile, p = 0.75, na.rm = TRUE),
-  max = apply(fa_expr_log2, 1, max, na.rm = TRUE),
-  null = apply(fa_expr_log2 == 0, 1, sum, na.rm = TRUE)
-  )
-gene_stat_norm$CV <- gene_stat_norm$sd / gene_stat_norm$mean
+
 ```
 
 ### Annotation des gènes
@@ -531,43 +435,22 @@ Suivez pas à pas la méthode proposée (***certaines étapes peuvent prendre qu
  
 A présent, ajoutez au dataframe `gene_stat_norm` en 1ères colonnes les annotations retrouvées grâce à biomaRt. Attention, certains gènes ne sont pas retrouvés dans la version d'ENSEMBL sur biomaRt donc laissez des NA comme données manquantes dans ce cas. Nous vous recommandons d'utiliser la function `merge()` de R base ou bien `left_join()` de `dplyr` pour fusionner les deux dataframes en un seul.
  
-```{r gene_annotations, eval=FALSE}
+```{r gene_annotations}
 ### Gene annotations ####
-
-## Open a connection to Ensembl MART
-message("Opening connection to Ensembl MART")
-ensembl <- useMart("ENSEMBL_MART_ENSEMBL", 
-                   host = "www.ensembl.org", 
-                   dataset = "mmusculus_gene_ensembl")
-
-## Get gene annotations
 message("Getting gene annotations")
-genes <- getBM(attributes = c("ensembl_gene_id", 
-                              "external_gene_name", 
-                              "chromosome_name",
-                              "start_position", 
-                              "end_position", 
-                              "strand"), 
-               filter = "ensembl_gene_id",
-               values = row.names(gene_stat_norm),
-               mart = ensembl)
-  
-## Merge gene annotations and expression statistics
-gene_stat_norm <- merge(genes, gene_stat_norm, by.x = "ensembl_gene_id", by.y = 0, sort = FALSE)
 
-kable(gene_stat_norm[100:109, ], caption = "Gene-wise statistics after normalisation")
+
+
 ```
 
 **Challenge falcultatif:**
 
 Réordonnez les gènes par position génomique et affichez les lignes 5 premières et  5 dernières lignes de ce tableau de statistiques. 
 
-```{r sort_genes_by_chrom, eval=FALSE}
+```{r sort_genes_by_chrom}
+#### Sorting genes by chromosome ####
+message("Sorting genes by chromosome")
 
-gene_stat_norm <- gene_stat_norm[order(gene_stat_norm$chromosome_name, gene_stat_norm$start_position),]
-
-kable(gene_stat_norm[c(1:5, (nrow(gene_stat_norm) - 4):nrow(gene_stat_norm)), ], 
-      caption = "Gene-wise statistics after normalisation.")
 ```
 
 
@@ -575,49 +458,17 @@ kable(gene_stat_norm[c(1:5, (nrow(gene_stat_norm) - 4):nrow(gene_stat_norm)), ],
 
 - Dessinez sous forme d'un histogramme la distribution des valeurs après normalisation (tous échantillons confondus)
 
-```{r fa_expr_norm_distrib, fig.width=8, fig.height=5, out.width="70%", fig.cap="Distribution of expression values (log2 counts) after gene filtering and standardisation on the sample-wise third-quartile of non-null values. The vertical line highlights the mean value. "}
-hist(unlist(fa_expr_log2), 
-     breaks = seq(from = 0, to = max(fa_expr_log2) + 1, by = 0.25),
-     xlab = "log2(counts) after standardisation", 
-     ylab = "number of genes after filtering",
-     col = "#BBDDFF",
-     las = 1, cex.axis = 0.8,
-     main = "distribution after standardisation")
-abline(v = mean(fa_expr_log2), col = "darkgreen", lwd = 2)
+```{r fa_expr_norm_distrib, fig.width=8, fig.height=5, out.width="70%", fig.cap="... don't forget the figure legend ..."}
+
+
 ```
 
 - Dessinez un box plot par échantillon avant et après normalisation, et commentez la façon dont l'effet de la normalisation apparaît sur ces graphiques. 
 
-```{r boxplots_standardisation_impact, fig.width=10, fig.height=12, out.width="100%", fig.cap="Box plots showing the impact of normalisation"}
+```{r boxplots_normalisation_impact, fig.width=10, fig.height=12, out.width="100%", fig.cap="... don't forget the figure legend ..."}
 #### Box plots to show normalisation impact ####
-par(mar = c(4,6,4,1)) ## Set the margins
-par(mfrow = c(2,2))
-boxplot(fa_expr_raw, 
-        horizontal = TRUE,
-        xlab = "counts", 
-        las = 1, 
-        col = fa_meta$color, 
-        main = "Raw counts, all genes")
-boxplot(fa_expr_filtered, 
-        horizontal = TRUE, 
-        xlab = "counts", 
-        las = 1, 
-        col = fa_meta$color, 
-        main = "Raw counts, filtered genes")
-boxplot(fa_expr_standard, 
-        horizontal = TRUE, 
-        xlab = "counts", 
-        las = 1, 
-        col = fa_meta$color, 
-        main = "Standardised counts (sample Q3)")
-boxplot(fa_expr_log2, 
-        xlab = "log2(counts)", 
-        las = 1, 
-        horizontal = TRUE, 
-        col = fa_meta$color, 
-        main = "Normalised counts")
-par(mfrow = c(1, 1))
-par(mar = c(4,5,5,1))
+
+
 ```
 
 ## 4. Analyse de regroupement des données
@@ -628,85 +479,29 @@ par(mar = c(4,5,5,1))
 
 Pour réduire le nombre de gènes, nous allons écarter les gènes faiblement exprimés (log2 moyen inférieur à 4), et ne retenir que ceux qui montrent des variations importantes entre échantillons. Pour ce dernier critère, nous nous basons sur la variance. 
 
-<!-- Sélectionnez les gènes ayant un niveau log2 moyen minimal supérieur à 3 ($m > 3$) et un coefficient de variation supérieur à 0.5 ($CV > 0.5$). Note: ces valeurs sont parfaitement arbitraires, elles ont été choisies pour obtenir un nombre raisonnable de gènes.  -->
-
 Sélectionnez les gènes ayant un niveau log2 moyen minimal supérieur à 5 ($m > 5$) et une variance supérieure à 2 ($s^2 > 2$). Note: ces valeurs sont parfaitement arbitraires, elles ont été choisies pour obtenir un nombre raisonnable de gènes. 
 
 ```{r gene_selection}
-## Compute a Boolean vector indicating whether each gene passes or not the expression level threshold
-high_expression <- gene_stat_norm$mean > 5
-# table(high_expression) # count number of genes with high/weak expression
+#### Selection of a subset of genes with igh expression and variance ####
+message("Selecting genes with high expression and variance")
 
-## Compute a Boolean vector indicating whether each gene passes or not the variation coefficient threshold
-high_variation <- gene_stat_norm$CV > 0.5
-# table(high_variation) # count number of genes with weak high coeffficient of variation
 
-## Compute a Boolean vector indicating whether each gene passes or not the variance threshold
-high_variance <- gene_stat_norm$var > 2
-# table(high_variance) # count number of genes with weak high variance
-
-# ## Select genes having both a high mean expression and a high variation coefficien
-# selected_genes <- high_variation & high_expression
-## Select genes having both a high mean expression and a high variance
-selected_genes <- high_variance & high_expression
-# table(selected_genes) # count number of genes with weak high coeffficient of variation
-print(paste0("Selected genes: ", sum(selected_genes)))
-
-## Create a data frame with the expression of the selected genes
-fa_expr_selected <- fa_expr_log2[selected_genes, ]
 ```
 
 Dessinez des histogrammes des valeurs d'expression avant et après cette sélection de gènes, et commentez les différences. 
 
-```{r hist_expr_selected_genes, fig.width=8, fig.height=6, out.width="100%", fig.cap="Distribution of expression values before and after gene selection"}
+```{r hist_expr_selected_genes, fig.width=8, fig.height=6, out.width="100%", fig.cap="... don't forget your legend ..."}
 #### Histograms of expression before and after gene selection ####
 
-par(mfrow = c(2,1))
-hist(unlist(fa_expr_log2), 
-     breaks = seq(from = 0, to = max(fa_expr_log2) + 1, by = 0.25),
-     las = 1, 
-     cex.axis = 0.8, 
-     main = "Standardized values before gene selection",
-     col =  "#DDBBFF")
 
-hist(unlist(fa_expr_selected), 
-     breaks = seq(from = 0, to = max(fa_expr_log2) + 1, by = 0.25),
-     las = 1, 
-     cex.axis = 0.8, 
-     main = "Standardized values after gene selection",
-     col =  "#FFDDBB")
-
-par(mfrow = c(1,1))
-
-
-# ## Some quick checks: the selection of highly variable genes select those having many zeros - and high values in other samples
-# hist(unlist(fa_expr_log2_filtered[high_expression, ]), breaks=100)
-# hist(unlist(fa_expr_log2_filtered[high_variation, ]), breaks=100)
-# hist(unlist(fa_expr_log2_filtered[!high_variation, ]), breaks=100)
-# hist(unlist(fa_expr_log2_filtered[selected_genes, ]), breaks=100)
 ```
 
 Dessinez un box plot par échantillon des valeurs d'expression avant et après sélection des gènes, et commentez le résultat. 
 
-```{r boxplots_expr_selected_genes, fig.width=10, fig.height=5, out.width="60%", fig.cap="Box plots of standardised expression values before and after gene selection. "}
-#### Histogram of expression after gene selection ####
+```{r boxplots_expr_selected_genes, fig.width=10, fig.height=5, out.width="60%", fig.cap="... don't forget the figure legend ..."}
+#### Boxplots of expression before and after gene selection ####
 
-par(mfrow = c(1,2))
 
-boxplot(fa_expr_log2, 
-        horizontal = TRUE,
-        xlab = "log2(counts)", 
-        las = 1, 
-        col = fa_meta$color, 
-        main = "Before gene selection")
-boxplot(fa_expr_selected, 
-        horizontal = TRUE,
-        xlab = "log2(counts)", 
-        las = 1, 
-        col = fa_meta$color, 
-        main = "After gene selection")
-
-par(mfrow = c(1,1))
 ```
 
 
@@ -716,45 +511,33 @@ Dessinez un plot ACP des échantillons en les colorant par condition avant et ap
 
 - avec les comptages bruts de la matrice d'expression initiale ($fa_expr$)
 
-```{r acp_raw_all_genes, fig.width=8, fig.height=8, out.width="60%", fig.cap="PC plot of the samples from the raw expression values of all genes. "}
-## Raw expression values, all genes
-ma_pca_raw_tt <- PCA(t(fa_expr_raw), 
-                      scale.unit = FALSE, 
-                      graph = FALSE)
-# plot(ma_pca_raw_tt, choix = "ind")
-fviz_pca_ind(ma_pca_raw_tt, col.ind = fa_meta[,"condition"])
+```{r acp_raw_all_genes, fig.width=8, fig.height=8, out.width="60%", fig.cap="... don't forget the figure legend ..."}
+#### PCA from raw counts, all genes ####
+message("Running PCA with raw counts, all genes")
+
+
+
 ```
-
-<!-- - avec les comptages bruts, mais en restreignant l'analyse aux gènes sélectionnés ($fa_expr_raw[selected_genes,]$) -->
-
-
-<!-- ```{r acp_raw_selected_genes, fig.width=8, fig.height=8, out.width="60%", fig.cap="PC plot of the samples from the raw expression values of selected genes. "} -->
-<!-- ## Raw values with only the selected genes -->
-<!-- ma_pca_raw_sel <- PCA(t(fa_expr_raw[selected_genes,]),  -->
-<!--                       scale.unit = FALSE,  -->
-<!--                       graph = FALSE) -->
-<!-- fviz_pca_ind(ma_pca_raw_sel, col.ind = fa_meta[, "color"]) -->
-<!-- ``` -->
 
 
 - avec la matrice de valeurs normalisées des gènes filtrés
 
-```{r acp_norm_filtered_genes, fig.width=8, fig.height=8, out.width="60%", fig.cap="PC plot of the samples from normalised counts, before gene selection. "}
-ma_pca_filtered <- PCA(t(fa_expr_log2), scale.unit = FALSE,
-                  graph = FALSE)
-# plot(ma_pca_filtered, choix = "var")
-# plot(ma_pca_sel, choix = "ind")
-fviz_pca_ind(ma_pca_filtered, col.ind = fa_meta[, "condition"])
+```{r acp_norm_filtered_genes, fig.width=8, fig.height=8, out.width="60%", fig.cap="... don't forget the figure legend ..."}
+#### PCA from normalised counts, all genes ####
+message("Running PCA with normalised counts, all genes")
+
+
+
 ```
 
 - avec la matrice finale (transformation log2, filtre des gènes non-détectés, standardisation et sélection des gènes fortement exprimés et à haut coefficient de variation)
 
-```{r acp_norm_selected_genes, fig.width=8, fig.height=8, out.width="60%", fig.cap="PC plot of the samples from normalised values, after gene selection. "}
-ma_pca_sel <- PCA(t(fa_expr_selected), scale.unit = FALSE,
-                  graph = FALSE)
-# plot(ma_pca_sel, choix = "var")
-# plot(ma_pca_sel, choix = "ind")
-fviz_pca_ind(ma_pca_sel, col.ind = fa_meta[, "condition"])
+```{r acp_norm_selected_genes, fig.width=8, fig.height=8, out.width="60%", fig.cap="... don't forget the figure legend ..."}
+#### PCA from normalised counts, selected genes ####
+message("Running PCA with normalised counts, selected genes")
+
+
+
 ```
 
 ### Clustering
@@ -764,72 +547,54 @@ fviz_pca_ind(ma_pca_sel, col.ind = fa_meta[, "condition"])
 
 ```{r sample_distances}
 #### Sample distances ####
-dist_euc_samples <- dist(t(fa_expr_selected))
-cor_pearson_samples <- as.dist(1 - cor(fa_expr_selected))
-cor_spearman_samples <- as.dist(1 - cor(fa_expr_selected, method = "spearman"))
+message("Computing inter-sample distances")
+
+
 ```
 
-- Effectuez un clustering hiérarchique des échantillons, en utilisant le critère "complete" pour l'agglomération. Comparez les arbres d'échantillons obtenus avec ces trois métriques et choisissez celle qui vous paraît la plus pertinente.
+- Effectuez un clustering hiérarchique des échantillons, en utilisant le critère `complete` pour l'agglomération. Comparez les arbres d'échantillons obtenus avec ces trois métriques et choisissez celle qui vous paraît la plus pertinente.
 
-```{r sample_clustering, fig.width=12, plot.height=5, out.width="100%", fig.cap="Sample tree with three alternative distance metrics: Euclidiant distance (left), Pearson correlation (center), Spearman correlation (right).? "}
+```{r sample_clustering, fig.width=12, plot.height=5, out.width="100%", fig.cap="... don't forget the figure legend ..."}
 #### Sample clustering ####
-par(mfrow = c(1,3))
-plot(hclust(dist_euc_samples), hang = -1,
-     main = "euclidean distance")
-plot(hclust(cor_pearson_samples), hang = -1,
-     main = "pearson")
-plot(hclust(cor_spearman_samples), hang = -1,
-     main = "spearman")
-par(mfrow = c(1,1))
+message("Sample clustering")
+
+
 ```
 
-- Effectuez un clustering hiérarchique des gènes en utilisant la distance basée sur le coefficient de Pearson et le critère de Ward
+- Effectuez un clustering hiérarchique des gènes en utilisant la distance basée sur le coefficient de Pearson et la règle d'agglomération complète
 
 ```{r gene_tree}
 #### Gene tree with Pearson correlation ####
-clustering_method <- "complete" ## Choose a clustering method
-cor_pearson_genes <-  as.dist(1 - cor(t(fa_expr_selected)))
+message("Drawing gene tree")
 
-## Build a gene tree
-gene_tree_pearson <- hclust(cor_pearson_genes, method = clustering_method)
 
-## Plot the gene tree
-plot(gene_tree_pearson, hang = -1, las = 1, 
-     main = paste0("Gene tree; Pearson coefficient; ", clustering_method, " clustering"), 
-     labels = FALSE)
 ```
 
 - Dessinez un arbre avec le résultat du clustering des gènes et commentez sa structure. Si vous deviez choisir de façon arbitraire un nombre de clusters, que choisiriez-vous ? Pourquoi ? Pas de panique, nous pouvons assumer ici que la réponse comporte une part de subjectivité. 
 
 ```{r gene_tree_with_boxes}
 #### Plot the gene tree with boxes to denote the clusters ####
-plot(gene_tree_pearson, hang = -1,
-     main = paste0("Gene tree with 7 clusters; Pearson coefficient; ", clustering_method, " clustering"), 
-     labels = FALSE)
-rect.hclust(gene_tree_pearson, k = 7)
+message("Plotting gene tree")
+
 ```
 
 - Dessinez une heatmap du résultat, en sélectionnant les deux résultats de clustering ci-dessus pour les gènes et les échantillons. 
 
-```{r heatmap_biclustering, fig.width=10, fig.height=8, out.width="90%", fig.cap="Heatmap showing the biclustering of genes and samples. "}
-#### Heatmap ####
-pheatmap(t(fa_expr_selected), 
-         main = paste0("Biclustering; ", "Pearson correlation; ", clustering_method, " clustering"),
-         labels_col = "", scale = "none",
-         clustering_method = clustering_method, 
-         clustering_distance_cols = "correlation", 
-         clustering_distance_rows = "correlation")
+```{r heatmap_biclustering, fig.width=10, fig.height=8, out.width="90%", fig.cap="... don't forget the figure legend ..."}
+#### Heatmap with biclustering ####
+message("heatmap with biclustering")
+
+
 ```
 
 - Dessinez une heatmap du résultat, en affichant un arbre sur les gènes mais pas sur les échantillons
 
-```{r biclustering}
-pheatmap(t(fa_expr_selected), 
-         main = paste0("Gene clustering; ", "Pearson correlation; ", clustering_method, " clustering"),
-         labels_col = "", scale = "none",
-         clustering_method = clustering_method, 
-         clustering_distance_cols = "correlation", 
-         cluster_rows = FALSE)
+```{r heatmap_gene_clustering, fig.width=10, fig.height=8, out.width="90%", fig.cap="... don't forget the figure legend ..."}
+#### Heatmap with clustering on genes only ####
+message("Heatmap with gene clustering")
+
+
+
 ```
 
 
@@ -842,58 +607,22 @@ Interprétez les résultats en quelques phrases.
 
 Effectuez une analyse d'enrichissement fonctionnel avec les principaux clusters obtenus dans la section précédente. 
 
-```{r functional_enrichment}
+```{r functional_enrichment, fig.width=7, fig.height=5, out.width="80%", fig.cap="... don't forget the figure legend ..."}
 #### Run enrichment analysis with gost() ####
-message("Running enrichment analysis with gost")
-
-## Get the list of IDs for the selected genes ##
-gene_ids <- rownames(gene_stat_norm)[selected_genes]
-
-## Get the list of gene names for the selected genes ##
-# gene_names <- unlist(subset(x = gene_stat_norm, 
-#                     subset = selected_genes,
-#                     select = external_gene_name))
-# length(gene_names)
-
-##
-
-gostres <- gost(query = gene_ids, 
-                organism = "mmusculus", 
-                ordered_query = FALSE, 
-                multi_query = FALSE, 
-                significant = TRUE, 
-                exclude_iea = FALSE, 
-                measure_underrepresentation = FALSE, 
-                evcodes = FALSE, 
-                user_threshold = 0.05, 
-                correction_method = "fdr", 
-                domain_scope = "annotated", 
-                custom_bg = NULL, 
-                numeric_ns = "", 
-                sources = NULL, 
-                as_short_link = FALSE)
+message("Running enrichment analysis for the selected genes")
 
 
-## Check the structure of the result
-names(gostres)
-names(gostres$result)
-kable(summary(gostres))
+```
 
-# Visualization
-gostplot(gostres, capped = TRUE, interactive = TRUE)
+**Challenge falcultatif:**
 
-# hist(gostres$result$p_value, breaks=seq(from=0, to=1, by = 0.05))
+Effectuez une analyse d'enrichissement sur chacun des clusters obtenus à partir de l'arbre des gènes. 
 
-## Check the most significant results, formating for kable
-#head(gostres$result)
-enrich_order <- order(gostres$result$p_value, decreasing = FALSE)
-sorted_result <- gostres$result[enrich_order, ]
-kable(head(sorted_result, n = 10), 
-      digits = c(0, 0, 15, 7, 7, 7, 3, 3, 0, 0, 7, 7, 0, 0), 
-      caption = "Top 10 most significant enriched functional classes")
-# kable(head(gostres$result), 
-#       format = c("%s", "%s", "%e", "%d", "%d", "%d", "%.3f", "%.3f", "%s", "%s", "%d", "%d", "%s", "%s"))
-names(gostres$meta)
+```{r functional_enrichment_clusters, fig.width=7, fig.height=5, out.width="80%", fig.cap="... don't forget the figure legend ..."}
+#### Enrichment by cluster ####
+message("Enrichment analysis by clusters")
+
+
 ```
 
 ## Conclusions générales
