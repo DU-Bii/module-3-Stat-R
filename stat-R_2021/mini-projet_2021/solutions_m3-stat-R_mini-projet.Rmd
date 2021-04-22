@@ -449,7 +449,7 @@ Suivez pas à pas la méthode proposée (***certaines étapes peuvent prendre qu
  
 A présent, ajoutez au dataframe `gene_stat_norm` en 1ères colonnes les annotations retrouvées grâce à biomaRt. Attention, certains gènes ne sont pas retrouvés dans la version d'ENSEMBL sur biomaRt donc laissez des NA comme données manquantes dans ce cas. Nous vous recommandons d'utiliser la function `merge()` de R base ou bien `left_join()` de `dplyr` pour fusionner les deux dataframes en un seul.
  
-```{r gene_annotations, eval=FALSE}
+```{r gene_annotations}
 ### Gene annotations ####
 message("Getting gene annotations")
 
@@ -481,7 +481,7 @@ kable(gene_stat_norm[100:109, ], caption = "Gene-wise statistics after normalisa
 
 Réordonnez les gènes par position génomique et affichez les lignes 5 premières et  5 dernières lignes de ce tableau de statistiques. 
 
-```{r sort_genes_by_chrom, eval=FALSE}
+```{r sort_genes_by_chrom}
 #### Sorting genes by chromosome ####
 message("Sorting genes by chromosome")
 
