@@ -361,7 +361,7 @@ fa_expr_filtered <- fa_expr_raw[kept_genes, ]
 
 ### Standardisation entre échantillons
 
-Nous appliquons ici une méthode simple mais efficace de standardisation
+Nous appliquons ici une méthode simple mais efficace de standardisation en appliquant un facteur multiplicatif qui ramène tous les échantillons au même troisième quartile ($Q3$). 
 
 ```{r normalisation_q3}
 #### Inter-sample standardisation on the Q3 of raw counts ####

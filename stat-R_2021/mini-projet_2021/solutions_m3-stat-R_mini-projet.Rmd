@@ -270,14 +270,14 @@ Il est affiché avec la fonction `kable()`.
 ```{r sample_stat_pre_norm}
 message("Computing sample-wise statistics on raw counts")
 sample_stat_prenorm <- data.frame(
-  mean = apply(fa_expr_raw, 2, mean, na.rm = TRUE),
-  sd = apply(fa_expr_raw, 2, sd, na.rm = TRUE),
-  iqr = apply(fa_expr_raw, 2, IQR, na.rm = TRUE),
-  Q1 = apply(fa_expr_raw, 2, quantile, p = 0.25, na.rm = TRUE),
-  median = apply(fa_expr_raw, 2, median, na.rm = TRUE),
-  Q3 = apply(fa_expr_raw, 2, quantile, p = 0.75, na.rm = TRUE),
-  max = apply(fa_expr_raw, 2, max, na.rm = TRUE),
-  null = apply(fa_expr_raw == 0, 2, sum, na.rm = TRUE)
+  mean = apply(fa_expr_raw, 2, mean, na.rm = FALSE),
+  sd = apply(fa_expr_raw, 2, sd, na.rm = FALSE),
+  iqr = apply(fa_expr_raw, 2, IQR, na.rm = FALSE),
+  Q1 = apply(fa_expr_raw, 2, quantile, p = 0.25, na.rm = FALSE),
+  median = apply(fa_expr_raw, 2, median, na.rm = FALSE),
+  Q3 = apply(fa_expr_raw, 2, quantile, p = 0.75, na.rm = FALSE),
+  max = apply(fa_expr_raw, 2, max, na.rm = FALSE),
+  null = apply(fa_expr_raw == 0, 2, sum, na.rm = FALSE)
 )
 
 kable(sample_stat_prenorm, caption = "Sample-wise statistics before normalisation.")
@@ -336,12 +336,15 @@ Nous fournissons ci-dessous le code.
 ### Filtrage : élimination des gènes non détectés ou à peine exprimés
 
 ```{r gene_filtering}
-## Data filtering: genes having at least 90% null values
+#### Gene filtering ####
+
+
+## Suppress genes having at least 90% null values
 message("Filtering undetected genes")
 undetected_genes <- gene_stat_prenorm$null >= ncol(fa_expr_raw) * 0.9
 print(paste0("Undetected genes (null in >= 90% samples): ", sum(undetected_genes)))
 
-## Data filtering: genes having a mean expression < 10
+## Suppress genes having a mean expression < 10
 message("Filtering barely expressed genes")
 barely_expressed_genes <- gene_stat_prenorm$mean < 10
 print(paste0("Barely expressed genes (mean < 10): ", sum(barely_expressed_genes)))
@@ -363,7 +366,7 @@ fa_expr_filtered <- fa_expr_raw[kept_genes, ]
 
 ### Standardisation entre échantillons
 
-Nous appliquons ici une méthode simple mais efficace de standardisation
+Nous appliquons ici une méthode simple mais efficace de standardisation en appliquant un facteur multiplicatif qui ramène tous les échantillons au même troisième quartile ($Q3$). 
 
 ```{r normalisation_q3}
 #### Inter-sample standardisation on the Q3 of raw counts ####
@@ -379,7 +382,6 @@ kable(apply(fa_expr_standard, 2, quantile, probs = 0.75),
       caption = "Third quartile of the filtered counts after inter-sample standardisation of the third quartiles. ")
 # boxplot(fa_expr_standard, horizontal = TRUE)
 ```
-
 
 
 
@@ -422,16 +424,16 @@ Générez un data.frame nommée `gene_stat_norm` avec une ligne par gène à par
 ## Gene-wise statistics after normalisation
 message("Computing gene-wise statistics on log2-transformed and normalised counts")
 gene_stat_norm <- data.frame(
-  mean = apply(fa_expr_log2, 1, mean, na.rm = F),
-  var = apply(fa_expr_log2, 1, var, na.rm = TRUE),
-  sd = apply(fa_expr_log2, 1, sd, na.rm = F),
+  mean = apply(fa_expr_log2, 1, mean, na.rm = FALSE),
+  var = apply(fa_expr_log2, 1, var, na.rm = FALSE),
+  sd = apply(fa_expr_log2, 1, sd, na.rm = FALSE),
   CV = NA,
-  min = apply(fa_expr_log2, 1, min, na.rm = TRUE),
-  Q1 = apply(fa_expr_log2, 1, quantile, p = 0.25, na.rm = TRUE),
-  median = apply(fa_expr_log2, 1, median, na.rm = TRUE),
-  Q3 = apply(fa_expr_log2, 1, quantile, p = 0.75, na.rm = TRUE),
-  max = apply(fa_expr_log2, 1, max, na.rm = TRUE),
-  null = apply(fa_expr_log2 == 0, 1, sum, na.rm = TRUE)
+  min = apply(fa_expr_log2, 1, min, na.rm = FALSE),
+  Q1 = apply(fa_expr_log2, 1, quantile, p = 0.25, na.rm = FALSE),
+  median = apply(fa_expr_log2, 1, median, na.rm = FALSE),
+  Q3 = apply(fa_expr_log2, 1, quantile, p = 0.75, na.rm = FALSE),
+  max = apply(fa_expr_log2, 1, max, na.rm = FALSE),
+  null = apply(fa_expr_log2 == 0, 1, sum, na.rm = FALSE)
   )
 gene_stat_norm$CV <- gene_stat_norm$sd / gene_stat_norm$mean
 ```
@@ -472,24 +474,24 @@ genes <- getBM(attributes = c("ensembl_gene_id",
                mart = ensembl)
   
 ## Merge gene annotations and expression statistics
-gene_stat_norm <- merge(genes, gene_stat_norm, by.x = "ensembl_gene_id", by.y = 0, sort = FALSE)
+gene_stat_norm_annot <- merge(genes, gene_stat_norm, by.x = "ensembl_gene_id", by.y = 0, sort = FALSE)
 
-kable(gene_stat_norm[100:109, ], caption = "Gene-wise statistics after normalisation")
+kable(gene_stat_norm_annot[100:109, ], caption = "Gene-wise statistics after normalisation")
 ```
 
 **Challenge falcultatif:**
 
-Réordonnez les gènes par position génomique et affichez les lignes 5 premières et  5 dernières lignes de ce tableau de statistiques. 
+Créez un tableau séparé appelé `gene_stat_norm_sorted` avec les statistiques par gène en les réordonnant par position génomique. Affichez les lignes 5 premières et  5 dernières lignes de ce tableau de statistiques. 
 
 ```{r sort_genes_by_chrom}
 #### Sorting genes by chromosome ####
 message("Sorting genes by chromosome")
 
+order_by_position <- order(gene_stat_norm_annot$chromosome_name, gene_stat_norm_annot$start_position)
+gene_stat_norm_sorted <- gene_stat_norm_annot[order_by_position,]
 
-gene_stat_norm <- gene_stat_norm[order(gene_stat_norm$chromosome_name, gene_stat_norm$start_position),]
-
-kable(gene_stat_norm[c(1:5, (nrow(gene_stat_norm) - 4):nrow(gene_stat_norm)), ], 
-      caption = "Gene-wise statistics after normalisation.")
+kable(gene_stat_norm_sorted[c(1:5, (nrow(gene_stat_norm_sorted) - 4):nrow(gene_stat_norm_sorted)), ], 
+      caption = "Gene-wise statistics after sorting per chromosomal position.")
 ```
 
 
@@ -560,10 +562,12 @@ message("Selecting genes with high expression and variance")
 
 ## Compute a Boolean vector indicating whether each gene passes or not the expression level threshold
 high_expression <- gene_stat_norm$mean > 5
+print(paste0("Genes with mean > 5 :", sum(high_expression)))
 # table(high_expression) # count number of genes with high/weak expression
 
 ## Compute a Boolean vector indicating whether each gene passes or not the variance threshold
 high_variance <- gene_stat_norm$var > 2
+print(paste0("Genes with variance > 2 :", sum(high_variance)))
 # table(high_variance) # count number of genes with weak high variance
 
 ## Select genes having both a high mean expression and a high variance
@@ -702,7 +706,6 @@ par(mfrow = c(1,1))
 ```{r gene_tree}
 #### Gene tree with Pearson correlation ####
 message("Drawing gene tree")
-
 
 clustering_method <- "complete" ## Choose a clustering method
 cor_pearson_genes <-  as.dist(1 - cor(t(fa_expr_selected)))
