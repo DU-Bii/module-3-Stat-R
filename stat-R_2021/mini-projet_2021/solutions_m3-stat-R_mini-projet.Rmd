@@ -270,14 +270,14 @@ Il est affiché avec la fonction `kable()`.
 ```{r sample_stat_pre_norm}
 message("Computing sample-wise statistics on raw counts")
 sample_stat_prenorm <- data.frame(
-  mean = apply(fa_expr_raw, 2, mean, na.rm = FALSE),
-  sd = apply(fa_expr_raw, 2, sd, na.rm = FALSE),
-  iqr = apply(fa_expr_raw, 2, IQR, na.rm = FALSE),
-  Q1 = apply(fa_expr_raw, 2, quantile, p = 0.25, na.rm = FALSE),
-  median = apply(fa_expr_raw, 2, median, na.rm = FALSE),
-  Q3 = apply(fa_expr_raw, 2, quantile, p = 0.75, na.rm = FALSE),
-  max = apply(fa_expr_raw, 2, max, na.rm = FALSE),
-  null = apply(fa_expr_raw == 0, 2, sum, na.rm = FALSE)
+  mean = apply(fa_expr_raw, 2, mean, na.rm = TRUE),
+  sd = apply(fa_expr_raw, 2, sd, na.rm = TRUE),
+  iqr = apply(fa_expr_raw, 2, IQR, na.rm = TRUE),
+  Q1 = apply(fa_expr_raw, 2, quantile, p = 0.25, na.rm = TRUE),
+  median = apply(fa_expr_raw, 2, median, na.rm = TRUE),
+  Q3 = apply(fa_expr_raw, 2, quantile, p = 0.75, na.rm = TRUE),
+  max = apply(fa_expr_raw, 2, max, na.rm = TRUE),
+  null = apply(fa_expr_raw == 0, 2, sum, na.rm = TRUE)
 )
 
 kable(sample_stat_prenorm, caption = "Sample-wise statistics before normalisation.")
@@ -423,17 +423,18 @@ Générez un data.frame nommée `gene_stat_norm` avec une ligne par gène à par
 ```{r gene_stat_post_norm}
 ## Gene-wise statistics after normalisation
 message("Computing gene-wise statistics on log2-transformed and normalised counts")
+
 gene_stat_norm <- data.frame(
-  mean = apply(fa_expr_log2, 1, mean, na.rm = FALSE),
-  var = apply(fa_expr_log2, 1, var, na.rm = FALSE),
-  sd = apply(fa_expr_log2, 1, sd, na.rm = FALSE),
+  mean = apply(fa_expr_log2, 1, mean, na.rm = TRUE),
+  var = apply(fa_expr_log2, 1, var, na.rm = TRUE),
+  sd = apply(fa_expr_log2, 1, sd, na.rm = TRUE),
   CV = NA,
-  min = apply(fa_expr_log2, 1, min, na.rm = FALSE),
-  Q1 = apply(fa_expr_log2, 1, quantile, p = 0.25, na.rm = FALSE),
-  median = apply(fa_expr_log2, 1, median, na.rm = FALSE),
-  Q3 = apply(fa_expr_log2, 1, quantile, p = 0.75, na.rm = FALSE),
-  max = apply(fa_expr_log2, 1, max, na.rm = FALSE),
-  null = apply(fa_expr_log2 == 0, 1, sum, na.rm = FALSE)
+  min = apply(fa_expr_log2, 1, min, na.rm = TRUE),
+  Q1 = apply(fa_expr_log2, 1, quantile, p = 0.25, na.rm = TRUE),
+  median = apply(fa_expr_log2, 1, median, na.rm = TRUE),
+  Q3 = apply(fa_expr_log2, 1, quantile, p = 0.75, na.rm = TRUE),
+  max = apply(fa_expr_log2, 1, max, na.rm = TRUE),
+  null = apply(fa_expr_log2 == 0, 1, sum, na.rm = TRUE)
   )
 gene_stat_norm$CV <- gene_stat_norm$sd / gene_stat_norm$mean
 ```
@@ -474,7 +475,8 @@ genes <- getBM(attributes = c("ensembl_gene_id",
                mart = ensembl)
   
 ## Merge gene annotations and expression statistics
-gene_stat_norm_annot <- merge(genes, gene_stat_norm, by.x = "ensembl_gene_id", by.y = 0, sort = FALSE)
+gene_stat_norm_annot <- merge(gene_stat_norm, genes, by.x = "ensembl_gene_id", by.y = 0, sort = FALSE, all.x = TRUE)
+# dim(gene_stat_norm)
 
 kable(gene_stat_norm_annot[100:109, ], caption = "Gene-wise statistics after normalisation")
 ```
@@ -814,12 +816,50 @@ names(gostres$meta)
 
 **Challenge falcultatif:**
 
-Effectuez une analyse d'enrichissement sur chacun des clusters obtenus à partir de l'arbre des gènes. 
+Effectuez une analyse d'enrichissement par cluster, à partir de clusters obtenus en coupant l'arbre des gènes (`cutree()`). 
 
-```{r functional_enrichment_clusters, fig.width=7, fig.height=5, out.width="80%", fig.cap="Dynamic map of the enrichment analysis for the clusters obtained from the gene tree. Position the cursor on a circle to see the enriched term. "}
+```{r functional_enrichment_clusters, fig.width=7, fig.height=12, out.width="100%", fig.cap="Dynamic map of the enrichment analysis for the clusters obtained from the gene tree. Position the cursor on a circle to see the enriched term. "}
 #### Enrichment by cluster ####
 message("Enrichment analysis by clusters")
 
+## Get the clusters from the tree
+k <- 7 ## Number of clusters
+clusters <- cutree(tree = gene_tree_pearson, k = k)
+
+## Convert vector of culsters into a list with one vector of gene IDs for each cluster
+cluster_list <- list()
+for (c in 1:k) {
+  cluster_list[[paste0("cluster_", c)]] <- names(clusters[clusters == c])
+}
+
+# View(cluster_list)
+
+## Compute enrichment for each cluster
+cluster_enrichment <- gost(query = cluster_list, 
+                           organism = "mmusculus", 
+                           ordered_query = FALSE, 
+                           multi_query = FALSE, 
+                           significant = TRUE, 
+                           exclude_iea = FALSE, 
+                           measure_underrepresentation = FALSE, 
+                           evcodes = FALSE, 
+                           user_threshold = 0.05, 
+                           correction_method = "fdr", 
+                           domain_scope = "annotated", 
+                           custom_bg = NULL, 
+                           numeric_ns = "", 
+                           sources = NULL, 
+                           as_short_link = FALSE)
+
+
+## Check the structure of the result
+names(cluster_enrichment)
+names(cluster_enrichment$result)
+# View(cluster_enrichment$result)
+#kable(summary(cluster_enrichment))
+
+# Visualization
+gostplot(cluster_enrichment, capped = TRUE, interactive = TRUE)
 
 ```
 
