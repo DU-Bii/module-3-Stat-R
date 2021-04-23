@@ -58,15 +58,7 @@ for (lib in required_cranLib) {
   require(lib, character.only = TRUE)
 }
 
-required_biocLib <- c("biomaRt")
-for (lib in required_biocLib) {
-  if (!require(lib, character.only = TRUE)) {
-    BiocManager::install(lib)
-  }
-  require(lib, character.only = TRUE)
-}
-
-kable(as.data.frame(c(required_cranLib, required_biocLib)),
+kable(as.data.frame(c(required_cranLib)),
       col.names = "libraries",
       caption = "Loaded required libraries"
     )
@@ -119,7 +111,7 @@ A partir de ces extraits de rein, l'ARN messager total et les petits ARNs ont é
 
 **But scientifique:** Dans le tutoriel sur les dataframes, vous avez travaillé sur les données de ***transcriptome du modèle UUO***. Dans ce mini-projet, vous allez travailler sur les données du ***transcriptome du modèle FA*** afin de regrouper les observations (échantillon) et les gènes selon des profils d'expression similaires.
 
-**Votre projet se décompose en 5 parties dont 3 seront à réaliser par:**
+**Votre projet se décompose en 5 parties dont 3 seront à réaliser par vous:**
 
 1. Statitiques descriptives des données brutes: commandes fournies
 2. Normalisation des données : commandes fournies
@@ -357,8 +349,6 @@ fa_expr_filtered <- fa_expr_raw[kept_genes, ]
 
 ```
 
-
-
 ### Standardisation entre échantillons
 
 Nous appliquons ici une méthode simple mais efficace de standardisation en appliquant un facteur multiplicatif qui ramène tous les échantillons au même troisième quartile ($Q3$). 
@@ -377,9 +367,6 @@ kable(apply(fa_expr_standard, 2, quantile, probs = 0.75),
       caption = "Third quartile of the filtered counts after inter-sample standardisation of the third quartiles. ")
 # boxplot(fa_expr_standard, horizontal = TRUE)
 ```
-
-
-
 
 ### Transformation log2
 
@@ -424,12 +411,12 @@ message("Computing gene-wise statistics on log2-transformed and normalised count
 
 ### Annotation des gènes
 
-Chaque gène étant donné par son identifiant dans la base de données ENSEMBL vous utiliserez le `paquet biomaRt de bioconductor` pour ajouter des annotations : symbole, chromosome, coordonnées génomiques, brin. 
+Chaque gène étant donné par son identifiant dans la base de données ENSEMBL vous utiliserez le **paquet biomaRt de bioconductor** pour ajouter des annotations : symbole, chromosome, coordonnées génomiques, brin. 
 Suivez pas à pas la méthode proposée (***certaines étapes peuvent prendre quelques minutes***):
 
- - chargez le paquet biomaRt, voire installer-le uniquement si nécessaire. Indiquez le code à l'emplacement adéquat dans de .Rmd.
+ - chargez le paquet biomaRt, voire installer-le uniquement si nécessaire. Indiquez le code à l'emplacement adéquat dans le .Rmd.
 
- - sélectionnez la base de données ENSEMBL avec la fonction `useMart()`. Attention à choisir le bon génome avec l'agument `dataset`: `mmusculus_gene_ensembl`
+ - sélectionnez la base de données ENSEMBL avec la fonction `useMart()`. Attention à choisir le bon génome avec l'agument `dataset`: "mmusculus_gene_ensembl"
  
  - avec la fonction `getBM()` récupérez de la base de données ENSEMBL les champs demandés (***pour symbole utilisez external_gene_name***) en appliquant "ensembl_geneid" pour l'agument `filter` et en indiquant pour l'argument `values` le vecteur des identifiants des gènes présents dans le dataframe `gene_stat_norm`. Vous obtenez un dataframe.
  
@@ -438,8 +425,6 @@ A présent, ajoutez au dataframe `gene_stat_norm` en 1ères colonnes les annotat
 ```{r gene_annotations}
 ### Gene annotations ####
 message("Getting gene annotations")
-
-
 
 ```
 
@@ -460,14 +445,12 @@ message("Sorting genes by chromosome")
 
 ```{r fa_expr_norm_distrib, fig.width=8, fig.height=5, out.width="70%", fig.cap="... don't forget the figure legend ..."}
 
-
 ```
 
 - Dessinez un box plot par échantillon avant et après normalisation, et commentez la façon dont l'effet de la normalisation apparaît sur ces graphiques. 
 
 ```{r boxplots_normalisation_impact, fig.width=10, fig.height=12, out.width="100%", fig.cap="... don't forget the figure legend ..."}
 #### Box plots to show normalisation impact ####
-
 
 ```
 
@@ -485,7 +468,6 @@ Sélectionnez les gènes ayant un niveau log2 moyen minimal supérieur à 5 ($m 
 #### Selection of a subset of genes with igh expression and variance ####
 message("Selecting genes with high expression and variance")
 
-
 ```
 
 Dessinez des histogrammes des valeurs d'expression avant et après cette sélection de gènes, et commentez les différences. 
@@ -493,14 +475,12 @@ Dessinez des histogrammes des valeurs d'expression avant et après cette sélect
 ```{r hist_expr_selected_genes, fig.width=8, fig.height=6, out.width="100%", fig.cap="... don't forget your legend ..."}
 #### Histograms of expression before and after gene selection ####
 
-
 ```
 
 Dessinez un box plot par échantillon des valeurs d'expression avant et après sélection des gènes, et commentez le résultat. 
 
 ```{r boxplots_expr_selected_genes, fig.width=10, fig.height=5, out.width="60%", fig.cap="... don't forget the figure legend ..."}
 #### Boxplots of expression before and after gene selection ####
-
 
 ```
 
@@ -515,18 +495,13 @@ Dessinez un plot ACP des échantillons en les colorant par condition avant et ap
 #### PCA from raw counts, all genes ####
 message("Running PCA with raw counts, all genes")
 
-
-
 ```
-
 
 - avec la matrice de valeurs normalisées des gènes filtrés
 
 ```{r acp_norm_filtered_genes, fig.width=8, fig.height=8, out.width="60%", fig.cap="... don't forget the figure legend ..."}
 #### PCA from normalised counts, all genes ####
 message("Running PCA with normalised counts, all genes")
-
-
 
 ```
 
@@ -535,8 +510,6 @@ message("Running PCA with normalised counts, all genes")
 ```{r acp_norm_selected_genes, fig.width=8, fig.height=8, out.width="60%", fig.cap="... don't forget the figure legend ..."}
 #### PCA from normalised counts, selected genes ####
 message("Running PCA with normalised counts, selected genes")
-
-
 
 ```
 
@@ -549,7 +522,6 @@ message("Running PCA with normalised counts, selected genes")
 #### Sample distances ####
 message("Computing inter-sample distances")
 
-
 ```
 
 - Effectuez un clustering hiérarchique des échantillons, en utilisant le critère `complete` pour l'agglomération. Comparez les arbres d'échantillons obtenus avec ces trois métriques et choisissez celle qui vous paraît la plus pertinente.
@@ -558,7 +530,6 @@ message("Computing inter-sample distances")
 #### Sample clustering ####
 message("Sample clustering")
 
-
 ```
 
 - Effectuez un clustering hiérarchique des gènes en utilisant la distance basée sur le coefficient de Pearson et la règle d'agglomération complète
@@ -566,7 +537,6 @@ message("Sample clustering")
 ```{r gene_tree}
 #### Gene tree with Pearson correlation ####
 message("Drawing gene tree")
-
 
 ```
 
@@ -584,7 +554,6 @@ message("Plotting gene tree")
 #### Heatmap with biclustering ####
 message("heatmap with biclustering")
 
-
 ```
 
 - Dessinez une heatmap du résultat, en affichant un arbre sur les gènes mais pas sur les échantillons
@@ -593,13 +562,9 @@ message("heatmap with biclustering")
 #### Heatmap with clustering on genes only ####
 message("Heatmap with gene clustering")
 
-
-
 ```
 
-
 Interprétez les résultats en quelques phrases. 
-
 
 ## 5. Enrichissement fonctionnel
 
@@ -611,7 +576,6 @@ Effectuez une analyse d'enrichissement fonctionnel avec les principaux clusters 
 #### Run enrichment analysis with gost() ####
 message("Running enrichment analysis for the selected genes")
 
-
 ```
 
 **Challenge falcultatif:**
@@ -622,21 +586,16 @@ Effectuez une analyse d'enrichissement sur chacun des clusters obtenus à partir
 #### Enrichment by cluster ####
 message("Enrichment analysis by clusters")
 
-
 ```
 
 ## Conclusions générales
 
-
 Résumez en quelques phrases vos conclusions à partir des résultats obtenus. 
 
-
 ## Session info
-
 
 ```{r session_info}
 #### Session info ####
 sessionInfo()
 
 ```
-
