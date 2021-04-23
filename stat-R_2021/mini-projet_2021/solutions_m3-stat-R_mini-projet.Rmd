@@ -475,8 +475,10 @@ genes <- getBM(attributes = c("ensembl_gene_id",
                mart = ensembl)
   
 ## Merge gene annotations and expression statistics
-gene_stat_norm_annot <- merge(gene_stat_norm, genes, by.x = "ensembl_gene_id", by.y = 0, sort = FALSE, all.x = TRUE)
-# dim(gene_stat_norm)
+gene_stat_norm_annot <- merge(gene_stat_norm, genes, by.y = "ensembl_gene_id", by.x = 0, sort = FALSE, all.x = TRUE)
+# dim(gene_stat_norm_annot)
+# names(gene_stat_norm_annot)
+# head(gene_stat_norm_annot)
 
 kable(gene_stat_norm_annot[100:109, ], caption = "Gene-wise statistics after normalisation")
 ```
