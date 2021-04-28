@@ -75,7 +75,7 @@ Nous fournissons ci-dessous une trame avec les principales sections attendues. C
 
 ### Remise du rapport
 
-Date: **le 22 mai 2021 à minuit**.  Si vous anticipez un problème pour remettre le rapport à cette date contactez-nous aussi rapidement que possible pour que nous puissions prévoir une remise plus tardive. 
+Date: **le 26 mai 2021 à minuit**.  Si vous anticipez un problème pour remettre le rapport à cette date contactez-nous aussi rapidement que possible pour que nous puissions prévoir une remise plus tardive. 
 
 - Commencez par renommer le fichier .Rmd en remplaçant Prenom-NOM par vos nom et prénom. 
 - Le rapport est attendu en formats .Rmd + .HTML (en gardant l'option self_contained de l'en-tête activée). 
@@ -447,7 +447,7 @@ message("Sorting genes by chromosome")
 
 ```
 
-- Dessinez un box plot par échantillon avant et après normalisation, et commentez la façon dont l'effet de la normalisation apparaît sur ces graphiques. 
+- Dessinez un box plot par échantillon avant (sans et après normalisation de la distribution en log2) et après standardisation (normalisation inter-échanntillon). Commentez la façon dont l'effet de la (des) normalisation(s) apparaît sur ces graphiques. 
 
 ```{r boxplots_normalisation_impact, fig.width=10, fig.height=12, out.width="100%", fig.cap="... don't forget the figure legend ..."}
 #### Box plots to show normalisation impact ####
