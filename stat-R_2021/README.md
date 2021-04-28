@@ -14,6 +14,8 @@
 
 - [Session 6. Classification non-supervisée / Analyse d'enrichissement](#session-6)
 
+- [Travail personnel ](#travail-perso)
+
 
 
 ## Goals
@@ -244,7 +246,7 @@ To follow this course, prior knowledge is expected on:
 -->
 
 
-
+<a name="travail-perso"></a>
 
 ### Travail personnel
 
@@ -272,8 +274,14 @@ To follow this course, prior knowledge is expected on:
     - terminer le TP de Magali Berlan sur l'ACP
     - réaliser le travail personnel de Jacques van Helden : application de l'ACP aux données multi-omiques de Pavkovicz
 
+5. **Mini-projet**
+
+- Le but de ce travail est de mettre en oeuvre les méthodes vues dans le module 3 "R et statistiques" pour explorer le jeu de données de Pavkovic, et de rendre un rapport d'analyse au format `.Rmd`.  Nous vous fournissons le fichier `Prenom-NOM_m3-stat-R_mini-projet.Rmd` à ce [lien](https://raw.githubusercontent.com/DU-Bii/module-3-Stat-R/master/stat-R_2021/mini-projet_2021/Prenom-NOM_m3-stat-R_mini-projet.Rmd.Rmd) avec une trame des principales sections attendues. Certaines contiennent déjà du code. Vous devrez en compléter d'autres. Sentez-vous libres d'adapter cette trame ou d'y ajouter des analyses complémentaires si elles vous aident à interpréter vos résultats. La date limite pour rendre se travail est fixée au 26/05/21 minuit dans votre repertoire: `/shared/projects/dubii2021/[login]/m3-stat-R/mini-projet` 
+
 
    **L'activité atelier est annulée due à la charge de travail déjà importante.**
+
+
 
 
 ## R tutorials and good practice
